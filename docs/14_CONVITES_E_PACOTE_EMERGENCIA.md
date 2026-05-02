@@ -74,3 +74,20 @@ O pacote local ja contem:
 - Camera e microfone permanecem fora do build publico.
 - Dados sensiveis nao aparecem em console, URL de API ou push.
 - Docs deixam claro que midia real e transmissao estao bloqueadas.
+
+## Validacao Android fisica
+
+Status em 2026-05-02: aprovado para recursos locais em build debug de homologacao.
+
+Resultados:
+
+- convite local criado e preservado;
+- deep link `sinalseguro://convite?convite=qa123` abriu a tela `Convite recebido`;
+- alerta de teste criou pacote local com georreferencia consentida;
+- area `Arquivos locais` listou pacotes, hash, status de georreferencia, midia bloqueada e plano API/P2P;
+- persistencia validada apos fechar e reabrir o app;
+- permissao de localizacao negada gerou pacote com status `permission_denied`;
+- `aapt` confirmou ausencia de `CAMERA`, `RECORD_AUDIO`, `SYSTEM_ALERT_WINDOW`, `READ_EXTERNAL_STORAGE` e `WRITE_EXTERNAL_STORAGE`;
+- logcat nao exibiu coordenadas, tokens, payloads sensiveis, upload, WebRTC ou crash.
+
+Relatorio completo: `docs/15_VALIDACAO_ANDROID_RECURSOS_LOCAIS.md`.

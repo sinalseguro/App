@@ -18,8 +18,8 @@ id_ed25519
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-android/
-ios/
+/android/
+/ios/
 !distribution/android/
 !distribution/android/*.md
 !distribution/android/*.txt

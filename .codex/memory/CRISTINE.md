@@ -58,12 +58,19 @@ Estado em 2026-05-02:
 - area `Arquivos locais` foi criada para listar pacotes gravados, hash, status de georreferencia, midia bloqueada e plano de envio futuro;
 - convites e pacotes pequenos usam cofre local do sistema via `expo-secure-store`, com indice sem dado sensivel em `AsyncStorage`;
 - alerta permanece simulado ate outbox criptografada, API e revisoes de seguranca/QA.
+- validacao Android fisica dos recursos locais foi concluida em `23129RA5FL`, Android 15, via ADB Wi-Fi `192.168.0.5:5555`;
+- APK debug validado: `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `a3b04d9e29349319ead70200c75c030d980b6b1b67feb8a5d34ec78c6b6b71b5`;
+- convites, deep link, alerta local, georreferencia consentida, negacao de localizacao, arquivos locais e persistencia foram validados;
+- Myers/Schneier identificaram `SYSTEM_ALERT_WINDOW` no manifest debug gerado pelo Expo; foi corrigido no APK e criado plugin local de hardening para proximos prebuilds;
+- evidencias saneadas ficaram em `docs/evidencias/android/2026-05-02-recursos-locais/`;
+- relatorio tecnico ficou em `docs/15_VALIDACAO_ANDROID_RECURSOS_LOCAIS.md`.
 
 Proximas acoes:
 
-1. Validar no Android fisico geracao de convite, permissao de localizacao, tela de arquivos locais e persistencia da outbox apos reiniciar o app.
-2. Preparar TestFlight/App Store para iOS.
-3. Conectar mock de API ao contrato OpenAPI.
-4. Implementar adaptador de envio real apenas depois de auth, consentimento, retencao e revisao Schneier/Doneda.
-5. Evoluir Fase 1 com componentes compartilhados revisados por Norman/Tarcila.
-6. Manter `origin` usando `github-sinalseguro-admin` para pushes do repo App.
+1. Rodar validacoes finais e publicar checkpoint Git com hardening + relatorio Android.
+2. Gerar novo APK assinado interno incorporando o plugin de hardening e publicar como release interna 3, se Roberto aprovar.
+3. Preparar TestFlight/App Store para iOS.
+4. Conectar mock de API ao contrato OpenAPI.
+5. Implementar adaptador de envio real apenas depois de auth, consentimento, retencao e revisao Schneier/Doneda.
+6. Evoluir Fase 1 com componentes compartilhados revisados por Norman/Tarcila.
+7. Manter `origin` usando `github-sinalseguro-admin` para pushes do repo App.

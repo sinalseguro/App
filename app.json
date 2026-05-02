@@ -41,6 +41,7 @@
       ]
     },
     "plugins": [
+      "./plugins/with-android-debug-permission-hardening",
       "expo-router",
       "expo-secure-store",
       "expo-notifications",

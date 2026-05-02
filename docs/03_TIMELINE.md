@@ -182,6 +182,44 @@ Proximo passo:
 - Validar no Android fisico geracao de convite, permissao de localizacao permitida/negada e persistencia da outbox apos reiniciar o app.
 - Conectar envio real somente quando backend, autorizacao, termos, retencao e revisao de seguranca estiverem prontos.
 
+## 2026-05-02 - Validacao Android dos recursos locais
+
+Status: concluido em aparelho Android fisico com ADB Wi-Fi.
+
+Especialistas acionados:
+
+- Cristine: continuidade, checkpoint e registro de memoria.
+- Ada/Hedy/Margaret: instalacao Android, fluxo de convite, alerta de teste, outbox e compatibilidade.
+- Myers/Schneier: permissoes, logcat, ausencia de midia real, ausencia de transmissao e criterios de bloqueio.
+- Doneda: minimizacao de dados e evidencias sem contatos/conversas reais.
+
+Decisoes e ajustes:
+
+- O aparelho foi configurado para ADB Wi-Fi em `192.168.0.5:5555`.
+- O APK debug validado tem SHA-256 `a3b04d9e29349319ead70200c75c030d980b6b1b67feb8a5d34ec78c6b6b71b5`.
+- Foi identificado e corrigido `SYSTEM_ALERT_WINDOW` em manifest debug gerado pelo Expo.
+- Foi criado plugin local `./plugins/with-android-debug-permission-hardening` para preservar essa regra nos proximos prebuilds.
+- Evidencias com contatos/conversa do aparelho foram descartadas por privacidade.
+
+Validacoes:
+
+- app abriu sem crash;
+- convite local criado e listado como pendente;
+- share sheet abriu para envio do convite;
+- deep link `sinalseguro://convite?convite=qa123` abriu a tela correta;
+- alerta de teste criou pacote local com georreferencia consentida;
+- tela `Arquivos locais` exibiu hash, status de entrega, status de midia e plano API/P2P;
+- outbox persistiu apos `force-stop` e reabertura;
+- negacao oficial de localizacao gerou pacote local com `permission_denied`;
+- `aapt` e `dumpsys package` confirmaram ausencia de camera, microfone, overlay e storage legado;
+- logcat do processo do app nao mostrou crash, coordenadas, tokens, payloads sensiveis, upload, `/alerts`, WebRTC, camera ou microfone;
+- sandbox do app nao possui arquivos de audio, video ou imagem.
+
+Evidencias:
+
+- `docs/15_VALIDACAO_ANDROID_RECURSOS_LOCAIS.md`;
+- `docs/evidencias/android/2026-05-02-recursos-locais/`.
+
 ## Modelo de registro
 
 | Data | Evento | Responsavel | Impacto | Proximo passo |
