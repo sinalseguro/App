@@ -72,7 +72,7 @@ Essas paginas devem continuar publicas mesmo antes dos instaladores finais para 
 - O push para `sinalseguro/App` foi resolvido com a chave SSH dedicada e alias `github-sinalseguro-admin`.
 - O Android SDK local possui `android-36` e permitiu build assinado local.
 - A chave de assinatura Android fica fora do Git, em caminho local protegido, com senhas no Keychain.
-- GitHub Release Android interno 2 preparada para publicacao e validada localmente por instalacao/checksum.
+- GitHub Release Android interno 2 publicada e validada por instalacao/checksum.
 - O primeiro APK deve ser tratado como app shell/alerta simulado, sem coleta real, midia, localizacao real enviada ou promessa publica.
 - Distribuicao iOS depende de conta Apple, certificados, provisioning profile e TestFlight/App Store.
 - Xcode esta disponivel, mas o app ainda nao possui projeto iOS prebuild nem credenciais Apple versionaveis.

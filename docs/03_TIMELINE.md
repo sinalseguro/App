@@ -104,7 +104,7 @@ Validacoes executadas:
 
 ## 2026-05-02 - Validacao visual Tarcila e Android interno 2
 
-Status: APK Android interno 2 preparado e validado em aparelho fisico via ADB Wi-Fi.
+Status: APK Android interno 2 publicado em GitHub Releases e validado em aparelho fisico via ADB Wi-Fi.
 
 Especialistas acionados:
 
@@ -131,10 +131,14 @@ Evidencias:
 - Permissoes validadas sem `CAMERA`, `RECORD_AUDIO`, `SYSTEM_ALERT_WINDOW`, `READ_EXTERNAL_STORAGE` ou `WRITE_EXTERNAL_STORAGE`.
 - Captura local saneada: `/tmp/sinalseguro-android-qa/home-v2.png`.
 
+Portal:
+
+- Portal publicado em `cereus_web:/var/www/sinalseguro/releases/20260502T191004Z`.
+- Manifesto publico `https://www.sinalseguro.com.br/downloads/installers.json` validado com `android-v0.1.0-internal.2` e SHA-256 correto.
+- Paginas `/baixar`, `/baixar/android` e `/baixar/ios` retornaram HTTP 200.
+
 Pendencias:
 
-- Publicar `android-v0.1.0-internal.2` em GitHub Releases.
-- Atualizar portal e manifesto publico para o APK interno 2.
 - Remover ativos visuais duplicados do portal somente com confirmacao explicita de exclusao.
 
 ## Modelo de registro

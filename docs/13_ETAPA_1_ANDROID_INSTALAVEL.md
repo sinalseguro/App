@@ -85,7 +85,7 @@ Estado de execucao em 2026-05-02:
 - SHA-256 atual: `dbad294407038cac954fd3154bac6c4ea9dbb30b4e79164f58807e83f0d358cb`;
 - release notes e checksum saneados versionados em `distribution/android/`;
 - release interna 1 publicada em `https://github.com/sinalseguro/App/releases/tag/android-v0.1.0-internal.1`;
-- release interna 2 preparada para publicacao em `https://github.com/sinalseguro/App/releases/tag/android-v0.1.0-internal.2`, incorporando parecer visual de Tarcila.
+- release interna 2 publicada em `https://github.com/sinalseguro/App/releases/tag/android-v0.1.0-internal.2`, incorporando parecer visual de Tarcila.
 
 ### 2. Assinatura
 
