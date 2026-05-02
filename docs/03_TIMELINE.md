@@ -5,7 +5,7 @@ Supervisao: Ze
 
 ## 2026-05-02 - Checkpoint inicial
 
-Status: implementado localmente; publicacao remota do App pendente por permissao GitHub.
+Status: publicado no GitHub; aguardando instaladores assinados.
 
 Decisoes:
 
@@ -17,7 +17,7 @@ Decisoes:
 - OpenAPI inicial copiada para `docs/api/openapi.yaml`.
 - Commit local inicial criado em `main`.
 - Remote configurado como `https://github.com/sinalseguro/App.git`.
-- Push para o remoto pendente: GitHub negou permissao de escrita para a credencial local ativa.
+- Push para o remoto resolvido com a chave SSH `id_ed25519_github_sinalseguro` e alias local `github-sinalseguro-admin`.
 - Tarcila aprovou o uso operacional da logo ja aplicada nos portais para o README do app.
 - QR codes Android/iOS gerados em `assets/qr/`.
 - Manifesto de instaladores criado em `distribution/installers.json`.
@@ -41,9 +41,18 @@ Validacoes executadas:
 
 Proximo passo operacional:
 
-- Conceder permissao de escrita ao usuario/chave ativa no repositorio `sinalseguro/App` ou trocar a credencial Git local por uma identidade com acesso ao repositorio.
 - Gerar APK Android assinado e publicar em GitHub Releases quando a permissao estiver resolvida.
 - Preparar TestFlight/App Store para iOS com conta Apple e documentos de privacidade.
+
+## 2026-05-02 - Acesso GitHub resolvido
+
+Status: concluido.
+
+- Chave publica `SHA256:D8EsPR5ldcu1hfb5vUbJFupSLsktofuGVPdr7gXg29A` cadastrada na conta GitHub `sinalseguro` como chave de autenticacao com leitura/escrita.
+- Alias local `github-sinalseguro-admin` criado em `~/.ssh/config`.
+- `origin` do app atualizado para `git@github-sinalseguro-admin:sinalseguro/App.git`.
+- `main` publicado em `sinalseguro/App`.
+- `push --dry-run` validado para `sinalseguro/App`, `sinalseguro/portais` e `sinalseguro/empresa`.
 
 ## Modelo de registro
 

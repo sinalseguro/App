@@ -32,8 +32,8 @@ Cristine coordena o desenvolvimento mobile Android/iOS, mantendo plano, cronogra
 
 ## Proximo checkpoint
 
-1. Liberar permissao de escrita no GitHub para publicar `origin/main` em `https://github.com/sinalseguro/App.git`.
-2. Gerar build Android assinado e publicar release com hash.
-3. Preparar TestFlight/App Store para iOS.
-4. Conectar mock de API ao contrato OpenAPI.
-5. Iniciar Fase 1 com tokens visuais, telas-base e revisao Norman/Tarcila.
+1. Gerar build Android assinado e publicar release com hash.
+2. Preparar TestFlight/App Store para iOS.
+3. Conectar mock de API ao contrato OpenAPI.
+4. Iniciar Fase 1 com tokens visuais, telas-base e revisao Norman/Tarcila.
+5. Manter `origin` usando `github-sinalseguro-admin` para pushes do repo App.

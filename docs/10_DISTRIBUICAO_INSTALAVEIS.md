@@ -36,7 +36,7 @@ Essas paginas devem continuar publicas mesmo antes dos instaladores finais para 
 
 ## Bloqueios atuais
 
-- O push para `sinalseguro/App` ainda depende de permissao de escrita da chave/usuario no repositorio.
+- O push para `sinalseguro/App` foi resolvido com a chave SSH dedicada e alias `github-sinalseguro-admin`.
 - EAS CLI nao esta instalado globalmente.
 - O Android SDK local nao possui plataformas instaladas em `~/Library/Android/sdk/platforms`, entao nao ha build Android local neste checkpoint.
 - Build Android assinado depende de perfil/chave fora do Git.
