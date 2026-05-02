@@ -22,6 +22,8 @@ android/
 ios/
 !distribution/android/
 !distribution/android/*.md
+!distribution/android/*.txt
+distribution/android/out/
 *.apk
 *.aab
 *.ipa

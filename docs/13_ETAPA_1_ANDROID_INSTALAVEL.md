@@ -69,9 +69,22 @@ Estado tecnico exigido:
 - `preview.android.buildType = apk`;
 - `production.android.buildType = app-bundle`;
 - `expo-build-properties` define Android `minSdkVersion 24`, `targetSdkVersion 36` e iOS `deploymentTarget 15.1`;
+- Nova Arquitetura React Native fica ativa porque o Expo Router/Reanimated exige esse modo no SDK atual;
+- build local pode limitar ABIs a `armeabi-v7a,arm64-v8a` para reduzir uso de disco e focar celulares reais;
 - `android.permissions` sem `CAMERA` e `RECORD_AUDIO`;
+- `android.blockedPermissions` remove camera, microfone, overlay e armazenamento legado do primeiro APK;
 - nenhum `console.log` em fluxo de alerta;
 - nenhum `.env`, keystore, certificado ou instalador real versionado.
+
+Estado de execucao em 2026-05-02:
+
+- Android SDK local preparado com plataforma `android-36`;
+- keystore de upload criada fora do repositorio, com senhas no Keychain;
+- APK release assinado gerado localmente;
+- APK final local: `distribution/android/out/sinalseguro-android.apk` (ignorado pelo Git);
+- SHA-256: `a920c116adff07f9121281c1cd3d086daeee969dd014741658d24dd128c280f5`;
+- release notes e checksum saneados versionados em `distribution/android/`;
+- GitHub Release publicada em `https://github.com/sinalseguro/App/releases/tag/android-v0.1.0-internal.1`.
 
 ### 2. Assinatura
 
@@ -112,7 +125,7 @@ npm run build:android:preview
 
 - Renomear o APK final aprovado para `sinalseguro-android.apk`.
 - Gerar `checksums.txt` com SHA-256.
-- Criar GitHub Release `android-internal-0.1.0-1`.
+- Criar GitHub Release `android-v0.1.0-internal.1`.
 - Anexar APK, checksums e release notes.
 - Validar download pelo portal e QR.
 - Se o repositorio GitHub for publico, tratar o link como publico; nao chamar de restrito sem controle real de acesso.
@@ -141,18 +154,17 @@ npm run build:android:preview
 
 ## Bloqueios atuais conhecidos
 
-- Android SDK local ainda precisa da plataforma `android-36` se houver build local.
-- EAS CLI nao esta instalado globalmente.
-- Keystore/assinatura ainda nao foi criada ou indicada em cofre local.
-- APK assinado ainda nao existe.
-- Node shell pode estar abaixo de `22.13.0`; usar Node 22 antes das validacoes.
+- EAS remoto segue nao autenticado; o build atual foi local.
+- O artefato `distribution/android/out/sinalseguro-android.apk` nao e versionado e deve ser anexado a GitHub Releases.
+- Node shell deve permanecer em `22.13+` para validacoes e builds.
 - Outbox atual ainda nao deve ser vendida como garantia offline ate persistencia criptografada.
+- Producao publica segue bloqueada ate QA, privacidade, backend homologado e trilha de loja.
 
 ## Parecer consolidado dos especialistas
 
-- Kim: EAS remoto e GitHub Releases sao o caminho operacional; publicar APK somente com hash e release notes saneadas.
+- Kim: GitHub Releases e o canal operacional para o APK interno; publicar somente com hash e release notes saneadas.
 - Ada/Margaret: Expo managed continua adequado; `preview` precisa gerar APK e `production` deve ficar reservado a AAB.
-- Schneier/Doneda/Myers: liberar apenas shell tecnico com alerta simulado; bloquear midia, dado real, camera, microfone e qualquer promessa de emergencia oficial.
+- Schneier/Doneda/Myers: liberar apenas shell tecnico com alerta simulado; bloquear midia, dado real, camera, microfone, overlay, armazenamento legado e qualquer promessa de emergencia oficial.
 
 ## Continuidade
 

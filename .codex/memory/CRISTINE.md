@@ -42,17 +42,20 @@ Estado em 2026-05-02:
 - `expo-build-properties` define Android 7+, target SDK 36 e iOS 15.1+ no schema correto do Expo;
 - `expo-doctor` esta limpo em 17/17 checks;
 - `npm run release:android:readiness` e o gate obrigatorio antes de build;
-- camera/microfone ficam fora do primeiro instalavel;
+- camera/microfone, overlay e armazenamento legado ficam fora do primeiro instalavel;
+- Android SDK local foi preparado com `android-36`;
+- keystore de upload foi criada fora do repositorio, com senhas no Keychain;
+- APK assinado local foi gerado e validado como artefato de homologacao tecnica;
+- SHA-256 do APK: `a920c116adff07f9121281c1cd3d086daeee969dd014741658d24dd128c280f5`;
+- GitHub Release Android interno 1 foi publicada em `https://github.com/sinalseguro/App/releases/tag/android-v0.1.0-internal.1`;
+- portal e manifestos apontam ao APK/checksum para homologacao controlada;
 - alerta permanece simulado ate outbox criptografada, API e revisoes de seguranca/QA.
 
 Proximas acoes:
 
-1. Rodar validacoes com Node 22.13+.
-2. Resolver autenticacao EAS/GitHub e escolher EAS remoto ou build local.
-3. Criar ou indicar keystore em cofre fora do Git quando o metodo de assinatura exigir.
-4. Gerar build Android assinado `preview` e publicar release com hash.
-5. Atualizar portal e timeline somente depois do artefato real aprovado.
-6. Preparar TestFlight/App Store para iOS.
-7. Conectar mock de API ao contrato OpenAPI.
-8. Iniciar Fase 1 com tokens visuais, telas-base e revisao Norman/Tarcila.
-9. Manter `origin` usando `github-sinalseguro-admin` para pushes do repo App.
+1. Rodar validacoes finais com Node 22.13+.
+2. Commitar e publicar os repos App, portais e empresa.
+3. Preparar TestFlight/App Store para iOS.
+4. Conectar mock de API ao contrato OpenAPI.
+5. Iniciar Fase 1 com tokens visuais, telas-base e revisao Norman/Tarcila.
+6. Manter `origin` usando `github-sinalseguro-admin` para pushes do repo App.

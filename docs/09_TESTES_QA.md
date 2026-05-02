@@ -50,6 +50,7 @@ Checklist minimo de Myers:
 - abrir app, onboarding, home, alerta de teste, contatos e configuracoes;
 - confirmar que alerta permanece simulado e nao transmite dados;
 - confirmar que camera e microfone nao sao solicitados;
+- confirmar que `SYSTEM_ALERT_WINDOW` e armazenamento legado nao aparecem no APK;
 - testar permissao de notificacao em Android 13+;
 - revisar edge-to-edge/safe area em Android moderno com target SDK 36;
 - registrar hash, dispositivo, versao e resultado sem dados pessoais.

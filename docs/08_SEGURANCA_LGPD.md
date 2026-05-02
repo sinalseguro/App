@@ -47,6 +47,7 @@ Checkpoint 2026-05-02:
 
 - primeiro APK deve ser app shell tecnico com alerta simulado;
 - permissoes de camera e microfone ficam removidas ate homologacao com midia;
+- permissoes transitivas de overlay (`SYSTEM_ALERT_WINDOW`) e armazenamento legado ficam bloqueadas no primeiro APK;
 - nenhum dado real de vitima, anjo, localizacao, alerta ou midia entra no release;
 - release notes devem dizer explicitamente que nao ha envio real nem substituicao de 190/180;
 - logs de alerta devem permanecer saneados e sem dado pessoal.

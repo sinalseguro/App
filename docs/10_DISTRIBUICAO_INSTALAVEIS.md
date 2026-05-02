@@ -10,7 +10,7 @@ Revisao juridica/LGPD: Doneda
 
 | Plataforma | URL publica | QR code | Status |
 |---|---|---|---|
-| Android | `https://www.sinalseguro.com.br/baixar/android` | `assets/qr/sinalseguro-android.svg` | Pendente de APK assinado |
+| Android | `https://www.sinalseguro.com.br/baixar/android` | `assets/qr/sinalseguro-android.svg` | APK publicado para homologacao controlada |
 | iOS | `https://www.sinalseguro.com.br/baixar/ios` | `assets/qr/sinalseguro-ios.svg` | Pendente de TestFlight/App Store |
 
 ## GitHub
@@ -23,6 +23,15 @@ Quando houver permissao de escrita e build assinado, os artefatos devem ser publ
 - `sinalseguro-android.aab`: pacote para Google Play, quando existir conta e trilha interna;
 - `checksums.txt`: hashes SHA-256 dos artefatos;
 - `release-notes.md`: notas de release sem dados sensiveis.
+
+Artefato Android interno 1:
+
+- tag publicada: `android-v0.1.0-internal.1`;
+- GitHub Release: `https://github.com/sinalseguro/App/releases/tag/android-v0.1.0-internal.1`;
+- arquivo: `sinalseguro-android.apk`;
+- SHA-256: `a920c116adff07f9121281c1cd3d086daeee969dd014741658d24dd128c280f5`;
+- notas versionadas: `distribution/android/release-notes-0.1.0-internal.1.md`;
+- checksum versionado: `distribution/android/checksums-0.1.0-internal.1.txt`.
 
 ## Perfis EAS
 
@@ -41,6 +50,8 @@ npm run build:android:production
 
 O documento operacional da Etapa 1 e `docs/13_ETAPA_1_ANDROID_INSTALAVEL.md`.
 
+No primeiro app shell, a Nova Arquitetura React Native fica ativa porque Expo Router/Reanimated exige esse modo no SDK atual. Para build local em Mac com pouco espaco, o APK pode ser limitado a `armeabi-v7a,arm64-v8a`; EAS remoto continua preferencial para builds completos.
+
 ## Portal
 
 Os portais publicam paginas estaveis:
@@ -54,9 +65,9 @@ Essas paginas devem continuar publicas mesmo antes dos instaladores finais para 
 ## Bloqueios atuais
 
 - O push para `sinalseguro/App` foi resolvido com a chave SSH dedicada e alias `github-sinalseguro-admin`.
-- EAS CLI nao esta instalado globalmente.
-- O Android SDK local nao possui plataformas instaladas em `~/Library/Android/sdk/platforms`, entao build local depende de `android-36`; EAS remoto continua sendo o caminho preferencial.
-- Build Android assinado depende de perfil/chave fora do Git.
+- O Android SDK local possui `android-36` e permitiu build assinado local.
+- A chave de assinatura Android fica fora do Git, em caminho local protegido, com senhas no Keychain.
+- GitHub Release Android interno 1 publicada e validada por download/checksum.
 - O primeiro APK deve ser tratado como app shell/alerta simulado, sem coleta real, midia, localizacao real enviada ou promessa publica.
 - Distribuicao iOS depende de conta Apple, certificados, provisioning profile e TestFlight/App Store.
 - Xcode esta disponivel, mas o app ainda nao possui projeto iOS prebuild nem credenciais Apple versionaveis.

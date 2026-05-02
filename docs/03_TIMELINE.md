@@ -56,7 +56,7 @@ Status: concluido.
 
 ## 2026-05-02 - Etapa 1 Android instalavel iniciada
 
-Status: plano e prontidao versionados; build assinado ainda pendente.
+Status: APK assinado publicado em GitHub Releases para homologacao controlada.
 
 Especialistas acionados:
 
@@ -73,13 +73,23 @@ Decisoes:
 - `npm run release:android:readiness` passa a ser o gate operacional antes de qualquer build Android.
 - `expo-build-properties` passa a concentrar `minSdkVersion 24`, `targetSdkVersion 36` e `deploymentTarget 15.1`.
 - Peers nativos exigidos pelo Expo Doctor foram adicionados: `expo-font`, `react-native-svg` e `react-native-worklets`.
+- Nova Arquitetura React Native permanece ativa por exigencia do Expo Router/Reanimated; o build local foi limitado a ABIs ARM para reduzir CMake/NDK.
+- Android SDK local foi preparado com `android-36`.
+- Keystore de upload foi criada fora do repositorio, com senhas no Keychain.
+- APK local assinado gerado em `distribution/android/out/sinalseguro-android.apk`, ignorado pelo Git.
+- SHA-256 do APK: `a920c116adff07f9121281c1cd3d086daeee969dd014741658d24dd128c280f5`.
+- Release notes e checksum saneados foram versionados em `distribution/android/`.
+- GitHub Release publicada: `https://github.com/sinalseguro/App/releases/tag/android-v0.1.0-internal.1`.
+- Portal e manifestos foram atualizados para apontar ao APK e checksum.
+- Deploy dos portais concluido em `cereus_web:/var/www/sinalseguro/releases/20260502T183150Z`.
 
 Bloqueios atuais:
 
 - ambiente local deve usar Node 22.13+;
-- Android SDK `android-36` e Java 17 sao obrigatorios apenas para build local;
-- EAS remoto autenticado e o caminho preferencial;
-- keystore/credencial Android precisa ficar fora do Git;
+- EAS remoto autenticado continua pendente;
+- build local deve priorizar ABIs ARM para celulares reais;
+- keystore/credencial Android precisa permanecer fora do Git;
+- producao publica segue bloqueada ate QA, privacidade, backend homologado e trilha de loja;
 - nenhum APK deve ser publicado sem SHA-256, release notes saneadas e revisoes Myers/Schneier/Doneda/Cristine.
 
 Validacoes executadas:

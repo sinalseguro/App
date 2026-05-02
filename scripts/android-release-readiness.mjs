@@ -32,6 +32,11 @@ function run(command, args, options = {}) {
   };
 }
 
+function isGitIgnored(candidate) {
+  const result = run("git", ["check-ignore", "-q", candidate]);
+  return result.status === 0;
+}
+
 const packageJson = JSON.parse(await readFile("package.json", "utf8"));
 const appJson = JSON.parse(await readFile("app.json", "utf8"));
 const easJson = JSON.parse(await readFile("eas.json", "utf8"));
@@ -119,12 +124,25 @@ addCheck(
 );
 
 const forbiddenFiles = [];
+const generatedNativeDirs = [];
 for (const candidate of ["android", "ios", ".env", ".env.local", "sinalseguro.keystore", "release.keystore"]) {
   if (await exists(candidate)) {
     const candidateStat = await stat(candidate);
-    forbiddenFiles.push(`${candidate}${candidateStat.isDirectory() ? "/" : ""}`);
+    const displayName = `${candidate}${candidateStat.isDirectory() ? "/" : ""}`;
+    if ((candidate === "android" || candidate === "ios") && candidateStat.isDirectory() && isGitIgnored(displayName)) {
+      generatedNativeDirs.push(displayName);
+    } else {
+      forbiddenFiles.push(displayName);
+    }
   }
 }
+addCheck(
+  "repo-generated-native",
+  generatedNativeDirs.length === 0 ? "ok" : "pending",
+  generatedNativeDirs.length
+    ? `Diretorios nativos gerados e ignorados pelo Git: ${generatedNativeDirs.join(", ")}`
+    : "Sem diretorios nativos gerados no workspace"
+);
 addCheck(
   "repo-sensitive-files",
   forbiddenFiles.length === 0 ? "ok" : "blocker",
