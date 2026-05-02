@@ -24,6 +24,23 @@ Quando houver permissao de escrita e build assinado, os artefatos devem ser publ
 - `checksums.txt`: hashes SHA-256 dos artefatos;
 - `release-notes.md`: notas de release sem dados sensiveis.
 
+## Perfis EAS
+
+| Perfil | Uso | Artefato |
+|---|---|---|
+| `preview` | homologacao interna Android | APK assinado por EAS ou credencial controlada |
+| `production` | trilha Google Play futura | AAB, somente quando loja/termos/QA estiverem prontos |
+
+Comandos:
+
+```bash
+npm run release:android:readiness
+npm run build:android:preview
+npm run build:android:production
+```
+
+O documento operacional da Etapa 1 e `docs/13_ETAPA_1_ANDROID_INSTALAVEL.md`.
+
 ## Portal
 
 Os portais publicam paginas estaveis:
@@ -38,8 +55,9 @@ Essas paginas devem continuar publicas mesmo antes dos instaladores finais para 
 
 - O push para `sinalseguro/App` foi resolvido com a chave SSH dedicada e alias `github-sinalseguro-admin`.
 - EAS CLI nao esta instalado globalmente.
-- O Android SDK local nao possui plataformas instaladas em `~/Library/Android/sdk/platforms`, entao nao ha build Android local neste checkpoint.
+- O Android SDK local nao possui plataformas instaladas em `~/Library/Android/sdk/platforms`, entao build local depende de `android-36`; EAS remoto continua sendo o caminho preferencial.
 - Build Android assinado depende de perfil/chave fora do Git.
+- O primeiro APK deve ser tratado como app shell/alerta simulado, sem coleta real, midia, localizacao real enviada ou promessa publica.
 - Distribuicao iOS depende de conta Apple, certificados, provisioning profile e TestFlight/App Store.
 - Xcode esta disponivel, mas o app ainda nao possui projeto iOS prebuild nem credenciais Apple versionaveis.
 

@@ -41,3 +41,15 @@ Responsavel: Myers
 - GitHub Release deve conter hash SHA-256.
 - Portal deve informar status quando instalador ainda estiver pendente.
 - Nenhum build de debug deve ser divulgado como producao.
+
+## Etapa 1 Android instalavel
+
+Checklist minimo de Myers:
+
+- instalar APK em Android 7+ e Android atual;
+- abrir app, onboarding, home, alerta de teste, contatos e configuracoes;
+- confirmar que alerta permanece simulado e nao transmite dados;
+- confirmar que camera e microfone nao sao solicitados;
+- testar permissao de notificacao em Android 13+;
+- revisar edge-to-edge/safe area em Android moderno com target SDK 36;
+- registrar hash, dispositivo, versao e resultado sem dados pessoais.

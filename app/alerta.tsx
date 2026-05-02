@@ -16,9 +16,7 @@ export default function AlertScreen() {
       <PanicButton
         label="Segurar para teste"
         holdMs={2200}
-        onTrigger={() => {
-          console.log("Alerta de teste registrado localmente.");
-        }}
+        onTrigger={() => {}}
       />
     </SafeScreen>
   );

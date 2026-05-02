@@ -24,7 +24,6 @@ export default function HomeScreen() {
         holdMs={1800}
         onTrigger={() => {
           // Checkpoint inicial: a acao real sera ligada a outbox/API nas fases seguintes.
-          console.log("Simulacao de alerta acionada sem envio real.");
         }}
       />
 

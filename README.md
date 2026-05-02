@@ -30,6 +30,7 @@ Use Node 22.13+ para evitar incompatibilidade com Metro/React Native.
 ```bash
 npm install
 npm run assets:qr
+npm run release:android:readiness
 npm run typecheck
 npm run lint
 npm test
@@ -37,6 +38,14 @@ npm run start
 ```
 
 Builds internos serao feitos por EAS ou build local controlado quando Kim liberar as credenciais e perfis fora do repositorio.
+
+Atalhos da Etapa 1 Android:
+
+```bash
+npm run doctor
+npm run build:android:preview
+npm run build:android:production
+```
 
 ## Instalacao e QR codes
 
@@ -49,7 +58,7 @@ Os QR codes apontam para paginas publicas estaveis. Elas serao atualizadas para 
 
 Status atual:
 
-- Android: APK assinado pendente.
+- Android: Etapa 1 em andamento para APK interno assinado, com hash e release notes.
 - iOS: TestFlight/App Store pendente.
 - GitHub Releases: canal tecnico previsto para artefatos Android.
 
@@ -77,4 +86,5 @@ Status atual:
 - `docs/10_DISTRIBUICAO_INSTALAVEIS.md`
 - `docs/11_LIFECYCLE.md`
 - `docs/12_TARCILA_LOGO_README.md`
+- `docs/13_ETAPA_1_ANDROID_INSTALAVEL.md`
 - `docs/api/openapi.yaml`

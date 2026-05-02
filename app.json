@@ -10,21 +10,15 @@
       "supportsTablet": false,
       "bundleIdentifier": "br.com.sinalseguro.app",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "O SinalSeguro usa sua localizacao apenas quando voce autoriza o envio em um alerta.",
-        "NSCameraUsageDescription": "A camera sera usada apenas em homologacao controlada e com consentimento especifico.",
-        "NSMicrophoneUsageDescription": "O microfone sera usado apenas em homologacao controlada e com consentimento especifico."
+        "NSLocationWhenInUseUsageDescription": "O SinalSeguro usa sua localizacao apenas quando voce autoriza o envio em um alerta."
       }
     },
     "android": {
       "package": "br.com.sinalseguro.app",
-      "minSdkVersion": 24,
-      "targetSdkVersion": 36,
       "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
-        "POST_NOTIFICATIONS",
-        "CAMERA",
-        "RECORD_AUDIO"
+        "POST_NOTIFICATIONS"
       ]
     },
     "plugins": [
@@ -32,7 +26,21 @@
       "expo-secure-store",
       "expo-notifications",
       "expo-location",
-      "expo-splash-screen"
+      "expo-splash-screen",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 36,
+            "minSdkVersion": 24,
+            "targetSdkVersion": 36
+          },
+          "ios": {
+            "deploymentTarget": "15.1"
+          }
+        }
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true

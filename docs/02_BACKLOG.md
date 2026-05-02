@@ -57,3 +57,6 @@ Supervisao: Ze
 | E04 | Relatorio de fase | MVP | Cristine | Timeline e memoria atualizadas. |
 | E05 | Distribuicao Android/iOS | MVP | Kim/Cristine | QR codes, paginas estaveis, release assinado e hashes. |
 | E06 | Logo README e assets publicos | MVP | Tarcila | Logo aprovada aplicada no README e portais. |
+| E07 | Etapa 1 Android instalavel | MVP | Cristine/Kim/Ada/Margaret | `docs/13_ETAPA_1_ANDROID_INSTALAVEL.md`, EAS preview APK e readiness versionados. |
+| E08 | Higienizacao do primeiro APK | MVP/Juridico | Schneier/Doneda/Myers | Sem camera/microfone, sem logs de alerta, release notes de alerta simulado. |
+| E09 | Publicacao do APK interno | MVP | Kim/Cristine | GitHub Release com `sinalseguro-android.apk`, `checksums.txt` e link validado no portal. |

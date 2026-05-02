@@ -35,6 +35,17 @@ Supervisao: Ze
 | `piloto-institucional` | Operacao com termo formal | Restrito ao convenio |
 | `publico` | Produto revisado para loja | Somente apos aprovacoes |
 
+## Gate Android Etapa 1
+
+Antes de qualquer APK Android:
+
+1. ler `docs/13_ETAPA_1_ANDROID_INSTALAVEL.md`;
+2. rodar `npm run release:android:readiness`;
+3. resolver bloqueios de ambiente, EAS, SDK e assinatura;
+4. manter keystore, tokens e senhas fora do Git;
+5. publicar somente APK assinado com `checksums.txt` e release notes saneadas;
+6. atualizar timeline, memoria Cristine e portal depois de validar o download.
+
 ## Memoria obrigatoria
 
 Cristine atualiza:
