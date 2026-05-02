@@ -1,0 +1,12 @@
+import { colors, motion, radius, shadow, spacing, typography } from "./tokens";
+
+export const theme = {
+  colors,
+  motion,
+  radius,
+  shadow,
+  spacing,
+  typography
+};
+
+export type AppTheme = typeof theme;

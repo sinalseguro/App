@@ -1,0 +1,396 @@
+openapi: 3.1.0
+info:
+  title: SinalSeguro Mobile API - Etapa 06
+  version: 0.1.0
+  description: >
+    Contrato inicial para o MVP mobile controlado. Nao autoriza uso em producao
+    com dados reais sem matriz LGPD, RIPD/DPIA, termos, retencao e revisao de
+    seguranca.
+servers:
+  - url: https://api.sinalseguro.com.br/api
+    description: Producao futura via dominio oficial
+  - url: https://homolog.api.sinalseguro.com.br/api
+    description: Homologacao controlada
+security:
+  - bearerAuth: []
+tags:
+  - name: auth
+  - name: devices
+  - name: trusted_contacts
+  - name: invitations
+  - name: consents
+  - name: alerts
+  - name: media_assets
+  - name: delivery_attempts
+  - name: audit_events
+paths:
+  /health:
+    get:
+      tags: [audit_events]
+      security: []
+      summary: Health check publico
+      responses:
+        "200":
+          description: API ativa
+  /auth/login:
+    post:
+      tags: [auth]
+      security: []
+      summary: Login proprio
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Tokens emitidos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthToken"
+  /auth/oidc:
+    post:
+      tags: [auth]
+      security: []
+      summary: Login Google/Apple via OIDC
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OidcLoginRequest"
+      responses:
+        "200":
+          description: Tokens emitidos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthToken"
+  /devices:
+    post:
+      tags: [devices]
+      summary: Registrar dispositivo e push token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeviceRegistration"
+      responses:
+        "201":
+          description: Dispositivo registrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+  /trusted-contacts:
+    get:
+      tags: [trusted_contacts]
+      summary: Listar anjos autorizados
+      responses:
+        "200":
+          description: Lista de contatos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TrustedContact"
+  /invitations:
+    post:
+      tags: [invitations]
+      summary: Criar convite unico para anjo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateInvitation"
+      responses:
+        "201":
+          description: Convite criado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Invitation"
+  /invitations/{token}/accept:
+    post:
+      tags: [invitations]
+      summary: Aceitar convite de anjo
+      parameters:
+        - $ref: "#/components/parameters/InvitationToken"
+      responses:
+        "200":
+          description: Convite aceito e vinculo criado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TrustedContact"
+  /consents:
+    post:
+      tags: [consents]
+      summary: Registrar aceite de termo/escopo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ConsentRecord"
+      responses:
+        "201":
+          description: Consentimento registrado
+  /alerts:
+    post:
+      tags: [alerts]
+      summary: Criar alerta idempotente
+      parameters:
+        - $ref: "#/components/parameters/IdempotencyKey"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAlert"
+      responses:
+        "201":
+          description: Alerta criado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Alert"
+        "200":
+          description: Alerta idempotente ja existente
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Alert"
+  /alerts/{alertId}/ack:
+    post:
+      tags: [delivery_attempts]
+      summary: Confirmar recebimento por anjo autorizado
+      parameters:
+        - $ref: "#/components/parameters/AlertId"
+      responses:
+        "200":
+          description: Confirmacao registrada
+  /media-assets:
+    post:
+      tags: [media_assets]
+      summary: Criar ativo de midia homologada
+      description: Bloqueado para producao publica ate RIPD/DPIA e revisao juridica.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMediaAsset"
+      responses:
+        "201":
+          description: Ativo criado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MediaAsset"
+  /media-assets/{mediaAssetId}/chunks:
+    post:
+      tags: [media_assets]
+      summary: Enviar chunk de midia homologada
+      parameters:
+        - $ref: "#/components/parameters/MediaAssetId"
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      responses:
+        "202":
+          description: Chunk aceito
+  /audit-events:
+    get:
+      tags: [audit_events]
+      summary: Consultar auditoria autorizada
+      responses:
+        "200":
+          description: Eventos de auditoria saneados
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema:
+        type: string
+        minLength: 16
+        maxLength: 128
+    InvitationToken:
+      name: token
+      in: path
+      required: true
+      schema:
+        type: string
+    AlertId:
+      name: alertId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    MediaAssetId:
+      name: mediaAssetId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    LoginRequest:
+      type: object
+      required: [identifier, password]
+      properties:
+        identifier:
+          type: string
+        password:
+          type: string
+          format: password
+    OidcLoginRequest:
+      type: object
+      required: [provider, idToken]
+      properties:
+        provider:
+          type: string
+          enum: [google, apple]
+        idToken:
+          type: string
+    AuthToken:
+      type: object
+      required: [accessToken, refreshToken, expiresIn]
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        expiresIn:
+          type: integer
+    DeviceRegistration:
+      type: object
+      required: [platform, pushToken]
+      properties:
+        platform:
+          type: string
+          enum: [android, ios]
+        pushToken:
+          type: string
+        appVersion:
+          type: string
+        deviceLabel:
+          type: string
+    Device:
+      type: object
+      required: [id, platform, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        platform:
+          type: string
+        status:
+          type: string
+    CreateInvitation:
+      type: object
+      required: [displayLabel]
+      properties:
+        displayLabel:
+          type: string
+          description: Nome local/apelido para a pessoa convidada.
+    Invitation:
+      type: object
+      required: [token, inviteUrl, expiresAt]
+      properties:
+        token:
+          type: string
+        inviteUrl:
+          type: string
+          format: uri
+        expiresAt:
+          type: string
+          format: date-time
+    TrustedContact:
+      type: object
+      required: [id, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        displayLabel:
+          type: string
+        status:
+          type: string
+          enum: [invited, accepted, revoked]
+    ConsentRecord:
+      type: object
+      required: [scope, version, accepted]
+      properties:
+        scope:
+          type: string
+          enum: [terms, privacy, location, alerts, media_homologation]
+        version:
+          type: string
+        accepted:
+          type: boolean
+    CreateAlert:
+      type: object
+      required: [clientAlertId, kind]
+      properties:
+        clientAlertId:
+          type: string
+          format: uuid
+        kind:
+          type: string
+          enum: [test, real]
+        location:
+          $ref: "#/components/schemas/LocationPoint"
+        triggeredAt:
+          type: string
+          format: date-time
+    LocationPoint:
+      type: object
+      required: [latitude, longitude, accuracyMeters]
+      properties:
+        latitude:
+          type: number
+        longitude:
+          type: number
+        accuracyMeters:
+          type: number
+    Alert:
+      type: object
+      required: [id, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [queued, delivered, acknowledged, cancelled]
+    CreateMediaAsset:
+      type: object
+      required: [alertId, sha256, byteSize, mimeType]
+      properties:
+        alertId:
+          type: string
+          format: uuid
+        sha256:
+          type: string
+        byteSize:
+          type: integer
+        mimeType:
+          type: string
