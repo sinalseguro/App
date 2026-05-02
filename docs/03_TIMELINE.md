@@ -102,6 +102,41 @@ Validacoes executadas:
 - `npm run assets:qr`: aprovado;
 - `npm audit --omit=dev --audit-level=high`: sem vulnerabilidades altas/criticas; permanecem moderadas transitivas da cadeia Expo.
 
+## 2026-05-02 - Validacao visual Tarcila e Android interno 2
+
+Status: APK Android interno 2 preparado e validado em aparelho fisico via ADB Wi-Fi.
+
+Especialistas acionados:
+
+- Tarcila: validacao do uso da identidade visual, logo, icone, splash e nome oficial do app.
+- Norman/Ada: ajustes de tela inicial, lockup e consistencia visual Android/iOS.
+- Myers/Schneier: QA de instalacao, permissao e ausencia de permissao sensivel prematura.
+
+Decisoes:
+
+- Nome oficial permanece `SinalSeguro` em app, README, portal e label Android.
+- Icone do app usa o simbolo aprovado em fundo institucional `#1E1B2E`.
+- Splash usa logo SinalSeguro e fundo institucional, sem marcas de terceiros.
+- Tela inicial usa `BrandLockup` com simbolo, nome e assinatura `Rede de Protecao e Amparo`.
+- Botao de panico simulado passa para `colors.panic = #C2185B`.
+- Sombra do design system passa a usar `shadowOpacity`, evitando reduzir a opacidade do botao.
+
+Evidencias:
+
+- APK local: `distribution/android/out/sinalseguro-android.apk` (ignorado pelo Git).
+- SHA-256: `dbad294407038cac954fd3154bac6c4ea9dbb30b4e79164f58807e83f0d358cb`.
+- Versao instalada no Android fisico: `versionCode=2`, `versionName=0.1.0`.
+- Label Android validado: `SinalSeguro`.
+- Assinatura APK Scheme v2: valida.
+- Permissoes validadas sem `CAMERA`, `RECORD_AUDIO`, `SYSTEM_ALERT_WINDOW`, `READ_EXTERNAL_STORAGE` ou `WRITE_EXTERNAL_STORAGE`.
+- Captura local saneada: `/tmp/sinalseguro-android-qa/home-v2.png`.
+
+Pendencias:
+
+- Publicar `android-v0.1.0-internal.2` em GitHub Releases.
+- Atualizar portal e manifesto publico para o APK interno 2.
+- Remover ativos visuais duplicados do portal somente com confirmacao explicita de exclusao.
+
 ## Modelo de registro
 
 | Data | Evento | Responsavel | Impacto | Proximo passo |

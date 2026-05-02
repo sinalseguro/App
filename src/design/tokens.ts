@@ -6,6 +6,7 @@ export const colors = {
   primary: "#6A1B9A",
   accent: "#EC407A",
   accentSoft: "#FF80AB",
+  panic: "#C2185B",
   secure: "#146C43",
   warning: "#A65F00",
   danger: "#B42318",
@@ -40,10 +41,10 @@ export const typography = {
 };
 
 export const shadow = {
-  color: "#1E1B2E",
-  opacity: 0.12,
-  radius: 12,
-  offset: { width: 0, height: 6 },
+  shadowColor: "#1E1B2E",
+  shadowOpacity: 0.12,
+  shadowRadius: 12,
+  shadowOffset: { width: 0, height: 6 },
   elevation: 3
 };
 

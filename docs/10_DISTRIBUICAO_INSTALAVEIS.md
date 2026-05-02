@@ -24,14 +24,19 @@ Quando houver permissao de escrita e build assinado, os artefatos devem ser publ
 - `checksums.txt`: hashes SHA-256 dos artefatos;
 - `release-notes.md`: notas de release sem dados sensiveis.
 
-Artefato Android interno 1:
+Artefato Android atual:
 
-- tag publicada: `android-v0.1.0-internal.1`;
-- GitHub Release: `https://github.com/sinalseguro/App/releases/tag/android-v0.1.0-internal.1`;
+- tag publicada: `android-v0.1.0-internal.2`;
+- GitHub Release: `https://github.com/sinalseguro/App/releases/tag/android-v0.1.0-internal.2`;
 - arquivo: `sinalseguro-android.apk`;
-- SHA-256: `a920c116adff07f9121281c1cd3d086daeee969dd014741658d24dd128c280f5`;
-- notas versionadas: `distribution/android/release-notes-0.1.0-internal.1.md`;
-- checksum versionado: `distribution/android/checksums-0.1.0-internal.1.txt`.
+- SHA-256: `dbad294407038cac954fd3154bac6c4ea9dbb30b4e79164f58807e83f0d358cb`;
+- notas versionadas: `distribution/android/release-notes-0.1.0-internal.2.md`;
+- checksum versionado: `distribution/android/checksums-0.1.0-internal.2.txt`.
+
+Historico:
+
+- `android-v0.1.0-internal.1`: primeiro APK assinado do app shell, SHA-256 `a920c116adff07f9121281c1cd3d086daeee969dd014741658d24dd128c280f5`.
+- `android-v0.1.0-internal.2`: validacao visual Tarcila com icone, splash, lockup e contraste do botao de panico simulado.
 
 ## Perfis EAS
 
@@ -67,7 +72,7 @@ Essas paginas devem continuar publicas mesmo antes dos instaladores finais para 
 - O push para `sinalseguro/App` foi resolvido com a chave SSH dedicada e alias `github-sinalseguro-admin`.
 - O Android SDK local possui `android-36` e permitiu build assinado local.
 - A chave de assinatura Android fica fora do Git, em caminho local protegido, com senhas no Keychain.
-- GitHub Release Android interno 1 publicada e validada por download/checksum.
+- GitHub Release Android interno 2 preparada para publicacao e validada localmente por instalacao/checksum.
 - O primeiro APK deve ser tratado como app shell/alerta simulado, sem coleta real, midia, localizacao real enviada ou promessa publica.
 - Distribuicao iOS depende de conta Apple, certificados, provisioning profile e TestFlight/App Store.
 - Xcode esta disponivel, mas o app ainda nao possui projeto iOS prebuild nem credenciais Apple versionaveis.

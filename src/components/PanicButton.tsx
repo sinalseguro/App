@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: "center",
-    backgroundColor: theme.colors.accent,
+    backgroundColor: theme.colors.panic,
     borderRadius: theme.radius.lg,
     minHeight: 96,
     justifyContent: "center",

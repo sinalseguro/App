@@ -10,9 +10,9 @@
       "qrFile": "sinalseguro-android.svg",
       "publicUrl": "https://www.sinalseguro.com.br/baixar/android",
       "releaseAsset": "https://github.com/sinalseguro/App/releases/latest/download/sinalseguro-android.apk",
-      "releaseUrl": "https://github.com/sinalseguro/App/releases/tag/android-v0.1.0-internal.1",
+      "releaseUrl": "https://github.com/sinalseguro/App/releases/tag/android-v0.1.0-internal.2",
       "checksumAsset": "https://github.com/sinalseguro/App/releases/latest/download/checksums.txt",
-      "sha256": "a920c116adff07f9121281c1cd3d086daeee969dd014741658d24dd128c280f5",
+      "sha256": "dbad294407038cac954fd3154bac6c4ea9dbb30b4e79164f58807e83f0d358cb",
       "status": "disponivel_homologacao_controlada"
     },
     {

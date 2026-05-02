@@ -82,9 +82,10 @@ Estado de execucao em 2026-05-02:
 - keystore de upload criada fora do repositorio, com senhas no Keychain;
 - APK release assinado gerado localmente;
 - APK final local: `distribution/android/out/sinalseguro-android.apk` (ignorado pelo Git);
-- SHA-256: `a920c116adff07f9121281c1cd3d086daeee969dd014741658d24dd128c280f5`;
+- SHA-256 atual: `dbad294407038cac954fd3154bac6c4ea9dbb30b4e79164f58807e83f0d358cb`;
 - release notes e checksum saneados versionados em `distribution/android/`;
-- GitHub Release publicada em `https://github.com/sinalseguro/App/releases/tag/android-v0.1.0-internal.1`.
+- release interna 1 publicada em `https://github.com/sinalseguro/App/releases/tag/android-v0.1.0-internal.1`;
+- release interna 2 preparada para publicacao em `https://github.com/sinalseguro/App/releases/tag/android-v0.1.0-internal.2`, incorporando parecer visual de Tarcila.
 
 ### 2. Assinatura
 
@@ -125,7 +126,7 @@ npm run build:android:preview
 
 - Renomear o APK final aprovado para `sinalseguro-android.apk`.
 - Gerar `checksums.txt` com SHA-256.
-- Criar GitHub Release `android-v0.1.0-internal.1`.
+- Criar GitHub Release `android-v0.1.0-internal.2`.
 - Anexar APK, checksums e release notes.
 - Validar download pelo portal e QR.
 - Se o repositorio GitHub for publico, tratar o link como publico; nao chamar de restrito sem controle real de acesso.
@@ -150,6 +151,7 @@ npm run build:android:preview
 - Myers validou instalacao e abertura.
 - Schneier validou ausencia de segredos no Git e nos artefatos publicos.
 - Doneda validou que o release e interno/homologacao e sem dados reais.
+- Tarcila validou nome, logo, icone, splash e contraste do botao.
 - Cristine atualizou timeline e memoria.
 
 ## Bloqueios atuais conhecidos
@@ -165,6 +167,7 @@ npm run build:android:preview
 - Kim: GitHub Releases e o canal operacional para o APK interno; publicar somente com hash e release notes saneadas.
 - Ada/Margaret: Expo managed continua adequado; `preview` precisa gerar APK e `production` deve ficar reservado a AAB.
 - Schneier/Doneda/Myers: liberar apenas shell tecnico com alerta simulado; bloquear midia, dado real, camera, microfone, overlay, armazenamento legado e qualquer promessa de emergencia oficial.
+- Tarcila: uso do nome `SinalSeguro`, simbolo aprovado, icone do app, splash e botao de panico com contraste corrigido ficam aprovados para homologacao interna 2.
 
 ## Continuidade
 

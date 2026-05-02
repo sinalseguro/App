@@ -1,19 +1,22 @@
 import { PropsWithChildren } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { BrandLockup } from "@/components/BrandLockup";
 import { theme } from "@/design/theme";
 
 type SafeScreenProps = PropsWithChildren<{
   title: string;
   subtitle?: string;
   footer?: string;
+  showBrand?: boolean;
 }>;
 
-export function SafeScreen({ title, subtitle, footer, children }: SafeScreenProps) {
+export function SafeScreen({ title, subtitle, footer, showBrand = false, children }: SafeScreenProps) {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
+          {showBrand ? <BrandLockup /> : null}
           <Text style={styles.title}>{title}</Text>
           {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
         </View>
@@ -34,7 +37,7 @@ const styles = StyleSheet.create({
     gap: theme.spacing.xl
   },
   header: {
-    gap: theme.spacing.sm
+    gap: theme.spacing.md
   },
   title: {
     color: theme.colors.text,

@@ -6,6 +6,12 @@
     "version": "0.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
+    "icon": "./assets/brand/sinalseguro-icon.png",
+    "splash": {
+      "image": "./assets/brand/sinalseguro-logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1E1B2E"
+    },
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": false,
@@ -16,6 +22,11 @@
     },
     "android": {
       "package": "br.com.sinalseguro.app",
+      "versionCode": 2,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/brand/sinalseguro-icon.png",
+        "backgroundColor": "#1E1B2E"
+      },
       "permissions": [
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",

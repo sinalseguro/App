@@ -12,6 +12,7 @@ export default function HomeScreen() {
       title="SinalSeguro"
       subtitle="Rede de apoio discreta, consentida e em validacao controlada."
       footer="Em risco imediato, use os canais oficiais como 190 e 180."
+      showBrand
     >
       <StatusBanner
         tone="secure"

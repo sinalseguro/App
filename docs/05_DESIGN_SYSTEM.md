@@ -31,6 +31,7 @@ Garantir uma experiencia visual e interativa unica em Android e iOS, respeitando
 - Nao depender apenas de cor.
 - Garantir alvos de toque amplos.
 - Usar contraste forte.
+- Botao de panico simulado usa `colors.panic = #C2185B` para garantir contraste com texto branco em acao critica.
 - Evitar linguagem visual alarmista.
 - Manter a marca aprovada por Tarcila.
 

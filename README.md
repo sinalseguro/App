@@ -4,7 +4,7 @@
 
 App mobile Android e iOS do SinalSeguro.
 
-Status: checkpoint inicial com app shell, documentacao, lifecycle e distribuicao preparada.
+Status: APK Android interno 2 publicado para homologacao controlada, com identidade visual validada por Tarcila.
 Coordenacao geral: Ze.  
 Gerente AI mobile: Cristine.
 
@@ -58,9 +58,15 @@ Os QR codes apontam para paginas publicas estaveis. Elas serao atualizadas para 
 
 Status atual:
 
-- Android: Etapa 1 em andamento para APK interno assinado, com hash e release notes.
+- Android: APK interno 2 assinado, validado em aparelho fisico via ADB Wi-Fi e publicado em GitHub Releases.
 - iOS: TestFlight/App Store pendente.
-- GitHub Releases: canal tecnico previsto para artefatos Android.
+- GitHub Releases: canal tecnico ativo para artefatos Android.
+
+Release Android atual:
+
+- Tag: `android-v0.1.0-internal.2`.
+- APK: `https://github.com/sinalseguro/App/releases/latest/download/sinalseguro-android.apk`.
+- SHA-256: `dbad294407038cac954fd3154bac6c4ea9dbb30b4e79164f58807e83f0d358cb`.
 
 ## Limites
 
