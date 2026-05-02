@@ -68,6 +68,13 @@ Release Android atual:
 - APK: `https://github.com/sinalseguro/App/releases/latest/download/sinalseguro-android.apk`.
 - SHA-256: `dbad294407038cac954fd3154bac6c4ea9dbb30b4e79164f58807e83f0d358cb`.
 
+Checkpoint tecnico atual:
+
+- Convite local com codigo opaco, expiracao e compartilhamento pelo sistema.
+- Pacote local de emergencia com horario, consentimento, georreferencia pontual autorizada, hash e plano de entrega API/P2P.
+- Area de arquivos locais para acessar os pacotes gravados no dispositivo e verificar o que sera enviado futuramente.
+- Midia real, camera, microfone e transmissao continuam bloqueados fora da homologacao.
+
 ## Limites
 
 - Nao versionar `.env`, tokens, chaves, credenciais, dados reais ou relatos identificaveis.
@@ -93,4 +100,5 @@ Release Android atual:
 - `docs/11_LIFECYCLE.md`
 - `docs/12_TARCILA_LOGO_README.md`
 - `docs/13_ETAPA_1_ANDROID_INSTALAVEL.md`
+- `docs/14_CONVITES_E_PACOTE_EMERGENCIA.md`
 - `docs/api/openapi.yaml`

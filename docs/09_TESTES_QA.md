@@ -10,7 +10,8 @@ Responsavel: Myers
 | Login | proprio, Google, Apple, sessao expirada |
 | Convite | criado, aceito, expirado, usado duas vezes |
 | Anjos | listar, adicionar, revogar |
-| Alerta | teste, real, cancelar, falso positivo |
+| Alerta | teste, real, cancelar, falso positivo, pacote local, hash |
+| Arquivos locais | listar pacotes, atualizar, verificar hash, status de envio |
 | Offline | sem rede, API fora, retry, deduplicacao |
 | Localizacao | permitida, negada, revogada, indisponivel |
 | Push | discreto, lock screen, deep link autenticado |
@@ -54,3 +55,18 @@ Checklist minimo de Myers:
 - testar permissao de notificacao em Android 13+;
 - revisar edge-to-edge/safe area em Android moderno com target SDK 36;
 - registrar hash, dispositivo, versao e resultado sem dados pessoais.
+
+## Convites e pacote local
+
+Checklist minimo de Myers:
+
+- gerar convite local e confirmar link publico com parametro `convite`;
+- confirmar que deep link futuro nao autentica outra pessoa;
+- compartilhar convite via share sheet sem dado sensivel adicional;
+- acionar alerta de teste e confirmar pacote local em outbox;
+- abrir area `Arquivos locais` e confirmar que os pacotes gravados aparecem;
+- confirmar que a tela exibe horario, hash, status de georreferencia, midia bloqueada e plano API/P2P;
+- confirmar que coordenadas completas nao sao exibidas sem autenticacao forte;
+- validar pacote com localizacao permitida, negada e servico indisponivel;
+- confirmar que API e P2P ficam como pendentes, sem transmissao real;
+- confirmar que midia real permanece bloqueada e sem permissao de camera/microfone.

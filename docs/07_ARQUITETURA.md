@@ -23,6 +23,9 @@ O app e API-first. O alerta usa API, outbox local e retries. P2P fica como pesqu
 - Zod para validacao.
 - Storage seguro para tokens/chaves.
 - Outbox criptografada para alertas pendentes.
+- Convites e pacotes locais usam `expo-secure-store` para conteudo sensivel pequeno, com indice sem dado sensivel em `AsyncStorage`.
+- Pacote de emergencia registra hash SHA-256, localizacao pontual autorizada e plano de entrega API/P2P futuro.
+- Area `Arquivos locais` lista pacotes do cofre local e mostra metadados de envio futuro sem expor coordenadas completas.
 
 ## API
 
@@ -47,3 +50,4 @@ Dominios:
 - Idempotencia em alertas.
 - Convite opaco e de uso unico.
 - Midia apenas homologacao.
+- Midia real permanece bloqueada no build publico; o pacote atual grava manifesto de midia bloqueada e nao captura camera/microfone.

@@ -6,5 +6,7 @@ export const acceptanceChecklist = [
   "Permissoes sao incrementais e revogaveis.",
   "Push discreto nao expoe dado sensivel.",
   "Offline nao perde alerta sem registro local.",
+  "Pacote local registra hash, horario e status de localizacao.",
+  "Convite local usa codigo opaco, expiracao e aceite por conta propria.",
   "Midia permanece bloqueada fora da homologacao."
 ];

@@ -20,7 +20,9 @@ export default function RootLayout() {
         <Stack.Screen name="index" options={{ title: "SinalSeguro" }} />
         <Stack.Screen name="onboarding" options={{ title: "Boas-vindas" }} />
         <Stack.Screen name="alerta" options={{ title: "Alerta" }} />
+        <Stack.Screen name="arquivos" options={{ title: "Arquivos locais" }} />
         <Stack.Screen name="contatos" options={{ title: "Anjos" }} />
+        <Stack.Screen name="convite" options={{ title: "Convite" }} />
         <Stack.Screen name="configuracoes" options={{ title: "Configuracoes" }} />
       </Stack>
     </QueryClientProvider>

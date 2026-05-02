@@ -141,6 +141,47 @@ Pendencias:
 
 - Remover ativos visuais duplicados do portal somente com confirmacao explicita de exclusao.
 
+## 2026-05-02 - Convites e pacote local de emergencia
+
+Status: base tecnica implementada para convites, georreferencia pontual e pacote local pronto para API/P2P futuro.
+
+Especialistas acionados:
+
+- Hedy/Ada: funcoes mobile de convite, pacote local, outbox e preparo de entrega.
+- Ritchie: alinhamento com contratos `invitations` e `alerts` do OpenAPI.
+- Schneier/Doneda: bloqueios de midia real, cofre local, consentimento e ausencia de transmissao.
+- Myers: criterios de teste para convite, outbox, localizacao e permissao negada.
+
+Decisoes:
+
+- Convite local gera codigo opaco, expiravel em 7 dias e de uso unico.
+- Link publico de convite usa `https://www.sinalseguro.com.br/baixar?convite=<codigo>` para manter QR/link estavel.
+- Deep link futuro usa `sinalseguro://convite?convite=<codigo>`.
+- Aceite real exige login proprio, consentimento e validacao de API; o app nao permite entrar como outra pessoa.
+- Botao de teste grava pacote local com horario, consentimento, localizacao pontual autorizada, manifesto de midia bloqueada e plano de entrega.
+- Area `Arquivos locais` permite visualizar pacotes gravados, hash, status de georreferencia, midia bloqueada e plano de envio futuro.
+- Pacote local fica em cofre do sistema via `expo-secure-store`, com indice sem dado sensivel em `AsyncStorage`.
+- Hash SHA-256 registra integridade do pacote.
+- API e P2P ficam como adaptadores pendentes; nenhuma transmissao real ocorre neste checkpoint.
+- Camera, microfone e midia real continuam bloqueados no build publico.
+
+Arquivos principais:
+
+- `src/features/invitations/invitationService.ts`;
+- `src/features/emergency/emergencyRecorder.ts`;
+- `src/features/emergency/emergencyOutbox.ts`;
+- `src/features/emergency/locationCapture.ts`;
+- `src/features/emergency/packagePresentation.ts`;
+- `src/components/EmergencyPackageCard.tsx`;
+- `app/arquivos.tsx`;
+- `src/storage/secureJsonStore.ts`;
+- `docs/14_CONVITES_E_PACOTE_EMERGENCIA.md`.
+
+Proximo passo:
+
+- Validar no Android fisico geracao de convite, permissao de localizacao permitida/negada e persistencia da outbox apos reiniciar o app.
+- Conectar envio real somente quando backend, autorizacao, termos, retencao e revisao de seguranca estiverem prontos.
+
 ## Modelo de registro
 
 | Data | Evento | Responsavel | Impacto | Proximo passo |

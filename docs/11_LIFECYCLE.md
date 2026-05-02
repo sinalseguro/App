@@ -46,6 +46,17 @@ Antes de qualquer APK Android:
 5. publicar somente APK assinado com `checksums.txt` e release notes saneadas;
 6. atualizar timeline, memoria Cristine e portal depois de validar o download.
 
+## Gate Convites E Pacote Local
+
+Antes de evoluir backend, P2P ou midia:
+
+1. confirmar que convites continuam opacos, expiraveis e sem autenticar terceiros;
+2. confirmar que o pacote local grava horario, consentimento, localizacao pontual e hash;
+3. manter midia real bloqueada no build publico;
+4. validar que API e P2P aparecem apenas como plano de entrega pendente;
+5. rodar `npm run typecheck`, `npm run lint` e `npm test`;
+6. atualizar `docs/14_CONVITES_E_PACOTE_EMERGENCIA.md`, timeline e memoria.
+
 ## Memoria obrigatoria
 
 Cristine atualiza:

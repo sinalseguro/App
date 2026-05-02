@@ -9,8 +9,15 @@ const requiredFiles = [
   "docs/api/openapi.yaml",
   "app/_layout.tsx",
   "app/index.tsx",
+  "app/arquivos.tsx",
+  "app/convite.tsx",
   "src/design/tokens.ts",
-  "src/components/PanicButton.tsx"
+  "src/components/PanicButton.tsx",
+  "src/features/invitations/invitationService.ts",
+  "src/features/emergency/packagePresentation.ts",
+  "src/features/emergency/emergencyRecorder.ts",
+  "src/features/emergency/emergencyOutbox.ts",
+  "src/storage/secureJsonStore.ts"
 ];
 
 for (const file of requiredFiles) {

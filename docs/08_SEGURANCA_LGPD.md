@@ -20,6 +20,8 @@ Responsaveis: Schneier e Doneda
 - Retencao definida.
 - Criptografia em transito e repouso.
 - Outbox criptografada.
+- Cofre local do sistema para convites e pacotes pequenos de emergencia.
+- Hash SHA-256 para integridade de pacote local.
 - Logs saneados.
 - RBAC e MFA no backend/admin.
 - Plano de incidente.
@@ -59,3 +61,14 @@ Checkpoint 2026-05-02:
 - `npm audit --omit=dev --audit-level=high` nao encontrou vulnerabilidades altas ou criticas.
 - Vulnerabilidades moderadas transitivas permanecem na cadeia Expo; `npm audit fix --force` indicou mudanca quebravel de SDK, portanto a correcao deve ser avaliada por Ada, Kim e Schneier antes de alterar a stack.
 - Em 2026-05-02, o mesmo resultado permaneceu apos inclusao de peers Expo e `expo-build-properties`.
+
+## Convites e pacote de emergencia local
+
+Checkpoint 2026-05-02:
+
+- convites locais geram codigo opaco, expiravel e de uso unico;
+- aceite real exige conta propria, consentimento e validacao pela API;
+- alerta de teste grava pacote local com horario, consentimento, localizacao pontual autorizada, manifesto de midia bloqueada e plano de entrega;
+- pacote local fica no cofre do sistema enquanto backend/P2P nao estiverem prontos;
+- o app nao grava midia real, nao transmite dados e nao aciona terceiros neste checkpoint;
+- localizacao negada ou indisponivel nao impede a gravacao do pacote, mas fica registrada como status explicito.

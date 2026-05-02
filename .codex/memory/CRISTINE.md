@@ -53,12 +53,17 @@ Estado em 2026-05-02:
 - APK interno 2 foi instalado e aberto em Android fisico via ADB Wi-Fi, com `versionCode=2`;
 - portal e manifestos apontam ao APK/checksum interno 2 para homologacao controlada;
 - deploy dos portais concluido em `cereus_web:/var/www/sinalseguro/releases/20260502T191004Z`;
+- funcoes de convite local foram implementadas com codigo opaco, expiracao, share sheet e deep link futuro;
+- pacote local de emergencia foi implementado com horario, consentimento, localizacao pontual autorizada, manifesto de midia bloqueada, hash SHA-256 e plano de entrega API/P2P pendente;
+- area `Arquivos locais` foi criada para listar pacotes gravados, hash, status de georreferencia, midia bloqueada e plano de envio futuro;
+- convites e pacotes pequenos usam cofre local do sistema via `expo-secure-store`, com indice sem dado sensivel em `AsyncStorage`;
 - alerta permanece simulado ate outbox criptografada, API e revisoes de seguranca/QA.
 
 Proximas acoes:
 
-1. Commitar e publicar os repos App, portais e empresa.
+1. Validar no Android fisico geracao de convite, permissao de localizacao, tela de arquivos locais e persistencia da outbox apos reiniciar o app.
 2. Preparar TestFlight/App Store para iOS.
 3. Conectar mock de API ao contrato OpenAPI.
-4. Evoluir Fase 1 com componentes compartilhados revisados por Norman/Tarcila.
-5. Manter `origin` usando `github-sinalseguro-admin` para pushes do repo App.
+4. Implementar adaptador de envio real apenas depois de auth, consentimento, retencao e revisao Schneier/Doneda.
+5. Evoluir Fase 1 com componentes compartilhados revisados por Norman/Tarcila.
+6. Manter `origin` usando `github-sinalseguro-admin` para pushes do repo App.

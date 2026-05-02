@@ -35,15 +35,16 @@ Supervisao: Ze
 |---|---|---|---|---|
 | C01 | PanicButton | MVP | Hedy | Pressao longa/sequencia com cancelamento. |
 | C02 | Alerta teste/real | MVP | Hedy/Myers | Estados separados e rastreaveis. |
-| C03 | Outbox criptografada | MVP | Hedy/Schneier | Alerta offline salvo e reenviado. |
-| C04 | Localizacao pontual | MVP/Juridico | Ada/Doneda | Permissao explicada e revogavel. |
+| C03 | Outbox criptografada | MVP | Hedy/Schneier | Pacote local salvo em cofre do sistema e pronto para retry. |
+| C04 | Localizacao pontual | MVP/Juridico | Ada/Doneda | Permissao explicada, revogavel e registrada no pacote. |
+| C05 | Pacote de emergencia | MVP/Juridico | Hedy/Ada/Schneier | Hash, localizacao, consentimento, midia bloqueada e plano API/P2P. |
 
 ## Epico D - API e anjos
 
 | ID | Item | Tipo | Responsavel | Aceite |
 |---|---|---|---|---|
 | D01 | API client | MVP | Ritchie/Ada | Contrato segue `docs/api/openapi.yaml`. |
-| D02 | Convite unico | MVP | Ritchie/Hedy | Token opaco, expiravel e uso unico. |
+| D02 | Convite unico | MVP | Ritchie/Hedy | Codigo opaco, expiravel e uso unico. |
 | D03 | Rede de anjos | MVP | Marty/Ada | Adicionar, aceitar, revogar e listar. |
 | D04 | Consentimentos | MVP/Juridico | Doneda/Ada | Versao, escopo e aceite registrados. |
 
