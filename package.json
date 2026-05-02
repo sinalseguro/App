@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": false,
   "main": "expo-router/entry",
+  "engines": {
+    "node": ">=22.13.0",
+    "npm": ">=10"
+  },
   "scripts": {
     "start": "expo start --dev-client",
     "android": "expo run:android",
@@ -10,7 +14,8 @@
     "web": "expo start --web",
     "typecheck": "node node_modules/typescript/bin/tsc --noEmit",
     "lint": "node scripts/lint-check.mjs",
-    "test": "node scripts/smoke-test.mjs"
+    "test": "node scripts/smoke-test.mjs",
+    "assets:qr": "node scripts/generate-qr-assets.mjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
@@ -37,6 +42,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "qrcode": "^1.5.4",
     "@types/react": "~19.1.10",
     "typescript": "~5.9.2"
   }

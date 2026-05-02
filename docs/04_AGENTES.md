@@ -34,3 +34,11 @@ Todo handoff deve registrar:
 - riscos;
 - validacao esperada;
 - proximo passo.
+
+## Handoff de distribuicao
+
+- Tarcila aprova logo, QR codes e qualquer imagem publica.
+- Kim prepara APK/AAB, TestFlight/App Store, hashes e GitHub Releases.
+- Schneier revisa ausencia de segredo, payload sensivel, logs e permissoes.
+- Doneda revisa politicas de privacidade, termos e declaracoes de loja.
+- Myers valida instalacao, abertura do app, rotas principais e comportamento offline.

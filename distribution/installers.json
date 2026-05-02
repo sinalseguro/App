@@ -1,0 +1,24 @@
+{
+  "generatedAt": "2026-05-02",
+  "owner": "SinalSeguro",
+  "manager": "Cristine",
+  "visualApproval": "Tarcila",
+  "installers": [
+    {
+      "platform": "android",
+      "label": "Android",
+      "qrFile": "sinalseguro-android.svg",
+      "publicUrl": "https://www.sinalseguro.com.br/baixar/android",
+      "releaseAsset": "https://github.com/sinalseguro/App/releases/latest/download/sinalseguro-android.apk",
+      "status": "pendente_build_assinado"
+    },
+    {
+      "platform": "ios",
+      "label": "iOS",
+      "qrFile": "sinalseguro-ios.svg",
+      "publicUrl": "https://www.sinalseguro.com.br/baixar/ios",
+      "releaseAsset": "TestFlight/App Store pendente de conta, assinatura e revisao Apple",
+      "status": "pendente_testflight_app_store"
+    }
+  ]
+}

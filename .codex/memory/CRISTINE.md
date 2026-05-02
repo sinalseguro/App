@@ -26,11 +26,14 @@ Cristine coordena o desenvolvimento mobile Android/iOS, mantendo plano, cronogra
 - P2P: futuro/best-effort.
 - Midia: homologacao controlada.
 - Rede social: fase futura.
+- Distribuicao: QR codes apontam para `/baixar/android` e `/baixar/ios`.
+- GitHub Releases: canal tecnico previsto para APK Android assinado.
+- iOS: TestFlight/App Store, sem IPA publico nesta fase.
 
 ## Proximo checkpoint
 
 1. Liberar permissao de escrita no GitHub para publicar `origin/main` em `https://github.com/sinalseguro/App.git`.
-2. Conectar mock de API ao contrato OpenAPI.
-3. Preparar matriz de testes de Myers.
-4. Iniciar Fase 1 com tokens visuais, telas-base e revisao Norman/Tarcila.
-5. Atualizar timeline antes de cada commit.
+2. Gerar build Android assinado e publicar release com hash.
+3. Preparar TestFlight/App Store para iOS.
+4. Conectar mock de API ao contrato OpenAPI.
+5. Iniciar Fase 1 com tokens visuais, telas-base e revisao Norman/Tarcila.

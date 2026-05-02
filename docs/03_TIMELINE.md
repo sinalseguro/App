@@ -5,7 +5,7 @@ Supervisao: Ze
 
 ## 2026-05-02 - Checkpoint inicial
 
-Status: implementado localmente; publicacao remota pendente por permissao GitHub.
+Status: implementado localmente; publicacao remota do App pendente por permissao GitHub.
 
 Decisoes:
 
@@ -18,6 +18,10 @@ Decisoes:
 - Commit local inicial criado em `main`.
 - Remote configurado como `https://github.com/sinalseguro/App.git`.
 - Push para o remoto pendente: GitHub negou permissao de escrita para a credencial local ativa.
+- Tarcila aprovou o uso operacional da logo ja aplicada nos portais para o README do app.
+- QR codes Android/iOS gerados em `assets/qr/`.
+- Manifesto de instaladores criado em `distribution/installers.json`.
+- Documentacao de distribuicao e lifecycle adicionada.
 
 Entregas esperadas no fechamento:
 
@@ -32,11 +36,14 @@ Validacoes executadas:
 - `npm run typecheck`: aprovado.
 - `npm run lint`: aprovado com checagem local contra padroes sensiveis.
 - `npm test`: aprovado com smoke test.
+- `npm run assets:qr`: aprovado.
 - `npm audit --omit=dev --audit-level=high`: sem vulnerabilidades altas/criticas; permanecem moderadas transitivas da cadeia Expo que exigem correcao upstream ou `--force` com quebra de SDK.
 
 Proximo passo operacional:
 
 - Conceder permissao de escrita ao usuario/chave ativa no repositorio `sinalseguro/App` ou trocar a credencial Git local por uma identidade com acesso ao repositorio.
+- Gerar APK Android assinado e publicar em GitHub Releases quando a permissao estiver resolvida.
+- Preparar TestFlight/App Store para iOS com conta Apple e documentos de privacidade.
 
 ## Modelo de registro
 

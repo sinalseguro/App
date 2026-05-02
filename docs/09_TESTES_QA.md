@@ -32,3 +32,12 @@ Responsavel: Myers
 - Relatorio por fase.
 - Lista de bugs e retestes.
 - Aprovação Myers antes de release interno.
+
+## Distribuicao
+
+- QR Android abre `/baixar/android`.
+- QR iOS abre `/baixar/ios`.
+- Links de instalacao nao prometem artefato antes de assinatura.
+- GitHub Release deve conter hash SHA-256.
+- Portal deve informar status quando instalador ainda estiver pendente.
+- Nenhum build de debug deve ser divulgado como producao.

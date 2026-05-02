@@ -51,3 +51,6 @@ Desenvolver o app SinalSeguro para Android e iOS com a mesma experiencia de UX/U
 - Memoria da Cristine esta criada.
 - Timeline e backlog estao versionados.
 - Git publico esta configurado sem segredos.
+- README possui marca aprovada por Tarcila.
+- QR codes de Android/iOS apontam para paginas publicas estaveis.
+- Distribuicao de instalaveis esta documentada sem publicar artefatos nao assinados como producao.

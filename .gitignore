@@ -20,3 +20,9 @@ yarn-debug.log*
 yarn-error.log*
 android/
 ios/
+*.apk
+*.aab
+*.ipa
+*.mobileprovision
+*.cer
+*.der

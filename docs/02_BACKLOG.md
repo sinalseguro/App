@@ -55,3 +55,5 @@ Supervisao: Ze
 | E02 | Threat model | MVP | Schneier | Riscos e bloqueios documentados. |
 | E03 | Build interno | MVP | Kim | EAS interno sem segredos versionados. |
 | E04 | Relatorio de fase | MVP | Cristine | Timeline e memoria atualizadas. |
+| E05 | Distribuicao Android/iOS | MVP | Kim/Cristine | QR codes, paginas estaveis, release assinado e hashes. |
+| E06 | Logo README e assets publicos | MVP | Tarcila | Logo aprovada aplicada no README e portais. |

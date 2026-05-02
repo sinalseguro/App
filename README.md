@@ -1,8 +1,10 @@
 # SinalSeguro App
 
+![Logo SinalSeguro](assets/brand/sinalseguro-logo.png)
+
 App mobile Android e iOS do SinalSeguro.
 
-Status: checkpoint inicial de desenvolvimento.  
+Status: checkpoint inicial com app shell, documentacao, lifecycle e distribuicao preparada.
 Coordenacao geral: Ze.  
 Gerente AI mobile: Cristine.
 
@@ -23,15 +25,33 @@ O app nao substitui 190, 180, delegacias, saude, assistencia social, Defensoria,
 
 ## Comandos
 
+Use Node 22.13+ para evitar incompatibilidade com Metro/React Native.
+
 ```bash
 npm install
+npm run assets:qr
 npm run typecheck
 npm run lint
 npm test
 npm run start
 ```
 
-Builds internos serao feitos por EAS quando Kim liberar as credenciais e perfis fora do repositorio.
+Builds internos serao feitos por EAS ou build local controlado quando Kim liberar as credenciais e perfis fora do repositorio.
+
+## Instalacao e QR codes
+
+Os QR codes apontam para paginas publicas estaveis. Elas serao atualizadas para GitHub Releases, TestFlight ou lojas oficiais quando os instaladores forem aprovados.
+
+| Plataforma | QR | URL |
+|---|---|---|
+| Android | ![QR Android](assets/qr/sinalseguro-android.svg) | `https://www.sinalseguro.com.br/baixar/android` |
+| iOS | ![QR iOS](assets/qr/sinalseguro-ios.svg) | `https://www.sinalseguro.com.br/baixar/ios` |
+
+Status atual:
+
+- Android: APK assinado pendente.
+- iOS: TestFlight/App Store pendente.
+- GitHub Releases: canal tecnico previsto para artefatos Android.
 
 ## Limites
 
@@ -54,4 +74,7 @@ Builds internos serao feitos por EAS quando Kim liberar as credenciais e perfis 
 - `docs/07_ARQUITETURA.md`
 - `docs/08_SEGURANCA_LGPD.md`
 - `docs/09_TESTES_QA.md`
+- `docs/10_DISTRIBUICAO_INSTALAVEIS.md`
+- `docs/11_LIFECYCLE.md`
+- `docs/12_TARCILA_LOGO_README.md`
 - `docs/api/openapi.yaml`
