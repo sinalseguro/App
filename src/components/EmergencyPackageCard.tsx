@@ -1,13 +1,16 @@
 import { StyleSheet, Text, View } from "react-native";
+import { Eye, Share2, Square, Trash2 } from "lucide-react-native";
+import { ButtonIcon } from "@/components/ButtonIcon";
 import { theme } from "@/design/theme";
 import { EmergencyPackage } from "@/features/emergency/types";
-import { summarizeDelivery, summarizeLocation } from "@/features/emergency/packagePresentation";
+import { summarizeCapture, summarizeDelivery, summarizeLocation } from "@/features/emergency/packagePresentation";
 
 type EmergencyPackageCardProps = {
   packageRecord: EmergencyPackage;
+  onFinish?: (packageId: string) => void;
 };
 
-export function EmergencyPackageCard({ packageRecord }: EmergencyPackageCardProps) {
+export function EmergencyPackageCard({ packageRecord, onFinish }: EmergencyPackageCardProps) {
   return (
     <View style={styles.card}>
       <View style={styles.header}>
@@ -15,15 +18,32 @@ export function EmergencyPackageCard({ packageRecord }: EmergencyPackageCardProp
         <Text style={styles.status}>{packageRecord.status}</Text>
       </View>
       <Text style={styles.text}>Criado em {new Date(packageRecord.createdAt).toLocaleString("pt-BR")}</Text>
+      <Text style={styles.text}>{summarizeCapture(packageRecord)}</Text>
       <Text style={styles.text}>{summarizeLocation(packageRecord)}</Text>
       <Text style={styles.text}>Midia real: {packageRecord.media.status}</Text>
       <Text style={styles.text}>{summarizeDelivery(packageRecord)}</Text>
-      <Text style={styles.hash}>SHA-256 {packageRecord.integrity.sha256}</Text>
+      <Text style={styles.hash}>Hash tecnico {packageRecord.integrity.sha256.slice(0, 16)}...</Text>
+      {packageRecord.status === "recording_local" && onFinish ? (
+        <ButtonIcon
+          icon={<Square size={18} color={theme.colors.danger} />}
+          label="Finalizar chamado"
+          onPress={() => onFinish(packageRecord.id)}
+        />
+      ) : null}
+      <View style={styles.actions}>
+        <ButtonIcon icon={<Eye size={18} color={theme.colors.primary} />} label="Revisar" />
+        <ButtonIcon icon={<Share2 size={18} color={theme.colors.primary} />} label="Compartilhar autorizado" disabled />
+        <ButtonIcon icon={<Trash2 size={18} color={theme.colors.danger} />} label="Excluir local" disabled />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  actions: {
+    gap: theme.spacing.sm,
+    marginTop: theme.spacing.sm
+  },
   card: {
     backgroundColor: theme.colors.surface,
     borderColor: theme.colors.border,

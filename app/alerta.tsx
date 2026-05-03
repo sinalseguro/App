@@ -1,33 +1,99 @@
-import { useEffect, useState } from "react";
-import { Link } from "expo-router";
-import { Archive, Database } from "lucide-react-native";
+import { useCallback, useEffect, useState } from "react";
+import { Link, useFocusEffect } from "expo-router";
+import { Archive, Database, Square } from "lucide-react-native";
 import { ButtonIcon } from "@/components/ButtonIcon";
 import { SafeScreen } from "@/components/SafeScreen";
 import { StatusBanner } from "@/components/StatusBanner";
 import { PanicButton } from "@/components/PanicButton";
 import { theme } from "@/design/theme";
 import { countPendingEmergencyPackages, listEmergencyPackages } from "@/features/emergency/emergencyOutbox";
-import { recordEmergencyPackage } from "@/features/emergency/emergencyRecorder";
+import {
+  finishEmergencyPackage,
+  finishExpiredActiveEmergencyPackage,
+  getActiveEmergencyPackage,
+  startEmergencyPackage
+} from "@/features/emergency/emergencyRecorder";
+import {
+  defaultEmergencyPreferences,
+  EmergencyPreferences,
+  formatDuration,
+  getEmergencyPreferences
+} from "@/features/emergency/emergencyPreferences";
 import { getEmergencyDeliveryReadiness } from "@/services/emergencyDelivery";
 
 export default function AlertScreen() {
   const [status, setStatus] = useState("Nenhum novo pacote gravado nesta tela.");
   const [outboxCount, setOutboxCount] = useState(0);
+  const [activePackageId, setActivePackageId] = useState<string | null>(null);
+  const [preferences, setPreferences] = useState<EmergencyPreferences>(defaultEmergencyPreferences);
 
   async function refreshOutboxCount() {
+    await finishExpiredActiveEmergencyPackage();
+    const activePackage = await getActiveEmergencyPackage();
+    setActivePackageId(activePackage?.id ?? null);
     setOutboxCount(await countPendingEmergencyPackages());
   }
 
+  useFocusEffect(
+    useCallback(() => {
+      async function prepareScreen() {
+        setPreferences(await getEmergencyPreferences());
+        await refreshOutboxCount();
+      }
+
+      void prepareScreen();
+    }, [])
+  );
+
   useEffect(() => {
-    void refreshOutboxCount();
-  }, []);
+    if (!activePackageId) return;
+
+    const timer = setTimeout(() => {
+      void finishEmergencyPackage(activePackageId, "default_duration_elapsed").then(async (result) => {
+        if (!result) return;
+        setStatus(`Chamado ${result.packageRecord.id.slice(0, 8)} finalizado pelo tempo padrao e mantido na fila local.`);
+        await refreshOutboxCount();
+      });
+    }, preferences.defaultDurationSeconds * 1000);
+
+    return () => clearTimeout(timer);
+  }, [activePackageId, preferences.defaultDurationSeconds]);
 
   async function handleTestTrigger() {
-    setStatus("Gravando pacote tecnico local...");
-    const result = await recordEmergencyPackage({ kind: "test" });
+    if (activePackageId) {
+      setStatus("Ja existe um chamado local ativo. Finalize antes de iniciar outro teste.");
+      return;
+    }
+
+    setStatus("Iniciando chamado local de teste...");
+    const result = await startEmergencyPackage({
+      kind: "test",
+      defaultDurationSeconds: preferences.defaultDurationSeconds,
+      locationConsentMode:
+        preferences.locationMode === "foreground_pre_authorized"
+          ? "foreground_pre_authorized"
+          : "foreground_when_triggered"
+    });
     const readiness = getEmergencyDeliveryReadiness(result.packageRecord);
     await refreshOutboxCount();
-    setStatus(`${readiness.reason} Hash ${result.packageRecord.integrity.sha256.slice(0, 12)} registrado.`);
+    setStatus(
+      `${readiness.reason} Chamado ativo por ate ${formatDuration(preferences.defaultDurationSeconds)}. Hash ${result.packageRecord.integrity.sha256.slice(0, 12)} registrado.`
+    );
+  }
+
+  async function handleFinishActiveCall() {
+    if (!activePackageId) return;
+
+    setStatus("Finalizando chamado local...");
+    const result = await finishEmergencyPackage(activePackageId, "manual_finish");
+    await refreshOutboxCount();
+
+    if (!result) {
+      setStatus("Nenhum chamado ativo encontrado.");
+      return;
+    }
+
+    setStatus(`Chamado ${result.packageRecord.id.slice(0, 8)} finalizado manualmente e preservado em cofre local.`);
   }
 
   async function inspectLastPackage() {
@@ -63,6 +129,13 @@ export default function AlertScreen() {
         holdMs={2200}
         onTrigger={handleTestTrigger}
       />
+      {activePackageId ? (
+        <ButtonIcon
+          icon={<Square size={20} color={theme.colors.danger} />}
+          label="Finalizar chamado ativo"
+          onPress={handleFinishActiveCall}
+        />
+      ) : null}
       <ButtonIcon
         icon={<Database size={20} color={theme.colors.primary} />}
         label="Inspecionar ultimo pacote"

@@ -9,12 +9,31 @@ export function summarizeLocation(packageRecord: EmergencyPackage) {
 }
 
 export function summarizeDelivery(packageRecord: EmergencyPackage) {
-  return `API ${packageRecord.deliveryPlan.api.status}; P2P ${packageRecord.deliveryPlan.p2p.status}; ${packageRecord.deliveryPlan.trustedContacts.length} anjo(s) autorizado(s).`;
+  return `Aguardando envio autorizado; ${packageRecord.deliveryPlan.trustedContacts.length} anjo(s) preparado(s) para fase backend.`;
+}
+
+export function summarizeCapture(packageRecord: EmergencyPackage) {
+  const duration = packageRecord.capture.plannedDurationSeconds ?? 60;
+  const durationText = duration < 60 ? `${duration}s` : `${Math.round(duration / 60)}min`;
+
+  if (packageRecord.capture.status === "recording") {
+    return `Coleta local ativa por ate ${durationText}; pode ser finalizada manualmente.`;
+  }
+
+  const reason =
+    packageRecord.capture.endReason === "manual_finish"
+      ? "finalizada pela usuaria"
+      : packageRecord.capture.endReason === "default_duration_elapsed"
+        ? "finalizada pelo tempo padrao"
+        : "pacote tecnico imediato";
+
+  return `Coleta ${reason}; duracao planejada ${durationText}.`;
 }
 
 export function summarizePackage(packageRecord: EmergencyPackage) {
   return [
     `Criado em ${new Date(packageRecord.createdAt).toLocaleString("pt-BR")}.`,
+    summarizeCapture(packageRecord),
     summarizeLocation(packageRecord),
     `Midia: ${packageRecord.media.status}.`,
     summarizeDelivery(packageRecord),

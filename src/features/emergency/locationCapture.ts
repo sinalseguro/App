@@ -1,6 +1,46 @@
 import * as Location from "expo-location";
 import { LocationSnapshot } from "./types";
 
+export type LocationPermissionReadiness = {
+  foreground: Location.PermissionStatus;
+  background: Location.PermissionStatus;
+  servicesEnabled: boolean;
+  backgroundAvailable: boolean;
+  backgroundBlockedReason?: string;
+};
+
+export async function getLocationPermissionReadiness(): Promise<LocationPermissionReadiness> {
+  const [foreground, servicesEnabled, backgroundAvailable] = await Promise.all([
+    Location.getForegroundPermissionsAsync(),
+    Location.hasServicesEnabledAsync(),
+    Location.isBackgroundLocationAvailableAsync()
+  ]);
+  let background = Location.PermissionStatus.DENIED;
+  let backgroundBlockedReason: string | undefined;
+
+  try {
+    const backgroundPermission = await Location.getBackgroundPermissionsAsync();
+    background = backgroundPermission.status;
+  } catch {
+    backgroundBlockedReason = "background_location_not_declared_public_build";
+  }
+
+  return {
+    foreground: foreground.status,
+    background,
+    servicesEnabled,
+    backgroundAvailable,
+    backgroundBlockedReason
+  };
+}
+
+export async function prepareForegroundLocationPermission() {
+  const currentPermission = await Location.getForegroundPermissionsAsync();
+  if (currentPermission.status === "granted") return currentPermission;
+
+  return Location.requestForegroundPermissionsAsync();
+}
+
 export async function captureForegroundLocation(): Promise<LocationSnapshot> {
   const capturedAt = new Date().toISOString();
 
@@ -14,7 +54,7 @@ export async function captureForegroundLocation(): Promise<LocationSnapshot> {
       };
     }
 
-    const permission = await Location.requestForegroundPermissionsAsync();
+    const permission = await prepareForegroundLocationPermission();
     if (permission.status !== "granted") {
       return {
         status: "permission_denied",

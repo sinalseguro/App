@@ -8,9 +8,21 @@ type ButtonIconProps = Omit<PressableProps, "style"> & {
   style?: StyleProp<ViewStyle>;
 };
 
-export function ButtonIcon({ icon, label, style, ...props }: ButtonIconProps) {
+export function ButtonIcon({ icon, label, style, accessibilityState, ...props }: ButtonIconProps) {
+  const disabled = Boolean(props.disabled);
+
   return (
-    <Pressable accessibilityRole="button" style={({ pressed }) => [styles.button, pressed && styles.buttonPressed, style]} {...props}>
+    <Pressable
+      accessibilityRole="button"
+      accessibilityState={{ ...accessibilityState, disabled }}
+      style={({ pressed }) => [
+        styles.button,
+        pressed && !disabled && styles.buttonPressed,
+        disabled && styles.buttonDisabled,
+        style
+      ]}
+      {...props}
+    >
       <View style={styles.icon}>{icon}</View>
       <Text style={styles.label}>{label}</Text>
     </Pressable>
@@ -32,6 +44,9 @@ const styles = StyleSheet.create({
   },
   buttonPressed: {
     backgroundColor: theme.colors.surfaceMuted
+  },
+  buttonDisabled: {
+    opacity: 0.48
   },
   icon: {
     alignItems: "center",

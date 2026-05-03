@@ -110,3 +110,41 @@ Foram criados 4 pacotes locais de teste no aparelho:
 - Publicar uma nova GitHub Release interna somente apos repetir `release:android:readiness`, lint, typecheck e smoke test.
 - Evoluir backend/API e adaptadores de envio antes de qualquer transmissao real.
 - Revalidar negacao de localizacao em mais um aparelho Android antigo, pois HyperOS tem comportamento proprio de permissao e cache.
+
+## Validacao complementar - Duracao, finalizacao e splash
+
+Data: 2026-05-02
+Build: debug local instalado por ADB Wi-Fi, com bundle JS carregado pelo Metro.
+SHA-256 do APK debug instalado: `17e90b153770faea5391c426bbc34a9d83d3d986ca9919cfbea49fdab60a00f9`.
+
+Resultados:
+
+- app abriu no Android fisico e saiu da splash para a Home;
+- o travamento visual de inicializacao foi tratado com `SplashScreen.hideAsync()` no layout raiz;
+- Tarcila aprovou splash, icone, adaptive icon atual e lockup para homologacao interna;
+- `Configuracoes` abriu sem erro mesmo sem `ACCESS_BACKGROUND_LOCATION` no manifest publico;
+- duracao padrao `30s` foi selecionada e persistida;
+- Home recarregou preferencias ao voltar de `Configuracoes`;
+- botao de panico in-app iniciou chamado ativo por ate `30s`;
+- botao `Finalizar chamado ativo` encerrou o chamado;
+- `Arquivos locais` mostrou o pacote como `QUEUED_FOR_DELIVERY`, coleta finalizada pela usuaria, duracao planejada `30s`, georreferencia preservada e SHA-256;
+- `aapt dump permissions` confirmou ausencia de `CAMERA`, `RECORD_AUDIO`, `SYSTEM_ALERT_WINDOW`, `READ_EXTERNAL_STORAGE`, `WRITE_EXTERNAL_STORAGE` e `ACCESS_BACKGROUND_LOCATION`;
+- logcat nao mostrou crash, excecao de background location, camera, microfone, upload `/alerts` ou WebRTC.
+
+## Validacao complementar - Botao central, cofre/player e 190
+
+Data: 2026-05-02
+Build: debug local instalado por ADB Wi-Fi, com bundle JS carregado pelo Metro.
+Dispositivo: `23129RA5FL`, Android 15, ADB Wi-Fi `192.168.0.5:5555`.
+
+Resultados:
+
+- `adb reverse tcp:8081 tcp:8081` foi reaplicado para manter o dev client conectado ao Metro via ADB Wi-Fi;
+- Home abriu sem crash com botao circular central `SOS`;
+- atalhos principais apareceram em grade: `Ligar 190`, `Anjos`, `Cofre`, `Config.`;
+- botao `Ligar 190` exibiu confirmacao antes de qualquer discagem;
+- `Cofre local` abriu com player visual, midia bloqueada e politica de criptografia;
+- acoes de player real permaneceram bloqueadas enquanto nao existe midia/autorizacao;
+- `Configuracoes` exibiu `Compartilhamento autorizado`, atalho 190 configuravel, chamada futura ao anjo e escopos futuros de video, audio e localizacao em tempo real;
+- segundo plano e botao de volume continuaram marcados como bloqueados/pesquisa futura;
+- logcat filtrado do processo nao mostrou `FATAL`, `AndroidRuntime`, `ACCESS_BACKGROUND_LOCATION`, `CAMERA`, `RECORD_AUDIO`, `webrtc`, `/alerts`, `/media` ou trafego de upload.

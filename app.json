@@ -8,9 +8,9 @@
     "userInterfaceStyle": "automatic",
     "icon": "./assets/brand/sinalseguro-icon.png",
     "splash": {
-      "image": "./assets/brand/sinalseguro-logo.png",
+      "image": "./assets/brand/sinalseguro-symbol.png",
       "resizeMode": "contain",
-      "backgroundColor": "#1E1B2E"
+      "backgroundColor": "#120A20"
     },
     "newArchEnabled": true,
     "ios": {
@@ -45,7 +45,16 @@
       "expo-router",
       "expo-secure-store",
       "expo-notifications",
-      "expo-location",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "O SinalSeguro usa sua localizacao apenas para anexar o ponto do chamado quando voce autorizar.",
+          "locationAlwaysAndWhenInUsePermission": "O SinalSeguro pode usar localizacao em segundo plano somente em homologacao autorizada, com consentimento e notificacao persistente.",
+          "isIosBackgroundLocationEnabled": false,
+          "isAndroidBackgroundLocationEnabled": false,
+          "isAndroidForegroundServiceEnabled": false
+        }
+      ],
       "expo-splash-screen",
       [
         "expo-build-properties",

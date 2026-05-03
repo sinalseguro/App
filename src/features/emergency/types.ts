@@ -24,6 +24,8 @@ export type MediaCaptureManifest = {
   policy: string;
 };
 
+export type EmergencyFinishReason = "manual_finish" | "default_duration_elapsed" | "immediate_package";
+
 export type EmergencyDeliveryPlan = {
   api: {
     status: "waiting_backend";
@@ -43,20 +45,23 @@ export type EmergencyPackage = {
   id: string;
   schemaVersion: "sinalseguro.emergency-package.v1";
   kind: EmergencyKind;
-  status: "recorded_local" | "queued_for_delivery";
+  status: "recording_local" | "recorded_local" | "queued_for_delivery";
   clientAlertId: string;
   idempotencyKey: string;
   createdAt: string;
   updatedAt: string;
   capture: {
-    status: "recorded";
+    status: "recording" | "recorded";
     startedAt: string;
-    completedAt: string;
+    completedAt?: string;
+    plannedDurationSeconds: number;
+    elapsedMs?: number;
+    endReason?: EmergencyFinishReason;
     evidenceTypes: readonly ["timestamp", "location_snapshot", "media_manifest", "delivery_plan"];
   };
   consentSnapshot: {
     termsVersion: "mvp-controlado-2026-05-02";
-    location: "foreground_when_triggered";
+    location: "foreground_when_triggered" | "foreground_pre_authorized";
     media: "blocked_until_homologation";
     sharing: "trusted_contacts_and_api_when_available";
   };
@@ -74,8 +79,8 @@ export type EmergencyExchangeEnvelope = {
   packageId: string;
   clientAlertId: string;
   idempotencyKey: string;
-  readyForBackend: true;
-  readyForP2PAdapter: true;
+  readyForBackend: false;
+  readyForP2PAdapter: false;
   locationStatus: LocationSnapshot["status"];
   mediaStatus: MediaCaptureManifest["status"];
   packageSha256: string;

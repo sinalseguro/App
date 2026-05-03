@@ -64,13 +64,38 @@ Estado em 2026-05-02:
 - Myers/Schneier identificaram `SYSTEM_ALERT_WINDOW` no manifest debug gerado pelo Expo; foi corrigido no APK e criado plugin local de hardening para proximos prebuilds;
 - evidencias saneadas ficaram em `docs/evidencias/android/2026-05-02-recursos-locais/`;
 - relatorio tecnico ficou em `docs/15_VALIDACAO_ANDROID_RECURSOS_LOCAIS.md`.
+- duracao padrao configuravel foi adicionada com opcoes `30s`, `1min`, `3min`, `5min`;
+- chamado local ativo agora usa `recording_local` e pode ser finalizado manualmente;
+- finalizacao recalcula SHA-256 sem carregar o bloco `integrity` anterior;
+- Home e Alerta recarregam preferencias ao ganhar foco, para aplicar imediatamente mudancas de configuracao;
+- configuracoes permite pre-autorizar localizacao foreground para evitar novo prompt quando a permissao ja esta concedida;
+- configuracoes trata ausencia de `ACCESS_BACKGROUND_LOCATION` como bloqueio esperado no build publico, sem quebrar a tela;
+- segundo plano e atalho fisico por volume com tela travada foram documentados como homologacao/pesquisa futura, sem promessa no MVP publico;
+- `app/_layout.tsx` chama `SplashScreen.hideAsync()` no mount para evitar retencao extra da tela inicial;
+- Tarcila aprovou splash, icone, adaptive icon atual e lockup para homologacao interna;
+- validacao Android fisica confirmou duracao `30s`, chamado ativo, finalizacao manual e pacote finalizado em `Arquivos locais`;
+- documento `docs/16_SEGUNDO_PLANO_ATALHO_FISICO_E_DURACAO.md` registra limites tecnicos e fontes oficiais.
+- splash custom foi redesenhada com simbolo maior, nome `SinalSeguro` abaixo e barra de loading, sem efeitos ornamentais;
+- Home agora prioriza botao circular central `SOS`;
+- atalhos principais ficam em grade: `Ligar 190`, `Anjos`, `Cofre`, `Config.`;
+- `Arquivos locais` passa a ser apresentado como `Cofre local`;
+- player visual e politica de evidencias foram adicionados para arquivos gravados/recebidos, com midia real bloqueada no build publico;
+- preferencias locais permitem solicitar escopos futuros de audio, video e localizacao em tempo real, mas sempre `homologation_blocked`;
+- atalho 190 fica ativo por padrao com confirmacao manual e pode ser desativado em configuracoes;
+- chamada para anjo autorizado foi registrada como preferencia futura, sem chamada automatica no build publico;
+- envelope local nao marca mais backend/P2P como prontos sem adaptadores reais;
+- documento `docs/17_STREAMING_COFRE_PLAYER_E_190.md` registra contrato bilateral, chaves, player, cofre e 190.
+- validacao Android fisica confirmou Home com `SOS`, atalho 190 com confirmacao, `Cofre local` com player bloqueado e `Configuracoes` com escopos futuros;
+- gates locais aprovados: `typecheck`, `lint`, `test`, `release:android:readiness` pronto condicionado.
 
 Proximas acoes:
 
-1. Rodar validacoes finais e publicar checkpoint Git com hardening + relatorio Android.
-2. Gerar novo APK assinado interno incorporando o plugin de hardening e publicar como release interna 3, se Roberto aprovar.
-3. Preparar TestFlight/App Store para iOS.
-4. Conectar mock de API ao contrato OpenAPI.
-5. Implementar adaptador de envio real apenas depois de auth, consentimento, retencao e revisao Schneier/Doneda.
-6. Evoluir Fase 1 com componentes compartilhados revisados por Norman/Tarcila.
-7. Manter `origin` usando `github-sinalseguro-admin` para pushes do repo App.
+1. Rodar validacoes e revalidar Android fisico com novo layout central, splash custom e cofre.
+2. Gerar novo APK assinado interno incorporando hardening, duracao, finalizacao, splash custom, cofre e botao central, publicando como release interna 3 se Roberto aprovar.
+3. Atualizar portal/manifestos para release interna 3 apos APK assinado.
+4. Revalidar Android fisico sem Metro usando APK assinado.
+5. Preparar TestFlight/App Store para iOS.
+6. Conectar mock de API ao contrato OpenAPI.
+7. Implementar adaptador de envio real apenas depois de auth, consentimento, retencao e revisao Schneier/Doneda.
+8. Evoluir Fase 1 com componentes compartilhados revisados por Norman/Tarcila.
+9. Manter `origin` usando `github-sinalseguro-admin` para pushes do repo App.

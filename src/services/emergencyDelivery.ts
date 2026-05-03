@@ -18,12 +18,12 @@ export function buildCreateAlertDraft(packageRecord: EmergencyPackage) {
 
 export function getEmergencyDeliveryReadiness(packageRecord: EmergencyPackage) {
   return {
-    apiReady: true,
-    p2pAdapterReady: true,
+    apiReady: false,
+    p2pAdapterReady: false,
     mediaUploadReady: packageRecord.media.assets.length > 0,
     reason:
       packageRecord.media.status === "blocked_public_build"
-        ? "Pacote pronto para alerta e localizacao; midia real bloqueada neste build publico."
-        : "Pacote pronto para entrega."
+        ? "Pacote preservado no cofre local; envio e midia real aguardam backend autorizado."
+        : "Pacote preservado e aguardando entrega autorizada."
   };
 }

@@ -220,6 +220,76 @@ Evidencias:
 - `docs/15_VALIDACAO_ANDROID_RECURSOS_LOCAIS.md`;
 - `docs/evidencias/android/2026-05-02-recursos-locais/`.
 
+## 2026-05-02 - Duracao, finalizacao, GPS agil e limites de segundo plano
+
+Status: implementado no app shell; segundo plano e atalho fisico ficam bloqueados para build publico e documentados para homologacao.
+
+Especialistas acionados:
+
+- Ada/Hedy/Margaret/Katherine: limites Android/iOS, Expo Location e arquitetura mobile.
+- Norman/Myers: UX de emergencia, estados do chamado, falso positivo e testes.
+- Schneier/Doneda: permissoes, LGPD, background location e bloqueios de loja.
+- Cristine/Knuth: memoria, timeline e lifecycle.
+
+Decisoes:
+
+- GPS "sem pedir sempre" passa a significar reutilizar permissao foreground ja concedida, nunca burlar o dialogo do sistema.
+- Configuracoes ganhou pre-autorizacao de localizacao e leitura de status de permissao.
+- Duracao padrao do chamado passa a ser configuravel: `30s`, `1min`, `3min`, `5min`.
+- Chamado local ativo usa status `recording_local`.
+- Usuaria pode finalizar manualmente o chamado; o pacote nao e apagado, e fechado com `manual_finish`.
+- Tempo padrao encerra pacote ativo com `default_duration_elapsed` quando o app esta ativo.
+- Hash do pacote finalizado e recalculado sem carregar o bloco `integrity` anterior.
+- Background location nao entra no build publico; exige homologacao com foreground service/notificacao persistente e revisao Doneda/Schneier.
+- Atalho por volume com tela travada fica como pesquisa futura nativa, sem promessa no MVP.
+- Startup Android recebeu `SplashScreen.hideAsync()` no layout raiz e foi validado em aparelho fisico.
+- Tarcila aprovou splash, icone, adaptive icon atual e lockup para homologacao interna.
+- Validacao fisica confirmou configuracao de duracao `30s`, recarregamento de preferencias no foco, chamado ativo, finalizacao manual e pacote em `Arquivos locais`.
+- `Configuracoes` passou a tratar ausencia de `ACCESS_BACKGROUND_LOCATION` como bloqueio esperado, sem quebrar a tela.
+
+Documentacao:
+
+- `docs/16_SEGUNDO_PLANO_ATALHO_FISICO_E_DURACAO.md`.
+- `docs/12_TARCILA_LOGO_README.md`.
+
+## 2026-05-02 - Botao central, cofre/player, streaming autorizado e 190
+
+Status: UX implementada no app shell; streaming real, player real e compartilhamento externo seguem bloqueados para build publico.
+
+Especialistas acionados:
+
+- Tarcila/Norman: splash, identidade visual, botao circular, atalhos e cofre.
+- Ada/Hedy/Ritchie: preferencias de midia, contrato bilateral, player, backend e chaves.
+- Schneier/Doneda/Myers: seguranca, LGPD, retencao, auditoria e criterios de bloqueio.
+
+Decisoes:
+
+- splash custom passa a ter simbolo maior, nome `SinalSeguro` abaixo e barra de loading;
+- fundo da splash muda para `#120A20` para diferenciar melhor a logo;
+- efeitos ornamentais foram removidos da splash;
+- Home prioriza botao circular central `SOS`;
+- atalhos principais ficam em grade: `Ligar 190`, `Anjos`, `Cofre`, `Config.`;
+- botao 190 abre confirmacao e usa `tel:190`, sem promessa de integracao oficial;
+- atalho 190 fica ativo por padrao, configuravel pela usuaria e sem acionamento automatico;
+- chamada para anjo autorizado entra como preferencia futura, exigindo contato validado, contrato e confirmacao;
+- `Arquivos locais` passa a ser tratado como `Cofre local`;
+- player visual mostra midia bloqueada, politica de criptografia e acoes futuras;
+- configuracoes permitem solicitar escopos futuros de audio, video e localizacao em tempo real, sempre bloqueados como `homologation_blocked`;
+- envio backend/P2P deixa de ser marcado como pronto no envelope local enquanto adaptadores reais nao existem;
+- compartilhar evidencia por share sheet generico fica bloqueado.
+
+Documentacao:
+
+- `docs/17_STREAMING_COFRE_PLAYER_E_190.md`.
+
+Validacoes executadas:
+
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `npm test`: aprovado;
+- `npm run release:android:readiness`: pronto condicionado, com assinatura externa e diretorio nativo gerado como pendencias esperadas;
+- Android fisico `23129RA5FL`: Home com `SOS`, atalho 190 com confirmacao, `Cofre local` com player bloqueado e `Configuracoes` com escopos futuros validados via ADB Wi-Fi.
+
 ## Modelo de registro
 
 | Data | Evento | Responsavel | Impacto | Proximo passo |

@@ -11,10 +11,15 @@ const requiredFiles = [
   "app/index.tsx",
   "app/arquivos.tsx",
   "app/convite.tsx",
+  "src/components/AppLaunchScreen.tsx",
+  "src/components/EmergencyCallButton.tsx",
+  "src/components/EvidencePlayerCard.tsx",
   "src/design/tokens.ts",
   "src/components/PanicButton.tsx",
   "src/features/invitations/invitationService.ts",
+  "src/features/evidence/evidencePolicy.ts",
   "src/features/emergency/packagePresentation.ts",
+  "src/features/emergency/emergencyPreferences.ts",
   "src/features/emergency/emergencyRecorder.ts",
   "src/features/emergency/emergencyOutbox.ts",
   "src/storage/secureJsonStore.ts"
@@ -32,6 +37,28 @@ if (packageJson.main !== "expo-router/entry") {
 
 if (!packageJson.dependencies.expo || !packageJson.dependencies["expo-router"]) {
   throw new Error("Dependencias Expo essenciais ausentes.");
+}
+
+const emergencyRecorder = await readFile("src/features/emergency/emergencyRecorder.ts", "utf8");
+
+if (!emergencyRecorder.includes("stripIntegrity(activePackage)")) {
+  throw new Error("Finalizacao de pacote precisa recalcular hash sem carregar integrity antigo.");
+}
+
+if (!emergencyRecorder.includes("locationConsentMode = \"foreground_when_triggered\"")) {
+  throw new Error("Snapshot de consentimento de localizacao precisa ter padrao conservador.");
+}
+
+const locationCapture = await readFile("src/features/emergency/locationCapture.ts", "utf8");
+
+if (!locationCapture.includes("background_location_not_declared_public_build")) {
+  throw new Error("Leitura de background location precisa ser segura quando a permissao nao esta no manifest publico.");
+}
+
+const launchScreen = await readFile("src/components/AppLaunchScreen.tsx", "utf8");
+
+if (!launchScreen.includes("Carregando SinalSeguro") || launchScreen.includes("glow")) {
+  throw new Error("Splash custom precisa ter barra de loading e nao usar efeitos glow ornamentais.");
 }
 
 console.log("Smoke test mobile aprovado.");

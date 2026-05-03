@@ -2,10 +2,12 @@ import { useEffect, useState } from "react";
 import { RefreshCw } from "lucide-react-native";
 import { ButtonIcon } from "@/components/ButtonIcon";
 import { EmergencyPackageCard } from "@/components/EmergencyPackageCard";
+import { EvidencePlayerCard } from "@/components/EvidencePlayerCard";
 import { SafeScreen } from "@/components/SafeScreen";
 import { StatusBanner } from "@/components/StatusBanner";
 import { theme } from "@/design/theme";
 import { listEmergencyPackages } from "@/features/emergency/emergencyOutbox";
+import { finishEmergencyPackage } from "@/features/emergency/emergencyRecorder";
 import { EmergencyPackage } from "@/features/emergency/types";
 
 export default function LocalFilesScreen() {
@@ -17,7 +19,7 @@ export default function LocalFilesScreen() {
     setPackages(records);
     setStatus(
       records.length
-        ? "Pacotes locais carregados. Eles serao enviados somente quando backend/P2P estiverem prontos e autorizados."
+        ? "Cofre local carregado. Envio, compartilhamento e player real exigem autorizacao, backend e criptografia ativos."
         : "Nenhum pacote local gravado neste dispositivo."
     );
   }
@@ -26,24 +28,30 @@ export default function LocalFilesScreen() {
     void refreshPackages();
   }, []);
 
+  async function finishPackage(packageId: string) {
+    await finishEmergencyPackage(packageId, "manual_finish");
+    await refreshPackages();
+  }
+
   return (
     <SafeScreen
-      title="Arquivos locais"
-      subtitle="Pacotes gravados neste dispositivo para envio futuro via API ou P2P autorizado."
+      title="Cofre local"
+      subtitle="Pacotes preservados neste dispositivo para revisao e envio futuro autorizado."
     >
       <StatusBanner tone="secure" title={`Pacotes gravados: ${packages.length}`} text={status} />
       <StatusBanner
         tone="warning"
         title="Protecao dos dados"
-        text="Coordenadas completas ficam preservadas no cofre local e nao sao exibidas sem autenticacao forte. Esta tela mostra status, horario, hash e plano de envio."
+        text="Coordenadas completas e midia real exigem autenticacao forte, contrato eletronico e acesso auditado. Esta tela mostra apenas previa segura."
       />
+      <EvidencePlayerCard packageRecord={packages[0]} />
       <ButtonIcon
         icon={<RefreshCw size={20} color={theme.colors.primary} />}
         label="Atualizar lista"
         onPress={refreshPackages}
       />
       {packages.map((packageRecord) => (
-        <EmergencyPackageCard key={packageRecord.id} packageRecord={packageRecord} />
+        <EmergencyPackageCard key={packageRecord.id} packageRecord={packageRecord} onFinish={finishPackage} />
       ))}
     </SafeScreen>
   );

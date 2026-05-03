@@ -42,6 +42,44 @@ Evidencias:
 - screenshot local saneado em `/tmp/sinalseguro-android-qa/home-v2.png`;
 - icone mestre registrado em `IdentidadeVisual/sinalseguro/app/MANIFESTO_ICONE_APP_2026-05-02.md`.
 
+## Parecer Tarcila - Splash e inicializacao Android
+
+Status em 2026-05-02: aprovado para homologacao interna.
+
+Tarcila revisou a tela de inicializacao depois do ajuste de startup no Android fisico:
+
+- `app.json` usa nome oficial `SinalSeguro`;
+- `icon` usa `assets/brand/sinalseguro-icon.png`, 1024x1024;
+- `splash` usa `assets/brand/sinalseguro-symbol.png`, `resizeMode: contain` e fundo institucional `#120A20`;
+- `adaptiveIcon` usa o icone atual com fundo institucional, suficiente para homologacao interna;
+- `app/_layout.tsx` chama `SplashScreen.hideAsync()` no mount para liberar a splash quando o React ja montou;
+- `BrandLockup` usa simbolo aprovado, nome e assinatura da marca;
+- contraste validado: branco sobre `#1E1B2E`, texto principal sobre fundo claro e texto branco no botao `#C2185B`.
+
+Recomendacao para loja:
+
+- antes de App Store/Google Play, criar foreground transparente dedicado para Android adaptive icon;
+- manter smoke visual obrigatorio: abrir em Android fisico, confirmar que a splash sai para Home, icone sem corte no launcher e nenhuma bolha/overlay de debug em screenshot publico.
+
+## Evolucao Tarcila + Norman - Splash custom e botao central
+
+Status em 2026-05-02: implementado no app shell.
+
+Direcao aplicada:
+
+- splash nativa usa simbolo aprovado sobre fundo `#120A20`;
+- splash React custom exibe simbolo maior, nome `SinalSeguro` abaixo e barra de loading;
+- efeitos ornamentais foram removidos para manter linguagem institucional;
+- Home passa a priorizar botao circular central `SOS`;
+- atalhos principais ficam em grade abaixo do botao: `Ligar 190`, `Anjos`, `Cofre`, `Config.`;
+- `Arquivos locais` passa a ser apresentado como `Cofre local`.
+
+Bloqueios visuais:
+
+- nao usar marca de orgao publico sem convenio;
+- nao usar screenshots publicos com bolhas/overlays de debug;
+- nao exibir hash completo, coordenadas completas ou termos sensiveis como conteudo principal.
+
 ## QR codes
 
 Os QR codes foram preparados com as cores da marca:

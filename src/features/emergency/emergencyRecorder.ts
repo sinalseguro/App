@@ -1,13 +1,28 @@
 import * as Crypto from "expo-crypto";
 import { captureForegroundLocation } from "./locationCapture";
-import { saveEmergencyPackage } from "./emergencyOutbox";
-import { EmergencyExchangeEnvelope, EmergencyKind, EmergencyPackage, MediaCaptureManifest } from "./types";
+import { listEmergencyPackages, saveEmergencyPackage } from "./emergencyOutbox";
+import {
+  EmergencyExchangeEnvelope,
+  EmergencyFinishReason,
+  EmergencyKind,
+  EmergencyPackage,
+  MediaCaptureManifest
+} from "./types";
 
 type RecordEmergencyPackageInput = {
   kind: EmergencyKind;
   trustedContactIds?: string[];
   captureLocation?: boolean;
+  defaultDurationSeconds?: number;
+  locationConsentMode?: EmergencyPackage["consentSnapshot"]["location"];
 };
+
+type EmergencyPackageWithoutIntegrity = Omit<EmergencyPackage, "integrity">;
+
+function stripIntegrity(packageRecord: EmergencyPackage): EmergencyPackageWithoutIntegrity {
+  const { integrity: _ignoredIntegrity, ...packageWithoutIntegrity } = packageRecord;
+  return packageWithoutIntegrity;
+}
 
 const mediaBlockedManifest: MediaCaptureManifest = {
   status: "blocked_public_build",
@@ -22,8 +37,8 @@ export function buildEmergencyExchangeEnvelope(packageRecord: EmergencyPackage):
     packageId: packageRecord.id,
     clientAlertId: packageRecord.clientAlertId,
     idempotencyKey: packageRecord.idempotencyKey,
-    readyForBackend: true,
-    readyForP2PAdapter: true,
+    readyForBackend: false,
+    readyForP2PAdapter: false,
     locationStatus: packageRecord.location.status,
     mediaStatus: packageRecord.media.status,
     packageSha256: packageRecord.integrity.sha256,
@@ -31,10 +46,27 @@ export function buildEmergencyExchangeEnvelope(packageRecord: EmergencyPackage):
   };
 }
 
-export async function recordEmergencyPackage({
+async function attachIntegrity(packageWithoutIntegrity: EmergencyPackageWithoutIntegrity): Promise<EmergencyPackage> {
+  const sha256 = await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    JSON.stringify(packageWithoutIntegrity)
+  );
+
+  return {
+    ...packageWithoutIntegrity,
+    integrity: {
+      sha256,
+      calculatedAt: new Date().toISOString()
+    }
+  };
+}
+
+export async function startEmergencyPackage({
   kind,
   trustedContactIds = [],
-  captureLocation = true
+  captureLocation = true,
+  defaultDurationSeconds = 60,
+  locationConsentMode = "foreground_when_triggered"
 }: RecordEmergencyPackageInput) {
   const startedAt = new Date().toISOString();
   const location = captureLocation
@@ -46,24 +78,24 @@ export async function recordEmergencyPackage({
       };
   const completedAt = new Date().toISOString();
 
-  const packageWithoutIntegrity = {
+  const packageWithoutIntegrity: EmergencyPackageWithoutIntegrity = {
     id: Crypto.randomUUID(),
     schemaVersion: "sinalseguro.emergency-package.v1" as const,
     kind,
-    status: "queued_for_delivery" as const,
+    status: "recording_local",
     clientAlertId: Crypto.randomUUID(),
     idempotencyKey: Crypto.randomUUID(),
     createdAt: startedAt,
     updatedAt: completedAt,
     capture: {
-      status: "recorded" as const,
+      status: "recording",
       startedAt,
-      completedAt,
+      plannedDurationSeconds: defaultDurationSeconds,
       evidenceTypes: ["timestamp", "location_snapshot", "media_manifest", "delivery_plan"] as const
     },
     consentSnapshot: {
       termsVersion: "mvp-controlado-2026-05-02" as const,
-      location: "foreground_when_triggered" as const,
+      location: locationConsentMode,
       media: "blocked_until_homologation" as const,
       sharing: "trusted_contacts_and_api_when_available" as const
     },
@@ -85,23 +117,84 @@ export async function recordEmergencyPackage({
     }
   };
 
-  const sha256 = await Crypto.digestStringAsync(
-    Crypto.CryptoDigestAlgorithm.SHA256,
-    JSON.stringify(packageWithoutIntegrity)
-  );
-
-  const packageRecord: EmergencyPackage = {
-    ...packageWithoutIntegrity,
-    integrity: {
-      sha256,
-      calculatedAt: new Date().toISOString()
-    }
-  };
-
+  const packageRecord = await attachIntegrity(packageWithoutIntegrity);
   await saveEmergencyPackage(packageRecord);
 
   return {
     packageRecord,
     exchangeEnvelope: buildEmergencyExchangeEnvelope(packageRecord)
   };
+}
+
+export async function getActiveEmergencyPackage() {
+  const packages = await listEmergencyPackages();
+  return packages.find((packageRecord) => packageRecord.status === "recording_local") ?? null;
+}
+
+export async function finishEmergencyPackage(packageId: string, endReason: EmergencyFinishReason = "manual_finish") {
+  const packages = await listEmergencyPackages();
+  const activePackage = packages.find((packageRecord) => packageRecord.id === packageId);
+
+  if (!activePackage) return null;
+
+  if (activePackage.status !== "recording_local") {
+    return {
+      packageRecord: activePackage,
+      exchangeEnvelope: buildEmergencyExchangeEnvelope(activePackage)
+    };
+  }
+
+  const completedAt = new Date().toISOString();
+  const elapsedMs = new Date(completedAt).getTime() - new Date(activePackage.capture.startedAt).getTime();
+  const packageWithoutIntegrity: EmergencyPackageWithoutIntegrity = {
+    ...stripIntegrity(activePackage),
+    status: "queued_for_delivery",
+    updatedAt: completedAt,
+    capture: {
+      ...activePackage.capture,
+      status: "recorded",
+      completedAt,
+      elapsedMs,
+      endReason
+    }
+  };
+
+  const packageRecord = await attachIntegrity(packageWithoutIntegrity);
+  await saveEmergencyPackage(packageRecord);
+
+  return {
+    packageRecord,
+    exchangeEnvelope: buildEmergencyExchangeEnvelope(packageRecord)
+  };
+}
+
+export async function finishActiveEmergencyPackage(endReason: EmergencyFinishReason = "manual_finish") {
+  const activePackage = await getActiveEmergencyPackage();
+  if (!activePackage) return null;
+
+  return finishEmergencyPackage(activePackage.id, endReason);
+}
+
+export async function finishExpiredActiveEmergencyPackage() {
+  const activePackage = await getActiveEmergencyPackage();
+  if (!activePackage) return null;
+
+  const plannedDurationMs = activePackage.capture.plannedDurationSeconds * 1000;
+  const elapsedMs = Date.now() - new Date(activePackage.capture.startedAt).getTime();
+
+  if (elapsedMs < plannedDurationMs) {
+    return null;
+  }
+
+  return finishEmergencyPackage(activePackage.id, "default_duration_elapsed");
+}
+
+export async function recordEmergencyPackage(input: RecordEmergencyPackageInput) {
+  const started = await startEmergencyPackage(input);
+  const finished = await finishEmergencyPackage(started.packageRecord.id, "immediate_package");
+  if (!finished) {
+    throw new Error("Falha ao finalizar pacote tecnico local.");
+  }
+
+  return finished;
 }

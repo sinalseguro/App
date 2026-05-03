@@ -33,13 +33,14 @@ Pacote de emergencia:
 - localizacao e capturada apenas com permissao foreground do sistema;
 - pacote fica salvo em cofre local do sistema via `expo-secure-store`, com indice sem dado sensivel em `AsyncStorage`;
 - integridade do pacote e registrada por SHA-256;
-- envelope de troca `sinalseguro.emergency-exchange.v1` fica pronto para backend/P2P futuro;
+- envelope de troca `sinalseguro.emergency-exchange.v1` fica preparado para backend/P2P futuro, mas marca adaptadores reais como nao prontos;
 - tela inicial e tela de alerta mostram contagem da outbox local e status de gravacao.
 
 Arquivos locais:
 
 - tela `app/arquivos.tsx` lista os pacotes gravados no dispositivo;
-- cada pacote mostra horario, hash SHA-256, status de georreferencia, status de midia e plano de entrega API/P2P;
+- a experiencia passa a apresentar essa area como `Cofre local`;
+- cada pacote mostra horario, hash tecnico resumido, status de georreferencia, status de midia e envio autorizado futuro;
 - coordenadas completas ficam preservadas no cofre local e nao sao exibidas nesta etapa sem autenticacao forte;
 - a tela deixa claro que os dados serao enviados somente quando backend/P2P estiverem prontos e autorizados.
 
@@ -51,7 +52,7 @@ Arquivos locais:
 - Nenhum pacote e transmitido para terceiros enquanto API/backend/P2P nao estiverem implementados e autorizados.
 - Nao ha acionamento de orgaos publicos, nem promessa de resposta emergencial.
 
-## Pronto para API/P2P
+## Preparado para API/P2P futuro
 
 O pacote local ja contem:
 
@@ -60,6 +61,7 @@ O pacote local ja contem:
 - `location` compatível com `LocationPoint`;
 - `deliveryPlan.api.endpoint = /alerts`;
 - `deliveryPlan.p2p.candidates = webrtc, nearby, multipeer`;
+- `readyForBackend = false` e `readyForP2PAdapter = false` enquanto os adaptadores reais nao existirem;
 - lista de contatos autorizados pendentes de entrega;
 - hash SHA-256 para verificacao de integridade.
 
@@ -91,3 +93,20 @@ Resultados:
 - logcat nao exibiu coordenadas, tokens, payloads sensiveis, upload, WebRTC ou crash.
 
 Relatorio completo: `docs/15_VALIDACAO_ANDROID_RECURSOS_LOCAIS.md`.
+
+## Evolucao: chamado ativo e finalizacao
+
+Status em 2026-05-02: implementado no app shell.
+
+Mudancas:
+
+- pacote pode iniciar como `recording_local`;
+- duracao padrao configuravel fica registrada em `plannedDurationSeconds`;
+- botao `Finalizar chamado ativo` encerra a coleta local sem apagar evidencia;
+- finalizacao manual registra `manual_finish`;
+- encerramento automatico por tempo registra `default_duration_elapsed`;
+- hash SHA-256 e recalculado apos o encerramento sem incluir o hash anterior no payload;
+- pacote finalizado fica em `queued_for_delivery`;
+- midia real segue `blocked_public_build`.
+
+Documento complementar: `docs/16_SEGUNDO_PLANO_ATALHO_FISICO_E_DURACAO.md`.
