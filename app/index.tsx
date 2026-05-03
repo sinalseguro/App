@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useFocusEffect } from "expo-router";
-import { StyleSheet, View } from "react-native";
-import { Archive, Shield, Users, Settings, Radio, Square, PhoneCall } from "lucide-react-native";
+import { Alert, Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Archive, Shield, Users, Settings, Radio, PhoneCall, LockKeyhole, X } from "lucide-react-native";
+import * as Crypto from "expo-crypto";
 import { SafeScreen } from "@/components/SafeScreen";
 import { StatusBanner } from "@/components/StatusBanner";
 import { ButtonIcon } from "@/components/ButtonIcon";
@@ -26,6 +27,9 @@ export default function HomeScreen() {
   const [outboxCount, setOutboxCount] = useState(0);
   const [activePackageId, setActivePackageId] = useState<string | null>(null);
   const [preferences, setPreferences] = useState<EmergencyPreferences>(defaultEmergencyPreferences);
+  const [finishCodeInput, setFinishCodeInput] = useState("");
+  const [finishConfirmationOpen, setFinishConfirmationOpen] = useState(false);
+  const [finishError, setFinishError] = useState("");
   const [recordingStatus, setRecordingStatus] = useState(
     "Pronto para gravar pacote local de teste com horario, consentimento e localizacao pontual. Envio externo bloqueado."
   );
@@ -67,7 +71,7 @@ export default function HomeScreen() {
 
   async function handlePanicTrigger() {
     if (activePackageId) {
-      setRecordingStatus("Ja existe um chamado local ativo. Finalize o chamado atual antes de iniciar outro.");
+      requestFinishActiveCall();
       return;
     }
 
@@ -94,6 +98,33 @@ export default function HomeScreen() {
     );
   }
 
+  function requestFinishActiveCall() {
+    if (!activePackageId) return;
+
+    setFinishError("");
+    setFinishCodeInput("");
+
+    if (preferences.finishSafety.requireCode) {
+      setFinishConfirmationOpen(true);
+      return;
+    }
+
+    Alert.alert(
+      "Encerrar chamado ativo?",
+      "O pacote sera encerrado e preservado no cofre local deste dispositivo. Nenhuma evidencia sera apagada.",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Encerrar",
+          style: "destructive",
+          onPress: () => {
+            void handleFinishActiveCall();
+          }
+        }
+      ]
+    );
+  }
+
   async function handleFinishActiveCall() {
     if (!activePackageId) return;
 
@@ -109,6 +140,25 @@ export default function HomeScreen() {
     setRecordingStatus(
       `Chamado ${result.packageRecord.id.slice(0, 8)} finalizado e preservado somente no cofre local deste dispositivo.`
     );
+    setFinishConfirmationOpen(false);
+    setFinishCodeInput("");
+    setFinishError("");
+  }
+
+  async function confirmFinishWithCode() {
+    if (!preferences.finishSafety.requireCode) {
+      void handleFinishActiveCall();
+      return;
+    }
+
+    const codeHash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, finishCodeInput.trim());
+
+    if (codeHash !== preferences.finishSafety.codeHash) {
+      setFinishError("Codigo incorreto. O chamado continua ativo.");
+      return;
+    }
+
+    void handleFinishActiveCall();
   }
 
   return (
@@ -119,18 +169,11 @@ export default function HomeScreen() {
       showBrand
     >
       <PanicButton
-        label="Segurar para acionar"
+        active={Boolean(activePackageId)}
+        label={activePackageId ? "Segurar para encerrar" : "Segurar para acionar"}
         holdMs={preferences.inAppHoldMs}
         onTrigger={handlePanicTrigger}
       />
-
-      {activePackageId ? (
-        <ButtonIcon
-          icon={<Square size={20} color={theme.colors.danger} />}
-          label="Finalizar chamado ativo"
-          onPress={handleFinishActiveCall}
-        />
-      ) : null}
 
       <View style={styles.shortcutGrid}>
         {preferences.emergencyPhoneCall.call190ShortcutEnabled ? (
@@ -173,6 +216,56 @@ export default function HomeScreen() {
       <Link href="/onboarding" asChild>
         <ButtonIcon icon={<Shield size={20} color={theme.colors.primary} />} label="Revisar onboarding" />
       </Link>
+
+      <Modal
+        animationType="fade"
+        onRequestClose={() => setFinishConfirmationOpen(false)}
+        transparent
+        visible={finishConfirmationOpen}
+      >
+        <View style={styles.modalBackdrop}>
+          <View style={styles.finishModal}>
+            <View style={styles.finishHeader}>
+              <LockKeyhole size={22} color={theme.colors.primary} />
+              <Text style={styles.finishTitle}>Confirmar encerramento</Text>
+              <Pressable
+                accessibilityLabel="Cancelar encerramento"
+                accessibilityRole="button"
+                onPress={() => setFinishConfirmationOpen(false)}
+                style={styles.closeButton}
+              >
+                <X size={18} color={theme.colors.textMuted} />
+              </Pressable>
+            </View>
+            <Text style={styles.finishText}>
+              O codigo de seguranca impede encerramento nao autorizado caso outra pessoa tome o aparelho.
+            </Text>
+            <TextInput
+              accessibilityLabel="Codigo para encerrar chamado"
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="number-pad"
+              onChangeText={setFinishCodeInput}
+              placeholder="Codigo de encerramento"
+              placeholderTextColor={theme.colors.textMuted}
+              secureTextEntry
+              style={styles.codeInput}
+              value={finishCodeInput}
+            />
+            {finishError ? <Text style={styles.finishError}>{finishError}</Text> : null}
+            <ButtonIcon
+              icon={<LockKeyhole size={20} color={theme.colors.danger} />}
+              label="Encerrar chamado"
+              onPress={confirmFinishWithCode}
+            />
+            <ButtonIcon
+              icon={<X size={20} color={theme.colors.primary} />}
+              label="Manter ativo"
+              onPress={() => setFinishConfirmationOpen(false)}
+            />
+          </View>
+        </View>
+      </Modal>
     </SafeScreen>
   );
 }
@@ -186,5 +279,62 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: theme.spacing.sm
+  },
+  closeButton: {
+    alignItems: "center",
+    height: 36,
+    justifyContent: "center",
+    width: 36
+  },
+  codeInput: {
+    backgroundColor: theme.colors.surfaceMuted,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    color: theme.colors.text,
+    fontSize: 18,
+    fontWeight: "800",
+    letterSpacing: 0,
+    minHeight: 52,
+    paddingHorizontal: theme.spacing.md
+  },
+  finishError: {
+    color: theme.colors.danger,
+    fontSize: theme.typography.small,
+    fontWeight: "800",
+    lineHeight: 18
+  },
+  finishHeader: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: theme.spacing.sm
+  },
+  finishModal: {
+    backgroundColor: theme.colors.surface,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    gap: theme.spacing.md,
+    maxWidth: 420,
+    padding: theme.spacing.lg,
+    width: "100%"
+  },
+  finishText: {
+    color: theme.colors.textMuted,
+    fontSize: theme.typography.body,
+    lineHeight: 21
+  },
+  finishTitle: {
+    color: theme.colors.text,
+    flex: 1,
+    fontSize: 18,
+    fontWeight: "900"
+  },
+  modalBackdrop: {
+    alignItems: "center",
+    backgroundColor: "rgba(18, 10, 32, 0.78)",
+    flex: 1,
+    justifyContent: "center",
+    padding: theme.spacing.xl
   }
 });

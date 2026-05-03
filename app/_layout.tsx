@@ -3,14 +3,17 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as SplashScreen from "expo-splash-screen";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { LogBox, View } from "react-native";
+import { LogBox, Platform, View } from "react-native";
 import { AppLaunchScreen } from "@/components/AppLaunchScreen";
 import { theme } from "@/design/theme";
 
 const queryClient = new QueryClient();
 
 LogBox.ignoreLogs(["Unable to activate keep awake"]);
-void SplashScreen.preventAutoHideAsync();
+
+if (Platform.OS !== "web") {
+  void SplashScreen.preventAutoHideAsync();
+}
 
 export default function RootLayout() {
   const [booting, setBooting] = useState(true);
@@ -25,7 +28,9 @@ export default function RootLayout() {
     if (nativeSplashHidden) return;
 
     setNativeSplashHidden(true);
-    void SplashScreen.hideAsync();
+    if (Platform.OS !== "web") {
+      void SplashScreen.hideAsync();
+    }
   }, [nativeSplashHidden]);
 
   if (booting) {

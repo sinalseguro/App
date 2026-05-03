@@ -8,6 +8,7 @@
     "userInterfaceStyle": "automatic",
     "icon": "./assets/brand/sinalseguro-icon.png",
     "splash": {
+      "image": "./assets/brand/sinalseguro-symbol.png",
       "resizeMode": "contain",
       "backgroundColor": "#120A20"
     },
@@ -55,7 +56,6 @@
         }
       ],
       "expo-splash-screen",
-      "./plugins/with-android-blank-native-splash",
       [
         "expo-build-properties",
         {

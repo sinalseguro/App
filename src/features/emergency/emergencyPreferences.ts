@@ -1,13 +1,19 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const DEFAULT_FINISH_CODE_HASH = "e41d64db5703c6440b5c714d57251a845bc0bd241480b41a4e7fd3e052f85a82";
+
 export type EmergencyDurationSeconds = 30 | 60 | 180 | 300;
 
 export type EmergencyPreferences = {
-  schemaVersion: 2;
+  schemaVersion: 3;
   defaultDurationSeconds: EmergencyDurationSeconds;
   inAppHoldMs: number;
   locationMode: "ask_when_needed" | "foreground_pre_authorized";
   backgroundAssist: "public_build_blocked" | "homologation_required";
+  finishSafety: {
+    requireCode: boolean;
+    codeHash: string;
+  };
   emergencyPhoneCall: {
     call190ShortcutEnabled: boolean;
     callTrustedContactOnAlert: boolean;
@@ -37,11 +43,15 @@ const PREFERENCES_KEY = "sinalseguro.emergency-preferences.v1";
 export const durationOptions: EmergencyDurationSeconds[] = [30, 60, 180, 300];
 
 export const defaultEmergencyPreferences: EmergencyPreferences = {
-  schemaVersion: 2,
+  schemaVersion: 3,
   defaultDurationSeconds: 60,
   inAppHoldMs: 1800,
   locationMode: "ask_when_needed",
   backgroundAssist: "public_build_blocked",
+  finishSafety: {
+    requireCode: false,
+    codeHash: DEFAULT_FINISH_CODE_HASH
+  },
   emergencyPhoneCall: {
     call190ShortcutEnabled: true,
     callTrustedContactOnAlert: false,
@@ -82,7 +92,7 @@ export async function getEmergencyPreferences(): Promise<EmergencyPreferences> {
   if (!raw) return defaultEmergencyPreferences;
 
   try {
-    const parsed = JSON.parse(raw) as Partial<EmergencyPreferences>;
+    const parsed = JSON.parse(raw) as Omit<Partial<EmergencyPreferences>, "schemaVersion"> & { schemaVersion?: number };
     const phoneCallPreferences = {
       ...defaultEmergencyPreferences.emergencyPhoneCall,
       ...parsed.emergencyPhoneCall,
@@ -95,8 +105,17 @@ export async function getEmergencyPreferences(): Promise<EmergencyPreferences> {
     return {
       ...defaultEmergencyPreferences,
       ...parsed,
-      schemaVersion: 2,
+      schemaVersion: 3,
       defaultDurationSeconds: normalizeDuration(parsed.defaultDurationSeconds),
+      finishSafety: {
+        ...defaultEmergencyPreferences.finishSafety,
+        ...parsed.finishSafety,
+        requireCode: Boolean(parsed.finishSafety?.requireCode),
+        codeHash:
+          typeof parsed.finishSafety?.codeHash === "string" && /^[a-f0-9]{64}$/i.test(parsed.finishSafety.codeHash)
+            ? parsed.finishSafety.codeHash.toLowerCase()
+            : defaultEmergencyPreferences.finishSafety.codeHash
+      },
       emergencyPhoneCall: phoneCallPreferences,
       trustedStream: {
         ...defaultEmergencyPreferences.trustedStream,

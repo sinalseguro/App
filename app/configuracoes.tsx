@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { Linking, StyleSheet, Text, View } from "react-native";
+import { Linking, StyleSheet, Text, TextInput, View } from "react-native";
 import * as Location from "expo-location";
+import * as Crypto from "expo-crypto";
 import {
   Clock,
+  LockKeyhole,
   LocateFixed,
   MapPin,
   Mic,
@@ -41,6 +43,7 @@ export default function SettingsScreen() {
   const [foregroundStatus, setForegroundStatus] = useState<PermissionStatusText>("pendente");
   const [backgroundStatus, setBackgroundStatus] = useState<PermissionStatusText>("bloqueado");
   const [servicesEnabled, setServicesEnabled] = useState(false);
+  const [finishCodeDraft, setFinishCodeDraft] = useState("");
   const [statusText, setStatusText] = useState("Carregando preferencias de emergencia...");
 
   async function refreshReadiness() {
@@ -113,6 +116,47 @@ export default function SettingsScreen() {
         ? "Preferencia futura marcada para analise. Ligacao real exige contato validado, contrato e confirmacao."
         : "Preferencia futura de chamada ao anjo desmarcada."
     );
+  }
+
+  async function toggleFinishSafetyCode() {
+    if (!preferences) return;
+
+    const enabled = !preferences.finishSafety.requireCode;
+    await updatePreferences(
+      {
+        ...preferences,
+        finishSafety: {
+          ...preferences.finishSafety,
+          requireCode: enabled
+        }
+      },
+      enabled
+        ? "Codigo de encerramento ativado. O padrao local inicial e 1900; altere abaixo antes de homologar."
+        : "Codigo de encerramento desativado. Finalizacao volta a exigir apenas confirmacao."
+    );
+  }
+
+  async function saveFinishCode() {
+    if (!preferences) return;
+
+    const normalizedCode = finishCodeDraft.trim();
+    if (normalizedCode.length < 4) {
+      setStatusText("Use um codigo de encerramento com pelo menos 4 caracteres.");
+      return;
+    }
+
+    const codeHash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, normalizedCode.slice(0, 12));
+    await updatePreferences(
+      {
+        ...preferences,
+        finishSafety: {
+          requireCode: true,
+          codeHash
+        }
+      },
+      "Codigo de encerramento atualizado como hash local. O codigo nao entra em logs, URLs, push ou pacote de evidencia."
+    );
+    setFinishCodeDraft("");
   }
 
   async function toggleStreamScope(scope: keyof EmergencyPreferences["trustedStream"]["requestedMedia"]) {
@@ -190,6 +234,43 @@ export default function SettingsScreen() {
             />
           ))}
         </View>
+      </View>
+
+      <View style={styles.card}>
+        <View style={styles.cardHeader}>
+          <LockKeyhole size={20} color={theme.colors.primary} />
+          <Text style={styles.cardTitle}>Seguranca para encerrar</Text>
+        </View>
+        <Text style={styles.text}>
+          Opcional e desativado por padrao. Quando ativo, o SOS so encerra o chamado depois do gesto e do codigo local.
+        </Text>
+        <ButtonIcon
+          icon={<LockKeyhole size={18} color={theme.colors.primary} />}
+          label={preferences?.finishSafety.requireCode ? "Codigo ativo" : "Ativar codigo"}
+          onPress={toggleFinishSafetyCode}
+        />
+        {preferences?.finishSafety.requireCode ? (
+          <View style={styles.codeBlock}>
+            <TextInput
+              accessibilityLabel="Novo codigo de encerramento"
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="number-pad"
+              maxLength={12}
+              onChangeText={setFinishCodeDraft}
+              placeholder="Novo codigo"
+              placeholderTextColor={theme.colors.textMuted}
+              secureTextEntry
+              style={styles.codeInput}
+              value={finishCodeDraft}
+            />
+            <ButtonIcon
+              icon={<LockKeyhole size={18} color={theme.colors.primary} />}
+              label="Salvar codigo"
+              onPress={saveFinishCode}
+            />
+          </View>
+        ) : null}
       </View>
 
       <PermissionGate
@@ -302,6 +383,20 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 18,
     fontWeight: "800"
+  },
+  codeBlock: {
+    gap: theme.spacing.sm
+  },
+  codeInput: {
+    backgroundColor: theme.colors.surfaceMuted,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    color: theme.colors.text,
+    fontSize: 17,
+    fontWeight: "800",
+    minHeight: 52,
+    paddingHorizontal: theme.spacing.md
   },
   optionGrid: {
     gap: theme.spacing.sm

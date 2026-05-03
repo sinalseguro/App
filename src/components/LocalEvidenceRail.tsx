@@ -36,6 +36,7 @@ function ActionButton({ label, danger = false, disabled = false, icon, onPress, 
       accessibilityRole="button"
       accessibilityState={{ disabled }}
       disabled={disabled}
+      hitSlop={8}
       onPress={onPress}
       style={({ pressed }) => [
         styles.actionButton,
@@ -240,7 +241,7 @@ const styles = StyleSheet.create({
     width: 150
   },
   fileNodeExpanded: {
-    minHeight: 290,
+    minHeight: 328,
     width: 270
   },
   fileNodeSelected: {
@@ -265,7 +266,7 @@ const styles = StyleSheet.create({
   },
   rayAction: {
     position: "absolute",
-    width: 86,
+    width: 92,
     zIndex: 2
   },
   rayActionDelete: {
@@ -320,11 +321,11 @@ const styles = StyleSheet.create({
     transform: [{ rotate: "90deg" }]
   },
   rayPanel: {
-    height: 150,
+    height: 178,
     marginTop: -theme.spacing.sm,
     position: "relative"
   },
   rayPanelActive: {
-    height: 214
+    height: 236
   }
 });

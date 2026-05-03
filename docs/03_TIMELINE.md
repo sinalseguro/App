@@ -323,6 +323,45 @@ Validacoes executadas:
 - evidencias salvas em `docs/evidencias/android/2026-05-03-ux-cofre/`;
 - relatorio criado em `docs/18_VALIDACAO_UX_SPLASH_COFRE_ANDROID.md`.
 
+## 2026-05-03 - Refino splash, SOS ativo, player local e simulador web
+
+Status: implementado e validado no navegador; aguardando rebuild Android final.
+
+Especialistas acionados:
+
+- Tarcila/Norman: identidade visual, splash nativa com simbolo discreto, SOS ativo e layout do Cofre.
+- Ada/Margaret/Kim: Expo web, dependencia `react-native-web`, splash nativa e build Android.
+- Hedy: protocolo do botao SOS ativo, encerramento e player local.
+- Schneier/Doneda/Myers: codigo de encerramento, hash local, exclusao, logs e criterios de aceite.
+
+Decisoes:
+
+- a splash nativa volta a exibir apenas o simbolo aprovado, evitando tela roxa vazia antes do React;
+- a splash React continua com simbolo maior, nome `SinalSeguro` e loading;
+- `SplashScreen.preventAutoHideAsync()` fica restrito a Android/iOS para nao bloquear web;
+- simulador web passa a funcionar com `react-native-web`;
+- SOS ativo exibe estado `ATIVO` e particulas discretas, com ate 8 pontos simultaneos;
+- quando existe chamado ativo, o mesmo SOS serve para encerrar com o mesmo gesto de segurar;
+- encerramento sem codigo usa confirmacao; encerramento com codigo usa modal proprio do app;
+- codigo de encerramento vem desativado por padrao e fica salvo como hash local;
+- player local ganhou controles de revisao, progresso e reinicio;
+- exclusao local pelo raio deixa de depender de alerta nativo e remove o pacote direto do cofre local com tombstone.
+
+Validacoes executadas:
+
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `npm test`: aprovado;
+- `npm run web -- --clear`: aprovado apos instalar `react-native-web`;
+- Browser Use validou Home e `Cofre local` em `http://localhost:8081`;
+- `./gradlew :app:assembleDebug --console=plain`: aprovado;
+- `adb install -r android/app/build/outputs/apk/debug/app-debug.apk`: aprovado;
+- `npm run release:android:readiness`: pronto condicionado, com pendencias esperadas de assinatura release e diretorio nativo gerado;
+- Android debug carregou bundle pelo Metro e `logcat` registrou `ReactNativeJS: Running "main"`;
+- captura visual Android ficou bloqueada por overlay MIUI `NotificationShade`/AOD e `ScreenOnProximitySensorGuide`;
+- evidencias salvas em `docs/evidencias/browser/2026-05-03-simulador/`;
+- relatorio criado em `docs/19_REFINO_SPLASH_SOS_PLAYER_BROWSER.md`.
+
 ## Modelo de registro
 
 | Data | Evento | Responsavel | Impacto | Proximo passo |

@@ -64,23 +64,6 @@ export default function LocalFilesScreen() {
     );
   }
 
-  function confirmDeletePackage(packageRecord: EmergencyPackage) {
-    Alert.alert(
-      "Excluir arquivo local",
-      "A exclusao remove este pacote do cofre deste dispositivo. Ela nao promete apagar backups do sistema, copias autorizadas futuras ou registros remotos.",
-      [
-        { text: "Cancelar", style: "cancel" },
-        {
-          text: "Excluir",
-          style: "destructive",
-          onPress: () => {
-            void deleteLocalPackage(packageRecord.id);
-          }
-        }
-      ]
-    );
-  }
-
   async function deleteLocalPackage(packageId: string) {
     await deleteEmergencyPackage(packageId);
     setSelectedPackageId((currentSelectedId) => (currentSelectedId === packageId ? undefined : currentSelectedId));
@@ -132,7 +115,9 @@ export default function LocalFilesScreen() {
             onSelectPackage={selectPackage}
             onToggleActions={togglePackageActions}
             onShareBlocked={showShareBlocked}
-            onDeletePackage={confirmDeletePackage}
+            onDeletePackage={(packageRecord) => {
+              void deleteLocalPackage(packageRecord.id);
+            }}
             onFinishPackage={finishPackage}
           />
         ) : null}

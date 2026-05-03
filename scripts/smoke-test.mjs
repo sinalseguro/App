@@ -24,8 +24,7 @@ const requiredFiles = [
   "src/features/emergency/emergencyRecorder.ts",
   "src/features/emergency/emergencyOutbox.ts",
   "src/storage/secureJsonStore.ts",
-  "plugins/with-android-blank-native-splash.js",
-  "android/app/src/main/res/drawable/splashscreen_blank.xml"
+  "android/app/src/main/res/drawable-xxhdpi/splashscreen_logo.png"
 ];
 
 for (const file of requiredFiles) {
@@ -69,8 +68,8 @@ if (locationCapture.includes(["error", "message"].join("."))) {
 
 const appConfig = await readFile("app.json", "utf8");
 
-if (appConfig.includes("\"image\": \"./assets/brand/sinalseguro-symbol.png\"")) {
-  throw new Error("Splash nativa nao deve renderizar a logo antiga; o splash com logo/loading fica no React.");
+if (!appConfig.includes("\"image\": \"./assets/brand/sinalseguro-symbol.png\"")) {
+  throw new Error("Splash nativa precisa exibir o simbolo discreto para evitar tela roxa vazia antes do React.");
 }
 
 const launchScreen = await readFile("src/components/AppLaunchScreen.tsx", "utf8");
@@ -87,6 +86,18 @@ if (!localEvidenceRail.includes("onDeletePackage") || !localEvidenceRail.include
 
 if (!localEvidenceRail.includes("rayActionView") || !localEvidenceRail.includes("rayHub")) {
   throw new Error("Cofre local precisa manter menu de acoes em raios ancorado no icone do arquivo.");
+}
+
+const panicButton = await readFile("src/components/PanicButton.tsx", "utf8");
+
+if (!panicButton.includes("particleConfigs") || !panicButton.includes("buttonArmed")) {
+  throw new Error("Botao SOS ativo precisa ter estado visual proprio e particulas discretas.");
+}
+
+const emergencyPreferences = await readFile("src/features/emergency/emergencyPreferences.ts", "utf8");
+
+if (!emergencyPreferences.includes("finishSafety") || !emergencyPreferences.includes("codeHash")) {
+  throw new Error("Encerramento seguro precisa ser configuravel e usar hash local do codigo.");
 }
 
 const emergencyOutbox = await readFile("src/features/emergency/emergencyOutbox.ts", "utf8");

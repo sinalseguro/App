@@ -102,15 +102,33 @@ Estado em 2026-05-02:
 - evidencias ficaram em `docs/evidencias/android/2026-05-03-ux-cofre/`;
 - relatorio complementar ficou em `docs/18_VALIDACAO_UX_SPLASH_COFRE_ANDROID.md`;
 - gates aprovados: `typecheck`, `lint`, `test`, `assembleDebug`, install Android via ADB Wi-Fi.
+- apos nova revisao de Roberto em 2026-05-03, Tarcila/Norman orientaram trocar a splash nativa vazia por simbolo discreto aprovado;
+- `app/_layout.tsx` passou a proteger `expo-splash-screen` apenas em Android/iOS, destravando o simulador web;
+- `react-native-web` foi instalado para permitir preview em navegador;
+- Home no navegador foi validada com SOS central e atalhos principais em `http://localhost:8081`;
+- `Cofre local` no navegador foi validado com player dedicado e area de revisao local;
+- SOS ativo agora muda para `ATIVO`, exibe particulas discretas e usa o mesmo gesto para acionar ou encerrar;
+- encerramento seguro ganhou confirmacao e codigo opcional, desativado por padrao, armazenado como hash local;
+- `Configuracoes` ganhou area `Seguranca para encerrar`;
+- player local ganhou controles de revisar, pausar, reiniciar e linha de progresso;
+- exclusao local pelo raio passou a remover o pacote diretamente do cofre local com tombstone, sem depender de `Alert` nativo;
+- evidencias browser ficaram em `docs/evidencias/browser/2026-05-03-simulador/`;
+- relatorio complementar ficou em `docs/19_REFINO_SPLASH_SOS_PLAYER_BROWSER.md`;
+- APK debug foi reconstruido e instalado no Android via ADB Wi-Fi;
+- readiness Android passou como pronto condicionado, com pendencias esperadas de assinatura release e diretorio nativo gerado;
+- `logcat` confirmou `ReactNativeJS: Running "main"` no Android debug, sem crash fatal;
+- captura visual Android ficou bloqueada por overlay MIUI `NotificationShade`/AOD e `ScreenOnProximitySensorGuide`, exigindo desbloqueio/limpeza do overlay para validacao visual fisica;
+- gates aprovados nesta revisao: `typecheck`, `lint`, `test`, `web`, `assembleDebug`, `install Android`, `release:android:readiness`.
 
 Proximas acoes:
 
-1. Coletar comentarios de Roberto sobre Home, Cofre, player e acoes em raio.
-2. Gerar build preview/release com bundle JS embarcado para validacao sem Metro.
-3. Publicar release interna 3 se Roberto aprovar o layout validado.
-4. Atualizar portal/manifestos para release interna 3 apos APK assinado.
-5. Preparar TestFlight/App Store para iOS.
-6. Conectar mock de API ao contrato OpenAPI.
-7. Implementar adaptador de envio real apenas depois de auth, consentimento, retencao e revisao Schneier/Doneda.
-8. Evoluir Fase 1 com componentes compartilhados revisados por Norman/Tarcila.
-9. Manter `origin` usando `github-sinalseguro-admin` para pushes do repo App.
+1. Rebuild e instalar Android com a versao refinada.
+2. Validar no aparelho: splash com simbolo, Home, SOS ativo, encerramento sem codigo, encerramento com codigo, Cofre/player e excluir.
+3. Gerar build preview/release com bundle JS embarcado para validacao sem Metro.
+4. Publicar release interna 3 se Roberto aprovar o layout validado.
+5. Atualizar portal/manifestos para release interna 3 apos APK assinado.
+6. Preparar TestFlight/App Store para iOS.
+7. Conectar mock de API ao contrato OpenAPI.
+8. Implementar adaptador de envio real apenas depois de auth, consentimento, retencao e revisao Schneier/Doneda.
+9. Evoluir Fase 1 com componentes compartilhados revisados por Norman/Tarcila.
+10. Manter `origin` usando `github-sinalseguro-admin` para pushes do repo App.
