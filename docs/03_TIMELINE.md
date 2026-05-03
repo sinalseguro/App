@@ -362,6 +362,55 @@ Validacoes executadas:
 - evidencias salvas em `docs/evidencias/browser/2026-05-03-simulador/`;
 - relatorio criado em `docs/19_REFINO_SPLASH_SOS_PLAYER_BROWSER.md`.
 
+## 2026-05-03 - Home SOS fixa e modular validada em Browser/Android
+
+Status: implementado, instalado no Android e pronto para validacao visual do usuario.
+
+Especialistas acionados:
+
+- Tarcila/Norman: revisao de identidade visual, home fixa, proporcao do SOS, icones oficiais e menu retratil.
+- Ada/Hedy/Margaret: modularizacao mobile, gesto SOS, modelo de chamada oficial e validacao Android.
+- Schneier/Doneda: fallback web controlado, codigo de encerramento sem padrao universal e limites de privacidade.
+- Myers: gates locais, Browser Use, ADB, screenshot e logcat.
+
+Decisoes:
+
+- Home deixou de usar `SafeScreen` e `ScrollView`;
+- header nativo foi removido da rota inicial para evitar duplicidade visual;
+- titulo/subtitulo antigos do corpo foram removidos;
+- SOS central passou a ocupar area responsiva com `width: "75%"` e `aspectRatio: 1`;
+- tela principal fica fixa com apenas SOS e atalhos oficiais `Policia 190`, `Bombeiros 193` e `SAMU 192`;
+- cofre/player, anjos, convites, configuracoes e atividade ficam no menu retratil da engrenagem;
+- Home foi modularizada em `src/features/emergency-home/`, com componentes e modelo de chamada em arquivos proprios;
+- `EmergencyCallTarget` concentra os dados e URI `tel:` dos canais oficiais;
+- fallback web nao chama `expo-secure-store` e a simulacao web nao captura localizacao real;
+- falha de persistencia do SOS passa a ser controlada, sem marcar chamado ativo se o pacote local nao for preservado;
+- codigo universal `1900` deixou de ser padrao valido; ativacao exige novo codigo salvo como hash local.
+
+Validacoes executadas:
+
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `npm test`: aprovado;
+- `npm run release:android:readiness`: pronto condicionado;
+- `git diff --check`: aprovado;
+- Browser Use validou explicitamente `http://localhost:8081/`;
+- `./gradlew :app:assembleDebug --console=plain`: aprovado;
+- `adb -s 192.168.0.5:5555 install -r android/app/build/outputs/apk/debug/app-debug.apk`: aprovado;
+- Android fisico validou Home, drawer e SOS ativo por gesto longo;
+- `logcat` ficou sem `FATAL`, `AndroidRuntime`, `RedBox`, `Unable to load script` ou `setValueWithKeyAsync`.
+
+Documentacao:
+
+- `docs/20_HOME_SOS_FIXA_MODULAR_ANDROID_BROWSER.md`.
+
+Evidencias:
+
+- `docs/evidencias/browser/2026-05-03-home-sos-refatorada/01-home-sos-fixa.png`;
+- `docs/evidencias/android/2026-05-03-home-sos-refatorada/01-home-sos-fixa.png`;
+- `docs/evidencias/android/2026-05-03-home-sos-refatorada/02-home-drawer.png`;
+- `docs/evidencias/android/2026-05-03-home-sos-refatorada/03-sos-ativo.png`.
+
 ## Modelo de registro
 
 | Data | Evento | Responsavel | Impacto | Proximo passo |

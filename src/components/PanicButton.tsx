@@ -143,13 +143,14 @@ export function PanicButton({ active = false, label, holdMs, onTrigger }: PanicB
   });
 
   return (
-    <View style={styles.wrapper}>
+    <View style={styles.wrapper} testID="panic-button-area">
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={label}
         onPressIn={startHold}
         onPressOut={clearHold}
         style={[styles.button, active && styles.buttonArmed, holding && styles.buttonActive]}
+        testID="panic-button"
       >
         {particleValues.map((value, index) => (
           <AnimatedParticle key={index} config={particleConfigs[index]} enabled={active} value={value} />
@@ -170,20 +171,23 @@ export function PanicButton({ active = false, label, holdMs, onTrigger }: PanicB
 const styles = StyleSheet.create({
   wrapper: {
     alignItems: "center",
-    gap: theme.spacing.md
+    gap: theme.spacing.sm,
+    width: "100%"
   },
   button: {
     alignItems: "center",
     backgroundColor: theme.colors.panic,
     borderColor: theme.colors.accentSoft,
-    borderRadius: 88,
+    borderRadius: theme.radius.pill,
     borderWidth: 6,
     gap: theme.spacing.xs,
-    height: 176,
+    aspectRatio: 1,
     justifyContent: "center",
+    maxWidth: 430,
+    minWidth: 240,
     padding: theme.spacing.lg,
     overflow: "visible",
-    width: 176,
+    width: "75%",
     ...theme.shadow
   },
   buttonArmed: {
@@ -195,9 +199,9 @@ const styles = StyleSheet.create({
   },
   label: {
     color: theme.colors.textOnDark,
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: "800",
-    lineHeight: 17,
+    lineHeight: 21,
     textAlign: "center"
   },
   progressFill: {
@@ -212,11 +216,11 @@ const styles = StyleSheet.create({
     height: 5,
     marginTop: theme.spacing.xs,
     overflow: "hidden",
-    width: 100
+    width: "66%"
   },
   sos: {
     color: theme.colors.textOnDark,
-    fontSize: 38,
+    fontSize: 56,
     fontWeight: "900",
     textAlign: "center"
   },

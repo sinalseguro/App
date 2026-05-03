@@ -70,3 +70,17 @@ Checklist minimo de Myers:
 - validar pacote com localizacao permitida, negada e servico indisponivel;
 - confirmar que API e P2P ficam como pendentes, sem transmissao real;
 - confirmar que midia real permanece bloqueada e sem permissao de camera/microfone.
+
+## Checkpoint 2026-05-03 - Home SOS fixa
+
+Checklist executado por Myers com supervisao de Tarcila, Norman, Ada, Hedy, Schneier e Doneda:
+
+- validar `http://localhost:8081/`, nao `/arquivos`, quando o objetivo for tela inicial;
+- confirmar Home sem `SafeScreen`/`ScrollView` e sem rolagem na superficie de emergencia;
+- confirmar que titulo/subtitulo duplicados foram removidos do corpo;
+- confirmar SOS circular com largura responsiva de 75% e texto legivel;
+- confirmar atalhos oficiais `Policia 190`, `Bombeiros 193` e `SAMU 192`;
+- confirmar drawer por engrenagem com modo atual, cofre/player, anjos, convites, configuracoes e atividade;
+- acionar SOS por gesto longo no Android fisico e confirmar estado `ATIVO`;
+- verificar `logcat` sem `FATAL`, `AndroidRuntime`, `RedBox`, `Unable to load script` ou `setValueWithKeyAsync`;
+- registrar evidencias saneadas em `docs/evidencias/browser/2026-05-03-home-sos-refatorada/` e `docs/evidencias/android/2026-05-03-home-sos-refatorada/`.

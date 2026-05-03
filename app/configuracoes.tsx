@@ -122,17 +122,20 @@ export default function SettingsScreen() {
     if (!preferences) return;
 
     const enabled = !preferences.finishSafety.requireCode;
+    if (enabled) {
+      setStatusText("Digite um novo codigo e toque em Salvar codigo para ativar o encerramento protegido.");
+      return;
+    }
+
     await updatePreferences(
       {
         ...preferences,
         finishSafety: {
           ...preferences.finishSafety,
-          requireCode: enabled
+          requireCode: false
         }
       },
-      enabled
-        ? "Codigo de encerramento ativado. O padrao local inicial e 1900; altere abaixo antes de homologar."
-        : "Codigo de encerramento desativado. Finalizacao volta a exigir apenas confirmacao."
+      "Codigo de encerramento desativado. Finalizacao volta a exigir apenas confirmacao."
     );
   }
 
@@ -249,28 +252,26 @@ export default function SettingsScreen() {
           label={preferences?.finishSafety.requireCode ? "Codigo ativo" : "Ativar codigo"}
           onPress={toggleFinishSafetyCode}
         />
-        {preferences?.finishSafety.requireCode ? (
-          <View style={styles.codeBlock}>
-            <TextInput
-              accessibilityLabel="Novo codigo de encerramento"
-              autoCapitalize="none"
-              autoCorrect={false}
-              keyboardType="number-pad"
-              maxLength={12}
-              onChangeText={setFinishCodeDraft}
-              placeholder="Novo codigo"
-              placeholderTextColor={theme.colors.textMuted}
-              secureTextEntry
-              style={styles.codeInput}
-              value={finishCodeDraft}
-            />
-            <ButtonIcon
-              icon={<LockKeyhole size={18} color={theme.colors.primary} />}
-              label="Salvar codigo"
-              onPress={saveFinishCode}
-            />
-          </View>
-        ) : null}
+        <View style={styles.codeBlock}>
+          <TextInput
+            accessibilityLabel="Novo codigo de encerramento"
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="number-pad"
+            maxLength={12}
+            onChangeText={setFinishCodeDraft}
+            placeholder="Novo codigo"
+            placeholderTextColor={theme.colors.textMuted}
+            secureTextEntry
+            style={styles.codeInput}
+            value={finishCodeDraft}
+          />
+          <ButtonIcon
+            icon={<LockKeyhole size={18} color={theme.colors.primary} />}
+            label="Salvar codigo"
+            onPress={saveFinishCode}
+          />
+        </View>
       </View>
 
       <PermissionGate

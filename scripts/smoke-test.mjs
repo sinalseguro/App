@@ -17,6 +17,10 @@ const requiredFiles = [
   "src/components/LocalEvidenceRail.tsx",
   "src/design/tokens.ts",
   "src/components/PanicButton.tsx",
+  "src/features/emergency-home/EmergencyCallDock.tsx",
+  "src/features/emergency-home/EmergencyCallTarget.ts",
+  "src/features/emergency-home/EmergencySettingsDrawer.tsx",
+  "src/features/emergency-home/EmergencyTopBar.tsx",
   "src/features/invitations/invitationService.ts",
   "src/features/evidence/evidencePolicy.ts",
   "src/features/emergency/packagePresentation.ts",
@@ -94,10 +98,46 @@ if (!panicButton.includes("particleConfigs") || !panicButton.includes("buttonArm
   throw new Error("Botao SOS ativo precisa ter estado visual proprio e particulas discretas.");
 }
 
+if (!panicButton.includes("width: \"75%\"") || !panicButton.includes("aspectRatio: 1")) {
+  throw new Error("Botao SOS precisa ocupar area responsiva de destaque na home.");
+}
+
+const homeScreen = await readFile("app/index.tsx", "utf8");
+
+if (homeScreen.includes("<SafeScreen") || homeScreen.includes("Rede de apoio discreta")) {
+  throw new Error("Home de emergencia nao pode usar tela rolavel nem manter titulo/subtitulo duplicados.");
+}
+
+const emergencyTopBar = await readFile("src/features/emergency-home/EmergencyTopBar.tsx", "utf8");
+const emergencyDrawer = await readFile("src/features/emergency-home/EmergencySettingsDrawer.tsx", "utf8");
+const emergencyCallTarget = await readFile("src/features/emergency-home/EmergencyCallTarget.ts", "utf8");
+
+if (!emergencyTopBar.includes("home-settings-toggle") || !emergencyDrawer.includes("Cofre e player")) {
+  throw new Error("Home precisa manter engrenagem retratil com acesso a cofre/player, anjos, convites e configuracoes.");
+}
+
+if (
+  !emergencyCallTarget.includes("Policia 190") ||
+  !emergencyCallTarget.includes("\"193\"") ||
+  !emergencyCallTarget.includes("\"192\"")
+) {
+  throw new Error("Home precisa manter atalhos oficiais Policia 190, Bombeiros 193 e SAMU 192.");
+}
+
 const emergencyPreferences = await readFile("src/features/emergency/emergencyPreferences.ts", "utf8");
 
 if (!emergencyPreferences.includes("finishSafety") || !emergencyPreferences.includes("codeHash")) {
   throw new Error("Encerramento seguro precisa ser configuravel e usar hash local do codigo.");
+}
+
+if (/const DEFAULT_FINISH_CODE_HASH = "e41d64/.test(emergencyPreferences)) {
+  throw new Error("Codigo universal de encerramento nao pode permanecer como padrao valido.");
+}
+
+const secureStorage = await readFile("src/security/secureStorage.ts", "utf8");
+
+if (!secureStorage.includes("sessionStorage") || !secureStorage.includes("Platform.OS !== \"web\"")) {
+  throw new Error("SecureStore precisa ter fallback web controlado sem chamar modulo nativo ausente.");
 }
 
 const emergencyOutbox = await readFile("src/features/emergency/emergencyOutbox.ts", "utf8");

@@ -119,11 +119,26 @@ Estado em 2026-05-02:
 - `logcat` confirmou `ReactNativeJS: Running "main"` no Android debug, sem crash fatal;
 - captura visual Android ficou bloqueada por overlay MIUI `NotificationShade`/AOD e `ScreenOnProximitySensorGuide`, exigindo desbloqueio/limpeza do overlay para validacao visual fisica;
 - gates aprovados nesta revisao: `typecheck`, `lint`, `test`, `web`, `assembleDebug`, `install Android`, `release:android:readiness`.
+- apos correcao de rota apontada por Roberto, validacao da Home passou a ser feita explicitamente em `http://localhost:8081/`, nao em `/arquivos`;
+- Tarcila/Norman reprovaram a Home anterior por rolagem, texto duplicado, SOS pequeno, menu ausente e atalhos incompletos;
+- Home foi refatorada para superficie fixa de emergencia, sem `SafeScreen`/`ScrollView`, com header nativo oculto apenas na rota inicial;
+- tela principal agora mostra apenas topo discreto, SOS central responsivo e atalhos oficiais `Policia 190`, `Bombeiros 193` e `SAMU 192`;
+- drawer da engrenagem concentra `Modo atual`, `Cofre e player`, `Anjos`, `Convites`, `Configuracoes` e status de atividade;
+- criterios de arquitetura atualizados: componentes de layout/regra ficam em arquivos proprios sob `src/features/emergency-home/`;
+- `EmergencyCallTarget` passou a modelar os canais oficiais e URI `tel:`;
+- fallback web de `secureStorage` deixou de chamar `expo-secure-store` e usa armazenamento de simulador por sessao/memoria;
+- SOS web nao captura localizacao real e erro de persistencia vira falha controlada;
+- codigo universal de encerramento deixou de ser padrao valido; ativacao exige novo codigo salvo como hash local;
+- Browser Use validou Home fixa e drawer em `http://localhost:8081/`;
+- Android fisico recebeu APK debug atualizado via ADB Wi-Fi e validou Home, drawer e SOS ativo com gesto longo;
+- evidencias foram salvas em `docs/evidencias/browser/2026-05-03-home-sos-refatorada/` e `docs/evidencias/android/2026-05-03-home-sos-refatorada/`;
+- relatorio complementar criado em `docs/20_HOME_SOS_FIXA_MODULAR_ANDROID_BROWSER.md`;
+- gates aprovados nesta revisao: `typecheck`, `lint`, `test`, `release:android:readiness`, `git diff --check`, `assembleDebug`, `adb install`, Browser Use e logcat filtrado.
 
 Proximas acoes:
 
-1. Rebuild e instalar Android com a versao refinada.
-2. Validar no aparelho: splash com simbolo, Home, SOS ativo, encerramento sem codigo, encerramento com codigo, Cofre/player e excluir.
+1. Submeter Home fixa/SOS ativo para validacao visual direta de Roberto.
+2. Validar encerramento manual do SOS ativo no Android e no browser.
 3. Gerar build preview/release com bundle JS embarcado para validacao sem Metro.
 4. Publicar release interna 3 se Roberto aprovar o layout validado.
 5. Atualizar portal/manifestos para release interna 3 apos APK assinado.

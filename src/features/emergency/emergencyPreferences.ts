@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const DEFAULT_FINISH_CODE_HASH = "e41d64db5703c6440b5c714d57251a845bc0bd241480b41a4e7fd3e052f85a82";
+const LEGACY_DEFAULT_FINISH_CODE_HASH = "e41d64db5703c6440b5c714d57251a845bc0bd241480b41a4e7fd3e052f85a82";
+const DEFAULT_FINISH_CODE_HASH = "";
 
 export type EmergencyDurationSeconds = 30 | 60 | 180 | 300;
 
@@ -93,6 +94,14 @@ export async function getEmergencyPreferences(): Promise<EmergencyPreferences> {
 
   try {
     const parsed = JSON.parse(raw) as Omit<Partial<EmergencyPreferences>, "schemaVersion"> & { schemaVersion?: number };
+    const parsedFinishCodeHash =
+      typeof parsed.finishSafety?.codeHash === "string" && /^[a-f0-9]{64}$/i.test(parsed.finishSafety.codeHash)
+        ? parsed.finishSafety.codeHash.toLowerCase()
+        : defaultEmergencyPreferences.finishSafety.codeHash;
+    const normalizedFinishCodeHash =
+      parsedFinishCodeHash === LEGACY_DEFAULT_FINISH_CODE_HASH
+        ? defaultEmergencyPreferences.finishSafety.codeHash
+        : parsedFinishCodeHash;
     const phoneCallPreferences = {
       ...defaultEmergencyPreferences.emergencyPhoneCall,
       ...parsed.emergencyPhoneCall,
@@ -110,11 +119,8 @@ export async function getEmergencyPreferences(): Promise<EmergencyPreferences> {
       finishSafety: {
         ...defaultEmergencyPreferences.finishSafety,
         ...parsed.finishSafety,
-        requireCode: Boolean(parsed.finishSafety?.requireCode),
-        codeHash:
-          typeof parsed.finishSafety?.codeHash === "string" && /^[a-f0-9]{64}$/i.test(parsed.finishSafety.codeHash)
-            ? parsed.finishSafety.codeHash.toLowerCase()
-            : defaultEmergencyPreferences.finishSafety.codeHash
+        requireCode: Boolean(parsed.finishSafety?.requireCode && normalizedFinishCodeHash),
+        codeHash: normalizedFinishCodeHash
       },
       emergencyPhoneCall: phoneCallPreferences,
       trustedStream: {

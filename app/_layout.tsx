@@ -53,7 +53,7 @@ export default function RootLayout() {
             contentStyle: { backgroundColor: theme.colors.background }
           }}
         >
-          <Stack.Screen name="index" options={{ title: "SinalSeguro" }} />
+          <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="onboarding" options={{ title: "Boas-vindas" }} />
           <Stack.Screen name="alerta" options={{ title: "Alerta" }} />
           <Stack.Screen name="arquivos" options={{ title: "Cofre local" }} />

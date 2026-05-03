@@ -28,6 +28,7 @@ Supervisao: Ze
 | B02 | Componentes base | MVP | Ada/Norman | Componentes obrigatorios implementados. |
 | B03 | Fluxo de onboarding | MVP | Norman/Myers | Fluxo claro, acessivel e sem dado excessivo. |
 | B04 | Modo discreto | MVP/Juridico | Norman/Schneier | Reduz exposicao sem enganar loja/sistema. |
+| B05 | Home SOS fixa e modular | MVP | Tarcila/Norman/Ada/Myers | Sem rolagem, SOS 75%, drawer da engrenagem e atalhos oficiais validados. |
 
 ## Epico C - Alertas
 
@@ -38,6 +39,7 @@ Supervisao: Ze
 | C03 | Outbox criptografada | MVP | Hedy/Schneier | Pacote local salvo em cofre do sistema e pronto para retry. |
 | C04 | Localizacao pontual | MVP/Juridico | Ada/Doneda | Permissao explicada, revogavel e registrada no pacote. |
 | C05 | Pacote de emergencia | MVP/Juridico | Hedy/Ada/Schneier | Hash, localizacao, consentimento, midia bloqueada e plano API/P2P. |
+| C06 | SOS ativo com falha controlada | MVP/Juridico | Hedy/Schneier/Myers | Estado `ATIVO`, particulas discretas, persistencia com try/catch e sem crash web. |
 
 ## Epico D - API e anjos
 
@@ -61,3 +63,4 @@ Supervisao: Ze
 | E07 | Etapa 1 Android instalavel | MVP | Cristine/Kim/Ada/Margaret | `docs/13_ETAPA_1_ANDROID_INSTALAVEL.md`, EAS preview APK e readiness versionados. |
 | E08 | Higienizacao do primeiro APK | MVP/Juridico | Schneier/Doneda/Myers | Sem camera/microfone, sem logs de alerta, release notes de alerta simulado. |
 | E09 | Publicacao do APK interno | MVP | Kim/Cristine | GitHub Release com `sinalseguro-android.apk`, `checksums.txt` e link validado no portal. |
+| E10 | Validacao Home SOS Browser/Android | MVP | Myers/Cristine | Evidencias em `docs/evidencias/` e relatorio `docs/20_HOME_SOS_FIXA_MODULAR_ANDROID_BROWSER.md`. |

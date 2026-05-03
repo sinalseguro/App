@@ -1,14 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
-import { Link, useFocusEffect } from "expo-router";
-import { Alert, Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import { Archive, Shield, Users, Settings, Radio, PhoneCall, LockKeyhole, X } from "lucide-react-native";
+import { router, useFocusEffect } from "expo-router";
+import { Alert, Linking, Modal, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { LockKeyhole, X } from "lucide-react-native";
 import * as Crypto from "expo-crypto";
-import { SafeScreen } from "@/components/SafeScreen";
-import { StatusBanner } from "@/components/StatusBanner";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { ButtonIcon } from "@/components/ButtonIcon";
-import { EmergencyCallButton } from "@/components/EmergencyCallButton";
 import { PanicButton } from "@/components/PanicButton";
 import { theme } from "@/design/theme";
+import { EmergencyCallDock } from "@/features/emergency-home/EmergencyCallDock";
+import { EmergencyCallTarget } from "@/features/emergency-home/EmergencyCallTarget";
+import { EmergencySettingsDrawer } from "@/features/emergency-home/EmergencySettingsDrawer";
+import { EmergencyTopBar } from "@/features/emergency-home/EmergencyTopBar";
+import { EmergencyHomeRoute } from "@/features/emergency-home/routes";
 import { countPendingEmergencyPackages } from "@/features/emergency/emergencyOutbox";
 import {
   finishEmergencyPackage,
@@ -27,6 +30,7 @@ export default function HomeScreen() {
   const [outboxCount, setOutboxCount] = useState(0);
   const [activePackageId, setActivePackageId] = useState<string | null>(null);
   const [preferences, setPreferences] = useState<EmergencyPreferences>(defaultEmergencyPreferences);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [finishCodeInput, setFinishCodeInput] = useState("");
   const [finishConfirmationOpen, setFinishConfirmationOpen] = useState(false);
   const [finishError, setFinishError] = useState("");
@@ -39,6 +43,28 @@ export default function HomeScreen() {
     const activePackage = await getActiveEmergencyPackage();
     setActivePackageId(activePackage?.id ?? null);
     setOutboxCount(await countPendingEmergencyPackages());
+  }
+
+  function openRoute(route: EmergencyHomeRoute) {
+    setMenuOpen(false);
+    router.push(route);
+  }
+
+  function confirmEmergencyCall(target: EmergencyCallTarget) {
+    Alert.alert(
+      `Ligar para ${target.description}?`,
+      "O SinalSeguro abre o discador do telefone. O atendimento e a ligacao continuam pelos canais oficiais.",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Ligar",
+          style: "default",
+          onPress: () => {
+            void Linking.openURL(target.callUri);
+          }
+        }
+      ]
+    );
   }
 
   useFocusEffect(
@@ -70,32 +96,48 @@ export default function HomeScreen() {
   }, [activePackageId, preferences.defaultDurationSeconds]);
 
   async function handlePanicTrigger() {
+    setMenuOpen(false);
+
     if (activePackageId) {
       requestFinishActiveCall();
       return;
     }
 
-    setRecordingStatus("Iniciando chamado local e capturando localizacao pontual...");
-
-    const result = await startEmergencyPackage({
-      kind: "test",
-      trustedContactIds: [],
-      defaultDurationSeconds: preferences.defaultDurationSeconds,
-      locationConsentMode:
-        preferences.locationMode === "foreground_pre_authorized"
-          ? "foreground_pre_authorized"
-          : "foreground_when_triggered"
-    });
-    await refreshOutboxCount();
-
-    const locationText =
-      result.packageRecord.location.status === "captured"
-        ? "localizacao registrada"
-        : `localizacao ${result.packageRecord.location.status}`;
-
     setRecordingStatus(
-      `Chamado ${result.packageRecord.id.slice(0, 8)} ativo por ate ${formatDuration(preferences.defaultDurationSeconds)}; ${locationText}; envio externo so podera ocorrer apos backend, autorizacao e revisao juridica.`
+      Platform.OS === "web"
+        ? "Iniciando chamado local de simulador sem captura real de localizacao..."
+        : "Iniciando chamado local e capturando localizacao pontual..."
     );
+
+    try {
+      const result = await startEmergencyPackage({
+        kind: "test",
+        trustedContactIds: [],
+        captureLocation: Platform.OS !== "web",
+        defaultDurationSeconds: preferences.defaultDurationSeconds,
+        locationConsentMode:
+          preferences.locationMode === "foreground_pre_authorized"
+            ? "foreground_pre_authorized"
+            : "foreground_when_triggered"
+      });
+      await refreshOutboxCount();
+
+      const locationText =
+        result.packageRecord.location.status === "captured"
+          ? "localizacao registrada"
+          : `localizacao ${result.packageRecord.location.status}`;
+
+      setRecordingStatus(
+        `Chamado ${result.packageRecord.id.slice(0, 8)} ativo por ate ${formatDuration(preferences.defaultDurationSeconds)}; ${locationText}; envio externo so podera ocorrer apos backend, autorizacao e revisao juridica.`
+      );
+    } catch {
+      setActivePackageId(null);
+      setRecordingStatus("Falha controlada ao preservar o chamado local. Tente novamente e use os canais oficiais.");
+      Alert.alert(
+        "Chamado nao preservado",
+        "Nao foi possivel salvar o pacote local com seguranca neste dispositivo. Use 190, 193 ou 192 em risco imediato."
+      );
+    }
   }
 
   function requestFinishActiveCall() {
@@ -162,123 +204,113 @@ export default function HomeScreen() {
   }
 
   return (
-    <SafeScreen
-      title="SinalSeguro"
-      subtitle="Rede de apoio discreta, consentida e em validacao controlada."
-      footer="Em risco imediato, use os canais oficiais como 190 e 180."
-      showBrand
-    >
-      <PanicButton
-        active={Boolean(activePackageId)}
-        label={activePackageId ? "Segurar para encerrar" : "Segurar para acionar"}
-        holdMs={preferences.inAppHoldMs}
-        onTrigger={handlePanicTrigger}
-      />
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.homeShell} testID="home-emergency-screen">
+        <EmergencyTopBar
+          active={Boolean(activePackageId)}
+          menuOpen={menuOpen}
+          onToggleMenu={() => setMenuOpen((current) => !current)}
+        />
 
-      <View style={styles.shortcutGrid}>
-        {preferences.emergencyPhoneCall.call190ShortcutEnabled ? (
-          <EmergencyCallButton compact style={styles.shortcut} />
-        ) : (
-          <Link href="/configuracoes" asChild>
-            <ButtonIcon
-              icon={<PhoneCall size={18} color={theme.colors.primary} />}
-              label="Ativar 190"
-              style={styles.shortcut}
-            />
-          </Link>
-        )}
-        <Link href="/contatos" asChild>
-          <ButtonIcon icon={<Users size={18} color={theme.colors.primary} />} label="Anjos" style={styles.shortcut} />
-        </Link>
-        <Link href="/arquivos" asChild>
-          <ButtonIcon icon={<Archive size={18} color={theme.colors.primary} />} label="Cofre" style={styles.shortcut} />
-        </Link>
-        <Link href="/configuracoes" asChild>
-          <ButtonIcon icon={<Settings size={18} color={theme.colors.primary} />} label="Config." style={styles.shortcut} />
-        </Link>
-      </View>
+        {menuOpen ? (
+          <EmergencySettingsDrawer
+            active={Boolean(activePackageId)}
+            onNavigate={openRoute}
+            outboxCount={outboxCount}
+            recordingStatus={recordingStatus}
+          />
+        ) : null}
 
-      <StatusBanner
-        tone="secure"
-        title="Modo discreto ativo"
-        text="A tela inicial evita termos sensiveis e mostra apenas acoes essenciais."
-      />
-
-      <StatusBanner
-        tone="warning"
-        title={`Cofre local: ${outboxCount} pacote(s)`}
-        text={recordingStatus}
-      />
-
-      <Link href="/alerta" asChild>
-        <ButtonIcon icon={<Radio size={20} color={theme.colors.primary} />} label="Ver preparo de alerta" />
-      </Link>
-      <Link href="/onboarding" asChild>
-        <ButtonIcon icon={<Shield size={20} color={theme.colors.primary} />} label="Revisar onboarding" />
-      </Link>
-
-      <Modal
-        animationType="fade"
-        onRequestClose={() => setFinishConfirmationOpen(false)}
-        transparent
-        visible={finishConfirmationOpen}
-      >
-        <View style={styles.modalBackdrop}>
-          <View style={styles.finishModal}>
-            <View style={styles.finishHeader}>
-              <LockKeyhole size={22} color={theme.colors.primary} />
-              <Text style={styles.finishTitle}>Confirmar encerramento</Text>
-              <Pressable
-                accessibilityLabel="Cancelar encerramento"
-                accessibilityRole="button"
-                onPress={() => setFinishConfirmationOpen(false)}
-                style={styles.closeButton}
-              >
-                <X size={18} color={theme.colors.textMuted} />
-              </Pressable>
-            </View>
-            <Text style={styles.finishText}>
-              O codigo de seguranca impede encerramento nao autorizado caso outra pessoa tome o aparelho.
-            </Text>
-            <TextInput
-              accessibilityLabel="Codigo para encerrar chamado"
-              autoCapitalize="none"
-              autoCorrect={false}
-              keyboardType="number-pad"
-              onChangeText={setFinishCodeInput}
-              placeholder="Codigo de encerramento"
-              placeholderTextColor={theme.colors.textMuted}
-              secureTextEntry
-              style={styles.codeInput}
-              value={finishCodeInput}
-            />
-            {finishError ? <Text style={styles.finishError}>{finishError}</Text> : null}
-            <ButtonIcon
-              icon={<LockKeyhole size={20} color={theme.colors.danger} />}
-              label="Encerrar chamado"
-              onPress={confirmFinishWithCode}
-            />
-            <ButtonIcon
-              icon={<X size={20} color={theme.colors.primary} />}
-              label="Manter ativo"
-              onPress={() => setFinishConfirmationOpen(false)}
+        <View style={styles.emergencySurface}>
+          <View style={styles.panicStage}>
+            <PanicButton
+              active={Boolean(activePackageId)}
+              label={activePackageId ? "Segurar para encerrar" : "Segurar para acionar"}
+              holdMs={preferences.inAppHoldMs}
+              onTrigger={handlePanicTrigger}
             />
           </View>
+
+          <EmergencyCallDock onCallTarget={confirmEmergencyCall} />
         </View>
-      </Modal>
-    </SafeScreen>
+
+        <Modal
+          animationType="fade"
+          onRequestClose={() => setFinishConfirmationOpen(false)}
+          transparent
+          visible={finishConfirmationOpen}
+        >
+          <View style={styles.modalBackdrop}>
+            <View style={styles.finishModal}>
+              <View style={styles.finishHeader}>
+                <LockKeyhole size={22} color={theme.colors.primary} />
+                <Text style={styles.finishTitle}>Confirmar encerramento</Text>
+                <Pressable
+                  accessibilityLabel="Cancelar encerramento"
+                  accessibilityRole="button"
+                  onPress={() => setFinishConfirmationOpen(false)}
+                  style={styles.closeButton}
+                >
+                  <X size={18} color={theme.colors.textMuted} />
+                </Pressable>
+              </View>
+              <Text style={styles.finishText}>
+                O codigo de seguranca impede encerramento nao autorizado caso outra pessoa tome o aparelho.
+              </Text>
+              <TextInput
+                accessibilityLabel="Codigo para encerrar chamado"
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType="number-pad"
+                onChangeText={setFinishCodeInput}
+                placeholder="Codigo de encerramento"
+                placeholderTextColor={theme.colors.textMuted}
+                secureTextEntry
+                style={styles.codeInput}
+                value={finishCodeInput}
+              />
+              {finishError ? <Text style={styles.finishError}>{finishError}</Text> : null}
+              <ButtonIcon
+                icon={<LockKeyhole size={20} color={theme.colors.danger} />}
+                label="Encerrar chamado"
+                onPress={confirmFinishWithCode}
+              />
+              <ButtonIcon
+                icon={<X size={20} color={theme.colors.primary} />}
+                label="Manter ativo"
+                onPress={() => setFinishConfirmationOpen(false)}
+              />
+            </View>
+          </View>
+        </Modal>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  shortcut: {
-    flexBasis: "48%",
-    flexGrow: 1
+  safeArea: {
+    backgroundColor: theme.colors.background,
+    flex: 1
   },
-  shortcutGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: theme.spacing.sm
+  homeShell: {
+    backgroundColor: theme.colors.background,
+    flex: 1,
+    overflow: "hidden"
+  },
+  emergencySurface: {
+    flex: 1,
+    justifyContent: "space-between",
+    paddingBottom: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.lg,
+    paddingTop: theme.spacing.md
+  },
+  panicStage: {
+    alignItems: "center",
+    flex: 1,
+    justifyContent: "center",
+    minHeight: 0,
+    width: "100%"
   },
   closeButton: {
     alignItems: "center",
