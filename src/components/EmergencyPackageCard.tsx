@@ -20,7 +20,7 @@ export function EmergencyPackageCard({ packageRecord, onFinish }: EmergencyPacka
       <Text style={styles.text}>Criado em {new Date(packageRecord.createdAt).toLocaleString("pt-BR")}</Text>
       <Text style={styles.text}>{summarizeCapture(packageRecord)}</Text>
       <Text style={styles.text}>{summarizeLocation(packageRecord)}</Text>
-      <Text style={styles.text}>Midia real: {packageRecord.media.status}</Text>
+      <Text style={styles.text}>Midia local: {packageRecord.media.status}</Text>
       <Text style={styles.text}>{summarizeDelivery(packageRecord)}</Text>
       <Text style={styles.hash}>Hash tecnico {packageRecord.integrity.sha256.slice(0, 16)}...</Text>
       {packageRecord.status === "recording_local" && onFinish ? (

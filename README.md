@@ -4,7 +4,7 @@
 
 App mobile Android e iOS do SinalSeguro.
 
-Status: Home SOS fixa, splash aprovada, modais SinalSeguro, Cofre por icones e encerramento protegido implementados; APK debug pronto para reinstalacao Android assim que o aparelho voltar ao ADB.
+Status: Home SOS fixa, splash aprovada, modais SinalSeguro, Cofre por icones, configuracoes iconograficas, consentimentos locais, endpoint de atualizacao e APK debug com bundle JS embutido validados em Android fisico.
 Coordenacao geral: Ze.  
 Gerente AI mobile: Cristine.
 
@@ -34,6 +34,7 @@ npm run release:android:readiness
 npm run typecheck
 npm run lint
 npm test
+npm run build:android:debug:bundled
 npm run start
 ```
 
@@ -84,16 +85,20 @@ Checkpoint tecnico atual:
 - Exclusao de pacote local exige confirmacao e fica bloqueada enquanto o chamado estiver ativo.
 - Simulador web usa memoria volatil, nao cofre real.
 - Pre-convite local com codigo opaco, expiracao sugerida e compartilhamento permitido pelo sistema somente para instalar/aceitar convite.
-- Pacote local de emergencia com horario, consentimento, georreferencia pontual autorizada e hash, sem envio externo neste build.
-- Area `Cofre local` para acessar os pacotes gravados neste dispositivo e verificar o que permanece bloqueado ate backend, contrato, chaves e auditoria.
-- Midia real, camera, microfone e transmissao continuam bloqueados fora da homologacao.
+- Pacote local de emergencia com horario, consentimento, georreferencia pontual autorizada, hash e video/audio local quando a usuaria conceder camera e microfone no build privado.
+- Area `Cofre local` para acessar pacotes e videos preservados neste dispositivo e verificar o que permanece bloqueado ate backend, contrato, chaves e auditoria.
+- Build privado de midia local habilita `CAMERA` e `RECORD_AUDIO` para homologacao controlada; transmissao, compartilhamento externo, P2P e backend real continuam bloqueados.
 
-APK debug atual para validacao:
+APK privado atual com midia local para validacao:
 
 - Caminho: `android/app/build/outputs/apk/debug/app-debug.apk`.
-- SHA-256: `481d9aca5dd1cabb36520440f7959c71b542af5619803aadbe5170164b300e70`.
-- Observacao: `adb devices -l` nao encontrou aparelho nesta rodada, entao a reinstalacao fisica ficou pendente.
-- Readiness Android passa com Node 24 via `PATH="/Applications/Codex.app/Contents/Resources:$PATH" npm run release:android:readiness`, restando pendencias esperadas de assinatura release fora do Git e nativo gerado/ignorado.
+- SHA-256: `056e41d7e1e91aef10c6763bb094bfe27973693c8c163b222c6f4be2952be67b`.
+- Build local: `npm run build:android:private`.
+- Observacao: o aparelho foi reinstalado pelo transporte ADB Wi-Fi ativo `192.168.0.4:5555`; o USB nao apareceu como transporte separado em `adb devices -l` nesta rodada.
+- O APK debug atual embute o bundle JS e desliga o suporte nativo de desenvolvedor apenas neste modo de validacao, abrindo sem Metro, sem `adb reverse` e sem depender de `localhost:8081`.
+- O gate publico `npm run release:android:readiness` fica bloqueado enquanto este workspace contiver a instrumentacao privada de midia (`expo-camera`/`expo-video`). Para loja/publico, usar perfil ou branch sem midia local ate a liberacao juridica.
+- Cold start validado no Android fisico com `TotalTime: 4103`, sem crash fatal no `logcat` filtrado.
+- A validacao de toque SOS/camera permanece manual no aparelho, porque a injecao de toque por ADB nao acionou os controles nesta rodada.
 
 ## Evidencias visuais
 
@@ -105,6 +110,15 @@ APK debug atual para validacao:
 | Player modal | ![Player modal](docs/assets/mobile/2026-05-03-cofre-player-modal.png) |
 | Como funciona | ![Como funciona](docs/assets/mobile/2026-05-03-funcionamento.png) |
 
+## Evidencias Android fisico - 2026-05-03
+
+| Validacao | Print |
+|---|---|
+| Home sem Metro/sem reverse | ![Android Home bundled](docs/assets/mobile/2026-05-03-android-home-bundled.png) |
+| Configuracoes por icones | ![Android Configuracoes](docs/assets/mobile/2026-05-03-android-configuracoes-bundled.png) |
+| Cofre por icones | ![Android Cofre](docs/assets/mobile/2026-05-03-android-cofre-bundled.png) |
+| SOS ativo com localizacao | ![Android SOS ativo](docs/assets/mobile/2026-05-03-android-sos-bundled-pos-localizacao.png) |
+
 ## Limites
 
 - Nao versionar `.env`, tokens, chaves, credenciais, dados reais ou relatos identificaveis.
@@ -113,7 +127,7 @@ APK debug atual para validacao:
 - Nao prometer acionamento de orgao publico sem convenio formal.
 - Nao compartilhar evidencia por share sheet do sistema; convites sao a unica excecao permitida e nao carregam evidencia.
 - P2P fica como pesquisa futura/best-effort.
-- Midia real fica bloqueada para producao ate RIPD/DPIA, retencao e revisao juridica.
+- Midia local fica habilitada somente no build privado de homologacao; producao publica, transmissao, anjos recebendo stream e exportacao seguem bloqueados ate RIPD/DPIA, retencao, contrato, backend, RBAC, chaves e revisao juridica.
 
 ## Documentacao
 
@@ -126,6 +140,7 @@ APK debug atual para validacao:
 - `docs/06_UX_UI_IX.md`
 - `docs/07_ARQUITETURA.md`
 - `docs/08_SEGURANCA_LGPD.md`
+- `docs/26_BUILD_PRIVADO_MIDIA_LOCAL.md`
 - `docs/09_TESTES_QA.md`
 - `docs/10_DISTRIBUICAO_INSTALAVEIS.md`
 - `docs/11_LIFECYCLE.md`

@@ -25,6 +25,7 @@ Fonte de verdade operacional: este repositorio, `AGENTS.md`, `.codex/AGENTS.md` 
 ## Componentes base
 
 - `AppTopBar`: topo padrao com logo, contexto, voltar e menu.
+- `BrandBackground`: fundo visual da Home com marca em transparencia e animacoes suaves.
 - `BrandedDialog`: modal SinalSeguro para confirmacoes e alertas criticos.
 - `ResourceTile`: icone de recurso usado em telas fixas.
 - `PanicButton`: SOS circular responsivo com gesto de pressao longa.
@@ -67,9 +68,11 @@ Fonte de verdade operacional: este repositorio, `AGENTS.md`, `.codex/AGENTS.md` 
 
 ## Midia, camera e streaming
 
-- Build publico nao solicita `CAMERA` nem `RECORD_AUDIO`.
-- Preferencias de camera frontal/traseira/ambas sao apenas preparo para homologacao.
-- Video/audio real exigem RIPD/DPIA, contrato, consentimento versionado, indicador visual, criptografia, hashes e auditoria.
+- Build publico continua sem transmissao, stream, P2P, upload e compartilhamento externo de midia.
+- Build privado de homologacao local pode solicitar `CAMERA` e `RECORD_AUDIO` para gravar video/audio no sandbox privado do app quando a usuaria autorizar.
+- Preferencias de camera frontal/traseira/ambas determinam a proxima gravacao local do SOS.
+- Video/audio local exigem permissao explicita do sistema, indicador discreto do app, aceite local de termos e acesso pelo cofre/player.
+- A transmissao para anjos, API, P2P ou autoridade exige RIPD/DPIA, contrato, consentimento versionado, criptografia por envelope, hashes, RBAC e auditoria.
 - Streaming WebRTC/P2P fica futuro/best-effort, nunca promessa de emergencia.
 
 ## Dados e seguranca
@@ -77,7 +80,10 @@ Fonte de verdade operacional: este repositorio, `AGENTS.md`, `.codex/AGENTS.md` 
 - Pacote local registra horario, consentimento, localizacao pontual se autorizada, manifesto de midia e hash.
 - Web usa simulador volatil para cofre seguro.
 - Dispositivo usa `expo-secure-store` para registros pequenos.
-- Midia real futura deve usar arquivo criptografado no armazenamento do app, com chave pequena no cofre do sistema e envelope pelo backend.
+- Aceites locais de termos, privacidade e compartilhamento emergencial ficam versionados em `legalConsent`.
+- Midia local no build privado fica no sandbox do app, com backup Android bloqueado no Manifest nativo.
+- O hash SHA-256 do asset de video e calculado sobre o conteudo preservado em base64 para detectar alteracao do arquivo no cofre local.
+- Criptografia por envelope e chaves relacionadas a usuarios autorizados entram na etapa de backend/homologacao controlada.
 - Logs nao podem conter coordenadas completas, tokens, payloads sensiveis, chaves, audio, video ou relatos.
 
 ## Permissoes
@@ -104,6 +110,18 @@ Bloqueadas no build publico:
 - `READ_EXTERNAL_STORAGE`.
 - `WRITE_EXTERNAL_STORAGE`.
 
+Declaradas apenas no build privado de midia local:
+
+- `CAMERA`.
+- `RECORD_AUDIO`.
+
+Bloqueadas tambem no build privado:
+
+- `SYSTEM_ALERT_WINDOW`.
+- `READ_EXTERNAL_STORAGE`.
+- `WRITE_EXTERNAL_STORAGE`.
+- backup Android de evidencias locais (`android:allowBackup="false"` no Manifest nativo preparado pelo build privado).
+
 ## API futura
 
 Contratos previstos em `docs/api/openapi.yaml`:
@@ -117,6 +135,47 @@ Contratos previstos em `docs/api/openapi.yaml`:
 - `delivery_attempts`.
 - `media_assets`.
 - `audit_events`.
+- `app_updates`.
+
+Endpoint de atualizacao planejado:
+
+- `GET /app/releases/latest?platform=android|ios&version=<versao>`;
+- usado pela acao `Atualizar app` no Cofre;
+- nao deve expor URL assinada, token ou dado sensivel em logs ou push.
+
+## Login e consentimentos
+
+- Login Google/Apple/iCloud fica preparado como fluxo OIDC futuro, sem client secret no app.
+- A conta de administracao ou homologacao nunca deve ser versionada com token, senha ou chave.
+- Termos de uso, privacidade e compartilhamento emergencial devem ter versao e aceite por dispositivo.
+- Quem recebe stream, arquivo ou localizacao deve aceitar compromisso de sigilo e uso somente no SinalSeguro ou por exportacao auditada para finalidade legal.
+
+## Build Android de validacao
+
+O APK debug usado para validacao fisica deve ser gerado com JS embutido quando o objetivo for testar abertura sem Metro:
+
+```bash
+npm run build:android:private
+```
+
+Essa rotina usa `-PsinalBundleDebugJs=true` em `android/app/build.gradle`, embute `index.android.bundle` no APK e desliga o suporte nativo de desenvolvedor apenas neste modo de validacao. Isso evita travamento visual quando o aparelho nao consegue acessar `localhost:8081`.
+
+Antes do build privado com midia local, executar:
+
+```bash
+npm run private:android:readiness
+```
+
+Esse gate aceita a pendencia de Node local apenas para debug privado, verifica `CAMERA`/`RECORD_AUDIO` no Manifest nativo gerado pelo script privado, mantem overlay/storage legado bloqueados e confirma backup Android desativado. O `app.json` permanece sem camera/microfone como padrao publico.
+
+Build validado em 2026-05-03:
+
+- arquivo `android/app/build/outputs/apk/debug/app-debug.apk`;
+- SHA-256 `056e41d7e1e91aef10c6763bb094bfe27973693c8c163b222c6f4be2952be67b`;
+- instalado no Android `23129RA5FL` via ADB Wi-Fi `192.168.0.4:5555`;
+- abriu sem Metro, sem `adb reverse` e sem consulta fatal ao packager;
+- permissoes de camera, microfone, localizacao fina/aproximada e notificacoes concedidas via ADB para homologacao privada;
+- validacao funcional de SOS com camera permanece manual, porque a injecao de toque por ADB nao acionou os controles nesta rodada.
 
 ## Gates minimos
 
@@ -132,7 +191,7 @@ git diff --check
 Antes de instalar Android:
 
 ```bash
-./gradlew assembleDebug
+npm run build:android:debug:bundled
 /Users/roberto/Library/Android/sdk/platform-tools/adb devices -l
 /Users/roberto/Library/Android/sdk/platform-tools/adb install -r android/app/build/outputs/apk/debug/app-debug.apk
 ```

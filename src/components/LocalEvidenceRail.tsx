@@ -9,6 +9,7 @@ type LocalEvidenceRailProps = {
   selectedPackageId?: string;
   expandedPackageId?: string;
   onSelectPackage: (packageRecord: EmergencyPackage) => void;
+  onOpenPlayerPackage?: (packageRecord: EmergencyPackage) => void;
   onToggleActions: (packageRecord: EmergencyPackage) => void;
   onShareBlocked: (packageRecord: EmergencyPackage) => void;
   onDeletePackage: (packageRecord: EmergencyPackage) => void;
@@ -57,6 +58,7 @@ export function LocalEvidenceRail({
   selectedPackageId,
   expandedPackageId,
   onSelectPackage,
+  onOpenPlayerPackage,
   onToggleActions,
   onShareBlocked,
   onDeletePackage,
@@ -119,7 +121,7 @@ export function LocalEvidenceRail({
                   <ActionButton
                     label="Visualizar"
                     icon={<Eye size={18} color={theme.colors.primary} />}
-                    onPress={() => onSelectPackage(packageRecord)}
+                    onPress={() => (onOpenPlayerPackage ? onOpenPlayerPackage(packageRecord) : onSelectPackage(packageRecord))}
                   />
                 </View>
                 <View style={[styles.rayAction, styles.rayActionShare]}>

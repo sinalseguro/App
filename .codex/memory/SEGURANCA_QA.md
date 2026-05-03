@@ -6,7 +6,8 @@ Papel: seguranca, LGPD e QA.
 ## Decisoes bloqueantes
 
 - Build publico nao pode solicitar `CAMERA` nem `RECORD_AUDIO`.
-- Video, audio, streaming e upload real ficam bloqueados ate homologacao controlada.
+- Build privado de homologacao local pode gravar video/audio no sandbox do app com consentimento e permissao do sistema.
+- Streaming, upload real e compartilhamento externo ficam bloqueados ate homologacao controlada.
 - Homologacao exige RIPD/DPIA, termos, consentimento versionado, retencao, auditoria, criptografia e criterio de loja.
 - Alertas criticos devem ser modais internos para consistencia visual e testabilidade.
 - Compartilhamento externo de evidencia segue bloqueado.
@@ -17,13 +18,14 @@ Papel: seguranca, LGPD e QA.
 - `npm run typecheck`: aprovado.
 - `npm run lint`: aprovado.
 - `npm test`: aprovado.
-- `./gradlew assembleDebug`: aprovado.
+- `npm run build:android:private`: aprovado.
 - Browser Use validou Home, drawer, Cofre, Player e Funcionamento.
-- `release:android:readiness`: aprovado com Node 24 via `PATH="/Applications/Codex.app/Contents/Resources:$PATH"`.
+- `private:android:readiness`: aprovado com pendencia ambiental aceita de Node local.
+- `release:android:readiness`: bloqueado corretamente enquanto o workspace contem instrumentacao privada de midia.
 - Cofre passou a respeitar o mesmo protocolo de encerramento seguro da Home: confirmacao e codigo local opcional.
-- Matriz de permissoes documenta permissoes transitivas do APK debug; camera, microfone, overlay e storage legado seguem ausentes.
+- Matriz de permissoes documenta que camera/microfone entram apenas no APK privado; overlay, storage legado e backup Android seguem bloqueados.
 
 ## Pendencia QA
 
-- Validacao Android fisica desta rodada ficou pendente porque `adb devices -l` nao detectou o aparelho.
-- Release interna 3 segue bloqueada ate validacao Android fisica e aprovacao Tarcila/Myers.
+- APK privado foi instalado no Android `192.168.0.4:5555` e abriu sem crash em cold start.
+- Validacao manual do gesto SOS com camera ainda precisa de aprovacao do Roberto/Myers no aparelho fisico, porque a injecao de toque por ADB nao acionou os controles da tela.

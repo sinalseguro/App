@@ -29,10 +29,19 @@ Cristine coordena o desenvolvimento mobile Android/iOS, mantendo plano, cronogra
 - Distribuicao: QR codes apontam para `/baixar/android` e `/baixar/ios`.
 - GitHub Releases: canal tecnico previsto para APK Android assinado.
 - iOS: TestFlight/App Store, sem IPA publico nesta fase.
+- Gate privado vigente: `npm run private:android:readiness`.
+- Gate publico: `npm run release:android:readiness` deve bloquear enquanto este workspace contiver instrumentacao privada de midia.
 
 ## Proximo checkpoint
 
-Etapa ativa: 1 - Android instalavel.
+Etapa ativa: validacao manual do APK privado Android com midia local.
+
+Estado ativo em 2026-05-03:
+
+- APK privado com midia local instalado no Android `192.168.0.4:5555`;
+- hash vigente `056e41d7e1e91aef10c6763bb094bfe27973693c8c163b222c6f4be2952be67b`;
+- abertura fria revalidada sem crash fatal;
+- proxima validacao depende de toque manual no aparelho: SOS inicia camera, encerramento preserva video, Cofre lista pacote e Player reproduz midia local.
 
 Estado em 2026-05-02:
 
@@ -189,3 +198,61 @@ Proximas acoes:
 10. Conectar mock de API ao contrato OpenAPI.
 11. Implementar adaptador de envio real apenas depois de auth, consentimento, retencao e revisao Schneier/Doneda.
 12. Manter `origin` usando `github-sinalseguro-admin` para pushes do repo App.
+
+## Memoria viva - 2026-05-03 - Android abriu sem Metro
+
+- Roberto reportou travamento ao abrir no Android.
+- Myers/Margaret identificaram que o APK debug anterior dependia do Metro em `localhost:8081`; sem Metro acessivel, o React nao carregava e a splash nativa ficava presa.
+- A correcao vigente e usar `npm run build:android:debug:bundled`, que chama `./gradlew assembleDebug -PsinalBundleDebugJs=true`.
+- `android/app/build.gradle` deve manter a propriedade `sinalBundleDebugJs` somente para validacao fisica; builds normais de desenvolvimento podem continuar usando Metro.
+- `MainApplication.kt` usa `BuildConfig.DEBUG && !BuildConfig.SINAL_BUNDLED_DEBUG` para desativar o suporte nativo de desenvolvedor apenas no APK bundled de validacao.
+- `app/_layout.tsx` tem fallback de `SplashScreen.hideAsync()` em 350 ms para evitar retencao da splash se o `onLayout` atrasar.
+- APK instalado e validado no aparelho `192.168.0.4:5555`, modelo `23129RA5FL`, com SHA-256 `2bd9055863a51f46d4c41f24b768e22b25f43984990e0313f5fc4baa5d599c83`.
+- O USB foi informado como conectado, mas `adb devices -l` mostrou apenas ADB Wi-Fi; manter esse detalhe em proximas validacoes para nao confundir transporte fisico com transporte ADB.
+- Validacao independente final: Metro parado, `adb reverse --remove-all`, cold start `TotalTime: 5700`, PID `7357` ativo, sem `Unable to load script`, `Failed to connect`, `FATAL EXCEPTION`, `AndroidRuntime` ou `setValueWithKeyAsync` no log isolado do SinalSeguro.
+- SOS de teste entrou em `CHAMADO ATIVO`, capturou localizacao pontual e nao reproduziu o erro antigo de `ExpoSecureStore`.
+- Evidencias finais para README/docs:
+  - `docs/assets/mobile/2026-05-03-android-home-bundled.png`;
+  - `docs/assets/mobile/2026-05-03-android-configuracoes-bundled.png`;
+  - `docs/assets/mobile/2026-05-03-android-cofre-bundled.png`;
+  - `docs/assets/mobile/2026-05-03-android-sos-bundled-pos-localizacao.png`;
+  - `docs/assets/mobile/2026-05-03-android-cofre-pos-sos-bundled.png`.
+- Nao usar capturas intermediarias de splash, tela preta, AOD/MIUI ou Metro para material publico.
+- Tarcila aprova a direcao visual atual para validacao de Roberto, mas qualquer nova arte/logo/background/icone continua dependendo da revisao dela.
+- Schneier/Doneda mantem bloqueio de transmissao, streaming, P2P, backend real e compartilhamento externo fora de homologacao controlada.
+
+## Memoria viva - 2026-05-03 - Build privado com midia local
+
+- Roberto decidiu habilitar midia nesta etapa por ser recurso central do SOS.
+- A habilitacao vale apenas para APK privado de homologacao local, nao para release publico.
+- `app.json` foi mantido como padrao publico sem `CAMERA`/`RECORD_AUDIO`; o build privado ativa essas permissoes pelo Manifest nativo preparado.
+- `SYSTEM_ALERT_WINDOW`, armazenamento externo legado e backup Android de evidencias seguem bloqueados.
+- `scripts/android-private-media-readiness.mjs` foi criado para separar o gate privado de midia do gate publico de release.
+- `scripts/prepare-android-bundled-debug.mjs` agora corrige o Manifest nativo para camera/microfone e `android:allowBackup="false"`.
+- `EmergencyMediaRecorder` grava video/audio local com `expo-camera` ao acionar o SOS e preserva o arquivo mesmo quando o chamado e encerrado manualmente.
+- `mediaCapture` copia o video para `sinalseguro-media/`, remove o temporario da camera e calcula hash SHA-256 do conteudo preservado.
+- `EvidencePlayerCard` usa `expo-video` para reproduzir video local quando o pacote tem `media.status = recorded_local`.
+- O tempo configuravel passou a ser tempo de gravacao local: `Ilimitado`, `1min`, `5min`, `15min`, `30min`, `60min`.
+- O chamado de emergencia nao encerra automaticamente por tempo; encerra apenas por gesto manual da usuaria, com confirmacao e codigo local opcional.
+- Tarcila/Norman apontaram risco de corte em Configuracoes; `ResourceTile` e o espacamento da tela foram compactados.
+- Myers/Schneier apontaram risco de perda de video no encerramento, inconsistencia de permissoes e backup Android; os tres pontos foram corrigidos antes do build privado.
+- Documentacao viva do recurso: `docs/26_BUILD_PRIVADO_MIDIA_LOCAL.md`.
+
+Proximas acoes atualizadas:
+
+1. Roberto validar no Android fisico o APK bundled instalado.
+2. Se aprovado, gerar release interna 3 e atualizar GitHub Release/portal.
+3. Implementar backend/OIDC/convites/alertas conforme `docs/api/openapi.yaml`.
+4. Validar no Android fisico: SOS inicia gravacao, encerramento preserva video e Cofre/Player reproduz o arquivo local.
+5. Preparar homologacao juridica completa para transmissao, anjos, backend, envelope de chaves, retencao e exportacao.
+
+## Memoria viva - 2026-05-03 - APK privado instalado
+
+- APK privado com midia local gerado por `npm run build:android:private`.
+- Artefato: `android/app/build/outputs/apk/debug/app-debug.apk`, tamanho aproximado 103 MB.
+- SHA-256: `056e41d7e1e91aef10c6763bb094bfe27973693c8c163b222c6f4be2952be67b`.
+- Instalado com sucesso no Android `192.168.0.4:5555`, modelo `23129RA5FL`.
+- Permissoes concedidas via ADB: camera, microfone, localizacao fina/aproximada e notificacoes.
+- Cold start validado: `TotalTime: 4103`, PID `31065`, sem `FATAL`, `AndroidRuntime`, erro de bundle Metro ou `setValueWithKeyAsync` no log isolado.
+- Captura aprovada para evidencia local: `docs/assets/mobile/2026-05-03-android-private-media-home.png`.
+- A injecao de toque por ADB nao acionou os controles; a validacao funcional do gesto SOS com camera deve ser feita manualmente no aparelho fisico.

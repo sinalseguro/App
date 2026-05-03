@@ -6,6 +6,7 @@ import {
   EmergencyFinishReason,
   EmergencyKind,
   EmergencyPackage,
+  LocalMediaAsset,
   MediaCaptureManifest
 } from "./types";
 
@@ -30,11 +31,12 @@ function stripIntegrity(packageRecord: EmergencyPackage): EmergencyPackageWithou
   return packageWithoutIntegrity;
 }
 
-const mediaBlockedManifest: MediaCaptureManifest = {
-  status: "blocked_public_build",
-  recordingMode: "none",
+const mediaPendingManifest: MediaCaptureManifest = {
+  status: "pending_local_recording",
+  recordingMode: "video",
   assets: [],
-  policy: "Midia real permanece bloqueada neste build publico ate RIPD/DPIA, consentimento, auditoria e ambiente de homologacao."
+  policy:
+    "Midia local habilitada mediante permissao explicita de camera/microfone; arquivo preservado no sandbox privado ate backend e chaves de envelope estarem prontos."
 };
 
 export function buildEmergencyExchangeEnvelope(packageRecord: EmergencyPackage): EmergencyExchangeEnvelope {
@@ -78,7 +80,7 @@ async function createEmergencyPackage({
   kind,
   trustedContactIds = [],
   captureLocation = true,
-  defaultDurationSeconds = 60,
+  defaultDurationSeconds = 0,
   locationConsentMode = "foreground_when_triggered"
 }: RecordEmergencyPackageInput) {
   const startedAt = new Date().toISOString();
@@ -109,11 +111,11 @@ async function createEmergencyPackage({
     consentSnapshot: {
       termsVersion: "mvp-controlado-2026-05-02" as const,
       location: locationConsentMode,
-      media: "blocked_until_homologation" as const,
+      media: "local_recording_enabled_with_explicit_permission" as const,
       sharing: "blocked_until_contract_backend_audit" as const
     },
     location,
-    media: mediaBlockedManifest,
+    media: mediaPendingManifest,
     deliveryPlan: {
       api: {
         status: "waiting_backend" as const,
@@ -201,17 +203,33 @@ export async function finishActiveEmergencyPackage(endReason: EmergencyFinishRea
 }
 
 export async function finishExpiredActiveEmergencyPackage() {
-  const activePackage = await getActiveEmergencyPackage();
-  if (!activePackage) return null;
+  return null;
+}
 
-  const plannedDurationMs = activePackage.capture.plannedDurationSeconds * 1000;
-  const elapsedMs = Date.now() - new Date(activePackage.capture.startedAt).getTime();
+export async function attachLocalMediaAsset(packageId: string, asset: LocalMediaAsset) {
+  const packages = await listEmergencyPackages();
+  const packageRecord = packages.find((record) => record.id === packageId);
 
-  if (elapsedMs < plannedDurationMs) {
-    return null;
-  }
+  if (!packageRecord) return null;
 
-  return finishEmergencyPackage(activePackage.id, "default_duration_elapsed");
+  const existingAssets =
+    packageRecord.media.status === "recorded_local" ? packageRecord.media.assets.filter((item) => item.id !== asset.id) : [];
+  const packageWithoutIntegrity: EmergencyPackageWithoutIntegrity = {
+    ...stripIntegrity(packageRecord),
+    updatedAt: new Date().toISOString(),
+    media: {
+      status: "recorded_local",
+      recordingMode: "video",
+      assets: [...existingAssets, asset],
+      policy:
+        "Video local preservado no sandbox privado do app. Exportacao, envio a anjos e descriptografia por envelope dependem de backend, contrato, RBAC e auditoria."
+    }
+  };
+
+  const updatedPackage = await attachIntegrity(packageWithoutIntegrity);
+  await saveEmergencyPackage(updatedPackage);
+
+  return buildEmergencyPackageResult(updatedPackage);
 }
 
 export async function recordEmergencyPackage(input: RecordEmergencyPackageInput) {

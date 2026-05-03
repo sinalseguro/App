@@ -14,20 +14,20 @@ export function summarizeDelivery(packageRecord: EmergencyPackage) {
 
 export function summarizeCapture(packageRecord: EmergencyPackage) {
   const duration = packageRecord.capture.plannedDurationSeconds ?? 60;
-  const durationText = duration < 60 ? `${duration}s` : `${Math.round(duration / 60)}min`;
+  const durationText = duration === 0 ? "ilimitada" : duration < 60 ? `${duration}s` : `${Math.round(duration / 60)}min`;
 
   if (packageRecord.capture.status === "recording") {
-    return `Coleta local ativa por ate ${durationText}; pode ser finalizada manualmente.`;
+    return `Chamado local ativo ate encerramento manual; gravacao ${durationText}.`;
   }
 
   const reason =
     packageRecord.capture.endReason === "manual_finish"
       ? "finalizada pela usuaria"
-      : packageRecord.capture.endReason === "default_duration_elapsed"
-        ? "finalizada pelo tempo padrao"
+      : packageRecord.capture.endReason === "recording_duration_elapsed"
+        ? "gravacao finalizada pelo tempo configurado"
         : "pacote tecnico imediato";
 
-  return `Coleta ${reason}; duracao planejada ${durationText}.`;
+  return `Coleta ${reason}; gravacao configurada ${durationText}.`;
 }
 
 export function summarizePackage(packageRecord: EmergencyPackage) {

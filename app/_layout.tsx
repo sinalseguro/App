@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as SplashScreen from "expo-splash-screen";
@@ -17,21 +17,30 @@ if (Platform.OS !== "web") {
 
 export default function RootLayout() {
   const [booting, setBooting] = useState(true);
-  const [nativeSplashHidden, setNativeSplashHidden] = useState(false);
+  const nativeSplashHiddenRef = useRef(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setBooting(false), 950);
-    return () => clearTimeout(timer);
-  }, []);
+  const hideNativeSplashOnce = useCallback(() => {
+    if (nativeSplashHiddenRef.current) return;
 
-  const hideNativeSplash = useCallback(() => {
-    if (nativeSplashHidden) return;
-
-    setNativeSplashHidden(true);
+    nativeSplashHiddenRef.current = true;
     if (Platform.OS !== "web") {
       void SplashScreen.hideAsync();
     }
-  }, [nativeSplashHidden]);
+  }, []);
+
+  useEffect(() => {
+    // Fallback defensivo: evita que a splash nativa fique presa se o onLayout atrasar no aparelho.
+    const nativeTimer = setTimeout(hideNativeSplashOnce, 350);
+    const timer = setTimeout(() => setBooting(false), 950);
+    return () => {
+      clearTimeout(nativeTimer);
+      clearTimeout(timer);
+    };
+  }, [hideNativeSplashOnce]);
+
+  const hideNativeSplash = useCallback(() => {
+    hideNativeSplashOnce();
+  }, [hideNativeSplashOnce]);
 
   if (booting) {
     return (

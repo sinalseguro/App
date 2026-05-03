@@ -1,4 +1,4 @@
-# 16 - Segundo Plano, Atalho Fisico e Duracao do Chamado
+# 16 - Segundo Plano, Atalho Fisico e Tempo de Gravacao
 
 Data: 2026-05-02  
 Supervisao: Ze  
@@ -10,7 +10,7 @@ Especialistas acionados: Ada, Hedy, Margaret, Katherine, Norman, Myers, Schneier
 Responder ao requisito de agilidade em emergencia sem prometer recursos que Android/iOS nao garantem:
 
 - reduzir atrito da permissao de GPS;
-- permitir duracao padrao configuravel do chamado;
+- permitir tempo padrao configuravel de gravacao local;
 - permitir encerramento manual do chamado;
 - preparar caminho tecnico para segundo plano;
 - documentar limite real do atalho fisico por volume com tela bloqueada.
@@ -32,36 +32,38 @@ Limite:
 - background location fica bloqueada ate homologacao, justificativa juridica, consentimento destacado, notificacao persistente e revisao de loja.
 - a leitura de status de segundo plano trata a ausencia de permissao no manifest como bloqueio esperado, sem quebrar a tela de configuracoes.
 
-### Duracao padrao do chamado
+### Tempo padrao de gravacao local
 
 Implementado:
 
-- opcoes: `30s`, `1min`, `3min`, `5min`;
-- padrao inicial: `1min`;
+- opcoes: `Ilimitado`, `1min`, `5min`, `15min`, `30min`, `60min`;
+- padrao inicial: `Ilimitado`;
 - a preferencia fica em `AsyncStorage`, pois nao contem dado sensivel;
 - cada pacote registra `plannedDurationSeconds`;
-- o chamado ativo pode ser encerrado manualmente antes do tempo;
-- se o tempo padrao expirar enquanto o app esta ativo, o pacote e finalizado como `default_duration_elapsed`.
+- o tempo controla a gravacao local de video/audio quando o build privado esta com midia habilitada;
+- o chamado ativo nao encerra automaticamente pelo tempo de gravacao;
+- o chamado encerra apenas por acao manual da usuaria no SOS ou no Cofre, com confirmacao e codigo opcional.
 
 Limite:
 
-- duracao de chamado nao e a mesma coisa que politica de retencao;
+- tempo de gravacao nao e a mesma coisa que duracao da emergencia nem politica de retencao;
 - retencao e exportacao continuam pendentes de backend, termos, RIPD/DPIA e revisao juridica.
 
-### Encerrar chamado/gravação
+### Encerrar chamado e gravacao
 
 Implementado para o pacote local:
 
 - chamada ativa usa status `recording_local`;
-- botao `Finalizar chamado ativo` fecha o pacote com motivo `manual_finish`;
+- botao `SOS` ativo e o fluxo do Cofre fecham o pacote com motivo `manual_finish`;
 - finalizar nao apaga evidencia local;
 - finalizar recalcula SHA-256 sem carregar o bloco `integrity` anterior e deixa o pacote em `recorded_local`;
 - tela `Arquivos locais` permite finalizar pacote ativo caso a usuaria navegue ate ela.
+- no build privado com midia, o encerramento manual para a camera e preserva o arquivo antes de atualizar o player/cofre.
 
 Limite:
 
-- midia real continua bloqueada no build publico;
-- portanto o encerramento atual fecha a coleta local de metadados/localizacao e o manifesto de midia bloqueada.
+- midia segue local no build privado;
+- transmissao, stream, envio para anjos e exportacao continuam bloqueados ate backend, contrato, chaves, RBAC e auditoria.
 
 ### Execucao em segundo plano
 
@@ -131,6 +133,7 @@ Alternativas seguras para proximas fases:
 - localizacao concedida previamente nao solicita dialogo novamente;
 - localizacao negada nao impede pacote local;
 - build publico continua sem camera, microfone, overlay, storage legado e background location;
+- build privado de midia local pode declarar `CAMERA` e `RECORD_AUDIO`, mantendo overlay, storage legado e backup Android bloqueados;
 - tela `Configuracoes` nao chama fluxo que exija `ACCESS_BACKGROUND_LOCATION` no build publico;
 - documentacao nao promete acionamento por volume com tela travada.
 
@@ -146,9 +149,9 @@ Resultados:
 - Tarcila aprovou splash, icone, adaptive icon atual e lockup para homologacao interna;
 - `Configuracoes` abriu sem erro mesmo sem `ACCESS_BACKGROUND_LOCATION` no manifest publico;
 - localizacao foreground autorizada foi reutilizada sem novo prompt;
-- duracao padrao `30s` foi salva em `Configuracoes`;
+- duracao padrao `30s` foi salva em `Configuracoes` no checkpoint anterior;
 - ao voltar para Home, preferencias foram recarregadas no foco da tela;
-- botao de panico in-app iniciou chamado ativo por ate `30s`;
+- botao de panico in-app iniciou chamado ativo e permitiu finalizacao manual;
 - botao `Finalizar chamado ativo` encerrou o chamado sem apagar o pacote;
 - `Arquivos locais` exibiu pacote preservado localmente, coleta finalizada pela usuaria, duracao planejada `30s`, georreferencia preservada e SHA-256, sem envio externo habilitado;
 - logcat do processo do app nao mostrou crash, excecao de background location, camera, microfone, upload `/alerts` ou WebRTC.

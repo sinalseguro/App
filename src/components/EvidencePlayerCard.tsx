@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { VideoView, useVideoPlayer } from "expo-video";
 import { Clock, FileLock2, LockKeyhole, MapPin, Pause, Play, RotateCcw, Video } from "lucide-react-native";
 import { theme } from "@/design/theme";
 import { EmergencyPackage } from "@/features/emergency/types";
@@ -15,16 +16,23 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   const [previewTouched, setPreviewTouched] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
-  const hasMedia = packageRecord?.media.status !== "blocked_public_build" && Boolean(packageRecord);
+  const videoAsset = packageRecord?.media.status === "recorded_local" ? packageRecord.media.assets[0] : undefined;
+  const player = useVideoPlayer(videoAsset?.uri ?? null, (videoPlayer) => {
+    videoPlayer.loop = false;
+    videoPlayer.muted = false;
+  });
+  const hasMedia = Boolean(videoAsset);
   const title = mode === "received" ? "Player seguro recebido" : "Player seguro local";
   const previewTitle = previewTouched && packageRecord ? "Pacote selecionado no player" : title;
   const previewText = packageRecord
     ? previewTouched
-      ? "Visualizacao tecnica ativa. Midia real continua bloqueada neste build; metadados e integridade estao disponiveis abaixo."
+      ? hasMedia
+        ? "Video local carregado do sandbox privado. Use os controles para revisar sem sair do app."
+        : "Visualizacao tecnica ativa. O pacote ainda nao possui video local anexado; metadados e integridade estao disponiveis abaixo."
       : hasMedia
-        ? "Toque para reproduzir midia criptografada autorizada."
-        : "Toque para revisar o pacote. Audio e video reais ficam bloqueados neste build."
-    : "Audio e video reais ficam bloqueados neste build. O player preserva o fluxo para homologacao autorizada.";
+        ? "Toque para revisar a midia local autorizada."
+        : "Toque para revisar o pacote. A gravacao local aparece aqui quando camera e microfone forem autorizados."
+    : "Apos acionar o SOS com permissao de camera e microfone, o video local aparece aqui para revisao privada.";
 
   useEffect(() => {
     setPlaying(false);
@@ -52,7 +60,16 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     if (!packageRecord) return;
 
     setPreviewTouched(true);
-    setPlaying((currentValue) => !currentValue);
+    setPlaying((currentValue) => {
+      if (hasMedia) {
+        if (currentValue) {
+          player.pause();
+        } else {
+          player.play();
+        }
+      }
+      return !currentValue;
+    });
   }
 
   function restartLocalPlayback() {
@@ -60,6 +77,10 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
 
     setPreviewTouched(true);
     setProgress(0);
+    if (hasMedia) {
+      player.currentTime = 0;
+      player.play();
+    }
     setPlaying(true);
   }
 
@@ -80,6 +101,14 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
         <View style={styles.playBadge}>
           {hasMedia ? <Play size={42} color={theme.colors.textOnDark} /> : <Video size={42} color={theme.colors.textOnDark} />}
         </View>
+        {hasMedia ? (
+          <VideoView
+            contentFit="contain"
+            nativeControls
+            player={player}
+            style={styles.videoView}
+          />
+        ) : null}
         <Text style={styles.previewTitle}>{previewTitle}</Text>
         {packageRecord ? <Text style={styles.packageId}>Pacote {packageRecord.id.slice(0, 8)}</Text> : null}
         <Text style={styles.previewText}>{previewText}</Text>
@@ -87,7 +116,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
 
       <View style={styles.controlPanel}>
         <View style={styles.timelineHeader}>
-          <Text style={styles.timelineLabel}>{hasMedia ? "Linha do tempo criptografada" : "Revisao local do pacote"}</Text>
+          <Text style={styles.timelineLabel}>{hasMedia ? "Linha do tempo local" : "Revisao local do pacote"}</Text>
           <Text style={styles.timelineValue}>{Math.round(progress)}%</Text>
         </View>
         <View style={styles.timelineTrack}>
@@ -139,7 +168,11 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
           </View>
           <View style={styles.detailItem}>
             <FileLock2 size={17} color={theme.colors.primary} />
-            <Text style={styles.detailText}>Hash tecnico {packageRecord.integrity.sha256.slice(0, 16)}...</Text>
+            <Text style={styles.detailText}>
+              {hasMedia
+                ? `Video ${Math.round((videoAsset?.sizeBytes ?? 0) / 1024)}KB; hash ${videoAsset?.sha256.slice(0, 16)}...`
+                : `Hash tecnico ${packageRecord.integrity.sha256.slice(0, 16)}...`}
+            </Text>
           </View>
         </View>
       ) : (
@@ -340,5 +373,13 @@ const styles = StyleSheet.create({
     height: 76,
     justifyContent: "center",
     width: 76
+  },
+  videoView: {
+    alignSelf: "stretch",
+    backgroundColor: "rgba(18, 10, 32, 0.62)",
+    borderRadius: theme.radius.md,
+    height: 190,
+    overflow: "hidden",
+    width: "100%"
   }
 });

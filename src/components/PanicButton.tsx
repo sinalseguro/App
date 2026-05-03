@@ -68,17 +68,36 @@ function AnimatedParticle({
 export function PanicButton({ active = false, label, holdMs, onTrigger }: PanicButtonProps) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const progress = useRef(new Animated.Value(0)).current;
+  const pulse = useRef(new Animated.Value(0)).current;
   const [holding, setHolding] = useState(false);
   const particleValues = useMemo(() => particleConfigs.map(() => new Animated.Value(0)), []);
 
   useEffect(() => {
     if (!active) {
+      pulse.stopAnimation();
+      pulse.setValue(0);
       particleValues.forEach((value) => {
         value.stopAnimation();
         value.setValue(0);
       });
       return;
     }
+
+    const pulseLoop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulse, {
+          duration: 1800,
+          toValue: 1,
+          useNativeDriver: true
+        }),
+        Animated.timing(pulse, {
+          duration: 1800,
+          toValue: 0,
+          useNativeDriver: true
+        })
+      ])
+    );
+    pulseLoop.start();
 
     const loops = particleValues.map((value, index) => {
       const config = particleConfigs[index];
@@ -103,13 +122,16 @@ export function PanicButton({ active = false, label, holdMs, onTrigger }: PanicB
     });
 
     return () => {
+      pulseLoop.stop();
+      pulse.stopAnimation();
+      pulse.setValue(0);
       loops.forEach((loop) => loop.stop());
       particleValues.forEach((value) => {
         value.stopAnimation();
         value.setValue(0);
       });
     };
-  }, [active, particleValues]);
+  }, [active, particleValues, pulse]);
 
   function clearHold() {
     if (timerRef.current) {
@@ -141,6 +163,18 @@ export function PanicButton({ active = false, label, holdMs, onTrigger }: PanicB
     inputRange: [0, 1],
     outputRange: ["0%", "100%"]
   });
+  const armedGlowOpacity = pulse.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.18, 0.42]
+  });
+  const armedGlowScale = pulse.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1.01, 1.08]
+  });
+  const armedRingOpacity = pulse.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.44, 0.9]
+  });
 
   return (
     <View style={styles.wrapper} testID="panic-button-area">
@@ -156,6 +190,21 @@ export function PanicButton({ active = false, label, holdMs, onTrigger }: PanicB
         ]}
         testID="panic-button"
       >
+        {active ? (
+          <>
+            <Animated.View
+              pointerEvents="none"
+              style={[
+                styles.armedGlow,
+                {
+                  opacity: armedGlowOpacity,
+                  transform: [{ scale: armedGlowScale }]
+                }
+              ]}
+            />
+            <Animated.View pointerEvents="none" style={[styles.armedRing, { opacity: armedRingOpacity }]} />
+          </>
+        ) : null}
         <View pointerEvents="none" style={styles.depthLayer} />
         <View pointerEvents="none" style={styles.sheenLayer} />
         {particleValues.map((value, index) => (
@@ -202,7 +251,11 @@ const styles = StyleSheet.create({
   },
   buttonArmed: {
     backgroundColor: "#9F174D",
-    borderColor: theme.colors.accentSoft
+    borderColor: "#FFD3E1",
+    shadowColor: "#16A34A",
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.32,
+    shadowRadius: 32
   },
   buttonPressed: {
     elevation: 3,
@@ -220,6 +273,27 @@ const styles = StyleSheet.create({
     right: 16,
     top: 18
   },
+  armedGlow: {
+    backgroundColor: "rgba(22, 163, 74, 0.42)",
+    borderRadius: theme.radius.pill,
+    bottom: -12,
+    left: -12,
+    position: "absolute",
+    right: -12,
+    top: -12,
+    zIndex: 0
+  },
+  armedRing: {
+    borderColor: "rgba(187, 247, 208, 0.92)",
+    borderRadius: theme.radius.pill,
+    borderWidth: 2,
+    bottom: 4,
+    left: 4,
+    position: "absolute",
+    right: 4,
+    top: 4,
+    zIndex: 3
+  },
   sheenLayer: {
     backgroundColor: "rgba(255, 255, 255, 0.08)",
     borderRadius: theme.radius.pill,
@@ -235,6 +309,9 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     lineHeight: 21,
     textAlign: "center",
+    textShadowColor: "rgba(18, 10, 32, 0.56)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
     zIndex: 2
   },
   progressFill: {
@@ -257,6 +334,9 @@ const styles = StyleSheet.create({
     fontSize: 56,
     fontWeight: "900",
     textAlign: "center",
+    textShadowColor: "rgba(18, 10, 32, 0.62)",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 7,
     zIndex: 2
   },
   particle: {

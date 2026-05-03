@@ -72,3 +72,14 @@ Checkpoint 2026-05-02:
 - pacote local fica no cofre do sistema enquanto backend/P2P nao estiverem prontos;
 - o app nao grava midia real, nao transmite dados e nao aciona terceiros neste checkpoint;
 - localizacao negada ou indisponivel nao impede a gravacao do pacote, mas fica registrada como status explicito.
+
+## Build privado com midia local
+
+Checkpoint 2026-05-03:
+
+- `CAMERA` e `RECORD_AUDIO` ficam habilitados somente no APK privado de homologacao local;
+- a gravacao inicia apenas apos acionamento do SOS e permissao explicita do Android;
+- video/audio ficam no sandbox privado do app, com backup Android desativado no Manifest nativo;
+- o arquivo e anexado ao pacote local e acessado pelo Cofre/Player;
+- transmissao, upload, streaming, P2P, envio a anjos e exportacao seguem bloqueados ate backend, contrato, chaves, RBAC, auditoria, retencao e RIPD/DPIA;
+- gravacao oculta, bypass de permissao, overlay e armazenamento externo continuam proibidos.

@@ -91,6 +91,26 @@ addCheck(
     : "Sem camera/microfone no primeiro instalavel"
 );
 
+const plugins = appJson.expo?.plugins ?? [];
+const hasCameraPlugin = plugins.some(
+  (plugin) => plugin === "expo-camera" || (Array.isArray(plugin) && plugin[0] === "expo-camera")
+);
+const hasMediaDependencies = ["expo-camera", "expo-video"].filter((dependency) =>
+  Boolean(packageJson.dependencies?.[dependency])
+);
+addCheck(
+  "android-media-public-gate",
+  hasCameraPlugin || hasMediaDependencies.length > 0 ? "blocker" : "ok",
+  hasCameraPlugin || hasMediaDependencies.length > 0
+    ? `Workspace atual contem midia privada (${[
+        hasCameraPlugin ? "expo-camera-plugin" : null,
+        ...hasMediaDependencies
+      ]
+        .filter(Boolean)
+        .join(", ")}); release publico exige perfil/branch sem midia`
+    : "Sem plugin/dependencia de midia no release publico"
+);
+
 const remote = run("git", ["remote", "get-url", "origin"]);
 addCheck(
   "git-origin",

@@ -17,14 +17,42 @@ export type LocationSnapshot =
       reason: string;
     };
 
-export type MediaCaptureManifest = {
-  status: "blocked_public_build";
-  recordingMode: "none";
-  assets: [];
-  policy: string;
+export type LocalMediaAsset = {
+  id: string;
+  kind: "video";
+  uri: string;
+  fileName: string;
+  mimeType: "video/mp4";
+  storage: "app_private_sandbox";
+  cameraMode: "front" | "back" | "both";
+  sizeBytes: number;
+  sha256: string;
+  recordedAt: string;
+  completedAt: string;
+  encryptionStatus: "local_sandbox_pending_backend_envelope";
 };
 
-export type EmergencyFinishReason = "manual_finish" | "default_duration_elapsed" | "immediate_package";
+export type MediaCaptureManifest =
+  | {
+      status: "pending_local_recording";
+      recordingMode: "video";
+      assets: [];
+      policy: string;
+    }
+  | {
+      status: "recorded_local";
+      recordingMode: "video";
+      assets: LocalMediaAsset[];
+      policy: string;
+    }
+  | {
+      status: "blocked_public_build";
+      recordingMode: "none";
+      assets: [];
+      policy: string;
+    };
+
+export type EmergencyFinishReason = "manual_finish" | "recording_duration_elapsed" | "immediate_package";
 
 export type EmergencyDeliveryPlan = {
   api: {
@@ -62,7 +90,7 @@ export type EmergencyPackage = {
   consentSnapshot: {
     termsVersion: "mvp-controlado-2026-05-02";
     location: "foreground_when_triggered" | "foreground_pre_authorized";
-    media: "blocked_until_homologation";
+    media: "local_recording_enabled_with_explicit_permission";
     sharing: "blocked_until_contract_backend_audit";
   };
   location: LocationSnapshot;

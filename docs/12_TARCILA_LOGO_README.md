@@ -92,6 +92,27 @@ Os QR codes foram preparados com as cores da marca:
 
 Os QR codes apontam para URLs estaveis do portal, nao para arquivos volateis. Quando os instaladores forem publicados, as paginas do portal passam a apontar para GitHub Releases, TestFlight ou lojas oficiais.
 
+## Parecer Tarcila - Validacao Android bundled
+
+Status em 2026-05-03: aprovado para validacao de Roberto no Android fisico.
+
+Tarcila revisou a rodada visual depois da correcao do travamento:
+
+- a splash nativa permanece com simbolo aprovado em fundo `#120A20`;
+- a Home abre sem Metro, sem tela preta e sem splash horizontal antiga;
+- topo usa simbolo e nome `SinalSeguro` com contraste suficiente no fundo institucional;
+- engrenagem e botao de voltar usam borda/acento da identidade visual;
+- Home usa fundo claro com marca em transparencia e tracos suaves, sem competir com o SOS;
+- SOS central usa profundidade discreta, texto com sombra controlada e estado ativo com brilho/particulas;
+- Configuracoes e Cofre usam grade iconografica fixa, com cards brancos e acentos roxos da marca;
+- capturas finais aprovadas para README/docs ficam em `docs/assets/mobile/2026-05-03-android-*-bundled.png`.
+
+Condicoes:
+
+- imagens intermediarias de troubleshooting, splash presa, tela preta, AOD/MIUI ou Metro nao devem entrar em material publico;
+- novos backgrounds, icones, videos, animacoes ou assets do portal continuam exigindo revisao de Tarcila antes de publicacao;
+- nenhuma arte deve sugerir convenio com orgaos publicos ainda nao formalizado.
+
 ## Regra de aprovacao
 
 Nenhum novo icone, logo, splash, mockup ou imagem institucional entra no app ou portal sem revisao visual de Tarcila e sem confirmar que nao representa parceria inexistente.

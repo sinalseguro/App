@@ -23,6 +23,7 @@ tags:
   - name: media_assets
   - name: delivery_attempts
   - name: audit_events
+  - name: app_updates
 paths:
   /health:
     get:
@@ -216,6 +217,33 @@ paths:
       responses:
         "200":
           description: Eventos de auditoria saneados
+  /app/releases/latest:
+    get:
+      tags: [app_updates]
+      security: []
+      summary: Consultar versao publica mais recente do app
+      description: >
+        Endpoint usado pelo cofre local para verificar se ha instalador ou build
+        recomendado. Nao retorna segredo, token ou dado sensivel.
+      parameters:
+        - name: platform
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [android, ios, web]
+        - name: version
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Versao mais recente disponivel
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AppRelease"
 components:
   securitySchemes:
     bearerAuth:
@@ -341,11 +369,24 @@ components:
       properties:
         scope:
           type: string
-          enum: [terms, privacy, location, alerts, media_homologation]
+          enum:
+            - terms
+            - privacy
+            - location
+            - alerts
+            - media_homologation
+            - emergency_data_sharing
+            - receiver_encrypted_save
         version:
           type: string
         accepted:
           type: boolean
+        acceptedAt:
+          type: string
+          format: date-time
+        deviceId:
+          type: string
+          format: uuid
     CreateAlert:
       type: object
       required: [clientAlertId, kind]
@@ -394,3 +435,27 @@ components:
           type: integer
         mimeType:
           type: string
+    AppRelease:
+      type: object
+      required: [platform, latestVersion, updateAvailable]
+      properties:
+        platform:
+          type: string
+          enum: [android, ios, web]
+        latestVersion:
+          type: string
+        minSupportedVersion:
+          type: string
+        updateAvailable:
+          type: boolean
+        mandatory:
+          type: boolean
+          default: false
+        installerUrl:
+          type: string
+          format: uri
+        releaseNotes:
+          type: string
+        publishedAt:
+          type: string
+          format: date-time

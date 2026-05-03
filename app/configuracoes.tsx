@@ -1,10 +1,13 @@
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Linking, StyleSheet, Text, TextInput, View } from "react-native";
+import { Camera as ExpoCamera } from "expo-camera";
 import * as Location from "expo-location";
 import * as Crypto from "expo-crypto";
 import {
-  Clock,
+  BookOpenCheck,
   Camera,
+  Clock,
+  KeyRound,
   LockKeyhole,
   LocateFixed,
   MapPin,
@@ -14,14 +17,18 @@ import {
   Settings as SettingsIcon,
   ShieldCheck,
   SwitchCamera,
+  UserCircle2,
   Video,
   Volume2
 } from "lucide-react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { AppTopBar } from "@/components/AppTopBar";
+import { BrandedDialog, BrandedDialogAction } from "@/components/BrandedDialog";
 import { ButtonIcon } from "@/components/ButtonIcon";
 import { PermissionGate } from "@/components/PermissionGate";
-import { SafeScreen } from "@/components/SafeScreen";
-import { StatusBanner } from "@/components/StatusBanner";
+import { ResourceTile } from "@/components/ResourceTile";
 import { theme } from "@/design/theme";
+import { trustedContactsMock } from "@/features/contacts/contactMocks";
 import {
   durationOptions,
   EmergencyDurationSeconds,
@@ -34,6 +41,14 @@ import {
 import { getLocationPermissionReadiness, prepareForegroundLocationPermission } from "@/features/emergency/locationCapture";
 
 type PermissionStatusText = "pendente" | "permitido" | "negado" | "bloqueado";
+type SettingsPanel = "duracao" | "encerramento" | "localizacao" | "compartilhamento" | "video" | "atalhos" | "termos" | "login" | null;
+
+type InfoDialog = {
+  title: string;
+  message: string;
+  icon?: ReactNode;
+  actions: BrandedDialogAction[];
+};
 
 function toPermissionStatus(status: Location.PermissionStatus): PermissionStatusText {
   if (status === Location.PermissionStatus.GRANTED) return "permitido";
@@ -47,6 +62,8 @@ export default function SettingsScreen() {
   const [backgroundStatus, setBackgroundStatus] = useState<PermissionStatusText>("bloqueado");
   const [servicesEnabled, setServicesEnabled] = useState(false);
   const [finishCodeDraft, setFinishCodeDraft] = useState("");
+  const [activePanel, setActivePanel] = useState<SettingsPanel>(null);
+  const [infoDialog, setInfoDialog] = useState<InfoDialog | null>(null);
   const [statusText, setStatusText] = useState("Carregando preferencias de emergencia...");
 
   async function refreshReadiness() {
@@ -60,29 +77,29 @@ export default function SettingsScreen() {
     const nextPreferences = await getEmergencyPreferences();
     setPreferences(nextPreferences);
     await refreshReadiness();
-    setStatusText("Preferencias carregadas. A permissao ja concedida sera reutilizada nos proximos chamados.");
+    setStatusText("Preferencias carregadas. As permissoes concedidas serao reutilizadas nos proximos chamados.");
   }
 
   useEffect(() => {
     void loadSettings();
   }, []);
 
-  async function updateDuration(defaultDurationSeconds: EmergencyDurationSeconds) {
-    if (!preferences) return;
-
-    const nextPreferences = {
-      ...preferences,
-      defaultDurationSeconds
-    };
-    await saveEmergencyPreferences(nextPreferences);
-    setPreferences(nextPreferences);
-    setStatusText(`Duracao padrao definida para ${formatDuration(defaultDurationSeconds)}.`);
-  }
-
   async function updatePreferences(nextPreferences: EmergencyPreferences, message: string) {
     await saveEmergencyPreferences(nextPreferences);
     setPreferences(nextPreferences);
     setStatusText(message);
+  }
+
+  async function updateDuration(defaultDurationSeconds: EmergencyDurationSeconds) {
+    if (!preferences) return;
+
+    await updatePreferences(
+      {
+        ...preferences,
+        defaultDurationSeconds
+      },
+      `Tempo de gravacao local definido para ${formatDuration(defaultDurationSeconds)}. O chamado continua ate encerramento manual.`
+    );
   }
 
   async function toggleCall190Shortcut() {
@@ -97,9 +114,7 @@ export default function SettingsScreen() {
           call190ShortcutEnabled: enabled
         }
       },
-      enabled
-        ? "Atalho 190 ativo. A ligacao sempre exige confirmacao da usuaria."
-        : "Atalho 190 desativado nas preferencias."
+      enabled ? "Atalho Policia 190 ativo na Home." : "Atalho Policia 190 removido da Home."
     );
   }
 
@@ -116,8 +131,30 @@ export default function SettingsScreen() {
         }
       },
       enabled
-        ? "Preferencia futura marcada para analise. Ligacao real exige contato validado, contrato e confirmacao."
+        ? "Preferencia futura marcada. Ligacao ao anjo exige contato validado, contrato e confirmacao."
         : "Preferencia futura de chamada ao anjo desmarcada."
+    );
+  }
+
+  async function toggleReceiverCall190() {
+    if (!preferences) return;
+
+    const enabled = !preferences.emergencyPhoneCall.allowReceiverCall190;
+    await updatePreferences(
+      {
+        ...preferences,
+        emergencyPhoneCall: {
+          ...preferences.emergencyPhoneCall,
+          allowReceiverCall190: enabled
+        },
+        trustedStream: {
+          ...preferences.trustedStream,
+          allowReceiverRelayTo190: enabled
+        }
+      },
+      enabled
+        ? "Preferencia futura marcada para o anjo acionar 190 com dados autorizados dentro do SinalSeguro."
+        : "Permissao futura para anjo acionar 190 foi desmarcada."
     );
   }
 
@@ -160,7 +197,7 @@ export default function SettingsScreen() {
           codeHash
         }
       },
-      "Codigo de encerramento atualizado como hash local. O codigo nao entra em logs, URLs, push ou pacote de evidencia."
+      "Codigo de encerramento salvo como hash local. O codigo nao entra em logs, URLs, push ou pacote de evidencia."
     );
     setFinishCodeDraft("");
   }
@@ -187,6 +224,24 @@ export default function SettingsScreen() {
     );
   }
 
+  async function toggleReceiverEncryptedSave() {
+    if (!preferences) return;
+
+    const enabled = !preferences.trustedStream.allowReceiverEncryptedSave;
+    await updatePreferences(
+      {
+        ...preferences,
+        trustedStream: {
+          ...preferences.trustedStream,
+          allowReceiverEncryptedSave: enabled
+        }
+      },
+      enabled
+        ? "Preferencia futura marcada: anjo autorizado podera salvar copia criptografada dentro do app."
+        : "Salvamento criptografado pelo anjo foi desmarcado."
+    );
+  }
+
   async function updateCameraMode(cameraMode: LocalVideoCameraMode) {
     if (!preferences) return;
 
@@ -196,10 +251,10 @@ export default function SettingsScreen() {
         localVideoCapture: {
           ...preferences.localVideoCapture,
           cameraMode,
-          status: "public_build_blocked"
+          status: "enabled_local"
         }
       },
-      "Preferencia de camera registrada para homologacao. O build publico nao solicita camera nem microfone."
+      `Camera ${cameraMode === "front" ? "frontal" : cameraMode === "back" ? "traseira" : "ambas"} definida para a proxima gravacao local.`
     );
   }
 
@@ -213,12 +268,22 @@ export default function SettingsScreen() {
         localVideoCapture: {
           ...preferences.localVideoCapture,
           requestOnSos,
-          status: "public_build_blocked"
+          status: "enabled_local"
         }
       },
       requestOnSos
-        ? "Solicitacao futura marcada. Video local real segue bloqueado ate RIPD/DPIA, termos e homologacao controlada."
-        : "Solicitacao futura de video local desmarcada."
+        ? "Video local sera solicitado quando o SOS iniciar, com permissao explicita de camera e microfone."
+        : "Video local desativado para o proximo SOS."
+    );
+  }
+
+  async function authorizeMediaPermissions() {
+    const cameraPermission = await ExpoCamera.requestCameraPermissionsAsync();
+    const microphonePermission = await ExpoCamera.requestMicrophonePermissionsAsync();
+    setStatusText(
+      cameraPermission.granted && microphonePermission.granted
+        ? "Camera e microfone autorizados. O proximo SOS pode gravar midia local no sandbox do app."
+        : "Camera ou microfone negados. O SOS preserva metadados e localizacao, mas sem video local."
     );
   }
 
@@ -245,222 +310,377 @@ export default function SettingsScreen() {
     );
   }
 
+  async function acceptLegalConsent() {
+    if (!preferences) return;
+
+    await updatePreferences(
+      {
+        ...preferences,
+        legalConsent: {
+          termsAccepted: true,
+          privacyAccepted: true,
+          emergencyDataSharingAccepted: true,
+          version: preferences.legalConsent.version,
+          acceptedAt: new Date().toISOString()
+        }
+      },
+      "Aceites locais registrados para homologacao. O aceite juridico definitivo sera versionado pela API."
+    );
+  }
+
   async function openSystemSettings() {
     await Linking.openSettings();
   }
 
+  function showOidcPlan(provider: "Google" | "Apple/iCloud") {
+    setInfoDialog({
+      title: `Login ${provider}`,
+      message:
+        "Fluxo preparado para OIDC via API. A configuracao real de client_id, redirect URI e chaves fica fora do Git e sera feita na etapa de backend/lojas, sem armazenar credenciais no app.",
+      icon: <KeyRound size={18} color={theme.colors.primary} />,
+      actions: [{ label: "Entendi" }]
+    });
+  }
+
+  const panelTitle = {
+    atalhos: "Atalhos",
+    compartilhamento: "Compartilhamento",
+    duracao: "Tempo de gravacao",
+    encerramento: "Encerramento seguro",
+    localizacao: "Localizacao",
+    login: "Login",
+    termos: "Termos e privacidade",
+    video: "Video local"
+  } satisfies Record<Exclude<SettingsPanel, null>, string>;
+
   return (
-    <SafeScreen
-      title="Configuracoes"
-      subtitle="Permissoes sao incrementais, explicadas e revogaveis."
-    >
-      <StatusBanner tone="secure" title="Agilidade no chamado" text={statusText} />
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.shell} testID="settings-screen">
+        <AppTopBar contextLabel="Configuracoes" showBack />
 
-      <View style={styles.card}>
-        <View style={styles.cardHeader}>
-          <Clock size={20} color={theme.colors.primary} />
-          <Text style={styles.cardTitle}>Duracao padrao do chamado</Text>
-        </View>
-        <Text style={styles.text}>
-          Define por quanto tempo o pacote local permanece ativo antes do encerramento automatico. A usuaria pode finalizar antes.
-        </Text>
-        <View style={styles.optionGrid}>
-          {durationOptions.map((duration) => (
-            <ButtonIcon
-              key={duration}
-              icon={<Clock size={18} color={theme.colors.primary} />}
-              label={formatDuration(duration)}
-              onPress={() => updateDuration(duration)}
-              style={preferences?.defaultDurationSeconds === duration ? styles.selectedOption : undefined}
+        <View style={styles.content}>
+          <View style={styles.statusPill}>
+            <View style={styles.statusIcon}>
+              <SettingsIcon size={20} color={theme.colors.secure} />
+            </View>
+            <View style={styles.statusCopy}>
+              <Text style={styles.statusTitle}>Configuracoes</Text>
+              <Text style={styles.statusText} numberOfLines={2}>
+                {statusText}
+              </Text>
+            </View>
+          </View>
+
+          <View style={styles.resourceGrid}>
+            <ResourceTile
+              icon={<BookOpenCheck size={24} color={theme.colors.primary} />}
+              label="Termos"
+              description={preferences?.legalConsent.termsAccepted ? "Aceito" : "Revisar"}
+              onPress={() => setActivePanel("termos")}
             />
-          ))}
+            <ResourceTile
+              icon={<UserCircle2 size={24} color={theme.colors.primary} />}
+              label="Login"
+              description="Google/Apple"
+              onPress={() => setActivePanel("login")}
+            />
+          </View>
+          <View style={styles.resourceGrid}>
+            <ResourceTile
+              icon={<LocateFixed size={24} color={theme.colors.primary} />}
+              label="Permissoes"
+              description={foregroundStatus === "permitido" ? "Permitido" : foregroundStatus}
+              onPress={() => setActivePanel("localizacao")}
+            />
+            <ResourceTile
+              icon={<Clock size={24} color={theme.colors.primary} />}
+              label="Gravacao"
+              description={preferences ? formatDuration(preferences.defaultDurationSeconds) : "Carregando"}
+              onPress={() => setActivePanel("duracao")}
+            />
+          </View>
+          <View style={styles.resourceGrid}>
+            <ResourceTile
+              icon={<LockKeyhole size={24} color={theme.colors.primary} />}
+              label="Encerrar"
+              description={preferences?.finishSafety.requireCode ? "Codigo" : "Livre"}
+              onPress={() => setActivePanel("encerramento")}
+            />
+            <ResourceTile
+              icon={<Video size={24} color={theme.colors.primary} />}
+              label="Midia"
+              description={preferences?.localVideoCapture.requestOnSos ? "Ativa local" : "Desativada"}
+              onPress={() => setActivePanel("video")}
+            />
+          </View>
+          <View style={styles.resourceGrid}>
+            <ResourceTile
+              icon={<MapPin size={24} color={theme.colors.primary} />}
+              label="Anjos"
+              description="Dados"
+              onPress={() => setActivePanel("compartilhamento")}
+            />
+            <ResourceTile
+              icon={<Volume2 size={24} color={theme.colors.primary} />}
+              label="Atalhos"
+              description="Volume futuro"
+              onPress={() => setActivePanel("atalhos")}
+            />
+          </View>
         </View>
+
+        <BrandedDialog
+          actions={[{ label: "Fechar", tone: "muted" }]}
+          icon={<SettingsIcon size={18} color={theme.colors.primary} />}
+          message="Configuracoes por modais para manter a tela principal fixa, simples e acionavel."
+          onClose={() => setActivePanel(null)}
+          title={activePanel ? panelTitle[activePanel] : ""}
+          visible={Boolean(activePanel)}
+        >
+          {activePanel === "termos" ? (
+            <View style={styles.dialogStack}>
+              <Text style={styles.dialogText}>
+                O uso de dados de emergencia exige aceite de termos, politica de privacidade e autorizacao especifica de
+                compartilhamento com anjos vinculados. O aceite definitivo sera versionado no backend.
+              </Text>
+              <ButtonIcon
+                icon={<ShieldCheck size={18} color={theme.colors.primary} />}
+                label={preferences?.legalConsent.privacyAccepted ? "Privacidade aceita localmente" : "Aceitar termos locais"}
+                onPress={acceptLegalConsent}
+              />
+            </View>
+          ) : null}
+
+          {activePanel === "login" ? (
+            <View style={styles.dialogStack}>
+              <Text style={styles.dialogText}>
+                Login proprio, Google e Apple/iCloud entram por OIDC na API. Nenhuma chave, client secret ou credencial deve
+                ser salva em Git, memoria ou bundle publico.
+              </Text>
+              <ButtonIcon
+                icon={<KeyRound size={18} color={theme.colors.primary} />}
+                label="Preparar login Google"
+                onPress={() => showOidcPlan("Google")}
+              />
+              <ButtonIcon
+                icon={<KeyRound size={18} color={theme.colors.primary} />}
+                label="Preparar login Apple/iCloud"
+                onPress={() => showOidcPlan("Apple/iCloud")}
+              />
+            </View>
+          ) : null}
+
+          {activePanel === "localizacao" ? (
+            <View style={styles.dialogStack}>
+              <PermissionGate
+                title="Localizacao do chamado"
+                text={
+                  servicesEnabled
+                    ? "Pode ser pre-autorizada aqui para reduzir atrito no momento do chamado."
+                    : "O GPS/localizacao do aparelho esta desativado no sistema."
+                }
+                status={foregroundStatus}
+              />
+              <PermissionGate
+                title="Segundo plano"
+                text="No build publico, localizacao em segundo plano fica bloqueada. Homologacao futura exige foreground service, permissao especifica, notificacao persistente e revisao juridica."
+                status={backgroundStatus === "permitido" ? "permitido" : "bloqueado"}
+              />
+              <ButtonIcon
+                icon={<LocateFixed size={18} color={theme.colors.primary} />}
+                label="Autorizar localizacao agora"
+                onPress={authorizeForegroundLocation}
+              />
+              <ButtonIcon
+                icon={<SettingsIcon size={18} color={theme.colors.primary} />}
+                label="Abrir configuracoes do sistema"
+                onPress={openSystemSettings}
+              />
+            </View>
+          ) : null}
+
+          {activePanel === "duracao" ? (
+            <View style={styles.dialogStack}>
+              <Text style={styles.dialogText}>
+                Define por quanto tempo a gravacao local fica ativa. O chamado de emergencia nao encerra sozinho:
+                ele continua ate a usuaria finalizar pelo botao.
+              </Text>
+              {durationOptions.map((duration) => (
+                <ButtonIcon
+                  key={duration}
+                  icon={<Clock size={18} color={theme.colors.primary} />}
+                  label={formatDuration(duration)}
+                  onPress={() => updateDuration(duration)}
+                  style={preferences?.defaultDurationSeconds === duration ? styles.selectedOption : undefined}
+                />
+              ))}
+            </View>
+          ) : null}
+
+          {activePanel === "encerramento" ? (
+            <View style={styles.dialogStack}>
+              <Text style={styles.dialogText}>
+                Opcional e desativado por padrao. Quando ativo, o SOS so encerra o chamado depois do gesto e do codigo local.
+              </Text>
+              <ButtonIcon
+                icon={<LockKeyhole size={18} color={theme.colors.primary} />}
+                label={preferences?.finishSafety.requireCode ? "Codigo ativo" : "Ativar codigo"}
+                onPress={toggleFinishSafetyCode}
+              />
+              <TextInput
+                accessibilityLabel="Novo codigo de encerramento"
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType="number-pad"
+                maxLength={12}
+                onChangeText={setFinishCodeDraft}
+                placeholder="Novo codigo"
+                placeholderTextColor={theme.colors.textMuted}
+                secureTextEntry
+                style={styles.codeInput}
+                value={finishCodeDraft}
+              />
+              <ButtonIcon
+                icon={<LockKeyhole size={18} color={theme.colors.primary} />}
+                label="Salvar codigo"
+                onPress={saveFinishCode}
+              />
+            </View>
+          ) : null}
+
+          {activePanel === "compartilhamento" ? (
+            <View style={styles.dialogStack}>
+              <Text style={styles.dialogText}>
+                Audio, video e localizacao em tempo real exigem contrato eletronico bilateral, backend, criptografia,
+                auditoria e homologacao.
+              </Text>
+              <View style={styles.inlineInfo}>
+                <MapPin size={18} color={theme.colors.secure} />
+                <Text style={styles.inlineInfoText}>
+                  Anjo convidado: {trustedContactsMock[0].name}. Status atual: {trustedContactsMock[0].status}.
+                </Text>
+              </View>
+              <ButtonIcon
+                icon={<PhoneCall size={18} color={theme.colors.primary} />}
+                label={preferences?.emergencyPhoneCall.call190ShortcutEnabled ? "Atalho 190 ativo" : "Ativar atalho 190"}
+                onPress={toggleCall190Shortcut}
+              />
+              <ButtonIcon
+                icon={<PhoneCall size={18} color={theme.colors.primary} />}
+                label={
+                  preferences?.emergencyPhoneCall.callTrustedContactOnAlert
+                    ? "Chamada ao anjo marcada"
+                    : "Ativar chamada ao anjo"
+                }
+                onPress={toggleTrustedContactCall}
+              />
+              <ButtonIcon
+                icon={<ShieldCheck size={18} color={theme.colors.primary} />}
+                label={
+                  preferences?.emergencyPhoneCall.allowReceiverCall190
+                    ? "Anjo pode acionar 190 futuro"
+                    : "Permitir anjo acionar 190 futuro"
+                }
+                onPress={toggleReceiverCall190}
+              />
+              <ButtonIcon
+                icon={<Video size={18} color={theme.colors.primary} />}
+                label={preferences?.trustedStream.requestedMedia.video ? "Video solicitado" : "Solicitar video futuro"}
+                onPress={() => toggleStreamScope("video")}
+              />
+              <ButtonIcon
+                icon={<Mic size={18} color={theme.colors.primary} />}
+                label={preferences?.trustedStream.requestedMedia.audio ? "Audio solicitado" : "Solicitar audio futuro"}
+                onPress={() => toggleStreamScope("audio")}
+              />
+              <ButtonIcon
+                icon={<MapPin size={18} color={theme.colors.primary} />}
+                label={
+                  preferences?.trustedStream.requestedMedia.locationLive
+                    ? "Localizacao ao vivo solicitada"
+                    : "Solicitar localizacao ao vivo"
+                }
+                onPress={() => toggleStreamScope("locationLive")}
+              />
+              <ButtonIcon
+                icon={<LockKeyhole size={18} color={theme.colors.primary} />}
+                label={
+                  preferences?.trustedStream.allowReceiverEncryptedSave
+                    ? "Anjo salva criptografado futuro"
+                    : "Permitir salvamento criptografado futuro"
+                }
+                onPress={toggleReceiverEncryptedSave}
+              />
+            </View>
+          ) : null}
+
+          {activePanel === "video" ? (
+            <View style={styles.dialogStack}>
+              <Text style={styles.dialogText}>
+                Habilita o SOS para gravar video e audio localmente no sandbox privado do app. O envio para anjos/API
+                continua bloqueado ate backend, contrato, chaves e auditoria.
+              </Text>
+              <ButtonIcon
+                icon={<Video size={18} color={theme.colors.primary} />}
+                label={preferences?.localVideoCapture.requestOnSos ? "Video local ativo no SOS" : "Ativar video local no SOS"}
+                onPress={toggleLocalVideoRequest}
+              />
+              <ButtonIcon
+                icon={<Mic size={18} color={theme.colors.primary} />}
+                label="Autorizar camera e microfone"
+                onPress={authorizeMediaPermissions}
+              />
+              <ButtonIcon
+                icon={<Camera size={18} color={theme.colors.primary} />}
+                label="Camera frontal"
+                onPress={() => updateCameraMode("front")}
+                style={preferences?.localVideoCapture.cameraMode === "front" ? styles.selectedOption : undefined}
+              />
+              <ButtonIcon
+                icon={<Camera size={18} color={theme.colors.primary} />}
+                label="Camera traseira"
+                onPress={() => updateCameraMode("back")}
+                style={preferences?.localVideoCapture.cameraMode === "back" ? styles.selectedOption : undefined}
+              />
+              <ButtonIcon
+                icon={<SwitchCamera size={18} color={theme.colors.primary} />}
+                label="Ambas"
+                onPress={() => updateCameraMode("both")}
+                style={preferences?.localVideoCapture.cameraMode === "both" ? styles.selectedOption : undefined}
+              />
+            </View>
+          ) : null}
+
+          {activePanel === "atalhos" ? (
+            <View style={styles.dialogStack}>
+              <Text style={styles.dialogText}>
+                Botao de volume com tela travada segue como pesquisa nativa. O MVP nao usa acessibilidade, overlay ou captura
+                indevida de botoes do sistema.
+              </Text>
+              <PermissionGate
+                title="Atalho por botao de volume"
+                text="Pesquisa futura nativa. Precisa validar limites Android/iOS, foreground service e politicas de loja."
+                status="bloqueado"
+              />
+              <ButtonIcon icon={<RefreshCw size={18} color={theme.colors.primary} />} label="Atualizar permissoes" onPress={loadSettings} />
+            </View>
+          ) : null}
+        </BrandedDialog>
+
+        <BrandedDialog
+          actions={infoDialog?.actions ?? []}
+          icon={infoDialog?.icon}
+          message={infoDialog?.message}
+          onClose={() => setInfoDialog(null)}
+          title={infoDialog?.title ?? ""}
+          visible={Boolean(infoDialog)}
+        />
       </View>
-
-      <View style={styles.card}>
-        <View style={styles.cardHeader}>
-          <LockKeyhole size={20} color={theme.colors.primary} />
-          <Text style={styles.cardTitle}>Seguranca para encerrar</Text>
-        </View>
-        <Text style={styles.text}>
-          Opcional e desativado por padrao. Quando ativo, o SOS so encerra o chamado depois do gesto e do codigo local.
-        </Text>
-        <ButtonIcon
-          icon={<LockKeyhole size={18} color={theme.colors.primary} />}
-          label={preferences?.finishSafety.requireCode ? "Codigo ativo" : "Ativar codigo"}
-          onPress={toggleFinishSafetyCode}
-        />
-        <View style={styles.codeBlock}>
-          <TextInput
-            accessibilityLabel="Novo codigo de encerramento"
-            autoCapitalize="none"
-            autoCorrect={false}
-            keyboardType="number-pad"
-            maxLength={12}
-            onChangeText={setFinishCodeDraft}
-            placeholder="Novo codigo"
-            placeholderTextColor={theme.colors.textMuted}
-            secureTextEntry
-            style={styles.codeInput}
-            value={finishCodeDraft}
-          />
-          <ButtonIcon
-            icon={<LockKeyhole size={18} color={theme.colors.primary} />}
-            label="Salvar codigo"
-            onPress={saveFinishCode}
-          />
-        </View>
-      </View>
-
-      <PermissionGate
-        title="Localizacao do chamado"
-        text={
-          servicesEnabled
-            ? "Pode ser pre-autorizada aqui para reduzir atrito no momento do chamado."
-            : "O GPS/localizacao do aparelho esta desativado no sistema."
-        }
-        status={foregroundStatus}
-      />
-      <ButtonIcon
-        icon={<LocateFixed size={20} color={theme.colors.primary} />}
-        label="Autorizar localizacao agora"
-        onPress={authorizeForegroundLocation}
-      />
-      <ButtonIcon
-        icon={<SettingsIcon size={20} color={theme.colors.primary} />}
-        label="Abrir configuracoes do sistema"
-        onPress={openSystemSettings}
-      />
-
-      <PermissionGate
-        title="Segundo plano"
-        text="No build publico, localizacao em segundo plano fica bloqueada. Homologacao futura exige foreground service, permissao especifica, notificacao persistente e revisao juridica."
-        status={backgroundStatus === "permitido" ? "permitido" : "bloqueado"}
-      />
-
-      <View style={styles.card}>
-        <View style={styles.cardHeader}>
-          <ShieldCheck size={20} color={theme.colors.primary} />
-          <Text style={styles.cardTitle}>Compartilhamento interno futuro</Text>
-        </View>
-        <Text style={styles.text}>
-          Audio, video e localizacao em tempo real exigem contrato eletronico bilateral, backend, criptografia, auditoria e homologacao.
-        </Text>
-        <ButtonIcon
-          icon={<PhoneCall size={18} color={theme.colors.primary} />}
-          label={preferences?.emergencyPhoneCall.call190ShortcutEnabled ? "Atalho 190 ativo" : "Ativar atalho 190"}
-          onPress={toggleCall190Shortcut}
-        />
-        <ButtonIcon
-          icon={<PhoneCall size={18} color={theme.colors.primary} />}
-          label={
-            preferences?.emergencyPhoneCall.callTrustedContactOnAlert
-              ? "Preferencia futura marcada"
-              : "Ativar chamada ao anjo"
-          }
-          onPress={toggleTrustedContactCall}
-        />
-        <ButtonIcon
-          icon={<Video size={18} color={theme.colors.primary} />}
-          label={preferences?.trustedStream.requestedMedia.video ? "Video solicitado" : "Solicitar video futuro"}
-          onPress={() => toggleStreamScope("video")}
-        />
-        <ButtonIcon
-          icon={<Mic size={18} color={theme.colors.primary} />}
-          label={preferences?.trustedStream.requestedMedia.audio ? "Audio solicitado" : "Solicitar audio futuro"}
-          onPress={() => toggleStreamScope("audio")}
-        />
-        <ButtonIcon
-          icon={<MapPin size={18} color={theme.colors.primary} />}
-          label={
-            preferences?.trustedStream.requestedMedia.locationLive
-              ? "Localizacao em tempo real solicitada"
-              : "Solicitar localizacao em tempo real"
-          }
-          onPress={() => toggleStreamScope("locationLive")}
-        />
-      </View>
-
-      <View style={styles.card}>
-        <View style={styles.cardHeader}>
-          <Camera size={20} color={theme.colors.primary} />
-          <Text style={styles.cardTitle}>Video local em homologacao</Text>
-        </View>
-        <Text style={styles.text}>
-          Prepara a preferencia para o SOS gravar video local criptografado quando a trilha juridica e tecnica liberar. Este build publico nao pede permissao de camera ou microfone.
-        </Text>
-        <ButtonIcon
-          icon={<Video size={18} color={theme.colors.primary} />}
-          label={preferences?.localVideoCapture.requestOnSos ? "Solicitacao marcada" : "Solicitar video no SOS futuro"}
-          onPress={toggleLocalVideoRequest}
-        />
-        <View style={styles.optionGrid}>
-          <ButtonIcon
-            icon={<Camera size={18} color={theme.colors.primary} />}
-            label="Frontal"
-            onPress={() => updateCameraMode("front")}
-            style={preferences?.localVideoCapture.cameraMode === "front" ? styles.selectedOption : undefined}
-          />
-          <ButtonIcon
-            icon={<Camera size={18} color={theme.colors.primary} />}
-            label="Traseira"
-            onPress={() => updateCameraMode("back")}
-            style={preferences?.localVideoCapture.cameraMode === "back" ? styles.selectedOption : undefined}
-          />
-          <ButtonIcon
-            icon={<SwitchCamera size={18} color={theme.colors.primary} />}
-            label="Ambas"
-            onPress={() => updateCameraMode("both")}
-            style={preferences?.localVideoCapture.cameraMode === "both" ? styles.selectedOption : undefined}
-          />
-        </View>
-      </View>
-
-      <PermissionGate
-        title="Atalho por botao de volume"
-        text="Pesquisa futura nativa. O MVP nao promete acionamento por volume com tela travada porque Android/iOS limitam esse uso."
-        status="bloqueado"
-      />
-      <ButtonIcon
-        icon={<Volume2 size={20} color={theme.colors.primary} />}
-        label="Ver status dos atalhos"
-        onPress={() =>
-          setStatusText("Atalho fisico permanece em pesquisa: sem uso de acessibilidade, overlay ou captura indevida de botoes do sistema.")
-        }
-      />
-
-      <ButtonIcon
-        icon={<RefreshCw size={20} color={theme.colors.primary} />}
-        label="Atualizar permissoes"
-        onPress={loadSettings}
-      />
-    </SafeScreen>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: theme.colors.surface,
-    borderColor: theme.colors.border,
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    gap: theme.spacing.md,
-    padding: theme.spacing.lg
-  },
-  cardHeader: {
-    alignItems: "center",
-    flexDirection: "row",
-    gap: theme.spacing.sm
-  },
-  cardTitle: {
-    color: theme.colors.text,
-    flex: 1,
-    fontSize: 18,
-    fontWeight: "800"
-  },
-  codeBlock: {
-    gap: theme.spacing.sm
-  },
   codeInput: {
     backgroundColor: theme.colors.surfaceMuted,
     borderColor: theme.colors.border,
@@ -472,16 +692,87 @@ const styles = StyleSheet.create({
     minHeight: 52,
     paddingHorizontal: theme.spacing.md
   },
-  optionGrid: {
+  content: {
+    flex: 1,
+    gap: theme.spacing.sm,
+    justifyContent: "center",
+    paddingHorizontal: theme.spacing.lg,
+    paddingVertical: theme.spacing.md
+  },
+  dialogStack: {
+    gap: theme.spacing.md
+  },
+  dialogText: {
+    color: theme.colors.textMuted,
+    fontSize: theme.typography.body,
+    lineHeight: 22
+  },
+  inlineInfo: {
+    alignItems: "flex-start",
+    backgroundColor: theme.colors.surfaceMuted,
+    borderRadius: theme.radius.md,
+    flexDirection: "row",
+    gap: theme.spacing.sm,
+    padding: theme.spacing.md
+  },
+  inlineInfoText: {
+    color: theme.colors.text,
+    flex: 1,
+    fontSize: theme.typography.small,
+    fontWeight: "800",
+    lineHeight: 18
+  },
+  resourceGrid: {
+    flexDirection: "row",
     gap: theme.spacing.sm
+  },
+  safeArea: {
+    backgroundColor: theme.colors.background,
+    flex: 1
   },
   selectedOption: {
     borderColor: theme.colors.primary,
     borderWidth: 2
   },
-  text: {
+  shell: {
+    backgroundColor: theme.colors.background,
+    flex: 1,
+    overflow: "hidden"
+  },
+  statusPill: {
+    alignItems: "center",
+    backgroundColor: theme.colors.surface,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    flexDirection: "row",
+    gap: theme.spacing.sm,
+    minHeight: 56,
+    paddingHorizontal: theme.spacing.md,
+    ...theme.shadow
+  },
+  statusCopy: {
+    flex: 1,
+    gap: 2
+  },
+  statusIcon: {
+    alignItems: "center",
+    backgroundColor: "rgba(20, 184, 166, 0.12)",
+    borderRadius: 18,
+    height: 36,
+    justifyContent: "center",
+    width: 36
+  },
+  statusText: {
     color: theme.colors.textMuted,
-    fontSize: theme.typography.body,
-    lineHeight: 21
+    fontSize: theme.typography.small,
+    fontWeight: "700",
+    lineHeight: 17
+  },
+  statusTitle: {
+    color: theme.colors.text,
+    fontSize: theme.typography.small,
+    fontWeight: "800",
+    textTransform: "uppercase"
   }
 });

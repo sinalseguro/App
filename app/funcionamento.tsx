@@ -17,7 +17,7 @@ const steps = [
   {
     icon: <Archive size={20} color={theme.colors.primary} />,
     title: "Cofre local",
-    text: "O pacote fica preservado no dispositivo para reenvio futuro quando a entrega segura estiver homologada."
+    text: "O pacote e o video autorizado ficam preservados no dispositivo para revisao local segura."
   },
   {
     icon: <KeyRound size={20} color={theme.colors.primary} />,
@@ -27,7 +27,7 @@ const steps = [
   {
     icon: <Video size={20} color={theme.colors.primary} />,
     title: "Midia",
-    text: "Audio, video e streaming ficam bloqueados no build publico e preparados apenas para homologacao controlada."
+    text: "Video/audio local funcionam no build privado. Streaming, envio e compartilhamento seguem bloqueados."
   },
   {
     icon: <ShieldCheck size={20} color={theme.colors.primary} />,

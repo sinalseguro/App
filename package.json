@@ -1,7 +1,7 @@
 {
   "name": "sinalseguro-app",
   "version": "0.1.0",
-  "private": false,
+  "private": true,
   "main": "expo-router/entry",
   "engines": {
     "node": ">=22.13.0",
@@ -18,6 +18,9 @@
     "test": "node scripts/smoke-test.mjs",
     "assets:qr": "node scripts/generate-qr-assets.mjs",
     "release:android:readiness": "node scripts/android-release-readiness.mjs",
+    "private:android:readiness": "node scripts/android-private-media-readiness.mjs",
+    "build:android:private": "npm run build:android:debug:bundled",
+    "build:android:debug:bundled": "node scripts/prepare-android-bundled-debug.mjs && cd android && ./gradlew assembleDebug -PsinalBundleDebugJs=true",
     "build:android:preview": "npx eas-cli@latest build --platform android --profile preview",
     "build:android:production": "npx eas-cli@latest build --platform android --profile production",
     "build:android:preview:local": "npx eas-cli@latest build --platform android --profile preview --local"
@@ -29,8 +32,10 @@
     "babel-preset-expo": "~54.0.10",
     "expo": "~54.0.21",
     "expo-build-properties": "~1.0.10",
+    "expo-camera": "~17.0.10",
     "expo-constants": "~18.0.10",
     "expo-crypto": "~15.0.7",
+    "expo-file-system": "~19.0.22",
     "expo-font": "~14.0.11",
     "expo-linking": "~8.0.8",
     "expo-location": "~19.0.7",
@@ -39,6 +44,7 @@
     "expo-secure-store": "~15.0.7",
     "expo-splash-screen": "~31.0.10",
     "expo-status-bar": "~3.0.8",
+    "expo-video": "~3.0.16",
     "lucide-react-native": "^0.553.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",

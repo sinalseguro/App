@@ -35,6 +35,7 @@ Estado:
 - cofre local exige confirmacao para excluir e bloqueia exclusao de chamado ativo;
 - SOS tem singleton no servico para evitar dois chamados ativos no mesmo dispositivo;
 - web e apenas simulador volatil, sem dados reais;
-- midia real, backend, P2P, streaming e compartilhamento externo continuam bloqueados ate revisoes juridica, seguranca e infraestrutura.
-- APK debug atualizado tem SHA-256 `481d9aca5dd1cabb36520440f7959c71b542af5619803aadbe5170164b300e70`;
-- instalacao Android desta rodada ficou pendente porque `adb devices -l` nao retornou aparelho.
+- build privado de homologacao local habilita video/audio no sandbox do app; backend, P2P, streaming e compartilhamento externo continuam bloqueados ate revisoes juridica, seguranca e infraestrutura.
+- `app.json` mantem o padrao publico sem `CAMERA`/`RECORD_AUDIO`; o build privado ativa essas permissoes pelo Manifest nativo preparado.
+- APK privado instalado no Android `192.168.0.4:5555` tem SHA-256 `056e41d7e1e91aef10c6763bb094bfe27973693c8c163b222c6f4be2952be67b`.
+- inicializacao fria validada sem crash no log isolado do SinalSeguro.

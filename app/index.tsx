@@ -1,9 +1,10 @@
-import { ReactNode, useCallback, useEffect, useState } from "react";
+import { ReactNode, useCallback, useState } from "react";
 import { router, useFocusEffect } from "expo-router";
-import { Image, Linking, Platform, StyleSheet, Text, TextInput, View } from "react-native";
+import { Linking, Platform, StyleSheet, Text, TextInput, View } from "react-native";
 import { Activity, HelpCircle, LockKeyhole, PhoneCall } from "lucide-react-native";
 import * as Crypto from "expo-crypto";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { BrandBackground } from "@/components/BrandBackground";
 import { BrandedDialog, BrandedDialogAction } from "@/components/BrandedDialog";
 import { PanicButton } from "@/components/PanicButton";
 import { theme } from "@/design/theme";
@@ -13,9 +14,9 @@ import { EmergencySettingsDrawer } from "@/features/emergency-home/EmergencySett
 import { EmergencyTopBar } from "@/features/emergency-home/EmergencyTopBar";
 import { EmergencyHomeRoute } from "@/features/emergency-home/routes";
 import { countPendingEmergencyPackages } from "@/features/emergency/emergencyOutbox";
+import { EmergencyMediaRecorder } from "@/features/emergency/EmergencyMediaRecorder";
 import {
   finishEmergencyPackage,
-  finishExpiredActiveEmergencyPackage,
   getActiveEmergencyPackage,
   startEmergencyPackage
 } from "@/features/emergency/emergencyRecorder";
@@ -33,8 +34,6 @@ type HomeDialog = {
   actions: BrandedDialogAction[];
 };
 
-const brandSymbol = require("../assets/brand/sinalseguro-symbol.png");
-
 export default function HomeScreen() {
   const [outboxCount, setOutboxCount] = useState(0);
   const [activePackageId, setActivePackageId] = useState<string | null>(null);
@@ -49,7 +48,6 @@ export default function HomeScreen() {
   );
 
   async function refreshOutboxCount() {
-    await finishExpiredActiveEmergencyPackage();
     const activePackage = await getActiveEmergencyPackage();
     setActivePackageId(activePackage?.id ?? null);
     setOutboxCount(await countPendingEmergencyPackages());
@@ -112,22 +110,6 @@ export default function HomeScreen() {
     }, [])
   );
 
-  useEffect(() => {
-    if (!activePackageId) return;
-
-    const timer = setTimeout(() => {
-      void finishEmergencyPackage(activePackageId, "default_duration_elapsed").then(async (result) => {
-        if (!result) return;
-        setRecordingStatus(
-          `Chamado ${result.packageRecord.id.slice(0, 8)} finalizado pelo tempo padrao e preservado somente no cofre local.`
-        );
-        await refreshOutboxCount();
-      });
-    }, preferences.defaultDurationSeconds * 1000);
-
-    return () => clearTimeout(timer);
-  }, [activePackageId, preferences.defaultDurationSeconds]);
-
   async function handlePanicTrigger() {
     setMenuOpen(false);
 
@@ -161,7 +143,7 @@ export default function HomeScreen() {
           : `localizacao ${result.packageRecord.location.status}`;
 
       setRecordingStatus(
-        `Chamado ${result.packageRecord.id.slice(0, 8)} ativo por ate ${formatDuration(preferences.defaultDurationSeconds)}; ${locationText}; envio externo indisponivel neste build.`
+        `Chamado ${result.packageRecord.id.slice(0, 8)} ativo ate encerramento manual; gravacao ${formatDuration(preferences.defaultDurationSeconds)}; ${locationText}; envio externo indisponivel neste build.`
       );
     } catch {
       setActivePackageId(null);
@@ -261,9 +243,13 @@ export default function HomeScreen() {
         ) : null}
 
         <View style={styles.emergencySurface}>
-          <View pointerEvents="none" style={styles.watermarkSlot}>
-            <Image accessibilityIgnoresInvertColors source={brandSymbol} style={styles.surfaceWatermark} />
-          </View>
+          <BrandBackground active={Boolean(activePackageId)} />
+          <EmergencyMediaRecorder
+            activePackageId={activePackageId}
+            preferences={preferences}
+            onMediaAttached={refreshOutboxCount}
+            onStatusChange={setRecordingStatus}
+          />
           <View style={styles.panicStage}>
             <PanicButton
               active={Boolean(activePackageId)}
@@ -375,17 +361,5 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.small,
     fontWeight: "800",
     lineHeight: 18
-  },
-  surfaceWatermark: {
-    height: "100%",
-    opacity: 0.05,
-    width: "100%"
-  },
-  watermarkSlot: {
-    height: "58%",
-    left: "21%",
-    position: "absolute",
-    top: "12%",
-    width: "58%"
   }
 });

@@ -1,4 +1,5 @@
 import { deleteSecureRecord, listSecureRecords, saveSecureRecord } from "@/storage/secureJsonStore";
+import * as FileSystem from "expo-file-system/legacy";
 import { EmergencyPackage } from "./types";
 
 const EMERGENCY_NAMESPACE = "sinalseguro.emergency-packages.v1";
@@ -22,6 +23,7 @@ function normalizeEmergencyPackage(packageRecord: EmergencyPackage): EmergencyPa
     status: maybeLegacyRecord.status === "recording_local" ? "recording_local" : "recorded_local",
     consentSnapshot: {
       ...packageRecord.consentSnapshot,
+      media: "local_recording_enabled_with_explicit_permission",
       sharing: "blocked_until_contract_backend_audit"
     },
     deliveryPlan: {
@@ -63,6 +65,14 @@ export async function deleteEmergencyPackage(packageId: string) {
       action: "removed_from_device",
       reason: "user_requested_local_delete"
     } satisfies EmergencyPackageDeletionAudit);
+
+    if (packageRecord.media.status === "recorded_local") {
+      await Promise.all(
+        packageRecord.media.assets.map((asset) =>
+          FileSystem.deleteAsync(asset.uri, { idempotent: true }).catch(() => undefined)
+        )
+      );
+    }
   }
 
   await deleteSecureRecord(EMERGENCY_NAMESPACE, packageId);

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Link, useFocusEffect } from "expo-router";
 import { Archive, Database, Square } from "lucide-react-native";
 import { ButtonIcon } from "@/components/ButtonIcon";
@@ -9,7 +9,6 @@ import { theme } from "@/design/theme";
 import { countPendingEmergencyPackages, listEmergencyPackages } from "@/features/emergency/emergencyOutbox";
 import {
   finishEmergencyPackage,
-  finishExpiredActiveEmergencyPackage,
   getActiveEmergencyPackage,
   startEmergencyPackage
 } from "@/features/emergency/emergencyRecorder";
@@ -28,7 +27,6 @@ export default function AlertScreen() {
   const [preferences, setPreferences] = useState<EmergencyPreferences>(defaultEmergencyPreferences);
 
   async function refreshOutboxCount() {
-    await finishExpiredActiveEmergencyPackage();
     const activePackage = await getActiveEmergencyPackage();
     setActivePackageId(activePackage?.id ?? null);
     setOutboxCount(await countPendingEmergencyPackages());
@@ -44,20 +42,6 @@ export default function AlertScreen() {
       void prepareScreen();
     }, [])
   );
-
-  useEffect(() => {
-    if (!activePackageId) return;
-
-    const timer = setTimeout(() => {
-      void finishEmergencyPackage(activePackageId, "default_duration_elapsed").then(async (result) => {
-        if (!result) return;
-        setStatus(`Chamado ${result.packageRecord.id.slice(0, 8)} finalizado pelo tempo padrao e preservado somente no cofre local.`);
-        await refreshOutboxCount();
-      });
-    }, preferences.defaultDurationSeconds * 1000);
-
-    return () => clearTimeout(timer);
-  }, [activePackageId, preferences.defaultDurationSeconds]);
 
   async function handleTestTrigger() {
     if (activePackageId) {
@@ -77,7 +61,7 @@ export default function AlertScreen() {
     const readiness = getEmergencyDeliveryReadiness(result.packageRecord);
     await refreshOutboxCount();
     setStatus(
-      `${readiness.reason} Chamado ativo por ate ${formatDuration(preferences.defaultDurationSeconds)}. Hash ${result.packageRecord.integrity.sha256.slice(0, 12)} registrado.`
+      `${readiness.reason} Chamado ativo ate encerramento manual; gravacao ${formatDuration(preferences.defaultDurationSeconds)}. Hash ${result.packageRecord.integrity.sha256.slice(0, 12)} registrado.`
     );
   }
 
@@ -117,7 +101,7 @@ export default function AlertScreen() {
       <StatusBanner
         tone="warning"
         title="Ambiente de validacao"
-        text="Este checkpoint grava metadados e localizacao pontual autorizada em cofre local. Midia real e transmissao seguem bloqueadas."
+        text="Este checkpoint grava metadados, localizacao pontual autorizada e midia local consentida no cofre do dispositivo. Transmissao externa segue bloqueada."
       />
       <StatusBanner
         tone="secure"

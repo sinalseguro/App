@@ -49,9 +49,11 @@ Arquivos locais:
 
 ## Limites de seguranca
 
-- Este checkpoint nao grava audio, video, camera ou microfone.
-- Midia real continua bloqueada no build publico ate RIPD/DPIA, consentimento, auditoria, retencao, revisao juridica e ambiente de homologacao.
-- O pacote atual registra metadados tecnicos e localizacao pontual autorizada, nao evidencia audiovisual.
+- O build publico nao grava audio, video, camera ou microfone.
+- O build privado de homologacao local pode gravar video/audio no sandbox do app quando a usuaria conceder `CAMERA` e `RECORD_AUDIO`.
+- Midia local no build privado nao e transmitida para backend, anjos, P2P ou terceiros.
+- Transmissao, exportacao e compartilhamento continuam bloqueados ate RIPD/DPIA, consentimento bilateral, auditoria, retencao, revisao juridica e backend de chaves.
+- O pacote atual registra metadados tecnicos, localizacao pontual autorizada e, no build privado, asset local de video quando capturado.
 - Nenhum pacote e transmitido para terceiros enquanto API/backend/P2P nao estiverem implementados e autorizados.
 - Nao ha acionamento de orgaos publicos, nem promessa de resposta emergencial.
 
@@ -76,7 +78,7 @@ O pacote local ja contem:
 - Convite nao permite login como outra pessoa.
 - Localizacao negada gera pacote mesmo assim, com status explicito.
 - Area de arquivos locais lista pacotes gravados e deixa o envio externo bloqueado.
-- Camera e microfone permanecem fora do build publico.
+- Camera e microfone permanecem fora do build publico e entram somente no build privado de midia local.
 - Dados sensiveis nao aparecem em console, URL de API ou push.
 - Docs deixam claro que midia real e transmissao estao bloqueadas.
 
@@ -105,11 +107,12 @@ Mudancas:
 
 - pacote pode iniciar como `recording_local`;
 - duracao padrao configuravel fica registrada em `plannedDurationSeconds`;
-- botao `Finalizar chamado ativo` encerra a coleta local sem apagar evidencia;
+- `plannedDurationSeconds` representa tempo de gravacao local, nao duracao da emergencia;
+- botao `SOS` ativo e Cofre encerram a coleta local sem apagar evidencia;
 - finalizacao manual registra `manual_finish`;
-- encerramento automatico por tempo registra `default_duration_elapsed`;
+- encerramento automatico antigo por `default_duration_elapsed` foi removido do fluxo ativo; o chamado encerra por acao manual;
 - hash SHA-256 e recalculado apos o encerramento sem incluir o hash anterior no payload;
 - pacote finalizado fica em `recorded_local`;
-- midia real segue `blocked_public_build`.
+- midia local pode passar de `pending_local_recording` para `recorded_local` quando o arquivo de video e preservado.
 
 Documento complementar: `docs/16_SEGUNDO_PLANO_ATALHO_FISICO_E_DURACAO.md`.

@@ -31,7 +31,10 @@ const requiredFiles = [
   "src/features/emergency/emergencyPreferences.ts",
   "src/features/emergency/emergencyRecorder.ts",
   "src/features/emergency/emergencyOutbox.ts",
+  "src/features/emergency/EmergencyMediaRecorder.tsx",
+  "src/features/emergency/mediaCapture.ts",
   "src/storage/secureJsonStore.ts",
+  "scripts/android-private-media-readiness.mjs",
   "android/app/src/main/res/drawable-xxhdpi/splashscreen_logo.png"
 ];
 
@@ -77,7 +80,7 @@ if (locationCapture.includes(["error", "message"].join("."))) {
 const appConfig = await readFile("app.json", "utf8");
 
 if (!appConfig.includes("\"image\": \"./assets/brand/sinalseguro-splash-approved.png\"")) {
-  throw new Error("Splash nativa precisa usar o lockup aprovado com logo/nome e fundo da identidade visual.");
+  throw new Error("Splash nativa precisa usar o layout aprovado por Tarcila com logo, nome e fundo institucional.");
 }
 
 const launchScreen = await readFile("src/components/AppLaunchScreen.tsx", "utf8");
@@ -152,9 +155,19 @@ if (!emergencyCallDock.includes("showPoliceShortcut") || !emergencyCallDock.incl
 }
 
 const emergencyPreferences = await readFile("src/features/emergency/emergencyPreferences.ts", "utf8");
+const emergencyMediaRecorder = await readFile("src/features/emergency/EmergencyMediaRecorder.tsx", "utf8");
+const mediaCapture = await readFile("src/features/emergency/mediaCapture.ts", "utf8");
+const privateMediaReadiness = await readFile("scripts/android-private-media-readiness.mjs", "utf8");
+const androidPrepare = await readFile("scripts/prepare-android-bundled-debug.mjs", "utf8");
 
 if (!emergencyPreferences.includes("finishSafety") || !emergencyPreferences.includes("codeHash")) {
   throw new Error("Encerramento seguro precisa ser configuravel e usar hash local do codigo.");
+}
+
+if (
+  !emergencyPreferences.includes("durationOptions: EmergencyDurationSeconds[] = [0, 60, 300, 900, 1800, 3600]")
+) {
+  throw new Error("Tempo de gravacao precisa manter opcoes Ilimitado, 1, 5, 15, 30 e 60 minutos.");
 }
 
 if (/const DEFAULT_FINISH_CODE_HASH = "e41d64/.test(emergencyPreferences)) {
@@ -169,6 +182,25 @@ if (secureStorage.includes("sessionStorage") || !secureStorage.includes("Platfor
 
 if (!emergencyRecorder.includes("activeStartPromise") || !emergencyRecorder.includes("Ja existe chamado local ativo")) {
   throw new Error("Servico de emergencia precisa impor singleton/idempotencia para chamado ativo local.");
+}
+
+if (
+  emergencyMediaRecorder.includes("!cancelled && result?.uri") ||
+  !emergencyMediaRecorder.includes("preserveLocalVideoAsset")
+) {
+  throw new Error("Encerramento manual do SOS nao pode descartar video antes de anexar ao cofre.");
+}
+
+if (!mediaCapture.includes("EncodingType.Base64") || !mediaCapture.includes("deleteAsync(sourceUri")) {
+  throw new Error("Midia local precisa gerar hash de conteudo e remover arquivo temporario da camera.");
+}
+
+if (
+  !privateMediaReadiness.includes("CAMERA") ||
+  !privateMediaReadiness.includes("RECORD_AUDIO") ||
+  !androidPrepare.includes('android:allowBackup="false"')
+) {
+  throw new Error("Build privado de midia precisa ter gate proprio e bloquear backup Android.");
 }
 
 const emergencyOutbox = await readFile("src/features/emergency/emergencyOutbox.ts", "utf8");

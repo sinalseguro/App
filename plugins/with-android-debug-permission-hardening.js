@@ -3,14 +3,13 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const DEBUG_MANIFESTS = [
+  "app/src/main/AndroidManifest.xml",
   "app/src/debug/AndroidManifest.xml",
   "app/src/debugOptimized/AndroidManifest.xml"
 ];
 
 const FORBIDDEN_DEBUG_PERMISSIONS = [
   "android.permission.SYSTEM_ALERT_WINDOW",
-  "android.permission.CAMERA",
-  "android.permission.RECORD_AUDIO",
   "android.permission.READ_EXTERNAL_STORAGE",
   "android.permission.WRITE_EXTERNAL_STORAGE"
 ];
@@ -30,6 +29,13 @@ function removeForbiddenPermissions(contents) {
   return nextContents;
 }
 
+function hardenApplicationBackup(contents) {
+  return contents
+    .replace(/android:allowBackup="true"/g, 'android:allowBackup="false"')
+    .replace(/\s+android:fullBackupContent="@xml\/[^"]+"/g, "")
+    .replace(/\s+android:dataExtractionRules="@xml\/[^"]+"/g, "");
+}
+
 module.exports = function withAndroidDebugPermissionHardening(config) {
   return withDangerousMod(config, [
     "android",
@@ -42,7 +48,7 @@ module.exports = function withAndroidDebugPermissionHardening(config) {
         }
 
         const currentContents = fs.readFileSync(absolutePath, "utf8");
-        const nextContents = removeForbiddenPermissions(currentContents);
+        const nextContents = hardenApplicationBackup(removeForbiddenPermissions(currentContents));
 
         if (nextContents !== currentContents) {
           fs.writeFileSync(absolutePath, nextContents);

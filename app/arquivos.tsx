@@ -20,6 +20,7 @@ import {
 } from "@/features/emergency/emergencyPreferences";
 import { finishEmergencyPackage } from "@/features/emergency/emergencyRecorder";
 import { EmergencyPackage } from "@/features/emergency/types";
+import { checkAppUpdate } from "@/services/appUpdateService";
 
 type VaultDialog = "player" | "cofre" | null;
 
@@ -115,6 +116,25 @@ export default function LocalFilesScreen() {
     setStatus(`Pacote ${packageRecord.id.slice(0, 8)} selecionado para previa segura no player.`);
   }
 
+  function openPackageInPlayer(packageRecord: EmergencyPackage) {
+    selectPackage(packageRecord);
+    setActiveDialog("player");
+  }
+
+  async function checkForAppUpdates() {
+    setStatus("Consultando atualizacoes do app na API SinalSeguro...");
+    const result = await checkAppUpdate();
+    setStatus(result.message);
+    setDialog({
+      title: "Atualizacoes do app",
+      message: result.latestVersion
+        ? `${result.message}\n\nVersao instalada: ${result.currentVersion}\nVersao API: ${result.latestVersion}`
+        : `${result.message}\n\nVersao instalada: ${result.currentVersion}`,
+      icon: <RefreshCw size={18} color={theme.colors.primary} />,
+      actions: [{ label: "Entendi" }]
+    });
+  }
+
   function togglePackageActions(packageRecord: EmergencyPackage) {
     setExpandedPackageId((currentPackageId) => (currentPackageId === packageRecord.id ? undefined : packageRecord.id));
   }
@@ -133,7 +153,7 @@ export default function LocalFilesScreen() {
     setSelectedPackageId((currentSelectedId) => (currentSelectedId === packageRecord.id ? undefined : currentSelectedId));
     setExpandedPackageId((currentExpandedId) => (currentExpandedId === packageRecord.id ? undefined : currentExpandedId));
     await refreshPackages();
-    setStatus(`Pacote ${packageRecord.id.slice(0, 8)} removido deste dispositivo com registro local de exclusao.`);
+    setStatus(`Pacote ${packageRecord.id.slice(0, 8)} removido deste dispositivo com arquivos locais e auditoria de exclusao.`);
   }
 
   function confirmDeleteLocalPackage(packageRecord: EmergencyPackage) {
@@ -165,10 +185,6 @@ export default function LocalFilesScreen() {
   }
 
   const selectedPackage = packages.find((packageRecord) => packageRecord.id === selectedPackageId);
-  const selectedSummary = selectedPackage
-    ? `Pacote ${selectedPackage.id.slice(0, 8)} selecionado para revisao segura.`
-    : "Nenhum arquivo selecionado.";
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.shell} testID="local-files-screen">
@@ -186,7 +202,7 @@ export default function LocalFilesScreen() {
             <StatusBanner
               tone="warning"
               title="Protecao dos dados"
-              text="Coordenadas completas e midia real exigem autenticacao forte, contrato eletronico e acesso auditado."
+              text="Midia local e coordenadas completas exigem autenticacao forte, contrato eletronico e acesso auditado antes de qualquer envio externo."
             />
             <ButtonIcon
               icon={<BookOpen size={18} color={theme.colors.primary} />}
@@ -200,25 +216,17 @@ export default function LocalFilesScreen() {
         ) : null}
 
         <View style={styles.content}>
-          <View style={styles.summary}>
-            <Archive size={24} color={theme.colors.primary} />
-            <View style={styles.summaryCopy}>
-              <Text style={styles.summaryTitle}>Arquivos locais</Text>
-              <Text style={styles.summaryText}>{selectedSummary}</Text>
-            </View>
-          </View>
-
           <View style={styles.resourceGrid}>
             <ResourceTile
               icon={<CirclePlay size={24} color={theme.colors.primary} />}
               label="Player"
-              description="Abrir revisao segura"
+              description="Revisao"
               onPress={() => setActiveDialog("player")}
             />
             <ResourceTile
               icon={<Archive size={24} color={theme.colors.primary} />}
               label="Cofre"
-              description="Arquivos em trilha"
+              description="Trilha"
               onPress={() => setActiveDialog("cofre")}
             />
           </View>
@@ -226,22 +234,25 @@ export default function LocalFilesScreen() {
             <ResourceTile
               icon={<BookOpen size={24} color={theme.colors.primary} />}
               label="Funcionamento"
-              description="Privacidade e fluxo"
+              description="Privacidade"
               onPress={() => router.push("/funcionamento")}
             />
             <ResourceTile
               icon={<RefreshCw size={24} color={theme.colors.primary} />}
-              label="Atualizar"
-              description="Recarregar cofre"
-              onPress={refreshPackages}
+              label="Atualizar app"
+              description="API"
+              onPress={checkForAppUpdates}
             />
           </View>
         </View>
 
         <BrandedDialog
-          actions={[{ label: "Fechar", tone: "muted" }]}
+          actions={[
+            { label: "Fechar", tone: "muted" },
+            { label: "Abrir cofre", onPress: () => setActiveDialog("cofre") }
+          ]}
           icon={<CirclePlay size={18} color={theme.colors.primary} />}
-          message="Area local para revisar arquivos gravados ou recebidos. Midia real segue bloqueada neste build publico."
+          message="Area local para revisar arquivos gravados ou recebidos. Videos autorizados pelo SOS ficam no sandbox privado do app."
           onClose={() => setActiveDialog(null)}
           title={selectedPackage ? `Player do pacote ${selectedPackage.id.slice(0, 8)}` : "Player seguro"}
           visible={activeDialog === "player"}
@@ -261,6 +272,7 @@ export default function LocalFilesScreen() {
             expandedPackageId={expandedPackageId}
             onDeletePackage={confirmDeleteLocalPackage}
             onFinishPackage={requestFinishPackage}
+            onOpenPlayerPackage={openPackageInPlayer}
             onSelectPackage={selectPackage}
             onShareBlocked={showShareBlocked}
             onToggleActions={togglePackageActions}
@@ -371,29 +383,5 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background,
     flex: 1,
     overflow: "hidden"
-  },
-  summary: {
-    alignItems: "center",
-    backgroundColor: theme.colors.surface,
-    borderColor: theme.colors.border,
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    flexDirection: "row",
-    gap: theme.spacing.md,
-    padding: theme.spacing.md
-  },
-  summaryCopy: {
-    flex: 1,
-    gap: theme.spacing.xs
-  },
-  summaryText: {
-    color: theme.colors.textMuted,
-    fontSize: theme.typography.small,
-    lineHeight: 18
-  },
-  summaryTitle: {
-    color: theme.colors.text,
-    fontSize: 17,
-    fontWeight: "900"
   }
 });

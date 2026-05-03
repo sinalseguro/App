@@ -17,11 +17,23 @@ export function ResourceTile({ icon, label, description, onPress }: ResourceTile
       style={({ pressed }) => [styles.tile, pressed && styles.tilePressed]}
     >
       <View style={styles.iconSlot}>{icon}</View>
-      <Text style={styles.label} numberOfLines={1}>
+      <Text
+        adjustsFontSizeToFit
+        maxFontSizeMultiplier={1.1}
+        minimumFontScale={0.72}
+        numberOfLines={1}
+        style={styles.label}
+      >
         {label}
       </Text>
       {description ? (
-        <Text style={styles.description} numberOfLines={2}>
+        <Text
+          adjustsFontSizeToFit
+          maxFontSizeMultiplier={1.1}
+          minimumFontScale={0.72}
+          numberOfLines={1}
+          style={styles.description}
+        >
           {description}
         </Text>
       ) : null}
@@ -40,9 +52,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: theme.colors.surfaceMuted,
     borderRadius: theme.radius.pill,
-    height: 48,
+    height: 40,
     justifyContent: "center",
-    width: 48
+    width: 40
   },
   label: {
     color: theme.colors.text,
@@ -59,9 +71,9 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: theme.spacing.xs,
     justifyContent: "center",
-    minHeight: 118,
+    minHeight: 92,
     minWidth: 100,
-    padding: theme.spacing.md,
+    padding: theme.spacing.sm,
     ...theme.shadow
   },
   tilePressed: {

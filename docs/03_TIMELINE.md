@@ -295,10 +295,10 @@ Decisoes:
 
 - GPS "sem pedir sempre" passa a significar reutilizar permissao foreground ja concedida, nunca burlar o dialogo do sistema.
 - Configuracoes ganhou pre-autorizacao de localizacao e leitura de status de permissao.
-- Duracao padrao do chamado passa a ser configuravel: `30s`, `1min`, `3min`, `5min`.
+- Tempo padrao de gravacao passou por evolucao posterior: `Ilimitado`, `1min`, `5min`, `15min`, `30min`, `60min`.
 - Chamado local ativo usa status `recording_local`.
 - Usuaria pode finalizar manualmente o chamado; o pacote nao e apagado, e fechado com `manual_finish`.
-- Tempo padrao encerra pacote ativo com `default_duration_elapsed` quando o app esta ativo.
+- O chamado ativo nao encerra automaticamente por tempo; encerramento automatico antigo foi removido do fluxo ativo.
 - Hash do pacote finalizado e recalculado sem carregar o bloco `integrity` anterior.
 - Background location nao entra no build publico; exige homologacao com foreground service/notificacao persistente e revisao Doneda/Schneier.
 - Atalho por volume com tela travada fica como pesquisa futura nativa, sem promessa no MVP.
@@ -506,6 +506,132 @@ Validacoes executadas:
 - `./gradlew :app:assembleDebug --console=plain`: aprovado;
 - `curl -fsS http://localhost:8081`: servidor web ativo;
 - ADB sem dispositivo conectado nesta rodada.
+
+## 2026-05-03 - Correcao do travamento Android na abertura
+
+Status: implementado, instalado e validado no aparelho fisico.
+
+Especialistas acionados:
+
+- Margaret/Ada: build Android/Expo e dependencia Metro;
+- Myers: validacao ADB, logcat e evidencias;
+- Tarcila/Norman: continuidade visual da Home, Configuracoes, Cofre e SOS ativo;
+- Schneier/Doneda: limites de midia, permissoes e dados sensiveis;
+- Cristine/Knuth: memoria, especificacao e documentacao.
+
+Decisoes:
+
+- o APK debug de validacao passa a ter comando dedicado `npm run build:android:debug:bundled`;
+- a propriedade Gradle `-PsinalBundleDebugJs=true` embute o JS no APK debug e remove a dependencia de Metro/`localhost:8081`;
+- `MainApplication.kt` desliga o suporte nativo de desenvolvedor quando `SINAL_BUNDLED_DEBUG=true`, evitando consulta ao packager no APK de validacao;
+- `app/_layout.tsx` ganhou fallback de `SplashScreen.hideAsync()` para evitar retencao da splash nativa;
+- o endpoint futuro `/app/releases/latest` foi documentado no OpenAPI para a acao `Atualizar app`;
+- Configuracoes registra aceite local de termos, privacidade e compartilhamento emergencial;
+- camera/microfone continuam bloqueados no build publico, com preparo de preferencia para homologacao.
+
+## 2026-05-03 - Build privado com midia local
+
+Status: implementado em codigo e preparado para build/validacao Android privada.
+
+Especialistas acionados:
+
+- Tarcila/Norman: revisao visual do header, Home fixa, SOS, Cofre e Configuracoes.
+- Ada/Hedy/Margaret: integracao `expo-camera`, gravacao local e APK debug bundled.
+- Schneier/Doneda/Myers: permissoes, backup Android, perda de video no encerramento e gate privado.
+- Cristine/Knuth: memoria, especificacao e continuidade.
+
+Decisoes:
+
+- O build publico segue sem midia, transmissao, stream, P2P ou compartilhamento externo.
+- O build privado de homologacao local habilita `CAMERA` e `RECORD_AUDIO`.
+- O SOS inicia pacote `recording_local` e, no Android/iOS, monta `EmergencyMediaRecorder`.
+- Ao encerrar o SOS, a camera e parada e o video e copiado para `sinalseguro-media/` no sandbox privado antes de atualizar o Cofre.
+- `android:allowBackup` fica `false` no Manifest nativo do build privado.
+- Hash SHA-256 do asset de video e calculado a partir do conteudo preservado em base64.
+- Tempo configuravel passou a significar tempo de gravacao local: `Ilimitado`, `1min`, `5min`, `15min`, `30min`, `60min`.
+- A emergencia/chamado encerra somente por acao manual da usuaria, com confirmacao e codigo local opcional.
+- Configuracoes foi compactada para reduzir risco de corte em telas Android menores, mantendo tela fixa e modais.
+
+Arquivos principais:
+
+- `src/features/emergency/EmergencyMediaRecorder.tsx`;
+- `src/features/emergency/mediaCapture.ts`;
+- `src/components/EvidencePlayerCard.tsx`;
+- `scripts/android-private-media-readiness.mjs`;
+- `scripts/prepare-android-bundled-debug.mjs`;
+- `docs/26_BUILD_PRIVADO_MIDIA_LOCAL.md`.
+
+Validacoes previstas para fechamento:
+
+- `npm run typecheck`;
+- `npm run lint`;
+- `npm test`;
+- `npm run private:android:readiness`;
+- `npm run build:android:private`;
+- `adb install`;
+- cold start Android e logcat filtrado;
+- teste manual: SOS inicia gravacao, encerramento preserva video, Cofre abre Player.
+
+Validacoes executadas:
+
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `npm test`: aprovado;
+- `npm run build:android:debug:bundled`: aprovado;
+- `adb -s 192.168.0.4:5555 install -r android/app/build/outputs/apk/debug/app-debug.apk`: aprovado;
+- app abriu com Metro desligado e `adb reverse --remove-all`;
+- cold start Android final: `TotalTime: 5700`;
+- `logcat` isolado por PID sem `Unable to load script`, `Failed to connect`, `FATAL EXCEPTION`, `AndroidRuntime` ou `setValueWithKeyAsync`;
+- SOS de teste entrou em `CHAMADO ATIVO`, capturou localizacao pontual e nao reproduziu o erro `ExpoSecureStore.default.setValueWithKeyAsync is not a function`.
+
+Artefatos:
+
+- `android/app/build/outputs/apk/debug/app-debug.apk`;
+- SHA-256 `2bd9055863a51f46d4c41f24b768e22b25f43984990e0313f5fc4baa5d599c83`;
+- `docs/25_CORRECAO_TRAVAMENTO_ANDROID_BUNDLE.md`;
+- `docs/assets/mobile/2026-05-03-android-home-bundled.png`;
+- `docs/assets/mobile/2026-05-03-android-configuracoes-bundled.png`;
+- `docs/assets/mobile/2026-05-03-android-cofre-bundled.png`;
+- `docs/assets/mobile/2026-05-03-android-sos-bundled-pos-localizacao.png`.
+
+Observacao:
+
+- Roberto informou USB conectado, mas `adb devices -l` enumerou apenas o transporte Wi-Fi `192.168.0.4:5555`; a instalacao usou o canal ADB ativo.
+
+## 2026-05-03 - APK privado com midia local instalado
+
+Status: build privado gerado, instalado e aberto no Android fisico.
+
+Resultado:
+
+- `npm run build:android:private`: aprovado;
+- artefato `android/app/build/outputs/apk/debug/app-debug.apk`;
+- tamanho aproximado: 103 MB;
+- SHA-256 `056e41d7e1e91aef10c6763bb094bfe27973693c8c163b222c6f4be2952be67b`;
+- `adb -s 192.168.0.4:5555 install -r android/app/build/outputs/apk/debug/app-debug.apk`: `Success`;
+- permissoes de camera, microfone, localizacao fina/aproximada e notificacoes concedidas via ADB para homologacao privada;
+- cold start Android: `Status: ok`, `LaunchState: COLD`, `TotalTime: 4103`;
+- logcat filtrado sem crash fatal, erro de bundle Metro, `setValueWithKeyAsync`, `RedBox` ou `Exception`.
+- revalidacao final de abertura Android: `TotalTime: 5787`, log `/tmp/sinalseguro-private-media-logcat-final.txt`, sem ocorrencias fatais filtradas.
+
+Gates executados no fechamento:
+
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `npm test`: aprovado;
+- `npm run private:android:readiness`: pronto condicionado para build privado;
+- `npm run release:android:readiness`: bloqueado corretamente para release publico por Node local e instrumentacao privada de midia.
+
+Evidencias:
+
+- `docs/assets/mobile/2026-05-03-android-private-media-home.png`;
+- `docs/assets/mobile/2026-05-03-android-private-media-home-final.png`;
+- `/tmp/sinalseguro-private-media-logcat.txt`.
+
+Pendencia de validacao manual:
+
+- a injecao de toque por ADB nao acionou os controles nesta rodada;
+- Roberto/Myers devem validar manualmente no aparelho: SOS inicia camera, encerramento preserva video, Cofre lista o pacote e Player reproduz o arquivo local.
 
 ## Modelo de registro
 

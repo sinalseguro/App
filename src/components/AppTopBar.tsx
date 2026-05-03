@@ -15,7 +15,7 @@ type AppTopBarProps = {
   onMenuPress?: () => void;
 };
 
-const brandSymbol = require("../../assets/brand/sinalseguro-symbol.png");
+const brandLogo = require("../../assets/brand/sinalseguro-logo.png");
 
 export function AppTopBar({
   contextLabel,
@@ -49,19 +49,22 @@ export function AppTopBar({
           <ChevronLeft size={25} color={theme.colors.textOnDark} />
         </Pressable>
       ) : null}
-      <View style={styles.brandArea}>
-        <Image accessibilityIgnoresInvertColors source={brandSymbol} style={styles.brandSymbol} />
+      <Pressable
+        accessibilityHint="Volta para a tela inicial do botao de panico"
+        accessibilityLabel="SinalSeguro"
+        accessibilityRole="button"
+        onPress={() => router.push("/")}
+        style={({ pressed }) => [styles.brandArea, showBack && styles.brandAreaWithBack, pressed && styles.brandAreaPressed]}
+      >
         <View style={styles.brandCopy}>
-          <Text style={styles.brandName} numberOfLines={1}>
-            SinalSeguro
-          </Text>
+          <Image accessibilityIgnoresInvertColors source={brandLogo} style={styles.brandLogo} />
           {contextLabel ? (
             <Text style={styles.contextLabel} numberOfLines={1}>
               {contextLabel}
             </Text>
           ) : null}
         </View>
-      </View>
+      </Pressable>
       {rightSlot}
       {showMenu ? (
         <Pressable
@@ -84,40 +87,52 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     gap: theme.spacing.sm,
-    minWidth: 0
+    minWidth: 0,
+    paddingRight: theme.spacing.sm
+  },
+  brandAreaWithBack: {
+    flex: 1
+  },
+  brandAreaPressed: {
+    opacity: 0.86
   },
   brandCopy: {
     flex: 1,
     gap: 2,
     minWidth: 0
   },
-  brandName: {
-    color: theme.colors.textOnDark,
-    fontSize: 21,
-    fontWeight: "900"
-  },
-  brandSymbol: {
-    height: 38,
-    width: 38
+  brandLogo: {
+    height: 39,
+    maxWidth: 230,
+    resizeMode: "contain",
+    width: "100%"
   },
   contextLabel: {
-    color: theme.colors.textOnDarkMuted,
+    color: "#FFD8E7",
     fontSize: 11,
     fontWeight: "800",
+    marginLeft: 5,
+    textShadowColor: "rgba(0, 0, 0, 0.28)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
     textTransform: "uppercase"
   },
   roundButton: {
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.12)",
-    borderColor: "rgba(255, 255, 255, 0.18)",
+    backgroundColor: "rgba(236, 64, 122, 0.16)",
+    borderColor: "rgba(255, 128, 171, 0.52)",
     borderRadius: theme.radius.pill,
     borderWidth: 1,
     height: 50,
     justifyContent: "center",
+    shadowColor: theme.colors.accent,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.22,
+    shadowRadius: 10,
     width: 50
   },
   roundButtonPressed: {
-    backgroundColor: "rgba(255, 255, 255, 0.2)",
+    backgroundColor: "rgba(236, 64, 122, 0.28)",
     transform: [{ translateY: 1 }]
   },
   topBar: {
