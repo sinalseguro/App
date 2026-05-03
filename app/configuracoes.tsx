@@ -110,8 +110,8 @@ export default function SettingsScreen() {
         }
       },
       enabled
-        ? "Chamada ao anjo autorizada como preferencia futura. Ligacao real exige contato validado e confirmacao."
-        : "Chamada ao anjo desativada nas preferencias."
+        ? "Preferencia futura marcada para analise. Ligacao real exige contato validado, contrato e confirmacao."
+        : "Preferencia futura de chamada ao anjo desmarcada."
     );
   }
 
@@ -221,7 +221,7 @@ export default function SettingsScreen() {
       <View style={styles.card}>
         <View style={styles.cardHeader}>
           <ShieldCheck size={20} color={theme.colors.primary} />
-          <Text style={styles.cardTitle}>Compartilhamento autorizado</Text>
+          <Text style={styles.cardTitle}>Compartilhamento interno futuro</Text>
         </View>
         <Text style={styles.text}>
           Audio, video e localizacao em tempo real exigem contrato eletronico bilateral, backend, criptografia, auditoria e homologacao.
@@ -235,7 +235,7 @@ export default function SettingsScreen() {
           icon={<PhoneCall size={18} color={theme.colors.primary} />}
           label={
             preferences?.emergencyPhoneCall.callTrustedContactOnAlert
-              ? "Chamada ao anjo ativa"
+              ? "Preferencia futura marcada"
               : "Ativar chamada ao anjo"
           }
           onPress={toggleTrustedContactCall}

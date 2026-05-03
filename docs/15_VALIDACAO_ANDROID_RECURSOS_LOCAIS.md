@@ -91,7 +91,7 @@ Foram criados 4 pacotes locais de teste no aparelho:
 
 - pacotes com georreferencia consentida;
 - pacote com `permission_denied` quando a localizacao foi negada;
-- todos com `QUEUED_FOR_DELIVERY`;
+- todos preservados localmente, sem envio externo habilitado;
 - todos com `Midia real: blocked_public_build`;
 - todos com `API waiting_backend` e `P2P waiting_adapter`;
 - hashes SHA-256 exibidos na tela de arquivos locais.
@@ -127,7 +127,7 @@ Resultados:
 - Home recarregou preferencias ao voltar de `Configuracoes`;
 - botao de panico in-app iniciou chamado ativo por ate `30s`;
 - botao `Finalizar chamado ativo` encerrou o chamado;
-- `Arquivos locais` mostrou o pacote como `QUEUED_FOR_DELIVERY`, coleta finalizada pela usuaria, duracao planejada `30s`, georreferencia preservada e SHA-256;
+- `Arquivos locais` mostrou o pacote local preservado, coleta finalizada pela usuaria, duracao planejada `30s`, georreferencia preservada e SHA-256, sem envio externo habilitado;
 - `aapt dump permissions` confirmou ausencia de `CAMERA`, `RECORD_AUDIO`, `SYSTEM_ALERT_WINDOW`, `READ_EXTERNAL_STORAGE`, `WRITE_EXTERNAL_STORAGE` e `ACCESS_BACKGROUND_LOCATION`;
 - logcat nao mostrou crash, excecao de background location, camera, microfone, upload `/alerts` ou WebRTC.
 
@@ -145,6 +145,6 @@ Resultados:
 - botao `Ligar 190` exibiu confirmacao antes de qualquer discagem;
 - `Cofre local` abriu com player visual, midia bloqueada e politica de criptografia;
 - acoes de player real permaneceram bloqueadas enquanto nao existe midia/autorizacao;
-- `Configuracoes` exibiu `Compartilhamento autorizado`, atalho 190 configuravel, chamada futura ao anjo e escopos futuros de video, audio e localizacao em tempo real;
+- `Configuracoes` exibiu compartilhamento interno futuro bloqueado, atalho 190 configuravel, chamada futura ao anjo e escopos futuros de video, audio e localizacao em tempo real;
 - segundo plano e botao de volume continuaram marcados como bloqueados/pesquisa futura;
 - logcat filtrado do processo nao mostrou `FATAL`, `AndroidRuntime`, `ACCESS_BACKGROUND_LOCATION`, `CAMERA`, `RECORD_AUDIO`, `webrtc`, `/alerts`, `/media` ou trafego de upload.

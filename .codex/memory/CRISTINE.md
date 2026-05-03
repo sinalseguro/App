@@ -87,13 +87,28 @@ Estado em 2026-05-02:
 - documento `docs/17_STREAMING_COFRE_PLAYER_E_190.md` registra contrato bilateral, chaves, player, cofre e 190.
 - validacao Android fisica confirmou Home com `SOS`, atalho 190 com confirmacao, `Cofre local` com player bloqueado e `Configuracoes` com escopos futuros;
 - gates locais aprovados: `typecheck`, `lint`, `test`, `release:android:readiness` pronto condicionado.
+- em 2026-05-03, splash nativa antiga foi removida por `splashscreen_blank` e plugin local de prebuild;
+- pacote finalizado foi alinhado para `recorded_local`, sem promessa de fila/entrega;
+- consentimento de compartilhamento foi alinhado para `blocked_until_contract_backend_audit`;
+- pre-convites locais nao prometem aceite/revogacao sem backend;
+- contatos mock nao entram como anjos autorizados no pacote local;
+- delete local registra tombstone/auditoria antes de remover o pacote deste dispositivo;
+- Cofre local foi validado com player dedicado, trilha retratil, acoes em raio e compartilhamento bloqueado;
+- microcopy do SOS foi reduzido para `Solte` e recebeu largura fixa para evitar truncamento visual em Android;
+- API real ficou bloqueada por flag de ambiente, sem endpoint hardcoded ativo por padrao;
+- share sheet do sistema ficou documentado como excecao exclusiva para pre-convite sem evidencia;
+- Navegador abriu `http://127.0.0.1:8081` com titulo `SinalSeguro`, mas preview web ficou preto no dev-client; validacao visual oficial segue no Android fisico;
+- readiness Android passou com Node 24 e acesso remoto GitHub, restando apenas pendencias esperadas de assinatura e nativo gerado;
+- evidencias ficaram em `docs/evidencias/android/2026-05-03-ux-cofre/`;
+- relatorio complementar ficou em `docs/18_VALIDACAO_UX_SPLASH_COFRE_ANDROID.md`;
+- gates aprovados: `typecheck`, `lint`, `test`, `assembleDebug`, install Android via ADB Wi-Fi.
 
 Proximas acoes:
 
-1. Rodar validacoes e revalidar Android fisico com novo layout central, splash custom e cofre.
-2. Gerar novo APK assinado interno incorporando hardening, duracao, finalizacao, splash custom, cofre e botao central, publicando como release interna 3 se Roberto aprovar.
-3. Atualizar portal/manifestos para release interna 3 apos APK assinado.
-4. Revalidar Android fisico sem Metro usando APK assinado.
+1. Coletar comentarios de Roberto sobre Home, Cofre, player e acoes em raio.
+2. Gerar build preview/release com bundle JS embarcado para validacao sem Metro.
+3. Publicar release interna 3 se Roberto aprovar o layout validado.
+4. Atualizar portal/manifestos para release interna 3 apos APK assinado.
 5. Preparar TestFlight/App Store para iOS.
 6. Conectar mock de API ao contrato OpenAPI.
 7. Implementar adaptador de envio real apenas depois de auth, consentimento, retencao e revisao Schneier/Doneda.

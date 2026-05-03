@@ -10,7 +10,7 @@ export const trustedContactsMock: TrustedContact[] = [
   {
     id: "anjo-2",
     name: "Rede familiar",
-    status: "aceito",
-    description: "Exemplo de anjo autorizado para validar a interface sem dados reais."
+    status: "pendente",
+    description: "Exemplo visual para validar a interface; aceite real exige conta propria e contrato."
   }
 ];

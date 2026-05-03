@@ -290,6 +290,39 @@ Validacoes executadas:
 - `npm run release:android:readiness`: pronto condicionado, com assinatura externa e diretorio nativo gerado como pendencias esperadas;
 - Android fisico `23129RA5FL`: Home com `SOS`, atalho 190 com confirmacao, `Cofre local` com player bloqueado e `Configuracoes` com escopos futuros validados via ADB Wi-Fi.
 
+## 2026-05-03 - Splash sem logo nativa antiga e Cofre com acoes em raio
+
+Status: pronto para validacao simulada no Android conectado, com Metro ativo.
+
+Especialistas acionados:
+
+- Tarcila/Norman/Myers: revisao de splash, Home, player, trilha retratil e menu em raio.
+- Schneier/Doneda/Ritchie: revisao de consentimento, convites, estados locais, delete e bloqueio de compartilhamento.
+- Ada/Margaret/Myers: rebuild, instalacao e validacao Android via ADB Wi-Fi.
+
+Decisoes:
+
+- splash nativa Android passa a usar drawable transparente, deixando apenas a splash React com logo e loading;
+- plugin `with-android-blank-native-splash` preserva essa regra em futuros prebuilds;
+- pacote finalizado fica em `recorded_local`, sem promessa de fila/entrega;
+- `consentSnapshot.sharing` passa a `blocked_until_contract_backend_audit`;
+- contatos mock nao entram como autorizados no pacote de emergencia;
+- pre-convites locais nao prometem aceite, revogacao ou uso controlado sem backend;
+- delete local grava tombstone/auditoria antes de remover do dispositivo;
+- player fica em area dedicada e a trilha de arquivos abre acoes em raio no pacote selecionado.
+
+Validacoes executadas:
+
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `npm test`: aprovado;
+- `./gradlew :app:assembleDebug --console=plain`: aprovado;
+- instalacao Android via ADB Wi-Fi: `Success`;
+- Metro validado com `packager-status:running`;
+- Home, Cofre, player, trilha retratil, acoes em raio e compartilhamento bloqueado validados em Android fisico;
+- evidencias salvas em `docs/evidencias/android/2026-05-03-ux-cofre/`;
+- relatorio criado em `docs/18_VALIDACAO_UX_SPLASH_COFRE_ANDROID.md`.
+
 ## Modelo de registro
 
 | Data | Evento | Responsavel | Impacto | Proximo passo |

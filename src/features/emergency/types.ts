@@ -37,7 +37,7 @@ export type EmergencyDeliveryPlan = {
   };
   trustedContacts: Array<{
     contactId: string;
-    status: "authorized_pending_delivery";
+    status: "local_reference_pending_contract";
   }>;
 };
 
@@ -45,7 +45,7 @@ export type EmergencyPackage = {
   id: string;
   schemaVersion: "sinalseguro.emergency-package.v1";
   kind: EmergencyKind;
-  status: "recording_local" | "recorded_local" | "queued_for_delivery";
+  status: "recording_local" | "recorded_local";
   clientAlertId: string;
   idempotencyKey: string;
   createdAt: string;
@@ -63,7 +63,7 @@ export type EmergencyPackage = {
     termsVersion: "mvp-controlado-2026-05-02";
     location: "foreground_when_triggered" | "foreground_pre_authorized";
     media: "blocked_until_homologation";
-    sharing: "trusted_contacts_and_api_when_available";
+    sharing: "blocked_until_contract_backend_audit";
   };
   location: LocationSnapshot;
   media: MediaCaptureManifest;

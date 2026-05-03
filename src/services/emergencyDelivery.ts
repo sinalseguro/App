@@ -5,14 +5,8 @@ export function buildCreateAlertDraft(packageRecord: EmergencyPackage) {
     clientAlertId: packageRecord.clientAlertId,
     kind: packageRecord.kind,
     triggeredAt: packageRecord.createdAt,
-    location:
-      packageRecord.location.status === "captured"
-        ? {
-            latitude: packageRecord.location.latitude,
-            longitude: packageRecord.location.longitude,
-            accuracyMeters: packageRecord.location.accuracyMeters
-          }
-        : undefined
+    locationStatus: packageRecord.location.status,
+    exactLocationBlockedReason: "exact_location_blocked_until_authorized_backend"
   };
 }
 
@@ -23,7 +17,7 @@ export function getEmergencyDeliveryReadiness(packageRecord: EmergencyPackage) {
     mediaUploadReady: packageRecord.media.assets.length > 0,
     reason:
       packageRecord.media.status === "blocked_public_build"
-        ? "Pacote preservado no cofre local; envio e midia real aguardam backend autorizado."
-        : "Pacote preservado e aguardando entrega autorizada."
+        ? "Pacote preservado no cofre local; envio externo e midia real seguem bloqueados neste build."
+        : "Pacote preservado; entrega externa depende de contrato, backend, chaves e auditoria."
   };
 }

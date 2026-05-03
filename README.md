@@ -10,7 +10,7 @@ Gerente AI mobile: Cristine.
 
 ## Objetivo
 
-Criar um app gratuito para pessoas em situacao de vulnerabilidade, com rede de anjos, convite unico, botao de panico in-app, alerta discreto, localizacao pontual consentida, outbox criptografada e integracao API-first.
+Criar um app gratuito para pessoas em situacao de vulnerabilidade, com rede de anjos, pre-convite local, botao de panico in-app, alerta discreto, localizacao pontual consentida e cofre local. A integracao API-first so sera ativada em build homologado, com backend, contrato, chaves e auditoria.
 
 O app nao substitui 190, 180, delegacias, saude, assistencia social, Defensoria, Ministerio Publico, Judiciario ou qualquer servico oficial.
 
@@ -70,9 +70,9 @@ Release Android atual:
 
 Checkpoint tecnico atual:
 
-- Convite local com codigo opaco, expiracao e compartilhamento pelo sistema.
-- Pacote local de emergencia com horario, consentimento, georreferencia pontual autorizada, hash e plano de entrega API/P2P.
-- Area de arquivos locais para acessar os pacotes gravados no dispositivo e verificar o que sera enviado futuramente.
+- Pre-convite local com codigo opaco, expiracao sugerida e compartilhamento permitido pelo sistema somente para instalar/aceitar convite.
+- Pacote local de emergencia com horario, consentimento, georreferencia pontual autorizada e hash, sem envio externo neste build.
+- Area `Cofre local` para acessar os pacotes gravados neste dispositivo e verificar o que permanece bloqueado ate backend, contrato, chaves e auditoria.
 - Midia real, camera, microfone e transmissao continuam bloqueados fora da homologacao.
 
 ## Limites
@@ -81,6 +81,7 @@ Checkpoint tecnico atual:
 - Nao implementar gravacao oculta.
 - Nao usar acessibilidade para burlar permissoes do sistema.
 - Nao prometer acionamento de orgao publico sem convenio formal.
+- Nao compartilhar evidencia por share sheet do sistema; convites sao a unica excecao permitida e nao carregam evidencia.
 - P2P fica como pesquisa futura/best-effort.
 - Midia real fica bloqueada para producao ate RIPD/DPIA, retencao e revisao juridica.
 

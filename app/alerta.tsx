@@ -51,7 +51,7 @@ export default function AlertScreen() {
     const timer = setTimeout(() => {
       void finishEmergencyPackage(activePackageId, "default_duration_elapsed").then(async (result) => {
         if (!result) return;
-        setStatus(`Chamado ${result.packageRecord.id.slice(0, 8)} finalizado pelo tempo padrao e mantido na fila local.`);
+        setStatus(`Chamado ${result.packageRecord.id.slice(0, 8)} finalizado pelo tempo padrao e preservado somente no cofre local.`);
         await refreshOutboxCount();
       });
     }, preferences.defaultDurationSeconds * 1000);
@@ -100,12 +100,12 @@ export default function AlertScreen() {
     const packages = await listEmergencyPackages();
     const lastPackage = packages[0];
     if (!lastPackage) {
-      setStatus("Outbox local vazia.");
+      setStatus("Cofre local vazio.");
       return;
     }
 
     setStatus(
-      `Ultimo pacote ${lastPackage.id.slice(0, 8)}: ${lastPackage.location.status}, API ${lastPackage.deliveryPlan.api.status}, P2P ${lastPackage.deliveryPlan.p2p.status}.`
+      `Ultimo pacote ${lastPackage.id.slice(0, 8)}: localizacao ${lastPackage.location.status}; envio externo bloqueado neste build.`
     );
   }
 

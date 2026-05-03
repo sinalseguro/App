@@ -21,14 +21,13 @@ import {
   formatDuration,
   getEmergencyPreferences
 } from "@/features/emergency/emergencyPreferences";
-import { trustedContactsMock } from "@/features/contacts/contactMocks";
 
 export default function HomeScreen() {
   const [outboxCount, setOutboxCount] = useState(0);
   const [activePackageId, setActivePackageId] = useState<string | null>(null);
   const [preferences, setPreferences] = useState<EmergencyPreferences>(defaultEmergencyPreferences);
   const [recordingStatus, setRecordingStatus] = useState(
-    "Pronto para gravar pacote local de teste com horario, consentimento, localizacao pontual e plano de entrega."
+    "Pronto para gravar pacote local de teste com horario, consentimento e localizacao pontual. Envio externo bloqueado."
   );
 
   async function refreshOutboxCount() {
@@ -57,7 +56,7 @@ export default function HomeScreen() {
       void finishEmergencyPackage(activePackageId, "default_duration_elapsed").then(async (result) => {
         if (!result) return;
         setRecordingStatus(
-          `Chamado ${result.packageRecord.id.slice(0, 8)} finalizado pelo tempo padrao e mantido na fila local.`
+          `Chamado ${result.packageRecord.id.slice(0, 8)} finalizado pelo tempo padrao e preservado somente no cofre local.`
         );
         await refreshOutboxCount();
       });
@@ -74,12 +73,9 @@ export default function HomeScreen() {
 
     setRecordingStatus("Iniciando chamado local e capturando localizacao pontual...");
 
-    const acceptedContactIds = trustedContactsMock
-      .filter((contact) => contact.status === "aceito")
-      .map((contact) => contact.id);
     const result = await startEmergencyPackage({
       kind: "test",
-      trustedContactIds: acceptedContactIds,
+      trustedContactIds: [],
       defaultDurationSeconds: preferences.defaultDurationSeconds,
       locationConsentMode:
         preferences.locationMode === "foreground_pre_authorized"
@@ -94,7 +90,7 @@ export default function HomeScreen() {
         : `localizacao ${result.packageRecord.location.status}`;
 
     setRecordingStatus(
-      `Chamado ${result.packageRecord.id.slice(0, 8)} ativo por ate ${formatDuration(preferences.defaultDurationSeconds)}; ${locationText}; rede autorizada sera acionada quando backend estiver pronto.`
+      `Chamado ${result.packageRecord.id.slice(0, 8)} ativo por ate ${formatDuration(preferences.defaultDurationSeconds)}; ${locationText}; envio externo so podera ocorrer apos backend, autorizacao e revisao juridica.`
     );
   }
 
@@ -111,7 +107,7 @@ export default function HomeScreen() {
     }
 
     setRecordingStatus(
-      `Chamado ${result.packageRecord.id.slice(0, 8)} finalizado e preservado em cofre local para envio futuro autorizado.`
+      `Chamado ${result.packageRecord.id.slice(0, 8)} finalizado e preservado somente no cofre local deste dispositivo.`
     );
   }
 

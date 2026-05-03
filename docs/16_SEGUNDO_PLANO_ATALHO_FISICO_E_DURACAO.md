@@ -55,7 +55,7 @@ Implementado para o pacote local:
 - chamada ativa usa status `recording_local`;
 - botao `Finalizar chamado ativo` fecha o pacote com motivo `manual_finish`;
 - finalizar nao apaga evidencia local;
-- finalizar recalcula SHA-256 sem carregar o bloco `integrity` anterior e deixa o pacote em `queued_for_delivery`;
+- finalizar recalcula SHA-256 sem carregar o bloco `integrity` anterior e deixa o pacote em `recorded_local`;
 - tela `Arquivos locais` permite finalizar pacote ativo caso a usuaria navegue ate ela.
 
 Limite:
@@ -150,7 +150,7 @@ Resultados:
 - ao voltar para Home, preferencias foram recarregadas no foco da tela;
 - botao de panico in-app iniciou chamado ativo por ate `30s`;
 - botao `Finalizar chamado ativo` encerrou o chamado sem apagar o pacote;
-- `Arquivos locais` exibiu pacote `QUEUED_FOR_DELIVERY`, coleta finalizada pela usuaria, duracao planejada `30s`, georreferencia preservada e SHA-256;
+- `Arquivos locais` exibiu pacote preservado localmente, coleta finalizada pela usuaria, duracao planejada `30s`, georreferencia preservada e SHA-256, sem envio externo habilitado;
 - logcat do processo do app nao mostrou crash, excecao de background location, camera, microfone, upload `/alerts` ou WebRTC.
 
 Observacao:

@@ -59,7 +59,9 @@ export function PanicButton({ label, holdMs, onTrigger }: PanicButtonProps) {
           <Animated.View style={[styles.progressFill, { width: progressWidth }]} />
         </View>
       </Pressable>
-      <Text style={styles.help}>Solte para cancelar antes da confirmacao.</Text>
+      <Text style={styles.help} numberOfLines={1}>
+        Solte
+      </Text>
     </View>
   );
 }
@@ -115,6 +117,9 @@ const styles = StyleSheet.create({
   help: {
     color: theme.colors.textMuted,
     fontSize: theme.typography.small,
-    textAlign: "center"
+    lineHeight: 18,
+    maxWidth: 280,
+    textAlign: "center",
+    width: 280
   }
 });

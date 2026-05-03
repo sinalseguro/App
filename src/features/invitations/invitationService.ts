@@ -19,11 +19,11 @@ async function createOpaqueToken() {
 
 export function buildInvitationShareText(invitation: LocalInvitation) {
   return [
-    "Voce recebeu um convite para ser anjo de confianca no SinalSeguro.",
-    "Instale o app pelo link abaixo e aceite usando sua propria conta.",
+    "Voce recebeu um pre-convite local para ser anjo de confianca no SinalSeguro.",
+    "Instale o app pelo link abaixo. O vinculo real exigira login proprio e validacao online.",
     invitation.inviteUrl,
     "",
-    "Convite de uso unico, com expiracao e validacao pelo backend quando a API estiver ativa."
+    "Token opaco local. Expiracao, aceite e revogacao so serao confirmados no ambiente autorizado."
   ].join("\n");
 }
 
@@ -38,9 +38,9 @@ export async function createLocalInvitation(displayLabel = "Anjo de confianca") 
     deepLinkUrl: `sinalseguro://convite?convite=${encodeURIComponent(invitationCode)}`,
     createdAt: now.toISOString(),
     expiresAt: addDays(now, 7).toISOString(),
-    singleUse: true,
+    singleUsePolicy: "backend_validation_required",
     status: "pendente",
-    syncStatus: "pendente_api"
+    syncStatus: "local_pre_invite"
   };
 
   await saveSecureRecord(INVITATION_NAMESPACE, invitation);

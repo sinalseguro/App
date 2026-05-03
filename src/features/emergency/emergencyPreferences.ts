@@ -45,7 +45,7 @@ export const defaultEmergencyPreferences: EmergencyPreferences = {
   emergencyPhoneCall: {
     call190ShortcutEnabled: true,
     callTrustedContactOnAlert: false,
-    allowReceiverCall190: true
+    allowReceiverCall190: false
   },
   trustedStream: {
     status: "homologation_blocked",

@@ -16,12 +16,12 @@ import {
 import { LocalInvitation } from "@/features/invitations/types";
 
 function invitationDescription(invitation: LocalInvitation) {
-  return `Convite local de uso unico. Expira em ${new Date(invitation.expiresAt).toLocaleDateString("pt-BR")}. API aguardando sincronizacao.`;
+  return `Pre-convite local com token opaco. Validade sugerida ate ${new Date(invitation.expiresAt).toLocaleDateString("pt-BR")}; aceite e revogacao dependem de validacao online.`;
 }
 
 export default function ContactsScreen() {
   const [invitations, setInvitations] = useState<LocalInvitation[]>([]);
-  const [status, setStatus] = useState("Convites ficam salvos localmente ate a API validar uso unico e aceite.");
+  const [status, setStatus] = useState("Pre-convites ficam salvos localmente ate validacao online, aceite proprio e revogacao.");
 
   async function refreshInvitations() {
     setInvitations(await listLocalInvitations());
@@ -34,16 +34,17 @@ export default function ContactsScreen() {
   async function handleCreateInvitation() {
     setStatus("Gerando convite opaco...");
     const invitation = await createLocalInvitation(`Anjo ${invitations.length + 1}`);
+    // Convite e a unica excecao de share sheet: nao carrega evidencias nem dados sensiveis.
     await Share.share({ message: buildInvitationShareText(invitation), url: invitation.inviteUrl });
     await markInvitationShared(invitation.id);
     await refreshInvitations();
-    setStatus("Convite criado e pronto para aceite pela propria conta da pessoa convidada.");
+    setStatus("Pre-convite criado. O vinculo real so nasce apos login proprio e validacao online.");
   }
 
   return (
     <SafeScreen
       title="Rede de anjos"
-      subtitle="Convites usam token opaco, expiram e exigem aceite com conta propria."
+      subtitle="Pre-convites usam token opaco local e exigem aceite com conta propria."
     >
       <StatusBanner tone="secure" title="Convite seguro" text={status} />
       <ButtonIcon

@@ -9,7 +9,7 @@ export function summarizeLocation(packageRecord: EmergencyPackage) {
 }
 
 export function summarizeDelivery(packageRecord: EmergencyPackage) {
-  return `Aguardando envio autorizado; ${packageRecord.deliveryPlan.trustedContacts.length} anjo(s) preparado(s) para fase backend.`;
+  return `Envio externo bloqueado neste build; ${packageRecord.deliveryPlan.trustedContacts.length} contato(s) apenas listado(s) para validacao futura.`;
 }
 
 export function summarizeCapture(packageRecord: EmergencyPackage) {

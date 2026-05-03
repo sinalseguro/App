@@ -1,6 +1,6 @@
 export type AlertKind = "test" | "real";
 
-export type AlertStatus = "draft" | "queued" | "sent" | "acknowledged" | "cancelled" | "failed";
+export type AlertStatus = "local_draft" | "blocked_until_secure_outbox" | "cancelled" | "failed";
 
 export type LocalAlert = {
   id: string;
@@ -8,9 +8,5 @@ export type LocalAlert = {
   status: AlertStatus;
   createdAt: string;
   idempotencyKey: string;
-  location?: {
-    latitude: number;
-    longitude: number;
-    accuracyMeters: number;
-  };
+  locationStatus?: "not_requested" | "authorized_local_only" | "denied" | "unavailable";
 };

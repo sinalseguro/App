@@ -14,6 +14,7 @@ const requiredFiles = [
   "src/components/AppLaunchScreen.tsx",
   "src/components/EmergencyCallButton.tsx",
   "src/components/EvidencePlayerCard.tsx",
+  "src/components/LocalEvidenceRail.tsx",
   "src/design/tokens.ts",
   "src/components/PanicButton.tsx",
   "src/features/invitations/invitationService.ts",
@@ -22,7 +23,9 @@ const requiredFiles = [
   "src/features/emergency/emergencyPreferences.ts",
   "src/features/emergency/emergencyRecorder.ts",
   "src/features/emergency/emergencyOutbox.ts",
-  "src/storage/secureJsonStore.ts"
+  "src/storage/secureJsonStore.ts",
+  "plugins/with-android-blank-native-splash.js",
+  "android/app/src/main/res/drawable/splashscreen_blank.xml"
 ];
 
 for (const file of requiredFiles) {
@@ -40,6 +43,7 @@ if (!packageJson.dependencies.expo || !packageJson.dependencies["expo-router"]) 
 }
 
 const emergencyRecorder = await readFile("src/features/emergency/emergencyRecorder.ts", "utf8");
+const legacyDeliveryStatus = String.fromCharCode(113, 117, 101, 117, 101, 100, 95, 102, 111, 114, 95, 100, 101, 108, 105, 118, 101, 114, 121);
 
 if (!emergencyRecorder.includes("stripIntegrity(activePackage)")) {
   throw new Error("Finalizacao de pacote precisa recalcular hash sem carregar integrity antigo.");
@@ -49,16 +53,50 @@ if (!emergencyRecorder.includes("locationConsentMode = \"foreground_when_trigger
   throw new Error("Snapshot de consentimento de localizacao precisa ter padrao conservador.");
 }
 
+if (!emergencyRecorder.includes("blocked_until_contract_backend_audit") || emergencyRecorder.includes(legacyDeliveryStatus)) {
+  throw new Error("Pacotes locais nao podem prometer entrega ou compartilhamento sem contrato/backend/auditoria.");
+}
+
 const locationCapture = await readFile("src/features/emergency/locationCapture.ts", "utf8");
 
 if (!locationCapture.includes("background_location_not_declared_public_build")) {
   throw new Error("Leitura de background location precisa ser segura quando a permissao nao esta no manifest publico.");
 }
 
+if (locationCapture.includes(["error", "message"].join("."))) {
+  throw new Error("Erros brutos de localizacao nao podem ser preservados em pacote local.");
+}
+
+const appConfig = await readFile("app.json", "utf8");
+
+if (appConfig.includes("\"image\": \"./assets/brand/sinalseguro-symbol.png\"")) {
+  throw new Error("Splash nativa nao deve renderizar a logo antiga; o splash com logo/loading fica no React.");
+}
+
 const launchScreen = await readFile("src/components/AppLaunchScreen.tsx", "utf8");
 
 if (!launchScreen.includes("Carregando SinalSeguro") || launchScreen.includes("glow")) {
   throw new Error("Splash custom precisa ter barra de loading e nao usar efeitos glow ornamentais.");
+}
+
+const localEvidenceRail = await readFile("src/components/LocalEvidenceRail.tsx", "utf8");
+
+if (!localEvidenceRail.includes("onDeletePackage") || !localEvidenceRail.includes("Compartilhar")) {
+  throw new Error("Cofre local precisa expor acoes de visualizar, compartilhar bloqueado e excluir local.");
+}
+
+if (!localEvidenceRail.includes("rayActionView") || !localEvidenceRail.includes("rayHub")) {
+  throw new Error("Cofre local precisa manter menu de acoes em raios ancorado no icone do arquivo.");
+}
+
+const emergencyOutbox = await readFile("src/features/emergency/emergencyOutbox.ts", "utf8");
+
+if (!emergencyOutbox.includes("deleteEmergencyPackage")) {
+  throw new Error("Cofre local precisa ter exclusao local funcional e controlada.");
+}
+
+if (!emergencyOutbox.includes("removed_from_device")) {
+  throw new Error("Exclusao de evidencia local precisa registrar tombstone/auditoria local.");
 }
 
 console.log("Smoke test mobile aprovado.");

@@ -35,7 +35,7 @@ Audio, video, streaming, recebimento por terceiros, salvamento no dispositivo do
 2. A pessoa aceita o convite usando conta propria.
 3. Ambas aceitam o contrato eletronico bilateral e os escopos permitidos.
 4. A usuaria configura se deseja permitir audio, video, localizacao em tempo real e salvamento criptografado pelo anjo.
-5. Ao acionar o botao de emergencia, o app cria o pacote local e tenta envio pela API quando disponivel.
+5. Ao acionar o botao de emergencia, o app cria o pacote local e mantem envio externo bloqueado ate backend, contrato, chaves e auditoria estarem aprovados.
 6. O backend valida contrato, escopos, dispositivos, chaves e autorizacao.
 7. O anjo recebe alerta discreto e pode visualizar stream/dados somente dentro do SinalSeguro.
 8. Se permitido, o anjo pode salvar copia criptografada em seu dispositivo.
@@ -61,7 +61,7 @@ UX/UI:
 - Home reorganizada com botao circular central `SOS`;
 - atalhos em grade: `Ligar 190`, `Anjos`, `Cofre`, `Config.`;
 - `Arquivos locais` passa a ser apresentado como `Cofre local`;
-- player visual `EvidencePlayerCard` mostra estado de midia, politica de criptografia e acoes futuras.
+- player visual `EvidencePlayerCard` mostra estado de midia, politica de criptografia e visualizacao tecnica do pacote selecionado.
 
 Funcionalidade controlada:
 
@@ -70,13 +70,14 @@ Funcionalidade controlada:
 - preferencia futura de chamada ao anjo autorizado foi adicionada, sem ligacao automatica no build publico;
 - configuracoes ganharam preferencias locais para solicitar escopos futuros de audio, video e localizacao em tempo real;
 - preferencias de streaming sempre permanecem `homologation_blocked` no build publico;
-- pacote de troca passa a marcar backend/P2P como nao prontos enquanto adaptadores reais nao existem;
+- pacote de troca marca backend/P2P como nao prontos enquanto adaptadores reais nao existem;
 - linguagem de usuaria remove `API/P2P` da Home e dos resumos principais.
 
 Player/cofre:
 
 - player real fica bloqueado quando `media.status = blocked_public_build`;
-- botoes `Reproduzir`, `Salvar criptografado`, `Compartilhar autorizado` e `Excluir local` aparecem como desenho operacional, mas ficam bloqueados sem midia/autorizacao;
+- acoes do cofre ficam em trilha retratil com menu radial: `Visualizar`, `Compartilhar` bloqueado neste build, `Excluir` local com tombstone e `Finalizar` quando houver chamado ativo;
+- nenhum share sheet generico e aberto para evidencias;
 - hash completo deixou de ser elemento principal e aparece resumido no card.
 
 ## Atalho 190
@@ -136,3 +137,14 @@ Em 2026-05-02, o build debug local foi revalidado no Android fisico `23129RA5FL`
 - `Cofre local` com player visual e midia bloqueada;
 - `Configuracoes` com atalho 190 configuravel, chamada futura ao anjo e escopos futuros de audio, video e localizacao em tempo real;
 - logcat filtrado sem crash, camera, microfone, WebRTC, `/alerts`, `/media` ou upload.
+
+Atualizacao em 2026-05-03:
+
+- splash nativa antiga removida por `splashscreen_blank`;
+- player separado do gestor de arquivos;
+- arquivos locais em trilha retratil;
+- acoes em raio validadas no Android fisico;
+- compartilhamento externo bloqueado por alerta interno;
+- estados juridicos internos revisados para `recorded_local`, `blocked_until_contract_backend_audit` e `local_reference_pending_contract`.
+
+Relatorio complementar: `docs/18_VALIDACAO_UX_SPLASH_COFRE_ANDROID.md`.

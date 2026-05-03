@@ -97,7 +97,7 @@ export async function startEmergencyPackage({
       termsVersion: "mvp-controlado-2026-05-02" as const,
       location: locationConsentMode,
       media: "blocked_until_homologation" as const,
-      sharing: "trusted_contacts_and_api_when_available" as const
+      sharing: "blocked_until_contract_backend_audit" as const
     },
     location,
     media: mediaBlockedManifest,
@@ -112,7 +112,7 @@ export async function startEmergencyPackage({
       },
       trustedContacts: trustedContactIds.map((contactId) => ({
         contactId,
-        status: "authorized_pending_delivery" as const
+        status: "local_reference_pending_contract" as const
       }))
     }
   };
@@ -148,7 +148,7 @@ export async function finishEmergencyPackage(packageId: string, endReason: Emerg
   const elapsedMs = new Date(completedAt).getTime() - new Date(activePackage.capture.startedAt).getTime();
   const packageWithoutIntegrity: EmergencyPackageWithoutIntegrity = {
     ...stripIntegrity(activePackage),
-    status: "queued_for_delivery",
+    status: "recorded_local",
     updatedAt: completedAt,
     capture: {
       ...activePackage.capture,

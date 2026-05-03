@@ -11,10 +11,10 @@ Criar a base tecnica que permite:
 
 - gerar convite local para anjo de confianca;
 - compartilhar o convite por WhatsApp ou outro app via share sheet do sistema;
-- manter token opaco, expiravel e de uso unico;
+- manter pre-convite local com token opaco, expiracao sugerida e validacao online futura;
 - gravar pacote local de emergencia com horario, consentimento, georreferencia pontual e plano de entrega;
 - permitir que a usuaria acesse a area de arquivos locais gravados no dispositivo;
-- deixar o pacote pronto para envio pela API e por adaptador P2P quando essas camadas estiverem ativas.
+- manter o pacote bloqueado para envio externo ate backend, contrato, chaves, auditoria e adaptadores reais serem aprovados.
 
 ## Escopo implementado
 
@@ -23,9 +23,10 @@ Convites:
 - `createLocalInvitation()` gera identificador opaco por SHA-256 de entropia local;
 - link publico aponta para `https://www.sinalseguro.com.br/baixar?convite=<codigo>`;
 - deep link futuro aponta para `sinalseguro://convite?convite=<codigo>`;
-- convite expira em 7 dias;
+- pre-convite tem validade sugerida de 7 dias;
 - convite fica salvo em cofre local do sistema via `expo-secure-store`;
 - tela `app/convite.tsx` reconhece o codigo e deixa claro que o aceite real exige login proprio e API.
+- convite e a unica excecao de share sheet neste build; ele nao transporta evidencia, midia, localizacao ou dados sensiveis da usuaria.
 
 Pacote de emergencia:
 
@@ -40,9 +41,9 @@ Arquivos locais:
 
 - tela `app/arquivos.tsx` lista os pacotes gravados no dispositivo;
 - a experiencia passa a apresentar essa area como `Cofre local`;
-- cada pacote mostra horario, hash tecnico resumido, status de georreferencia, status de midia e envio autorizado futuro;
+- cada pacote mostra horario, hash tecnico resumido, status de georreferencia, status de midia e bloqueio de envio externo neste build;
 - coordenadas completas ficam preservadas no cofre local e nao sao exibidas nesta etapa sem autenticacao forte;
-- a tela deixa claro que os dados serao enviados somente quando backend/P2P estiverem prontos e autorizados.
+- a tela deixa claro que os dados permanecem locais neste build; qualquer envio futuro depende de backend, contrato, chaves, auditoria e autorizacao.
 
 ## Limites de seguranca
 
@@ -62,7 +63,7 @@ O pacote local ja contem:
 - `deliveryPlan.api.endpoint = /alerts`;
 - `deliveryPlan.p2p.candidates = webrtc, nearby, multipeer`;
 - `readyForBackend = false` e `readyForP2PAdapter = false` enquanto os adaptadores reais nao existirem;
-- lista de contatos autorizados pendentes de entrega;
+- lista de referencias locais pendentes de contrato e validacao;
 - hash SHA-256 para verificacao de integridade.
 
 ## Criterios de aceite Myers/Schneier/Doneda
@@ -72,7 +73,7 @@ O pacote local ja contem:
 - `npm test` aprovado.
 - Convite nao permite login como outra pessoa.
 - Localizacao negada gera pacote mesmo assim, com status explicito.
-- Area de arquivos locais lista pacotes gravados e status de envio futuro.
+- Area de arquivos locais lista pacotes gravados e deixa o envio externo bloqueado.
 - Camera e microfone permanecem fora do build publico.
 - Dados sensiveis nao aparecem em console, URL de API ou push.
 - Docs deixam claro que midia real e transmissao estao bloqueadas.
@@ -106,7 +107,7 @@ Mudancas:
 - finalizacao manual registra `manual_finish`;
 - encerramento automatico por tempo registra `default_duration_elapsed`;
 - hash SHA-256 e recalculado apos o encerramento sem incluir o hash anterior no payload;
-- pacote finalizado fica em `queued_for_delivery`;
+- pacote finalizado fica em `recorded_local`;
 - midia real segue `blocked_public_build`.
 
 Documento complementar: `docs/16_SEGUNDO_PLANO_ATALHO_FISICO_E_DURACAO.md`.

@@ -1,6 +1,6 @@
 export type InvitationStatus = "pendente" | "compartilhado" | "aceito" | "revogado" | "expirado";
 
-export type InvitationSyncStatus = "pendente_api" | "sincronizado" | "falhou";
+export type InvitationSyncStatus = "local_pre_invite" | "backend_validated" | "failed";
 
 export type LocalInvitation = {
   id: string;
@@ -10,7 +10,7 @@ export type LocalInvitation = {
   deepLinkUrl: string;
   createdAt: string;
   expiresAt: string;
-  singleUse: true;
+  singleUsePolicy: "backend_validation_required";
   status: InvitationStatus;
   syncStatus: InvitationSyncStatus;
 };

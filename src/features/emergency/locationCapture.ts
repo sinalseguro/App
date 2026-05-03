@@ -81,7 +81,7 @@ export async function captureForegroundLocation(): Promise<LocationSnapshot> {
     return {
       status: "error",
       capturedAt,
-      reason: error instanceof Error ? error.message : "Falha desconhecida ao capturar localizacao."
+      reason: "Falha controlada ao capturar localizacao."
     };
   }
 }

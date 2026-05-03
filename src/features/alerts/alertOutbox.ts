@@ -7,16 +7,16 @@ export async function createLocalAlert(kind: LocalAlert["kind"]): Promise<LocalA
   return {
     id,
     kind,
-    status: "draft",
+    status: "local_draft",
     createdAt: new Date().toISOString(),
     idempotencyKey: Crypto.randomUUID()
   };
 }
 
 export async function enqueueAlert(alert: LocalAlert): Promise<LocalAlert> {
-  // Checkpoint inicial: a persistencia criptografada real entra na fase de outbox.
+  // Checkpoint inicial: envio externo fica bloqueado ate existir outbox criptografada auditada.
   return {
     ...alert,
-    status: "queued"
+    status: "blocked_until_secure_outbox"
   };
 }

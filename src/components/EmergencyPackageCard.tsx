@@ -32,7 +32,7 @@ export function EmergencyPackageCard({ packageRecord, onFinish }: EmergencyPacka
       ) : null}
       <View style={styles.actions}>
         <ButtonIcon icon={<Eye size={18} color={theme.colors.primary} />} label="Revisar" />
-        <ButtonIcon icon={<Share2 size={18} color={theme.colors.primary} />} label="Compartilhar autorizado" disabled />
+        <ButtonIcon icon={<Share2 size={18} color={theme.colors.primary} />} label="Compartilhar futuro" disabled />
         <ButtonIcon icon={<Trash2 size={18} color={theme.colors.danger} />} label="Excluir local" disabled />
       </View>
     </View>
