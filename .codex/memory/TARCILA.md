@@ -13,6 +13,8 @@ Papel: guardia de identidade visual SinalSeguro para mobile.
 - Particulas do SOS ativo devem ser pequenas, lentas e nao alarmistas.
 - Alertas criticos devem usar modal SinalSeguro com sombra, icone, titulo e botoes da identidade visual.
 - Cofre deve ser iconografico, com recursos em modais e sem blocos tecnicos na primeira tela.
+- Modais devem aceitar rolagem interna quando o conteudo exceder a altura util do Android.
+- Prints de `Cofre fixo` e `Como funciona` recapturados em 2026-05-03 ja mostram as telas reais, nao a splash.
 
 ## Pendencias para aprovacao final
 

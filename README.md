@@ -4,7 +4,7 @@
 
 App mobile Android e iOS do SinalSeguro.
 
-Status: Home SOS fixa, splash aprovada, modais SinalSeguro e Cofre por icones implementados; APK debug atualizado para reinstalacao Android assim que o aparelho voltar ao ADB.
+Status: Home SOS fixa, splash aprovada, modais SinalSeguro, Cofre por icones e encerramento protegido implementados; APK debug pronto para reinstalacao Android assim que o aparelho voltar ao ADB.
 Coordenacao geral: Ze.  
 Gerente AI mobile: Cristine.
 
@@ -77,6 +77,8 @@ Checkpoint tecnico atual:
 - Todos os alertas criticos de Home e Cofre usam modal SinalSeguro, nao `Alert.alert` nativo.
 - Cofre local foi refatorado para tela fixa por icones: Player, Cofre, Funcionamento e Atualizar.
 - Player e trilha do cofre abrem em modais.
+- Encerramento de chamado ativo pelo Cofre segue o mesmo protocolo da Home: confirmacao e codigo local opcional quando ativado.
+- Modais possuem rolagem interna para reduzir risco de overflow em Android menor ou fonte ampliada.
 - Componentes da Home separados em `src/features/emergency-home/` para manter evolucao modular e revisao por Tarcila, Norman, Ada, Hedy, Schneier e Myers.
 - Chamado ativo tem regra singleton no servico, evitando dois pacotes `recording_local` simultaneos.
 - Exclusao de pacote local exige confirmacao e fica bloqueada enquanto o chamado estiver ativo.
@@ -91,6 +93,7 @@ APK debug atual para validacao:
 - Caminho: `android/app/build/outputs/apk/debug/app-debug.apk`.
 - SHA-256: `481d9aca5dd1cabb36520440f7959c71b542af5619803aadbe5170164b300e70`.
 - Observacao: `adb devices -l` nao encontrou aparelho nesta rodada, entao a reinstalacao fisica ficou pendente.
+- Readiness Android passa com Node 24 via `PATH="/Applications/Codex.app/Contents/Resources:$PATH" npm run release:android:readiness`, restando pendencias esperadas de assinatura release fora do Git e nativo gerado/ignorado.
 
 ## Evidencias visuais
 
@@ -138,4 +141,5 @@ APK debug atual para validacao:
 - `docs/21_REVISAO_ESPECIALISTAS_HOME_COFRE_SEGURANCA.md`
 - `docs/22_REFINO_IDENTIDADE_MODAL_COFRE_SPLASH.md`
 - `docs/23_ESPECIFICACAO_DESENVOLVIMENTO_APP.md`
+- `docs/24_CONTINUIDADE_COFRE_ENCERRAMENTO_QA.md`
 - `docs/api/openapi.yaml`

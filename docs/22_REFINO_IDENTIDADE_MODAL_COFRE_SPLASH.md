@@ -23,6 +23,8 @@ Atender aos comentarios de revisao visual e funcional feitos no navegador, deixa
 - Cofre local foi refeito como tela fixa por icones: Player, Cofre, Funcionamento e Atualizar.
 - Dados tecnicos do Cofre foram movidos para o menu sanduiche.
 - Player e trilha do cofre abrem em modais de identidade visual.
+- O Cofre reutiliza o protocolo de encerramento seguro da Home quando um chamado ativo for finalizado pela trilha local.
+- `BrandedDialog` recebeu rolagem interna para proteger telas menores e fonte ampliada.
 - Nova pagina `Como funciona` explica acionamento, localizacao, cofre, criptografia, midia e privacidade.
 - Configuracoes ganharam preparacao de preferencia para video local futuro: frontal, traseira ou ambas.
 
@@ -62,7 +64,11 @@ Como funciona:
 - `npm test`: aprovado.
 - `./gradlew assembleDebug`: aprovado.
 - Browser Use em `http://localhost:8081/`: Home, drawer, modais, Cofre e Funcionamento validados.
-- `npm run release:android:readiness`: bloqueado apenas pelo Node local `20.16.0`; script exige `>=22.13.0`. Demais itens ficaram OK, com pendencias esperadas de assinatura e diretorio nativo gerado/ignorado.
+- `PATH="/Applications/Codex.app/Contents/Resources:$PATH" npm run release:android:readiness`: aprovado como pronto condicionado, com pendencias esperadas de assinatura e diretorio nativo gerado/ignorado.
+
+Complemento posterior desta rodada:
+
+- `docs/24_CONTINUIDADE_COFRE_ENCERRAMENTO_QA.md` registra a correcao do encerramento protegido pelo Cofre, prints recapturados, matriz de permissoes e pendencias de Android fisico.
 
 ## Android
 

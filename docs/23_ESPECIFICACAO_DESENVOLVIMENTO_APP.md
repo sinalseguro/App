@@ -61,6 +61,8 @@ Fonte de verdade operacional: este repositorio, `AGENTS.md`, `.codex/AGENTS.md` 
 - Trilha de arquivos abre em modal.
 - Exclusao exige confirmacao em `BrandedDialog`.
 - Chamada ativa nao pode ser excluida antes de finalizar.
+- Finalizacao de chamada ativa pelo Cofre deve reutilizar o mesmo protocolo de seguranca da Home.
+- Se `finishSafety.requireCode` estiver ativo, o Cofre deve exigir o codigo local antes de encerrar.
 - Exclusao local grava tombstone/auditoria antes de remover o pacote.
 
 ## Midia, camera e streaming
@@ -80,11 +82,19 @@ Fonte de verdade operacional: este repositorio, `AGENTS.md`, `.codex/AGENTS.md` 
 
 ## Permissoes
 
-Declaradas no build publico:
+Declaradas diretamente no build publico:
 
 - `ACCESS_FINE_LOCATION`.
 - `ACCESS_COARSE_LOCATION`.
 - `POST_NOTIFICATIONS`.
+
+Permissoes transitivas observadas no APK debug por dependencias Expo/AndroidX e que devem ficar documentadas e revisadas antes de release publica:
+
+- `WAKE_LOCK`.
+- `RECEIVE_BOOT_COMPLETED`.
+- `USE_BIOMETRIC`.
+- `USE_FINGERPRINT`.
+- Permissoes de badge/launcher de fabricantes adicionadas por bibliotecas de notificacao.
 
 Bloqueadas no build publico:
 

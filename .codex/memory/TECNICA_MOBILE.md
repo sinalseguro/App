@@ -13,6 +13,10 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Singleton/idempotencia de chamado ativo permanece em `emergencyRecorder`.
 - Preferencias de camera foram preparadas em `localVideoCapture`, sem permissao real.
 - APK debug atualizado foi gerado por `./gradlew assembleDebug`.
+- Encerramento de chamado ativo pelo Cofre agora passa por `BrandedDialog` e respeita `finishSafety.requireCode`.
+- `BrandedDialog` tem `ScrollView` interno para modais com player/cofre em telas menores.
+- `EmergencySettingsDrawer` evita `Pressable` dentro de `Pressable`; `Modo atual` e ajuda sao controles separados.
+- `release:android:readiness` passa com Node 24 via `PATH="/Applications/Codex.app/Contents/Resources:$PATH"`.
 
 ## Pendencias tecnicas
 

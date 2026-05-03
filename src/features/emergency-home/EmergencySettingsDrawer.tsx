@@ -28,7 +28,7 @@ type MenuActionProps = {
 };
 
 function MenuMetric({ icon, label, value, onHelp, onPress }: MenuMetricProps) {
-  const content = (
+  const metricCopy = (
     <>
       <View style={styles.menuIcon}>{icon}</View>
       <View style={styles.menuMetricCopy}>
@@ -38,6 +38,27 @@ function MenuMetric({ icon, label, value, onHelp, onPress }: MenuMetricProps) {
         </Text>
       </View>
       {onPress ? <ChevronDown size={16} color={theme.colors.primary} /> : null}
+    </>
+  );
+
+  return (
+    <View style={styles.menuMetric}>
+      {onPress ? (
+        <Pressable
+          accessibilityRole="button"
+          onPress={onPress}
+          style={({ pressed }) => [
+            styles.menuMetricMain,
+            styles.menuMetricPressable,
+            pressed && styles.menuMetricPressed
+          ]}
+        >
+          {metricCopy}
+        </Pressable>
+      ) : (
+        <View style={styles.menuMetricMain}>{metricCopy}</View>
+      )}
+
       {onHelp ? (
         <Pressable
           accessibilityLabel={`Ajuda sobre ${label}`}
@@ -48,26 +69,8 @@ function MenuMetric({ icon, label, value, onHelp, onPress }: MenuMetricProps) {
           <HelpCircle size={16} color={theme.colors.primary} />
         </Pressable>
       ) : null}
-    </>
+    </View>
   );
-
-  if (onPress) {
-    return (
-      <Pressable
-        accessibilityRole="button"
-        onPress={onPress}
-        style={({ pressed }) => [
-          styles.menuMetric,
-          styles.menuMetricPressable,
-          pressed && styles.menuMetricPressed
-        ]}
-      >
-        {content}
-      </Pressable>
-    );
-  }
-
-  return <View style={styles.menuMetric}>{content}</View>;
 }
 
 function MenuAction({ icon, label, onPress }: MenuActionProps) {
@@ -147,6 +150,13 @@ const styles = StyleSheet.create({
   menuMetric: {
     alignItems: "center",
     borderRadius: theme.radius.md,
+    flexDirection: "row",
+    gap: theme.spacing.sm
+  },
+  menuMetricMain: {
+    alignItems: "center",
+    borderRadius: theme.radius.md,
+    flex: 1,
     flexDirection: "row",
     gap: theme.spacing.sm
   },

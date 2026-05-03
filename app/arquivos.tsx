@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { router } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import * as Crypto from "expo-crypto";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Archive, BookOpen, CirclePlay, LockKeyhole, RefreshCw, Share2, Trash2 } from "lucide-react-native";
 import { AppTopBar } from "@/components/AppTopBar";
@@ -12,6 +13,11 @@ import { ResourceTile } from "@/components/ResourceTile";
 import { StatusBanner } from "@/components/StatusBanner";
 import { theme } from "@/design/theme";
 import { deleteEmergencyPackage, listEmergencyPackages } from "@/features/emergency/emergencyOutbox";
+import {
+  defaultEmergencyPreferences,
+  EmergencyPreferences,
+  getEmergencyPreferences
+} from "@/features/emergency/emergencyPreferences";
 import { finishEmergencyPackage } from "@/features/emergency/emergencyRecorder";
 import { EmergencyPackage } from "@/features/emergency/types";
 
@@ -32,6 +38,10 @@ export default function LocalFilesScreen() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [status, setStatus] = useState("Carregando pacotes locais...");
   const [dialog, setDialog] = useState<LocalDialog | null>(null);
+  const [preferences, setPreferences] = useState<EmergencyPreferences>(defaultEmergencyPreferences);
+  const [finishPackageId, setFinishPackageId] = useState<string | null>(null);
+  const [finishCodeInput, setFinishCodeInput] = useState("");
+  const [finishError, setFinishError] = useState("");
 
   async function refreshPackages() {
     const records = await listEmergencyPackages();
@@ -54,12 +64,50 @@ export default function LocalFilesScreen() {
 
   useEffect(() => {
     void refreshPackages();
+    void getEmergencyPreferences().then(setPreferences);
   }, []);
 
-  async function finishPackage(packageId: string) {
-    await finishEmergencyPackage(packageId, "manual_finish");
+  async function finishPackageNow(packageId: string) {
+    const result = await finishEmergencyPackage(packageId, "manual_finish");
     await refreshPackages();
+
+    if (!result) {
+      setStatus("Nenhum chamado ativo encontrado para finalizar.");
+      return;
+    }
+
     setStatus(`Chamado ${packageId.slice(0, 8)} finalizado e preservado no cofre local.`);
+  }
+
+  function requestFinishPackage(packageId: string) {
+    setActiveDialog(null);
+    setDialog(null);
+    setFinishError("");
+    setFinishCodeInput("");
+    setFinishPackageId(packageId);
+  }
+
+  function closeFinishDialog() {
+    setFinishPackageId(null);
+    setFinishCodeInput("");
+    setFinishError("");
+  }
+
+  async function confirmFinishPackage() {
+    if (!finishPackageId) return;
+
+    if (preferences.finishSafety.requireCode) {
+      const codeHash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, finishCodeInput.trim());
+
+      if (codeHash !== preferences.finishSafety.codeHash) {
+        setFinishError("Codigo incorreto. O chamado continua ativo.");
+        return;
+      }
+    }
+
+    const packageId = finishPackageId;
+    closeFinishDialog();
+    await finishPackageNow(packageId);
   }
 
   function selectPackage(packageRecord: EmergencyPackage) {
@@ -212,13 +260,54 @@ export default function LocalFilesScreen() {
           <LocalEvidenceRail
             expandedPackageId={expandedPackageId}
             onDeletePackage={confirmDeleteLocalPackage}
-            onFinishPackage={finishPackage}
+            onFinishPackage={requestFinishPackage}
             onSelectPackage={selectPackage}
             onShareBlocked={showShareBlocked}
             onToggleActions={togglePackageActions}
             packages={packages}
             selectedPackageId={selectedPackageId}
           />
+        </BrandedDialog>
+
+        <BrandedDialog
+          actions={[
+            { label: "Cancelar", tone: "muted" },
+            {
+              autoClose: false,
+              label: "Encerrar",
+              tone: "danger",
+              onPress: () => {
+                void confirmFinishPackage();
+              }
+            }
+          ]}
+          icon={<LockKeyhole size={18} color={theme.colors.primary} />}
+          message={
+            preferences.finishSafety.requireCode
+              ? "Informe o codigo de encerramento configurado para impedir que outra pessoa finalize o chamado sem autorizacao."
+              : "O pacote sera encerrado e preservado no cofre local. Nenhuma evidencia sera apagada."
+          }
+          onClose={closeFinishDialog}
+          title="Encerrar chamado ativo?"
+          visible={Boolean(finishPackageId)}
+        >
+          {preferences.finishSafety.requireCode ? (
+            <>
+              <TextInput
+                accessibilityLabel="Codigo para encerrar chamado pelo cofre"
+                autoCapitalize="none"
+                autoCorrect={false}
+                keyboardType="number-pad"
+                onChangeText={setFinishCodeInput}
+                placeholder="Codigo de encerramento"
+                placeholderTextColor={theme.colors.textMuted}
+                secureTextEntry
+                style={styles.codeInput}
+                value={finishCodeInput}
+              />
+              {finishError ? <Text style={styles.finishError}>{finishError}</Text> : null}
+            </>
+          ) : null}
         </BrandedDialog>
 
         <BrandedDialog
@@ -235,6 +324,16 @@ export default function LocalFilesScreen() {
 }
 
 const styles = StyleSheet.create({
+  codeInput: {
+    backgroundColor: theme.colors.surfaceMuted,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    color: theme.colors.text,
+    fontSize: theme.typography.body,
+    minHeight: 50,
+    paddingHorizontal: theme.spacing.md
+  },
   content: {
     flex: 1,
     gap: theme.spacing.md,
@@ -254,6 +353,11 @@ const styles = StyleSheet.create({
     top: 84,
     zIndex: 25,
     ...theme.shadow
+  },
+  finishError: {
+    color: theme.colors.danger,
+    fontSize: theme.typography.small,
+    fontWeight: "800"
   },
   resourceGrid: {
     flexDirection: "row",

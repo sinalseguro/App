@@ -19,8 +19,11 @@ Papel: seguranca, LGPD e QA.
 - `npm test`: aprovado.
 - `./gradlew assembleDebug`: aprovado.
 - Browser Use validou Home, drawer, Cofre, Player e Funcionamento.
-- `release:android:readiness`: bloqueado pelo Node local `20.16.0`; exige `>=22.13.0`.
+- `release:android:readiness`: aprovado com Node 24 via `PATH="/Applications/Codex.app/Contents/Resources:$PATH"`.
+- Cofre passou a respeitar o mesmo protocolo de encerramento seguro da Home: confirmacao e codigo local opcional.
+- Matriz de permissoes documenta permissoes transitivas do APK debug; camera, microfone, overlay e storage legado seguem ausentes.
 
 ## Pendencia QA
 
 - Validacao Android fisica desta rodada ficou pendente porque `adb devices -l` nao detectou o aparelho.
+- Release interna 3 segue bloqueada ate validacao Android fisica e aprovacao Tarcila/Myers.

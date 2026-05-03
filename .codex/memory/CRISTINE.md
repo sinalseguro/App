@@ -166,6 +166,14 @@ Estado em 2026-05-02:
 - `release:android:readiness` ficou bloqueado apenas pelo Node local `20.16.0`; exige `>=22.13.0`;
 - ADB continuou sem dispositivo visivel apos restart do servidor; instalacao fisica ficou pendente;
 - handoff para portais registrado para sessao `019ddfad-a214-72a3-9b50-ba204e1c9351`.
+- complemento de continuidade em 2026-05-03 corrigiu o bloqueio P1 apontado por Schneier/Doneda/Myers: o Cofre agora usa confirmacao e codigo local opcional antes de finalizar chamado ativo;
+- `BrandedDialog` ganhou rolagem interna para reduzir overflow em aparelhos menores ou fonte ampliada;
+- `docs/23_ESPECIFICACAO_DESENVOLVIMENTO_APP.md` documenta permissoes transitivas do APK debug, mantendo camera/microfone/overlay/storage bloqueados;
+- prints de `Cofre fixo` e `Como funciona` foram recapturados em `docs/assets/mobile/`;
+- drawer da Home separa `Modo atual` e `Ajuda sobre Modo atual` em botoes irmaos para evitar aninhamento no web;
+- relatorio complementar ficou em `docs/24_CONTINUIDADE_COFRE_ENCERRAMENTO_QA.md`;
+- gates aprovados no complemento: `typecheck`, `lint`, `test`, `git diff --check`, `release:android:readiness` com Node 24 e `assembleDebug`;
+- ADB continuou sem dispositivo; `adb connect 192.168.0.5:5555` retornou `Connection refused`.
 
 Proximas acoes:
 

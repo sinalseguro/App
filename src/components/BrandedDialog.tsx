@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { X } from "lucide-react-native";
 import { theme } from "@/design/theme";
 
@@ -45,7 +45,17 @@ export function BrandedDialog({ visible, title, message, icon, children, actions
             </Pressable>
           </View>
           {message ? <Text style={styles.message}>{message}</Text> : null}
-          {children}
+          {children ? (
+            <ScrollView
+              bounces={false}
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
+              style={styles.childrenScroll}
+              contentContainerStyle={styles.childrenContent}
+            >
+              {children}
+            </ScrollView>
+          ) : null}
           <View style={styles.actions}>
             {actions.map((action) => (
               <Pressable
@@ -135,6 +145,13 @@ const styles = StyleSheet.create({
   closePressed: {
     backgroundColor: theme.colors.surfaceMuted
   },
+  childrenContent: {
+    gap: theme.spacing.md
+  },
+  childrenScroll: {
+    maxHeight: 520,
+    width: "100%"
+  },
   header: {
     alignItems: "center",
     flexDirection: "row",
@@ -159,6 +176,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.lg,
     borderWidth: 1,
     gap: theme.spacing.md,
+    maxHeight: "88%",
     maxWidth: 440,
     padding: theme.spacing.lg,
     width: "100%",

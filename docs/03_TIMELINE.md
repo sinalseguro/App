@@ -92,6 +92,18 @@ Handoff:
 
 - Agentes dos portais devem usar este checkpoint e a sessao `019ddfad-a214-72a3-9b50-ba204e1c9351` para refatorar conteudo publico com foco no app, gratuidade, privacidade, cofre e botao SOS.
 
+Complemento de continuidade:
+
+- Schneier/Doneda/Myers identificaram que o Cofre encerrava chamado ativo por um caminho menos protegido.
+- `app/arquivos.tsx` foi ajustado para exigir `BrandedDialog`, confirmacao e codigo local opcional no encerramento pelo Cofre.
+- `BrandedDialog` recebeu rolagem interna para telas menores e fonte ampliada.
+- `docs/23_ESPECIFICACAO_DESENVOLVIMENTO_APP.md` passou a documentar permissoes transitivas observadas no APK debug.
+- Prints de `Cofre fixo` e `Como funciona` foram recapturados com a tela real, nao com splash/loading.
+- `EmergencySettingsDrawer` foi ajustado para separar `Modo atual` e `Ajuda sobre Modo atual` em botoes irmaos, evitando botao aninhado no web.
+- Relatorio complementar criado em `docs/24_CONTINUIDADE_COFRE_ENCERRAMENTO_QA.md`.
+- Gates aprovados no complemento: `typecheck`, `lint`, `test`, `git diff --check`, `release:android:readiness` com Node 24 e `assembleDebug`.
+- `adb devices -l` seguiu sem dispositivo; tentativa de `adb connect 192.168.0.5:5555` retornou `Connection refused`.
+
 ## 2026-05-02 - Acesso GitHub resolvido
 
 Status: concluido.
