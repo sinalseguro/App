@@ -35,7 +35,7 @@ export default function HomeScreen() {
   const [finishConfirmationOpen, setFinishConfirmationOpen] = useState(false);
   const [finishError, setFinishError] = useState("");
   const [recordingStatus, setRecordingStatus] = useState(
-    "Pronto para gravar pacote local de teste com horario, consentimento e localizacao pontual. Envio externo bloqueado."
+    "Pronto para preservar um chamado local com horario, consentimento e localizacao pontual autorizada."
   );
 
   async function refreshOutboxCount() {
@@ -128,7 +128,7 @@ export default function HomeScreen() {
           : `localizacao ${result.packageRecord.location.status}`;
 
       setRecordingStatus(
-        `Chamado ${result.packageRecord.id.slice(0, 8)} ativo por ate ${formatDuration(preferences.defaultDurationSeconds)}; ${locationText}; envio externo so podera ocorrer apos backend, autorizacao e revisao juridica.`
+        `Chamado ${result.packageRecord.id.slice(0, 8)} ativo por ate ${formatDuration(preferences.defaultDurationSeconds)}; ${locationText}; envio externo indisponivel neste build.`
       );
     } catch {
       setActivePackageId(null);
@@ -231,7 +231,10 @@ export default function HomeScreen() {
             />
           </View>
 
-          <EmergencyCallDock onCallTarget={confirmEmergencyCall} />
+          <EmergencyCallDock
+            onCallTarget={confirmEmergencyCall}
+            showPoliceShortcut={preferences.emergencyPhoneCall.call190ShortcutEnabled}
+          />
         </View>
 
         <Modal

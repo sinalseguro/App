@@ -30,7 +30,9 @@ Convites:
 
 Pacote de emergencia:
 
-- `recordEmergencyPackage()` cria pacote local com `clientAlertId`, `idempotencyKey`, horario, consentimento, localizacao e plano de entrega;
+- `startEmergencyPackage()` cria pacote local com `clientAlertId`, `idempotencyKey`, horario, consentimento, localizacao e plano de entrega;
+- o servico impede dois chamados `recording_local` simultaneos no mesmo dispositivo;
+- `recordEmergencyPackage()` e utilitario tecnico imediato e bloqueia execucao quando ja existe chamado ativo;
 - localizacao e capturada apenas com permissao foreground do sistema;
 - pacote fica salvo em cofre local do sistema via `expo-secure-store`, com indice sem dado sensivel em `AsyncStorage`;
 - integridade do pacote e registrada por SHA-256;

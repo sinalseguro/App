@@ -87,7 +87,7 @@ Estado em 2026-05-02:
 - documento `docs/17_STREAMING_COFRE_PLAYER_E_190.md` registra contrato bilateral, chaves, player, cofre e 190.
 - validacao Android fisica confirmou Home com `SOS`, atalho 190 com confirmacao, `Cofre local` com player bloqueado e `Configuracoes` com escopos futuros;
 - gates locais aprovados: `typecheck`, `lint`, `test`, `release:android:readiness` pronto condicionado.
-- em 2026-05-03, splash nativa antiga foi removida por `splashscreen_blank` e plugin local de prebuild;
+- em 2026-05-03, a splash nativa antiga com logo horizontal foi removida; decisao posterior de Tarcila substituiu a transicao vazia por simbolo discreto aprovado;
 - pacote finalizado foi alinhado para `recorded_local`, sem promessa de fila/entrega;
 - consentimento de compartilhamento foi alinhado para `blocked_until_contract_backend_audit`;
 - pre-convites locais nao prometem aceite/revogacao sem backend;
@@ -134,16 +134,32 @@ Estado em 2026-05-02:
 - evidencias foram salvas em `docs/evidencias/browser/2026-05-03-home-sos-refatorada/` e `docs/evidencias/android/2026-05-03-home-sos-refatorada/`;
 - relatorio complementar criado em `docs/20_HOME_SOS_FIXA_MODULAR_ANDROID_BROWSER.md`;
 - gates aprovados nesta revisao: `typecheck`, `lint`, `test`, `release:android:readiness`, `git diff --check`, `assembleDebug`, `adb install`, Browser Use e logcat filtrado.
+- revisao complementar dos especialistas em 2026-05-03 identificou bloqueios de UX/seguranca antes de novo checkpoint;
+- Tarcila/Norman exigiram confirmacao antes de excluir evidencia local e remocao de jargao `backend/P2P` do drawer;
+- Ada/Hedy exigiram singleton/idempotencia no servico de SOS e respeito ao atalho 190 configuravel;
+- Schneier/Doneda/Myers reforcaram web como simulador volatil, reconciliacao da splash e readiness com Node correto;
+- `startEmergencyPackage()` agora impede multiplos chamados `recording_local` por dispositivo;
+- `recordEmergencyPackage()` nao finaliza chamado ativo por engano;
+- cofre local agora confirma exclusao, bloqueia exclusao de chamado ativo e preserva tombstone local;
+- `Policia 190` respeita `call190ShortcutEnabled`; `Bombeiros 193` e `SAMU 192` seguem visiveis;
+- fallback web do cofre deixou de usar `sessionStorage` e fica apenas em memoria volatil;
+- `docs/18_VALIDACAO_UX_SPLASH_COFRE_ANDROID.md` foi reconciliado com o estado real: splash nativa com simbolo discreto aprovado, sem plugin blank;
+- relatorio complementar criado em `docs/21_REVISAO_ESPECIALISTAS_HOME_COFRE_SEGURANCA.md`.
+- gates finais aprovados: `typecheck`, `lint`, `test`, `release:android:readiness`, `git diff --check` e `assembleDebug`;
+- servidor web respondeu em `http://localhost:8081`;
+- ADB nao tinha aparelho conectado no fechamento desta rodada, portanto nao houve reinstalacao fisica adicional.
 
 Proximas acoes:
 
-1. Submeter Home fixa/SOS ativo para validacao visual direta de Roberto.
-2. Validar encerramento manual do SOS ativo no Android e no browser.
-3. Gerar build preview/release com bundle JS embarcado para validacao sem Metro.
-4. Publicar release interna 3 se Roberto aprovar o layout validado.
-5. Atualizar portal/manifestos para release interna 3 apos APK assinado.
-6. Preparar TestFlight/App Store para iOS.
-7. Conectar mock de API ao contrato OpenAPI.
-8. Implementar adaptador de envio real apenas depois de auth, consentimento, retencao e revisao Schneier/Doneda.
-9. Evoluir Fase 1 com componentes compartilhados revisados por Norman/Tarcila.
-10. Manter `origin` usando `github-sinalseguro-admin` para pushes do repo App.
+1. Rodar gates finais e salvar checkpoint `docs/21`.
+2. Validar Home fixa/SOS ativo em aparelho menor quando disponivel.
+3. Validar encerramento manual do SOS ativo no Android e no browser.
+4. Gerar build preview/release com bundle JS embarcado para validacao sem Metro.
+5. Publicar release interna 3 se Roberto aprovar o layout validado.
+6. Atualizar portal/manifestos para release interna 3 apos APK assinado.
+7. Preparar TestFlight/App Store para iOS.
+8. Consolidar `alerts` e `emergency` em uma outbox unica criptografada e idempotente.
+9. Conectar mock de API ao contrato OpenAPI.
+10. Implementar adaptador de envio real apenas depois de auth, consentimento, retencao e revisao Schneier/Doneda.
+11. Evoluir Fase 1 com componentes compartilhados revisados por Norman/Tarcila.
+12. Manter `origin` usando `github-sinalseguro-admin` para pushes do repo App.

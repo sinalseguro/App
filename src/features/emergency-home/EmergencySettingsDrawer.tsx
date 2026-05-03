@@ -62,7 +62,7 @@ export function EmergencySettingsDrawer({
       <MenuMetric
         icon={<Archive size={18} color={theme.colors.primary} />}
         label="Cofre local"
-        value={`${outboxCount} pacote(s) aguardando backend/P2P`}
+        value={`${outboxCount} pacote(s) preservado(s) no dispositivo`}
       />
       <MenuMetric icon={<Radio size={18} color={theme.colors.primary} />} label="Atividade" value={recordingStatus} />
 

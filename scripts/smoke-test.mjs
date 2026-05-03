@@ -83,6 +83,7 @@ if (!launchScreen.includes("Carregando SinalSeguro") || launchScreen.includes("g
 }
 
 const localEvidenceRail = await readFile("src/components/LocalEvidenceRail.tsx", "utf8");
+const localFilesScreen = await readFile("app/arquivos.tsx", "utf8");
 
 if (!localEvidenceRail.includes("onDeletePackage") || !localEvidenceRail.includes("Compartilhar")) {
   throw new Error("Cofre local precisa expor acoes de visualizar, compartilhar bloqueado e excluir local.");
@@ -90,6 +91,10 @@ if (!localEvidenceRail.includes("onDeletePackage") || !localEvidenceRail.include
 
 if (!localEvidenceRail.includes("rayActionView") || !localEvidenceRail.includes("rayHub")) {
   throw new Error("Cofre local precisa manter menu de acoes em raios ancorado no icone do arquivo.");
+}
+
+if (!localFilesScreen.includes("Excluir pacote local?") || !localFilesScreen.includes("Finalize o chamado antes")) {
+  throw new Error("Exclusao local de pacote precisa confirmar acao destrutiva e bloquear chamado ativo.");
 }
 
 const panicButton = await readFile("src/components/PanicButton.tsx", "utf8");
@@ -108,12 +113,21 @@ if (homeScreen.includes("<SafeScreen") || homeScreen.includes("Rede de apoio dis
   throw new Error("Home de emergencia nao pode usar tela rolavel nem manter titulo/subtitulo duplicados.");
 }
 
+if (!homeScreen.includes("showPoliceShortcut={preferences.emergencyPhoneCall.call190ShortcutEnabled}")) {
+  throw new Error("Home precisa respeitar preferencia local do atalho 190 configuravel.");
+}
+
 const emergencyTopBar = await readFile("src/features/emergency-home/EmergencyTopBar.tsx", "utf8");
 const emergencyDrawer = await readFile("src/features/emergency-home/EmergencySettingsDrawer.tsx", "utf8");
 const emergencyCallTarget = await readFile("src/features/emergency-home/EmergencyCallTarget.ts", "utf8");
+const emergencyCallDock = await readFile("src/features/emergency-home/EmergencyCallDock.tsx", "utf8");
 
 if (!emergencyTopBar.includes("home-settings-toggle") || !emergencyDrawer.includes("Cofre e player")) {
   throw new Error("Home precisa manter engrenagem retratil com acesso a cofre/player, anjos, convites e configuracoes.");
+}
+
+if (emergencyDrawer.includes("backend/P2P")) {
+  throw new Error("Drawer da Home nao pode expor jargao tecnico backend/P2P para a usuaria.");
 }
 
 if (
@@ -122,6 +136,10 @@ if (
   !emergencyCallTarget.includes("\"192\"")
 ) {
   throw new Error("Home precisa manter atalhos oficiais Policia 190, Bombeiros 193 e SAMU 192.");
+}
+
+if (!emergencyCallDock.includes("showPoliceShortcut") || !emergencyCallDock.includes("target.number !== \"190\"")) {
+  throw new Error("Dock de chamadas precisa permitir ocultar o atalho 190 quando a usuaria desativar.");
 }
 
 const emergencyPreferences = await readFile("src/features/emergency/emergencyPreferences.ts", "utf8");
@@ -136,8 +154,12 @@ if (/const DEFAULT_FINISH_CODE_HASH = "e41d64/.test(emergencyPreferences)) {
 
 const secureStorage = await readFile("src/security/secureStorage.ts", "utf8");
 
-if (!secureStorage.includes("sessionStorage") || !secureStorage.includes("Platform.OS !== \"web\"")) {
-  throw new Error("SecureStore precisa ter fallback web controlado sem chamar modulo nativo ausente.");
+if (secureStorage.includes("sessionStorage") || !secureStorage.includes("Platform.OS !== \"web\"")) {
+  throw new Error("SecureStore web precisa ser simulador volatil em memoria, sem sessionStorage/localStorage.");
+}
+
+if (!emergencyRecorder.includes("activeStartPromise") || !emergencyRecorder.includes("Ja existe chamado local ativo")) {
+  throw new Error("Servico de emergencia precisa impor singleton/idempotencia para chamado ativo local.");
 }
 
 const emergencyOutbox = await readFile("src/features/emergency/emergencyOutbox.ts", "utf8");

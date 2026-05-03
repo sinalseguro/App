@@ -25,4 +25,12 @@ Cristine é a gerente AI mobile. Ela mantém compatibilidade de memória com Zé
 
 ## Checkpoint atual
 
-Fase 0/1: estrutura inicial, documentação, design system e app shell.
+Fase 1: Home SOS fixa e modular revisada pelos especialistas.
+
+Estado:
+- tela inicial fixa, sem rolagem, com SOS central e menu retratil por engrenagem;
+- Tarcila supervisiona identidade visual e aprova apenas apos validacao em aparelhos menores;
+- cofre local exige confirmacao para excluir e bloqueia exclusao de chamado ativo;
+- SOS tem singleton no servico para evitar dois chamados ativos no mesmo dispositivo;
+- web e apenas simulador volatil, sem dados reais;
+- midia real, backend, P2P, streaming e compartilhamento externo continuam bloqueados ate revisoes juridica, seguranca e infraestrutura.

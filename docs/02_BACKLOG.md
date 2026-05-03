@@ -64,3 +64,4 @@ Supervisao: Ze
 | E08 | Higienizacao do primeiro APK | MVP/Juridico | Schneier/Doneda/Myers | Sem camera/microfone, sem logs de alerta, release notes de alerta simulado. |
 | E09 | Publicacao do APK interno | MVP | Kim/Cristine | GitHub Release com `sinalseguro-android.apk`, `checksums.txt` e link validado no portal. |
 | E10 | Validacao Home SOS Browser/Android | MVP | Myers/Cristine | Evidencias em `docs/evidencias/` e relatorio `docs/20_HOME_SOS_FIXA_MODULAR_ANDROID_BROWSER.md`. |
+| E11 | Revisao especialistas Home/Cofre | MVP/Juridico | Tarcila/Norman/Ada/Hedy/Schneier/Doneda/Myers | Singleton de chamado, delete confirmado, 190 configuravel, web volatil e docs reconciliados. |

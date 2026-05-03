@@ -18,6 +18,12 @@ type RecordEmergencyPackageInput = {
 };
 
 type EmergencyPackageWithoutIntegrity = Omit<EmergencyPackage, "integrity">;
+type EmergencyPackageStartResult = {
+  packageRecord: EmergencyPackage;
+  exchangeEnvelope: EmergencyExchangeEnvelope;
+};
+
+let activeStartPromise: Promise<EmergencyPackageStartResult> | null = null;
 
 function stripIntegrity(packageRecord: EmergencyPackage): EmergencyPackageWithoutIntegrity {
   const { integrity: _ignoredIntegrity, ...packageWithoutIntegrity } = packageRecord;
@@ -46,6 +52,13 @@ export function buildEmergencyExchangeEnvelope(packageRecord: EmergencyPackage):
   };
 }
 
+function buildEmergencyPackageResult(packageRecord: EmergencyPackage): EmergencyPackageStartResult {
+  return {
+    packageRecord,
+    exchangeEnvelope: buildEmergencyExchangeEnvelope(packageRecord)
+  };
+}
+
 async function attachIntegrity(packageWithoutIntegrity: EmergencyPackageWithoutIntegrity): Promise<EmergencyPackage> {
   const sha256 = await Crypto.digestStringAsync(
     Crypto.CryptoDigestAlgorithm.SHA256,
@@ -61,7 +74,7 @@ async function attachIntegrity(packageWithoutIntegrity: EmergencyPackageWithoutI
   };
 }
 
-export async function startEmergencyPackage({
+async function createEmergencyPackage({
   kind,
   trustedContactIds = [],
   captureLocation = true,
@@ -120,15 +133,33 @@ export async function startEmergencyPackage({
   const packageRecord = await attachIntegrity(packageWithoutIntegrity);
   await saveEmergencyPackage(packageRecord);
 
-  return {
-    packageRecord,
-    exchangeEnvelope: buildEmergencyExchangeEnvelope(packageRecord)
-  };
+  return buildEmergencyPackageResult(packageRecord);
 }
 
 export async function getActiveEmergencyPackage() {
   const packages = await listEmergencyPackages();
   return packages.find((packageRecord) => packageRecord.status === "recording_local") ?? null;
+}
+
+export async function startEmergencyPackage(input: RecordEmergencyPackageInput): Promise<EmergencyPackageStartResult> {
+  if (activeStartPromise) {
+    return activeStartPromise;
+  }
+
+  const activePackage = await getActiveEmergencyPackage();
+  if (activePackage) {
+    return buildEmergencyPackageResult(activePackage);
+  }
+
+  if (activeStartPromise) {
+    return activeStartPromise;
+  }
+
+  activeStartPromise = createEmergencyPackage(input).finally(() => {
+    activeStartPromise = null;
+  });
+
+  return activeStartPromise;
 }
 
 export async function finishEmergencyPackage(packageId: string, endReason: EmergencyFinishReason = "manual_finish") {
@@ -138,10 +169,7 @@ export async function finishEmergencyPackage(packageId: string, endReason: Emerg
   if (!activePackage) return null;
 
   if (activePackage.status !== "recording_local") {
-    return {
-      packageRecord: activePackage,
-      exchangeEnvelope: buildEmergencyExchangeEnvelope(activePackage)
-    };
+    return buildEmergencyPackageResult(activePackage);
   }
 
   const completedAt = new Date().toISOString();
@@ -162,10 +190,7 @@ export async function finishEmergencyPackage(packageId: string, endReason: Emerg
   const packageRecord = await attachIntegrity(packageWithoutIntegrity);
   await saveEmergencyPackage(packageRecord);
 
-  return {
-    packageRecord,
-    exchangeEnvelope: buildEmergencyExchangeEnvelope(packageRecord)
-  };
+  return buildEmergencyPackageResult(packageRecord);
 }
 
 export async function finishActiveEmergencyPackage(endReason: EmergencyFinishReason = "manual_finish") {
@@ -190,7 +215,11 @@ export async function finishExpiredActiveEmergencyPackage() {
 }
 
 export async function recordEmergencyPackage(input: RecordEmergencyPackageInput) {
-  const started = await startEmergencyPackage(input);
+  if (activeStartPromise || (await getActiveEmergencyPackage())) {
+    throw new Error("Ja existe chamado local ativo para este dispositivo.");
+  }
+
+  const started = await createEmergencyPackage(input);
   const finished = await finishEmergencyPackage(started.packageRecord.id, "immediate_package");
   if (!finished) {
     throw new Error("Falha ao finalizar pacote tecnico local.");

@@ -64,12 +64,38 @@ export default function LocalFilesScreen() {
     );
   }
 
-  async function deleteLocalPackage(packageId: string) {
-    await deleteEmergencyPackage(packageId);
-    setSelectedPackageId((currentSelectedId) => (currentSelectedId === packageId ? undefined : currentSelectedId));
-    setExpandedPackageId((currentExpandedId) => (currentExpandedId === packageId ? undefined : currentExpandedId));
+  async function deleteLocalPackage(packageRecord: EmergencyPackage) {
+    await deleteEmergencyPackage(packageRecord.id);
+    setSelectedPackageId((currentSelectedId) => (currentSelectedId === packageRecord.id ? undefined : currentSelectedId));
+    setExpandedPackageId((currentExpandedId) => (currentExpandedId === packageRecord.id ? undefined : currentExpandedId));
     await refreshPackages();
-    setStatus(`Pacote ${packageId.slice(0, 8)} removido deste dispositivo com registro local de exclusao.`);
+    setStatus(`Pacote ${packageRecord.id.slice(0, 8)} removido deste dispositivo com registro local de exclusao.`);
+  }
+
+  function confirmDeleteLocalPackage(packageRecord: EmergencyPackage) {
+    if (packageRecord.status === "recording_local") {
+      Alert.alert(
+        "Finalize o chamado antes",
+        "Um chamado ativo nao pode ser excluido. Finalize o chamado e revise o pacote no cofre local.",
+        [{ text: "Entendi" }]
+      );
+      return;
+    }
+
+    Alert.alert(
+      "Excluir pacote local?",
+      `O pacote ${packageRecord.id.slice(0, 8)} sera removido apenas deste dispositivo. A acao registra auditoria local e nao pode ser desfeita neste build.`,
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Excluir",
+          style: "destructive",
+          onPress: () => {
+            void deleteLocalPackage(packageRecord);
+          }
+        }
+      ]
+    );
   }
 
   const selectedPackage = packages.find((packageRecord) => packageRecord.id === selectedPackageId);
@@ -115,9 +141,7 @@ export default function LocalFilesScreen() {
             onSelectPackage={selectPackage}
             onToggleActions={togglePackageActions}
             onShareBlocked={showShareBlocked}
-            onDeletePackage={(packageRecord) => {
-              void deleteLocalPackage(packageRecord.id);
-            }}
+            onDeletePackage={confirmDeleteLocalPackage}
             onFinishPackage={finishPackage}
           />
         ) : null}

@@ -68,14 +68,14 @@ Status em 2026-05-02: implementado no app shell.
 Direcao aplicada:
 
 - splash nativa antiga com logo horizontal foi removida em 2026-05-03;
-- splash nativa Android usa recurso em branco apenas para transicao do sistema;
+- splash nativa Android usa o simbolo discreto aprovado em fundo `#120A20`, conforme revisao posterior de Tarcila;
 - splash React custom exibe simbolo maior, nome `SinalSeguro` abaixo e barra de loading;
 - efeitos ornamentais foram removidos para manter linguagem institucional;
 - Home passa a priorizar botao circular central `SOS`;
 - atalhos principais ficam em grade abaixo do botao: `Ligar 190`, `Anjos`, `Cofre`, `Config.`;
 - `Arquivos locais` passa a ser apresentado como `Cofre local`.
 
-Regra vigente: a unica superficie de inicializacao com marca, nome e loading deve ser o `AppLaunchScreen` React. O tema nativo Android nao deve voltar a exibir a logo, para evitar a duplicidade percebida na abertura do app.
+Regra vigente: a splash nativa pode exibir apenas o simbolo discreto aprovado. A superficie com marca completa, nome e loading deve ser o `AppLaunchScreen` React. O tema nativo Android nao deve voltar a exibir a logo horizontal, para evitar a duplicidade percebida na abertura do app.
 
 Bloqueios visuais:
 

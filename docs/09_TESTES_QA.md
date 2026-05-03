@@ -84,3 +84,16 @@ Checklist executado por Myers com supervisao de Tarcila, Norman, Ada, Hedy, Schn
 - acionar SOS por gesto longo no Android fisico e confirmar estado `ATIVO`;
 - verificar `logcat` sem `FATAL`, `AndroidRuntime`, `RedBox`, `Unable to load script` ou `setValueWithKeyAsync`;
 - registrar evidencias saneadas em `docs/evidencias/browser/2026-05-03-home-sos-refatorada/` e `docs/evidencias/android/2026-05-03-home-sos-refatorada/`.
+
+## Checkpoint 2026-05-03 - Revisao especialistas
+
+Checklist complementar de Myers:
+
+- confirmar que `startEmergencyPackage()` nao cria dois chamados `recording_local` simultaneos;
+- confirmar que `recordEmergencyPackage()` nao finaliza chamado ativo por engano;
+- confirmar que excluir pacote local exige confirmacao;
+- confirmar que pacote ativo nao pode ser excluido pelo cofre;
+- confirmar que drawer da Home nao mostra jargao `backend/P2P`;
+- confirmar que o atalho `Policia 190` respeita a preferencia configurada;
+- confirmar que fallback web do cofre usa memoria volatil e nao `sessionStorage`;
+- confirmar que a documentacao de splash corresponde ao `app.json` atual.

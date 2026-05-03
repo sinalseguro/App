@@ -106,9 +106,9 @@ export async function getEmergencyPreferences(): Promise<EmergencyPreferences> {
       ...defaultEmergencyPreferences.emergencyPhoneCall,
       ...parsed.emergencyPhoneCall,
       call190ShortcutEnabled:
-        parsed.schemaVersion === 2
-          ? parsed.emergencyPhoneCall?.call190ShortcutEnabled ?? defaultEmergencyPreferences.emergencyPhoneCall.call190ShortcutEnabled
-          : true
+        typeof parsed.emergencyPhoneCall?.call190ShortcutEnabled === "boolean"
+          ? parsed.emergencyPhoneCall.call190ShortcutEnabled
+          : defaultEmergencyPreferences.emergencyPhoneCall.call190ShortcutEnabled
     };
 
     return {

@@ -302,8 +302,8 @@ Especialistas acionados:
 
 Decisoes:
 
-- splash nativa Android passa a usar drawable transparente, deixando apenas a splash React com logo e loading;
-- plugin `with-android-blank-native-splash` preserva essa regra em futuros prebuilds;
+- splash nativa Android remove a logo horizontal antiga; decisao posterior substituiu o drawable transparente pelo simbolo discreto aprovado;
+- nao ha plugin blank ativo no estado vigente; `app.json` define a splash nativa com `sinalseguro-symbol.png`;
 - pacote finalizado fica em `recorded_local`, sem promessa de fila/entrega;
 - `consentSnapshot.sharing` passa a `blocked_until_contract_backend_audit`;
 - contatos mock nao entram como autorizados no pacote de emergencia;
@@ -410,6 +410,42 @@ Evidencias:
 - `docs/evidencias/android/2026-05-03-home-sos-refatorada/01-home-sos-fixa.png`;
 - `docs/evidencias/android/2026-05-03-home-sos-refatorada/02-home-drawer.png`;
 - `docs/evidencias/android/2026-05-03-home-sos-refatorada/03-sos-ativo.png`.
+
+## 2026-05-03 - Revisao especialistas Home/Cofre/Seguranca
+
+Status: implementado, validado e salvo no checkpoint.
+
+Especialistas acionados:
+
+- Tarcila/Norman: apontaram bloqueio de exclusao destrutiva sem confirmacao e jargao tecnico no drawer.
+- Ada/Hedy: apontaram risco de multiplos chamados ativos e atalho 190 configuravel sem efeito na Home.
+- Myers/Schneier/Doneda: apontaram necessidade de Node correto no readiness, web apenas simulador, reconciliacao da splash e bloqueios de seguranca.
+
+Decisoes:
+
+- `startEmergencyPackage()` impoe singleton/idempotencia no servico;
+- `recordEmergencyPackage()` bloqueia se ja houver chamado ativo;
+- `Excluir` no cofre exige confirmacao e fica bloqueado para pacote ativo;
+- drawer da Home usa texto operacional, sem `backend/P2P`;
+- `Policia 190` respeita `call190ShortcutEnabled`;
+- `Bombeiros 193` e `SAMU 192` continuam como canais oficiais manuais;
+- fallback web do cofre usa memoria volatil, sem `sessionStorage`;
+- docs de splash foram reconciliados: splash nativa usa simbolo discreto aprovado, nao plugin blank.
+
+Documentacao:
+
+- `docs/21_REVISAO_ESPECIALISTAS_HOME_COFRE_SEGURANCA.md`.
+
+Validacoes executadas:
+
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `npm test`: aprovado;
+- `npm run release:android:readiness`: pronto condicionado;
+- `git diff --check`: aprovado;
+- `./gradlew :app:assembleDebug --console=plain`: aprovado;
+- `curl -fsS http://localhost:8081`: servidor web ativo;
+- ADB sem dispositivo conectado nesta rodada.
 
 ## Modelo de registro
 

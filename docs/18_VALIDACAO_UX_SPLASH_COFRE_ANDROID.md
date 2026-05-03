@@ -10,7 +10,7 @@ Especialistas acionados: Tarcila, Norman, Ada, Margaret, Hedy, Schneier, Doneda,
 Concluir a correcao da inicializacao Android e entregar uma versao navegavel para validacao simulada, com foco em:
 
 - remover o splash nativo antigo com logo horizontal;
-- manter somente a splash React com logo e loading;
+- manter splash nativa discreta com simbolo aprovado e splash React com logo/loading;
 - validar Home com botao central `SOS`;
 - validar `Cofre local` com player dedicado;
 - validar trilha retratil de arquivos locais;
@@ -22,14 +22,14 @@ Concluir a correcao da inicializacao Android e entregar uma versao navegavel par
 
 ### Splash
 
-- `app.json` nao define mais imagem de splash nativa.
-- Android nativo passou a usar `@drawable/splashscreen_blank`.
-- `plugins/with-android-blank-native-splash.js` garante que futuros prebuilds mantenham a splash nativa sem logo.
-- `app/_layout.tsx` usa `SplashScreen.preventAutoHideAsync()` e libera a splash nativa quando a tela React monta.
-- `AppLaunchScreen` continua sendo a unica tela com logo, nome `SinalSeguro` e barra de loading.
+- `app.json` define a splash nativa com `./assets/brand/sinalseguro-symbol.png`.
+- A splash nativa usa apenas o simbolo aprovado em fundo `#120A20`, evitando a tela roxa vazia antes do React.
+- Nao ha plugin `with-android-blank-native-splash` ativo neste checkpoint.
+- `app/_layout.tsx` usa `SplashScreen.preventAutoHideAsync()` apenas em Android/iOS e libera a splash nativa quando a tela React monta.
+- `AppLaunchScreen` continua sendo a tela com marca completa, nome `SinalSeguro` e barra de loading.
 - `colors.xml` foi alinhado para `#120A20`, evitando flash visual entre splash nativa e tela React.
 
-Resultado: o splash antigo exibido no print enviado por Roberto foi removido do tema nativo. O APK debug precisa de rebuild/reinstall para refletir essa alteracao.
+Resultado: o splash antigo exibido no print enviado por Roberto foi substituido pelo simbolo discreto aprovado por Tarcila. O APK debug precisa de rebuild/reinstall para refletir ajustes nativos.
 
 ### Cofre e player
 
@@ -98,7 +98,7 @@ Comandos/gates:
 Fluxos validados:
 
 - abertura do app com Metro ativo;
-- ausencia de splash nativo antigo no APK reconstruido;
+- ausencia do splash nativo antigo com logo horizontal no APK reconstruido;
 - Home com `SOS`, `Ligar 190`, `Anjos`, `Cofre` e `Config.`;
 - microcopy do botao SOS ajustado para `Solte`, sem truncamento;
 - `Cofre local` com player dedicado e metadados resumidos;

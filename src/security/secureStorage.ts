@@ -12,22 +12,9 @@ function webSecretKey(key: string) {
   return `${webSecretPrefix}${key}`;
 }
 
-function getWebSessionStorage() {
-  if (typeof sessionStorage === "undefined") {
-    return null;
-  }
-
-  return sessionStorage;
-}
-
 export async function saveSecret(key: string, value: string) {
   if (!canUseNativeSecureStore()) {
-    const storage = getWebSessionStorage();
-    if (storage) {
-      storage.setItem(webSecretKey(key), value);
-    } else {
-      webMemorySecrets.set(webSecretKey(key), value);
-    }
+    webMemorySecrets.set(webSecretKey(key), value);
     return;
   }
 
@@ -38,8 +25,7 @@ export async function saveSecret(key: string, value: string) {
 
 export async function readSecret(key: string) {
   if (!canUseNativeSecureStore()) {
-    const storage = getWebSessionStorage();
-    return storage?.getItem(webSecretKey(key)) ?? webMemorySecrets.get(webSecretKey(key)) ?? null;
+    return webMemorySecrets.get(webSecretKey(key)) ?? null;
   }
 
   return SecureStore.getItemAsync(key);
@@ -47,8 +33,6 @@ export async function readSecret(key: string) {
 
 export async function deleteSecret(key: string) {
   if (!canUseNativeSecureStore()) {
-    const storage = getWebSessionStorage();
-    storage?.removeItem(webSecretKey(key));
     webMemorySecrets.delete(webSecretKey(key));
     return;
   }

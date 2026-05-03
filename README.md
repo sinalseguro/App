@@ -4,7 +4,7 @@
 
 App mobile Android e iOS do SinalSeguro.
 
-Status: Home SOS fixa e modular validada em Browser/Android; APK Android interno 2 publicado para homologacao controlada, com identidade visual supervisionada por Tarcila.
+Status: Home SOS fixa e modular revisada pelos especialistas; APK Android interno 2 publicado para homologacao controlada, com identidade visual supervisionada por Tarcila.
 Coordenacao geral: Ze.  
 Gerente AI mobile: Cristine.
 
@@ -73,6 +73,9 @@ Checkpoint tecnico atual:
 - Home principal fixa, sem rolagem, com foco no SOS central responsivo e atalhos oficiais `Policia 190`, `Bombeiros 193` e `SAMU 192`.
 - Menu retratil por engrenagem para modo atual, cofre/player, anjos, convites, configuracoes e atividade.
 - Componentes da Home separados em `src/features/emergency-home/` para manter evolucao modular e revisao por Tarcila, Norman, Ada, Hedy, Schneier e Myers.
+- Chamado ativo tem regra singleton no servico, evitando dois pacotes `recording_local` simultaneos.
+- Exclusao de pacote local exige confirmacao e fica bloqueada enquanto o chamado estiver ativo.
+- Simulador web usa memoria volatil, nao cofre real.
 - Pre-convite local com codigo opaco, expiracao sugerida e compartilhamento permitido pelo sistema somente para instalar/aceitar convite.
 - Pacote local de emergencia com horario, consentimento, georreferencia pontual autorizada e hash, sem envio externo neste build.
 - Area `Cofre local` para acessar os pacotes gravados neste dispositivo e verificar o que permanece bloqueado ate backend, contrato, chaves e auditoria.
@@ -111,4 +114,5 @@ Checkpoint tecnico atual:
 - `docs/18_VALIDACAO_UX_SPLASH_COFRE_ANDROID.md`
 - `docs/19_REFINO_SPLASH_SOS_PLAYER_BROWSER.md`
 - `docs/20_HOME_SOS_FIXA_MODULAR_ANDROID_BROWSER.md`
+- `docs/21_REVISAO_ESPECIALISTAS_HOME_COFRE_SEGURANCA.md`
 - `docs/api/openapi.yaml`
