@@ -50,7 +50,7 @@ Tarcila revisou a tela de inicializacao depois do ajuste de startup no Android f
 
 - `app.json` usa nome oficial `SinalSeguro`;
 - `icon` usa `assets/brand/sinalseguro-icon.png`, 1024x1024;
-- `splash` usa `assets/brand/sinalseguro-symbol.png`, `resizeMode: contain` e fundo institucional `#120A20`;
+- `splash` usa `assets/brand/sinalseguro-splash-approved.png`, `resizeMode: contain` e fundo institucional `#120A20`;
 - `adaptiveIcon` usa o icone atual com fundo institucional, suficiente para homologacao interna;
 - `app/_layout.tsx` chama `SplashScreen.hideAsync()` no mount para liberar a splash quando o React ja montou;
 - `BrandLockup` usa simbolo aprovado, nome e assinatura da marca;

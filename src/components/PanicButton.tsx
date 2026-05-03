@@ -18,14 +18,14 @@ type ParticleConfig = {
 };
 
 const particleConfigs: ParticleConfig[] = [
-  { delay: 0, duration: 2600, left: 20, rise: -42, size: 5 },
-  { delay: 360, duration: 3200, left: 45, rise: -54, size: 4 },
-  { delay: 720, duration: 2900, left: 72, rise: -46, size: 6 },
-  { delay: 980, duration: 3600, left: 30, rise: -62, size: 3 },
-  { delay: 1280, duration: 3100, left: 58, rise: -50, size: 5 },
-  { delay: 1660, duration: 3400, left: 84, rise: -58, size: 4 },
-  { delay: 1960, duration: 3900, left: 12, rise: -48, size: 4 },
-  { delay: 2260, duration: 3300, left: 66, rise: -66, size: 3 }
+  { delay: 0, duration: 3000, left: 20, rise: -178, size: 5 },
+  { delay: 420, duration: 3600, left: 45, rise: -238, size: 4 },
+  { delay: 760, duration: 3300, left: 72, rise: -198, size: 6 },
+  { delay: 1080, duration: 4100, left: 30, rise: -268, size: 3 },
+  { delay: 1400, duration: 3500, left: 58, rise: -214, size: 5 },
+  { delay: 1840, duration: 3900, left: 84, rise: -252, size: 4 },
+  { delay: 2140, duration: 4400, left: 12, rise: -190, size: 4 },
+  { delay: 2460, duration: 3700, left: 66, rise: -260, size: 3 }
 ];
 
 function AnimatedParticle({
@@ -149,9 +149,15 @@ export function PanicButton({ active = false, label, holdMs, onTrigger }: PanicB
         accessibilityLabel={label}
         onPressIn={startHold}
         onPressOut={clearHold}
-        style={[styles.button, active && styles.buttonArmed, holding && styles.buttonActive]}
+        style={({ pressed }) => [
+          styles.button,
+          active && styles.buttonArmed,
+          (holding || pressed) && styles.buttonPressed
+        ]}
         testID="panic-button"
       >
+        <View pointerEvents="none" style={styles.depthLayer} />
+        <View pointerEvents="none" style={styles.sheenLayer} />
         {particleValues.map((value, index) => (
           <AnimatedParticle key={index} config={particleConfigs[index]} enabled={active} value={value} />
         ))}
@@ -188,21 +194,48 @@ const styles = StyleSheet.create({
     padding: theme.spacing.lg,
     overflow: "visible",
     width: "75%",
-    ...theme.shadow
+    shadowColor: "#1E1B2E",
+    shadowOffset: { width: 0, height: 16 },
+    shadowOpacity: 0.24,
+    shadowRadius: 28,
+    elevation: 10
   },
   buttonArmed: {
-    backgroundColor: theme.colors.backgroundStrong,
-    borderColor: theme.colors.accent
+    backgroundColor: "#9F174D",
+    borderColor: theme.colors.accentSoft
   },
-  buttonActive: {
-    backgroundColor: theme.colors.danger
+  buttonPressed: {
+    elevation: 3,
+    shadowOffset: { width: 0, height: 7 },
+    shadowOpacity: 0.2,
+    shadowRadius: 12,
+    transform: [{ translateY: 4 }, { scale: 0.985 }]
+  },
+  depthLayer: {
+    backgroundColor: "rgba(18, 10, 32, 0.2)",
+    borderRadius: theme.radius.pill,
+    bottom: 14,
+    left: 16,
+    position: "absolute",
+    right: 16,
+    top: 18
+  },
+  sheenLayer: {
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
+    borderRadius: theme.radius.pill,
+    height: "46%",
+    left: "12%",
+    position: "absolute",
+    right: "12%",
+    top: "9%"
   },
   label: {
     color: theme.colors.textOnDark,
     fontSize: 16,
     fontWeight: "800",
     lineHeight: 21,
-    textAlign: "center"
+    textAlign: "center",
+    zIndex: 2
   },
   progressFill: {
     backgroundColor: theme.colors.textOnDark,
@@ -216,19 +249,22 @@ const styles = StyleSheet.create({
     height: 5,
     marginTop: theme.spacing.xs,
     overflow: "hidden",
-    width: "66%"
+    width: "66%",
+    zIndex: 2
   },
   sos: {
     color: theme.colors.textOnDark,
     fontSize: 56,
     fontWeight: "900",
-    textAlign: "center"
+    textAlign: "center",
+    zIndex: 2
   },
   particle: {
     backgroundColor: theme.colors.accentSoft,
     borderRadius: 6,
-    bottom: 30,
-    position: "absolute"
+    bottom: 22,
+    position: "absolute",
+    zIndex: 4
   },
   help: {
     color: theme.colors.textMuted,

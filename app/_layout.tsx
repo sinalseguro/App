@@ -47,19 +47,18 @@ export default function RootLayout() {
         <StatusBar style="light" backgroundColor={theme.colors.backgroundStrong} />
         <Stack
           screenOptions={{
-            headerStyle: { backgroundColor: theme.colors.backgroundStrong },
-            headerTintColor: theme.colors.textOnDark,
-            headerTitleStyle: { fontWeight: "700" },
+            headerShown: false,
             contentStyle: { backgroundColor: theme.colors.background }
           }}
         >
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="onboarding" options={{ title: "Boas-vindas" }} />
-          <Stack.Screen name="alerta" options={{ title: "Alerta" }} />
-          <Stack.Screen name="arquivos" options={{ title: "Cofre local" }} />
-          <Stack.Screen name="contatos" options={{ title: "Anjos" }} />
-          <Stack.Screen name="convite" options={{ title: "Convite" }} />
-          <Stack.Screen name="configuracoes" options={{ title: "Configuracoes" }} />
+          <Stack.Screen name="index" />
+          <Stack.Screen name="onboarding" />
+          <Stack.Screen name="alerta" />
+          <Stack.Screen name="arquivos" />
+          <Stack.Screen name="contatos" />
+          <Stack.Screen name="convite" />
+          <Stack.Screen name="configuracoes" />
+          <Stack.Screen name="funcionamento" />
         </Stack>
       </QueryClientProvider>
     </View>

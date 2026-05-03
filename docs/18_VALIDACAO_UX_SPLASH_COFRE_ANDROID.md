@@ -22,7 +22,7 @@ Concluir a correcao da inicializacao Android e entregar uma versao navegavel par
 
 ### Splash
 
-- `app.json` define a splash nativa com `./assets/brand/sinalseguro-symbol.png`.
+- `app.json` define a splash nativa atual com `./assets/brand/sinalseguro-splash-approved.png`.
 - A splash nativa usa apenas o simbolo aprovado em fundo `#120A20`, evitando a tela roxa vazia antes do React.
 - Nao ha plugin `with-android-blank-native-splash` ativo neste checkpoint.
 - `app/_layout.tsx` usa `SplashScreen.preventAutoHideAsync()` apenas em Android/iOS e libera a splash nativa quando a tela React monta.

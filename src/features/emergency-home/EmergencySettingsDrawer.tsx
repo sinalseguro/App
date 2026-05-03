@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Activity, Archive, Radio, Settings, UserPlus, Users } from "lucide-react-native";
+import { Activity, Archive, ChevronDown, HelpCircle, Radio, Settings, UserPlus, Users } from "lucide-react-native";
 import { theme } from "@/design/theme";
 import { EmergencyHomeRoute } from "./routes";
 
@@ -9,12 +9,16 @@ type EmergencySettingsDrawerProps = {
   outboxCount: number;
   recordingStatus: string;
   onNavigate: (route: EmergencyHomeRoute) => void;
+  onOpenModeHelp: () => void;
+  onOpenModeOptions: () => void;
 };
 
 type MenuMetricProps = {
   icon: ReactNode;
   label: string;
   value: string;
+  onHelp?: () => void;
+  onPress?: () => void;
 };
 
 type MenuActionProps = {
@@ -23,9 +27,9 @@ type MenuActionProps = {
   onPress: () => void;
 };
 
-function MenuMetric({ icon, label, value }: MenuMetricProps) {
-  return (
-    <View style={styles.menuMetric}>
+function MenuMetric({ icon, label, value, onHelp, onPress }: MenuMetricProps) {
+  const content = (
+    <>
       <View style={styles.menuIcon}>{icon}</View>
       <View style={styles.menuMetricCopy}>
         <Text style={styles.menuMetricLabel}>{label}</Text>
@@ -33,8 +37,37 @@ function MenuMetric({ icon, label, value }: MenuMetricProps) {
           {value}
         </Text>
       </View>
-    </View>
+      {onPress ? <ChevronDown size={16} color={theme.colors.primary} /> : null}
+      {onHelp ? (
+        <Pressable
+          accessibilityLabel={`Ajuda sobre ${label}`}
+          accessibilityRole="button"
+          onPress={onHelp}
+          style={({ pressed }) => [styles.helpButton, pressed && styles.helpButtonPressed]}
+        >
+          <HelpCircle size={16} color={theme.colors.primary} />
+        </Pressable>
+      ) : null}
+    </>
   );
+
+  if (onPress) {
+    return (
+      <Pressable
+        accessibilityRole="button"
+        onPress={onPress}
+        style={({ pressed }) => [
+          styles.menuMetric,
+          styles.menuMetricPressable,
+          pressed && styles.menuMetricPressed
+        ]}
+      >
+        {content}
+      </Pressable>
+    );
+  }
+
+  return <View style={styles.menuMetric}>{content}</View>;
 }
 
 function MenuAction({ icon, label, onPress }: MenuActionProps) {
@@ -50,7 +83,9 @@ export function EmergencySettingsDrawer({
   active,
   outboxCount,
   recordingStatus,
-  onNavigate
+  onNavigate,
+  onOpenModeHelp,
+  onOpenModeOptions
 }: EmergencySettingsDrawerProps) {
   return (
     <View style={styles.drawer} testID="home-settings-drawer">
@@ -58,6 +93,8 @@ export function EmergencySettingsDrawer({
         icon={<Activity size={18} color={theme.colors.primary} />}
         label="Modo atual"
         value={active ? "Chamado local ativo" : "Discreto"}
+        onHelp={onOpenModeHelp}
+        onPress={onOpenModeOptions}
       />
       <MenuMetric
         icon={<Archive size={18} color={theme.colors.primary} />}
@@ -109,8 +146,25 @@ const styles = StyleSheet.create({
   },
   menuMetric: {
     alignItems: "center",
+    borderRadius: theme.radius.md,
     flexDirection: "row",
     gap: theme.spacing.sm
+  },
+  helpButton: {
+    alignItems: "center",
+    borderRadius: theme.radius.pill,
+    height: 30,
+    justifyContent: "center",
+    width: 30
+  },
+  helpButtonPressed: {
+    backgroundColor: theme.colors.surfaceMuted
+  },
+  menuMetricPressable: {
+    paddingVertical: theme.spacing.xs
+  },
+  menuMetricPressed: {
+    backgroundColor: theme.colors.surfaceMuted
   },
   menuMetricCopy: {
     flex: 1,

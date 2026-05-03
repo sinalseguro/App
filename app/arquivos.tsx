@@ -1,22 +1,37 @@
-import { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
-import { ChevronDown, ChevronUp, RefreshCw } from "lucide-react-native";
+import { ReactNode, useEffect, useState } from "react";
+import { router } from "expo-router";
+import { StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Archive, BookOpen, CirclePlay, LockKeyhole, RefreshCw, Share2, Trash2 } from "lucide-react-native";
+import { AppTopBar } from "@/components/AppTopBar";
+import { BrandedDialog, BrandedDialogAction } from "@/components/BrandedDialog";
 import { ButtonIcon } from "@/components/ButtonIcon";
 import { EvidencePlayerCard } from "@/components/EvidencePlayerCard";
 import { LocalEvidenceRail } from "@/components/LocalEvidenceRail";
-import { SafeScreen } from "@/components/SafeScreen";
+import { ResourceTile } from "@/components/ResourceTile";
 import { StatusBanner } from "@/components/StatusBanner";
 import { theme } from "@/design/theme";
 import { deleteEmergencyPackage, listEmergencyPackages } from "@/features/emergency/emergencyOutbox";
 import { finishEmergencyPackage } from "@/features/emergency/emergencyRecorder";
 import { EmergencyPackage } from "@/features/emergency/types";
 
+type VaultDialog = "player" | "cofre" | null;
+
+type LocalDialog = {
+  title: string;
+  message: string;
+  icon?: ReactNode;
+  actions: BrandedDialogAction[];
+};
+
 export default function LocalFilesScreen() {
   const [packages, setPackages] = useState<EmergencyPackage[]>([]);
   const [selectedPackageId, setSelectedPackageId] = useState<string | undefined>();
   const [expandedPackageId, setExpandedPackageId] = useState<string | undefined>();
-  const [showFileRail, setShowFileRail] = useState(true);
+  const [activeDialog, setActiveDialog] = useState<VaultDialog>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [status, setStatus] = useState("Carregando pacotes locais...");
+  const [dialog, setDialog] = useState<LocalDialog | null>(null);
 
   async function refreshPackages() {
     const records = await listEmergencyPackages();
@@ -57,11 +72,12 @@ export default function LocalFilesScreen() {
   }
 
   function showShareBlocked(packageRecord: EmergencyPackage) {
-    Alert.alert(
-      "Compartilhamento interno futuro",
-      `Pacote ${packageRecord.id.slice(0, 8)} so podera ser compartilhado por rota interna autenticada, com contrato, chaves e auditoria. Nenhum share externo foi aberto.`,
-      [{ text: "Entendi" }]
-    );
+    setDialog({
+      title: "Compartilhamento interno futuro",
+      message: `Pacote ${packageRecord.id.slice(0, 8)} so podera ser compartilhado por rota interna autenticada, com contrato, chaves e auditoria. Nenhum share externo foi aberto.`,
+      icon: <Share2 size={18} color={theme.colors.primary} />,
+      actions: [{ label: "Entendi" }]
+    });
   }
 
   async function deleteLocalPackage(packageRecord: EmergencyPackage) {
@@ -74,131 +90,206 @@ export default function LocalFilesScreen() {
 
   function confirmDeleteLocalPackage(packageRecord: EmergencyPackage) {
     if (packageRecord.status === "recording_local") {
-      Alert.alert(
-        "Finalize o chamado antes",
-        "Um chamado ativo nao pode ser excluido. Finalize o chamado e revise o pacote no cofre local.",
-        [{ text: "Entendi" }]
-      );
+      setDialog({
+        title: "Finalize o chamado antes",
+        message: "Um chamado ativo nao pode ser excluido. Finalize o chamado e revise o pacote no cofre local.",
+        icon: <LockKeyhole size={18} color={theme.colors.primary} />,
+        actions: [{ label: "Entendi" }]
+      });
       return;
     }
 
-    Alert.alert(
-      "Excluir pacote local?",
-      `O pacote ${packageRecord.id.slice(0, 8)} sera removido apenas deste dispositivo. A acao registra auditoria local e nao pode ser desfeita neste build.`,
-      [
-        { text: "Cancelar", style: "cancel" },
+    setDialog({
+      title: "Excluir pacote local?",
+      message: `O pacote ${packageRecord.id.slice(0, 8)} sera removido apenas deste dispositivo. A acao registra auditoria local e nao pode ser desfeita neste build.`,
+      icon: <Trash2 size={18} color={theme.colors.danger} />,
+      actions: [
+        { label: "Cancelar", tone: "muted" },
         {
-          text: "Excluir",
-          style: "destructive",
+          label: "Excluir",
+          tone: "danger",
           onPress: () => {
             void deleteLocalPackage(packageRecord);
           }
         }
       ]
-    );
+    });
   }
 
   const selectedPackage = packages.find((packageRecord) => packageRecord.id === selectedPackageId);
+  const selectedSummary = selectedPackage
+    ? `Pacote ${selectedPackage.id.slice(0, 8)} selecionado para revisao segura.`
+    : "Nenhum arquivo selecionado.";
 
   return (
-    <SafeScreen
-      title="Cofre local"
-      subtitle="Pacotes preservados neste dispositivo para revisao local e homologacao futura."
-    >
-      <StatusBanner tone="secure" title={`Pacotes gravados: ${packages.length}`} text={status} />
-      <StatusBanner
-        tone="warning"
-        title="Protecao dos dados"
-        text="Coordenadas completas e midia real exigem autenticacao forte, contrato eletronico e acesso auditado. Esta tela mostra apenas previa segura."
-      />
-      <View style={styles.playerArea}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Player seguro</Text>
-          <Text style={styles.sectionMeta}>{selectedPackage ? `Pacote ${selectedPackage.id.slice(0, 8)}` : "Selecione um arquivo"}</Text>
-        </View>
-        <EvidencePlayerCard packageRecord={selectedPackage} />
-      </View>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.shell} testID="local-files-screen">
+        <AppTopBar
+          contextLabel="Cofre local"
+          menuOpen={menuOpen}
+          onMenuPress={() => setMenuOpen((current) => !current)}
+          showBack
+          showMenu
+        />
 
-      <View style={styles.managerArea}>
-        <View style={styles.managerHeader}>
-          <View style={styles.managerTitleBlock}>
-            <Text style={styles.sectionTitle}>Cofre local</Text>
-            <Text style={styles.sectionMeta}>Toque no icone para abrir as acoes em raio.</Text>
+        {menuOpen ? (
+          <View style={styles.drawer}>
+            <StatusBanner tone="secure" title={`Pacotes gravados: ${packages.length}`} text={status} />
+            <StatusBanner
+              tone="warning"
+              title="Protecao dos dados"
+              text="Coordenadas completas e midia real exigem autenticacao forte, contrato eletronico e acesso auditado."
+            />
+            <ButtonIcon
+              icon={<BookOpen size={18} color={theme.colors.primary} />}
+              label="Como funciona"
+              onPress={() => {
+                setMenuOpen(false);
+                router.push("/funcionamento");
+              }}
+            />
           </View>
-          <ButtonIcon
-            icon={showFileRail ? <ChevronUp size={18} color={theme.colors.primary} /> : <ChevronDown size={18} color={theme.colors.primary} />}
-            label={showFileRail ? "Recolher" : "Abrir"}
-            onPress={() => setShowFileRail((currentValue) => !currentValue)}
-            style={styles.headerButton}
-          />
+        ) : null}
+
+        <View style={styles.content}>
+          <View style={styles.summary}>
+            <Archive size={24} color={theme.colors.primary} />
+            <View style={styles.summaryCopy}>
+              <Text style={styles.summaryTitle}>Arquivos locais</Text>
+              <Text style={styles.summaryText}>{selectedSummary}</Text>
+            </View>
+          </View>
+
+          <View style={styles.resourceGrid}>
+            <ResourceTile
+              icon={<CirclePlay size={24} color={theme.colors.primary} />}
+              label="Player"
+              description="Abrir revisao segura"
+              onPress={() => setActiveDialog("player")}
+            />
+            <ResourceTile
+              icon={<Archive size={24} color={theme.colors.primary} />}
+              label="Cofre"
+              description="Arquivos em trilha"
+              onPress={() => setActiveDialog("cofre")}
+            />
+          </View>
+          <View style={styles.resourceGrid}>
+            <ResourceTile
+              icon={<BookOpen size={24} color={theme.colors.primary} />}
+              label="Funcionamento"
+              description="Privacidade e fluxo"
+              onPress={() => router.push("/funcionamento")}
+            />
+            <ResourceTile
+              icon={<RefreshCw size={24} color={theme.colors.primary} />}
+              label="Atualizar"
+              description="Recarregar cofre"
+              onPress={refreshPackages}
+            />
+          </View>
         </View>
 
-        {showFileRail ? (
+        <BrandedDialog
+          actions={[{ label: "Fechar", tone: "muted" }]}
+          icon={<CirclePlay size={18} color={theme.colors.primary} />}
+          message="Area local para revisar arquivos gravados ou recebidos. Midia real segue bloqueada neste build publico."
+          onClose={() => setActiveDialog(null)}
+          title={selectedPackage ? `Player do pacote ${selectedPackage.id.slice(0, 8)}` : "Player seguro"}
+          visible={activeDialog === "player"}
+        >
+          <EvidencePlayerCard packageRecord={selectedPackage} />
+        </BrandedDialog>
+
+        <BrandedDialog
+          actions={[{ label: "Fechar", tone: "muted" }]}
+          icon={<Archive size={18} color={theme.colors.primary} />}
+          message="Toque no icone do pacote para abrir as acoes em raio: visualizar, compartilhar interno futuro, excluir ou finalizar quando ativo."
+          onClose={() => setActiveDialog(null)}
+          title="Cofre local"
+          visible={activeDialog === "cofre"}
+        >
           <LocalEvidenceRail
-            packages={packages}
-            selectedPackageId={selectedPackageId}
             expandedPackageId={expandedPackageId}
-            onSelectPackage={selectPackage}
-            onToggleActions={togglePackageActions}
-            onShareBlocked={showShareBlocked}
             onDeletePackage={confirmDeleteLocalPackage}
             onFinishPackage={finishPackage}
+            onSelectPackage={selectPackage}
+            onShareBlocked={showShareBlocked}
+            onToggleActions={togglePackageActions}
+            packages={packages}
+            selectedPackageId={selectedPackageId}
           />
-        ) : null}
-      </View>
+        </BrandedDialog>
 
-      <ButtonIcon
-        icon={<RefreshCw size={20} color={theme.colors.primary} />}
-        label="Atualizar cofre"
-        onPress={refreshPackages}
-      />
-    </SafeScreen>
+        <BrandedDialog
+          actions={dialog?.actions ?? []}
+          icon={dialog?.icon}
+          message={dialog?.message}
+          onClose={() => setDialog(null)}
+          title={dialog?.title ?? ""}
+          visible={Boolean(dialog)}
+        />
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  headerButton: {
-    minHeight: 48,
-    paddingHorizontal: theme.spacing.md
+  content: {
+    flex: 1,
+    gap: theme.spacing.md,
+    justifyContent: "center",
+    padding: theme.spacing.lg
   },
-  managerArea: {
+  drawer: {
     backgroundColor: theme.colors.surface,
     borderColor: theme.colors.border,
     borderRadius: theme.radius.md,
     borderWidth: 1,
-    gap: theme.spacing.md,
-    padding: theme.spacing.lg
+    gap: theme.spacing.sm,
+    left: theme.spacing.lg,
+    padding: theme.spacing.md,
+    position: "absolute",
+    right: theme.spacing.lg,
+    top: 84,
+    zIndex: 25,
+    ...theme.shadow
   },
-  managerHeader: {
+  resourceGrid: {
+    flexDirection: "row",
+    gap: theme.spacing.md
+  },
+  safeArea: {
+    backgroundColor: theme.colors.background,
+    flex: 1
+  },
+  shell: {
+    backgroundColor: theme.colors.background,
+    flex: 1,
+    overflow: "hidden"
+  },
+  summary: {
     alignItems: "center",
+    backgroundColor: theme.colors.surface,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
     flexDirection: "row",
     gap: theme.spacing.md,
-    justifyContent: "space-between"
+    padding: theme.spacing.md
   },
-  managerTitleBlock: {
+  summaryCopy: {
     flex: 1,
     gap: theme.spacing.xs
   },
-  playerArea: {
-    gap: theme.spacing.md
-  },
-  sectionHeader: {
-    alignItems: "flex-start",
-    flexDirection: "row",
-    gap: theme.spacing.md,
-    justifyContent: "space-between"
-  },
-  sectionMeta: {
+  summaryText: {
     color: theme.colors.textMuted,
-    flexShrink: 1,
     fontSize: theme.typography.small,
-    lineHeight: 18,
-    textAlign: "right"
+    lineHeight: 18
   },
-  sectionTitle: {
+  summaryTitle: {
     color: theme.colors.text,
-    flex: 1,
-    fontSize: 20,
+    fontSize: 17,
     fontWeight: "900"
   }
 });

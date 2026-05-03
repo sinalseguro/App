@@ -46,7 +46,7 @@ Resolver os bloqueios apontados apos o checkpoint `docs/20_HOME_SOS_FIXA_MODULAR
 
 ### Splash e Android
 
-- O estado real atual usa `expo.splash.image` com `./assets/brand/sinalseguro-symbol.png`.
+- O estado real atual usa `expo.splash.image` com `./assets/brand/sinalseguro-splash-approved.png`.
 - Nao existe plugin `with-android-blank-native-splash` ativo neste checkpoint.
 - O simbolo discreto na splash nativa evita a tela roxa vazia antes da splash React.
 - As regras `secure_store_backup_rules` e `secure_store_data_extraction_rules` vem do `expo-secure-store` e aparecem nos recursos mesclados do Gradle.

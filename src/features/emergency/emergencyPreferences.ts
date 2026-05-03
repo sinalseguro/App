@@ -4,9 +4,10 @@ const LEGACY_DEFAULT_FINISH_CODE_HASH = "e41d64db5703c6440b5c714d57251a845bc0bd2
 const DEFAULT_FINISH_CODE_HASH = "";
 
 export type EmergencyDurationSeconds = 30 | 60 | 180 | 300;
+export type LocalVideoCameraMode = "front" | "back" | "both";
 
 export type EmergencyPreferences = {
-  schemaVersion: 3;
+  schemaVersion: 4;
   defaultDurationSeconds: EmergencyDurationSeconds;
   inAppHoldMs: number;
   locationMode: "ask_when_needed" | "foreground_pre_authorized";
@@ -31,6 +32,12 @@ export type EmergencyPreferences = {
     allowReceiverRelayTo190: boolean;
     legalUse: "judicial_or_protective_procedure_only";
   };
+  localVideoCapture: {
+    status: "public_build_blocked" | "homologation_required";
+    cameraMode: LocalVideoCameraMode;
+    requestOnSos: boolean;
+    requiresExplicitConsent: true;
+  };
   physicalShortcut: {
     kind: "volume_button_long_press";
     holdMs: number;
@@ -44,7 +51,7 @@ const PREFERENCES_KEY = "sinalseguro.emergency-preferences.v1";
 export const durationOptions: EmergencyDurationSeconds[] = [30, 60, 180, 300];
 
 export const defaultEmergencyPreferences: EmergencyPreferences = {
-  schemaVersion: 3,
+  schemaVersion: 4,
   defaultDurationSeconds: 60,
   inAppHoldMs: 1800,
   locationMode: "ask_when_needed",
@@ -68,6 +75,12 @@ export const defaultEmergencyPreferences: EmergencyPreferences = {
     allowReceiverEncryptedSave: false,
     allowReceiverRelayTo190: false,
     legalUse: "judicial_or_protective_procedure_only"
+  },
+  localVideoCapture: {
+    status: "public_build_blocked",
+    cameraMode: "front",
+    requestOnSos: false,
+    requiresExplicitConsent: true
   },
   physicalShortcut: {
     kind: "volume_button_long_press",
@@ -114,7 +127,7 @@ export async function getEmergencyPreferences(): Promise<EmergencyPreferences> {
     return {
       ...defaultEmergencyPreferences,
       ...parsed,
-      schemaVersion: 3,
+      schemaVersion: 4,
       defaultDurationSeconds: normalizeDuration(parsed.defaultDurationSeconds),
       finishSafety: {
         ...defaultEmergencyPreferences.finishSafety,
@@ -132,6 +145,17 @@ export async function getEmergencyPreferences(): Promise<EmergencyPreferences> {
         },
         status: "homologation_blocked",
         legalUse: "judicial_or_protective_procedure_only"
+      },
+      localVideoCapture: {
+        ...defaultEmergencyPreferences.localVideoCapture,
+        ...parsed.localVideoCapture,
+        cameraMode:
+          parsed.localVideoCapture?.cameraMode === "back" || parsed.localVideoCapture?.cameraMode === "both"
+            ? parsed.localVideoCapture.cameraMode
+            : defaultEmergencyPreferences.localVideoCapture.cameraMode,
+        requestOnSos: Boolean(parsed.localVideoCapture?.requestOnSos),
+        status: "public_build_blocked",
+        requiresExplicitConsent: true
       },
       physicalShortcut: {
         ...defaultEmergencyPreferences.physicalShortcut,

@@ -11,10 +11,14 @@ const requiredFiles = [
   "app/index.tsx",
   "app/arquivos.tsx",
   "app/convite.tsx",
+  "app/funcionamento.tsx",
+  "src/components/AppTopBar.tsx",
   "src/components/AppLaunchScreen.tsx",
+  "src/components/BrandedDialog.tsx",
   "src/components/EmergencyCallButton.tsx",
   "src/components/EvidencePlayerCard.tsx",
   "src/components/LocalEvidenceRail.tsx",
+  "src/components/ResourceTile.tsx",
   "src/design/tokens.ts",
   "src/components/PanicButton.tsx",
   "src/features/emergency-home/EmergencyCallDock.tsx",
@@ -72,8 +76,8 @@ if (locationCapture.includes(["error", "message"].join("."))) {
 
 const appConfig = await readFile("app.json", "utf8");
 
-if (!appConfig.includes("\"image\": \"./assets/brand/sinalseguro-symbol.png\"")) {
-  throw new Error("Splash nativa precisa exibir o simbolo discreto para evitar tela roxa vazia antes do React.");
+if (!appConfig.includes("\"image\": \"./assets/brand/sinalseguro-splash-approved.png\"")) {
+  throw new Error("Splash nativa precisa usar o lockup aprovado com logo/nome e fundo da identidade visual.");
 }
 
 const launchScreen = await readFile("src/components/AppLaunchScreen.tsx", "utf8");
@@ -113,6 +117,10 @@ if (homeScreen.includes("<SafeScreen") || homeScreen.includes("Rede de apoio dis
   throw new Error("Home de emergencia nao pode usar tela rolavel nem manter titulo/subtitulo duplicados.");
 }
 
+if (homeScreen.includes("Alert.alert") || localFilesScreen.includes("Alert.alert")) {
+  throw new Error("Fluxos criticos da Home e Cofre devem usar modal SinalSeguro, nao Alert nativo.");
+}
+
 if (!homeScreen.includes("showPoliceShortcut={preferences.emergencyPhoneCall.call190ShortcutEnabled}")) {
   throw new Error("Home precisa respeitar preferencia local do atalho 190 configuravel.");
 }
@@ -121,8 +129,9 @@ const emergencyTopBar = await readFile("src/features/emergency-home/EmergencyTop
 const emergencyDrawer = await readFile("src/features/emergency-home/EmergencySettingsDrawer.tsx", "utf8");
 const emergencyCallTarget = await readFile("src/features/emergency-home/EmergencyCallTarget.ts", "utf8");
 const emergencyCallDock = await readFile("src/features/emergency-home/EmergencyCallDock.tsx", "utf8");
+const appTopBar = await readFile("src/components/AppTopBar.tsx", "utf8");
 
-if (!emergencyTopBar.includes("home-settings-toggle") || !emergencyDrawer.includes("Cofre e player")) {
+if (!appTopBar.includes("home-settings-toggle") || !emergencyDrawer.includes("Cofre e player")) {
   throw new Error("Home precisa manter engrenagem retratil com acesso a cofre/player, anjos, convites e configuracoes.");
 }
 

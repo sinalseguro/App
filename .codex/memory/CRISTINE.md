@@ -148,18 +148,36 @@ Estado em 2026-05-02:
 - gates finais aprovados: `typecheck`, `lint`, `test`, `release:android:readiness`, `git diff --check` e `assembleDebug`;
 - servidor web respondeu em `http://localhost:8081`;
 - ADB nao tinha aparelho conectado no fechamento desta rodada, portanto nao houve reinstalacao fisica adicional.
+- em 2026-05-03, a rodada de comentarios do navegador foi aplicada sob supervisao Tarcila/Norman;
+- splash nativa foi substituida por `assets/brand/sinalseguro-splash-approved.png`, com simbolo grande, nome e fundo institucional;
+- `AppTopBar`, `BrandedDialog` e `ResourceTile` foram criados como componentes compartilhados;
+- Home manteve superficie fixa, agora com topo de logo real e drawer com ajuda/opcoes de modo;
+- `Alert.alert` foi removido dos fluxos criticos de Home e Cofre;
+- SOS ganhou profundidade 3D discreta, estado pressionado e particulas ativas mais altas/lentas;
+- Cofre local foi refatorado para tela fixa por icones, com Player e Cofre em modais;
+- dados tecnicos do cofre passaram para menu sanduiche;
+- pagina `Como funciona` foi criada e ligada ao Cofre;
+- configuracoes ganharam preparo de preferencia para video local futuro com camera frontal, traseira ou ambas, sem solicitar permissao real no build publico;
+- screenshot set salvo em `docs/assets/mobile/2026-05-03-*.png`;
+- relatorio criado em `docs/22_REFINO_IDENTIDADE_MODAL_COFRE_SPLASH.md`;
+- especificacao viva criada em `docs/23_ESPECIFICACAO_DESENVOLVIMENTO_APP.md`;
+- Browser Use validou Home, menu, modais, Cofre e Funcionamento em `http://localhost:8081`;
+- APK debug reconstruido com SHA-256 `481d9aca5dd1cabb36520440f7959c71b542af5619803aadbe5170164b300e70`;
+- `release:android:readiness` ficou bloqueado apenas pelo Node local `20.16.0`; exige `>=22.13.0`;
+- ADB continuou sem dispositivo visivel apos restart do servidor; instalacao fisica ficou pendente;
+- handoff para portais registrado para sessao `019ddfad-a214-72a3-9b50-ba204e1c9351`.
 
 Proximas acoes:
 
-1. Rodar gates finais e salvar checkpoint `docs/21`.
-2. Validar Home fixa/SOS ativo em aparelho menor quando disponivel.
-3. Validar encerramento manual do SOS ativo no Android e no browser.
-4. Gerar build preview/release com bundle JS embarcado para validacao sem Metro.
-5. Publicar release interna 3 se Roberto aprovar o layout validado.
+1. Reinstalar APK debug no Android quando `adb devices -l` mostrar o aparelho.
+2. Validar splash nativa no Android reinstalado.
+3. Validar Home, SOS ativo/encerramento, drawer, Cofre, Player e Funcionamento no Android fisico.
+4. Tarcila/Myers aprovarem ou pedirem ajustes finais.
+5. Gerar release interna 3 somente apos validacao fisica.
 6. Atualizar portal/manifestos para release interna 3 apos APK assinado.
-7. Preparar TestFlight/App Store para iOS.
-8. Consolidar `alerts` e `emergency` em uma outbox unica criptografada e idempotente.
-9. Conectar mock de API ao contrato OpenAPI.
-10. Implementar adaptador de envio real apenas depois de auth, consentimento, retencao e revisao Schneier/Doneda.
-11. Evoluir Fase 1 com componentes compartilhados revisados por Norman/Tarcila.
+7. Acionar agentes dos portais na sessao `019ddfad-a214-72a3-9b50-ba204e1c9351`.
+8. Preparar TestFlight/App Store para iOS.
+9. Consolidar `alerts` e `emergency` em uma outbox unica criptografada e idempotente.
+10. Conectar mock de API ao contrato OpenAPI.
+11. Implementar adaptador de envio real apenas depois de auth, consentimento, retencao e revisao Schneier/Doneda.
 12. Manter `origin` usando `github-sinalseguro-admin` para pushes do repo App.

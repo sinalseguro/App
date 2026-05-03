@@ -4,6 +4,7 @@ import * as Location from "expo-location";
 import * as Crypto from "expo-crypto";
 import {
   Clock,
+  Camera,
   LockKeyhole,
   LocateFixed,
   MapPin,
@@ -12,6 +13,7 @@ import {
   RefreshCw,
   Settings as SettingsIcon,
   ShieldCheck,
+  SwitchCamera,
   Video,
   Volume2
 } from "lucide-react-native";
@@ -26,6 +28,7 @@ import {
   EmergencyPreferences,
   formatDuration,
   getEmergencyPreferences,
+  LocalVideoCameraMode,
   saveEmergencyPreferences
 } from "@/features/emergency/emergencyPreferences";
 import { getLocationPermissionReadiness, prepareForegroundLocationPermission } from "@/features/emergency/locationCapture";
@@ -181,6 +184,41 @@ export default function SettingsScreen() {
       enabled
         ? "Escopo solicitado para contrato futuro. Streaming real segue bloqueado neste build publico."
         : "Escopo removido das preferencias locais."
+    );
+  }
+
+  async function updateCameraMode(cameraMode: LocalVideoCameraMode) {
+    if (!preferences) return;
+
+    await updatePreferences(
+      {
+        ...preferences,
+        localVideoCapture: {
+          ...preferences.localVideoCapture,
+          cameraMode,
+          status: "public_build_blocked"
+        }
+      },
+      "Preferencia de camera registrada para homologacao. O build publico nao solicita camera nem microfone."
+    );
+  }
+
+  async function toggleLocalVideoRequest() {
+    if (!preferences) return;
+
+    const requestOnSos = !preferences.localVideoCapture.requestOnSos;
+    await updatePreferences(
+      {
+        ...preferences,
+        localVideoCapture: {
+          ...preferences.localVideoCapture,
+          requestOnSos,
+          status: "public_build_blocked"
+        }
+      },
+      requestOnSos
+        ? "Solicitacao futura marcada. Video local real segue bloqueado ate RIPD/DPIA, termos e homologacao controlada."
+        : "Solicitacao futura de video local desmarcada."
     );
   }
 
@@ -341,6 +379,41 @@ export default function SettingsScreen() {
           }
           onPress={() => toggleStreamScope("locationLive")}
         />
+      </View>
+
+      <View style={styles.card}>
+        <View style={styles.cardHeader}>
+          <Camera size={20} color={theme.colors.primary} />
+          <Text style={styles.cardTitle}>Video local em homologacao</Text>
+        </View>
+        <Text style={styles.text}>
+          Prepara a preferencia para o SOS gravar video local criptografado quando a trilha juridica e tecnica liberar. Este build publico nao pede permissao de camera ou microfone.
+        </Text>
+        <ButtonIcon
+          icon={<Video size={18} color={theme.colors.primary} />}
+          label={preferences?.localVideoCapture.requestOnSos ? "Solicitacao marcada" : "Solicitar video no SOS futuro"}
+          onPress={toggleLocalVideoRequest}
+        />
+        <View style={styles.optionGrid}>
+          <ButtonIcon
+            icon={<Camera size={18} color={theme.colors.primary} />}
+            label="Frontal"
+            onPress={() => updateCameraMode("front")}
+            style={preferences?.localVideoCapture.cameraMode === "front" ? styles.selectedOption : undefined}
+          />
+          <ButtonIcon
+            icon={<Camera size={18} color={theme.colors.primary} />}
+            label="Traseira"
+            onPress={() => updateCameraMode("back")}
+            style={preferences?.localVideoCapture.cameraMode === "back" ? styles.selectedOption : undefined}
+          />
+          <ButtonIcon
+            icon={<SwitchCamera size={18} color={theme.colors.primary} />}
+            label="Ambas"
+            onPress={() => updateCameraMode("both")}
+            style={preferences?.localVideoCapture.cameraMode === "both" ? styles.selectedOption : undefined}
+          />
+        </View>
       </View>
 
       <PermissionGate

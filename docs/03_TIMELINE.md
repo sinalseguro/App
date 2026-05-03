@@ -44,6 +44,54 @@ Proximo passo operacional:
 - Gerar APK Android assinado e publicar em GitHub Releases quando a permissao estiver resolvida.
 - Preparar TestFlight/App Store para iOS com conta Apple e documentos de privacidade.
 
+## 2026-05-03 - Refino de identidade, modais, Cofre fixo e splash aprovada
+
+Status: implementado e validado no Browser Use; APK debug reconstruido; instalacao Android pendente por ausencia de dispositivo no ADB.
+
+Especialistas acionados:
+
+- Tarcila/Norman: identidade visual, topo com logo, splash, SOS 3D discreto, modais e Cofre iconografico.
+- Ada/Hedy/Margaret: arquitetura React Native, tela fixa, componentes reutilizaveis e APK debug.
+- Schneier/Doneda/Myers: bloqueio de midia real, permissoes, cofre, confirmacoes e gates.
+
+Decisoes:
+
+- Splash nativa passa a usar `assets/brand/sinalseguro-splash-approved.png`.
+- Topos internos usam `AppTopBar` com logo, contexto, voltar e menu.
+- Fluxos criticos deixam de usar `Alert.alert` e passam a usar `BrandedDialog`.
+- Cofre local vira tela fixa por icones e abre Player/Cofre em modal.
+- Dados tecnicos do Cofre ficam no menu sanduiche.
+- Pagina `Como funciona` criada para explicar fluxo, privacidade e limites.
+- Preferencia de camera frontal/traseira/ambas foi preparada somente como homologacao; build publico segue sem `CAMERA` e `RECORD_AUDIO`.
+
+Evidencias:
+
+- `docs/assets/mobile/2026-05-03-home-sos.png`;
+- `docs/assets/mobile/2026-05-03-home-menu.png`;
+- `docs/assets/mobile/2026-05-03-cofre-fixo.png`;
+- `docs/assets/mobile/2026-05-03-cofre-player-modal.png`;
+- `docs/assets/mobile/2026-05-03-funcionamento.png`;
+- relatorio: `docs/22_REFINO_IDENTIDADE_MODAL_COFRE_SPLASH.md`;
+- especificacao viva: `docs/23_ESPECIFICACAO_DESENVOLVIMENTO_APP.md`.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado.
+- `npm run lint`: aprovado.
+- `npm test`: aprovado.
+- Browser Use em `http://localhost:8081/`: aprovado.
+- `./gradlew assembleDebug`: aprovado.
+
+Android:
+
+- APK debug: `android/app/build/outputs/apk/debug/app-debug.apk`.
+- SHA-256: `481d9aca5dd1cabb36520440f7959c71b542af5619803aadbe5170164b300e70`.
+- `adb devices -l`: sem dispositivos conectados; reinstalacao fisica ficou pendente.
+
+Handoff:
+
+- Agentes dos portais devem usar este checkpoint e a sessao `019ddfad-a214-72a3-9b50-ba204e1c9351` para refatorar conteudo publico com foco no app, gratuidade, privacidade, cofre e botao SOS.
+
 ## 2026-05-02 - Acesso GitHub resolvido
 
 Status: concluido.
@@ -303,7 +351,7 @@ Especialistas acionados:
 Decisoes:
 
 - splash nativa Android remove a logo horizontal antiga; decisao posterior substituiu o drawable transparente pelo simbolo discreto aprovado;
-- nao ha plugin blank ativo no estado vigente; `app.json` define a splash nativa com `sinalseguro-symbol.png`;
+- nao ha plugin blank ativo no estado vigente; `app.json` define a splash nativa com `sinalseguro-splash-approved.png`;
 - pacote finalizado fica em `recorded_local`, sem promessa de fila/entrega;
 - `consentSnapshot.sharing` passa a `blocked_until_contract_backend_audit`;
 - contatos mock nao entram como autorizados no pacote de emergencia;

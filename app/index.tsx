@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import { router, useFocusEffect } from "expo-router";
-import { Alert, Linking, Modal, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import { LockKeyhole, X } from "lucide-react-native";
+import { Image, Linking, Platform, StyleSheet, Text, TextInput, View } from "react-native";
+import { Activity, HelpCircle, LockKeyhole, PhoneCall } from "lucide-react-native";
 import * as Crypto from "expo-crypto";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ButtonIcon } from "@/components/ButtonIcon";
+import { BrandedDialog, BrandedDialogAction } from "@/components/BrandedDialog";
 import { PanicButton } from "@/components/PanicButton";
 import { theme } from "@/design/theme";
 import { EmergencyCallDock } from "@/features/emergency-home/EmergencyCallDock";
@@ -26,6 +26,15 @@ import {
   getEmergencyPreferences
 } from "@/features/emergency/emergencyPreferences";
 
+type HomeDialog = {
+  title: string;
+  message: string;
+  icon?: ReactNode;
+  actions: BrandedDialogAction[];
+};
+
+const brandSymbol = require("../assets/brand/sinalseguro-symbol.png");
+
 export default function HomeScreen() {
   const [outboxCount, setOutboxCount] = useState(0);
   const [activePackageId, setActivePackageId] = useState<string | null>(null);
@@ -34,6 +43,7 @@ export default function HomeScreen() {
   const [finishCodeInput, setFinishCodeInput] = useState("");
   const [finishConfirmationOpen, setFinishConfirmationOpen] = useState(false);
   const [finishError, setFinishError] = useState("");
+  const [dialog, setDialog] = useState<HomeDialog | null>(null);
   const [recordingStatus, setRecordingStatus] = useState(
     "Pronto para preservar um chamado local com horario, consentimento e localizacao pontual autorizada."
   );
@@ -51,20 +61,43 @@ export default function HomeScreen() {
   }
 
   function confirmEmergencyCall(target: EmergencyCallTarget) {
-    Alert.alert(
-      `Ligar para ${target.description}?`,
-      "O SinalSeguro abre o discador do telefone. O atendimento e a ligacao continuam pelos canais oficiais.",
-      [
-        { text: "Cancelar", style: "cancel" },
+    setDialog({
+      title: `Ligar para ${target.description}?`,
+      message: "O SinalSeguro abre o discador do telefone. O atendimento e a ligacao continuam pelos canais oficiais.",
+      icon: <PhoneCall size={18} color={theme.colors.primary} />,
+      actions: [
+        { label: "Cancelar", tone: "muted" },
         {
-          text: "Ligar",
-          style: "default",
+          label: "Ligar",
           onPress: () => {
             void Linking.openURL(target.callUri);
           }
         }
       ]
-    );
+    });
+  }
+
+  function openModeHelp() {
+    setDialog({
+      title: "Modo discreto",
+      message:
+        "A tela principal reduz textos sensiveis e prioriza o gesto do SOS, contatos oficiais e acesso rapido ao cofre. O modo nao oculta gravacoes nem burla regras do sistema.",
+      icon: <HelpCircle size={18} color={theme.colors.primary} />,
+      actions: [{ label: "Entendi" }]
+    });
+  }
+
+  function openModeOptions() {
+    setDialog({
+      title: "Opcoes de modo",
+      message:
+        "Neste MVP o modo padrao e discreto. Outros modos dependem de testes com usuarias, revisao juridica e criterios de loja antes de virar configuracao publica.",
+      icon: <Activity size={18} color={theme.colors.primary} />,
+      actions: [
+        { label: "Manter discreto" },
+        { label: "Ver configuracoes", tone: "muted", onPress: () => router.push("/configuracoes") }
+      ]
+    });
   }
 
   useFocusEffect(
@@ -133,10 +166,13 @@ export default function HomeScreen() {
     } catch {
       setActivePackageId(null);
       setRecordingStatus("Falha controlada ao preservar o chamado local. Tente novamente e use os canais oficiais.");
-      Alert.alert(
-        "Chamado nao preservado",
-        "Nao foi possivel salvar o pacote local com seguranca neste dispositivo. Use 190, 193 ou 192 em risco imediato."
-      );
+      setDialog({
+        title: "Chamado nao preservado",
+        message:
+          "Nao foi possivel salvar o pacote local com seguranca neste dispositivo. Use 190, 193 ou 192 em risco imediato.",
+        icon: <LockKeyhole size={18} color={theme.colors.danger} />,
+        actions: [{ label: "Entendi", tone: "danger" }]
+      });
     }
   }
 
@@ -151,20 +187,21 @@ export default function HomeScreen() {
       return;
     }
 
-    Alert.alert(
-      "Encerrar chamado ativo?",
-      "O pacote sera encerrado e preservado no cofre local deste dispositivo. Nenhuma evidencia sera apagada.",
-      [
-        { text: "Cancelar", style: "cancel" },
+    setDialog({
+      title: "Encerrar chamado ativo?",
+      message: "O pacote sera encerrado e preservado no cofre local deste dispositivo. Nenhuma evidencia sera apagada.",
+      icon: <LockKeyhole size={18} color={theme.colors.primary} />,
+      actions: [
+        { label: "Cancelar", tone: "muted" },
         {
-          text: "Encerrar",
-          style: "destructive",
+          label: "Encerrar",
+          tone: "danger",
           onPress: () => {
             void handleFinishActiveCall();
           }
         }
       ]
-    );
+    });
   }
 
   async function handleFinishActiveCall() {
@@ -215,6 +252,8 @@ export default function HomeScreen() {
         {menuOpen ? (
           <EmergencySettingsDrawer
             active={Boolean(activePackageId)}
+            onOpenModeHelp={openModeHelp}
+            onOpenModeOptions={openModeOptions}
             onNavigate={openRoute}
             outboxCount={outboxCount}
             recordingStatus={recordingStatus}
@@ -222,6 +261,9 @@ export default function HomeScreen() {
         ) : null}
 
         <View style={styles.emergencySurface}>
+          <View pointerEvents="none" style={styles.watermarkSlot}>
+            <Image accessibilityIgnoresInvertColors source={brandSymbol} style={styles.surfaceWatermark} />
+          </View>
           <View style={styles.panicStage}>
             <PanicButton
               active={Boolean(activePackageId)}
@@ -237,55 +279,50 @@ export default function HomeScreen() {
           />
         </View>
 
-        <Modal
-          animationType="fade"
-          onRequestClose={() => setFinishConfirmationOpen(false)}
-          transparent
+        <BrandedDialog
+          actions={[
+            {
+              label: "Manter ativo",
+              tone: "muted",
+              onPress: () => setFinishConfirmationOpen(false)
+            },
+            {
+              autoClose: false,
+              label: "Encerrar chamado",
+              tone: "danger",
+              onPress: () => {
+                void confirmFinishWithCode();
+              }
+            }
+          ]}
+          icon={<LockKeyhole size={18} color={theme.colors.primary} />}
+          message="O codigo de seguranca impede encerramento nao autorizado caso outra pessoa tome o aparelho."
+          onClose={() => setFinishConfirmationOpen(false)}
+          title="Confirmar encerramento"
           visible={finishConfirmationOpen}
         >
-          <View style={styles.modalBackdrop}>
-            <View style={styles.finishModal}>
-              <View style={styles.finishHeader}>
-                <LockKeyhole size={22} color={theme.colors.primary} />
-                <Text style={styles.finishTitle}>Confirmar encerramento</Text>
-                <Pressable
-                  accessibilityLabel="Cancelar encerramento"
-                  accessibilityRole="button"
-                  onPress={() => setFinishConfirmationOpen(false)}
-                  style={styles.closeButton}
-                >
-                  <X size={18} color={theme.colors.textMuted} />
-                </Pressable>
-              </View>
-              <Text style={styles.finishText}>
-                O codigo de seguranca impede encerramento nao autorizado caso outra pessoa tome o aparelho.
-              </Text>
-              <TextInput
-                accessibilityLabel="Codigo para encerrar chamado"
-                autoCapitalize="none"
-                autoCorrect={false}
-                keyboardType="number-pad"
-                onChangeText={setFinishCodeInput}
-                placeholder="Codigo de encerramento"
-                placeholderTextColor={theme.colors.textMuted}
-                secureTextEntry
-                style={styles.codeInput}
-                value={finishCodeInput}
-              />
-              {finishError ? <Text style={styles.finishError}>{finishError}</Text> : null}
-              <ButtonIcon
-                icon={<LockKeyhole size={20} color={theme.colors.danger} />}
-                label="Encerrar chamado"
-                onPress={confirmFinishWithCode}
-              />
-              <ButtonIcon
-                icon={<X size={20} color={theme.colors.primary} />}
-                label="Manter ativo"
-                onPress={() => setFinishConfirmationOpen(false)}
-              />
-            </View>
-          </View>
-        </Modal>
+          <TextInput
+            accessibilityLabel="Codigo para encerrar chamado"
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="number-pad"
+            onChangeText={setFinishCodeInput}
+            placeholder="Codigo de encerramento"
+            placeholderTextColor={theme.colors.textMuted}
+            secureTextEntry
+            style={styles.codeInput}
+            value={finishCodeInput}
+          />
+          {finishError ? <Text style={styles.finishError}>{finishError}</Text> : null}
+        </BrandedDialog>
+        <BrandedDialog
+          actions={dialog?.actions ?? []}
+          icon={dialog?.icon}
+          message={dialog?.message}
+          onClose={() => setDialog(null)}
+          title={dialog?.title ?? ""}
+          visible={Boolean(dialog)}
+        />
       </View>
     </SafeAreaView>
   );
@@ -339,37 +376,16 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     lineHeight: 18
   },
-  finishHeader: {
-    alignItems: "center",
-    flexDirection: "row",
-    gap: theme.spacing.sm
-  },
-  finishModal: {
-    backgroundColor: theme.colors.surface,
-    borderColor: theme.colors.border,
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    gap: theme.spacing.md,
-    maxWidth: 420,
-    padding: theme.spacing.lg,
+  surfaceWatermark: {
+    height: "100%",
+    opacity: 0.05,
     width: "100%"
   },
-  finishText: {
-    color: theme.colors.textMuted,
-    fontSize: theme.typography.body,
-    lineHeight: 21
-  },
-  finishTitle: {
-    color: theme.colors.text,
-    flex: 1,
-    fontSize: 18,
-    fontWeight: "900"
-  },
-  modalBackdrop: {
-    alignItems: "center",
-    backgroundColor: "rgba(18, 10, 32, 0.78)",
-    flex: 1,
-    justifyContent: "center",
-    padding: theme.spacing.xl
+  watermarkSlot: {
+    height: "58%",
+    left: "21%",
+    position: "absolute",
+    top: "12%",
+    width: "58%"
   }
 });
