@@ -118,6 +118,14 @@ if (!panicButton.includes("width: \"75%\"") || !panicButton.includes("aspectRati
   throw new Error("Botao SOS precisa ocupar area responsiva de destaque na home.");
 }
 
+if (
+  !panicButton.includes("CircularHoldProgress") ||
+  !panicButton.includes("strokeDashoffset") ||
+  !panicButton.includes("translate(100 0) scale(-1 1)")
+) {
+  throw new Error("Botao SOS precisa usar progresso circular horario para acionar e anti-horario para encerrar.");
+}
+
 const homeScreen = await readFile("app/index.tsx", "utf8");
 
 if (homeScreen.includes("<SafeScreen") || homeScreen.includes("Rede de apoio discreta")) {
@@ -184,6 +192,10 @@ if (secureStorage.includes("sessionStorage") || !secureStorage.includes("Platfor
   throw new Error("SecureStore web precisa ser simulador volatil em memoria, sem sessionStorage/localStorage.");
 }
 
+if (!secureStorage.includes("nativeSecretKey") || !secureStorage.includes("nativeSecureStoreAllowedKey")) {
+  throw new Error("SecureStore nativo precisa normalizar chaves para evitar caracteres invalidos no Android.");
+}
+
 if (!emergencyRecorder.includes("activeStartPromise") || !emergencyRecorder.includes("Ja existe chamado local ativo")) {
   throw new Error("Servico de emergencia precisa impor singleton/idempotencia para chamado ativo local.");
 }
@@ -193,6 +205,15 @@ if (
   !emergencyMediaRecorder.includes("preserveLocalVideoAsset")
 ) {
   throw new Error("Encerramento manual do SOS nao pode descartar video antes de anexar ao cofre.");
+}
+
+if (
+  !emergencyMediaRecorder.includes("requestedCameraMode === \"both\"") ||
+  !emergencyMediaRecorder.includes("frontCameraRef") ||
+  !emergencyMediaRecorder.includes("backCameraRef") ||
+  !emergencyMediaRecorder.includes("Captura dupla limitada pelo aparelho")
+) {
+  throw new Error("Midia privada precisa configurar frontal, traseira e tentativa de duas cameras com fallback seguro.");
 }
 
 if (!mediaCapture.includes("EncodingType.Base64") || !mediaCapture.includes("deleteAsync(sourceUri")) {

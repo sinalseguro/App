@@ -79,6 +79,34 @@ Validacoes:
 - `npm run typecheck`: aprovado.
 - `npm run lint`: aprovado.
 - `npm test`: aprovado.
+
+## 2026-05-03 - Ajuste prioritario do anel SOS e cameras
+
+Status: implementado, build privado gerado e instalado no Android.
+
+Especialistas acionados:
+
+- Tarcila/Norman: anel de progresso dentro da circunferencia visual do botao SOS.
+- Ada/Hedy: configuracao frontal/traseira/duas cameras com fallback tecnico.
+- Myers: gates locais, instalacao e cold start no Android.
+- Cristine/Knuth: memoria viva e documentacao.
+
+Decisoes:
+
+- O progresso do gesto usa camada SVG recortada pela propria circunferencia do botao, sem anel externo.
+- O acionamento permanece em sentido horario; o encerramento usa sentido anti-horario.
+- A opcao `Duas cameras` tenta captura dupla no build privado; se a plataforma bloquear, tenta frontal e depois traseira antes de seguir sem video.
+- O card `Midia` em Configuracoes mostra a camera selecionada.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado.
+- `npm test`: aprovado.
+- `npm run lint`: aprovado.
+- `npm run build:android:private`: aprovado.
+- APK instalado no Android `192.168.0.4:5555`: `Success`.
+- Cold start: `TotalTime: 3442`, sem erro fatal filtrado.
+- Browser simulator aberto em `http://localhost:8081/`.
 - `npm run private:android:readiness`: aprovado como build privado condicionado.
 - `npm run build:android:private`: `BUILD SUCCESSFUL`.
 - `adb install -r`: `Success` no Android `23129RA5FL` via `192.168.0.4:5555`.
@@ -665,8 +693,9 @@ Decisoes:
 
 - O topo usa `sinalseguro-symbol.png` como logomarca sem texto; o nome `SinalSeguro` continua como texto da UI para contraste.
 - O SOS ativo nao usa mais halo/glow verde; o feedback visual segue magenta/rosa da identidade visual.
+- O anel de progresso foi ajustado para rodar na circunferencia do botao SOS, sem escapar da borda em telas responsivas.
 - A gravacao solicita permissao de camera/microfone antes de esperar `CameraView.onCameraReady`.
-- `Ambas (homologar)` continua disponivel como preferencia, mas o build privado grava uma camera por acionamento e registra `requestedCameraMode` para auditoria tecnica.
+- `Duas cameras` continua disponivel como preferencia de homologacao; o build privado tenta captura dupla e registra `requestedCameraMode` para auditoria tecnica quando houver fallback.
 - O Player usa progresso real do `expo-video` quando ha arquivo local.
 
 Validacoes:

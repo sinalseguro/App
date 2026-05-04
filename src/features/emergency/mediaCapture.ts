@@ -34,7 +34,7 @@ export async function preserveLocalVideoAsset({
   await FileSystem.makeDirectoryAsync(MEDIA_DIRECTORY, { intermediates: true });
 
   const safeTimestamp = completedAt.replace(/[:.]/g, "-");
-  const fileName = `${packageId}-${safeTimestamp}.mp4`;
+  const fileName = `${packageId}-${cameraMode}-${safeTimestamp}.mp4`;
   const destinationUri = `${MEDIA_DIRECTORY}${fileName}`;
   await FileSystem.copyAsync({ from: sourceUri, to: destinationUri });
   if (sourceUri !== destinationUri) {

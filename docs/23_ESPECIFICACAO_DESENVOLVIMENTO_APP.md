@@ -70,7 +70,8 @@ Fonte de verdade operacional: este repositorio, `AGENTS.md`, `.codex/AGENTS.md` 
 
 - Build publico continua sem transmissao, stream, P2P, upload e compartilhamento externo de midia.
 - Build privado de homologacao local pode solicitar `CAMERA` e `RECORD_AUDIO` para gravar video/audio no sandbox privado do app quando a usuaria autorizar.
-- Preferencias de camera frontal/traseira/ambas determinam a proxima gravacao local do SOS.
+- Preferencias de camera frontal/traseira/duas cameras determinam a proxima gravacao local do SOS.
+- `Duas cameras` e modo de homologacao: tenta frontal e traseira simultaneamente, com fallback automatico para camera unica quando Android/Expo ou o aparelho bloquear captura dupla.
 - Video/audio local exigem permissao explicita do sistema, indicador discreto do app, aceite local de termos e acesso pelo cofre/player.
 - A transmissao para anjos, API, P2P ou autoridade exige RIPD/DPIA, contrato, consentimento versionado, criptografia por envelope, hashes, RBAC e auditoria.
 - Streaming WebRTC/P2P fica futuro/best-effort, nunca promessa de emergencia.
@@ -85,6 +86,13 @@ Fonte de verdade operacional: este repositorio, `AGENTS.md`, `.codex/AGENTS.md` 
 - O hash SHA-256 do asset de video e calculado sobre o conteudo preservado em base64 para detectar alteracao do arquivo no cofre local.
 - Criptografia por envelope e chaves relacionadas a usuarios autorizados entram na etapa de backend/homologacao controlada.
 - Logs nao podem conter coordenadas completas, tokens, payloads sensiveis, chaves, audio, video ou relatos.
+
+## Botao SOS
+
+- O botao SOS ocupa a area central da Home e usa pressao longa para acionar ou encerrar.
+- O progresso do gesto e circular, discreto e preso a circunferencia do proprio botao.
+- Acionamento progride no sentido horario; encerramento progride no sentido anti-horario.
+- O anel nao deve sair da borda visual do botao em Android, iOS ou web responsivo.
 
 ## Permissoes
 

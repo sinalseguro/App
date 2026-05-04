@@ -14,8 +14,8 @@ Habilitar o recurso central de gravacao local no fluxo de SOS para validacao pri
 - `CAMERA` e `RECORD_AUDIO` no APK privado.
 - Permissao explicita do Android antes da primeira gravacao.
 - Gravacao local de video/audio ao acionar o SOS.
-- Configuracao local de camera frontal ou traseira para a proxima gravacao.
-- Opcao `Ambas (homologar)` registra a preferencia, mas captura dupla simultanea depende de modulo nativo futuro.
+- Configuracao local de camera frontal, traseira ou duas cameras para a proxima gravacao.
+- Opcao `Duas cameras` tenta captura frontal e traseira no build privado; se Android/Expo ou o aparelho bloquear captura dupla, o app preserva a camera disponivel e registra fallback tecnico no pacote.
 - Tempo de gravacao configuravel: `Ilimitado`, `1min`, `5min`, `15min`, `30min`, `60min`.
 - Encerramento manual do chamado pelo SOS ativo ou Cofre.
 - Preservacao do video no sandbox privado do app.
@@ -61,8 +61,10 @@ Habilitar o recurso central de gravacao local no fluxo de SOS para validacao pri
 
 - Tarcila ajustou o topo para usar somente o simbolo da marca como imagem; o nome `SinalSeguro` fica como texto de interface para contraste e responsividade.
 - O estado ativo do SOS deixou de usar glow/halo verde. O feedback ativo agora segue a paleta magenta/rosa da identidade visual.
+- O anel de progresso do SOS foi preso a uma camada SVG recortada pela propria circunferencia do botao, discreto, responsivo, horario para acionar e anti-horario para encerrar.
 - `EmergencyMediaRecorder` solicita camera/microfone antes de depender de `CameraView.onCameraReady`, reduzindo risco de o primeiro SOS nao pedir permissao.
-- `cameraMode` no asset preservado registra a camera efetivamente usada (`front` ou `back`) e `requestedCameraMode` preserva a preferencia original quando a usuaria escolhe `Ambas (homologar)`.
+- `cameraMode` no asset preservado registra a camera efetivamente usada (`front` ou `back`) e `requestedCameraMode` preserva a preferencia original quando a usuaria escolhe `Duas cameras`.
+- Quando `Duas cameras` nao fica pronta, o recorder tenta fallback frontal e depois traseiro antes de seguir apenas com metadados.
 - O Player sincroniza a barra de progresso com `expo-video` quando existe arquivo local real.
 
 ## Comandos
@@ -79,7 +81,7 @@ adb install -r android/app/build/outputs/apk/debug/app-debug.apk
 - Resultado: `BUILD SUCCESSFUL`.
 - Artefato: `android/app/build/outputs/apk/debug/app-debug.apk`.
 - Tamanho: 107 MB.
-- SHA-256: `b6993cf4056d9926e582e9579621f4e32f468fc83e1cc66185678652b51df22f`.
+- SHA-256: `2fbef1caee679d901b1e3f6dac2cf3966aa2621d4da8ef1f24d8631b71b99d46`.
 - Dispositivo: Android `23129RA5FL` via ADB Wi-Fi `192.168.0.4:5555`.
 - Instalacao: `adb install -r` com resultado `Success`.
 - Permissoes concedidas para homologacao: camera, microfone, localizacao fina/aproximada e notificacoes.
@@ -89,6 +91,7 @@ adb install -r android/app/build/outputs/apk/debug/app-debug.apk
 - Revalidacao final de abertura: `TotalTime: 5787`, log salvo em `/tmp/sinalseguro-private-media-logcat-final.txt`, sem ocorrencias fatais filtradas.
 - Evidencia final: `docs/assets/mobile/2026-05-03-android-private-media-home-final.png`.
 - Evidencia do topo com simbolo sem texto: `docs/assets/mobile/2026-05-03-android-topo-simbolo.png`.
+- Evidencia apos anel responsivo e selecao de duas cameras: `docs/assets/mobile/2026-05-03-android-ring-camera-home.png`.
 
 Observacao operacional: a injecao de toque por ADB nao acionou os controles nesta rodada. A validacao funcional do gesto SOS com camera, encerramento manual, preservacao do video e reproducao no Player deve ser feita manualmente por Roberto/Myers no aparelho fisico.
 

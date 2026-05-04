@@ -56,6 +56,12 @@ function toPermissionStatus(status: Location.PermissionStatus): PermissionStatus
   return "pendente";
 }
 
+function formatCameraModeLabel(cameraMode: LocalVideoCameraMode) {
+  if (cameraMode === "back") return "Traseira";
+  if (cameraMode === "both") return "Duas cameras";
+  return "Frontal";
+}
+
 export default function SettingsScreen() {
   const [preferences, setPreferences] = useState<EmergencyPreferences | null>(null);
   const [foregroundStatus, setForegroundStatus] = useState<PermissionStatusText>("pendente");
@@ -245,12 +251,7 @@ export default function SettingsScreen() {
   async function updateCameraMode(cameraMode: LocalVideoCameraMode) {
     if (!preferences) return;
 
-    const cameraLabel =
-      cameraMode === "front"
-        ? "frontal"
-        : cameraMode === "back"
-          ? "traseira"
-          : "ambas solicitadas para homologacao nativa";
+    const cameraLabel = formatCameraModeLabel(cameraMode).toLowerCase();
 
     await updatePreferences(
       {
@@ -261,7 +262,9 @@ export default function SettingsScreen() {
           status: "enabled_local"
         }
       },
-      `Camera ${cameraLabel} definida para a proxima gravacao local.`
+      cameraMode === "both"
+        ? "Duas cameras selecionadas. O build privado tenta frontal e traseira; se o aparelho bloquear captura dupla, preserva a camera disponivel."
+        : `Camera ${cameraLabel} definida para a proxima gravacao local.`
     );
   }
 
@@ -416,7 +419,11 @@ export default function SettingsScreen() {
             <ResourceTile
               icon={<Video size={24} color={theme.colors.primary} />}
               label="Midia"
-              description={preferences?.localVideoCapture.requestOnSos ? "Ativa local" : "Desativada"}
+              description={
+                preferences?.localVideoCapture.requestOnSos
+                  ? formatCameraModeLabel(preferences.localVideoCapture.cameraMode)
+                  : "Desativada"
+              }
               onPress={() => setActivePanel("video")}
             />
           </View>
@@ -625,8 +632,13 @@ export default function SettingsScreen() {
             <View style={styles.dialogStack}>
               <Text style={styles.dialogText}>
                 Habilita o SOS para gravar video e audio localmente no sandbox privado do app. O envio para anjos/API
-                continua bloqueado ate backend, contrato, chaves e auditoria. A opcao ambas registra a preferencia, mas
-                captura dupla simultanea exige modulo nativo homologado.
+                continua bloqueado ate backend, contrato, chaves e auditoria. Selecione frontal, traseira ou duas
+                cameras para a proxima gravacao do SOS.
+              </Text>
+              <Text style={styles.dialogHint}>
+                Duas cameras e modo de homologacao: o app tenta frontal e traseira no build privado; se Android/Expo ou o
+                aparelho bloquear captura dupla simultanea, o pacote preserva a camera que conseguir gravar e registra o
+                fallback tecnico.
               </Text>
               <ButtonIcon
                 icon={<Video size={18} color={theme.colors.primary} />}
@@ -640,19 +652,19 @@ export default function SettingsScreen() {
               />
               <ButtonIcon
                 icon={<Camera size={18} color={theme.colors.primary} />}
-                label="Camera frontal"
+                label="Usar camera frontal"
                 onPress={() => updateCameraMode("front")}
                 style={preferences?.localVideoCapture.cameraMode === "front" ? styles.selectedOption : undefined}
               />
               <ButtonIcon
                 icon={<Camera size={18} color={theme.colors.primary} />}
-                label="Camera traseira"
+                label="Usar camera traseira"
                 onPress={() => updateCameraMode("back")}
                 style={preferences?.localVideoCapture.cameraMode === "back" ? styles.selectedOption : undefined}
               />
               <ButtonIcon
                 icon={<SwitchCamera size={18} color={theme.colors.primary} />}
-                label="Ambas (homologar)"
+                label="Usar duas cameras"
                 onPress={() => updateCameraMode("both")}
                 style={preferences?.localVideoCapture.cameraMode === "both" ? styles.selectedOption : undefined}
               />
@@ -714,6 +726,17 @@ const styles = StyleSheet.create({
     color: theme.colors.textMuted,
     fontSize: theme.typography.body,
     lineHeight: 22
+  },
+  dialogHint: {
+    backgroundColor: theme.colors.surfaceMuted,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    color: theme.colors.text,
+    fontSize: theme.typography.small,
+    fontWeight: "700",
+    lineHeight: 18,
+    padding: theme.spacing.md
   },
   inlineInfo: {
     alignItems: "flex-start",

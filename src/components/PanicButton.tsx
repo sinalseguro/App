@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
+import Svg, { Circle, G } from "react-native-svg";
 import { theme } from "@/design/theme";
 
 type PanicButtonProps = {
@@ -27,6 +28,58 @@ const particleConfigs: ParticleConfig[] = [
   { delay: 2140, duration: 4400, left: 12, rise: -190, size: 4 },
   { delay: 2460, duration: 3700, left: 66, rise: -260, size: 3 }
 ];
+
+const progressCircleRadius = 49.2;
+const progressCircleCircumference = 2 * Math.PI * progressCircleRadius;
+const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+
+function CircularHoldProgress({
+  active,
+  holding,
+  progress
+}: {
+  active: boolean;
+  holding: boolean;
+  progress: Animated.Value;
+}) {
+  const strokeDashoffset = progress.interpolate({
+    inputRange: [0, 1],
+    outputRange: [progressCircleCircumference, 0]
+  });
+  const rotationTransform = active ? "translate(100 0) scale(-1 1) rotate(-90 50 50)" : "rotate(-90 50 50)";
+
+  if (!holding) return null;
+
+  return (
+    <View pointerEvents="none" style={styles.circularProgressLayer}>
+      <Svg height="100%" style={styles.circularProgressSvg} viewBox="0 0 100 100" width="100%">
+        <Circle
+          cx="50"
+          cy="50"
+          fill="none"
+          r={progressCircleRadius}
+          stroke={theme.colors.accentSoft}
+          strokeOpacity={0.1}
+          strokeWidth={0.75}
+        />
+        <G transform={rotationTransform}>
+          <AnimatedCircle
+            cx="50"
+            cy="50"
+            fill="none"
+            r={progressCircleRadius}
+            stroke={theme.colors.accentSoft}
+            strokeDasharray={`${progressCircleCircumference} ${progressCircleCircumference}`}
+            strokeDashoffset={strokeDashoffset}
+            strokeLinecap="round"
+            strokeOpacity={0.68}
+            strokeWidth={0.85}
+          />
+        </G>
+      </Svg>
+    </View>
+  );
+}
 
 function AnimatedParticle({
   config,
@@ -159,10 +212,6 @@ export function PanicButton({ active = false, label, holdMs, onTrigger }: PanicB
     }, holdMs);
   }
 
-  const progressWidth = progress.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0%", "100%"]
-  });
   const armedGlowOpacity = pulse.interpolate({
     inputRange: [0, 1],
     outputRange: [0.18, 0.42]
@@ -205,6 +254,7 @@ export function PanicButton({ active = false, label, holdMs, onTrigger }: PanicB
             <Animated.View pointerEvents="none" style={[styles.armedRing, { opacity: armedRingOpacity }]} />
           </>
         ) : null}
+        <CircularHoldProgress active={active} holding={holding} progress={progress} />
         <View pointerEvents="none" style={styles.depthLayer} />
         <View pointerEvents="none" style={styles.sheenLayer} />
         {particleValues.map((value, index) => (
@@ -212,9 +262,6 @@ export function PanicButton({ active = false, label, holdMs, onTrigger }: PanicB
         ))}
         <Text style={styles.sos}>{active ? "ATIVO" : "SOS"}</Text>
         <Text style={styles.label}>{holding ? "Continue segurando" : label}</Text>
-        <View style={styles.progressTrack}>
-          <Animated.View style={[styles.progressFill, { width: progressWidth }]} />
-        </View>
       </Pressable>
       <Text style={styles.help} numberOfLines={1}>
         Solte
@@ -264,6 +311,15 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     transform: [{ translateY: 4 }, { scale: 0.985 }]
   },
+  circularProgressLayer: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: theme.radius.pill,
+    overflow: "hidden",
+    zIndex: 6
+  },
+  circularProgressSvg: {
+    ...StyleSheet.absoluteFillObject
+  },
   depthLayer: {
     backgroundColor: "rgba(18, 10, 32, 0.2)",
     borderRadius: theme.radius.pill,
@@ -312,21 +368,6 @@ const styles = StyleSheet.create({
     textShadowColor: "rgba(18, 10, 32, 0.56)",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 4,
-    zIndex: 2
-  },
-  progressFill: {
-    backgroundColor: theme.colors.textOnDark,
-    borderRadius: theme.radius.pill,
-    height: "100%",
-    opacity: 0.86
-  },
-  progressTrack: {
-    backgroundColor: "rgba(255, 255, 255, 0.26)",
-    borderRadius: theme.radius.pill,
-    height: 5,
-    marginTop: theme.spacing.xs,
-    overflow: "hidden",
-    width: "66%",
     zIndex: 2
   },
   sos: {

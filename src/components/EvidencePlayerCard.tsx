@@ -16,7 +16,9 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   const [previewTouched, setPreviewTouched] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
-  const videoAsset = packageRecord?.media.status === "recorded_local" ? packageRecord.media.assets[0] : undefined;
+  const [selectedAssetIndex, setSelectedAssetIndex] = useState(0);
+  const mediaAssets = packageRecord?.media.status === "recorded_local" ? packageRecord.media.assets : [];
+  const videoAsset = mediaAssets[selectedAssetIndex];
   const player = useVideoPlayer(videoAsset?.uri ?? null, (videoPlayer) => {
     videoPlayer.loop = false;
     videoPlayer.muted = false;
@@ -38,7 +40,13 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     setPlaying(false);
     setPreviewTouched(false);
     setProgress(0);
+    setSelectedAssetIndex(0);
   }, [packageRecord?.id]);
+
+  useEffect(() => {
+    setPlaying(false);
+    setProgress(0);
+  }, [selectedAssetIndex]);
 
   useEffect(() => {
     if (!playing || !packageRecord) return;
@@ -131,6 +139,32 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
       </Pressable>
 
       <View style={styles.controlPanel}>
+        {mediaAssets.length > 1 ? (
+          <View style={styles.assetSwitchRow}>
+            {mediaAssets.map((asset, index) => (
+              <Pressable
+                accessibilityLabel={`Selecionar video da camera ${asset.cameraMode === "front" ? "frontal" : "traseira"}`}
+                accessibilityRole="button"
+                accessibilityState={{ selected: selectedAssetIndex === index }}
+                key={asset.id}
+                onPress={() => setSelectedAssetIndex(index)}
+                style={[
+                  styles.assetSwitchButton,
+                  selectedAssetIndex === index && styles.assetSwitchButtonSelected
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.assetSwitchLabel,
+                    selectedAssetIndex === index && styles.assetSwitchLabelSelected
+                  ]}
+                >
+                  {asset.cameraMode === "front" ? "Frontal" : "Traseira"}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        ) : null}
         <View style={styles.timelineHeader}>
           <Text style={styles.timelineLabel}>{hasMedia ? "Linha do tempo local" : "Revisao local do pacote"}</Text>
           <Text style={styles.timelineValue}>{Math.round(progress)}%</Text>
@@ -209,6 +243,33 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
 }
 
 const styles = StyleSheet.create({
+  assetSwitchButton: {
+    alignItems: "center",
+    backgroundColor: theme.colors.surface,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.pill,
+    borderWidth: 1,
+    flex: 1,
+    justifyContent: "center",
+    minHeight: 38,
+    paddingHorizontal: theme.spacing.sm
+  },
+  assetSwitchButtonSelected: {
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary
+  },
+  assetSwitchLabel: {
+    color: theme.colors.primary,
+    fontSize: 12,
+    fontWeight: "900"
+  },
+  assetSwitchLabelSelected: {
+    color: theme.colors.textOnDark
+  },
+  assetSwitchRow: {
+    flexDirection: "row",
+    gap: theme.spacing.sm
+  },
   card: {
     backgroundColor: theme.colors.surface,
     borderColor: theme.colors.border,

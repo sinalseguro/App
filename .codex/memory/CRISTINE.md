@@ -265,8 +265,19 @@ Proximas acoes atualizadas:
 - Tarcila/Norman aprovaram substituir o feedback verde por luz/halo magenta dentro da identidade SinalSeguro.
 - O topo do app agora usa `sinalseguro-symbol.png` como logomarca sem texto; o nome `SinalSeguro` e renderizado como texto responsivo da interface.
 - Ada/Hedy corrigiram o fluxo de permissao: camera e microfone sao solicitados antes de depender do `CameraView.onCameraReady`, reduzindo risco de o primeiro SOS nao iniciar captura.
-- `Video local` em Configuracoes preserva frontal/traseira; `Ambas (homologar)` registra intencao, mas captura dupla simultanea continua pendente de modulo nativo homologado.
+- O anel de progresso do SOS foi preso a circunferencia do botao, com SVG recortado pela propria area circular: horario para acionar e anti-horario para encerrar.
+- `Video local` em Configuracoes preserva frontal/traseira/duas cameras; captura dupla e tentada no build privado e cai automaticamente para frontal/traseira quando a plataforma nao sustentar as duas ao mesmo tempo.
 - O asset local registra `cameraMode` efetivo e `requestedCameraMode` original.
 - Schneier/Myers reforcaram a gestao do Cofre: exclusao de chamado ativo agora e bloqueada no servico, e falha ao remover arquivo local mantem o pacote para retry.
 - Player local sincroniza progresso com `expo-video` quando existe midia real.
 - Gates executados nesta rodada: `typecheck`, `lint`, `test`.
+
+## Memoria viva - 2026-05-03 - Anel SOS e cameras
+
+- Roberto priorizou o anel na circunferencia do botao SOS e a configuracao frontal/traseira/duas cameras.
+- Tarcila/Norman: anel agora fica em camada SVG recortada pela propria area circular do botao, discreto e responsivo.
+- Ada/Hedy: `Duas cameras` tenta captura frontal+traseira; se a plataforma nao deixar as duas prontas, o recorder tenta fallback frontal e depois traseiro.
+- Configuracoes mostra a camera selecionada diretamente no card `Midia`.
+- APK privado reinstalado no Android `192.168.0.4:5555`; SHA-256 `2fbef1caee679d901b1e3f6dac2cf3966aa2621d4da8ef1f24d8631b71b99d46`.
+- Cold start do app instalado: `TotalTime: 3442`; log filtrado sem fatal/RedBox/Exception.
+- Browser simulator ativo em `http://localhost:8081/` para validacao comentada.
