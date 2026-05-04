@@ -92,12 +92,12 @@ Checkpoint tecnico atual:
 APK privado atual com midia local para validacao:
 
 - Caminho: `android/app/build/outputs/apk/debug/app-debug.apk`.
-- SHA-256: `056e41d7e1e91aef10c6763bb094bfe27973693c8c163b222c6f4be2952be67b`.
+- SHA-256: `f5a407ca1937f589f8d1c1f4dc1d2f251e8cf1f7031e59ef76f3ac3373724f15`.
 - Build local: `npm run build:android:private`.
 - Observacao: o aparelho foi reinstalado pelo transporte ADB Wi-Fi ativo `192.168.0.4:5555`; o USB nao apareceu como transporte separado em `adb devices -l` nesta rodada.
 - O APK debug atual embute o bundle JS e desliga o suporte nativo de desenvolvedor apenas neste modo de validacao, abrindo sem Metro, sem `adb reverse` e sem depender de `localhost:8081`.
 - O gate publico `npm run release:android:readiness` fica bloqueado enquanto este workspace contiver a instrumentacao privada de midia (`expo-camera`/`expo-video`). Para loja/publico, usar perfil ou branch sem midia local ate a liberacao juridica.
-- Cold start validado no Android fisico com `TotalTime: 4103`, sem crash fatal no `logcat` filtrado.
+- Cold start validado no Android fisico com `TotalTime: 4487`, sem crash fatal no `logcat` filtrado por PID do app.
 - A validacao de toque SOS/camera permanece manual no aparelho, porque a injecao de toque por ADB nao acionou os controles nesta rodada.
 
 ## Evidencias visuais
@@ -118,6 +118,8 @@ APK privado atual com midia local para validacao:
 | Configuracoes por icones | ![Android Configuracoes](docs/assets/mobile/2026-05-03-android-configuracoes-bundled.png) |
 | Cofre por icones | ![Android Cofre](docs/assets/mobile/2026-05-03-android-cofre-bundled.png) |
 | SOS ativo com localizacao | ![Android SOS ativo](docs/assets/mobile/2026-05-03-android-sos-bundled-pos-localizacao.png) |
+| Anel SOS destacado e Home atual | ![Android anel SOS](docs/assets/mobile/2026-05-03-android-ring-visivel-home.png) |
+| Anel SOS durante pressao longa | ![Android anel SOS em hold](docs/assets/mobile/2026-05-03-android-ring-visivel-hold.png) |
 
 ## Limites
 

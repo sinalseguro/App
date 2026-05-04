@@ -100,7 +100,7 @@ Fluxos validados:
 - abertura do app com Metro ativo;
 - ausencia do splash nativo antigo com logo horizontal no APK reconstruido;
 - Home com `SOS`, `Ligar 190`, `Anjos`, `Cofre` e `Config.`;
-- microcopy do botao SOS ajustado para `Solte`, sem truncamento;
+- registro historico: a microcopy do botao SOS foi ajustada para `Solte` nesta validacao; checkpoint posterior removeu o texto auxiliar da Home;
 - `Cofre local` com player dedicado e metadados resumidos;
 - trilha retratil de arquivos locais;
 - acoes em raio ligadas ao pacote selecionado;

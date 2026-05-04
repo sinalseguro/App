@@ -1,7 +1,7 @@
 import { ReactNode, useCallback, useState } from "react";
 import { router, useFocusEffect } from "expo-router";
 import { Linking, Platform, StyleSheet, Text, TextInput, View } from "react-native";
-import { Activity, HelpCircle, LockKeyhole, PhoneCall } from "lucide-react-native";
+import { LockKeyhole, PhoneCall } from "lucide-react-native";
 import * as Crypto from "expo-crypto";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BrandBackground } from "@/components/BrandBackground";
@@ -31,8 +31,18 @@ type HomeDialog = {
   title: string;
   message: string;
   icon?: ReactNode;
+  children?: ReactNode;
   actions: BrandedDialogAction[];
 };
+
+function CallNumberHero({ target }: { target: EmergencyCallTarget }) {
+  return (
+    <View style={styles.callNumberPanel}>
+      <Text style={styles.callNumber}>{target.number}</Text>
+      <Text style={styles.callService}>{target.description}</Text>
+    </View>
+  );
+}
 
 export default function HomeScreen() {
   const [outboxCount, setOutboxCount] = useState(0);
@@ -61,7 +71,8 @@ export default function HomeScreen() {
   function confirmEmergencyCall(target: EmergencyCallTarget) {
     setDialog({
       title: `Ligar para ${target.description}?`,
-      message: "O SinalSeguro abre o discador do telefone. O atendimento e a ligacao continuam pelos canais oficiais.",
+      message: "",
+      children: <CallNumberHero target={target} />,
       icon: <PhoneCall size={18} color={theme.colors.primary} />,
       actions: [
         { label: "Cancelar", tone: "muted" },
@@ -71,29 +82,6 @@ export default function HomeScreen() {
             void Linking.openURL(target.callUri);
           }
         }
-      ]
-    });
-  }
-
-  function openModeHelp() {
-    setDialog({
-      title: "Modo discreto",
-      message:
-        "A tela principal reduz textos sensiveis e prioriza o gesto do SOS, contatos oficiais e acesso rapido ao cofre. O modo nao oculta gravacoes nem burla regras do sistema.",
-      icon: <HelpCircle size={18} color={theme.colors.primary} />,
-      actions: [{ label: "Entendi" }]
-    });
-  }
-
-  function openModeOptions() {
-    setDialog({
-      title: "Opcoes de modo",
-      message:
-        "Neste MVP o modo padrao e discreto. Outros modos dependem de testes com usuarias, revisao juridica e criterios de loja antes de virar configuracao publica.",
-      icon: <Activity size={18} color={theme.colors.primary} />,
-      actions: [
-        { label: "Manter discreto" },
-        { label: "Ver configuracoes", tone: "muted", onPress: () => router.push("/configuracoes") }
       ]
     });
   }
@@ -233,12 +221,7 @@ export default function HomeScreen() {
 
         {menuOpen ? (
           <EmergencySettingsDrawer
-            active={Boolean(activePackageId)}
-            onOpenModeHelp={openModeHelp}
-            onOpenModeOptions={openModeOptions}
             onNavigate={openRoute}
-            outboxCount={outboxCount}
-            recordingStatus={recordingStatus}
           />
         ) : null}
 
@@ -308,7 +291,9 @@ export default function HomeScreen() {
           onClose={() => setDialog(null)}
           title={dialog?.title ?? ""}
           visible={Boolean(dialog)}
-        />
+        >
+          {dialog?.children}
+        </BrandedDialog>
       </View>
     </SafeAreaView>
   );
@@ -355,6 +340,33 @@ const styles = StyleSheet.create({
     letterSpacing: 0,
     minHeight: 52,
     paddingHorizontal: theme.spacing.md
+  },
+  callNumber: {
+    color: theme.colors.primary,
+    fontSize: 64,
+    fontWeight: "900",
+    lineHeight: 70,
+    textAlign: "center",
+    textShadowColor: "rgba(30, 27, 46, 0.28)",
+    textShadowOffset: { width: 0, height: 4 },
+    textShadowRadius: 9
+  },
+  callNumberPanel: {
+    alignItems: "center",
+    backgroundColor: theme.colors.surfaceMuted,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.lg,
+    borderWidth: 1,
+    gap: theme.spacing.xs,
+    paddingHorizontal: theme.spacing.lg,
+    paddingVertical: theme.spacing.md
+  },
+  callService: {
+    color: theme.colors.text,
+    fontSize: 16,
+    fontWeight: "900",
+    lineHeight: 21,
+    textAlign: "center"
   },
   finishError: {
     color: theme.colors.danger,

@@ -29,7 +29,7 @@ Fonte de verdade operacional: este repositorio, `AGENTS.md`, `.codex/AGENTS.md` 
 - `BrandedDialog`: modal SinalSeguro para confirmacoes e alertas criticos.
 - `ResourceTile`: icone de recurso usado em telas fixas.
 - `PanicButton`: SOS circular responsivo com gesto de pressao longa.
-- `EmergencySettingsDrawer`: menu retratil da Home.
+- `EmergencySettingsDrawer`: menu retratil padrao da Home e do Cofre, somente com acoes iconograficas.
 - `EmergencyCallDock`: atalhos oficiais 190, 193 e 192.
 - `EvidencePlayerCard`: player seguro local/recebido.
 - `LocalEvidenceRail`: trilha horizontal de pacotes locais com acoes em raio.
@@ -42,9 +42,11 @@ Fonte de verdade operacional: este repositorio, `AGENTS.md`, `.codex/AGENTS.md` 
 - Deve priorizar o botao central `SOS`.
 - SOS ocupa 75% da largura horizontal possivel, com limite maximo para telas grandes.
 - Pressao longa aciona ou encerra o chamado.
-- Chamado ativo muda o texto para `ATIVO` e liga particulas discretas.
+- Chamado ativo muda o estado para encerramento e liga particulas discretas.
+- O texto auxiliar externo `Solte` nao deve aparecer na Home.
 - Atalhos oficiais ficam visiveis no rodape: `Policia 190`, `Bombeiros 193`, `SAMU 192`.
 - O 190 pode ser ocultado por preferencia; 193 e 192 seguem visiveis.
+- Os modais de chamada devem destacar `190`, `193` ou `192` como numero grande, com sombra e contraste.
 
 ## Encerramento do chamado
 
@@ -57,7 +59,8 @@ Fonte de verdade operacional: este repositorio, `AGENTS.md`, `.codex/AGENTS.md` 
 ## Cofre local
 
 - Deve ser tela fixa e iconografica.
-- Dados tecnicos ficam no menu sanduiche.
+- O menu retratil do Cofre reutiliza o mesmo menu padrao da Home.
+- Dados tecnicos nao ficam expostos no menu retratil; ficam em modais, no player ou na trilha de arquivos.
 - Player abre em modal.
 - Trilha de arquivos abre em modal.
 - Exclusao exige confirmacao em `BrandedDialog`.
@@ -71,6 +74,7 @@ Fonte de verdade operacional: este repositorio, `AGENTS.md`, `.codex/AGENTS.md` 
 - Build publico continua sem transmissao, stream, P2P, upload e compartilhamento externo de midia.
 - Build privado de homologacao local pode solicitar `CAMERA` e `RECORD_AUDIO` para gravar video/audio no sandbox privado do app quando a usuaria autorizar.
 - Preferencias de camera frontal/traseira/duas cameras determinam a proxima gravacao local do SOS.
+- `Duas cameras` e o padrao local de homologacao para novas instalacoes e para migracao de preferencias antigas.
 - `Duas cameras` e modo de homologacao: tenta frontal e traseira simultaneamente, com fallback automatico para camera unica quando Android/Expo ou o aparelho bloquear captura dupla.
 - Video/audio local exigem permissao explicita do sistema, indicador discreto do app, aceite local de termos e acesso pelo cofre/player.
 - A transmissao para anjos, API, P2P ou autoridade exige RIPD/DPIA, contrato, consentimento versionado, criptografia por envelope, hashes, RBAC e auditoria.
@@ -93,6 +97,13 @@ Fonte de verdade operacional: este repositorio, `AGENTS.md`, `.codex/AGENTS.md` 
 - O progresso do gesto e circular, discreto e preso a circunferencia do proprio botao.
 - Acionamento progride no sentido horario; encerramento progride no sentido anti-horario.
 - O anel nao deve sair da borda visual do botao em Android, iOS ou web responsivo.
+- O fundo da Home usa marca d'agua e particulas/circulos sutis; nao deve usar riscos/linhas animadas.
+
+## Riscos tecnicos abertos
+
+- Hash de video ainda usa leitura completa em base64; antes de gravacoes longas reais, Myers/Schneier devem substituir por hash incremental/binario para reduzir risco de memoria.
+- Ainda falta politica local de cota/retencao para gravacoes ilimitadas e captura dupla.
+- Captura simultanea de duas cameras continua best-effort; aparelhos Android podem permitir somente uma camera por vez.
 
 ## Permissoes
 

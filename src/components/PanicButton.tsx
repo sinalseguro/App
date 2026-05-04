@@ -29,7 +29,7 @@ const particleConfigs: ParticleConfig[] = [
   { delay: 2460, duration: 3700, left: 66, rise: -260, size: 3 }
 ];
 
-const progressCircleRadius = 49.2;
+const progressCircleRadius = 48.7;
 const progressCircleCircumference = 2 * Math.PI * progressCircleRadius;
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -59,8 +59,8 @@ function CircularHoldProgress({
           fill="none"
           r={progressCircleRadius}
           stroke={theme.colors.accentSoft}
-          strokeOpacity={0.1}
-          strokeWidth={0.75}
+          strokeOpacity={0.28}
+          strokeWidth={1.35}
         />
         <G transform={rotationTransform}>
           <AnimatedCircle
@@ -72,8 +72,8 @@ function CircularHoldProgress({
             strokeDasharray={`${progressCircleCircumference} ${progressCircleCircumference}`}
             strokeDashoffset={strokeDashoffset}
             strokeLinecap="round"
-            strokeOpacity={0.68}
-            strokeWidth={0.85}
+            strokeOpacity={0.96}
+            strokeWidth={1.9}
           />
         </G>
       </Svg>
@@ -263,9 +263,6 @@ export function PanicButton({ active = false, label, holdMs, onTrigger }: PanicB
         <Text style={styles.sos}>{active ? "ATIVO" : "SOS"}</Text>
         <Text style={styles.label}>{holding ? "Continue segurando" : label}</Text>
       </Pressable>
-      <Text style={styles.help} numberOfLines={1}>
-        Solte
-      </Text>
     </View>
   );
 }
@@ -273,7 +270,6 @@ export function PanicButton({ active = false, label, holdMs, onTrigger }: PanicB
 const styles = StyleSheet.create({
   wrapper: {
     alignItems: "center",
-    gap: theme.spacing.sm,
     width: "100%"
   },
   button: {
@@ -387,12 +383,4 @@ const styles = StyleSheet.create({
     position: "absolute",
     zIndex: 4
   },
-  help: {
-    color: theme.colors.textMuted,
-    fontSize: theme.typography.small,
-    lineHeight: 18,
-    maxWidth: 280,
-    textAlign: "center",
-    width: 280
-  }
 });

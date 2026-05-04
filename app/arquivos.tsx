@@ -6,12 +6,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Archive, BookOpen, CirclePlay, LockKeyhole, RefreshCw, Share2, Trash2 } from "lucide-react-native";
 import { AppTopBar } from "@/components/AppTopBar";
 import { BrandedDialog, BrandedDialogAction } from "@/components/BrandedDialog";
-import { ButtonIcon } from "@/components/ButtonIcon";
 import { EvidencePlayerCard } from "@/components/EvidencePlayerCard";
 import { LocalEvidenceRail } from "@/components/LocalEvidenceRail";
 import { ResourceTile } from "@/components/ResourceTile";
-import { StatusBanner } from "@/components/StatusBanner";
 import { theme } from "@/design/theme";
+import { EmergencySettingsDrawer } from "@/features/emergency-home/EmergencySettingsDrawer";
+import { EmergencyHomeRoute } from "@/features/emergency-home/routes";
 import { deleteEmergencyPackage, listEmergencyPackages } from "@/features/emergency/emergencyOutbox";
 import {
   defaultEmergencyPreferences,
@@ -116,6 +116,15 @@ export default function LocalFilesScreen() {
     setStatus(`Pacote ${packageRecord.id.slice(0, 8)} selecionado para previa segura no player.`);
   }
 
+  function openMenuRoute(route: EmergencyHomeRoute) {
+    setMenuOpen(false);
+    if (route === "/arquivos") {
+      setActiveDialog(selectedPackage ? "player" : "cofre");
+      return;
+    }
+    router.push(route);
+  }
+
   function openPackageInPlayer(packageRecord: EmergencyPackage) {
     selectPackage(packageRecord);
     setActiveDialog("player");
@@ -208,6 +217,7 @@ export default function LocalFilesScreen() {
       <View style={styles.shell} testID="local-files-screen">
         <AppTopBar
           contextLabel="Cofre local"
+          menuIcon="settings"
           menuOpen={menuOpen}
           onMenuPress={() => setMenuOpen((current) => !current)}
           showBack
@@ -215,22 +225,7 @@ export default function LocalFilesScreen() {
         />
 
         {menuOpen ? (
-          <View style={styles.drawer}>
-            <StatusBanner tone="secure" title={`Pacotes gravados: ${packages.length}`} text={status} />
-            <StatusBanner
-              tone="warning"
-              title="Protecao dos dados"
-              text="Midia local e coordenadas completas exigem autenticacao forte, contrato eletronico e acesso auditado antes de qualquer envio externo."
-            />
-            <ButtonIcon
-              icon={<BookOpen size={18} color={theme.colors.primary} />}
-              label="Como funciona"
-              onPress={() => {
-                setMenuOpen(false);
-                router.push("/funcionamento");
-              }}
-            />
-          </View>
+          <EmergencySettingsDrawer onNavigate={openMenuRoute} />
         ) : null}
 
         <View style={styles.content}>
@@ -270,9 +265,8 @@ export default function LocalFilesScreen() {
             { label: "Abrir cofre", onPress: () => setActiveDialog("cofre") }
           ]}
           icon={<CirclePlay size={18} color={theme.colors.primary} />}
-          message="Area local para revisar arquivos gravados ou recebidos. Videos autorizados pelo SOS ficam no sandbox privado do app."
           onClose={() => setActiveDialog(null)}
-          title={selectedPackage ? `Player do pacote ${selectedPackage.id.slice(0, 8)}` : "Player seguro"}
+          title={selectedPackage ? `Player ${selectedPackage.id.slice(0, 8)}` : "Player seguro"}
           visible={activeDialog === "player"}
         >
           <EvidencePlayerCard packageRecord={selectedPackage} />
@@ -369,20 +363,6 @@ const styles = StyleSheet.create({
     gap: theme.spacing.md,
     justifyContent: "center",
     padding: theme.spacing.lg
-  },
-  drawer: {
-    backgroundColor: theme.colors.surface,
-    borderColor: theme.colors.border,
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
-    gap: theme.spacing.sm,
-    left: theme.spacing.lg,
-    padding: theme.spacing.md,
-    position: "absolute",
-    right: theme.spacing.lg,
-    top: 84,
-    zIndex: 25,
-    ...theme.shadow
   },
   finishError: {
     color: theme.colors.danger,

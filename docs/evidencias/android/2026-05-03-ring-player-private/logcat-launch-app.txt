@@ -1,0 +1,297 @@
+--------- beginning of system
+05-04 00:01:12.959  5403  5418 D MiuiDownscaleImpl: set override inverted scale : 1.0
+05-04 00:01:13.021  5403  5403 I ActivityThread: SetSystemFontMap done
+05-04 00:01:13.944  5403  5403 I ActivityThread: TrafficStats init done
+05-04 00:01:13.977  5403  5403 I ActivityThread: Miui Feature Init done
+05-04 00:01:14.985  5403  5403 D FramePredict: FramePredict init: false
+05-04 00:01:14.986  5403  5403 D UserSceneDetector: invoke error.
+05-04 00:01:14.990  5403  5403 I ActivityThread: HardwareRenderer preload  done
+05-04 00:01:15.289  5403  5403 D FramePredict: init success
+05-04 00:01:15.296  5403  5733 E FramePredict: registerContentObserver fail
+05-04 00:01:15.305  5403  5403 I ForceDarkHelperStubImpl: setViewRootImplForceDark: false for br.com.sinalseguro.app.MainActivity@850e28d, reason: AppDarkModeEnable
+05-04 00:01:17.000  5403  5403 D UserSceneDetector: invoke error.
+05-04 00:01:43.616  5403  6781 D MiuiMultiWindowUtils: freeform resolution args raw data:{  "wide_default":{    "freeform_args": {        "vertical_portrait":{"aspect_ratio":0.626, "original_ratio":0.5643,"original_scale":0.74,"top_margin":0.168,"left_margin":0.484},        "horizontal_portrait":{"aspect_ratio":0.626, "original_ratio":0.5643,"original_scale":0.74,"top_margin":0.1222,"left_margin":0.59745},        "vertical_landscape":{"aspect_ratio":1.6, "original_ratio":1,"original_scale":0.604,"top_margin":0.2596,"left_margin":0.2624},        "horizontal_landscape":{"aspect_ratio":1.6, "original_ratio":1,"original_scale":0.604,"top_margin":0.213,"left_margin":0.3758}    },    "mini_freeform_args":{        "vertical_portrait":{"original_ratio":0.147},        "horizontal_portrait":{"original_ratio":0.147},        "vertical_landscape":{"original_ratio":0.165},        "horizontal_landscape":{"original_ratio":0.165}    }  },  "narrow_default": {    "freeform_args": {        "vertical_portrait":{"aspect_ratio":0.626, "original_ratio":1,"original_scale":0.74,"top_margin":0.0753,"left_margin":-1},        "horizontal_portrait":{"aspect_ratio":0.626, "original_ratio":1,"original_scale":0.5756,"top_margin":-1,"left_margin":0.0753},        "vertical_landscape":{"aspect_ratio":1.6, "original_ratio":0.6847,"original_scale":0.587,"top_margin":0.0753,"left_margin":-1},        "horizontal_landscape":{"aspect_ratio":1.6, "original_ratio":0.6847,"original_scale":0.587,"top_margin":-1,"left_margin":0.0753}    },    "mini_freeform_args":{        "vertical_portrait":{"original_ratio":0.26},        "horizontal_portrait":{"original_ratio":0.26},        "vertical_landscape":{"original_ratio":0.293},        "horizontal_landscape":{"original_ratio":0.293}    }  },  "regular_default": {    "freeform_args": {      "vertical_portrait":{"aspect_ratio":0.625, "original_ratio":1,"original_scale":0.7,"top_margin":0.109,"left_margin":-1},      "horizontal_portrait":{"aspect_ratio":0.6667, "original_ratio":1,"original_scale":0.6102,"top_margin":-1,"left_margin":0.026},      "vertical_landscape":{"aspect_ratio":1.6, "original_ratio":1,"original_scale":0.4244,"top_margin":0.109,"left_margin":-1},      "horizontal_landscape":{"aspect_ratio":1.6, "original_ratio":1,"original_scale":0.4244,"top_margin":-1,"left_margin":0.026}    },    "mini_freeform_args":{      "vertical_portrait":{"original_ratio":0.25},      "horizontal_portrait":{"original_ratio":0.25},      "vertical_landscape":{"original_ratio":0.25},      "horizontal_landscape":{"original_ratio":0.25}    }  },  "pad_default": {    "freeform_args": {      "vertical_portrait":{"aspect_ratio":0.5625, "original_ratio":0.375,"original_scale":0.835,"top_margin":0.049,"left_margin":0.2775},      "horizontal_portrait":{"aspect_ratio":0.5625, "original_ratio":0.375,"original_scale":0.835,"top_margin":-1,"left_margin":0.6525},      "vertical_landscape":{"aspect_ratio":-1, "original_ratio":1,"original_scale":0.468,"top_margin":0.049,"left_margin":-1},      "horizontal_landscape":{"aspect_ratio":-1, "original_ratio":1,"original_scale":0.468,"top_margin":-1,"left_margin":0.4976}    },    "mini_freeform_args":{      "vertical_portrait":{"original_ratio":0.144},      "horizontal_portrait":{"original_ratio":0.144},      "vertical_landscape":{"original_ratio":0.2},      "horizontal_landscape":{"original_ratio":0.2}    }  }}
+05-04 00:01:43.617  5403  6781 D MiuiMultiWindowUtils: initFreeFormResolutionArgs failed, device is sapphire
+05-04 00:01:43.665  5403  5403 D UserSceneDetector: invoke error.
+05-04 00:01:46.531  5403  5403 D UserSceneDetector: invoke error.
+05-04 00:01:47.089  5403  5403 D UserSceneDetector: invoke error.
+05-04 00:02:02.938  5403  5403 I ForceDarkHelperStubImpl: setViewRootImplForceDark: false for br.com.sinalseguro.app.MainActivity@850e28d, reason: AppDarkModeEnable
+05-04 00:02:03.116  5403  5403 I ForceDarkHelperStubImpl: setViewRootImplForceDark: false for br.com.sinalseguro.app.MainActivity@850e28d, reason: AppDarkModeEnable
+05-04 00:02:03.270  5403  5403 D UserSceneDetector: invoke error.
+05-04 00:05:48.231  5403  5403 I ForceDarkHelperStubImpl: setViewRootImplForceDark: false for br.com.sinalseguro.app.MainActivity@850e28d, reason: AppDarkModeEnable
+05-04 00:05:48.291  5403  5403 I ForceDarkHelperStubImpl: setViewRootImplForceDark: false for br.com.sinalseguro.app.MainActivity@850e28d, reason: AppDarkModeEnable
+05-04 00:06:09.503  5403  5403 I ForceDarkHelperStubImpl: setViewRootImplForceDark: false for br.com.sinalseguro.app.MainActivity@850e28d, reason: AppDarkModeEnable
+05-04 00:06:09.630  5403  5403 I ForceDarkHelperStubImpl: setViewRootImplForceDark: false for br.com.sinalseguro.app.MainActivity@850e28d, reason: AppDarkModeEnable
+05-04 00:06:09.769  5403  5403 D UserSceneDetector: invoke error.
+05-04 00:06:25.022  5403  5403 D ActivityThread: Fail to check app heapsize due to java.lang.NoSuchMethodException: dalvik.system.VMRuntime.getBlockingGcCountForAlloc []
+--------- beginning of main
+05-04 00:07:58.957  5403  6798 D BufferPoolAccessor2.0: evictor expired: 1, evicted: 0
+05-04 00:08:00.587  5403  6777 D Camera2PresenceSrc: System onCameraAccessPrioritiesChanged.
+05-04 00:08:00.596  5403  6781 D CameraInjector: updateCloudCameraControllerInfoAsync: has aleardy start update task.
+05-04 00:08:00.596  5403  6781 D CameraInjector: waitForResult: 
+05-04 00:08:00.597  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelist"
+05-04 00:08:00.597  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelistext"
+05-04 00:08:00.598  5403  6781 D Camera2PresenceSrc: [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+05-04 00:08:00.613  5403  6781 D Camera2PresenceSrc: System onCameraAccessPrioritiesChanged.
+05-04 00:08:00.614  5403  6781 D CameraInjector: updateCloudCameraControllerInfoAsync: has aleardy start update task.
+05-04 00:08:00.614  5403  6781 D CameraInjector: waitForResult: 
+05-04 00:08:00.614  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelist"
+05-04 00:08:00.614  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelistext"
+05-04 00:08:00.615  5403  6781 D Camera2PresenceSrc: [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+05-04 00:08:01.903  5403  6781 D Camera2PresenceSrc: System onCameraAccessPrioritiesChanged.
+05-04 00:08:01.904  5403  6781 D Camera2PresenceSrc: System onCameraAccessPrioritiesChanged.
+05-04 00:08:01.905  5403  6781 D CameraInjector: updateCloudCameraControllerInfoAsync: has aleardy start update task.
+05-04 00:08:01.905  5403  6781 D CameraInjector: waitForResult: 
+05-04 00:08:01.905  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelist"
+05-04 00:08:01.905  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelistext"
+05-04 00:08:01.906  5403  6781 D Camera2PresenceSrc: [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+05-04 00:08:01.914  5403  6777 D CameraInjector: updateCloudCameraControllerInfoAsync: has aleardy start update task.
+05-04 00:08:01.914  5403  6777 D CameraInjector: waitForResult: 
+05-04 00:08:01.914  5403  6777 W libc    : Access denied finding property "vendor.camera.aux.packagelist"
+05-04 00:08:01.917  5403  6777 W libc    : Access denied finding property "vendor.camera.aux.packagelistext"
+05-04 00:08:01.917  5403  6777 D Camera2PresenceSrc: [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+05-04 00:08:01.981  5403  6777 D Camera2PresenceSrc: System onCameraAccessPrioritiesChanged.
+05-04 00:08:01.982  5403  6781 D Camera2PresenceSrc: System onCameraAccessPrioritiesChanged.
+05-04 00:08:01.983  5403  6781 D CameraInjector: updateCloudCameraControllerInfoAsync: has aleardy start update task.
+05-04 00:08:01.983  5403  6781 D CameraInjector: waitForResult: 
+05-04 00:08:01.983  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelist"
+05-04 00:08:01.983  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelistext"
+05-04 00:08:01.984  5403  6781 D Camera2PresenceSrc: [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+05-04 00:08:01.990  5403  6777 D CameraInjector: updateCloudCameraControllerInfoAsync: has aleardy start update task.
+05-04 00:08:01.990  5403  6777 D CameraInjector: waitForResult: 
+05-04 00:08:01.991  5403  6777 W libc    : Access denied finding property "vendor.camera.aux.packagelist"
+05-04 00:08:01.991  5403  6777 W libc    : Access denied finding property "vendor.camera.aux.packagelistext"
+05-04 00:08:01.992  5403  6777 D Camera2PresenceSrc: [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+05-04 00:09:07.444  5403  7994 D ActivityThread: handleBoundsCompatInfoChanged remove: name=br.com.sinalseguro.app
+05-04 00:09:07.459  5403  6777 D Camera2PresenceSrc: System onCameraAccessPrioritiesChanged.
+05-04 00:09:07.460  5403  6781 D CameraInjector: updateCloudCameraControllerInfoAsync: has aleardy start update task.
+05-04 00:09:07.460  5403  6781 D CameraInjector: waitForResult: 
+05-04 00:09:07.461  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelist"
+05-04 00:09:07.461  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelistext"
+05-04 00:09:07.462  5403  6781 D Camera2PresenceSrc: [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+05-04 00:09:07.469  5403  6777 D Camera2PresenceSrc: System onCameraAccessPrioritiesChanged.
+05-04 00:09:07.470  5403  6781 D CameraInjector: updateCloudCameraControllerInfoAsync: has aleardy start update task.
+05-04 00:09:07.470  5403  6781 D CameraInjector: waitForResult: 
+05-04 00:09:07.470  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelist"
+05-04 00:09:07.470  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelistext"
+05-04 00:09:07.471  5403  6781 D Camera2PresenceSrc: [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+05-04 00:09:07.474  5403  5403 I ForceDarkHelperStubImpl: setViewRootImplForceDark: false for br.com.sinalseguro.app.MainActivity@850e28d, reason: AppDarkModeEnable
+05-04 00:09:07.563  5403  5403 D SecurityManager: checkAccessControl flag1
+05-04 00:09:07.571  5403  5403 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+05-04 00:09:07.572  5403  5403 W unknown:BridgelessReact: ReactContext.onHostResume()
+05-04 00:09:07.598  5403  5403 W unknown:BridgelessReact: ReactHost{0}.onUserLeaveHint(activity)
+05-04 00:09:07.605  5403  5403 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+05-04 00:09:07.606  5403  5403 W unknown:BridgelessReact: ReactContext.onHostPause()
+05-04 00:09:07.617  5403  5403 D UserSceneDetector: invoke error.
+05-04 00:09:07.671  5403  5403 W sinalseguro.app: type=1400 audit(0.0:1480682): avc:  denied  { read } for  name="u:object_r:vendor_display_prop:s0" dev="tmpfs" ino=457 scontext=u:r:untrusted_app:s0:c136,c258,c512,c768 tcontext=u:object_r:vendor_display_prop:s0 tclass=file permissive=0 app=br.com.sinalseguro.app
+05-04 00:09:07.677  5403  5403 W libc    : Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+05-04 00:09:07.678  5403  5403 W libc    : Access denied finding property "vendor.gpp.create_frc_extension"
+05-04 00:09:07.702  5403  5403 D VRI[MainActivity]: vri.reportNextDraw android.view.ViewRootImpl.performTraversals:4923 android.view.ViewRootImpl.doTraversal:3553 android.view.ViewRootImpl$TraversalRunnable.run:11520 android.view.Choreographer$CallbackRecord.run:1730 android.view.Choreographer$CallbackRecord.run:1739 
+05-04 00:09:07.808  5403  5403 D VRI[MainActivity]: vri.Setup new sync=wmsSync-VRI[MainActivity]#12
+05-04 00:09:07.812  5403  5403 D VRI[MainActivity]: vri.reportDrawFinished
+05-04 00:09:07.815  5403  5403 D ActivityThread: Fail to check app heapsize due to java.lang.NoSuchMethodException: dalvik.system.VMRuntime.getBlockingGcCountForAlloc []
+05-04 00:09:41.883  5403  6777 D Camera2PresenceSrc: System onCameraAccessPrioritiesChanged.
+05-04 00:09:41.883  5403  6781 D CameraInjector: updateCloudCameraControllerInfoAsync: has aleardy start update task.
+05-04 00:09:41.883  5403  6781 D CameraInjector: waitForResult: 
+05-04 00:09:41.884  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelist"
+05-04 00:09:41.884  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelistext"
+05-04 00:09:41.885  5403  6781 D Camera2PresenceSrc: [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+05-04 00:09:41.896  5403  6777 D Camera2PresenceSrc: System onCameraAccessPrioritiesChanged.
+05-04 00:09:41.897  5403  6781 D CameraInjector: updateCloudCameraControllerInfoAsync: has aleardy start update task.
+05-04 00:09:41.897  5403  6781 D CameraInjector: waitForResult: 
+05-04 00:09:41.897  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelist"
+05-04 00:09:41.897  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelistext"
+05-04 00:09:41.898  5403  6781 D Camera2PresenceSrc: [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+05-04 00:11:09.448  5403  6777 D Camera2PresenceSrc: System onCameraUnavailable: 1
+05-04 00:11:09.449  5403  6781 D CameraInjector: updateCloudCameraControllerInfoAsync: has aleardy start update task.
+05-04 00:11:09.450  5403  6781 D CameraInjector: waitForResult: 
+05-04 00:11:09.450  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelist"
+05-04 00:11:09.450  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelistext"
+05-04 00:11:09.454  5403  6781 D Camera2PresenceSrc: [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+05-04 00:11:09.856  5403  6777 D Camera2PresenceSrc: System onCameraAccessPrioritiesChanged.
+05-04 00:11:09.858  5403  6777 D CameraInjector: updateCloudCameraControllerInfoAsync: has aleardy start update task.
+05-04 00:11:09.858  5403  6777 D CameraInjector: waitForResult: 
+05-04 00:11:09.859  5403  6777 W libc    : Access denied finding property "vendor.camera.aux.packagelist"
+05-04 00:11:09.859  5403  6777 W libc    : Access denied finding property "vendor.camera.aux.packagelistext"
+05-04 00:11:09.860  5403  6777 D Camera2PresenceSrc: [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+05-04 00:11:09.902  5403  6781 D Camera2PresenceSrc: System onCameraAccessPrioritiesChanged.
+05-04 00:11:09.903  5403  6777 D CameraInjector: updateCloudCameraControllerInfoAsync: has aleardy start update task.
+05-04 00:11:09.903  5403  6777 D CameraInjector: waitForResult: 
+05-04 00:11:09.903  5403  6777 W libc    : Access denied finding property "vendor.camera.aux.packagelist"
+05-04 00:11:09.904  5403  6777 W libc    : Access denied finding property "vendor.camera.aux.packagelistext"
+05-04 00:11:09.905  5403  6777 D Camera2PresenceSrc: [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+05-04 00:11:16.240  5403  6777 D Camera2PresenceSrc: System onCameraAvailable: 1
+05-04 00:11:16.241  5403  6777 D CameraInjector: updateCloudCameraControllerInfoAsync: has aleardy start update task.
+05-04 00:11:16.241  5403  6777 D CameraInjector: waitForResult: 
+05-04 00:11:16.242  5403  6777 W libc    : Access denied finding property "vendor.camera.aux.packagelist"
+05-04 00:11:16.242  5403  6777 W libc    : Access denied finding property "vendor.camera.aux.packagelistext"
+05-04 00:11:16.246  5403  6777 D Camera2PresenceSrc: [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+05-04 00:11:28.768  5403  6781 D Camera2PresenceSrc: System onCameraAccessPrioritiesChanged.
+05-04 00:11:28.772  5403  6781 D CameraInjector: updateCloudCameraControllerInfoAsync: has aleardy start update task.
+05-04 00:11:28.772  5403  6781 D CameraInjector: waitForResult: 
+05-04 00:11:28.772  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelist"
+05-04 00:11:28.772  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelistext"
+05-04 00:11:28.773  5403  6781 D Camera2PresenceSrc: [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+05-04 00:11:29.907  5403  6777 D Camera2PresenceSrc: System onCameraAccessPrioritiesChanged.
+05-04 00:11:29.908  5403  6777 D CameraInjector: updateCloudCameraControllerInfoAsync: has aleardy start update task.
+05-04 00:11:29.908  5403  6777 D CameraInjector: waitForResult: 
+05-04 00:11:29.909  5403  6777 W libc    : Access denied finding property "vendor.camera.aux.packagelist"
+05-04 00:11:29.909  5403  6777 W libc    : Access denied finding property "vendor.camera.aux.packagelistext"
+05-04 00:11:29.910  5403  6777 D Camera2PresenceSrc: [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+05-04 00:11:29.922  5403  6777 D Camera2PresenceSrc: System onCameraAccessPrioritiesChanged.
+05-04 00:11:29.923  5403  6777 D CameraInjector: updateCloudCameraControllerInfoAsync: has aleardy start update task.
+05-04 00:11:29.923  5403  6777 D CameraInjector: waitForResult: 
+05-04 00:11:29.923  5403  6777 W libc    : Access denied finding property "vendor.camera.aux.packagelist"
+05-04 00:11:29.924  5403  6777 W libc    : Access denied finding property "vendor.camera.aux.packagelistext"
+05-04 00:11:29.925  5403  6777 D Camera2PresenceSrc: [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+05-04 00:11:31.038  5403  5403 I ForceDarkHelperStubImpl: setViewRootImplForceDark: false for br.com.sinalseguro.app.MainActivity@850e28d, reason: AppDarkModeEnable
+05-04 00:11:31.066  5403  6781 D Camera2PresenceSrc: System onCameraAccessPrioritiesChanged.
+05-04 00:11:31.067  5403  6777 D CameraInjector: updateCloudCameraControllerInfoAsync: has aleardy start update task.
+05-04 00:11:31.068  5403  6777 D CameraInjector: waitForResult: 
+05-04 00:11:31.069  5403  6777 W libc    : Access denied finding property "vendor.camera.aux.packagelist"
+05-04 00:11:31.070  5403  6777 W libc    : Access denied finding property "vendor.camera.aux.packagelistext"
+05-04 00:11:31.072  5403  6777 D Camera2PresenceSrc: [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+05-04 00:11:31.075  5403  7994 D AppScoutStateMachine: 5403-ScoutStateMachinecreated
+05-04 00:11:31.088  5403  7994 D ActivityThread: handleBoundsCompatInfoChanged remove: name=br.com.sinalseguro.app
+05-04 00:11:31.167  5403  5403 D SecurityManager: checkAccessControl flag1
+05-04 00:11:31.170  5403  5403 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+05-04 00:11:31.170  5403  5403 W unknown:BridgelessReact: ReactContext.onHostResume()
+05-04 00:11:31.259  5403  5403 W sinalseguro.app: type=1400 audit(0.0:1480804): avc:  denied  { read } for  name="u:object_r:vendor_display_prop:s0" dev="tmpfs" ino=457 scontext=u:r:untrusted_app:s0:c136,c258,c512,c768 tcontext=u:object_r:vendor_display_prop:s0 tclass=file permissive=0 app=br.com.sinalseguro.app
+05-04 00:11:31.265  5403  5403 W libc    : Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+05-04 00:11:31.265  5403  5403 W libc    : Access denied finding property "vendor.gpp.create_frc_extension"
+05-04 00:11:31.272  5403  5403 D VRI[MainActivity]: vri.reportNextDraw android.view.ViewRootImpl.performTraversals:4923 android.view.ViewRootImpl.doTraversal:3553 android.view.ViewRootImpl$TraversalRunnable.run:11520 android.view.Choreographer$CallbackRecord.run:1730 android.view.Choreographer$CallbackRecord.run:1739 
+05-04 00:11:31.273  5403  5403 D VRI[MainActivity]: vri.Setup new sync=wmsSync-VRI[MainActivity]#14
+05-04 00:11:31.324  5403  6781 D Camera2PresenceSrc: System onCameraAccessPrioritiesChanged.
+05-04 00:11:31.324  5403  6781 D CameraInjector: updateCloudCameraControllerInfoAsync: has aleardy start update task.
+05-04 00:11:31.325  5403  6781 D CameraInjector: waitForResult: 
+05-04 00:11:31.325  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelist"
+05-04 00:11:31.325  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelistext"
+05-04 00:11:31.326  5403  6781 D Camera2PresenceSrc: [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+05-04 00:11:31.450  5403  5403 D VRI[MainActivity]: vri.reportDrawFinished
+05-04 00:11:31.766  5403  6777 D Camera2PresenceSrc: System onCameraAccessPrioritiesChanged.
+05-04 00:11:31.767  5403  6781 D CameraInjector: updateCloudCameraControllerInfoAsync: has aleardy start update task.
+05-04 00:11:31.767  5403  6781 D CameraInjector: waitForResult: 
+05-04 00:11:31.767  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelist"
+05-04 00:11:31.767  5403  6781 W libc    : Access denied finding property "vendor.camera.aux.packagelistext"
+05-04 00:11:31.768  5403  6781 D Camera2PresenceSrc: [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+05-04 00:11:31.803  5403  6777 D Camera2PresenceSrc: System onCameraAccessPrioritiesChanged.
+05-04 00:11:31.805  5403  6777 D CameraInjector: updateCloudCameraControllerInfoAsync: has aleardy start update task.
+05-04 00:11:31.805  5403  6777 D CameraInjector: waitForResult: 
+05-04 00:11:31.811  5403  6777 W libc    : Access denied finding property "vendor.camera.aux.packagelist"
+05-04 00:11:31.811  5403  6777 W libc    : Access denied finding property "vendor.camera.aux.packagelistext"
+05-04 00:11:31.813  5403  6777 D Camera2PresenceSrc: [FetchData] Refreshed camera list: CameraIdentifier{cameraIds=0}, CameraIdentifier{cameraIds=1}
+05-04 00:11:31.890  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=20, avg=9 ms, max=18 ms.
+05-04 00:11:32.352  5403  5403 I HandWritingStubImpl: refreshLastKeyboardType: 1
+05-04 00:11:32.352  5403  5403 I HandWritingStubImpl: getCurrentKeyboardType: 1
+05-04 00:11:32.396  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=1, avg=9 ms, max=9 ms.
+05-04 00:11:32.580  5403  5403 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=360880130, downTime=360880130, phoneEventTime=00:11:32.556 } moveCount:0
+05-04 00:11:32.744  5403  5403 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=360880301, downTime=360880130, phoneEventTime=00:11:32.727 } moveCount:2
+05-04 00:11:33.172  5403  5403 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=360880738, downTime=360880738, phoneEventTime=00:11:33.164 } moveCount:0
+05-04 00:11:33.910  5403  5403 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=360881478, downTime=360880738, phoneEventTime=00:11:33.904 } moveCount:1
+05-04 00:11:34.379  5403  5696 W RenderInspector: QueueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=1, avg=9 ms, max=9 ms.
+05-04 00:11:34.419  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=4, avg=6 ms, max=10 ms.
+05-04 00:11:34.532  5403  5403 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=360882072, downTime=360882072, phoneEventTime=00:11:34.498 } moveCount:0
+05-04 00:11:34.617  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=2, avg=12 ms, max=12 ms.
+05-04 00:11:34.785  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=1, avg=8 ms, max=8 ms.
+05-04 00:11:35.104  5403  5410 I sinalseguro.app: NativeAlloc concurrent mark compact GC freed 12MB AllocSpace bytes, 0(0B) LOS objects, 75% free, 10MB/42MB, paused 1.528ms,6.224ms total 404.102ms
+05-04 00:11:35.752  5403  5403 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=360883304, downTime=360882072, phoneEventTime=00:11:35.730 } moveCount:2
+05-04 00:11:36.922  5403  5696 W RenderInspector: QueueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=1, avg=8 ms, max=8 ms.
+05-04 00:11:58.412  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=15 ms.
+05-04 00:11:59.414  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=16 ms.
+05-04 00:11:59.839  5403  5403 I MIUIInput: [KeyEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', KeyEvent { action=ACTION_DOWN, keyCode=KEYCODE_MENU, scanCode=0, metaState=0, flags=0x0, repeatCount=0, eventTime=360907395000000, downTime=360907395000000, deviceId=-1, source=0x0, displayId=-1 }, phoneEventTime=00:11:59.821
+05-04 00:11:59.884  5403  5403 I MIUIInput: [KeyEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', KeyEvent { action=ACTION_UP, keyCode=KEYCODE_MENU, scanCode=0, metaState=0, flags=0x0, repeatCount=0, eventTime=360907442000000, downTime=360907395000000, deviceId=-1, source=0x0, displayId=-1 }, phoneEventTime=00:11:59.868
+05-04 00:11:59.906  5403  5403 I AbsListViewStubImpl: br.com.sinalseguro.app, version: 0.1.0, Enable Prefetch: false
+05-04 00:11:59.967  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=30, avg=11 ms, max=16 ms.
+05-04 00:12:00.604  5403  5403 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=360908175, downTime=360908175, phoneEventTime=00:12:00.601 } moveCount:0
+05-04 00:12:00.916  5403  5403 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=360908485, downTime=360908175, phoneEventTime=00:12:00.911 } moveCount:17
+05-04 00:12:02.140  5403  5410 I sinalseguro.app: Background young concurrent mark compact GC freed 32MB AllocSpace bytes, 0(0B) LOS objects, 75% free, 10MB/42MB, paused 931us,7.861ms total 77.581ms
+05-04 00:12:04.255  5403  5403 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=360911821, downTime=360911821, phoneEventTime=00:12:04.247 } moveCount:0
+05-04 00:12:04.270  5403  5403 I MiInputConsumer: optimized resample latency: 21794260 ns
+05-04 00:12:04.529  5403  5403 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=360912097, downTime=360911821, phoneEventTime=00:12:04.523 } moveCount:21
+05-04 00:12:29.778  5403  5410 I sinalseguro.app: Background young concurrent mark compact GC freed 32MB AllocSpace bytes, 0(0B) LOS objects, 75% free, 10MB/42MB, paused 558us,7.445ms total 66.616ms
+05-04 00:12:33.480  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=59, avg=11 ms, max=15 ms.
+05-04 00:12:34.484  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=16 ms.
+05-04 00:12:35.487  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=16 ms.
+05-04 00:12:36.485  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=10 ms, max=14 ms.
+05-04 00:12:37.488  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=16 ms.
+05-04 00:12:38.490  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=16 ms.
+05-04 00:12:39.493  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=10 ms, max=16 ms.
+05-04 00:12:40.496  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=17 ms.
+05-04 00:12:41.497  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=15 ms.
+05-04 00:12:42.498  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=15 ms.
+05-04 00:12:43.353  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=48, avg=12 ms, max=17 ms.
+05-04 00:12:44.337  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=55, avg=11 ms, max=16 ms.
+05-04 00:12:45.206  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=48, avg=11 ms, max=14 ms.
+05-04 00:12:45.943  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=40, avg=12 ms, max=15 ms.
+05-04 00:12:46.960  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=16 ms.
+05-04 00:12:47.516  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=30, avg=12 ms, max=15 ms.
+05-04 00:12:50.907  5403  5403 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=360958477, downTime=360958477, phoneEventTime=00:12:50.903 } moveCount:0
+05-04 00:12:51.108  5403  5403 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=360958656, downTime=360958477, phoneEventTime=00:12:51.082 } moveCount:3
+05-04 00:12:51.239  5403  5696 W RenderInspector: QueueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=1, avg=12 ms, max=12 ms.
+05-04 00:12:51.486  5403  5403 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=360959056, downTime=360959056, phoneEventTime=00:12:51.482 } moveCount:0
+05-04 00:12:51.645  5403  5696 W RenderInspector: QueueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=1, avg=11 ms, max=11 ms.
+05-04 00:12:51.755  5403  5403 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=360959312, downTime=360959056, phoneEventTime=00:12:51.738 } moveCount:4
+05-04 00:12:53.064  5403  5403 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=360960635, downTime=360960635, phoneEventTime=00:12:53.061 } moveCount:0
+05-04 00:12:53.571  5403  5696 W RenderInspector: QueueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=1, avg=12 ms, max=12 ms.
+05-04 00:12:54.000  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=1, avg=12 ms, max=12 ms.
+05-04 00:12:54.034  5403  5696 W RenderInspector: QueueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=1, avg=14 ms, max=14 ms.
+05-04 00:12:54.081  5403  5403 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=360961637, downTime=360960635, phoneEventTime=00:12:54.063 } moveCount:40
+05-04 00:12:54.225  5403  5696 W RenderInspector: QueueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=1, avg=20 ms, max=20 ms.
+05-04 00:12:54.785  5403  5410 I sinalseguro.app: Background young concurrent mark compact GC freed 32MB AllocSpace bytes, 0(0B) LOS objects, 75% free, 10MB/42MB, paused 914us,7.681ms total 75.003ms
+05-04 00:12:56.500  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=15 ms.
+05-04 00:12:56.943  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=23, avg=12 ms, max=15 ms.
+05-04 00:12:57.140  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=5, avg=9 ms, max=12 ms.
+05-04 00:12:58.153  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=17 ms.
+05-04 00:12:59.159  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=15 ms.
+05-04 00:13:00.161  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=16 ms.
+05-04 00:13:01.166  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=14 ms.
+05-04 00:13:02.166  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=16 ms.
+05-04 00:13:03.167  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=15 ms.
+05-04 00:13:03.469  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=15, avg=12 ms, max=14 ms.
+05-04 00:13:05.473  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=15 ms.
+05-04 00:13:06.476  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=14 ms.
+05-04 00:13:07.509  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=59, avg=11 ms, max=15 ms.
+05-04 00:13:08.512  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=15 ms.
+05-04 00:13:09.517  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=17 ms.
+05-04 00:13:10.101  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=32, avg=11 ms, max=16 ms.
+05-04 00:13:11.119  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=59, avg=12 ms, max=16 ms.
+05-04 00:13:12.056  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=53, avg=11 ms, max=16 ms.
+05-04 00:13:13.076  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=15 ms.
+05-04 00:13:14.078  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=14 ms.
+05-04 00:13:15.113  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=59, avg=11 ms, max=16 ms.
+05-04 00:13:16.132  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=16 ms.
+05-04 00:13:17.169  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=14 ms.
+05-04 00:13:17.971  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=45, avg=11 ms, max=17 ms.
+05-04 00:13:18.990  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=15 ms.
+05-04 00:13:19.239  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=12, avg=12 ms, max=13 ms.
+05-04 00:13:20.260  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=21 ms.
+05-04 00:13:21.259  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=16 ms.
+05-04 00:13:22.264  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=59, avg=11 ms, max=15 ms.
+05-04 00:13:22.699  5403  5410 I sinalseguro.app: Background young concurrent mark compact GC freed 32MB AllocSpace bytes, 0(0B) LOS objects, 75% free, 10MB/42MB, paused 636us,7.415ms total 69.443ms
+05-04 00:13:23.317  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=15 ms.
+05-04 00:13:24.318  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=14 ms.
+05-04 00:13:24.970  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=36, avg=12 ms, max=14 ms.
+05-04 00:13:25.257  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=13, avg=10 ms, max=15 ms.
+05-04 00:13:25.845  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=30, avg=12 ms, max=16 ms.
+05-04 00:13:26.891  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=17 ms.
+05-04 00:13:27.175  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=14, avg=12 ms, max=14 ms.
+05-04 00:13:28.194  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=15 ms.
+05-04 00:13:29.197  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=15 ms.
+05-04 00:13:30.205  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=15 ms.
+05-04 00:13:31.219  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=16 ms.
+05-04 00:13:32.221  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=15 ms.
+05-04 00:13:33.270  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=15 ms.
+05-04 00:13:34.275  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=16 ms.
+05-04 00:13:35.277  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=16 ms.
+05-04 00:13:36.297  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=59, avg=12 ms, max=14 ms.
+05-04 00:13:37.300  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=15 ms.
+05-04 00:13:38.302  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=15 ms.
+05-04 00:13:38.937  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=35, avg=11 ms, max=15 ms.
+05-04 00:13:39.205  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=12, avg=10 ms, max=15 ms.
+05-04 00:13:40.223  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=15 ms.
+05-04 00:13:41.226  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=17 ms.
+05-04 00:13:42.228  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=15 ms.
+05-04 00:13:43.227  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=12 ms, max=15 ms.
+05-04 00:13:44.229  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=13 ms, max=15 ms.
+05-04 00:13:45.231  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=60, avg=11 ms, max=15 ms.
+05-04 00:13:45.455  5403  5696 W RenderInspector: DequeueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=10, avg=12 ms, max=15 ms.

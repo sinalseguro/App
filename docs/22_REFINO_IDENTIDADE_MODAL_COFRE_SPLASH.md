@@ -17,7 +17,7 @@ Atender aos comentarios de revisao visual e funcional feitos no navegador, deixa
 - Splash React mantida com simbolo, nome, assinatura e barra de loading.
 - Topo do app passou a usar componente reutilizavel `AppTopBar`, com logo, contexto, botao voltar e menu.
 - Home continua fixa, sem rolagem, com foco no SOS central e atalhos oficiais.
-- Drawer da Home ganhou `Modo atual` clicavel, icone de ajuda e modais SinalSeguro.
+- Registro historico: o drawer da Home chegou a ter `Modo atual` clicavel, icone de ajuda e modais SinalSeguro; no checkpoint posterior, modo/status foram removidos da Home e o drawer ficou restrito a acoes iconograficas.
 - `Alert.alert` foi removido dos fluxos criticos de Home e Cofre; confirmacoes passam por `BrandedDialog`.
 - SOS recebeu efeito visual 3D discreto, profundidade, estado pressionado e particulas ativas mais altas e lentas.
 - Cofre local foi refeito como tela fixa por icones: Player, Cofre, Funcionamento e Atualizar.

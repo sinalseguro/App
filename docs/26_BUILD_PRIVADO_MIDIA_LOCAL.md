@@ -62,10 +62,19 @@ Habilitar o recurso central de gravacao local no fluxo de SOS para validacao pri
 - Tarcila ajustou o topo para usar somente o simbolo da marca como imagem; o nome `SinalSeguro` fica como texto de interface para contraste e responsividade.
 - O estado ativo do SOS deixou de usar glow/halo verde. O feedback ativo agora segue a paleta magenta/rosa da identidade visual.
 - O anel de progresso do SOS foi preso a uma camada SVG recortada pela propria circunferencia do botao, discreto, responsivo, horario para acionar e anti-horario para encerrar.
+- O texto auxiliar `Solte` foi removido da Home para reduzir ruido visual no fluxo de emergencia.
+- O menu retratil da Home e do Cofre foi padronizado para acoes iconograficas, sem metricas ou textos tecnicos expostos.
+- Modais de ligacao agora destacam o numero oficial (`190`, `193` ou `192`) como elemento principal.
+- O fundo da Home troca riscos/linhas por particulas e circulos discretos dentro da identidade visual.
+- `Duas cameras` passou a ser o padrao de homologacao para preferencias novas e migradas.
+- O Player foi compactado para mostrar primeiro a area de video, seletor de camera quando houver mais de um asset, controles e poucos metadados.
 - `EmergencyMediaRecorder` solicita camera/microfone antes de depender de `CameraView.onCameraReady`, reduzindo risco de o primeiro SOS nao pedir permissao.
 - `cameraMode` no asset preservado registra a camera efetivamente usada (`front` ou `back`) e `requestedCameraMode` preserva a preferencia original quando a usuaria escolhe `Duas cameras`.
 - Quando `Duas cameras` nao fica pronta, o recorder tenta fallback frontal e depois traseiro antes de seguir apenas com metadados.
 - O Player sincroniza a barra de progresso com `expo-video` quando existe arquivo local real.
+- Riscos ainda abertos antes de gravacoes longas reais: hash incremental/binario e politica local de cota/retencao.
+- Ajuste visual posterior: o anel de load do SOS ficou mais destacado no trilho e no progresso, mantendo a mesma circunferencia do botao para acionar e encerrar. O trilho usa opacidade maior e a volta ativa usa traco mais espesso para aparecer melhor sem virar um aro externo.
+- Migracao posterior: preferencias anteriores ao `schemaVersion 6` passam a usar `Duas cameras` como padrao de homologacao.
 
 ## Comandos
 
@@ -81,17 +90,20 @@ adb install -r android/app/build/outputs/apk/debug/app-debug.apk
 - Resultado: `BUILD SUCCESSFUL`.
 - Artefato: `android/app/build/outputs/apk/debug/app-debug.apk`.
 - Tamanho: 107 MB.
-- SHA-256: `2fbef1caee679d901b1e3f6dac2cf3966aa2621d4da8ef1f24d8631b71b99d46`.
+- SHA-256: `f5a407ca1937f589f8d1c1f4dc1d2f251e8cf1f7031e59ef76f3ac3373724f15`.
 - Dispositivo: Android `23129RA5FL` via ADB Wi-Fi `192.168.0.4:5555`.
 - Instalacao: `adb install -r` com resultado `Success`.
 - Permissoes concedidas para homologacao: camera, microfone, localizacao fina/aproximada e notificacoes.
-- Cold start revalidado apos ajuste do topo: `Status: ok`, `LaunchState: COLD`, `TotalTime: 6026`.
-- Logcat filtrado: sem `FATAL`, `AndroidRuntime`, `Unable to load script`, `Failed to connect`, `setValueWithKeyAsync`, `RedBox` ou `Exception`.
+- Cold start revalidado apos ajuste do anel: `Status: ok`, `LaunchState: COLD`, `TotalTime: 4487`.
+- Logcat filtrado: sem `FATAL`, `AndroidRuntime`, `Unable to load script`, `Failed to connect`, `setValueWithKeyAsync`, `RedBox` ou erro JS critico. O log contem avisos de plataforma/MIUI sem crash.
 - Evidencia visual: `docs/assets/mobile/2026-05-03-android-private-media-home.png`.
 - Revalidacao final de abertura: `TotalTime: 5787`, log salvo em `/tmp/sinalseguro-private-media-logcat-final.txt`, sem ocorrencias fatais filtradas.
 - Evidencia final: `docs/assets/mobile/2026-05-03-android-private-media-home-final.png`.
 - Evidencia do topo com simbolo sem texto: `docs/assets/mobile/2026-05-03-android-topo-simbolo.png`.
 - Evidencia apos anel responsivo e selecao de duas cameras: `docs/assets/mobile/2026-05-03-android-ring-camera-home.png`.
+- Evidencia apos reforco visual do anel: `docs/assets/mobile/2026-05-03-android-ring-visivel-home.png`.
+- Evidencia do anel durante pressao longa: `docs/assets/mobile/2026-05-03-android-ring-visivel-hold.png`.
+- Log Android filtrado por PID do app: `docs/evidencias/android/2026-05-03-ring-player-private/logcat-launch-app.txt`.
 
 Observacao operacional: a injecao de toque por ADB nao acionou os controles nesta rodada. A validacao funcional do gesto SOS com camera, encerramento manual, preservacao do video e reproducao no Player deve ser feita manualmente por Roberto/Myers no aparelho fisico.
 
@@ -113,7 +125,7 @@ Observacao operacional: a injecao de toque por ADB nao acionou os controles nest
 - Abrir Cofre.
 - Abrir Player.
 - Confirmar video local listado/reproduzivel.
-- Verificar `logcat` sem `FATAL`, `AndroidRuntime`, `Unable to load script`, coordenadas completas, upload, `/alerts`, `/media` ou WebRTC.
+- Verificar `logcat` sem `FATAL`, `AndroidRuntime`, `Unable to load script`, erro JS critico, coordenadas completas, upload, `/alerts`, `/media` ou WebRTC.
 
 ## Criterio de aprovacao Tarcila/Norman
 

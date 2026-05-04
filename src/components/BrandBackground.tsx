@@ -7,28 +7,40 @@ type TraceConfig = {
   duration: number;
   left: number;
   top: number;
-  width: number;
-  rotate: string;
+  driftX: number;
+  driftY: number;
+  size: number;
 };
 
 const brandSymbol = require("../../assets/brand/sinalseguro-symbol.png");
 
-const traceConfigs: TraceConfig[] = [
-  { delay: 0, duration: 5200, left: 5, top: 18, width: 96, rotate: "-18deg" },
-  { delay: 900, duration: 6100, left: 68, top: 12, width: 70, rotate: "22deg" },
-  { delay: 1600, duration: 5600, left: 12, top: 66, width: 82, rotate: "16deg" },
-  { delay: 2400, duration: 6800, left: 62, top: 74, width: 92, rotate: "-12deg" },
-  { delay: 3100, duration: 7200, left: 38, top: 8, width: 64, rotate: "10deg" }
+const particleConfigs: TraceConfig[] = [
+  { delay: 0, duration: 5400, left: 12, top: 20, driftX: 10, driftY: -22, size: 9 },
+  { delay: 520, duration: 6800, left: 74, top: 22, driftX: -12, driftY: 18, size: 7 },
+  { delay: 980, duration: 6200, left: 28, top: 68, driftX: 15, driftY: -16, size: 6 },
+  { delay: 1420, duration: 7600, left: 82, top: 66, driftX: -18, driftY: -20, size: 8 },
+  { delay: 1980, duration: 7000, left: 50, top: 16, driftX: -8, driftY: 24, size: 5 },
+  { delay: 2380, duration: 6400, left: 18, top: 84, driftX: 20, driftY: -12, size: 4 },
+  { delay: 2860, duration: 8000, left: 66, top: 82, driftX: -16, driftY: -18, size: 6 },
+  { delay: 3320, duration: 7200, left: 42, top: 54, driftX: 9, driftY: -28, size: 5 }
 ];
 
-function AnimatedTrace({ config, value }: { config: TraceConfig; value: Animated.Value }) {
+function AnimatedBrandParticle({ config, value }: { config: TraceConfig; value: Animated.Value }) {
   const opacity = value.interpolate({
-    inputRange: [0, 0.26, 0.72, 1],
-    outputRange: [0.03, 0.12, 0.08, 0.03]
+    inputRange: [0, 0.25, 0.75, 1],
+    outputRange: [0.04, 0.18, 0.12, 0.04]
+  });
+  const scale = value.interpolate({
+    inputRange: [0, 0.5, 1],
+    outputRange: [0.72, 1.08, 0.84]
+  });
+  const translateX = value.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, config.driftX]
   });
   const translateY = value.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, -18]
+    outputRange: [0, config.driftY]
   });
 
   return (
@@ -37,11 +49,12 @@ function AnimatedTrace({ config, value }: { config: TraceConfig; value: Animated
       style={[
         styles.trace,
         {
+          height: config.size,
           left: `${config.left}%`,
           opacity,
           top: `${config.top}%`,
-          transform: [{ rotate: config.rotate }, { translateY }],
-          width: config.width
+          transform: [{ translateX }, { translateY }, { scale }],
+          width: config.size
         }
       ]}
     />
@@ -53,7 +66,7 @@ type BrandBackgroundProps = {
 };
 
 export function BrandBackground({ active = false }: BrandBackgroundProps) {
-  const values = useMemo(() => traceConfigs.map(() => new Animated.Value(0)), []);
+  const values = useMemo(() => particleConfigs.map(() => new Animated.Value(0)), []);
   const watermarkPulse = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -74,7 +87,7 @@ export function BrandBackground({ active = false }: BrandBackgroundProps) {
     watermarkLoop.start();
 
     const loops = values.map((value, index) => {
-      const config = traceConfigs[index];
+      const config = particleConfigs[index];
       const loop = Animated.loop(
         Animated.sequence([
           Animated.delay(config.delay),
@@ -142,7 +155,7 @@ export function BrandBackground({ active = false }: BrandBackgroundProps) {
         <Image accessibilityIgnoresInvertColors source={brandSymbol} style={styles.watermarkImage} />
       </Animated.View>
       {values.map((value, index) => (
-        <AnimatedTrace key={index} config={traceConfigs[index]} value={value} />
+        <AnimatedBrandParticle key={index} config={particleConfigs[index]} value={value} />
       ))}
     </View>
   );
@@ -150,9 +163,10 @@ export function BrandBackground({ active = false }: BrandBackgroundProps) {
 
 const styles = StyleSheet.create({
   trace: {
-    backgroundColor: theme.colors.accent,
+    backgroundColor: "rgba(236, 64, 122, 0.56)",
+    borderColor: "rgba(122, 31, 162, 0.22)",
     borderRadius: theme.radius.pill,
-    height: 3,
+    borderWidth: 1,
     position: "absolute"
   },
   activeHalo: {

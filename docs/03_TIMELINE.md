@@ -138,7 +138,7 @@ Complemento de continuidade:
 - `BrandedDialog` recebeu rolagem interna para telas menores e fonte ampliada.
 - `docs/23_ESPECIFICACAO_DESENVOLVIMENTO_APP.md` passou a documentar permissoes transitivas observadas no APK debug.
 - Prints de `Cofre fixo` e `Como funciona` foram recapturados com a tela real, nao com splash/loading.
-- `EmergencySettingsDrawer` foi ajustado para separar `Modo atual` e `Ajuda sobre Modo atual` em botoes irmaos, evitando botao aninhado no web.
+- Registro historico: `EmergencySettingsDrawer` chegou a separar modo e ajuda em botoes irmaos; checkpoint posterior substituiu esse arranjo por um drawer sem metricas/status e apenas com acoes iconograficas.
 - Relatorio complementar criado em `docs/24_CONTINUIDADE_COFRE_ENCERRAMENTO_QA.md`.
 - Gates aprovados no complemento: `typecheck`, `lint`, `test`, `git diff --check`, `release:android:readiness` com Node 24 e `assembleDebug`.
 - `adb devices -l` seguiu sem dispositivo; tentativa de `adb connect 192.168.0.5:5555` retornou `Connection refused`.
@@ -703,3 +703,46 @@ Validacoes:
 - `npm run typecheck`: aprovado.
 - `npm run lint`: aprovado.
 - `npm test`: aprovado.
+
+## 2026-05-03 - Home limpa, player compacto e duas cameras padrao
+
+Status: implementado; validacao final em browser/Android neste checkpoint.
+
+Especialistas acionados:
+
+- Tarcila/Norman: remover ruido visual da Home, padronizar menus e manter identidade visual.
+- Ada/Hedy: migrar preferencias para `Duas cameras` como padrao de homologacao.
+- Myers/Schneier: registrar riscos de memoria/cota para gravacoes longas antes de uso real.
+- Cristine/Knuth: atualizar memoria, especificacao e documentacao de build privado.
+
+Decisoes:
+
+- Home nao exibe mais o texto auxiliar `Solte`.
+- Drawer inicial e drawer do Cofre usam o mesmo menu de acoes iconograficas, sem metricas ou textos tecnicos.
+- Modais de ligacao destacam `190`, `193` e `192` como numero principal, com sombra e contraste.
+- Fundo da Home remove riscos/linhas e usa particulas/circulos sutis.
+- `Duas cameras` passa a ser preferencia padrao e migracao das configuracoes antigas.
+- Player do Cofre foi compactado para priorizar video, seletor de camera, controles e metadados essenciais.
+
+Pendencias tecnicas registradas:
+
+- Substituir hash de video por rotina incremental/binaria antes de gravacoes longas.
+- Definir cota/retencao local para captura ilimitada e dupla.
+
+## 2026-05-03 - Anel SOS mais visivel
+
+Status: implementado; em validacao browser/Android.
+
+Especialistas acionados:
+
+- Tarcila/Norman: revisar contraste do anel sem quebrar a circunferencia do botao.
+- Ada/Hedy: manter direcao horaria para acionar e anti-horaria para encerrar.
+- Myers: validar que o anel aparece no Android fisico durante pressao longa.
+
+Decisoes:
+
+- O anel continua dentro da circunferencia do SOS, sem aro externo deslocado.
+- Trilho e progresso ganharam mais opacidade e espessura, mantendo o efeito discreto.
+- Preferencias antigas anteriores ao `schemaVersion 6` migram para `Duas cameras`.
+- APK privado reinstalado no Android `192.168.0.4:5555`, SHA-256 `f5a407ca1937f589f8d1c1f4dc1d2f251e8cf1f7031e59ef76f3ac3373724f15`, cold start `TotalTime: 4487`.
+- Evidencias salvas em `docs/assets/mobile/2026-05-03-android-ring-visivel-home.png` e `docs/assets/mobile/2026-05-03-android-ring-visivel-hold.png`; log filtrado por PID em `docs/evidencias/android/2026-05-03-ring-player-private/logcat-launch-app.txt`.

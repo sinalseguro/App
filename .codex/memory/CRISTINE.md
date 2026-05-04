@@ -105,7 +105,7 @@ Estado em 2026-05-02:
 - contatos mock nao entram como anjos autorizados no pacote local;
 - delete local registra tombstone/auditoria antes de remover o pacote deste dispositivo;
 - Cofre local foi validado com player dedicado, trilha retratil, acoes em raio e compartilhamento bloqueado;
-- microcopy do SOS foi reduzido para `Solte` e recebeu largura fixa para evitar truncamento visual em Android;
+- registro historico: a microcopy do SOS chegou a usar `Solte`; no checkpoint posterior, esse texto auxiliar foi removido da Home para reduzir ruido no acionamento;
 - API real ficou bloqueada por flag de ambiente, sem endpoint hardcoded ativo por padrao;
 - share sheet do sistema ficou documentado como excecao exclusiva para pre-convite sem evidencia;
 - Navegador abriu `http://127.0.0.1:8081` com titulo `SinalSeguro`, mas preview web ficou preto no dev-client; validacao visual oficial segue no Android fisico;
@@ -134,7 +134,7 @@ Estado em 2026-05-02:
 - Tarcila/Norman reprovaram a Home anterior por rolagem, texto duplicado, SOS pequeno, menu ausente e atalhos incompletos;
 - Home foi refatorada para superficie fixa de emergencia, sem `SafeScreen`/`ScrollView`, com header nativo oculto apenas na rota inicial;
 - tela principal agora mostra apenas topo discreto, SOS central responsivo e atalhos oficiais `Policia 190`, `Bombeiros 193` e `SAMU 192`;
-- drawer da engrenagem concentra `Modo atual`, `Cofre e player`, `Anjos`, `Convites`, `Configuracoes` e status de atividade;
+- registro historico: o drawer da engrenagem chegou a concentrar `Modo atual`, status e atalhos; no checkpoint posterior, ele foi simplificado para acoes iconograficas essenciais;
 - criterios de arquitetura atualizados: componentes de layout/regra ficam em arquivos proprios sob `src/features/emergency-home/`;
 - `EmergencyCallTarget` passou a modelar os canais oficiais e URI `tel:`;
 - fallback web de `secureStorage` deixou de chamar `expo-secure-store` e usa armazenamento de simulador por sessao/memoria;
@@ -181,7 +181,7 @@ Estado em 2026-05-02:
 - `BrandedDialog` ganhou rolagem interna para reduzir overflow em aparelhos menores ou fonte ampliada;
 - `docs/23_ESPECIFICACAO_DESENVOLVIMENTO_APP.md` documenta permissoes transitivas do APK debug, mantendo camera/microfone/overlay/storage bloqueados;
 - prints de `Cofre fixo` e `Como funciona` foram recapturados em `docs/assets/mobile/`;
-- drawer da Home separa `Modo atual` e `Ajuda sobre Modo atual` em botoes irmaos para evitar aninhamento no web;
+- registro historico: o drawer da Home chegou a separar modo e ajuda em botoes irmaos; no checkpoint posterior, modo/status foram retirados da Home e mantidos como configuracoes por modal;
 - relatorio complementar ficou em `docs/24_CONTINUIDADE_COFRE_ENCERRAMENTO_QA.md`;
 - gates aprovados no complemento: `typecheck`, `lint`, `test`, `git diff --check`, `release:android:readiness` com Node 24 e `assembleDebug`;
 - ADB continuou sem dispositivo; `adb connect 192.168.0.5:5555` retornou `Connection refused`.
@@ -281,3 +281,23 @@ Proximas acoes atualizadas:
 - APK privado reinstalado no Android `192.168.0.4:5555`; SHA-256 `2fbef1caee679d901b1e3f6dac2cf3966aa2621d4da8ef1f24d8631b71b99d46`.
 - Cold start do app instalado: `TotalTime: 3442`; log filtrado sem fatal/RedBox/Exception.
 - Browser simulator ativo em `http://localhost:8081/` para validacao comentada.
+
+## Memoria viva - 2026-05-03 - Ajustes de validacao comentada
+
+- Roberto anotou remocao do texto `Solte`, remocao das metricas do drawer inicial, player mais enxuto, menu do Cofre igual ao da Home, numeros 190/193/192 em destaque e `Duas cameras` como padrao.
+- Tarcila/Norman: Home fica mais limpa; menus retrateis devem conter somente acoes iconograficas, sem status tecnico exposto.
+- Ada/Hedy: `schemaVersion` das preferencias subiu para `6`; novas instalacoes e preferencias antigas migradas usam `localVideoCapture.cameraMode = both`.
+- Background da Home removeu riscos/linhas e usa particulas/circulos discretos com marca d'agua.
+- Modais de chamada usam `CallNumberHero` para destacar o numero oficial como informacao principal.
+- Cofre reutiliza `EmergencySettingsDrawer`; dados de pacote ficam em modais/player/trilha.
+- Player foi compactado: menos texto, video/seletor/controles/metadados essenciais.
+- Myers/Schneier: antes de gravacoes longas reais, corrigir hash de video para rotina incremental/binaria e definir cota/retencao local.
+
+## Memoria viva - 2026-05-03 - Anel de progresso mais visivel
+
+- Roberto apontou que o anel de load do SOS estava quase invisivel.
+- Tarcila/Norman mantiveram a decisao de nao criar um segundo aro externo: o anel continua preso a circunferencia do botao para preservar a forma e a responsividade.
+- O contraste do trilho e do progresso foi aumentado com opacidade e espessura maiores, tanto no acionamento quanto no encerramento.
+- Ada/Hedy ajustaram a migracao de preferencias: qualquer configuracao anterior ao `schemaVersion 6` volta para `Duas cameras`, evitando aparelhos antigos ficarem presos em frontal/traseira.
+- Myers reinstalou o APK privado no Android `192.168.0.4:5555`, SHA-256 `f5a407ca1937f589f8d1c1f4dc1d2f251e8cf1f7031e59ef76f3ac3373724f15`, cold start `TotalTime: 4487` e logcat filtrado por PID sem falhas criticas.
+- Evidencias visuais salvas em `docs/assets/mobile/2026-05-03-android-ring-visivel-home.png` e `docs/assets/mobile/2026-05-03-android-ring-visivel-hold.png`; log filtrado em `docs/evidencias/android/2026-05-03-ring-player-private/logcat-launch-app.txt`.

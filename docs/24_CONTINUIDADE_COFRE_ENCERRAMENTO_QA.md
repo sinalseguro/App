@@ -22,7 +22,7 @@ Corrigir o bloqueio apontado pelos especialistas no Cofre local e deixar o check
 - `BrandedDialog` ganhou rolagem interna para reduzir risco de overflow em telas Android menores ou com fonte ampliada.
 - A matriz de permissoes em `docs/23_ESPECIFICACAO_DESENVOLVIMENTO_APP.md` foi atualizada com permissoes transitivas observadas no APK debug.
 - Prints de `Cofre fixo` e `Como funciona` foram recapturados porque os anteriores podiam registrar a splash/loading.
-- O item `Modo atual` do drawer da Home foi ajustado para separar o botao principal do botao de ajuda, removendo aninhamento de botoes no simulador web.
+- Registro historico: o drawer da Home chegou a separar modo e ajuda para remover aninhamento no simulador web; checkpoint posterior removeu modo/status da Home e manteve apenas acoes iconograficas.
 
 ## Evidencias atualizadas
 
@@ -51,7 +51,7 @@ Resultado:
 - `git diff --check`: aprovado.
 - Readiness Android com Node 24: pronto condicionado.
 - `assembleDebug`: aprovado.
-- Browser web: `Modo atual` e `Ajuda sobre Modo atual` aparecem como botoes irmaos no DOM, preservando a mesma interface visual.
+- Browser web: registro historico do arranjo com modo/ajuda; a interface atual usa drawer simplificado com acoes para cofre/player, anjos, convites e configuracoes.
 
 Pendencias esperadas no readiness:
 
