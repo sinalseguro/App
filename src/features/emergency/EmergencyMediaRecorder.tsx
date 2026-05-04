@@ -5,6 +5,8 @@ import { theme } from "@/design/theme";
 import { EmergencyPreferences } from "./emergencyPreferences";
 import { preserveLocalVideoAsset } from "./mediaCapture";
 
+type MediaPermissionStatus = "idle" | "requesting" | "granted" | "denied";
+
 type EmergencyMediaRecorderProps = {
   activePackageId: string | null;
   preferences: EmergencyPreferences;
@@ -22,20 +24,24 @@ export function EmergencyMediaRecorder({
   const recordingRef = useRef(false);
   const startedAtRef = useRef<string | null>(null);
   const [cameraReady, setCameraReady] = useState(false);
+  const [mediaPermissionStatus, setMediaPermissionStatus] = useState<MediaPermissionStatus>("idle");
 
   const mediaEnabled = Boolean(activePackageId && preferences.localVideoCapture.requestOnSos);
-  const facing = preferences.localVideoCapture.cameraMode === "back" ? "back" : "front";
+  const requestedCameraMode = preferences.localVideoCapture.cameraMode;
+  const facing = requestedCameraMode === "back" ? "back" : "front";
 
   useEffect(() => {
-    if (!mediaEnabled || !activePackageId || Platform.OS === "web" || !cameraReady || recordingRef.current) {
+    if (!mediaEnabled || Platform.OS === "web") {
+      setCameraReady(false);
+      setMediaPermissionStatus("idle");
       return;
     }
 
-    let ignoreStatusUpdates = false;
+    let cancelled = false;
 
-    async function startRecording() {
-      const currentPackageId = activePackageId;
-      if (!currentPackageId) return;
+    async function prepareMediaPermissions() {
+      setMediaPermissionStatus("requesting");
+
       const currentCameraPermission = await Camera.getCameraPermissionsAsync();
       const cameraAuthorization = currentCameraPermission.granted
         ? currentCameraPermission
@@ -45,15 +51,54 @@ export function EmergencyMediaRecorder({
         ? currentMicrophonePermission
         : await Camera.requestMicrophonePermissionsAsync();
 
+      if (cancelled) return;
+
       if (!cameraAuthorization.granted || !microphoneAuthorization.granted) {
+        setMediaPermissionStatus("denied");
         onStatusChange?.("Chamado ativo sem video: camera ou microfone nao autorizados neste dispositivo.");
+        return;
+      }
+
+      setMediaPermissionStatus("granted");
+    }
+
+    void prepareMediaPermissions();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [mediaEnabled, onStatusChange]);
+
+  useEffect(() => {
+    if (
+      !mediaEnabled ||
+      !activePackageId ||
+      Platform.OS === "web" ||
+      mediaPermissionStatus !== "granted" ||
+      !cameraReady ||
+      recordingRef.current
+    ) {
+      return;
+    }
+
+    let ignoreStatusUpdates = false;
+
+    async function startRecording() {
+      const currentPackageId = activePackageId;
+      if (!currentPackageId) return;
+
+      if (!cameraRef.current) {
         return;
       }
 
       recordingRef.current = true;
       const startedAt = new Date().toISOString();
       startedAtRef.current = startedAt;
-      onStatusChange?.("Gravacao local de video e audio iniciada no sandbox privado do app.");
+      onStatusChange?.(
+        requestedCameraMode === "both"
+          ? "Modo ambas solicitado. Este build privado grava a camera frontal neste acionamento; captura dupla exige modulo nativo homologado."
+          : "Gravacao local de video e audio iniciada no sandbox privado do app."
+      );
 
       try {
         const maxDuration =
@@ -65,7 +110,8 @@ export function EmergencyMediaRecorder({
           const asset = await preserveLocalVideoAsset({
             packageId: currentPackageId,
             sourceUri: result.uri,
-            cameraMode: preferences.localVideoCapture.cameraMode,
+            cameraMode: facing,
+            requestedCameraMode,
             startedAt,
             completedAt
           });
@@ -95,14 +141,16 @@ export function EmergencyMediaRecorder({
   }, [
     activePackageId,
     cameraReady,
+    facing,
     mediaEnabled,
+    mediaPermissionStatus,
     onMediaAttached,
     onStatusChange,
     preferences.defaultDurationSeconds,
-    preferences.localVideoCapture.cameraMode
+    requestedCameraMode
   ]);
 
-  if (!mediaEnabled || Platform.OS === "web") return null;
+  if (!mediaEnabled || Platform.OS === "web" || mediaPermissionStatus !== "granted") return null;
 
   return (
     <View pointerEvents="none" style={styles.captureHost}>
@@ -122,12 +170,13 @@ export function EmergencyMediaRecorder({
 
 const styles = StyleSheet.create({
   cameraPreview: {
-    height: 2,
-    opacity: 0.02,
+    borderRadius: 8,
+    height: 42,
+    opacity: 0.16,
     position: "absolute",
-    right: 0,
-    top: 0,
-    width: 2
+    right: 6,
+    top: 6,
+    width: 54
   },
   captureHost: {
     alignItems: "center",
@@ -136,11 +185,12 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.pill,
     borderWidth: 1,
     bottom: 94,
-    height: 28,
+    height: 54,
     justifyContent: "center",
     paddingHorizontal: theme.spacing.sm,
     position: "absolute",
     right: theme.spacing.lg,
+    width: 118,
     zIndex: 8
   },
   captureLabel: {

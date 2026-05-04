@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     position: "absolute"
   },
   activeHalo: {
-    backgroundColor: "rgba(22, 163, 74, 0.34)",
+    backgroundColor: "rgba(236, 64, 122, 0.2)",
     borderRadius: theme.radius.pill,
     bottom: "18%",
     left: "10%",

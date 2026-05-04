@@ -149,11 +149,29 @@ export default function LocalFilesScreen() {
   }
 
   async function deleteLocalPackage(packageRecord: EmergencyPackage) {
-    await deleteEmergencyPackage(packageRecord.id);
-    setSelectedPackageId((currentSelectedId) => (currentSelectedId === packageRecord.id ? undefined : currentSelectedId));
-    setExpandedPackageId((currentExpandedId) => (currentExpandedId === packageRecord.id ? undefined : currentExpandedId));
-    await refreshPackages();
-    setStatus(`Pacote ${packageRecord.id.slice(0, 8)} removido deste dispositivo com arquivos locais e auditoria de exclusao.`);
+    try {
+      await deleteEmergencyPackage(packageRecord.id);
+      setSelectedPackageId((currentSelectedId) =>
+        currentSelectedId === packageRecord.id ? undefined : currentSelectedId
+      );
+      setExpandedPackageId((currentExpandedId) =>
+        currentExpandedId === packageRecord.id ? undefined : currentExpandedId
+      );
+      await refreshPackages();
+      setStatus(`Pacote ${packageRecord.id.slice(0, 8)} removido deste dispositivo com arquivos locais e auditoria de exclusao.`);
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Nao foi possivel excluir o pacote local. Revise o cofre e tente novamente.";
+      setDialog({
+        title: "Exclusao nao concluida",
+        message,
+        icon: <LockKeyhole size={18} color={theme.colors.primary} />,
+        actions: [{ label: "Entendi" }]
+      });
+      setStatus(message);
+    }
   }
 
   function confirmDeleteLocalPackage(packageRecord: EmergencyPackage) {

@@ -14,6 +14,8 @@ Habilitar o recurso central de gravacao local no fluxo de SOS para validacao pri
 - `CAMERA` e `RECORD_AUDIO` no APK privado.
 - Permissao explicita do Android antes da primeira gravacao.
 - Gravacao local de video/audio ao acionar o SOS.
+- Configuracao local de camera frontal ou traseira para a proxima gravacao.
+- Opcao `Ambas (homologar)` registra a preferencia, mas captura dupla simultanea depende de modulo nativo futuro.
 - Tempo de gravacao configuravel: `Ilimitado`, `1min`, `5min`, `15min`, `30min`, `60min`.
 - Encerramento manual do chamado pelo SOS ativo ou Cofre.
 - Preservacao do video no sandbox privado do app.
@@ -50,8 +52,18 @@ Habilitar o recurso central de gravacao local no fluxo de SOS para validacao pri
 - O Manifest nativo preparado pelo build privado define `android:allowBackup="false"`.
 - O app nao grava em armazenamento externo.
 - O app nao transmite arquivo, coordenada completa, token ou payload sensivel.
+- O indicador `midia local` fica visivel durante a captura; o preview minimo foi ampliado para evitar fluxo de gravacao oculta.
+- O Cofre bloqueia exclusao de chamado ativo no UI e no servico; se algum arquivo local nao for removido, o pacote e mantido para nova tentativa.
 - O hash de video e local; prova juridica formal ainda exige backend, cadeia de custodia e auditoria.
 - Chaves por envelope, RBAC, MFA, retencao e exportacao auditada ficam para etapa backend/homologacao.
+
+## Refinos de 2026-05-03
+
+- Tarcila ajustou o topo para usar somente o simbolo da marca como imagem; o nome `SinalSeguro` fica como texto de interface para contraste e responsividade.
+- O estado ativo do SOS deixou de usar glow/halo verde. O feedback ativo agora segue a paleta magenta/rosa da identidade visual.
+- `EmergencyMediaRecorder` solicita camera/microfone antes de depender de `CameraView.onCameraReady`, reduzindo risco de o primeiro SOS nao pedir permissao.
+- `cameraMode` no asset preservado registra a camera efetivamente usada (`front` ou `back`) e `requestedCameraMode` preserva a preferencia original quando a usuaria escolhe `Ambas (homologar)`.
+- O Player sincroniza a barra de progresso com `expo-video` quando existe arquivo local real.
 
 ## Comandos
 
@@ -66,16 +78,17 @@ adb install -r android/app/build/outputs/apk/debug/app-debug.apk
 - Build: `npm run build:android:private`.
 - Resultado: `BUILD SUCCESSFUL`.
 - Artefato: `android/app/build/outputs/apk/debug/app-debug.apk`.
-- Tamanho: 103 MB.
-- SHA-256: `056e41d7e1e91aef10c6763bb094bfe27973693c8c163b222c6f4be2952be67b`.
+- Tamanho: 107 MB.
+- SHA-256: `b6993cf4056d9926e582e9579621f4e32f468fc83e1cc66185678652b51df22f`.
 - Dispositivo: Android `23129RA5FL` via ADB Wi-Fi `192.168.0.4:5555`.
 - Instalacao: `adb install -r` com resultado `Success`.
 - Permissoes concedidas para homologacao: camera, microfone, localizacao fina/aproximada e notificacoes.
-- Cold start: `Status: ok`, `LaunchState: COLD`, `TotalTime: 4103`.
+- Cold start revalidado apos ajuste do topo: `Status: ok`, `LaunchState: COLD`, `TotalTime: 6026`.
 - Logcat filtrado: sem `FATAL`, `AndroidRuntime`, `Unable to load script`, `Failed to connect`, `setValueWithKeyAsync`, `RedBox` ou `Exception`.
 - Evidencia visual: `docs/assets/mobile/2026-05-03-android-private-media-home.png`.
 - Revalidacao final de abertura: `TotalTime: 5787`, log salvo em `/tmp/sinalseguro-private-media-logcat-final.txt`, sem ocorrencias fatais filtradas.
 - Evidencia final: `docs/assets/mobile/2026-05-03-android-private-media-home-final.png`.
+- Evidencia do topo com simbolo sem texto: `docs/assets/mobile/2026-05-03-android-topo-simbolo.png`.
 
 Observacao operacional: a injecao de toque por ADB nao acionou os controles nesta rodada. A validacao funcional do gesto SOS com camera, encerramento manual, preservacao do video e reproducao no Player deve ser feita manualmente por Roberto/Myers no aparelho fisico.
 

@@ -15,7 +15,7 @@ type AppTopBarProps = {
   onMenuPress?: () => void;
 };
 
-const brandLogo = require("../../assets/brand/sinalseguro-logo.png");
+const brandSymbol = require("../../assets/brand/sinalseguro-symbol.png");
 
 export function AppTopBar({
   contextLabel,
@@ -56,13 +56,12 @@ export function AppTopBar({
         onPress={() => router.push("/")}
         style={({ pressed }) => [styles.brandArea, showBack && styles.brandAreaWithBack, pressed && styles.brandAreaPressed]}
       >
+        <Image accessibilityIgnoresInvertColors source={brandSymbol} style={styles.brandSymbol} />
         <View style={styles.brandCopy}>
-          <Image accessibilityIgnoresInvertColors source={brandLogo} style={styles.brandLogo} />
-          {contextLabel ? (
-            <Text style={styles.contextLabel} numberOfLines={1}>
-              {contextLabel}
-            </Text>
-          ) : null}
+          <Text style={styles.brandName} numberOfLines={1}>
+            SinalSeguro
+          </Text>
+          {contextLabel ? <Text style={styles.contextLabel} numberOfLines={1}>{contextLabel}</Text> : null}
         </View>
       </Pressable>
       {rightSlot}
@@ -101,11 +100,19 @@ const styles = StyleSheet.create({
     gap: 2,
     minWidth: 0
   },
-  brandLogo: {
-    height: 39,
-    maxWidth: 230,
+  brandName: {
+    color: theme.colors.textOnDark,
+    fontSize: 22,
+    fontWeight: "900",
+    lineHeight: 25,
+    textShadowColor: "rgba(0, 0, 0, 0.34)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3
+  },
+  brandSymbol: {
+    height: 48,
     resizeMode: "contain",
-    width: "100%"
+    width: 42
   },
   contextLabel: {
     color: "#FFD8E7",

@@ -39,8 +39,10 @@ Etapa ativa: validacao manual do APK privado Android com midia local.
 Estado ativo em 2026-05-03:
 
 - APK privado com midia local instalado no Android `192.168.0.4:5555`;
-- hash vigente `056e41d7e1e91aef10c6763bb094bfe27973693c8c163b222c6f4be2952be67b`;
+- hash vigente `b6993cf4056d9926e582e9579621f4e32f468fc83e1cc66185678652b51df22f`;
 - abertura fria revalidada sem crash fatal;
+- topo revisado por Tarcila para usar o simbolo `sinalseguro-symbol.png` como logomarca sem texto, mantendo `SinalSeguro` como texto responsivo de interface;
+- feedback ativo do SOS sem animacao verde, usando apenas a paleta magenta/rosa da identidade;
 - proxima validacao depende de toque manual no aparelho: SOS inicia camera, encerramento preserva video, Cofre lista pacote e Player reproduz midia local.
 
 Estado em 2026-05-02:
@@ -256,3 +258,15 @@ Proximas acoes atualizadas:
 - Cold start validado: `TotalTime: 4103`, PID `31065`, sem `FATAL`, `AndroidRuntime`, erro de bundle Metro ou `setValueWithKeyAsync` no log isolado.
 - Captura aprovada para evidencia local: `docs/assets/mobile/2026-05-03-android-private-media-home.png`.
 - A injecao de toque por ADB nao acionou os controles; a validacao funcional do gesto SOS com camera deve ser feita manualmente no aparelho fisico.
+
+## Memoria viva - 2026-05-03 - Refinos midia/cofre/topo
+
+- Roberto pediu ajuste rapido para remover as animacoes verdes do SOS ativo.
+- Tarcila/Norman aprovaram substituir o feedback verde por luz/halo magenta dentro da identidade SinalSeguro.
+- O topo do app agora usa `sinalseguro-symbol.png` como logomarca sem texto; o nome `SinalSeguro` e renderizado como texto responsivo da interface.
+- Ada/Hedy corrigiram o fluxo de permissao: camera e microfone sao solicitados antes de depender do `CameraView.onCameraReady`, reduzindo risco de o primeiro SOS nao iniciar captura.
+- `Video local` em Configuracoes preserva frontal/traseira; `Ambas (homologar)` registra intencao, mas captura dupla simultanea continua pendente de modulo nativo homologado.
+- O asset local registra `cameraMode` efetivo e `requestedCameraMode` original.
+- Schneier/Myers reforcaram a gestao do Cofre: exclusao de chamado ativo agora e bloqueada no servico, e falha ao remover arquivo local mantem o pacote para retry.
+- Player local sincroniza progresso com `expo-video` quando existe midia real.
+- Gates executados nesta rodada: `typecheck`, `lint`, `test`.

@@ -55,6 +55,21 @@ export async function deleteEmergencyPackage(packageId: string) {
   const packageRecord = (await listEmergencyPackages()).find((item) => item.id === packageId);
 
   if (packageRecord) {
+    if (packageRecord.status === "recording_local") {
+      throw new Error("Chamado ativo nao pode ser excluido. Finalize a gravacao antes de remover do cofre local.");
+    }
+
+    if (packageRecord.media.status === "recorded_local") {
+      const deletionResults = await Promise.allSettled(
+        packageRecord.media.assets.map((asset) => FileSystem.deleteAsync(asset.uri, { idempotent: true }))
+      );
+      const failedDeletion = deletionResults.some((result) => result.status === "rejected");
+
+      if (failedDeletion) {
+        throw new Error("Nao foi possivel remover todos os arquivos locais. O pacote foi mantido para nova tentativa.");
+      }
+    }
+
     const deletedAt = new Date().toISOString();
     await saveSecureRecord(EMERGENCY_DELETION_AUDIT_NAMESPACE, {
       id: `${packageId}.${deletedAt}`,
@@ -65,14 +80,6 @@ export async function deleteEmergencyPackage(packageId: string) {
       action: "removed_from_device",
       reason: "user_requested_local_delete"
     } satisfies EmergencyPackageDeletionAudit);
-
-    if (packageRecord.media.status === "recorded_local") {
-      await Promise.all(
-        packageRecord.media.assets.map((asset) =>
-          FileSystem.deleteAsync(asset.uri, { idempotent: true }).catch(() => undefined)
-        )
-      );
-    }
   }
 
   await deleteSecureRecord(EMERGENCY_NAMESPACE, packageId);

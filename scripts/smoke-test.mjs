@@ -110,6 +110,10 @@ if (!panicButton.includes("particleConfigs") || !panicButton.includes("buttonArm
   throw new Error("Botao SOS ativo precisa ter estado visual proprio e particulas discretas.");
 }
 
+if (panicButton.includes("#16A34A") || panicButton.includes("187, 247, 208")) {
+  throw new Error("Botao SOS ativo nao pode usar animacao/glow verde; deve seguir a identidade visual SinalSeguro.");
+}
+
 if (!panicButton.includes("width: \"75%\"") || !panicButton.includes("aspectRatio: 1")) {
   throw new Error("Botao SOS precisa ocupar area responsiva de destaque na home.");
 }
@@ -207,6 +211,13 @@ const emergencyOutbox = await readFile("src/features/emergency/emergencyOutbox.t
 
 if (!emergencyOutbox.includes("deleteEmergencyPackage")) {
   throw new Error("Cofre local precisa ter exclusao local funcional e controlada.");
+}
+
+if (
+  !emergencyOutbox.includes("status === \"recording_local\"") ||
+  !emergencyOutbox.includes("Nao foi possivel remover todos os arquivos locais")
+) {
+  throw new Error("Exclusao local precisa bloquear chamado ativo e manter pacote se algum asset nao for removido.");
 }
 
 if (!emergencyOutbox.includes("removed_from_device")) {

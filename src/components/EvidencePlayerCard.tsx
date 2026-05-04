@@ -44,6 +44,22 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     if (!playing || !packageRecord) return;
 
     const timer = setInterval(() => {
+      if (hasMedia) {
+        const duration = player.duration;
+        const currentTime = player.currentTime;
+
+        if (Number.isFinite(duration) && duration > 0) {
+          const nextProgress = Math.min(100, (currentTime / duration) * 100);
+          setProgress(nextProgress);
+
+          if (nextProgress >= 99.5) {
+            player.pause();
+            setPlaying(false);
+          }
+          return;
+        }
+      }
+
       setProgress((currentProgress) => {
         const nextProgress = Math.min(100, currentProgress + 6);
         if (nextProgress >= 100) {
@@ -54,7 +70,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     }, 360);
 
     return () => clearInterval(timer);
-  }, [packageRecord, playing]);
+  }, [hasMedia, packageRecord, player, playing]);
 
   function toggleLocalPlayback() {
     if (!packageRecord) return;

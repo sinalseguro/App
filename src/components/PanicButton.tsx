@@ -252,9 +252,9 @@ const styles = StyleSheet.create({
   buttonArmed: {
     backgroundColor: "#9F174D",
     borderColor: "#FFD3E1",
-    shadowColor: "#16A34A",
+    shadowColor: "#EC407A",
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.32,
+    shadowOpacity: 0.36,
     shadowRadius: 32
   },
   buttonPressed: {
@@ -274,7 +274,7 @@ const styles = StyleSheet.create({
     top: 18
   },
   armedGlow: {
-    backgroundColor: "rgba(22, 163, 74, 0.42)",
+    backgroundColor: "rgba(236, 64, 122, 0.34)",
     borderRadius: theme.radius.pill,
     bottom: -12,
     left: -12,
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
     zIndex: 0
   },
   armedRing: {
-    borderColor: "rgba(187, 247, 208, 0.92)",
+    borderColor: "rgba(255, 128, 171, 0.86)",
     borderRadius: theme.radius.pill,
     borderWidth: 2,
     bottom: 4,

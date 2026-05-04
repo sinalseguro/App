@@ -245,6 +245,13 @@ export default function SettingsScreen() {
   async function updateCameraMode(cameraMode: LocalVideoCameraMode) {
     if (!preferences) return;
 
+    const cameraLabel =
+      cameraMode === "front"
+        ? "frontal"
+        : cameraMode === "back"
+          ? "traseira"
+          : "ambas solicitadas para homologacao nativa";
+
     await updatePreferences(
       {
         ...preferences,
@@ -254,7 +261,7 @@ export default function SettingsScreen() {
           status: "enabled_local"
         }
       },
-      `Camera ${cameraMode === "front" ? "frontal" : cameraMode === "back" ? "traseira" : "ambas"} definida para a proxima gravacao local.`
+      `Camera ${cameraLabel} definida para a proxima gravacao local.`
     );
   }
 
@@ -618,7 +625,8 @@ export default function SettingsScreen() {
             <View style={styles.dialogStack}>
               <Text style={styles.dialogText}>
                 Habilita o SOS para gravar video e audio localmente no sandbox privado do app. O envio para anjos/API
-                continua bloqueado ate backend, contrato, chaves e auditoria.
+                continua bloqueado ate backend, contrato, chaves e auditoria. A opcao ambas registra a preferencia, mas
+                captura dupla simultanea exige modulo nativo homologado.
               </Text>
               <ButtonIcon
                 icon={<Video size={18} color={theme.colors.primary} />}
@@ -644,7 +652,7 @@ export default function SettingsScreen() {
               />
               <ButtonIcon
                 icon={<SwitchCamera size={18} color={theme.colors.primary} />}
-                label="Ambas"
+                label="Ambas (homologar)"
                 onPress={() => updateCameraMode("both")}
                 style={preferences?.localVideoCapture.cameraMode === "both" ? styles.selectedOption : undefined}
               />

@@ -9,7 +9,8 @@ const MEDIA_DIRECTORY = `${FileSystem.documentDirectory ?? ""}sinalseguro-media/
 type PreserveLocalVideoInput = {
   packageId: string;
   sourceUri: string;
-  cameraMode: LocalVideoCameraMode;
+  cameraMode: Exclude<LocalVideoCameraMode, "both">;
+  requestedCameraMode?: LocalVideoCameraMode;
   startedAt: string;
   completedAt?: string;
 };
@@ -22,6 +23,7 @@ export async function preserveLocalVideoAsset({
   packageId,
   sourceUri,
   cameraMode,
+  requestedCameraMode,
   startedAt,
   completedAt = new Date().toISOString()
 }: PreserveLocalVideoInput) {
@@ -60,6 +62,7 @@ export async function preserveLocalVideoAsset({
     mimeType: "video/mp4",
     storage: "app_private_sandbox",
     cameraMode,
+    requestedCameraMode,
     sizeBytes: fileInfo.size,
     sha256,
     recordedAt: startedAt,

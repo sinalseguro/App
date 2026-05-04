@@ -24,7 +24,8 @@ export type LocalMediaAsset = {
   fileName: string;
   mimeType: "video/mp4";
   storage: "app_private_sandbox";
-  cameraMode: "front" | "back" | "both";
+  cameraMode: "front" | "back";
+  requestedCameraMode?: "front" | "back" | "both";
   sizeBytes: number;
   sha256: string;
   recordedAt: string;

@@ -79,6 +79,17 @@ Validacoes:
 - `npm run typecheck`: aprovado.
 - `npm run lint`: aprovado.
 - `npm test`: aprovado.
+- `npm run private:android:readiness`: aprovado como build privado condicionado.
+- `npm run build:android:private`: `BUILD SUCCESSFUL`.
+- `adb install -r`: `Success` no Android `23129RA5FL` via `192.168.0.4:5555`.
+- Cold start Android apos ajuste do topo: `Status: ok`, `LaunchState: COLD`, `TotalTime: 6026`.
+- Logcat filtrado sem falhas fatais.
+
+Artefatos:
+
+- APK privado: `android/app/build/outputs/apk/debug/app-debug.apk`.
+- SHA-256: `b6993cf4056d9926e582e9579621f4e32f468fc83e1cc66185678652b51df22f`.
+- Evidencia Android do topo com simbolo sem texto: `docs/assets/mobile/2026-05-03-android-topo-simbolo.png`.
 - Browser Use em `http://localhost:8081/`: aprovado.
 - `./gradlew assembleDebug`: aprovado.
 
@@ -638,3 +649,28 @@ Pendencia de validacao manual:
 | Data | Evento | Responsavel | Impacto | Proximo passo |
 |---|---|---|---|---|
 |  |  |  |  |  |
+
+## 2026-05-03 - Refinos de midia, cofre e topo
+
+Status: implementado e validado em gates locais.
+
+Especialistas acionados:
+
+- Tarcila/Norman: topo com simbolo sem texto e remocao do feedback verde do SOS ativo.
+- Ada/Hedy: fluxo de permissao de camera/microfone e registro correto da camera usada.
+- Schneier/Myers: bloqueio de exclusao de chamado ativo no servico e preservacao do pacote quando arquivo local nao puder ser removido.
+- Cristine/Knuth: memoria e documentacao do checkpoint.
+
+Decisoes:
+
+- O topo usa `sinalseguro-symbol.png` como logomarca sem texto; o nome `SinalSeguro` continua como texto da UI para contraste.
+- O SOS ativo nao usa mais halo/glow verde; o feedback visual segue magenta/rosa da identidade visual.
+- A gravacao solicita permissao de camera/microfone antes de esperar `CameraView.onCameraReady`.
+- `Ambas (homologar)` continua disponivel como preferencia, mas o build privado grava uma camera por acionamento e registra `requestedCameraMode` para auditoria tecnica.
+- O Player usa progresso real do `expo-video` quando ha arquivo local.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado.
+- `npm run lint`: aprovado.
+- `npm test`: aprovado.
