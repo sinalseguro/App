@@ -7,7 +7,7 @@ export type EmergencyDurationSeconds = 0 | 60 | 300 | 900 | 1800 | 3600;
 export type LocalVideoCameraMode = "front" | "back" | "both";
 
 export type EmergencyPreferences = {
-  schemaVersion: 6;
+  schemaVersion: 7;
   defaultDurationSeconds: EmergencyDurationSeconds;
   inAppHoldMs: number;
   locationMode: "ask_when_needed" | "foreground_pre_authorized";
@@ -18,6 +18,7 @@ export type EmergencyPreferences = {
   };
   emergencyPhoneCall: {
     call190ShortcutEnabled: boolean;
+    call190OnSosEnabled: boolean;
     callTrustedContactOnAlert: boolean;
     allowReceiverCall190: boolean;
   };
@@ -58,7 +59,7 @@ const PREFERENCES_KEY = "sinalseguro.emergency-preferences.v1";
 export const durationOptions: EmergencyDurationSeconds[] = [0, 60, 300, 900, 1800, 3600];
 
 export const defaultEmergencyPreferences: EmergencyPreferences = {
-  schemaVersion: 6,
+  schemaVersion: 7,
   defaultDurationSeconds: 0,
   inAppHoldMs: 1800,
   locationMode: "ask_when_needed",
@@ -68,7 +69,8 @@ export const defaultEmergencyPreferences: EmergencyPreferences = {
     codeHash: DEFAULT_FINISH_CODE_HASH
   },
   emergencyPhoneCall: {
-    call190ShortcutEnabled: true,
+    call190ShortcutEnabled: false,
+    call190OnSosEnabled: false,
     callTrustedContactOnAlert: false,
     allowReceiverCall190: false
   },
@@ -131,13 +133,21 @@ export async function getEmergencyPreferences(): Promise<EmergencyPreferences> {
       parsedFinishCodeHash === LEGACY_DEFAULT_FINISH_CODE_HASH
         ? defaultEmergencyPreferences.finishSafety.codeHash
         : parsedFinishCodeHash;
+    const normalizedCall190ShortcutEnabled =
+      storedSchemaVersion < 7
+        ? defaultEmergencyPreferences.emergencyPhoneCall.call190ShortcutEnabled
+        : typeof parsed.emergencyPhoneCall?.call190ShortcutEnabled === "boolean"
+          ? parsed.emergencyPhoneCall.call190ShortcutEnabled
+          : defaultEmergencyPreferences.emergencyPhoneCall.call190ShortcutEnabled;
+    const normalizedCall190OnSosEnabled =
+      typeof parsed.emergencyPhoneCall?.call190OnSosEnabled === "boolean"
+        ? parsed.emergencyPhoneCall.call190OnSosEnabled
+        : defaultEmergencyPreferences.emergencyPhoneCall.call190OnSosEnabled;
     const phoneCallPreferences = {
       ...defaultEmergencyPreferences.emergencyPhoneCall,
       ...parsed.emergencyPhoneCall,
-      call190ShortcutEnabled:
-        typeof parsed.emergencyPhoneCall?.call190ShortcutEnabled === "boolean"
-          ? parsed.emergencyPhoneCall.call190ShortcutEnabled
-          : defaultEmergencyPreferences.emergencyPhoneCall.call190ShortcutEnabled
+      call190ShortcutEnabled: normalizedCall190ShortcutEnabled,
+      call190OnSosEnabled: normalizedCall190OnSosEnabled
     };
     const parsedCameraMode =
       parsed.localVideoCapture?.cameraMode === "front" ||
@@ -153,7 +163,7 @@ export async function getEmergencyPreferences(): Promise<EmergencyPreferences> {
     return {
       ...defaultEmergencyPreferences,
       ...parsed,
-      schemaVersion: 6,
+      schemaVersion: 7,
       defaultDurationSeconds: normalizeDuration(parsed.defaultDurationSeconds),
       finishSafety: {
         ...defaultEmergencyPreferences.finishSafety,

@@ -32,7 +32,7 @@ Fonte de verdade operacional: este repositorio, `AGENTS.md`, `.codex/AGENTS.md` 
 - `EmergencySettingsDrawer`: menu retratil padrao da Home e do Cofre, somente com acoes iconograficas.
 - `EmergencyCallDock`: atalhos oficiais 190, 193 e 192.
 - `EvidencePlayerCard`: player seguro local/recebido.
-- `LocalEvidenceRail`: trilha horizontal de pacotes locais com acoes em raio.
+- `LocalEvidenceRail`: grade vertical de pacotes locais com acoes em linhas/colunas.
 - `SafeScreen`: base rolavel para paginas informativas e configuracoes.
 
 ## Home SOS
@@ -60,9 +60,13 @@ Fonte de verdade operacional: este repositorio, `AGENTS.md`, `.codex/AGENTS.md` 
 
 - Deve ser tela fixa e iconografica.
 - O menu retratil do Cofre reutiliza o mesmo menu padrao da Home.
+- O menu retratil deve usar `Cofre`, `Anjos`, `Player` e `Configuracoes`; `Cofre` abre a trilha de arquivos e `Player` abre a revisao segura.
+- Toque fora do menu retratil ou de modal deve fechar a camada aberta quando isso nao destruir dados.
 - Dados tecnicos nao ficam expostos no menu retratil; ficam em modais, no player ou na trilha de arquivos.
 - Player abre em modal.
 - Trilha de arquivos abre em modal.
+- O modal da trilha do cofre deve apresentar os arquivos como icones agrupados em grade vertical com rolagem interna quando houver muitos pacotes.
+- Ao tocar em um pacote, as acoes aparecem em botoes iconograficos organizados em linhas e colunas: visualizar, compartilhar interno futuro, excluir e finalizar quando ativo.
 - Exclusao exige confirmacao em `BrandedDialog`.
 - Chamada ativa nao pode ser excluida antes de finalizar.
 - Finalizacao de chamada ativa pelo Cofre deve reutilizar o mesmo protocolo de seguranca da Home.
@@ -98,6 +102,8 @@ Fonte de verdade operacional: este repositorio, `AGENTS.md`, `.codex/AGENTS.md` 
 - Acionamento progride no sentido horario; encerramento progride no sentido anti-horario.
 - O anel nao deve sair da borda visual do botao em Android, iOS ou web responsivo.
 - O fundo da Home usa marca d'agua e particulas/circulos sutis; nao deve usar riscos/linhas animadas.
+- O efeito visual do botao deve parecer uma bolha 3D discreta, com profundidade, brilho superior e sombra interna, sempre dentro da identidade visual aprovada por Tarcila.
+- O anel de progresso deve ter contraste suficiente para validacao em Android fisico, mas sem criar aro externo fora da circunferencia.
 
 ## Riscos tecnicos abertos
 

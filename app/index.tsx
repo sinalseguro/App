@@ -1,8 +1,7 @@
 import { ReactNode, useCallback, useState } from "react";
 import { router, useFocusEffect } from "expo-router";
-import { Linking, Platform, StyleSheet, Text, TextInput, View } from "react-native";
+import { Linking, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { LockKeyhole, PhoneCall } from "lucide-react-native";
-import * as Crypto from "expo-crypto";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BrandBackground } from "@/components/BrandBackground";
 import { BrandedDialog, BrandedDialogAction } from "@/components/BrandedDialog";
@@ -12,7 +11,7 @@ import { EmergencyCallDock } from "@/features/emergency-home/EmergencyCallDock";
 import { EmergencyCallTarget } from "@/features/emergency-home/EmergencyCallTarget";
 import { EmergencySettingsDrawer } from "@/features/emergency-home/EmergencySettingsDrawer";
 import { EmergencyTopBar } from "@/features/emergency-home/EmergencyTopBar";
-import { EmergencyHomeRoute } from "@/features/emergency-home/routes";
+import { EmergencyHomePanel, EmergencyHomeRoute } from "@/features/emergency-home/routes";
 import { countPendingEmergencyPackages } from "@/features/emergency/emergencyOutbox";
 import { EmergencyMediaRecorder } from "@/features/emergency/EmergencyMediaRecorder";
 import {
@@ -26,6 +25,7 @@ import {
   formatDuration,
   getEmergencyPreferences
 } from "@/features/emergency/emergencyPreferences";
+import { isProtectedAccessUnlocked, unlockProtectedAccess, verifySecurityCode } from "@/security/protectedAccess";
 
 type HomeDialog = {
   title: string;
@@ -33,6 +33,11 @@ type HomeDialog = {
   icon?: ReactNode;
   children?: ReactNode;
   actions: BrandedDialogAction[];
+};
+
+type ProtectedRouteRequest = {
+  panel?: EmergencyHomePanel;
+  route: EmergencyHomeRoute;
 };
 
 function CallNumberHero({ target }: { target: EmergencyCallTarget }) {
@@ -52,10 +57,11 @@ export default function HomeScreen() {
   const [finishCodeInput, setFinishCodeInput] = useState("");
   const [finishConfirmationOpen, setFinishConfirmationOpen] = useState(false);
   const [finishError, setFinishError] = useState("");
+  const [protectedRouteRequest, setProtectedRouteRequest] = useState<ProtectedRouteRequest | null>(null);
+  const [protectedRouteCodeInput, setProtectedRouteCodeInput] = useState("");
+  const [protectedRouteError, setProtectedRouteError] = useState("");
   const [dialog, setDialog] = useState<HomeDialog | null>(null);
-  const [recordingStatus, setRecordingStatus] = useState(
-    "Pronto para preservar um chamado local com horario, consentimento e localizacao pontual autorizada."
-  );
+  const [recordingStatus, setRecordingStatus] = useState("Pronto para iniciar um chamado seguro.");
 
   async function refreshOutboxCount() {
     const activePackage = await getActiveEmergencyPackage();
@@ -63,9 +69,29 @@ export default function HomeScreen() {
     setOutboxCount(await countPendingEmergencyPackages());
   }
 
-  function openRoute(route: EmergencyHomeRoute) {
+  function navigateRoute(route: EmergencyHomeRoute, panel?: EmergencyHomePanel) {
     setMenuOpen(false);
+    if (route === "/arquivos" && panel) {
+      router.push({ pathname: "/arquivos", params: { painel: panel } });
+      return;
+    }
     router.push(route);
+  }
+
+  function openRoute(route: EmergencyHomeRoute, panel?: EmergencyHomePanel) {
+    void openRouteAsync(route, panel);
+  }
+
+  async function openRouteAsync(route: EmergencyHomeRoute, panel?: EmergencyHomePanel) {
+    if (preferences.finishSafety.requireCode && !(await isProtectedAccessUnlocked())) {
+      setMenuOpen(false);
+      setProtectedRouteRequest({ route, panel });
+      setProtectedRouteCodeInput("");
+      setProtectedRouteError("");
+      return;
+    }
+
+    navigateRoute(route, panel);
   }
 
   function confirmEmergencyCall(target: EmergencyCallTarget) {
@@ -106,11 +132,30 @@ export default function HomeScreen() {
       return;
     }
 
-    setRecordingStatus(
-      Platform.OS === "web"
-        ? "Iniciando chamado local de simulador sem captura real de localizacao..."
-        : "Iniciando chamado local e capturando localizacao pontual..."
-    );
+    if (
+      preferences.localVideoCapture.requestOnSos &&
+      (!preferences.legalConsent.termsAccepted ||
+        !preferences.legalConsent.privacyAccepted ||
+        !preferences.legalConsent.emergencyDataSharingAccepted)
+    ) {
+      setDialog({
+        title: "Autorizar gravacao",
+        message: "Revise e aceite os termos para permitir gravacao local durante o SOS.",
+        icon: <LockKeyhole size={18} color={theme.colors.primary} />,
+        actions: [
+          { label: "Agora nao", tone: "muted" },
+          {
+            label: "Abrir termos",
+            onPress: () => {
+              router.push("/configuracoes");
+            }
+          }
+        ]
+      });
+      return;
+    }
+
+    setRecordingStatus("Iniciando chamado seguro...");
 
     try {
       const result = await startEmergencyPackage({
@@ -125,17 +170,21 @@ export default function HomeScreen() {
       });
       await refreshOutboxCount();
 
+      if (preferences.emergencyPhoneCall.call190OnSosEnabled && Platform.OS !== "web") {
+        void Linking.openURL("tel:190").catch(() => undefined);
+      }
+
       const locationText =
         result.packageRecord.location.status === "captured"
-          ? "localizacao registrada"
-          : `localizacao ${result.packageRecord.location.status}`;
+          ? "Localizacao preservada."
+          : "Localizacao nao registrada.";
 
       setRecordingStatus(
-        `Chamado ${result.packageRecord.id.slice(0, 8)} ativo ate encerramento manual; gravacao ${formatDuration(preferences.defaultDurationSeconds)}; ${locationText}; envio externo indisponivel neste build.`
+        `Chamado ativo. Gravacao ${formatDuration(preferences.defaultDurationSeconds)}. ${locationText} Arquivo no cofre local.`
       );
     } catch {
       setActivePackageId(null);
-      setRecordingStatus("Falha controlada ao preservar o chamado local. Tente novamente e use os canais oficiais.");
+      setRecordingStatus("Nao foi possivel iniciar o chamado neste aparelho.");
       setDialog({
         title: "Chamado nao preservado",
         message:
@@ -177,18 +226,16 @@ export default function HomeScreen() {
   async function handleFinishActiveCall() {
     if (!activePackageId) return;
 
-    setRecordingStatus("Finalizando chamado local...");
+    setRecordingStatus("Finalizando chamado...");
     const result = await finishEmergencyPackage(activePackageId, "manual_finish");
     await refreshOutboxCount();
 
     if (!result) {
-      setRecordingStatus("Nenhum chamado ativo encontrado para finalizar.");
+      setRecordingStatus("Nenhum chamado ativo encontrado.");
       return;
     }
 
-    setRecordingStatus(
-      `Chamado ${result.packageRecord.id.slice(0, 8)} finalizado e preservado somente no cofre local deste dispositivo.`
-    );
+    setRecordingStatus("Chamado encerrado e preservado no cofre local.");
     setFinishConfirmationOpen(false);
     setFinishCodeInput("");
     setFinishError("");
@@ -200,14 +247,34 @@ export default function HomeScreen() {
       return;
     }
 
-    const codeHash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, finishCodeInput.trim());
-
-    if (codeHash !== preferences.finishSafety.codeHash) {
+    if (!(await verifySecurityCode(preferences, finishCodeInput))) {
       setFinishError("Codigo incorreto. O chamado continua ativo.");
       return;
     }
 
     void handleFinishActiveCall();
+  }
+
+  async function confirmProtectedRouteWithCode() {
+    if (!protectedRouteRequest) return;
+
+    if (!(await verifySecurityCode(preferences, protectedRouteCodeInput))) {
+      setProtectedRouteError("Codigo incorreto. Area protegida bloqueada.");
+      return;
+    }
+
+    const nextRequest = protectedRouteRequest;
+    setProtectedRouteRequest(null);
+    setProtectedRouteCodeInput("");
+    setProtectedRouteError("");
+    await unlockProtectedAccess();
+    navigateRoute(nextRequest.route, nextRequest.panel);
+  }
+
+  function closeProtectedRouteDialog() {
+    setProtectedRouteRequest(null);
+    setProtectedRouteCodeInput("");
+    setProtectedRouteError("");
   }
 
   return (
@@ -220,9 +287,14 @@ export default function HomeScreen() {
         />
 
         {menuOpen ? (
-          <EmergencySettingsDrawer
-            onNavigate={openRoute}
-          />
+          <>
+            <Pressable
+              accessibilityLabel="Fechar menu"
+              onPress={() => setMenuOpen(false)}
+              style={styles.menuBackdrop}
+            />
+            <EmergencySettingsDrawer onNavigate={openRoute} />
+          </>
         ) : null}
 
         <View style={styles.emergencySurface}>
@@ -251,6 +323,43 @@ export default function HomeScreen() {
         <BrandedDialog
           actions={[
             {
+              label: "Cancelar",
+              tone: "muted",
+              onPress: closeProtectedRouteDialog
+            },
+            {
+              autoClose: false,
+              label: "Liberar",
+              onPress: () => {
+                void confirmProtectedRouteWithCode();
+              }
+            }
+          ]}
+          icon={<LockKeyhole size={18} color={theme.colors.primary} />}
+          message="Informe o codigo de seguranca para continuar."
+          onClose={closeProtectedRouteDialog}
+          title="Codigo de seguranca"
+          visible={Boolean(protectedRouteRequest)}
+        >
+          <TextInput
+            accessibilityLabel="Codigo para abrir area protegida"
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="number-pad"
+            maxLength={12}
+            onChangeText={setProtectedRouteCodeInput}
+            placeholder="Codigo de seguranca"
+            placeholderTextColor={theme.colors.textMuted}
+            secureTextEntry
+            style={styles.codeInput}
+            value={protectedRouteCodeInput}
+          />
+          {protectedRouteError ? <Text style={styles.finishError}>{protectedRouteError}</Text> : null}
+        </BrandedDialog>
+
+        <BrandedDialog
+          actions={[
+            {
               label: "Manter ativo",
               tone: "muted",
               onPress: () => setFinishConfirmationOpen(false)
@@ -265,7 +374,7 @@ export default function HomeScreen() {
             }
           ]}
           icon={<LockKeyhole size={18} color={theme.colors.primary} />}
-          message="O codigo de seguranca impede encerramento nao autorizado caso outra pessoa tome o aparelho."
+          message="Informe o codigo para confirmar o encerramento do chamado."
           onClose={() => setFinishConfirmationOpen(false)}
           title="Confirmar encerramento"
           visible={finishConfirmationOpen}
@@ -308,6 +417,11 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background,
     flex: 1,
     overflow: "hidden"
+  },
+  menuBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "transparent",
+    zIndex: 20
   },
   emergencySurface: {
     flex: 1,

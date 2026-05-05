@@ -17,7 +17,7 @@ export function getEmergencyDeliveryReadiness(packageRecord: EmergencyPackage) {
     mediaUploadReady: packageRecord.media.assets.length > 0,
     reason:
       packageRecord.media.status === "blocked_public_build"
-        ? "Pacote preservado no cofre local; envio externo e midia real seguem bloqueados neste build."
-        : "Pacote preservado; entrega externa depende de contrato, backend, chaves e auditoria."
+        ? "Pacote preservado no cofre local; arquivos permanecem somente neste aparelho."
+        : "Pacote preservado; envio protegido depende de conta, contrato e autorizacoes."
   };
 }

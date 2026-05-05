@@ -1,8 +1,8 @@
 import { ReactNode, useEffect, useState } from "react";
 import { Linking, StyleSheet, Text, TextInput, View } from "react-native";
+import { router } from "expo-router";
 import { Camera as ExpoCamera } from "expo-camera";
 import * as Location from "expo-location";
-import * as Crypto from "expo-crypto";
 import {
   BookOpenCheck,
   Camera,
@@ -26,6 +26,7 @@ import { AppTopBar } from "@/components/AppTopBar";
 import { BrandedDialog, BrandedDialogAction } from "@/components/BrandedDialog";
 import { ButtonIcon } from "@/components/ButtonIcon";
 import { PermissionGate } from "@/components/PermissionGate";
+import { ProtectedAccessGate } from "@/components/ProtectedAccessGate";
 import { ResourceTile } from "@/components/ResourceTile";
 import { theme } from "@/design/theme";
 import { trustedContactsMock } from "@/features/contacts/contactMocks";
@@ -39,6 +40,14 @@ import {
   saveEmergencyPreferences
 } from "@/features/emergency/emergencyPreferences";
 import { getLocationPermissionReadiness, prepareForegroundLocationPermission } from "@/features/emergency/locationCapture";
+import {
+  clearProtectedAccess,
+  hashSecurityCode,
+  hasSecurityCode,
+  isProtectedAccessUnlocked,
+  verifySecurityCode,
+  validateSecurityCodePair
+} from "@/security/protectedAccess";
 
 type PermissionStatusText = "pendente" | "permitido" | "negado" | "bloqueado";
 type SettingsPanel = "duracao" | "encerramento" | "localizacao" | "compartilhamento" | "video" | "atalhos" | "termos" | "login" | null;
@@ -62,15 +71,59 @@ function formatCameraModeLabel(cameraMode: LocalVideoCameraMode) {
   return "Frontal";
 }
 
+function formatTrustedContactStatus(status: string) {
+  if (status === "accepted" || status === "ativo" || status === "validado") return "Autorizado";
+  if (status === "pending" || status === "pendente") return "Aguardando aceite";
+  if (status === "revoked" || status === "revogado") return "Revogado";
+  return "Em revisao";
+}
+
+function SecurityCodeInput({
+  label,
+  onChangeText,
+  value
+}: {
+  label: string;
+  onChangeText: (value: string) => void;
+  value: string;
+}) {
+  return (
+    <View style={styles.fieldGroup}>
+      <Text style={styles.fieldLabel}>{label}</Text>
+      <TextInput
+        accessibilityLabel={label}
+        autoCapitalize="none"
+        autoCorrect={false}
+        keyboardType="number-pad"
+        maxLength={16}
+        onChangeText={(text) => {
+          onChangeText(text);
+        }}
+        placeholder={label}
+        placeholderTextColor={theme.colors.textMuted}
+        secureTextEntry
+        style={styles.codeInput}
+        value={value}
+      />
+    </View>
+  );
+}
+
 export default function SettingsScreen() {
   const [preferences, setPreferences] = useState<EmergencyPreferences | null>(null);
   const [foregroundStatus, setForegroundStatus] = useState<PermissionStatusText>("pendente");
   const [backgroundStatus, setBackgroundStatus] = useState<PermissionStatusText>("bloqueado");
   const [servicesEnabled, setServicesEnabled] = useState(false);
-  const [finishCodeDraft, setFinishCodeDraft] = useState("");
+  const [currentFinishCode, setCurrentFinishCode] = useState("");
+  const [newFinishCode, setNewFinishCode] = useState("");
+  const [repeatFinishCode, setRepeatFinishCode] = useState("");
+  const [securityCodeError, setSecurityCodeError] = useState("");
+  const [securityCodeNotice, setSecurityCodeNotice] = useState("");
   const [activePanel, setActivePanel] = useState<SettingsPanel>(null);
   const [infoDialog, setInfoDialog] = useState<InfoDialog | null>(null);
-  const [statusText, setStatusText] = useState("Carregando preferencias de emergencia...");
+  const [accessReady, setAccessReady] = useState(false);
+  const [accessGateVisible, setAccessGateVisible] = useState(false);
+  const [, setStatusText] = useState("Carregando preferencias de emergencia...");
 
   async function refreshReadiness() {
     const readiness = await getLocationPermissionReadiness();
@@ -83,7 +136,11 @@ export default function SettingsScreen() {
     const nextPreferences = await getEmergencyPreferences();
     setPreferences(nextPreferences);
     await refreshReadiness();
-    setStatusText("Preferencias carregadas. As permissoes concedidas serao reutilizadas nos proximos chamados.");
+    if (hasSecurityCode(nextPreferences)) {
+      setAccessGateVisible(!(await isProtectedAccessUnlocked()));
+    }
+    setAccessReady(true);
+    setStatusText("Configuracoes carregadas.");
   }
 
   useEffect(() => {
@@ -124,6 +181,22 @@ export default function SettingsScreen() {
     );
   }
 
+  async function toggleCall190OnSos() {
+    if (!preferences) return;
+
+    const enabled = !preferences.emergencyPhoneCall.call190OnSosEnabled;
+    await updatePreferences(
+      {
+        ...preferences,
+        emergencyPhoneCall: {
+          ...preferences.emergencyPhoneCall,
+          call190OnSosEnabled: enabled
+        }
+      },
+      enabled ? "Ligacao 190 junto com SOS ativada." : "Ligacao 190 junto com SOS desativada."
+    );
+  }
+
   async function toggleTrustedContactCall() {
     if (!preferences) return;
 
@@ -137,8 +210,8 @@ export default function SettingsScreen() {
         }
       },
       enabled
-        ? "Preferencia futura marcada. Ligacao ao anjo exige contato validado, contrato e confirmacao."
-        : "Preferencia futura de chamada ao anjo desmarcada."
+        ? "Chamada ao anjo marcada para quando houver anjo validado."
+        : "Chamada ao anjo desmarcada."
     );
   }
 
@@ -159,42 +232,28 @@ export default function SettingsScreen() {
         }
       },
       enabled
-        ? "Preferencia futura marcada para o anjo acionar 190 com dados autorizados dentro do SinalSeguro."
-        : "Permissao futura para anjo acionar 190 foi desmarcada."
+        ? "Anjo autorizado podera acionar 190 dentro do fluxo seguro."
+        : "Permissao para anjo acionar 190 desmarcada."
     );
   }
 
-  async function toggleFinishSafetyCode() {
-    if (!preferences) return;
-
-    const enabled = !preferences.finishSafety.requireCode;
-    if (enabled) {
-      setStatusText("Digite um novo codigo e toque em Salvar codigo para ativar o encerramento protegido.");
-      return;
-    }
-
-    await updatePreferences(
-      {
-        ...preferences,
-        finishSafety: {
-          ...preferences.finishSafety,
-          requireCode: false
-        }
-      },
-      "Codigo de encerramento desativado. Finalizacao volta a exigir apenas confirmacao."
-    );
+  function resetSecurityCodeFields() {
+    setCurrentFinishCode("");
+    setNewFinishCode("");
+    setRepeatFinishCode("");
+    setSecurityCodeError("");
   }
 
-  async function saveFinishCode() {
+  async function saveNewSecurityCode() {
     if (!preferences) return;
 
-    const normalizedCode = finishCodeDraft.trim();
-    if (normalizedCode.length < 4) {
-      setStatusText("Use um codigo de encerramento com pelo menos 4 caracteres.");
+    const validation = validateSecurityCodePair(newFinishCode, repeatFinishCode);
+    if (!validation.ok) {
+      setSecurityCodeError(validation.message);
       return;
     }
 
-    const codeHash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, normalizedCode.slice(0, 12));
+    const codeHash = await hashSecurityCode(validation.code);
     await updatePreferences(
       {
         ...preferences,
@@ -203,9 +262,66 @@ export default function SettingsScreen() {
           codeHash
         }
       },
-      "Codigo de encerramento salvo como hash local. O codigo nao entra em logs, URLs, push ou pacote de evidencia."
+      "Codigo habilitado."
     );
-    setFinishCodeDraft("");
+    await clearProtectedAccess();
+    resetSecurityCodeFields();
+    setSecurityCodeNotice("Codigo habilitado.");
+  }
+
+  async function changeSecurityCode() {
+    if (!preferences) return;
+
+    const verified = await verifySecurityCode(preferences, currentFinishCode);
+    if (!verified) {
+      setSecurityCodeError("Codigo atual incorreto.");
+      return;
+    }
+
+    const validation = validateSecurityCodePair(newFinishCode, repeatFinishCode);
+    if (!validation.ok) {
+      setSecurityCodeError(validation.message);
+      return;
+    }
+
+    const codeHash = await hashSecurityCode(validation.code);
+    await updatePreferences(
+      {
+        ...preferences,
+        finishSafety: {
+          requireCode: true,
+          codeHash
+        }
+      },
+      "Codigo atualizado."
+    );
+    await clearProtectedAccess();
+    resetSecurityCodeFields();
+    setSecurityCodeNotice("Codigo atualizado.");
+  }
+
+  async function disableSecurityCode() {
+    if (!preferences) return;
+
+    const verified = await verifySecurityCode(preferences, currentFinishCode);
+    if (!verified) {
+      setSecurityCodeError("Codigo atual incorreto.");
+      return;
+    }
+
+    await updatePreferences(
+      {
+        ...preferences,
+        finishSafety: {
+          requireCode: false,
+          codeHash: ""
+        }
+      },
+      "Codigo removido."
+    );
+    await clearProtectedAccess();
+    resetSecurityCodeFields();
+    setSecurityCodeNotice("Codigo removido.");
   }
 
   async function toggleStreamScope(scope: keyof EmergencyPreferences["trustedStream"]["requestedMedia"]) {
@@ -224,9 +340,7 @@ export default function SettingsScreen() {
           }
         }
       },
-      enabled
-        ? "Escopo solicitado para contrato futuro. Streaming real segue bloqueado neste build publico."
-        : "Escopo removido das preferencias locais."
+      enabled ? "Preferencia ativada para anjos autorizados." : "Preferencia removida."
     );
   }
 
@@ -243,8 +357,8 @@ export default function SettingsScreen() {
         }
       },
       enabled
-        ? "Preferencia futura marcada: anjo autorizado podera salvar copia criptografada dentro do app."
-        : "Salvamento criptografado pelo anjo foi desmarcado."
+        ? "Anjo autorizado podera salvar copia protegida dentro do app."
+        : "Salvamento pelo anjo foi desmarcado."
     );
   }
 
@@ -263,7 +377,7 @@ export default function SettingsScreen() {
         }
       },
       cameraMode === "both"
-        ? "Duas cameras selecionadas. O build privado tenta frontal e traseira; se o aparelho bloquear captura dupla, preserva a camera disponivel."
+        ? "Duas cameras selecionadas para a proxima gravacao local."
         : `Camera ${cameraLabel} definida para a proxima gravacao local.`
     );
   }
@@ -282,7 +396,7 @@ export default function SettingsScreen() {
         }
       },
       requestOnSos
-        ? "Video local sera solicitado quando o SOS iniciar, com permissao explicita de camera e microfone."
+        ? "Video local sera solicitado quando o SOS iniciar."
         : "Video local desativado para o proximo SOS."
     );
   }
@@ -292,7 +406,7 @@ export default function SettingsScreen() {
     const microphonePermission = await ExpoCamera.requestMicrophonePermissionsAsync();
     setStatusText(
       cameraPermission.granted && microphonePermission.granted
-        ? "Camera e microfone autorizados. O proximo SOS pode gravar midia local no sandbox do app."
+        ? "Camera e microfone autorizados para o proximo SOS."
         : "Camera ou microfone negados. O SOS preserva metadados e localizacao, mas sem video local."
     );
   }
@@ -334,7 +448,7 @@ export default function SettingsScreen() {
           acceptedAt: new Date().toISOString()
         }
       },
-      "Aceites locais registrados para homologacao. O aceite juridico definitivo sera versionado pela API."
+      "Termos e privacidade aceitos neste aparelho."
     );
   }
 
@@ -346,8 +460,36 @@ export default function SettingsScreen() {
     setInfoDialog({
       title: `Login ${provider}`,
       message:
-        "Fluxo preparado para OIDC via API. A configuracao real de client_id, redirect URI e chaves fica fora do Git e sera feita na etapa de backend/lojas, sem armazenar credenciais no app.",
+        `Entrada com ${provider} preparada. A ativacao final acontece pela conta segura do SinalSeguro.`,
       icon: <KeyRound size={18} color={theme.colors.primary} />,
+      actions: [{ label: "Entendi" }]
+    });
+  }
+
+  function showPanelHelp(panel: Exclude<SettingsPanel, null>) {
+    const helpByPanel = {
+      atalhos:
+        "Atalhos fisicos exigem autorizacao do sistema e validacao no aparelho. O SOS do app continua sendo o acionamento principal.",
+      compartilhamento:
+        "Os anjos recebem dados somente quando houver convite aceito, autorizacao da usuaria e contrato de privacidade. A opcao de ligar 190 junto com o SOS vem desativada por padrao.",
+      duracao:
+        "Este tempo controla apenas a gravacao local. O chamado de emergencia continua ativo ate a usuaria encerrar pelo botao SOS.",
+      encerramento:
+        "Quando o codigo estiver ativo, ele protege o encerramento do SOS e o acesso a areas sensiveis do app por alguns minutos.",
+      localizacao:
+        "Autorizar localizacao antes da emergencia reduz etapas no momento do acionamento. A permissao pode ser revogada no sistema.",
+      login:
+        "Use sua conta para proteger convites, anjos e acesso aos arquivos autorizados.",
+      termos:
+        "Termos e privacidade registram consentimento para uso emergencial, anjos autorizados e preservacao dos arquivos.",
+      video:
+        "O SOS pode gravar video local no aparelho autorizado. A opcao padrao tenta usar as duas cameras; se o aparelho bloquear, o app preserva a camera disponivel."
+    } satisfies Record<Exclude<SettingsPanel, null>, string>;
+
+    setInfoDialog({
+      title: `Ajuda: ${panelTitle[panel]}`,
+      message: helpByPanel[panel],
+      icon: <SettingsIcon size={18} color={theme.colors.primary} />,
       actions: [{ label: "Entendi" }]
     });
   }
@@ -356,7 +498,7 @@ export default function SettingsScreen() {
     atalhos: "Atalhos",
     compartilhamento: "Compartilhamento",
     duracao: "Tempo de gravacao",
-    encerramento: "Encerramento seguro",
+    encerramento: "Codigo de seguranca",
     localizacao: "Localizacao",
     login: "Login",
     termos: "Termos e privacidade",
@@ -369,18 +511,6 @@ export default function SettingsScreen() {
         <AppTopBar contextLabel="Configuracoes" showBack />
 
         <View style={styles.content}>
-          <View style={styles.statusPill}>
-            <View style={styles.statusIcon}>
-              <SettingsIcon size={20} color={theme.colors.secure} />
-            </View>
-            <View style={styles.statusCopy}>
-              <Text style={styles.statusTitle}>Configuracoes</Text>
-              <Text style={styles.statusText} numberOfLines={2}>
-                {statusText}
-              </Text>
-            </View>
-          </View>
-
           <View style={styles.resourceGrid}>
             <ResourceTile
               icon={<BookOpenCheck size={24} color={theme.colors.primary} />}
@@ -412,8 +542,8 @@ export default function SettingsScreen() {
           <View style={styles.resourceGrid}>
             <ResourceTile
               icon={<LockKeyhole size={24} color={theme.colors.primary} />}
-              label="Encerrar"
-              description={preferences?.finishSafety.requireCode ? "Codigo" : "Livre"}
+              label="Codigo de seguranca"
+              description={preferences?.finishSafety.requireCode ? "Ativo" : "Configurar"}
               onPress={() => setActivePanel("encerramento")}
             />
             <ResourceTile
@@ -437,7 +567,7 @@ export default function SettingsScreen() {
             <ResourceTile
               icon={<Volume2 size={24} color={theme.colors.primary} />}
               label="Atalhos"
-              description="Volume futuro"
+              description="Opcional"
               onPress={() => setActivePanel("atalhos")}
             />
           </View>
@@ -446,17 +576,14 @@ export default function SettingsScreen() {
         <BrandedDialog
           actions={[{ label: "Fechar", tone: "muted" }]}
           icon={<SettingsIcon size={18} color={theme.colors.primary} />}
-          message="Configuracoes por modais para manter a tela principal fixa, simples e acionavel."
+          helpLabel="Explicar recurso"
+          onHelpPress={activePanel ? () => showPanelHelp(activePanel) : undefined}
           onClose={() => setActivePanel(null)}
           title={activePanel ? panelTitle[activePanel] : ""}
           visible={Boolean(activePanel)}
         >
           {activePanel === "termos" ? (
             <View style={styles.dialogStack}>
-              <Text style={styles.dialogText}>
-                O uso de dados de emergencia exige aceite de termos, politica de privacidade e autorizacao especifica de
-                compartilhamento com anjos vinculados. O aceite definitivo sera versionado no backend.
-              </Text>
               <ButtonIcon
                 icon={<ShieldCheck size={18} color={theme.colors.primary} />}
                 label={preferences?.legalConsent.privacyAccepted ? "Privacidade aceita localmente" : "Aceitar termos locais"}
@@ -467,18 +594,14 @@ export default function SettingsScreen() {
 
           {activePanel === "login" ? (
             <View style={styles.dialogStack}>
-              <Text style={styles.dialogText}>
-                Login proprio, Google e Apple/iCloud entram por OIDC na API. Nenhuma chave, client secret ou credencial deve
-                ser salva em Git, memoria ou bundle publico.
-              </Text>
               <ButtonIcon
                 icon={<KeyRound size={18} color={theme.colors.primary} />}
-                label="Preparar login Google"
+                label="Entrar com Google"
                 onPress={() => showOidcPlan("Google")}
               />
               <ButtonIcon
                 icon={<KeyRound size={18} color={theme.colors.primary} />}
-                label="Preparar login Apple/iCloud"
+                label="Entrar com Apple/iCloud"
                 onPress={() => showOidcPlan("Apple/iCloud")}
               />
             </View>
@@ -497,7 +620,7 @@ export default function SettingsScreen() {
               />
               <PermissionGate
                 title="Segundo plano"
-                text="No build publico, localizacao em segundo plano fica bloqueada. Homologacao futura exige foreground service, permissao especifica, notificacao persistente e revisao juridica."
+                text="Mantem a localizacao do chamado enquanto a emergencia estiver ativa, quando essa permissao estiver disponivel."
                 status={backgroundStatus === "permitido" ? "permitido" : "bloqueado"}
               />
               <ButtonIcon
@@ -515,10 +638,6 @@ export default function SettingsScreen() {
 
           {activePanel === "duracao" ? (
             <View style={styles.dialogStack}>
-              <Text style={styles.dialogText}>
-                Define por quanto tempo a gravacao local fica ativa. O chamado de emergencia nao encerra sozinho:
-                ele continua ate a usuaria finalizar pelo botao.
-              </Text>
               {durationOptions.map((duration) => (
                 <ButtonIcon
                   key={duration}
@@ -533,51 +652,69 @@ export default function SettingsScreen() {
 
           {activePanel === "encerramento" ? (
             <View style={styles.dialogStack}>
-              <Text style={styles.dialogText}>
-                Opcional e desativado por padrao. Quando ativo, o SOS so encerra o chamado depois do gesto e do codigo local.
-              </Text>
-              <ButtonIcon
-                icon={<LockKeyhole size={18} color={theme.colors.primary} />}
-                label={preferences?.finishSafety.requireCode ? "Codigo ativo" : "Ativar codigo"}
-                onPress={toggleFinishSafetyCode}
-              />
-              <TextInput
-                accessibilityLabel="Novo codigo de encerramento"
-                autoCapitalize="none"
-                autoCorrect={false}
-                keyboardType="number-pad"
-                maxLength={12}
-                onChangeText={setFinishCodeDraft}
-                placeholder="Novo codigo"
-                placeholderTextColor={theme.colors.textMuted}
-                secureTextEntry
-                style={styles.codeInput}
-                value={finishCodeDraft}
-              />
-              <ButtonIcon
-                icon={<LockKeyhole size={18} color={theme.colors.primary} />}
-                label="Salvar codigo"
-                onPress={saveFinishCode}
-              />
+              <View style={[styles.statusPill, preferences?.finishSafety.requireCode && styles.statusPillActive]}>
+                <LockKeyhole size={18} color={preferences?.finishSafety.requireCode ? theme.colors.textOnDark : theme.colors.primary} />
+                <Text style={[styles.statusPillText, preferences?.finishSafety.requireCode && styles.statusPillTextActive]}>
+                  {preferences?.finishSafety.requireCode ? "Codigo habilitado" : "Sem codigo"}
+                </Text>
+              </View>
+              {preferences?.finishSafety.requireCode ? (
+                <>
+                  <SecurityCodeInput label="Codigo atual" onChangeText={setCurrentFinishCode} value={currentFinishCode} />
+                  <SecurityCodeInput label="Novo codigo" onChangeText={setNewFinishCode} value={newFinishCode} />
+                  <SecurityCodeInput label="Repetir novo codigo" onChangeText={setRepeatFinishCode} value={repeatFinishCode} />
+                  {securityCodeError ? <Text style={styles.errorText}>{securityCodeError}</Text> : null}
+                  {securityCodeNotice ? <Text style={styles.noticeText}>{securityCodeNotice}</Text> : null}
+                  <ButtonIcon
+                    icon={<LockKeyhole size={18} color={theme.colors.primary} />}
+                    label="Alterar codigo"
+                    onPress={changeSecurityCode}
+                  />
+                  <ButtonIcon
+                    icon={<LockKeyhole size={18} color={theme.colors.danger} />}
+                    label="Desativar codigo"
+                    onPress={disableSecurityCode}
+                    style={styles.dangerOption}
+                  />
+                </>
+              ) : (
+                <>
+                  <SecurityCodeInput label="Codigo" onChangeText={setNewFinishCode} value={newFinishCode} />
+                  <SecurityCodeInput label="Repetir codigo" onChangeText={setRepeatFinishCode} value={repeatFinishCode} />
+                  {securityCodeError ? <Text style={styles.errorText}>{securityCodeError}</Text> : null}
+                  {securityCodeNotice ? <Text style={styles.noticeText}>{securityCodeNotice}</Text> : null}
+                  <ButtonIcon
+                    icon={<LockKeyhole size={18} color={theme.colors.primary} />}
+                    label="Ativar codigo"
+                    onPress={saveNewSecurityCode}
+                  />
+                </>
+              )}
             </View>
           ) : null}
 
           {activePanel === "compartilhamento" ? (
             <View style={styles.dialogStack}>
-              <Text style={styles.dialogText}>
-                Audio, video e localizacao em tempo real exigem contrato eletronico bilateral, backend, criptografia,
-                auditoria e homologacao.
-              </Text>
               <View style={styles.inlineInfo}>
                 <MapPin size={18} color={theme.colors.secure} />
                 <Text style={styles.inlineInfoText}>
-                  Anjo convidado: {trustedContactsMock[0].name}. Status atual: {trustedContactsMock[0].status}.
+                  Anjo convidado: {trustedContactsMock[0].name}. {formatTrustedContactStatus(trustedContactsMock[0].status)}.
                 </Text>
               </View>
               <ButtonIcon
                 icon={<PhoneCall size={18} color={theme.colors.primary} />}
                 label={preferences?.emergencyPhoneCall.call190ShortcutEnabled ? "Atalho 190 ativo" : "Ativar atalho 190"}
                 onPress={toggleCall190Shortcut}
+              />
+              <ButtonIcon
+                icon={<PhoneCall size={18} color={theme.colors.primary} />}
+                label={
+                  preferences?.emergencyPhoneCall.call190OnSosEnabled
+                    ? "190 junto com SOS ativo"
+                    : "Ligar 190 junto com SOS"
+                }
+                onPress={toggleCall190OnSos}
+                style={preferences?.emergencyPhoneCall.call190OnSosEnabled ? styles.selectedOption : undefined}
               />
               <ButtonIcon
                 icon={<PhoneCall size={18} color={theme.colors.primary} />}
@@ -592,19 +729,19 @@ export default function SettingsScreen() {
                 icon={<ShieldCheck size={18} color={theme.colors.primary} />}
                 label={
                   preferences?.emergencyPhoneCall.allowReceiverCall190
-                    ? "Anjo pode acionar 190 futuro"
-                    : "Permitir anjo acionar 190 futuro"
+                    ? "Anjo pode acionar 190"
+                    : "Permitir anjo acionar 190"
                 }
                 onPress={toggleReceiverCall190}
               />
               <ButtonIcon
                 icon={<Video size={18} color={theme.colors.primary} />}
-                label={preferences?.trustedStream.requestedMedia.video ? "Video solicitado" : "Solicitar video futuro"}
+                label={preferences?.trustedStream.requestedMedia.video ? "Video para anjos ativo" : "Video para anjos"}
                 onPress={() => toggleStreamScope("video")}
               />
               <ButtonIcon
                 icon={<Mic size={18} color={theme.colors.primary} />}
-                label={preferences?.trustedStream.requestedMedia.audio ? "Audio solicitado" : "Solicitar audio futuro"}
+                label={preferences?.trustedStream.requestedMedia.audio ? "Audio para anjos ativo" : "Audio para anjos"}
                 onPress={() => toggleStreamScope("audio")}
               />
               <ButtonIcon
@@ -620,8 +757,8 @@ export default function SettingsScreen() {
                 icon={<LockKeyhole size={18} color={theme.colors.primary} />}
                 label={
                   preferences?.trustedStream.allowReceiverEncryptedSave
-                    ? "Anjo salva criptografado futuro"
-                    : "Permitir salvamento criptografado futuro"
+                    ? "Salvar no app do anjo ativo"
+                    : "Salvar no app do anjo"
                 }
                 onPress={toggleReceiverEncryptedSave}
               />
@@ -630,16 +767,6 @@ export default function SettingsScreen() {
 
           {activePanel === "video" ? (
             <View style={styles.dialogStack}>
-              <Text style={styles.dialogText}>
-                Habilita o SOS para gravar video e audio localmente no sandbox privado do app. O envio para anjos/API
-                continua bloqueado ate backend, contrato, chaves e auditoria. Selecione frontal, traseira ou duas
-                cameras para a proxima gravacao do SOS.
-              </Text>
-              <Text style={styles.dialogHint}>
-                Duas cameras e modo de homologacao: o app tenta frontal e traseira no build privado; se Android/Expo ou o
-                aparelho bloquear captura dupla simultanea, o pacote preserva a camera que conseguir gravar e registra o
-                fallback tecnico.
-              </Text>
               <ButtonIcon
                 icon={<Video size={18} color={theme.colors.primary} />}
                 label={preferences?.localVideoCapture.requestOnSos ? "Video local ativo no SOS" : "Ativar video local no SOS"}
@@ -673,13 +800,9 @@ export default function SettingsScreen() {
 
           {activePanel === "atalhos" ? (
             <View style={styles.dialogStack}>
-              <Text style={styles.dialogText}>
-                Botao de volume com tela travada segue como pesquisa nativa. O MVP nao usa acessibilidade, overlay ou captura
-                indevida de botoes do sistema.
-              </Text>
               <PermissionGate
                 title="Atalho por botao de volume"
-                text="Pesquisa futura nativa. Precisa validar limites Android/iOS, foreground service e politicas de loja."
+                text="Ainda nao disponivel neste aparelho."
                 status="bloqueado"
               />
               <ButtonIcon icon={<RefreshCw size={18} color={theme.colors.primary} />} label="Atualizar permissoes" onPress={loadSettings} />
@@ -694,6 +817,14 @@ export default function SettingsScreen() {
           onClose={() => setInfoDialog(null)}
           title={infoDialog?.title ?? ""}
           visible={Boolean(infoDialog)}
+        />
+
+        <ProtectedAccessGate
+          message="Informe o codigo para abrir as configuracoes."
+          onCancel={() => router.replace("/")}
+          onUnlocked={() => setAccessGateVisible(false)}
+          preferences={preferences}
+          visible={accessReady && accessGateVisible}
         />
       </View>
     </SafeAreaView>
@@ -722,21 +853,22 @@ const styles = StyleSheet.create({
   dialogStack: {
     gap: theme.spacing.md
   },
-  dialogText: {
-    color: theme.colors.textMuted,
-    fontSize: theme.typography.body,
-    lineHeight: 22
+  dangerOption: {
+    borderColor: theme.colors.danger,
+    borderWidth: 2
   },
-  dialogHint: {
-    backgroundColor: theme.colors.surfaceMuted,
-    borderColor: theme.colors.border,
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
+  errorText: {
+    color: theme.colors.danger,
+    fontSize: theme.typography.small,
+    fontWeight: "800"
+  },
+  fieldGroup: {
+    gap: theme.spacing.xs
+  },
+  fieldLabel: {
     color: theme.colors.text,
     fontSize: theme.typography.small,
-    fontWeight: "700",
-    lineHeight: 18,
-    padding: theme.spacing.md
+    fontWeight: "900"
   },
   inlineInfo: {
     alignItems: "flex-start",
@@ -765,6 +897,11 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.primary,
     borderWidth: 2
   },
+  noticeText: {
+    color: theme.colors.secure,
+    fontSize: theme.typography.small,
+    fontWeight: "800"
+  },
   shell: {
     backgroundColor: theme.colors.background,
     flex: 1,
@@ -772,38 +909,25 @@ const styles = StyleSheet.create({
   },
   statusPill: {
     alignItems: "center",
-    backgroundColor: theme.colors.surface,
+    backgroundColor: theme.colors.surfaceMuted,
     borderColor: theme.colors.border,
-    borderRadius: theme.radius.md,
+    borderRadius: theme.radius.pill,
     borderWidth: 1,
     flexDirection: "row",
     gap: theme.spacing.sm,
-    minHeight: 56,
-    paddingHorizontal: theme.spacing.md,
-    ...theme.shadow
+    minHeight: 48,
+    paddingHorizontal: theme.spacing.md
   },
-  statusCopy: {
-    flex: 1,
-    gap: 2
+  statusPillActive: {
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary
   },
-  statusIcon: {
-    alignItems: "center",
-    backgroundColor: "rgba(20, 184, 166, 0.12)",
-    borderRadius: 18,
-    height: 36,
-    justifyContent: "center",
-    width: 36
-  },
-  statusText: {
-    color: theme.colors.textMuted,
-    fontSize: theme.typography.small,
-    fontWeight: "700",
-    lineHeight: 17
-  },
-  statusTitle: {
+  statusPillText: {
     color: theme.colors.text,
-    fontSize: theme.typography.small,
-    fontWeight: "800",
-    textTransform: "uppercase"
+    fontSize: theme.typography.body,
+    fontWeight: "900"
+  },
+  statusPillTextActive: {
+    color: theme.colors.textOnDark
   }
 });

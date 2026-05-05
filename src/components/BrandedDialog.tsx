@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { X } from "lucide-react-native";
+import { HelpCircle, X } from "lucide-react-native";
 import { theme } from "@/design/theme";
 
 export type BrandedDialogAction = {
@@ -18,9 +18,21 @@ type BrandedDialogProps = {
   children?: ReactNode;
   actions: BrandedDialogAction[];
   onClose: () => void;
+  onHelpPress?: () => void;
+  helpLabel?: string;
 };
 
-export function BrandedDialog({ visible, title, message, icon, children, actions, onClose }: BrandedDialogProps) {
+export function BrandedDialog({
+  visible,
+  title,
+  message,
+  icon,
+  children,
+  actions,
+  onClose,
+  onHelpPress,
+  helpLabel = "Abrir ajuda"
+}: BrandedDialogProps) {
   function pressAction(action: BrandedDialogAction) {
     action.onPress?.();
     if (action.autoClose !== false) {
@@ -30,19 +42,31 @@ export function BrandedDialog({ visible, title, message, icon, children, actions
 
   return (
     <Modal animationType="fade" onRequestClose={onClose} transparent visible={visible}>
-      <View style={styles.backdrop}>
-        <View style={styles.panel}>
+      <Pressable accessibilityRole="button" onPress={onClose} style={styles.backdrop}>
+        <Pressable onPress={() => undefined} style={styles.panel}>
           <View style={styles.header}>
             {icon ? <View style={styles.iconSlot}>{icon}</View> : null}
             <Text style={styles.title}>{title}</Text>
-            <Pressable
-              accessibilityLabel="Fechar janela"
-              accessibilityRole="button"
-              onPress={onClose}
-              style={({ pressed }) => [styles.closeButton, pressed && styles.closePressed]}
-            >
-              <X size={18} color={theme.colors.textMuted} />
-            </Pressable>
+            <View style={styles.headerActions}>
+              {onHelpPress ? (
+                <Pressable
+                  accessibilityLabel={helpLabel}
+                  accessibilityRole="button"
+                  onPress={onHelpPress}
+                  style={({ pressed }) => [styles.closeButton, styles.helpButton, pressed && styles.closePressed]}
+                >
+                  <HelpCircle size={18} color={theme.colors.primary} />
+                </Pressable>
+              ) : null}
+              <Pressable
+                accessibilityLabel="Fechar janela"
+                accessibilityRole="button"
+                onPress={onClose}
+                style={({ pressed }) => [styles.closeButton, pressed && styles.closePressed]}
+              >
+                <X size={18} color={theme.colors.textMuted} />
+              </Pressable>
+            </View>
           </View>
           {message ? <Text style={styles.message}>{message}</Text> : null}
           {children ? (
@@ -81,8 +105,8 @@ export function BrandedDialog({ visible, title, message, icon, children, actions
               </Pressable>
             ))}
           </View>
-        </View>
-      </View>
+        </Pressable>
+      </Pressable>
     </Modal>
   );
 }
@@ -156,6 +180,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     gap: theme.spacing.sm
+  },
+  headerActions: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: theme.spacing.xs
+  },
+  helpButton: {
+    backgroundColor: theme.colors.surfaceMuted
   },
   iconSlot: {
     alignItems: "center",

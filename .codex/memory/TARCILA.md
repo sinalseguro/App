@@ -22,3 +22,21 @@ Papel: guardia de identidade visual SinalSeguro para mobile.
 - Validar Home e Cofre em aparelho menor.
 - Validar contraste e legibilidade no modo real do Android.
 - Aprovar ou solicitar ajuste antes de release interna 3.
+
+## Decisao visual - 2026-05-04
+
+- SOS deve manter efeito de bolha 3D discreta: brilho superior, sombra interna e profundidade magenta/rosa.
+- O anel de progresso precisa ser mais visivel durante pressao longa, mas sempre dentro da circunferencia do botao.
+- Drawer aprovado para validacao com `Cofre`, `Anjos`, `Player` e `Configuracoes`.
+- Configuracoes nao deve exibir banner tecnico no topo; a tela fica iconografica e direta.
+- Cofre em modal deve organizar pacotes como icones em grade vertical, com acoes em linhas e colunas.
+- Aprovado microajuste visual: anel de progresso do SOS mais legivel no gesto de pressao, sem virar aro externo e sem quebrar a bolha 3D.
+
+## Pausa visual - 2026-05-05
+
+- Pausa registrada antes de nova validacao visual para liberar espaco em disco.
+- Na retomada, Tarcila deve revisar primeiro:
+  - topo com logo simbolo sempre visivel;
+  - SOS com bolha 3D mais realista e anel discreto, porem legivel;
+  - modais com linguagem de produto, botao de ajuda `(?)` e sem justificativas tecnicas na camada principal;
+  - Cofre/Player com menos texto e mais acao por icones.

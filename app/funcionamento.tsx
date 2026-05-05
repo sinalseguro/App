@@ -7,7 +7,7 @@ const steps = [
   {
     icon: <Radio size={20} color={theme.colors.primary} />,
     title: "Acionamento",
-    text: "O SOS in-app exige gesto deliberado de pressao longa. Atalhos fisicos permanecem em pesquisa nativa."
+    text: "O SOS exige pressao longa para evitar toque acidental. Atalhos fisicos entram quando forem seguros no aparelho."
   },
   {
     icon: <MapPin size={20} color={theme.colors.primary} />,
@@ -22,12 +22,12 @@ const steps = [
   {
     icon: <KeyRound size={20} color={theme.colors.primary} />,
     title: "Criptografia",
-    text: "Midia e localizacao reais exigem criptografia por envelope, chaves protegidas no backend e acesso autorizado."
+    text: "Arquivos e localizacao devem ser protegidos por chaves e acesso autorizado quando sairem do aparelho."
   },
   {
     icon: <Video size={20} color={theme.colors.primary} />,
     title: "Midia",
-    text: "Video/audio local funcionam no build privado. Streaming, envio e compartilhamento seguem bloqueados."
+    text: "Video e audio locais podem ser preservados no aparelho autorizado. Envio e compartilhamento dependem de permissao e contrato."
   },
   {
     icon: <ShieldCheck size={20} color={theme.colors.primary} />,
@@ -40,7 +40,7 @@ export default function FuncionamentoScreen() {
   return (
     <SafeScreen
       title="Como funciona"
-      subtitle="Fluxo tecnico e juridico do app, sem promessa de integracao publica sem convenio formal."
+      subtitle="Resumo simples dos recursos principais, privacidade e limites atuais do app."
     >
       <View style={styles.grid}>
         {steps.map((step) => (

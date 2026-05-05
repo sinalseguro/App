@@ -96,8 +96,13 @@ if (!localEvidenceRail.includes("onDeletePackage") || !localEvidenceRail.include
   throw new Error("Cofre local precisa expor acoes de visualizar, compartilhar bloqueado e excluir local.");
 }
 
-if (!localEvidenceRail.includes("rayActionView") || !localEvidenceRail.includes("rayHub")) {
-  throw new Error("Cofre local precisa manter menu de acoes em raios ancorado no icone do arquivo.");
+if (
+  !localEvidenceRail.includes("Grade vertical de arquivos locais") ||
+  !localEvidenceRail.includes("actionGrid") ||
+  localEvidenceRail.includes("rayHub") ||
+  localEvidenceRail.includes("rayAction")
+) {
+  throw new Error("Cofre local precisa usar grade vertical de icones com acoes agrupadas em linhas e colunas.");
 }
 
 if (!localFilesScreen.includes("Excluir pacote local?") || !localFilesScreen.includes("Finalize o chamado antes")) {
@@ -146,8 +151,14 @@ const emergencyCallTarget = await readFile("src/features/emergency-home/Emergenc
 const emergencyCallDock = await readFile("src/features/emergency-home/EmergencyCallDock.tsx", "utf8");
 const appTopBar = await readFile("src/components/AppTopBar.tsx", "utf8");
 
-if (!appTopBar.includes("home-settings-toggle") || !emergencyDrawer.includes("Cofre e player")) {
-  throw new Error("Home precisa manter engrenagem retratil com acesso a cofre/player, anjos, convites e configuracoes.");
+if (
+  !appTopBar.includes("home-settings-toggle") ||
+  !emergencyDrawer.includes('label="Cofre"') ||
+  !emergencyDrawer.includes('label="Player"') ||
+  !emergencyDrawer.includes('onNavigate("/arquivos", "cofre")') ||
+  !emergencyDrawer.includes('onNavigate("/arquivos", "player")')
+) {
+  throw new Error("Home precisa manter engrenagem retratil com acesso separado a cofre, player, anjos e configuracoes.");
 }
 
 if (emergencyDrawer.includes("backend/P2P")) {

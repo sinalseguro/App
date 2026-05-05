@@ -29,9 +29,10 @@ const particleConfigs: ParticleConfig[] = [
   { delay: 2460, duration: 3700, left: 66, rise: -260, size: 3 }
 ];
 
-const progressCircleRadius = 48.7;
+const progressCircleRadius = 47.25;
 const progressCircleCircumference = 2 * Math.PI * progressCircleRadius;
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+const AnimatedText = Animated.createAnimatedComponent(Text);
 
 function CircularHoldProgress({
   active,
@@ -58,9 +59,9 @@ function CircularHoldProgress({
           cy="50"
           fill="none"
           r={progressCircleRadius}
-          stroke={theme.colors.accentSoft}
-          strokeOpacity={0.28}
-          strokeWidth={1.35}
+          stroke="#FFEAF2"
+          strokeOpacity={0.3}
+          strokeWidth={1.5}
         />
         <G transform={rotationTransform}>
           <AnimatedCircle
@@ -68,12 +69,12 @@ function CircularHoldProgress({
             cy="50"
             fill="none"
             r={progressCircleRadius}
-            stroke={theme.colors.accentSoft}
+            stroke="#FFE0EC"
             strokeDasharray={`${progressCircleCircumference} ${progressCircleCircumference}`}
             strokeDashoffset={strokeDashoffset}
             strokeLinecap="round"
-            strokeOpacity={0.96}
-            strokeWidth={1.9}
+            strokeOpacity={0.92}
+            strokeWidth={2.15}
           />
         </G>
       </Svg>
@@ -222,7 +223,15 @@ export function PanicButton({ active = false, label, holdMs, onTrigger }: PanicB
   });
   const armedRingOpacity = pulse.interpolate({
     inputRange: [0, 1],
-    outputRange: [0.44, 0.9]
+    outputRange: [0.18, 0.36]
+  });
+  const activeTextOpacity = pulse.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.9, 1]
+  });
+  const activeTextScale = pulse.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 1.015]
   });
 
   return (
@@ -254,14 +263,29 @@ export function PanicButton({ active = false, label, holdMs, onTrigger }: PanicB
             <Animated.View pointerEvents="none" style={[styles.armedRing, { opacity: armedRingOpacity }]} />
           </>
         ) : null}
+        <View pointerEvents="none" style={styles.outerRim} />
         <CircularHoldProgress active={active} holding={holding} progress={progress} />
         <View pointerEvents="none" style={styles.depthLayer} />
+        <View pointerEvents="none" style={styles.lowerDepthLayer} />
         <View pointerEvents="none" style={styles.sheenLayer} />
+        <View pointerEvents="none" style={styles.specularLayer} />
+        <View pointerEvents="none" style={styles.rimLightLayer} />
+        <View pointerEvents="none" style={styles.innerGlowLayer} />
         {particleValues.map((value, index) => (
           <AnimatedParticle key={index} config={particleConfigs[index]} enabled={active} value={value} />
         ))}
-        <Text style={styles.sos}>{active ? "ATIVO" : "SOS"}</Text>
-        <Text style={styles.label}>{holding ? "Continue segurando" : label}</Text>
+        <AnimatedText
+          style={[
+            styles.sos,
+            active && styles.sosActive,
+            active && { opacity: activeTextOpacity, transform: [{ scale: activeTextScale }] }
+          ]}
+        >
+          {active ? "ATIVO" : "SOS"}
+        </AnimatedText>
+        <AnimatedText style={[styles.label, active && styles.labelActive, active && { opacity: activeTextOpacity }]}>
+          {holding ? "Continue segurando" : label}
+        </AnimatedText>
       </Pressable>
     </View>
   );
@@ -274,7 +298,7 @@ const styles = StyleSheet.create({
   },
   button: {
     alignItems: "center",
-    backgroundColor: theme.colors.panic,
+    backgroundColor: "#C4155A",
     borderColor: theme.colors.accentSoft,
     borderRadius: theme.radius.pill,
     borderWidth: 6,
@@ -287,25 +311,25 @@ const styles = StyleSheet.create({
     overflow: "visible",
     width: "75%",
     shadowColor: "#1E1B2E",
-    shadowOffset: { width: 0, height: 16 },
-    shadowOpacity: 0.24,
-    shadowRadius: 28,
-    elevation: 10
+    shadowOffset: { width: 0, height: 22 },
+    shadowOpacity: 0.42,
+    shadowRadius: 48,
+    elevation: 18
   },
   buttonArmed: {
-    backgroundColor: "#9F174D",
+    backgroundColor: "#A6144E",
     borderColor: "#FFD3E1",
     shadowColor: "#EC407A",
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.36,
-    shadowRadius: 32
+    shadowOpacity: 0.28,
+    shadowRadius: 30
   },
   buttonPressed: {
     elevation: 3,
     shadowOffset: { width: 0, height: 7 },
     shadowOpacity: 0.2,
     shadowRadius: 12,
-    transform: [{ translateY: 4 }, { scale: 0.985 }]
+    transform: [{ translateY: 5 }, { scale: 0.982 }]
   },
   circularProgressLayer: {
     ...StyleSheet.absoluteFillObject,
@@ -317,16 +341,42 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject
   },
   depthLayer: {
-    backgroundColor: "rgba(18, 10, 32, 0.2)",
+    backgroundColor: "rgba(18, 10, 32, 0.14)",
     borderRadius: theme.radius.pill,
-    bottom: 14,
-    left: 16,
+    bottom: 16,
+    left: 17,
     position: "absolute",
-    right: 16,
-    top: 18
+    right: 17,
+    top: 19,
+    zIndex: 0
+  },
+  outerRim: {
+    backgroundColor: "rgba(255, 255, 255, 0.05)",
+    borderColor: "rgba(255, 232, 241, 0.5)",
+    borderRadius: theme.radius.pill,
+    borderWidth: 1,
+    bottom: 8,
+    left: 8,
+    position: "absolute",
+    right: 8,
+    top: 8,
+    zIndex: 1
+  },
+  lowerDepthLayer: {
+    backgroundColor: "rgba(78, 5, 43, 0.24)",
+    borderBottomLeftRadius: theme.radius.pill,
+    borderBottomRightRadius: theme.radius.pill,
+    borderTopLeftRadius: 120,
+    borderTopRightRadius: 120,
+    bottom: "7%",
+    height: "38%",
+    left: "12%",
+    position: "absolute",
+    right: "12%",
+    zIndex: 1
   },
   armedGlow: {
-    backgroundColor: "rgba(236, 64, 122, 0.34)",
+    backgroundColor: "rgba(236, 64, 122, 0.24)",
     borderRadius: theme.radius.pill,
     bottom: -12,
     left: -12,
@@ -336,24 +386,61 @@ const styles = StyleSheet.create({
     zIndex: 0
   },
   armedRing: {
-    borderColor: "rgba(255, 128, 171, 0.86)",
+    borderColor: "rgba(255, 211, 225, 0.8)",
     borderRadius: theme.radius.pill,
-    borderWidth: 2,
-    bottom: 4,
-    left: 4,
+    borderWidth: 1.2,
+    bottom: 6,
+    left: 6,
     position: "absolute",
-    right: 4,
-    top: 4,
+    right: 6,
+    top: 6,
     zIndex: 3
   },
   sheenLayer: {
-    backgroundColor: "rgba(255, 255, 255, 0.08)",
+    backgroundColor: "rgba(255, 255, 255, 0.3)",
     borderRadius: theme.radius.pill,
-    height: "46%",
-    left: "12%",
+    height: "40%",
+    left: "13%",
     position: "absolute",
-    right: "12%",
-    top: "9%"
+    right: "13%",
+    top: "9%",
+    zIndex: 1
+  },
+  specularLayer: {
+    backgroundColor: "rgba(255, 255, 255, 0.16)",
+    borderRadius: theme.radius.pill,
+    height: "24%",
+    left: "25%",
+    position: "absolute",
+    right: "25%",
+    top: "17%",
+    zIndex: 1
+  },
+  rimLightLayer: {
+    borderColor: "rgba(255, 235, 242, 0.34)",
+    borderRadius: theme.radius.pill,
+    borderTopWidth: 1,
+    bottom: "7%",
+    left: "7%",
+    position: "absolute",
+    right: "7%",
+    top: "7%",
+    zIndex: 1
+  },
+  innerGlowLayer: {
+    backgroundColor: "rgba(255, 175, 205, 0.12)",
+    borderRadius: theme.radius.pill,
+    bottom: "15%",
+    left: "16%",
+    position: "absolute",
+    right: "16%",
+    top: "16%",
+    zIndex: 1
+  },
+  labelActive: {
+    color: "#FFF3F8",
+    textShadowColor: "rgba(255, 188, 214, 0.64)",
+    textShadowRadius: 10
   },
   label: {
     color: theme.colors.textOnDark,
@@ -375,6 +462,12 @@ const styles = StyleSheet.create({
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 7,
     zIndex: 2
+  },
+  sosActive: {
+    color: "#FFF3F8",
+    textShadowColor: "rgba(255, 188, 214, 0.72)",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 14
   },
   particle: {
     backgroundColor: theme.colors.accentSoft,

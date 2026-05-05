@@ -1,11 +1,11 @@
 import { ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Archive, Settings, UserPlus, Users } from "lucide-react-native";
+import { Archive, CirclePlay, Settings, Users } from "lucide-react-native";
 import { theme } from "@/design/theme";
-import { EmergencyHomeRoute } from "./routes";
+import { EmergencyHomePanel, EmergencyHomeRoute } from "./routes";
 
 type EmergencySettingsDrawerProps = {
-  onNavigate: (route: EmergencyHomeRoute) => void;
+  onNavigate: (route: EmergencyHomeRoute, panel?: EmergencyHomePanel) => void;
 };
 
 type MenuActionProps = {
@@ -31,8 +31,8 @@ export function EmergencySettingsDrawer({
       <View style={styles.menuActions}>
         <MenuAction
           icon={<Archive size={18} color={theme.colors.primary} />}
-          label="Cofre e player"
-          onPress={() => onNavigate("/arquivos")}
+          label="Cofre"
+          onPress={() => onNavigate("/arquivos", "cofre")}
         />
         <MenuAction
           icon={<Users size={18} color={theme.colors.primary} />}
@@ -40,9 +40,9 @@ export function EmergencySettingsDrawer({
           onPress={() => onNavigate("/contatos")}
         />
         <MenuAction
-          icon={<UserPlus size={18} color={theme.colors.primary} />}
-          label="Convites"
-          onPress={() => onNavigate("/convite")}
+          icon={<CirclePlay size={18} color={theme.colors.primary} />}
+          label="Player"
+          onPress={() => onNavigate("/arquivos", "player")}
         />
         <MenuAction
           icon={<Settings size={18} color={theme.colors.primary} />}

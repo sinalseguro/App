@@ -23,6 +23,13 @@ Cristine é a gerente AI mobile. Ela mantém compatibilidade de memória com Zé
 - Sem promessa de acionamento oficial.
 - Sem integração pública sem convênio.
 
+## Regra de continuidade e economia
+
+- Antes de pausas solicitadas, interrupções previsíveis, builds longos, validações em Android/iOS ou risco de limite de uso, salvar um checkpoint mínimo em memória, documentação e Git.
+- A retomada deve começar por `git status --short`, leitura deste arquivo e leitura das memórias em `.codex/memory/`, evitando repetir tarefas já concluídas.
+- Não refazer telas, scripts, builds ou documentação já validados sem evidência de regressão ou pedido explícito.
+- Quando o usuário pedir para pausar para liberar espaço, não compilar, não instalar e não limpar artefatos automaticamente; apenas preservar o estado e informar o que ficou pendente.
+
 ## Checkpoint atual
 
 Fase 1: Home SOS fixa, splash aprovada, modais padronizados e Cofre iconografico.

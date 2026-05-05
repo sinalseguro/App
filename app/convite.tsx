@@ -8,21 +8,21 @@ export default function InvitationScreen() {
   return (
     <SafeScreen
       title="Convite recebido"
-      subtitle="O aceite definitivo exige login com conta propria e validacao online."
+      subtitle="Entre com sua propria conta para aceitar um convite de anjo."
     >
       <StatusBanner
         tone={convite ? "secure" : "warning"}
         title={convite ? "Convite identificado" : "Convite ausente"}
         text={
           convite
-            ? "Pre-convite identificado. O vinculo real so sera validado no ambiente autorizado."
+            ? "Convite identificado. Confirme somente se reconhecer a pessoa que enviou."
             : "Abra um link de convite valido enviado por uma pessoa de confianca."
         }
       />
       <StatusBanner
         tone="warning"
         title="Limite de seguranca"
-        text="Este app nao permite entrar como outra pessoa. O vinculo so sera criado depois de autenticacao propria, consentimento e confirmacao online."
+        text="Este app nao permite entrar como outra pessoa. O vinculo so sera criado com sua conta, seu aceite e autorizacao da pessoa que convidou."
       />
     </SafeScreen>
   );

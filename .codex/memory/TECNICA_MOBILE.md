@@ -23,3 +23,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Validar manualmente no Android fisico o gesto SOS completo com camera em ambiente controlado.
 - Evoluir adaptadores de outbox/API quando backend estiver pronto.
 - Nao colocar blobs de midia no `SecureStore`; midia local deve permanecer em arquivo do sandbox do app com hash e criptografia por envelope na etapa de backend.
+
+## Atualizacao tecnica - 2026-05-04
+
+- `EmergencySettingsDrawer` recebe navegacao por painel: `Cofre` envia `/arquivos?painel=cofre` e `Player` envia `/arquivos?painel=player`.
+- `app/arquivos.tsx` interpreta `painel` por `useLocalSearchParams` e abre o modal correspondente sem criar telas duplicadas.
+- `BrandedDialog` usa backdrop pressionavel para fechar ao tocar fora; conteudo interno impede propagacao.
+- `LocalEvidenceRail` abandonou a trilha horizontal e passou a usar grade vertical com acoes iconograficas por pacote.
+- `PanicButton` mantem o anel SVG dentro da circunferencia do botao, com sentido horario para acionar e anti-horario para encerrar.
+
+## Atualizacao tecnica - 2026-05-05 - checkpoint de pausa
+
+- Implementacao pausada por pedido do Roberto para liberar espaco em disco.
+- Nao rodar build ou instalacao Android ate nova autorizacao de continuidade.
+- Ponto de retomada tecnico: revisar `EvidencePlayerCard`, `mediaCapture`, `types`, `LocalEvidenceRail`, `PanicButton`, `packagePresentation`, `contactMocks` e `scripts/smoke-test.mjs`.
+- Risco tecnico principal ainda pendente: `mediaCapture` nao deve ler videos longos integralmente em Base64 para calcular hash; precisa limite e fallback de manifesto/hash tecnico ate streaming/chunking real.
+- Retomar com validacao leve primeiro: `npm run typecheck`, `npm run lint`, `npm test`, `git diff --check`.

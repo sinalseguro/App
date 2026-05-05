@@ -19,11 +19,11 @@ async function createOpaqueToken() {
 
 export function buildInvitationShareText(invitation: LocalInvitation) {
   return [
-    "Voce recebeu um pre-convite local para ser anjo de confianca no SinalSeguro.",
-    "Instale o app pelo link abaixo. O vinculo real exigira login proprio e validacao online.",
+    "Voce recebeu um convite para ser anjo de confianca no SinalSeguro.",
+    "Instale o app pelo link abaixo. O vinculo sera confirmado com sua propria conta.",
     invitation.inviteUrl,
     "",
-    "Token opaco local. Expiracao, aceite e revogacao so serao confirmados no ambiente autorizado."
+    "Use este convite apenas se reconhecer a pessoa que enviou."
   ].join("\n");
 }
 

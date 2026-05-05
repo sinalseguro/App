@@ -17,6 +17,19 @@ Cristine coordena o desenvolvimento mobile Android/iOS, mantendo plano, cronogra
 - Bloquear escopo que viole LGPD, seguranca, lojas ou regras do projeto.
 - Registrar pendencias sem incluir dados sensiveis.
 
+## Protocolo de retomada apos interrupcao
+
+Quando a sessao for retomada apos limite de uso, troca de agente, interrupcao de build ou pausa longa:
+
+1. Ler `AGENTS.md`, `.codex/AGENTS.md`, `.codex/memory/CRISTINE.md`, `docs/03_TIMELINE.md` e o documento especifico da demanda.
+2. Rodar `git status --short` no repo `apps/mobile` antes de editar qualquer arquivo.
+3. Presumir que alteracoes nao reconhecidas pertencem a outro agente ou ao usuario; nao reverter, nao reformatar e nao sobrescrever sem pedido explicito.
+4. Comparar o pedido atual com memoria/timeline para evitar refazer trabalho ja registrado.
+5. Antes de builds longos, instalacoes fisicas, publicacoes ou validacoes demoradas, salvar checkpoint minimo em memoria/timeline quando houver estado novo consolidado.
+6. Manter lista viva de pendencias, artefatos, hashes, dispositivo/ADB usado, gates executados e bloqueios.
+7. Validar e so entao publicar; registrar separadamente o que foi aprovado, o que ficou bloqueado e o que ficou para homologacao.
+8. Separar sempre build publico, APK privado de homologacao, fase futura, dependencia juridica, dependencia de convenio e dependencia de infraestrutura.
+
 ## Decisoes ativas
 
 - Stack: React Native + Expo Dev Client/EAS.
@@ -34,7 +47,21 @@ Cristine coordena o desenvolvimento mobile Android/iOS, mantendo plano, cronogra
 
 ## Proximo checkpoint
 
-Etapa ativa: validacao manual do APK privado Android com midia local.
+Etapa ativa: continuidade do refino UX/IX do SOS, Cofre/Player e validacao manual do APK privado Android com midia local.
+
+Estado ativo em 2026-05-04:
+
+- UX/IX do SOS em refinamento com efeito de bolha, anel de pressao mais visivel dentro da circunferencia e feedback magenta/rosa;
+- Home sem microcopy redundante e drawer enxuto por acoes iconograficas;
+- drawer da Home e do Cofre separa `Cofre`, `Anjos`, `Player` e `Configuracoes`;
+- Cofre local em grade vertical, com acoes por icones, exclusao confirmada, tombstone/auditoria local e bloqueio de exclusao de chamado ativo;
+- Player privado/homologacao compacto, com video local preservado, progresso real quando houver midia e metadados essenciais;
+- codigo de seguranca para encerramento segue local, opcional, salvo como hash e sem codigo universal padrao;
+- midia privada permanece restrita a homologacao controlada; build publico continua sem camera/microfone, streaming, upload, P2P, compartilhamento externo ou integracao oficial;
+- script/gate privado de APK Android permanece separado do gate publico;
+- Android fisico de referencia recente: `23129RA5FL`, ADB Wi-Fi `192.168.0.4:5555`;
+- proxima validacao manual no aparelho deve confirmar: SOS inicia camera, encerramento preserva video, Cofre lista pacote e Player reproduz midia local;
+- pendencias tecnicas: hash incremental/binario para videos longos, cota/retencao local, homologacao juridica/seguranca para transmissao, backend, anjos reais, chaves, retencao e exportacao.
 
 Estado ativo em 2026-05-03:
 
@@ -301,3 +328,24 @@ Proximas acoes atualizadas:
 - Ada/Hedy ajustaram a migracao de preferencias: qualquer configuracao anterior ao `schemaVersion 6` volta para `Duas cameras`, evitando aparelhos antigos ficarem presos em frontal/traseira.
 - Myers reinstalou o APK privado no Android `192.168.0.4:5555`, SHA-256 `f5a407ca1937f589f8d1c1f4dc1d2f251e8cf1f7031e59ef76f3ac3373724f15`, cold start `TotalTime: 4487` e logcat filtrado por PID sem falhas criticas.
 - Evidencias visuais salvas em `docs/assets/mobile/2026-05-03-android-ring-visivel-home.png` e `docs/assets/mobile/2026-05-03-android-ring-visivel-hold.png`; log filtrado em `docs/evidencias/android/2026-05-03-ring-player-private/logcat-launch-app.txt`.
+
+## Memoria viva - 2026-05-04 - Drawer Cofre/Player e Configuracoes limpa
+
+- Roberto pediu continuidade nos comentarios do browser: SOS com efeito de bolha, Configuracoes sem fundo/status tecnico, drawer com `Cofre` e `Player`, Cofre em grade e fechamento ao tocar fora.
+- Tarcila/Norman mantiveram a Home limpa e aprovaram a direcao do SOS como bolha 3D discreta, com anel mais visivel dentro da circunferencia.
+- Ada/Hedy separaram a navegacao do drawer por painel: `Cofre` abre a trilha de arquivos e `Player` abre a revisao segura.
+- `BrandedDialog` fecha ao tocar fora, preservando acoes destrutivas protegidas por confirmacao propria.
+- `LocalEvidenceRail` agora apresenta os pacotes como grade vertical com acoes iconograficas em linhas/colunas.
+- Configuracoes removeu o banner `Preferencias carregadas`; a tela principal fica somente com recursos em icones.
+- Microajuste final do anel SOS: trilho e progresso ficaram um pouco mais espessos/opacos, ainda recortados dentro da circunferencia do botao.
+- Evidencias browser salvas: `2026-05-04-home-sos-bolha.png`, `2026-05-04-home-menu-cofre-player.png`, `2026-05-04-configuracoes-sem-banner.png`, `2026-05-04-cofre-modal-grid.png`.
+- Documento de continuidade: `docs/27_REFINO_DRAWER_COFRE_PLAYER_CONFIG.md`.
+
+## Memoria viva - 2026-05-05 - Pausa solicitada para liberar disco
+
+- Roberto pediu para salvar e pausar tudo antes de continuar, para liberar espaco no disco.
+- Zé registrou regra operacional: antes de pausas, interrupções, builds longos ou risco de limite de uso, criar checkpoint mínimo em memória, documentação e Git.
+- Não executar build Android, instalação no aparelho, limpeza de artefatos ou validação pesada durante esta pausa.
+- Estado de trabalho deve ser preservado como checkpoint de continuidade, mesmo com ajustes ainda pendentes.
+- Na retomada, começar por `git status --short`, ler `.codex/AGENTS.md`, esta memória, `TECNICA_MOBILE.md`, `SEGURANCA_QA.md`, `TARCILA.md` e `docs/03_TIMELINE.md`.
+- Pendências conhecidas para a retomada: refinamento de modais com linguagem de produto, player/cofre com menos texto, código de segurança simplificado, hash de vídeo grande sem leitura integral em Base64, validação visual no browser e APK privado via script.

@@ -16,12 +16,14 @@ import {
 import { LocalInvitation } from "@/features/invitations/types";
 
 function invitationDescription(invitation: LocalInvitation) {
-  return `Pre-convite local com token opaco. Validade sugerida ate ${new Date(invitation.expiresAt).toLocaleDateString("pt-BR")}; aceite e revogacao dependem de validacao online.`;
+  return `Convite criado em ${new Date(invitation.createdAt).toLocaleDateString("pt-BR")}. A pessoa convidada precisa aceitar com a propria conta.`;
 }
 
 export default function ContactsScreen() {
   const [invitations, setInvitations] = useState<LocalInvitation[]>([]);
-  const [status, setStatus] = useState("Pre-convites ficam salvos localmente ate validacao online, aceite proprio e revogacao.");
+  const [status, setStatus] = useState(
+    "Convites ficam salvos neste aparelho ate o aceite. Ligar 190 junto com o SOS fica em Configuracoes e vem desativado por padrao."
+  );
 
   async function refreshInvitations() {
     setInvitations(await listLocalInvitations());
@@ -32,19 +34,19 @@ export default function ContactsScreen() {
   }, []);
 
   async function handleCreateInvitation() {
-    setStatus("Gerando convite opaco...");
+    setStatus("Gerando convite seguro...");
     const invitation = await createLocalInvitation(`Anjo ${invitations.length + 1}`);
     // Convite e a unica excecao de share sheet: nao carrega evidencias nem dados sensiveis.
     await Share.share({ message: buildInvitationShareText(invitation), url: invitation.inviteUrl });
     await markInvitationShared(invitation.id);
     await refreshInvitations();
-    setStatus("Pre-convite criado. O vinculo real so nasce apos login proprio e validacao online.");
+    setStatus("Convite criado. O vinculo nasce quando a pessoa aceita com a propria conta.");
   }
 
   return (
     <SafeScreen
       title="Rede de anjos"
-      subtitle="Pre-convites usam token opaco local e exigem aceite com conta propria."
+      subtitle="Convide pessoas de confianca para receber ajuda autorizada."
     >
       <StatusBanner tone="secure" title="Convite seguro" text={status} />
       <ButtonIcon

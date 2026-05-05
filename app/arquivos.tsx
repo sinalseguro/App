@@ -1,18 +1,19 @@
 import { ReactNode, useEffect, useState } from "react";
-import { router } from "expo-router";
-import * as Crypto from "expo-crypto";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import { Linking, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Archive, BookOpen, CirclePlay, LockKeyhole, RefreshCw, Share2, Trash2 } from "lucide-react-native";
+import { Archive, BookOpen, CirclePlay, HelpCircle, LockKeyhole, MapPinned, RefreshCw, Share2, Trash2 } from "lucide-react-native";
 import { AppTopBar } from "@/components/AppTopBar";
 import { BrandedDialog, BrandedDialogAction } from "@/components/BrandedDialog";
 import { EvidencePlayerCard } from "@/components/EvidencePlayerCard";
 import { LocalEvidenceRail } from "@/components/LocalEvidenceRail";
+import { ProtectedAccessGate } from "@/components/ProtectedAccessGate";
 import { ResourceTile } from "@/components/ResourceTile";
 import { theme } from "@/design/theme";
 import { EmergencySettingsDrawer } from "@/features/emergency-home/EmergencySettingsDrawer";
-import { EmergencyHomeRoute } from "@/features/emergency-home/routes";
+import { EmergencyHomePanel, EmergencyHomeRoute } from "@/features/emergency-home/routes";
 import { deleteEmergencyPackage, listEmergencyPackages } from "@/features/emergency/emergencyOutbox";
+import { buildPackageMapLinks, buildTelemetrySummary } from "@/features/emergency/packagePresentation";
 import {
   defaultEmergencyPreferences,
   EmergencyPreferences,
@@ -20,6 +21,7 @@ import {
 } from "@/features/emergency/emergencyPreferences";
 import { finishEmergencyPackage } from "@/features/emergency/emergencyRecorder";
 import { EmergencyPackage } from "@/features/emergency/types";
+import { isProtectedAccessUnlocked, verifySecurityCode } from "@/security/protectedAccess";
 import { checkAppUpdate } from "@/services/appUpdateService";
 
 type VaultDialog = "player" | "cofre" | null;
@@ -32,17 +34,22 @@ type LocalDialog = {
 };
 
 export default function LocalFilesScreen() {
+  const params = useLocalSearchParams<{ painel?: EmergencyHomePanel }>();
   const [packages, setPackages] = useState<EmergencyPackage[]>([]);
   const [selectedPackageId, setSelectedPackageId] = useState<string | undefined>();
   const [expandedPackageId, setExpandedPackageId] = useState<string | undefined>();
   const [activeDialog, setActiveDialog] = useState<VaultDialog>(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [status, setStatus] = useState("Carregando pacotes locais...");
+  const [status, setStatus] = useState("Carregando arquivos locais...");
   const [dialog, setDialog] = useState<LocalDialog | null>(null);
   const [preferences, setPreferences] = useState<EmergencyPreferences>(defaultEmergencyPreferences);
   const [finishPackageId, setFinishPackageId] = useState<string | null>(null);
   const [finishCodeInput, setFinishCodeInput] = useState("");
   const [finishError, setFinishError] = useState("");
+  const [mapPackage, setMapPackage] = useState<EmergencyPackage | null>(null);
+  const [helpDialog, setHelpDialog] = useState<LocalDialog | null>(null);
+  const [accessReady, setAccessReady] = useState(false);
+  const [accessGateVisible, setAccessGateVisible] = useState(false);
 
   async function refreshPackages() {
     const records = await listEmergencyPackages();
@@ -58,15 +65,32 @@ export default function LocalFilesScreen() {
     });
     setStatus(
       records.length
-        ? "Cofre local carregado. Visualizacao local ativa; compartilhamento externo segue bloqueado neste build."
-        : "Nenhum pacote local gravado neste dispositivo."
+        ? "Arquivos carregados."
+        : "Nenhum arquivo local neste dispositivo."
     );
   }
 
   useEffect(() => {
-    void refreshPackages();
-    void getEmergencyPreferences().then(setPreferences);
+    async function bootScreen() {
+      const nextPreferences = await getEmergencyPreferences();
+      setPreferences(nextPreferences);
+
+      if (nextPreferences.finishSafety.requireCode && !(await isProtectedAccessUnlocked())) {
+        setAccessGateVisible(true);
+      }
+
+      setAccessReady(true);
+      await refreshPackages();
+    }
+
+    void bootScreen();
   }, []);
+
+  useEffect(() => {
+    if (params.painel === "player" || params.painel === "cofre") {
+      setActiveDialog(params.painel);
+    }
+  }, [params.painel]);
 
   async function finishPackageNow(packageId: string) {
     const result = await finishEmergencyPackage(packageId, "manual_finish");
@@ -77,7 +101,7 @@ export default function LocalFilesScreen() {
       return;
     }
 
-    setStatus(`Chamado ${packageId.slice(0, 8)} finalizado e preservado no cofre local.`);
+    setStatus("Chamado finalizado e preservado no cofre local.");
   }
 
   function requestFinishPackage(packageId: string) {
@@ -98,9 +122,8 @@ export default function LocalFilesScreen() {
     if (!finishPackageId) return;
 
     if (preferences.finishSafety.requireCode) {
-      const codeHash = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, finishCodeInput.trim());
-
-      if (codeHash !== preferences.finishSafety.codeHash) {
+      const verified = await verifySecurityCode(preferences, finishCodeInput);
+      if (!verified) {
         setFinishError("Codigo incorreto. O chamado continua ativo.");
         return;
       }
@@ -113,13 +136,13 @@ export default function LocalFilesScreen() {
 
   function selectPackage(packageRecord: EmergencyPackage) {
     setSelectedPackageId(packageRecord.id);
-    setStatus(`Pacote ${packageRecord.id.slice(0, 8)} selecionado para previa segura no player.`);
+    setStatus("Arquivo selecionado.");
   }
 
-  function openMenuRoute(route: EmergencyHomeRoute) {
+  function openMenuRoute(route: EmergencyHomeRoute, panel?: EmergencyHomePanel) {
     setMenuOpen(false);
     if (route === "/arquivos") {
-      setActiveDialog(selectedPackage ? "player" : "cofre");
+      setActiveDialog(panel ?? (selectedPackage ? "player" : "cofre"));
       return;
     }
     router.push(route);
@@ -131,13 +154,13 @@ export default function LocalFilesScreen() {
   }
 
   async function checkForAppUpdates() {
-    setStatus("Consultando atualizacoes do app na API SinalSeguro...");
+    setStatus("Consultando atualizacoes no servico SinalSeguro...");
     const result = await checkAppUpdate();
     setStatus(result.message);
     setDialog({
       title: "Atualizacoes do app",
       message: result.latestVersion
-        ? `${result.message}\n\nVersao instalada: ${result.currentVersion}\nVersao API: ${result.latestVersion}`
+        ? `${result.message}\n\nVersao instalada: ${result.currentVersion}\nVersao disponivel: ${result.latestVersion}`
         : `${result.message}\n\nVersao instalada: ${result.currentVersion}`,
       icon: <RefreshCw size={18} color={theme.colors.primary} />,
       actions: [{ label: "Entendi" }]
@@ -150,11 +173,50 @@ export default function LocalFilesScreen() {
 
   function showShareBlocked(packageRecord: EmergencyPackage) {
     setDialog({
-      title: "Compartilhamento interno futuro",
-      message: `Pacote ${packageRecord.id.slice(0, 8)} so podera ser compartilhado por rota interna autenticada, com contrato, chaves e auditoria. Nenhum share externo foi aberto.`,
+      title: "Compartilhar pelo app",
+      message: "O compartilhamento interno sera liberado apenas para pessoas autorizadas, com registro de acesso.",
       icon: <Share2 size={18} color={theme.colors.primary} />,
       actions: [{ label: "Entendi" }]
     });
+  }
+
+  function showVaultHelp() {
+    setHelpDialog({
+      title: "Cofre local",
+      message:
+        "O cofre guarda arquivos deste aparelho. Toque em um item para visualizar, abrir mapa, compartilhar pelo app quando liberado ou excluir localmente.",
+      icon: <HelpCircle size={18} color={theme.colors.primary} />,
+      actions: [{ label: "Entendi" }]
+    });
+  }
+
+  function openPackageMap(packageRecord: EmergencyPackage) {
+    const links = buildPackageMapLinks(packageRecord);
+
+    if (!links) {
+      setDialog({
+        title: "Sem localizacao",
+        message: "Este arquivo nao possui localizacao preservada para abrir no mapa.",
+        icon: <MapPinned size={18} color={theme.colors.primary} />,
+        actions: [{ label: "Entendi" }]
+      });
+      return;
+    }
+
+    setMapPackage(packageRecord);
+  }
+
+  async function openMapUrl(url: string) {
+    try {
+      await Linking.openURL(url);
+    } catch {
+      setDialog({
+        title: "Mapa indisponivel",
+        message: "Nao foi possivel abrir o aplicativo de mapa neste dispositivo.",
+        icon: <MapPinned size={18} color={theme.colors.primary} />,
+        actions: [{ label: "Entendi" }]
+      });
+    }
   }
 
   async function deleteLocalPackage(packageRecord: EmergencyPackage) {
@@ -167,12 +229,12 @@ export default function LocalFilesScreen() {
         currentExpandedId === packageRecord.id ? undefined : currentExpandedId
       );
       await refreshPackages();
-      setStatus(`Pacote ${packageRecord.id.slice(0, 8)} removido deste dispositivo com arquivos locais e auditoria de exclusao.`);
+      setStatus("Arquivo removido deste dispositivo.");
     } catch (error) {
       const message =
         error instanceof Error
           ? error.message
-          : "Nao foi possivel excluir o pacote local. Revise o cofre e tente novamente.";
+          : "Nao foi possivel excluir o arquivo. Revise o cofre e tente novamente.";
       setDialog({
         title: "Exclusao nao concluida",
         message,
@@ -187,7 +249,7 @@ export default function LocalFilesScreen() {
     if (packageRecord.status === "recording_local") {
       setDialog({
         title: "Finalize o chamado antes",
-        message: "Um chamado ativo nao pode ser excluido. Finalize o chamado e revise o pacote no cofre local.",
+        message: "Finalize o chamado antes de excluir o arquivo.",
         icon: <LockKeyhole size={18} color={theme.colors.primary} />,
         actions: [{ label: "Entendi" }]
       });
@@ -195,8 +257,8 @@ export default function LocalFilesScreen() {
     }
 
     setDialog({
-      title: "Excluir pacote local?",
-      message: `O pacote ${packageRecord.id.slice(0, 8)} sera removido apenas deste dispositivo. A acao registra auditoria local e nao pode ser desfeita neste build.`,
+      title: "Excluir arquivo local?",
+      message: "O arquivo sera removido apenas deste dispositivo. Esta acao nao pode ser desfeita.",
       icon: <Trash2 size={18} color={theme.colors.danger} />,
       actions: [
         { label: "Cancelar", tone: "muted" },
@@ -225,7 +287,14 @@ export default function LocalFilesScreen() {
         />
 
         {menuOpen ? (
-          <EmergencySettingsDrawer onNavigate={openMenuRoute} />
+          <>
+            <Pressable
+              accessibilityLabel="Fechar menu"
+              onPress={() => setMenuOpen(false)}
+              style={styles.menuBackdrop}
+            />
+            <EmergencySettingsDrawer onNavigate={openMenuRoute} />
+          </>
         ) : null}
 
         <View style={styles.content}>
@@ -253,7 +322,7 @@ export default function LocalFilesScreen() {
             <ResourceTile
               icon={<RefreshCw size={24} color={theme.colors.primary} />}
               label="Atualizar app"
-              description="API"
+              description="Servico"
               onPress={checkForAppUpdates}
             />
           </View>
@@ -266,7 +335,7 @@ export default function LocalFilesScreen() {
           ]}
           icon={<CirclePlay size={18} color={theme.colors.primary} />}
           onClose={() => setActiveDialog(null)}
-          title={selectedPackage ? `Player ${selectedPackage.id.slice(0, 8)}` : "Player seguro"}
+          title="Player seguro"
           visible={activeDialog === "player"}
         >
           <EvidencePlayerCard packageRecord={selectedPackage} />
@@ -275,7 +344,8 @@ export default function LocalFilesScreen() {
         <BrandedDialog
           actions={[{ label: "Fechar", tone: "muted" }]}
           icon={<Archive size={18} color={theme.colors.primary} />}
-          message="Toque no icone do pacote para abrir as acoes em raio: visualizar, compartilhar interno futuro, excluir ou finalizar quando ativo."
+          helpLabel="Ajuda do cofre"
+          onHelpPress={showVaultHelp}
           onClose={() => setActiveDialog(null)}
           title="Cofre local"
           visible={activeDialog === "cofre"}
@@ -284,6 +354,7 @@ export default function LocalFilesScreen() {
             expandedPackageId={expandedPackageId}
             onDeletePackage={confirmDeleteLocalPackage}
             onFinishPackage={requestFinishPackage}
+            onOpenMapPackage={openPackageMap}
             onOpenPlayerPackage={openPackageInPlayer}
             onSelectPackage={selectPackage}
             onShareBlocked={showShareBlocked}
@@ -342,6 +413,48 @@ export default function LocalFilesScreen() {
           title={dialog?.title ?? ""}
           visible={Boolean(dialog)}
         />
+
+        <BrandedDialog
+          actions={[
+            { label: "Fechar", tone: "muted" },
+            {
+              label: "Apple Maps",
+              onPress: () => {
+                const links = mapPackage ? buildPackageMapLinks(mapPackage) : null;
+                if (links) void openMapUrl(links.apple);
+              }
+            },
+            {
+              label: "Google Maps",
+              onPress: () => {
+                const links = mapPackage ? buildPackageMapLinks(mapPackage) : null;
+                if (links) void openMapUrl(links.google);
+              }
+            }
+          ]}
+          icon={<MapPinned size={18} color={theme.colors.primary} />}
+          message={mapPackage ? buildTelemetrySummary(mapPackage).join("\n") : ""}
+          onClose={() => setMapPackage(null)}
+          title="Abrir localizacao"
+          visible={Boolean(mapPackage)}
+        />
+
+        <BrandedDialog
+          actions={helpDialog?.actions ?? []}
+          icon={helpDialog?.icon}
+          message={helpDialog?.message}
+          onClose={() => setHelpDialog(null)}
+          title={helpDialog?.title ?? ""}
+          visible={Boolean(helpDialog)}
+        />
+
+        <ProtectedAccessGate
+          message="Informe o codigo para abrir o cofre."
+          onCancel={() => router.replace("/")}
+          onUnlocked={() => setAccessGateVisible(false)}
+          preferences={preferences}
+          visible={accessReady && accessGateVisible}
+        />
       </View>
     </SafeAreaView>
   );
@@ -368,6 +481,11 @@ const styles = StyleSheet.create({
     color: theme.colors.danger,
     fontSize: theme.typography.small,
     fontWeight: "800"
+  },
+  menuBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "transparent",
+    zIndex: 20
   },
   resourceGrid: {
     flexDirection: "row",

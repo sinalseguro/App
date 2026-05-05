@@ -73,10 +73,12 @@ Checkpoint tecnico atual:
 
 - Splash nativa substituida por lockup aprovado com simbolo grande, nome e fundo institucional `#120A20`.
 - Home principal fixa, sem rolagem, com foco no SOS central responsivo e atalhos oficiais `Policia 190`, `Bombeiros 193` e `SAMU 192`.
-- Menu retratil por engrenagem para modo atual, cofre/player, anjos, convites, configuracoes e atividade.
+- Menu retratil por engrenagem com acoes objetivas: `Cofre`, `Anjos`, `Player` e `Configuracoes`; toque fora fecha o menu.
 - `Modo atual` abre modal de ajuda/opcoes dentro da identidade visual.
 - Todos os alertas criticos de Home e Cofre usam modal SinalSeguro, nao `Alert.alert` nativo.
 - Cofre local foi refatorado para tela fixa por icones: Player, Cofre, Funcionamento e Atualizar.
+- O modal do Cofre usa grade vertical de pacotes locais; cada pacote abre acoes em linhas/colunas para visualizar, compartilhar interno futuro, excluir ou finalizar quando ativo.
+- Configuracoes ficam em tela iconografica sem banner/status tecnico no topo.
 - Player e trilha do cofre abrem em modais.
 - Encerramento de chamado ativo pelo Cofre segue o mesmo protocolo da Home: confirmacao e codigo local opcional quando ativado.
 - Modais possuem rolagem interna para reduzir risco de overflow em Android menor ou fonte ampliada.
@@ -109,6 +111,10 @@ APK privado atual com midia local para validacao:
 | Cofre fixo | ![Cofre fixo](docs/assets/mobile/2026-05-03-cofre-fixo.png) |
 | Player modal | ![Player modal](docs/assets/mobile/2026-05-03-cofre-player-modal.png) |
 | Como funciona | ![Como funciona](docs/assets/mobile/2026-05-03-funcionamento.png) |
+| Home SOS bolha | ![Home SOS bolha](docs/assets/mobile/2026-05-04-home-sos-bolha.png) |
+| Menu Cofre/Player | ![Menu Cofre Player](docs/assets/mobile/2026-05-04-home-menu-cofre-player.png) |
+| Configuracoes sem banner | ![Configuracoes sem banner](docs/assets/mobile/2026-05-04-configuracoes-sem-banner.png) |
+| Cofre modal em grade | ![Cofre modal em grade](docs/assets/mobile/2026-05-04-cofre-modal-grid.png) |
 
 ## Evidencias Android fisico - 2026-05-03
 
@@ -159,4 +165,5 @@ APK privado atual com midia local para validacao:
 - `docs/22_REFINO_IDENTIDADE_MODAL_COFRE_SPLASH.md`
 - `docs/23_ESPECIFICACAO_DESENVOLVIMENTO_APP.md`
 - `docs/24_CONTINUIDADE_COFRE_ENCERRAMENTO_QA.md`
+- `docs/27_REFINO_DRAWER_COFRE_PLAYER_CONFIG.md`
 - `docs/api/openapi.yaml`

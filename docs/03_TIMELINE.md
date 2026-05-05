@@ -746,3 +746,99 @@ Decisoes:
 - Preferencias antigas anteriores ao `schemaVersion 6` migram para `Duas cameras`.
 - APK privado reinstalado no Android `192.168.0.4:5555`, SHA-256 `f5a407ca1937f589f8d1c1f4dc1d2f251e8cf1f7031e59ef76f3ac3373724f15`, cold start `TotalTime: 4487`.
 - Evidencias salvas em `docs/assets/mobile/2026-05-03-android-ring-visivel-home.png` e `docs/assets/mobile/2026-05-03-android-ring-visivel-hold.png`; log filtrado por PID em `docs/evidencias/android/2026-05-03-ring-player-private/logcat-launch-app.txt`.
+
+## 2026-05-04 - Drawer Cofre/Player, Configuracoes limpa e Cofre em grade
+
+Status: implementado em codigo e documentado para validacao Android.
+
+Especialistas acionados:
+
+- Tarcila/Norman: SOS com efeito de bolha, menu mais objetivo e Configuracoes sem banner tecnico.
+- Ada/Hedy: rotas `Cofre` e `Player` separadas por parametro de painel e cofre em grade vertical.
+- Myers/Schneier: manter fechamento por toque fora sem perda de dados, bloquear compartilhamento externo e preservar exclusao auditada.
+- Cristine/Knuth: memoria, especificacao e evidencia do checkpoint.
+
+Decisoes:
+
+- Drawer da Home e do Cofre passa a mostrar `Cofre`, `Anjos`, `Player` e `Configuracoes`.
+- `Cofre` abre a trilha de arquivos; `Player` abre a revisao segura.
+- Configuracoes removeu o bloco de status `Preferencias carregadas`.
+- Modais e drawer fecham ao tocar fora.
+- Cofre local exibe pacotes em grade vertical com acoes iconograficas em linhas/colunas.
+- SOS manteve o anel dentro da circunferencia e ganhou mais contraste para o gesto de pressao longa.
+
+Evidencias:
+
+- `docs/assets/mobile/2026-05-04-home-sos-bolha.png`;
+- `docs/assets/mobile/2026-05-04-home-menu-cofre-player.png`;
+- `docs/assets/mobile/2026-05-04-configuracoes-sem-banner.png`;
+- `docs/assets/mobile/2026-05-04-cofre-modal-grid.png`.
+
+Documento do ciclo:
+
+- `docs/27_REFINO_DRAWER_COFRE_PLAYER_CONFIG.md`.
+
+## 2026-05-04 - Continuidade documental apos interrupcao
+
+Status: protocolo documental registrado; sem alteracao de codigo do app nesta rodada.
+
+Responsaveis:
+
+- Cristine/Knuth: continuidade documental e memoria mobile.
+- Zé: supervisao de consistencia com a memoria mestre.
+- Myers/Schneier: devem ser acionados quando a retomada envolver build, instalacao, permissao, midia, dados, seguranca ou validacao tecnica.
+
+Decisoes de continuidade:
+
+- toda retomada deve ler memoria local e timeline antes de executar nova etapa;
+- a primeira checagem deve ser `git status --short` no repo `apps/mobile`;
+- alteracoes de outros agentes ou do usuario nao devem ser revertidas;
+- a proxima acao deve reaproveitar o que ja esta documentado, evitando redundancia;
+- antes de build longo, instalacao Android/iOS, publicacao ou validacao demorada, salvar checkpoint minimo em docs/memoria quando houver estado novo consolidado;
+- manter lista de pendencias, artefatos, hashes, aparelho/ADB usado, gates, bloqueios e publicacoes;
+- validar antes de publicar e registrar claramente o resultado.
+
+Checkpoint mobile atual:
+
+- SOS segue em refino UX/IX com efeito de bolha, anel de pressao mais visivel e feedback magenta/rosa;
+- Home permanece limpa, sem texto auxiliar redundante, com drawer iconografico;
+- Cofre e Player foram separados no drawer;
+- Cofre local usa grade vertical e acoes por icones;
+- codigo de seguranca para encerramento continua local, opcional, com hash e sem codigo universal padrao;
+- midia privada continua restrita a homologacao controlada;
+- script/gate de APK privado Android continua separado do gate publico;
+- instalacao Android e cold start ja foram validados em ciclos recentes no aparelho `23129RA5FL` via ADB Wi-Fi;
+- validacao manual pendente: SOS inicia camera, encerramento preserva video, Cofre lista pacote e Player reproduz midia local.
+
+Pendencias para proxima sessao:
+
+1. Verificar `git status --short` antes de tocar qualquer arquivo.
+2. Confirmar se o APK privado vigente ainda corresponde ao ultimo hash documentado ou se houve novo build por outro agente.
+3. Validar manualmente no Android fisico o fluxo SOS com midia local.
+4. Registrar hash, aparelho, logcat, evidencias e resultado de QA.
+5. Publicar apenas depois de gates e aceite compatíveis com o risco.
+
+## 2026-05-05 - Checkpoint de pausa para liberar disco
+
+Status: pausado por solicitacao do Roberto; estado preservado para retomada.
+
+Responsaveis:
+
+- Zé/Cristine: salvar memoria, evitar retrabalho e publicar checkpoint.
+- Ada/Hedy: retomar ajustes tecnicos sem repetir o que ja esta validado.
+- Tarcila/Norman: retomar revisao visual de SOS, modais, Cofre e Player.
+- Myers/Schneier: validar antes do proximo APK privado.
+
+Decisoes:
+
+- Quando houver risco de limite de uso, interrupcao, build longo ou pausa para limpeza de disco, salvar memoria e Git antes de continuar.
+- Durante a pausa nao executar build, instalacao, limpeza automatica ou validacao pesada.
+- A retomada deve comecar por `git status --short` e leitura das memorias locais.
+
+Pendencias de retomada:
+
+1. Finalizar refinamento de modais com linguagem de produto e ajuda em `(?)`.
+2. Simplificar fluxo do codigo de seguranca.
+3. Ajustar hash de video grande para nao carregar arquivo inteiro em memoria.
+4. Validar visualmente no browser `localhost:8081`.
+5. Rodar gates leves, gerar APK privado pelo script e instalar no Android quando Roberto liberar espaco.

@@ -22,7 +22,7 @@ export function EmergencyPackageCard({ packageRecord, onFinish }: EmergencyPacka
       <Text style={styles.text}>{summarizeLocation(packageRecord)}</Text>
       <Text style={styles.text}>Midia local: {packageRecord.media.status}</Text>
       <Text style={styles.text}>{summarizeDelivery(packageRecord)}</Text>
-      <Text style={styles.hash}>Hash tecnico {packageRecord.integrity.sha256.slice(0, 16)}...</Text>
+      <Text style={styles.hash}>Integridade {packageRecord.integrity.sha256.slice(0, 16)}...</Text>
       {packageRecord.status === "recording_local" && onFinish ? (
         <ButtonIcon
           icon={<Square size={18} color={theme.colors.danger} />}
@@ -32,7 +32,7 @@ export function EmergencyPackageCard({ packageRecord, onFinish }: EmergencyPacka
       ) : null}
       <View style={styles.actions}>
         <ButtonIcon icon={<Eye size={18} color={theme.colors.primary} />} label="Revisar" />
-        <ButtonIcon icon={<Share2 size={18} color={theme.colors.primary} />} label="Compartilhar futuro" disabled />
+        <ButtonIcon icon={<Share2 size={18} color={theme.colors.primary} />} label="Compartilhar pelo app" disabled />
         <ButtonIcon icon={<Trash2 size={18} color={theme.colors.danger} />} label="Excluir local" disabled />
       </View>
     </View>

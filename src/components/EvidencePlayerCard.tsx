@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { VideoView, useVideoPlayer } from "expo-video";
-import { Clock, FileLock2, MapPin, Pause, Play, RotateCcw, Video } from "lucide-react-native";
+import { CalendarClock, FileLock2, MapPin, Pause, Play, RotateCcw, Video } from "lucide-react-native";
 import { theme } from "@/design/theme";
 import { EmergencyPackage } from "@/features/emergency/types";
-import { summarizeCapture, summarizeLocation } from "@/features/emergency/packagePresentation";
+import {
+  formatPackageDate,
+  formatPackageTitle,
+  summarizeLocation
+} from "@/features/emergency/packagePresentation";
 
 type EvidencePlayerCardProps = {
   packageRecord?: EmergencyPackage;
@@ -24,12 +28,24 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   });
   const hasMedia = Boolean(videoAsset);
   const title = mode === "received" ? "Player seguro recebido" : "Player seguro local";
-  const previewTitle = previewTouched && packageRecord ? "Pacote selecionado no player" : title;
+  const selectedTitle = packageRecord ? formatPackageTitle(packageRecord) : title;
+  const previewTitle = previewTouched && packageRecord ? selectedTitle : title;
   const previewHint = hasMedia
-    ? "Video autorizado"
+    ? "Video local"
     : packageRecord
-      ? "Pacote sem video"
-      : "Escolha no cofre";
+      ? "Sem video"
+      : "Escolha arquivo";
+  const packageDateLabel = packageRecord ? formatPackageDate(packageRecord) : undefined;
+  const mediaSummary = hasMedia
+    ? mediaAssets.length > 1
+      ? `${mediaAssets.length} videos locais`
+      : "1 video local"
+    : packageRecord
+      ? "Sem video"
+      : "Escolha arquivo";
+  const playerAccessibilityLabel = packageRecord
+    ? `Visualizar ${formatPackageTitle(packageRecord)} no player seguro`
+    : "Player seguro sem arquivo selecionado";
 
   useEffect(() => {
     setPlaying(false);
@@ -106,7 +122,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   return (
     <View style={styles.card}>
       <Pressable
-        accessibilityLabel={packageRecord ? `Visualizar pacote ${packageRecord.id.slice(0, 8)} no player seguro` : "Player seguro sem arquivo selecionado"}
+        accessibilityLabel={playerAccessibilityLabel}
         accessibilityRole="button"
         accessibilityState={{ disabled: !packageRecord, selected: previewTouched && Boolean(packageRecord) }}
         disabled={!packageRecord}
@@ -131,7 +147,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
         )}
         <Text style={styles.previewTitle}>{previewTitle}</Text>
         <Text style={styles.previewHint}>{previewHint}</Text>
-        {packageRecord ? <Text style={styles.packageId}>Pacote {packageRecord.id.slice(0, 8)}</Text> : null}
+        {packageDateLabel ? <Text style={styles.packageId}>{packageDateLabel}</Text> : null}
       </Pressable>
 
       <View style={styles.controlPanel}>
@@ -162,7 +178,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
           </View>
         ) : null}
         <View style={styles.timelineHeader}>
-          <Text style={styles.timelineLabel}>{hasMedia ? "Linha do tempo local" : "Revisao local do pacote"}</Text>
+          <Text style={styles.timelineLabel}>{hasMedia ? "Reproducao" : "Revisao"}</Text>
           <Text style={styles.timelineValue}>{Math.round(progress)}%</Text>
         </View>
         <View style={styles.timelineTrack}>
@@ -182,7 +198,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
             ]}
           >
             {playing ? <Pause size={18} color={theme.colors.textOnDark} /> : <Play size={18} color={theme.colors.textOnDark} />}
-            <Text style={styles.controlLabel}>{playing ? "Pausar" : "Revisar"}</Text>
+            <Text style={styles.controlLabel}>{playing ? "Pausar" : hasMedia ? "Reproduzir" : "Revisar"}</Text>
           </Pressable>
           <Pressable
             accessibilityLabel="Reiniciar revisao local"
@@ -204,14 +220,14 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
 
       <View style={styles.secureBadge}>
         <FileLock2 size={16} color={theme.colors.primary} />
-        <Text style={styles.secureBadgeText}>Sandbox privado</Text>
+        <Text style={styles.secureBadgeText}>Privado</Text>
       </View>
 
       {packageRecord ? (
         <View style={styles.detailGrid}>
           <View style={styles.detailItem}>
-            <Clock size={17} color={theme.colors.primary} />
-            <Text numberOfLines={1} style={styles.detailText}>{summarizeCapture(packageRecord)}</Text>
+            <CalendarClock size={17} color={theme.colors.primary} />
+            <Text numberOfLines={1} style={styles.detailText}>{packageDateLabel}</Text>
           </View>
           <View style={styles.detailItem}>
             <MapPin size={17} color={theme.colors.primary} />
@@ -219,11 +235,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
           </View>
           <View style={styles.detailItem}>
             <FileLock2 size={17} color={theme.colors.primary} />
-            <Text numberOfLines={1} style={styles.detailText}>
-              {hasMedia
-                ? `Video ${Math.round((videoAsset?.sizeBytes ?? 0) / 1024)}KB; hash ${videoAsset?.sha256.slice(0, 16)}...`
-                : `Hash tecnico ${packageRecord.integrity.sha256.slice(0, 16)}...`}
-            </Text>
+            <Text numberOfLines={1} style={styles.detailText}>{mediaSummary}</Text>
           </View>
         </View>
       ) : null}

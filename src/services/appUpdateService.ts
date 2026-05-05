@@ -39,7 +39,7 @@ export async function checkAppUpdate(): Promise<AppUpdateCheck> {
     return {
       currentVersion: APP_VERSION,
       message:
-        "Verificacao de atualizacao preparada, mas a API esta bloqueada neste build local. Use EXPO_PUBLIC_SINALSEGURO_API_ENABLED=1 e EXPO_PUBLIC_SINALSEGURO_API_BASE_URL em homologacao.",
+        "A checagem de atualizacao sera feita pelo servico SinalSeguro quando a conta do app estiver conectada.",
       status: "api_disabled"
     };
   }
@@ -63,7 +63,7 @@ export async function checkAppUpdate(): Promise<AppUpdateCheck> {
         downloadUrl: release.downloadUrl,
         latestVersion: release.latestVersion,
         message:
-          "Esta versao ficou abaixo do minimo aceito pela API. A usuaria deve atualizar antes de usar novos fluxos conectados.",
+          "Esta versao precisa ser atualizada antes de usar novos recursos conectados.",
         status: "unsupported"
       };
     }
@@ -81,13 +81,13 @@ export async function checkAppUpdate(): Promise<AppUpdateCheck> {
     return {
       currentVersion: APP_VERSION,
       latestVersion: release.latestVersion,
-      message: "Esta instalacao esta na versao mais recente informada pela API.",
+      message: "Esta instalacao esta na versao mais recente informada pelo SinalSeguro.",
       status: "current"
     };
   } catch {
     return {
       currentVersion: APP_VERSION,
-      message: "Nao foi possivel consultar atualizacoes agora. A checagem podera ser repetida quando a API estiver acessivel.",
+      message: "Nao foi possivel consultar atualizacoes agora. Tente novamente quando estiver conectado.",
       status: "unavailable"
     };
   }
