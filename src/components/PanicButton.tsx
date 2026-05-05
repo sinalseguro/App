@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
-import Svg, { Circle, G } from "react-native-svg";
+import Svg, { Circle, Defs, G, LinearGradient, Rect, Stop } from "react-native-svg";
 import { theme } from "@/design/theme";
 
 type PanicButtonProps = {
@@ -60,8 +60,8 @@ function CircularHoldProgress({
           fill="none"
           r={progressCircleRadius}
           stroke="#FFEAF2"
-          strokeOpacity={0.3}
-          strokeWidth={1.5}
+          strokeOpacity={0.22}
+          strokeWidth={1.55}
         />
         <G transform={rotationTransform}>
           <AnimatedCircle
@@ -69,12 +69,12 @@ function CircularHoldProgress({
             cy="50"
             fill="none"
             r={progressCircleRadius}
-            stroke="#FFE0EC"
+            stroke="#FFF7FB"
             strokeDasharray={`${progressCircleCircumference} ${progressCircleCircumference}`}
             strokeDashoffset={strokeDashoffset}
             strokeLinecap="round"
-            strokeOpacity={0.92}
-            strokeWidth={2.15}
+            strokeOpacity={0.72}
+            strokeWidth={1.85}
           />
         </G>
       </Svg>
@@ -267,8 +267,18 @@ export function PanicButton({ active = false, label, holdMs, onTrigger }: PanicB
         <CircularHoldProgress active={active} holding={holding} progress={progress} />
         <View pointerEvents="none" style={styles.depthLayer} />
         <View pointerEvents="none" style={styles.lowerDepthLayer} />
-        <View pointerEvents="none" style={styles.sheenLayer} />
-        <View pointerEvents="none" style={styles.specularLayer} />
+        <View pointerEvents="none" style={styles.sheenGradientLayer}>
+          <Svg height="100%" width="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <Defs>
+              <LinearGradient id="sinalseguro-sos-sheen" x1="0" x2="0" y1="0" y2="1">
+                <Stop offset="0" stopColor="#FFFFFF" stopOpacity="0.36" />
+                <Stop offset="0.42" stopColor="#FFFFFF" stopOpacity="0.2" />
+                <Stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
+              </LinearGradient>
+            </Defs>
+            <Rect fill="url(#sinalseguro-sos-sheen)" height="100" rx="50" ry="50" width="100" />
+          </Svg>
+        </View>
         <View pointerEvents="none" style={styles.rimLightLayer} />
         <View pointerEvents="none" style={styles.innerGlowLayer} />
         {particleValues.map((value, index) => (
@@ -284,7 +294,7 @@ export function PanicButton({ active = false, label, holdMs, onTrigger }: PanicB
           {active ? "ATIVO" : "SOS"}
         </AnimatedText>
         <AnimatedText style={[styles.label, active && styles.labelActive, active && { opacity: activeTextOpacity }]}>
-          {holding ? "Continue segurando" : label}
+          {holding ? "Mantenha pressionado" : label}
         </AnimatedText>
       </Pressable>
     </View>
@@ -301,7 +311,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#C4155A",
     borderColor: theme.colors.accentSoft,
     borderRadius: theme.radius.pill,
-    borderWidth: 6,
+    borderWidth: 7,
     gap: theme.spacing.xs,
     aspectRatio: 1,
     justifyContent: "center",
@@ -311,9 +321,9 @@ const styles = StyleSheet.create({
     overflow: "visible",
     width: "75%",
     shadowColor: "#1E1B2E",
-    shadowOffset: { width: 0, height: 22 },
-    shadowOpacity: 0.42,
-    shadowRadius: 48,
+    shadowOffset: { width: 0, height: 24 },
+    shadowOpacity: 0.48,
+    shadowRadius: 58,
     elevation: 18
   },
   buttonArmed: {
@@ -321,8 +331,8 @@ const styles = StyleSheet.create({
     borderColor: "#FFD3E1",
     shadowColor: "#EC407A",
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.28,
-    shadowRadius: 30
+    shadowOpacity: 0.32,
+    shadowRadius: 36
   },
   buttonPressed: {
     elevation: 3,
@@ -341,7 +351,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject
   },
   depthLayer: {
-    backgroundColor: "rgba(18, 10, 32, 0.14)",
+    backgroundColor: "rgba(18, 10, 32, 0.2)",
     borderRadius: theme.radius.pill,
     bottom: 16,
     left: 17,
@@ -352,27 +362,27 @@ const styles = StyleSheet.create({
   },
   outerRim: {
     backgroundColor: "rgba(255, 255, 255, 0.05)",
-    borderColor: "rgba(255, 232, 241, 0.5)",
+    borderColor: "rgba(255, 232, 241, 0.62)",
     borderRadius: theme.radius.pill,
-    borderWidth: 1,
-    bottom: 8,
-    left: 8,
+    borderWidth: 1.15,
+    bottom: 7,
+    left: 7,
     position: "absolute",
-    right: 8,
-    top: 8,
+    right: 7,
+    top: 7,
     zIndex: 1
   },
   lowerDepthLayer: {
-    backgroundColor: "rgba(78, 5, 43, 0.24)",
+    backgroundColor: "rgba(45, 4, 28, 0.34)",
     borderBottomLeftRadius: theme.radius.pill,
     borderBottomRightRadius: theme.radius.pill,
     borderTopLeftRadius: 120,
     borderTopRightRadius: 120,
-    bottom: "7%",
-    height: "38%",
-    left: "12%",
+    bottom: "6%",
+    height: "42%",
+    left: "11%",
     position: "absolute",
-    right: "12%",
+    right: "11%",
     zIndex: 1
   },
   armedGlow: {
@@ -396,24 +406,14 @@ const styles = StyleSheet.create({
     top: 6,
     zIndex: 3
   },
-  sheenLayer: {
-    backgroundColor: "rgba(255, 255, 255, 0.3)",
+  sheenGradientLayer: {
     borderRadius: theme.radius.pill,
-    height: "40%",
+    height: "43%",
     left: "13%",
+    overflow: "hidden",
     position: "absolute",
     right: "13%",
-    top: "9%",
-    zIndex: 1
-  },
-  specularLayer: {
-    backgroundColor: "rgba(255, 255, 255, 0.16)",
-    borderRadius: theme.radius.pill,
-    height: "24%",
-    left: "25%",
-    position: "absolute",
-    right: "25%",
-    top: "17%",
+    top: "7%",
     zIndex: 1
   },
   rimLightLayer: {
@@ -439,8 +439,8 @@ const styles = StyleSheet.create({
   },
   labelActive: {
     color: "#FFF3F8",
-    textShadowColor: "rgba(255, 188, 214, 0.64)",
-    textShadowRadius: 10
+    textShadowColor: theme.colors.secure,
+    textShadowRadius: 12
   },
   label: {
     color: theme.colors.textOnDark,
@@ -451,7 +451,7 @@ const styles = StyleSheet.create({
     textShadowColor: "rgba(18, 10, 32, 0.56)",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 4,
-    zIndex: 2
+    zIndex: 8
   },
   sos: {
     color: theme.colors.textOnDark,
@@ -461,13 +461,13 @@ const styles = StyleSheet.create({
     textShadowColor: "rgba(18, 10, 32, 0.62)",
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 7,
-    zIndex: 2
+    zIndex: 8
   },
   sosActive: {
     color: "#FFF3F8",
-    textShadowColor: "rgba(255, 188, 214, 0.72)",
+    textShadowColor: theme.colors.secure,
     textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 14
+    textShadowRadius: 18
   },
   particle: {
     backgroundColor: theme.colors.accentSoft,

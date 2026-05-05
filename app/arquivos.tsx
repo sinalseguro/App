@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
-import { Linking, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Linking, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Archive, BookOpen, CirclePlay, HelpCircle, LockKeyhole, MapPinned, RefreshCw, Share2, Trash2 } from "lucide-react-native";
 import { AppTopBar } from "@/components/AppTopBar";
@@ -21,10 +21,11 @@ import {
 } from "@/features/emergency/emergencyPreferences";
 import { finishEmergencyPackage } from "@/features/emergency/emergencyRecorder";
 import { EmergencyPackage } from "@/features/emergency/types";
-import { isProtectedAccessUnlocked, verifySecurityCode } from "@/security/protectedAccess";
+import { isProtectedAccessUnlocked, verifySecurityCodeStatus } from "@/security/protectedAccess";
 import { checkAppUpdate } from "@/services/appUpdateService";
 
 type VaultDialog = "player" | "cofre" | null;
+type MapChoice = "platform" | "google";
 
 type LocalDialog = {
   title: string;
@@ -122,9 +123,9 @@ export default function LocalFilesScreen() {
     if (!finishPackageId) return;
 
     if (preferences.finishSafety.requireCode) {
-      const verified = await verifySecurityCode(preferences, finishCodeInput);
-      if (!verified) {
-        setFinishError("Codigo incorreto. O chamado continua ativo.");
+      const verification = await verifySecurityCodeStatus(preferences, finishCodeInput);
+      if (!verification.ok) {
+        setFinishError(`${verification.message} O chamado continua ativo.`);
         return;
       }
     }
@@ -174,7 +175,7 @@ export default function LocalFilesScreen() {
   function showShareBlocked(packageRecord: EmergencyPackage) {
     setDialog({
       title: "Compartilhar pelo app",
-      message: "O compartilhamento interno sera liberado apenas para pessoas autorizadas, com registro de acesso.",
+      message: "O compartilhamento protegido sera liberado apenas para pessoas autorizadas dentro do SinalSeguro.",
       icon: <Share2 size={18} color={theme.colors.primary} />,
       actions: [{ label: "Entendi" }]
     });
@@ -185,6 +186,16 @@ export default function LocalFilesScreen() {
       title: "Cofre local",
       message:
         "O cofre guarda arquivos deste aparelho. Toque em um item para visualizar, abrir mapa, compartilhar pelo app quando liberado ou excluir localmente.",
+      icon: <HelpCircle size={18} color={theme.colors.primary} />,
+      actions: [{ label: "Entendi" }]
+    });
+  }
+
+  function showPlayerHelp() {
+    setHelpDialog({
+      title: "Player seguro",
+      message:
+        "O player abre videos salvos neste aparelho e mostra os dados do arquivo selecionado. Quando ainda nao houver video, abra o cofre e escolha outro item.",
       icon: <HelpCircle size={18} color={theme.colors.primary} />,
       actions: [{ label: "Entendi" }]
     });
@@ -206,17 +217,41 @@ export default function LocalFilesScreen() {
     setMapPackage(packageRecord);
   }
 
-  async function openMapUrl(url: string) {
-    try {
-      await Linking.openURL(url);
-    } catch {
-      setDialog({
-        title: "Mapa indisponivel",
-        message: "Nao foi possivel abrir o aplicativo de mapa neste dispositivo.",
-        icon: <MapPinned size={18} color={theme.colors.primary} />,
-        actions: [{ label: "Entendi" }]
-      });
+  function getPlatformMapUrl(links: NonNullable<ReturnType<typeof buildPackageMapLinks>>) {
+    if (Platform.OS === "ios") return links.apple;
+    if (Platform.OS === "android") return links.geo;
+    return links.google;
+  }
+
+  async function openFirstAvailableMapUrl(urls: string[]) {
+    for (const url of urls) {
+      try {
+        if (Platform.OS !== "web") {
+          const canOpenUrl = await Linking.canOpenURL(url);
+          if (!canOpenUrl) continue;
+        }
+
+        await Linking.openURL(url);
+        return;
+      } catch {
+        continue;
+      }
     }
+
+    setDialog({
+      title: "Mapa indisponivel",
+      message: "Nao foi possivel abrir o aplicativo de mapa neste dispositivo.",
+      icon: <MapPinned size={18} color={theme.colors.primary} />,
+      actions: [{ label: "Entendi" }]
+    });
+  }
+
+  async function openMapChoice(choice: MapChoice) {
+    const links = mapPackage ? buildPackageMapLinks(mapPackage) : null;
+    if (!links) return;
+
+    const platformUrl = getPlatformMapUrl(links);
+    await openFirstAvailableMapUrl(choice === "platform" ? [platformUrl, links.google] : [links.google]);
   }
 
   async function deleteLocalPackage(packageRecord: EmergencyPackage) {
@@ -274,6 +309,10 @@ export default function LocalFilesScreen() {
   }
 
   const selectedPackage = packages.find((packageRecord) => packageRecord.id === selectedPackageId);
+  const platformMapLabel = Platform.OS === "ios" ? "Maps" : Platform.OS === "android" ? "Maps" : "Mapa";
+  const mapDialogMessage = mapPackage
+    ? `${buildTelemetrySummary(mapPackage).join("\n")}\n\nAo abrir um mapa externo, a localizacao exata deste registro sera enviada ao app ou servico escolhido.`
+    : "";
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.shell} testID="local-files-screen">
@@ -302,13 +341,13 @@ export default function LocalFilesScreen() {
             <ResourceTile
               icon={<CirclePlay size={24} color={theme.colors.primary} />}
               label="Player"
-              description="Revisao"
+              description="Rever"
               onPress={() => setActiveDialog("player")}
             />
             <ResourceTile
               icon={<Archive size={24} color={theme.colors.primary} />}
               label="Cofre"
-              description="Trilha"
+              description="Arquivos"
               onPress={() => setActiveDialog("cofre")}
             />
           </View>
@@ -322,7 +361,7 @@ export default function LocalFilesScreen() {
             <ResourceTile
               icon={<RefreshCw size={24} color={theme.colors.primary} />}
               label="Atualizar app"
-              description="Servico"
+              description="Atualizacoes"
               onPress={checkForAppUpdates}
             />
           </View>
@@ -331,9 +370,11 @@ export default function LocalFilesScreen() {
         <BrandedDialog
           actions={[
             { label: "Fechar", tone: "muted" },
-            { label: "Abrir cofre", onPress: () => setActiveDialog("cofre") }
+            { autoClose: false, label: "Abrir cofre", onPress: () => setActiveDialog("cofre") }
           ]}
           icon={<CirclePlay size={18} color={theme.colors.primary} />}
+          helpLabel="Ajuda do player"
+          onHelpPress={showPlayerHelp}
           onClose={() => setActiveDialog(null)}
           title="Player seguro"
           visible={activeDialog === "player"}
@@ -377,6 +418,16 @@ export default function LocalFilesScreen() {
             }
           ]}
           icon={<LockKeyhole size={18} color={theme.colors.primary} />}
+          helpLabel="Ajuda para encerrar"
+          onHelpPress={() =>
+            setHelpDialog({
+              title: "Encerrar chamado",
+              message:
+                "Encerrar finaliza apenas o chamado ativo. Os arquivos ja salvos continuam no cofre local, a menos que voce exclua depois.",
+              icon: <LockKeyhole size={18} color={theme.colors.primary} />,
+              actions: [{ label: "Entendi" }]
+            })
+          }
           message={
             preferences.finishSafety.requireCode
               ? "Informe o codigo de encerramento configurado para impedir que outra pessoa finalize o chamado sem autorizacao."
@@ -418,22 +469,20 @@ export default function LocalFilesScreen() {
           actions={[
             { label: "Fechar", tone: "muted" },
             {
-              label: "Apple Maps",
+              label: platformMapLabel,
               onPress: () => {
-                const links = mapPackage ? buildPackageMapLinks(mapPackage) : null;
-                if (links) void openMapUrl(links.apple);
+                void openMapChoice("platform");
               }
             },
             {
               label: "Google Maps",
               onPress: () => {
-                const links = mapPackage ? buildPackageMapLinks(mapPackage) : null;
-                if (links) void openMapUrl(links.google);
+                void openMapChoice("google");
               }
             }
           ]}
           icon={<MapPinned size={18} color={theme.colors.primary} />}
-          message={mapPackage ? buildTelemetrySummary(mapPackage).join("\n") : ""}
+          message={mapDialogMessage}
           onClose={() => setMapPackage(null)}
           title="Abrir localizacao"
           visible={Boolean(mapPackage)}

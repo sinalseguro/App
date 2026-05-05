@@ -4,7 +4,7 @@ import { LockKeyhole } from "lucide-react-native";
 import { BrandedDialog } from "@/components/BrandedDialog";
 import { theme } from "@/design/theme";
 import { EmergencyPreferences } from "@/features/emergency/emergencyPreferences";
-import { hasSecurityCode, unlockProtectedAccess, verifySecurityCode } from "@/security/protectedAccess";
+import { hasSecurityCode, unlockProtectedAccess, verifySecurityCodeStatus } from "@/security/protectedAccess";
 
 type ProtectedAccessGateProps = {
   visible: boolean;
@@ -32,9 +32,9 @@ export function ProtectedAccessGate({
       return;
     }
 
-    const verified = await verifySecurityCode(preferences, code);
-    if (!verified) {
-      setError("Codigo incorreto.");
+    const verification = await verifySecurityCodeStatus(preferences, code);
+    if (!verification.ok) {
+      setError(verification.message);
       return;
     }
 

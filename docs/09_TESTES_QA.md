@@ -79,7 +79,7 @@ Checklist executado por Myers com supervisao de Tarcila, Norman, Ada, Hedy, Schn
 - confirmar Home sem `SafeScreen`/`ScrollView` e sem rolagem na superficie de emergencia;
 - confirmar que titulo/subtitulo duplicados foram removidos do corpo;
 - confirmar SOS circular com largura responsiva de 75% e texto legivel;
-- confirmar atalhos oficiais `Policia 190`, `Bombeiros 193` e `SAMU 192`;
+- confirmar atalhos oficiais visiveis como `Policia`, `Bombeiros` e `SAMU`, com numeros preservados somente na confirmacao de chamada;
 - confirmar drawer por engrenagem com modo atual, cofre/player, anjos, convites, configuracoes e atividade;
 - acionar SOS por gesto longo no Android fisico e confirmar estado `ATIVO`;
 - verificar `logcat` sem `FATAL`, `AndroidRuntime`, `RedBox`, `Unable to load script` ou `setValueWithKeyAsync`;
@@ -94,6 +94,6 @@ Checklist complementar de Myers:
 - confirmar que excluir pacote local exige confirmacao;
 - confirmar que pacote ativo nao pode ser excluido pelo cofre;
 - confirmar que drawer da Home nao mostra jargao `backend/P2P`;
-- confirmar que o atalho `Policia 190` respeita a preferencia configurada;
+- confirmar que `Policia`, `Bombeiros` e `SAMU` aparecem por padrao e nao sao ocultados por preferencia local;
 - confirmar que fallback web do cofre usa memoria volatil e nao `sessionStorage`;
 - confirmar que a documentacao de splash corresponde ao `app.json` atual.

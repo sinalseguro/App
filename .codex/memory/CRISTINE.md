@@ -349,3 +349,38 @@ Proximas acoes atualizadas:
 - Estado de trabalho deve ser preservado como checkpoint de continuidade, mesmo com ajustes ainda pendentes.
 - Na retomada, começar por `git status --short`, ler `.codex/AGENTS.md`, esta memória, `TECNICA_MOBILE.md`, `SEGURANCA_QA.md`, `TARCILA.md` e `docs/03_TIMELINE.md`.
 - Pendências conhecidas para a retomada: refinamento de modais com linguagem de produto, player/cofre com menos texto, código de segurança simplificado, hash de vídeo grande sem leitura integral em Base64, validação visual no browser e APK privado via script.
+
+## Memoria viva - 2026-05-05 - Retomada final do APK privado
+
+- Retomada iniciada por Zé/Cristine com `git status --short`, preservando os ajustes ja implementados e evitando retrabalho.
+- Tarcila/Norman: SOS mantem identidade visual SinalSeguro, sem animação verde, com botão em bolha 3D, partículas discretas e anel circular interno na circunferencia do botão.
+- Ada/Hedy: gravação local privada permanece habilitada para build privado; `Duas cameras` continua como padrão de homologação, com fallback de plataforma quando captura simultânea não for sustentada.
+- Cofre/Player: lista de arquivos segue em grade vertical, com título/data do pacote, player local, ação de mapa e ação de compartilhar pelo app quando autorizada no produto.
+- Configurações: recursos ficam em grade iconográfica; modais usam linguagem de produto e ajuda contextual `(?)`, sem justificar detalhes técnicos na camada principal.
+- Código de segurança: permanece local, opcional e sem código padrão; quando habilitado, protege encerramento do SOS e áreas privadas como Cofre, Anjos, Player e Configurações.
+- Linguagem pendente removida da UI principal: ações de compartilhamento passaram de `Envio futuro` para `Compartilhar pelo app`.
+- Protocolo permanente para interrupções: antes de limite de uso, pausa, travamento, build longo ou limpeza de disco, registrar memória, documentação e Git para permitir retomada sem redundância.
+- Próximo passo operacional desta retomada: rodar gates, validar browser, gerar APK privado com script, instalar no Android USB e publicar checkpoint.
+
+## Solucao anti-redundancia - 2026-05-05
+
+- Criado `docs/28_RETOMADA_SEM_REDUNDANCIA.md` como documento unico de retomada do ciclo atual.
+- Na proxima interrupcao, Cristine deve iniciar por esse documento e por `git status --short --branch`, evitando reabrir toda a memoria historica.
+- A fila de execucao ficou travada: fechar pendencias UX/IX comentadas, rodar gates leves, validar browser, gerar APK privado, instalar somente com ADB visivel e confirmacao no momento, atualizar memoria/docs e publicar Git.
+- O criterio de passagem para a proxima etapa ficou objetivo: gates aprovados, browser validado, APK privado gerado, Android fisico validado ou bloqueio ADB documentado, commit e push.
+- Acesso a Google/iCloud/contas logadas ficou marcado como etapa propria OIDC/backend, sem tocar credenciais ou configuracoes de conta sem confirmacao de acao.
+
+## Memoria viva - 2026-05-05 - Ajustes finais no browser
+
+- Roberto marcou no browser que a Home deve trazer `Policia`, `Bombeiros` e `SAMU` ativos por padrao, sem `190` no rotulo visual do botao `Policia`; `Anjo` fica como atalho futuro, desativado ate gestao propria.
+- Tarcila/Norman revisaram a bolha SOS: foi removida a dupla transparencia superior; agora ha uma unica camada SVG com degradê que some em direcao ao centro.
+- O texto `ATIVO` foi elevado acima das particulas e deve usar somente sombra verde no proprio texto, sem faixa/charuto atras, mantendo a massa principal magenta/rosa da identidade SinalSeguro.
+- Myers/Schneier bloquearam o atalho de Anjo e `Anjo acionar 190` enquanto nao houver anjo aceito, conta propria, termos, contrato e auditoria.
+- Cofre/Player agora mostram duracao/tempo de gravacao na grade e nos detalhes do player.
+- Mapa agora oferece `Maps` da plataforma e `Google Maps`, valida disponibilidade no nativo e avisa que o app externo recebera a localizacao exata do registro.
+- Gates locais desta rodada: `typecheck`, `lint`, `test`, `private:android:readiness` e `git diff --check` aprovados.
+- Browser local aberto em `http://localhost:8081/` e Home validada com `Policia`, `Bombeiros` e `SAMU`, sem `Policia 190`.
+- APK privado regerado por `npm run build:android:private`: `android/app/build/outputs/apk/debug/app-debug.apk`, `119M`, SHA-256 `daf5a22d163acc468a9470e1bd2178606f1b547c55bdf824a22eefe5d3f022d1`.
+- APK instalado por USB no Android `23129RA5FL` com `adb install -r`: `Success`.
+- Evidencias Android finais: `docs/evidencias/android/2026-05-05-apk-privado-final/home-apk-final-after-wake.png` e `docs/evidencias/android/2026-05-05-apk-privado-final/estado-final-aparelho.png`.
+- Proxima fase do plano global: `API e Anjos`, documentada em `docs/29_PROXIMA_ETAPA_API_ANJOS.md`.

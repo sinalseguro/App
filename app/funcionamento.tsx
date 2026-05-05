@@ -21,18 +21,18 @@ const steps = [
   },
   {
     icon: <KeyRound size={20} color={theme.colors.primary} />,
-    title: "Criptografia",
-    text: "Arquivos e localizacao devem ser protegidos por chaves e acesso autorizado quando sairem do aparelho."
+    title: "Protecao dos arquivos",
+    text: "Arquivos e localizacao ficam protegidos no app e so devem sair com autorizacao."
   },
   {
     icon: <Video size={20} color={theme.colors.primary} />,
     title: "Midia",
-    text: "Video e audio locais podem ser preservados no aparelho autorizado. Envio e compartilhamento dependem de permissao e contrato."
+    text: "Video local autorizado pode ficar salvo no aparelho para revisao privada."
   },
   {
     icon: <ShieldCheck size={20} color={theme.colors.primary} />,
     title: "Privacidade",
-    text: "Dados so podem ser usados dentro do SinalSeguro ou por exportacao auditada para processo judicial ou protetivo."
+    text: "Dados devem ser usados apenas para protecao, orientacao e entrega autorizada."
   }
 ];
 

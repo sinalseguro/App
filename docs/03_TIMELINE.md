@@ -842,3 +842,108 @@ Pendencias de retomada:
 3. Ajustar hash de video grande para nao carregar arquivo inteiro em memoria.
 4. Validar visualmente no browser `localhost:8081`.
 5. Rodar gates leves, gerar APK privado pelo script e instalar no Android quando Roberto liberar espaco.
+
+## 2026-05-05 - Retomada final do ciclo privado Android
+
+Status: em fechamento para validacao, APK privado e publicacao Git.
+
+Responsaveis:
+
+- Zé/Cristine: coordenacao, continuidade, memoria e publicacao.
+- Tarcila/Norman: aprovacao visual do SOS, drawer, modais e Cofre/Player.
+- Ada/Hedy: fluxo tecnico de SOS, midia local, duas cameras, cofre e player.
+- Schneier/Doneda/Myers: seguranca, LGPD, bloqueios de compartilhamento externo e QA.
+
+Decisoes e ajustes consolidados:
+
+- SOS usa botao circular responsivo com efeito de bolha 3D, anel interno de progresso na circunferencia e particulas discretas.
+- O anel continua horario para acionar e anti-horario para encerrar; foi calibrado para aparecer sem virar aro externo dominante.
+- O feedback ativo preserva a massa magenta/rosa da identidade SinalSeguro e usa halo verde apenas como sombra pulsante atras do texto `ATIVO`, por decisao visual posterior do Roberto.
+- Configuracoes mantem tela principal iconografica e modais de produto com ajuda `(?)`.
+- `Duas cameras` e o padrao de homologacao privada, com fallback para camera unica quando o aparelho ou a plataforma impedir captura simultanea.
+- Cofre/Player lista arquivos em grade vertical com titulo, data, duracao, player local, mapa e compartilhamento pelo app quando autorizado.
+- O texto `Envio futuro` saiu das acoes visiveis e virou linguagem de produto: `Compartilhar pelo app`.
+- Codigo de seguranca protege encerramento do SOS e acesso a Cofre, Anjos, Player e Configuracoes quando habilitado.
+- Regra de continuidade reforcada: antes de interrupcoes, travamentos, builds longos, limpeza de disco ou limite de uso, salvar memoria, documentacao e Git.
+
+Pendencias imediatas:
+
+1. Rodar `typecheck`, `lint`, `test`, `private:android:readiness` e `git diff --check`.
+2. Validar visualmente no browser local.
+3. Gerar APK privado pelo script `scripts/gerar-aplicativo.sh`.
+4. Instalar no Android conectado por USB.
+5. Commitar e publicar o checkpoint.
+
+## 2026-05-05 - Solucao de continuidade sem redundancia
+
+Status: roteiro de retomada criado para evitar consumo de limite com releitura repetida.
+
+Decisao:
+
+- `docs/28_RETOMADA_SEM_REDUNDANCIA.md` passa a ser o primeiro documento operacional para fechar o ciclo atual.
+- A retomada deve usar uma fila unica: revisar somente arquivos alterados, fechar pendencias comentadas, rodar gates, validar browser, gerar APK privado, instalar no Android se o ADB listar o aparelho, documentar e publicar.
+- Se o Android nao aparecer no ADB, a instalacao nao deve ser tentada; registrar bloqueio e seguir somente com o que puder ser validado localmente.
+- Google/iCloud/login social entram por etapa propria de OIDC/backend, sem usar credenciais ou contas logadas como material versionado.
+
+Proxima acao:
+
+1. Continuar diretamente da fila em `docs/28_RETOMADA_SEM_REDUNDANCIA.md`.
+2. Nao refazer plano de agentes, stack, arquitetura ou pesquisa ampla.
+3. Encerrar o ciclo atual com validacao e Git antes de abrir a proxima etapa.
+
+## 2026-05-05 - Ajustes finais solicitados no browser
+
+Status: implementado, validado no browser local e instalado no Android fisico.
+
+Especialistas:
+
+- Norman/Tarcila: revisaram a Home, a bolha SOS e o estado `ATIVO`.
+- Myers/Schneier: revisaram duracao no Cofre, mapas externos, Anjo bloqueado e minimizacao de dados.
+
+Ajustes:
+
+- A Home passa a renderizar `Policia`, `Bombeiros` e `SAMU` como atalhos oficiais sempre ativos por padrao, com os numeros preservados apenas no fluxo de confirmacao antes de ligar.
+- O atalho de Anjo permanece desativado/preparatorio ate gestao de anjos, aceite real, contrato, termos e auditoria.
+- A bolha SOS troca as duas transparencias superiores por uma unica camada SVG com degradê que some em direcao ao centro.
+- O texto `ATIVO` fica acima das particulas e usa apenas sombra verde no proprio texto, sem faixa ou camada em formato de charuto atras.
+- A grade do Cofre e o Player passam a mostrar duracao/tempo de gravacao do arquivo.
+- O modal de mapa oferece `Maps` da plataforma e `Google Maps`, valida `canOpenURL` no nativo e avisa que abrir mapa externo envia a localizacao exata ao app escolhido.
+- Os links de mapa permanecem multiplataforma: Apple Maps, Google Maps e `geo:` para Android/handlers compativeis.
+
+Validacao local:
+
+- `npm run typecheck`: aprovado.
+- `npm run lint`: aprovado.
+- `npm test`: aprovado.
+- `npm run private:android:readiness`: aprovado.
+- Browser aberto em `http://localhost:8081/`: Home validada com `Policia`, `Bombeiros` e `SAMU`, sem `Policia 190`.
+- `npm run build:android:private`: aprovado.
+- APK privado: `android/app/build/outputs/apk/debug/app-debug.apk`.
+- Tamanho do APK: `119M`.
+- SHA-256 do APK: `daf5a22d163acc468a9470e1bd2178606f1b547c55bdf824a22eefe5d3f022d1`.
+- `adb install -r android/app/build/outputs/apk/debug/app-debug.apk`: `Success` no Android `23129RA5FL`.
+- `adb shell am start -n br.com.sinalseguro.app/.MainActivity`: app iniciou e ficou como foco atual.
+- Evidencia Android final: `docs/evidencias/android/2026-05-05-apk-privado-final/home-apk-final-after-wake.png`.
+- Evidencia de estado final inativo no aparelho: `docs/evidencias/android/2026-05-05-apk-privado-final/estado-final-aparelho.png`.
+- Logcat de pos-instalacao registrado em `docs/evidencias/android/2026-05-05-apk-privado-final/logcat-app-pos-instalacao-final.txt`.
+
+Observacao:
+
+- O `uiautomator dump` oscilou por estado de idle/animações no aparelho, mas `dumpsys window` confirmou `br.com.sinalseguro.app/.MainActivity` como foco e a captura visual confirmou a Home instalada.
+
+## 2026-05-05 - Revisao do plano global e proxima fase
+
+Status: revisado e pronto para orientar a proxima etapa apos o fechamento do APK privado.
+
+Decisao:
+
+- A proxima etapa do plano global e `API e Anjos`, conforme Fase 4 do cronograma e Epico D do backlog.
+- O documento operacional da proxima etapa e `docs/29_PROXIMA_ETAPA_API_ANJOS.md`.
+- Antes de abrir essa fase, falta apenas publicar o checkpoint Git se Roberto quiser fechar a etapa no remoto nesta sessao.
+
+Escopo inicial da proxima fase:
+
+- Evoluir `services/api` de placeholder Django para API modular.
+- Implementar dominios iniciais de `auth`, `devices`, `consents`, `trusted_contacts`, `invitations`, `alerts`, `app_updates` e auditoria saneada.
+- Conectar o mobile via cliente API minimo, preservando fallback local/offline.
+- Manter midia real, streaming, P2P critico e integracao oficial com orgaos publicos fora do escopo ate revisoes juridica, LGPD, seguranca e convenios.

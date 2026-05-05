@@ -4,6 +4,7 @@ import { Archive, ChevronDown, ChevronUp, Eye, MapPin, Share2, Square, Trash2 } 
 import { theme } from "@/design/theme";
 import {
   formatPackageDate,
+  formatPackageDurationLabel,
   formatPackageSubtitle,
   formatPackageTitle,
   hasPackageLocation
@@ -114,6 +115,7 @@ export function LocalEvidenceRail({
               </View>
               <Text numberOfLines={2} style={styles.fileTitle}>{packageTitle}</Text>
               <Text numberOfLines={1} style={styles.fileDate}>{formatPackageDate(packageRecord)}</Text>
+              <Text numberOfLines={1} style={styles.fileDuration}>{formatPackageDurationLabel(packageRecord)}</Text>
               <Text style={styles.fileStatus}>{formatPackageSubtitle(packageRecord)}</Text>
               {expanded ? (
                 <ChevronUp size={18} color={theme.colors.textMuted} />
@@ -275,6 +277,12 @@ const styles = StyleSheet.create({
     color: theme.colors.textMuted,
     fontSize: 10,
     fontWeight: "800",
+    textAlign: "center"
+  },
+  fileDuration: {
+    color: theme.colors.primary,
+    fontSize: 11,
+    fontWeight: "900",
     textAlign: "center"
   },
   fileTitle: {

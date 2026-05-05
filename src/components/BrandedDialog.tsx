@@ -42,8 +42,8 @@ export function BrandedDialog({
 
   return (
     <Modal animationType="fade" onRequestClose={onClose} transparent visible={visible}>
-      <Pressable accessibilityRole="button" onPress={onClose} style={styles.backdrop}>
-        <Pressable onPress={() => undefined} style={styles.panel}>
+      <Pressable accessible={false} onPress={onClose} style={styles.backdrop}>
+        <Pressable accessible={false} onPress={() => undefined} style={styles.panel}>
           <View style={styles.header}>
             {icon ? <View style={styles.iconSlot}>{icon}</View> : null}
             <Text style={styles.title}>{title}</Text>

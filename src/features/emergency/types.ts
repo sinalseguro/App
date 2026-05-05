@@ -28,6 +28,7 @@ export type LocalMediaAsset = {
   requestedCameraMode?: "front" | "back" | "both";
   sizeBytes: number;
   sha256: string;
+  hashMode: "content_sha256" | "metadata_sha256_pending_streaming";
   recordedAt: string;
   completedAt: string;
   encryptionStatus: "local_sandbox_pending_backend_envelope";

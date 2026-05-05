@@ -25,7 +25,7 @@ import {
   formatDuration,
   getEmergencyPreferences
 } from "@/features/emergency/emergencyPreferences";
-import { isProtectedAccessUnlocked, unlockProtectedAccess, verifySecurityCode } from "@/security/protectedAccess";
+import { isProtectedAccessUnlocked, unlockProtectedAccess, verifySecurityCodeStatus } from "@/security/protectedAccess";
 
 type HomeDialog = {
   title: string;
@@ -247,8 +247,9 @@ export default function HomeScreen() {
       return;
     }
 
-    if (!(await verifySecurityCode(preferences, finishCodeInput))) {
-      setFinishError("Codigo incorreto. O chamado continua ativo.");
+    const verification = await verifySecurityCodeStatus(preferences, finishCodeInput);
+    if (!verification.ok) {
+      setFinishError(`${verification.message} O chamado continua ativo.`);
       return;
     }
 
@@ -258,8 +259,9 @@ export default function HomeScreen() {
   async function confirmProtectedRouteWithCode() {
     if (!protectedRouteRequest) return;
 
-    if (!(await verifySecurityCode(preferences, protectedRouteCodeInput))) {
-      setProtectedRouteError("Codigo incorreto. Area protegida bloqueada.");
+    const verification = await verifySecurityCodeStatus(preferences, protectedRouteCodeInput);
+    if (!verification.ok) {
+      setProtectedRouteError(`${verification.message} Area protegida bloqueada.`);
       return;
     }
 
@@ -316,7 +318,6 @@ export default function HomeScreen() {
 
           <EmergencyCallDock
             onCallTarget={confirmEmergencyCall}
-            showPoliceShortcut={preferences.emergencyPhoneCall.call190ShortcutEnabled}
           />
         </View>
 

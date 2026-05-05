@@ -54,3 +54,12 @@ git diff --check
 1. Reinstalar APK privado no Android conectado.
 2. Validar no aparelho: abertura sem travamento, SOS, permissao de camera/microfone, gravacao local, cofre, player e exclusao.
 3. Se Roberto aprovar a UX, seguir para integracao API/OIDC/convites persistidos e contrato de atualizacao.
+
+## Atualizacao 2026-05-05
+
+- Tarcila e Norman aprovaram o ajuste de direcao visual: SOS sem brilho verde, anel circular discreto na propria circunferencia do botao e efeito de bolha com profundidade.
+- O texto visivel de compartilhamento foi ajustado para linguagem de produto: `Compartilhar pelo app`.
+- Configuracoes permanece em grade iconografica e os detalhes longos devem ficar em ajuda padronizada por botao `(?)`, mantendo a tela como produto e nao prototipo tecnico.
+- O codigo de seguranca local protege o encerramento do SOS e tambem pode bloquear o acesso a Cofre, Anjos, Player e Configuracoes quando estiver ativo.
+- `Duas cameras` e a preferencia padrao do build privado. Quando a plataforma nao permitir captura simultanea, o pacote deve preservar a camera que conseguir gravar e registrar o fallback tecnico.
+- O proximo checkpoint deve fechar validacao, APK privado e instalacao no Android conectado antes de seguir para API/OIDC/convites persistidos.

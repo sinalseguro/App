@@ -48,3 +48,13 @@ Papel: seguranca, LGPD e QA.
   - compartilhamento externo sem backend, contrato, RBAC, auditoria e criptografia por envelope;
   - permissao de camera/microfone fora do build privado/homologado.
 - Validacoes pendentes na retomada: browser em `localhost:8081`, `npm run typecheck`, `npm run lint`, `npm test`, build privado pelo script e instalacao no Android conectado.
+
+## QA/Security - 2026-05-05 - ajustes finais no browser
+
+- `Policia`, `Bombeiros` e `SAMU` ficam ativos por padrao na Home; os numeros `190`, `193` e `192` ficam preservados na confirmacao antes de abrir `tel:`.
+- Atalho de Anjo e permissao para Anjo acionar 190 ficam desativados/preparatorios ate aceite real, backend, contrato, termos, auditoria e RBAC.
+- Cofre e Player exibem duracao/tempo de gravacao do arquivo sem expor URI local, hash de midia ou coordenadas completas na grade.
+- Modal de mapa avisa que abrir Maps/Google Maps envia a localizacao exata ao app externo escolhido; links mantem suporte Apple Maps, Google Maps e `geo:`.
+- Gates aprovados nesta rodada: `typecheck`, `lint`, `test`, `private:android:readiness` e `git diff --check`.
+- APK privado final gerado com SHA-256 `daf5a22d163acc468a9470e1bd2178606f1b547c55bdf824a22eefe5d3f022d1` e instalado por USB no Android `23129RA5FL` com `adb install -r`: `Success`.
+- Evidencias finais salvas em `docs/evidencias/android/2026-05-05-apk-privado-final/`, incluindo Home instalada e logcat de pos-instalacao.

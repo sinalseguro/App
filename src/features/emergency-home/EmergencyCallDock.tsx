@@ -5,7 +5,6 @@ import { EmergencyCallIcon, EmergencyCallTarget, emergencyCallTargets } from "./
 
 type EmergencyCallDockProps = {
   onCallTarget: (target: EmergencyCallTarget) => void;
-  showPoliceShortcut?: boolean;
 };
 
 function renderEmergencyIcon(icon: EmergencyCallIcon) {
@@ -20,14 +19,10 @@ function renderEmergencyIcon(icon: EmergencyCallIcon) {
   return <ShieldAlert size={24} color={theme.colors.primary} />;
 }
 
-export function EmergencyCallDock({ onCallTarget, showPoliceShortcut = true }: EmergencyCallDockProps) {
-  const visibleTargets = showPoliceShortcut
-    ? emergencyCallTargets
-    : emergencyCallTargets.filter((target) => target.number !== "190");
-
+export function EmergencyCallDock({ onCallTarget }: EmergencyCallDockProps) {
   return (
     <View style={styles.callDock}>
-      {visibleTargets.map((target) => (
+      {emergencyCallTargets.map((target) => (
         <Pressable
           accessibilityHint={`Abre confirmacao para ligar ${target.number}`}
           accessibilityLabel={target.label}

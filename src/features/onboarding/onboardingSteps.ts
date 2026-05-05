@@ -19,8 +19,8 @@ export const onboardingSteps = [
   },
   {
     id: "midia",
-    title: "Midia homologada",
-    text: "Gravacao e upload ficam bloqueados para producao ate revisao juridica e de seguranca.",
-    status: "bloqueado" as const
+    title: "Midia local",
+    text: "Video e audio entram quando a usuaria autoriza e o aparelho permitir.",
+    status: "opcional" as const
   }
 ];

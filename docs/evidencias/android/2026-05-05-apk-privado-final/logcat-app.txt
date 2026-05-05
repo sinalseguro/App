@@ -1,0 +1,315 @@
+--------- beginning of main
+05-05 14:41:20.909 18267 18267 E Zygote  : process_name_ptr:18267 br.com.sinalseguro.app
+05-05 14:41:20.909 18267 18267 E Zygote  : SetMemoryProtected process_name_ptr:18267 br.com.sinalseguro.app
+05-05 14:41:20.918 18267 18267 I sinalseguro.app: Late-enabling -Xcheck:jni
+05-05 14:41:20.957 18267 18267 I sinalseguro.app: Using CollectorTypeCMC GC.
+05-05 14:41:20.974 18267 18267 D nativeloader: Load libframework-connectivity-tiramisu-jni.so using APEX ns com_android_tethering for caller /apex/com.android.tethering/javalib/framework-connectivity-t.jar: ok
+05-05 14:41:20.981 18267 18267 I MessageMonitor: Load libmiui_runtime
+--------- beginning of system
+05-05 14:41:21.073 18267 18278 D MiuiDownscaleImpl: set override inverted scale : 1.0
+05-05 14:41:21.090 18267 18267 D MiuiMonitorThread: Shared singleton Thread for stability monitor start
+05-05 14:41:21.112 18267 18267 I ActivityThread: SetSystemFontMap done
+05-05 14:41:21.185 18267 18267 D ActivityThread: setEmbeddedParam packageName=br.com.sinalseguro.app processName=br.com.sinalseguro.app isEmbedded=false isIsolated=false
+05-05 14:41:21.223 18267 18279 D AppScoutStateMachine: 18267-ScoutStateMachinecreated
+05-05 14:41:23.438 18267 18267 D nativeloader: Configuring clns-7 for other apk /data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk. target_sdk_version=36, uses_libraries=, library_path=/data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/lib/arm64:/data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/br.com.sinalseguro.app
+05-05 14:41:23.551 18267 18267 I Perf    : Connecting to perf service.
+05-05 14:41:23.577 18267 18267 V GraphicsEnvironment: Currently set values for:
+05-05 14:41:23.577 18267 18267 V GraphicsEnvironment:   angle_gl_driver_selection_pkgs=[]
+05-05 14:41:23.577 18267 18267 V GraphicsEnvironment:   angle_gl_driver_selection_values=[]
+05-05 14:41:23.579 18267 18267 V GraphicsEnvironment: Global.Settings values are invalid: number of packages: 0, number of values: 0
+05-05 14:41:23.583 18267 18267 V GraphicsEnvironment: App is not on the allowlist for updatable production driver.
+05-05 14:41:23.586 18267 18267 I ActivityThread: TrafficStats init done
+05-05 14:41:23.632 18267 18267 I ForceDarkHelperStubImpl: initialize for br.com.sinalseguro.app , ForceDarkAppConfig: null
+05-05 14:41:23.666 18267 18267 D nativeloader: Load libforcedarkimpl.so using system ns (caller=/system_ext/framework/miui-framework.jar): ok
+05-05 14:41:23.667 18267 18267 D HWUI    : JNI_OnLoad success
+05-05 14:41:23.667 18267 18267 I MiuiForceDarkConfig: setConfig density:2.200000, mainRule:0, secondaryRule:0, tertiaryRule:0
+05-05 14:41:23.684 18267 18267 I ActivityThread: Miui Feature Init done
+05-05 14:41:24.326 18267 18267 W FirebaseApp: Default FirebaseApp failed to initialize because no default options were found. This usually means that com.google.gms:google-services was not applied to your gradle project.
+05-05 14:41:24.326 18267 18267 I FirebaseInitProvider: FirebaseApp initialization unsuccessful
+05-05 14:41:24.475 18267 18267 W libc    : Access denied finding property "vendor.boostfwk.frameprefetcher"
+05-05 14:41:24.850 18267 18267 W SoLoader: Initializing SoLoader: 0
+05-05 14:41:24.852 18267 18267 W SoLoader: Recording new base apk path: /data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk
+05-05 14:41:24.852 18267 18267 W SoLoader: Previously recorded 0 base apk paths.
+05-05 14:41:24.856 18267 18267 I SoLoader: Preparing SO source: DirectorySoSource[root = /vendor/lib64 flags = 2]
+05-05 14:41:24.856 18267 18267 I SoLoader: Preparing SO source: DirectorySoSource[root = /system/lib64 flags = 2]
+05-05 14:41:24.856 18267 18267 I SoLoader: Preparing SO source: DirectApkSoSource[root = [/data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!/lib/arm64-v8a]]
+05-05 14:41:24.960 18267 18267 I SoLoader: Preparing SO source: ApplicationSoSource[DirectorySoSource[root = /data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/lib/arm64 flags = 0]]
+05-05 14:41:24.960 18267 18267 I SoLoader: init finish: 4 SO sources prepared
+05-05 14:41:24.960 18267 18267 W SoLoader: SoLoader initialized: 8
+05-05 14:41:25.115 18267 18267 D nativeloader: Load /data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!/lib/arm64-v8a/libc++_shared.so using class loader ns clns-7 (caller=/data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!classes20.dex): ok
+05-05 14:41:25.177 18267 18267 D nativeloader: Load /data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!/lib/arm64-v8a/libjsi.so using class loader ns clns-7 (caller=/data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!classes20.dex): ok
+05-05 14:41:25.238 18267 18267 D nativeloader: Load /data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!/lib/arm64-v8a/libfbjni.so using class loader ns clns-7 (caller=/data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!classes20.dex): ok
+05-05 14:41:25.263 18267 18267 D nativeloader: Load /data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!/lib/arm64-v8a/libreactnative.so using class loader ns clns-7 (caller=/data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!classes20.dex): ok
+05-05 14:41:25.263 18267 18267 D jni_lib_merge: Entering merged library JNI_OnLoad.
+05-05 14:41:25.263 18267 18267 D jni_lib_merge: Preparing 12 pre-merged libs (including stub)
+05-05 14:41:25.264 18267 18267 D jni_lib_merge: Preparing to register libfabricjni_so.  onload_func: 0x6d23024ce0
+05-05 14:41:25.264 18267 18267 D jni_lib_merge: Preparing to register libreact_devsupportjni_so.  onload_func: 0x6d2321efc8
+05-05 14:41:25.264 18267 18267 D jni_lib_merge: Preparing to register libreact_featureflagsjni_so.  onload_func: 0x6d2322d518
+05-05 14:41:25.264 18267 18267 D jni_lib_merge: Preparing to register libreact_newarchdefaults_so.  onload_func: 0x6d232956a8
+05-05 14:41:25.264 18267 18267 D jni_lib_merge: Preparing to register libreactnativeblob_so.  onload_func: 0x6d23485cb4
+05-05 14:41:25.264 18267 18267 D jni_lib_merge: Preparing to register libreactnativejni_so.  onload_func: 0x6d234d36bc
+05-05 14:41:25.264 18267 18267 D jni_lib_merge: Preparing to register libreactnativejni_common_so.  onload_func: 0x6d234e4044
+05-05 14:41:25.264 18267 18267 D jni_lib_merge: Preparing to register librninstance_so.  onload_func: 0x6d2352b764
+05-05 14:41:25.264 18267 18267 D jni_lib_merge: Preparing to register libturbomodulejsijni_so.  onload_func: 0x6d23643f68
+05-05 14:41:25.264 18267 18267 D jni_lib_merge: Preparing to register libuimanagerjni_so.  onload_func: 0x6d2365cfb8
+05-05 14:41:25.264 18267 18267 D jni_lib_merge: Preparing to register libyoga_so.  onload_func: 0x6d2366ca3c
+05-05 14:41:25.264 18267 18267 D jni_lib_merge: About to register 11 actual methods.
+05-05 14:41:25.416 18267 18267 D nativeloader: Load /data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!/lib/arm64-v8a/libreact_codegen_rnscreens.so using class loader ns clns-7 (caller=/data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!classes20.dex): ok
+05-05 14:41:25.416 18267 18267 D jni_lib_merge: Entering merged library JNI_OnLoad.
+05-05 14:41:25.416 18267 18267 D jni_lib_merge: Preparing 12 pre-merged libs (including stub)
+05-05 14:41:25.416 18267 18267 D jni_lib_merge: Preparing to register libfabricjni_so.  onload_func: 0x6d23024ce0
+05-05 14:41:25.416 18267 18267 D jni_lib_merge: Preparing to register libreact_devsupportjni_so.  onload_func: 0x6d2321efc8
+05-05 14:41:25.416 18267 18267 D jni_lib_merge: Preparing to register libreact_featureflagsjni_so.  onload_func: 0x6d2322d518
+05-05 14:41:25.416 18267 18267 D jni_lib_merge: Preparing to register libreact_newarchdefaults_so.  onload_func: 0x6d232956a8
+05-05 14:41:25.416 18267 18267 D jni_lib_merge: Preparing to register libreactnativeblob_so.  onload_func: 0x6d23485cb4
+05-05 14:41:25.416 18267 18267 D jni_lib_merge: Preparing to register libreactnativejni_so.  onload_func: 0x6d234d36bc
+05-05 14:41:25.416 18267 18267 D jni_lib_merge: Preparing to register libreactnativejni_common_so.  onload_func: 0x6d234e4044
+05-05 14:41:25.416 18267 18267 D jni_lib_merge: Preparing to register librninstance_so.  onload_func: 0x6d2352b764
+05-05 14:41:25.416 18267 18267 D jni_lib_merge: Preparing to register libturbomodulejsijni_so.  onload_func: 0x6d23643f68
+05-05 14:41:25.416 18267 18267 D jni_lib_merge: Preparing to register libuimanagerjni_so.  onload_func: 0x6d2365cfb8
+05-05 14:41:25.416 18267 18267 D jni_lib_merge: Preparing to register libyoga_so.  onload_func: 0x6d2366ca3c
+05-05 14:41:25.416 18267 18267 D jni_lib_merge: About to register 11 actual methods.
+05-05 14:41:25.477 18267 18267 D nativeloader: Load /data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!/lib/arm64-v8a/libreact_codegen_rnsvg.so using class loader ns clns-7 (caller=/data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!classes20.dex): ok
+05-05 14:41:25.477 18267 18267 D jni_lib_merge: Entering merged library JNI_OnLoad.
+05-05 14:41:25.477 18267 18267 D jni_lib_merge: Preparing 12 pre-merged libs (including stub)
+05-05 14:41:25.480 18267 18267 D jni_lib_merge: Preparing to register libfabricjni_so.  onload_func: 0x6d23024ce0
+05-05 14:41:25.480 18267 18267 D jni_lib_merge: Preparing to register libreact_devsupportjni_so.  onload_func: 0x6d2321efc8
+05-05 14:41:25.480 18267 18267 D jni_lib_merge: Preparing to register libreact_featureflagsjni_so.  onload_func: 0x6d2322d518
+05-05 14:41:25.480 18267 18267 D jni_lib_merge: Preparing to register libreact_newarchdefaults_so.  onload_func: 0x6d232956a8
+05-05 14:41:25.480 18267 18267 D jni_lib_merge: Preparing to register libreactnativeblob_so.  onload_func: 0x6d23485cb4
+05-05 14:41:25.480 18267 18267 D jni_lib_merge: Preparing to register libreactnativejni_so.  onload_func: 0x6d234d36bc
+05-05 14:41:25.480 18267 18267 D jni_lib_merge: Preparing to register libreactnativejni_common_so.  onload_func: 0x6d234e4044
+05-05 14:41:25.480 18267 18267 D jni_lib_merge: Preparing to register librninstance_so.  onload_func: 0x6d2352b764
+05-05 14:41:25.480 18267 18267 D jni_lib_merge: Preparing to register libturbomodulejsijni_so.  onload_func: 0x6d23643f68
+05-05 14:41:25.480 18267 18267 D jni_lib_merge: Preparing to register libuimanagerjni_so.  onload_func: 0x6d2365cfb8
+05-05 14:41:25.480 18267 18267 D jni_lib_merge: Preparing to register libyoga_so.  onload_func: 0x6d2366ca3c
+05-05 14:41:25.480 18267 18267 D jni_lib_merge: About to register 11 actual methods.
+05-05 14:41:25.543 18267 18267 D nativeloader: Load /data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!/lib/arm64-v8a/libreact_codegen_safeareacontext.so using class loader ns clns-7 (caller=/data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!classes20.dex): ok
+05-05 14:41:25.550 18267 18267 D nativeloader: Load /data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!/lib/arm64-v8a/libappmodules.so using class loader ns clns-7 (caller=/data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!classes20.dex): ok
+05-05 14:41:25.572 18267 18267 I ActivityThread: HardwareRenderer preload  done
+05-05 14:41:25.587 18267 18699 W libc    : Access denied finding property "vendor.migl.debug"
+05-05 14:41:25.588 18267 18699 D libMiGL : SuperResolution SR initSR mBaseSRWidthSize: 0, mBaseSRHeightSize: 0, mTargetSRWidthSize: 0, mTargetSRHeightSize: 0
+05-05 14:41:25.588 18267 18699 I libMiGL : EnableDR: 0
+05-05 14:41:25.588 18267 18699 D libMiGL : mDFIInterval: -1
+05-05 14:41:25.589 18267 18699 I AdrenoGLES-0: QUALCOMM build                   : a63fb93269, I16b8254a37
+05-05 14:41:25.589 18267 18699 I AdrenoGLES-0: Build Date                       : 08/27/24
+05-05 14:41:25.589 18267 18699 I AdrenoGLES-0: OpenGL ES Shader Compiler Version: EV031.36.08.30
+05-05 14:41:25.589 18267 18699 I AdrenoGLES-0: Local Branch                     :
+05-05 14:41:25.589 18267 18699 I AdrenoGLES-0: Remote Branch                    : refs/tags/AU_LINUX_ANDROID_LA.VENDOR.1.0.11.00.00.770.073
+05-05 14:41:25.589 18267 18699 I AdrenoGLES-0: Remote Branch                    : NONE
+05-05 14:41:25.589 18267 18699 I AdrenoGLES-0: Reconstruct Branch               : NOTHING
+05-05 14:41:25.589 18267 18699 I AdrenoGLES-0: Build Config                     : S P 12.1.1 AArch64
+05-05 14:41:25.589 18267 18699 I AdrenoGLES-0: Driver Path                      : /vendor/lib64/egl/libGLESv2_adreno.so
+05-05 14:41:25.589 18267 18699 I AdrenoGLES-0: Driver Version                   : 0615.91
+05-05 14:41:25.605 18267 18699 I AdrenoGLES-0: PFP: 0x016ee206, ME: 0x00000000
+05-05 14:41:25.674 18267 18267 D AppCompatDelegate: Checking for metadata for AppLocalesMetadataHolderService : Service not found
+05-05 14:41:25.793 18267 18267 I sinalseguro.app: hiddenapi: Accessing hidden method Landroid/view/ViewGroup;->makeOptionalFitsSystemWindows()V (runtime_flags=0, domain=platform, api=unsupported) from Landroidx/appcompat/widget/ViewUtils; (domain=app, TargetSdkVersion=36) using reflection: allowed
+05-05 14:41:25.888 18267 18267 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+05-05 14:41:25.889 18267 18267 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+05-05 14:41:25.896 18267 18742 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+05-05 14:41:25.896 18267 18742 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Start
+05-05 14:41:25.897 18267 18742 W unknown:BridgelessReact: ReactHost{0}.getJSBundleLoader()
+05-05 14:41:25.901 18267 18742 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactContext(): Creating BridgelessReactContext
+05-05 14:41:25.914 18267 18742 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Creating ReactInstance
+05-05 14:41:25.991 18267 18267 W libc    : Access denied finding property "ro.vendor.df.effect.conflict"
+05-05 14:41:25.989 18267 18267 W sinalseguro.app: type=1400 audit(0.0:2337393): avc:  denied  { read } for  name="u:object_r:vendor_displayfeature_prop:s0" dev="tmpfs" ino=458 scontext=u:r:untrusted_app:s0:c136,c258,c512,c768 tcontext=u:object_r:vendor_displayfeature_prop:s0 tclass=file permissive=0
+05-05 14:41:25.995 18267 18267 D SecurityManager: checkAccessControl flag1
+05-05 14:41:25.996 18267 18267 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+05-05 14:41:25.996 18267 18267 W unknown:BridgelessReact: ReactContext.onHostResume()
+05-05 14:41:26.022 18267 18267 D FramePredict: FramePredict init: false
+05-05 14:41:26.023 18267 18267 D FramePredict: init success
+05-05 14:41:26.026 18267 18786 E FramePredict: registerContentObserver fail
+05-05 14:41:26.040 18267 18267 W HWUI    : Unknown dataspace 0
+05-05 14:41:26.049 18267 18267 I ForceDarkHelperStubImpl: setViewRootImplForceDark: false for br.com.sinalseguro.app.MainActivity@7e686bc, reason: AppDarkModeEnable
+05-05 14:41:26.121 18267 18267 I Choreographer: Skipped 196 frames!  The application may be doing too much work on its main thread.
+05-05 14:41:26.121 18267 18267 D UserSceneDetector: invoke error.
+05-05 14:41:26.208 18267 18267 W libc    : Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+05-05 14:41:26.209 18267 18267 W libc    : Access denied finding property "vendor.gpp.create_frc_extension"
+05-05 14:41:26.215 18267 18267 D VRI[MainActivity]: vri.reportNextDraw android.view.ViewRootImpl.performTraversals:4923 android.view.ViewRootImpl.doTraversal:3553 android.view.ViewRootImpl$TraversalRunnable.run:11520 android.view.Choreographer$CallbackRecord.run:1730 android.view.Choreographer$CallbackRecord.run:1739
+05-05 14:41:26.267 18267 18742 D nativeloader: Load /data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!/lib/arm64-v8a/libhermes.so using class loader ns clns-7 (caller=/data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!classes20.dex): ok
+05-05 14:41:26.279 18267 18742 D nativeloader: Load /data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!/lib/arm64-v8a/libhermestooling.so using class loader ns clns-7 (caller=/data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!classes20.dex): ok
+05-05 14:41:26.279 18267 18742 D jni_lib_merge: Entering merged library JNI_OnLoad.
+05-05 14:41:26.279 18267 18742 D jni_lib_merge: Preparing 4 pre-merged libs (including stub)
+05-05 14:41:26.279 18267 18742 D jni_lib_merge: Preparing to register libhermes_executor_so.  onload_func: 0x6d0c3a97e0
+05-05 14:41:26.279 18267 18742 D jni_lib_merge: Preparing to register libhermesinstancejni_so.  onload_func: 0x6d0c3df26c
+05-05 14:41:26.279 18267 18742 D jni_lib_merge: Preparing to register libjsijniprofiler_so.  onload_func: 0x6d0c3e12bc
+05-05 14:41:26.279 18267 18742 D jni_lib_merge: About to register 3 actual methods.
+05-05 14:41:27.585 18267 18742 I ExpoModulesCore: ✅ AppContext was initialized
+05-05 14:41:28.007 18267 18742 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Loading JS Bundle
+05-05 14:41:28.008 18267 18742 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Calling DevSupportManagerBase.onNewReactContextCreated(reactContext)
+05-05 14:41:28.008 18267 18742 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+05-05 14:41:28.009 18267 18267 W unknown:BridgelessReact: ReactContext.onHostResume()
+05-05 14:41:28.010 18267 18267 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Executing ReactInstanceEventListeners
+05-05 14:41:28.184 18267 18781 D nativeloader: Load /data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!/lib/arm64-v8a/libexpo-modules-core.so using class loader ns clns-7 (caller=/data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!classes20.dex): ok
+05-05 14:41:28.452 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.th3rdwave.safeareacontext.SafeAreaProviderManager
+05-05 14:41:28.462 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.uimanager.LayoutShadowNode
+05-05 14:41:28.471 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.SearchBarManager
+05-05 14:41:28.476 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class expo.modules.kotlin.views.GroupViewManagerWrapper
+05-05 14:41:28.481 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenFooterManager
+05-05 14:41:28.483 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.gamma.tabs.TabScreenViewManager
+05-05 14:41:28.487 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenContainerViewManager
+05-05 14:41:28.489 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.gamma.tabs.TabsHostViewManager
+05-05 14:41:28.494 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ModalScreenViewManager
+05-05 14:41:28.505 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenStackHeaderConfigViewManager
+05-05 14:41:28.507 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenContentWrapperManager
+05-05 14:41:28.508 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.th3rdwave.safeareacontext.SafeAreaViewManager
+05-05 14:41:28.512 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.th3rdwave.safeareacontext.SafeAreaViewShadowNode
+05-05 14:41:28.515 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenViewManager
+05-05 14:41:28.523 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenStackHeaderSubviewManager
+05-05 14:41:28.528 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenStackViewManager
+05-05 14:41:28.909 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$DefsViewManager
+05-05 14:41:28.913 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.VirtualViewManager$RenderableShadowNode
+05-05 14:41:28.922 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeMergeManager
+05-05 14:41:28.934 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.safeareaview.ReactSafeAreaViewManager
+05-05 14:41:28.935 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.safeareaview.ReactSafeAreaViewShadowNode
+05-05 14:41:28.951 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$LinearGradientManager
+05-05 14:41:28.963 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeGaussianBlurManager
+05-05 14:41:28.983 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.progressbar.ReactProgressBarViewManager
+05-05 14:41:28.987 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.progressbar.ProgressBarShadowNode
+05-05 14:41:29.028 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.scroll.ReactHorizontalScrollViewManager
+05-05 14:41:29.062 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactTextViewManager
+05-05 14:41:29.065 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactTextShadowNode
+05-05 14:41:29.078 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeColorMatrixManager
+05-05 14:41:29.092 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.scroll.ReactHorizontalScrollContainerViewManager
+05-05 14:41:29.108 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$ClipPathViewManager
+05-05 14:41:29.146 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$SymbolManager
+05-05 14:41:29.178 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$PatternManager
+05-05 14:41:29.194 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeBlendManager
+05-05 14:41:29.203 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.view.ReactViewManager
+05-05 14:41:29.218 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.SvgViewManager
+05-05 14:41:29.231 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.switchview.ReactSwitchManager
+05-05 14:41:29.232 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.switchview.ReactSwitchShadowNode
+05-05 14:41:29.240 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$UseViewManager
+05-05 14:41:29.251 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$CircleViewManager
+05-05 14:41:29.272 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$TSpanViewManager
+05-05 14:41:29.289 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FilterManager
+05-05 14:41:29.313 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$MarkerManager
+05-05 14:41:29.339 18267 18271 I sinalseguro.app: Compiler allocated 5148KB to compile void android.view.ViewRootImpl.performTraversals()
+05-05 14:41:29.341 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.gesturehandler.react.RNGestureHandlerButtonViewManager
+05-05 14:41:29.355 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.modal.ReactModalHostManager
+05-05 14:41:29.371 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$ForeignObjectManager
+05-05 14:41:29.382 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$EllipseViewManager
+05-05 14:41:29.392 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$LineViewManager
+05-05 14:41:29.403 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.frescosupport.FrescoBasedReactTextInlineImageViewManager
+05-05 14:41:29.404 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.frescosupport.FrescoBasedReactTextInlineImageShadowNode
+05-05 14:41:29.421 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeFloodManager
+05-05 14:41:29.446 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$GroupViewManager
+05-05 14:41:29.493 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$TextViewManager
+05-05 14:41:29.529 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$ImageViewManager
+05-05 14:41:29.545 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeCompositeManager
+05-05 14:41:29.562 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.image.ReactImageManager
+05-05 14:41:29.593 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$RadialGradientManager
+05-05 14:41:29.632 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$MaskManager
+05-05 14:41:29.673 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.unimplementedview.ReactUnimplementedViewManager
+05-05 14:41:29.682 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$RectViewManager
+05-05 14:41:29.708 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$TextPathViewManager
+05-05 14:41:29.727 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.scroll.ReactScrollViewManager
+05-05 14:41:29.743 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeOffsetManager
+05-05 14:41:29.757 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$PathViewManager
+05-05 14:41:29.801 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.drawer.ReactDrawerLayoutManager
+05-05 14:41:29.832 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactVirtualTextViewManager
+05-05 14:41:29.833 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactVirtualTextShadowNode
+05-05 14:41:29.845 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.swiperefresh.SwipeRefreshLayoutManager
+05-05 14:41:29.854 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactRawTextManager
+05-05 14:41:29.854 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactRawTextShadowNode
+05-05 14:41:29.869 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.textinput.ReactTextInputManager
+05-05 14:41:29.887 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.textinput.ReactTextInputShadowNode
+05-05 14:41:29.901 18267 18781 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.gesturehandler.react.RNGestureHandlerRootViewManager
+05-05 14:41:29.958 18267 18781 W BridgelessReactContext: [WARNING] Bridgeless doesn't support CatalystInstance. Accessing an API that's not part of the new architecture is not encouraged usage.
+05-05 14:41:30.011 18267 18781 I ExpoModulesCore: ✅ JSI interop was installed
+05-05 14:41:30.088 18267 18781 I ExpoModulesCore: ✅ Constants were exported
+05-05 14:41:30.239 18267 18781 I libc    : kill: send 15 to pid 19110
+05-05 14:41:30.282 18267 18781 D nativeloader: Load /data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!/lib/arm64-v8a/librnscreens.so using class loader ns clns-7 (caller=/data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!classes16.dex): ok
+05-05 14:41:30.322 18267 18781 I ReactNativeJS: Running "main"
+05-05 14:41:30.574 18267 18267 D VRI[MainActivity]: vri.Setup new sync=wmsSync-VRI[MainActivity]#0
+05-05 14:41:30.579 18267 18267 D UserSceneDetector: invoke error.
+05-05 14:41:30.621 18267 18699 D HWUI    : makeCurrent grContext:0xb400006f5a03ddb0 reset mTextureAvailable
+05-05 14:41:30.624 18267 18699 D sinalseguro.app: MiuiProcessManagerServiceStub setSchedFifo
+05-05 14:41:30.624 18267 18699 I MiuiProcessManagerImpl: setSchedFifo pid:18267, mode:3
+05-05 14:41:30.627 18267 19126 W sinalseguro.app: Verification of void com.facebook.imagepipeline.producers.MultiplexProducer$Multiplexer.startInputProducerIfHasAttachedConsumers(com.facebook.common.util.TriState) took 101.439ms (1597.02 bytecodes/s) (0B arena alloc)
+05-05 14:41:30.650 18267 18699 E LB      : fail to open file: No such file or directory
+05-05 14:41:30.650 18267 18699 E LB      : fail to open node: No such file or directory
+05-05 14:41:30.650 18267 18699 E LB      : fail to open node: No such file or directory
+05-05 14:41:30.654 18267 18267 D VRI[MainActivity]: vri.reportDrawFinished
+05-05 14:41:30.754 18267 18267 I HandWritingStubImpl: refreshLastKeyboardType: 1
+05-05 14:41:30.756 18267 18267 I HandWritingStubImpl: getCurrentKeyboardType: 1
+05-05 14:41:30.841 18267 18267 I HandWritingStubImpl: getCurrentKeyboardType: 1
+05-05 14:41:30.898 18267 19152 D nativeloader: Load /data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!/lib/arm64-v8a/libimagepipeline.so using class loader ns clns-7 (caller=/data/app/~~CFjU54RZBJCbm5-_qa9pjQ==/br.com.sinalseguro.app-HIQ1cyFENzaldQ3CBi6hKg==/base.apk!classes20.dex): ok
+05-05 14:41:31.046 18267 18272 W sinalseguro.app: userfaultfd: MOVE ioctl seems unsupported: Try again
+05-05 14:41:32.047 18267 19371 D ProfileInstaller: Installing profile for br.com.sinalseguro.app
+05-05 14:41:32.428 18267 18784 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+05-05 14:41:32.430 18267 18784 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+05-05 14:41:32.522 18267 18267 W [RNScreens]: backTitleVisible prop is not available on Android
+05-05 14:41:32.523 18267 18267 W [RNScreens]: backTitleFontFamily prop is not available on Android
+05-05 14:41:32.523 18267 18267 W [RNScreens]: disableBackButtonMenu prop is not available on Android
+05-05 14:41:32.523 18267 18267 W [RNScreens]: largeTitleFontFamily prop is not available on Android
+05-05 14:41:32.523 18267 18267 W [RNScreens]: largeTitleFontWeight prop is not available on Android
+05-05 14:41:32.523 18267 18267 W [RNScreens]: largeTitleHideShadow prop is not available on Android
+05-05 14:41:32.954 18267 18267 I Choreographer: Skipped 42 frames!  The application may be doing too much work on its main thread.
+05-05 14:41:32.955 18267 18267 D UserSceneDetector: invoke error.
+05-05 14:41:35.655 18267 18699 E sinalseguro.app: FrameInsert open fail: No such file or directory
+05-05 14:41:37.880 18267 18267 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=499209424, downTime=499209424, phoneEventTime=14:41:37.862 } moveCount:0
+05-05 14:41:37.890 18267 18267 W MirrorManager: this model don't Support
+05-05 14:41:38.374 18267 18267 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=499209913, downTime=499209424, phoneEventTime=14:41:38.350 } moveCount:2
+05-05 14:41:41.896 18267 18267 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=499213452, downTime=499213452, phoneEventTime=14:41:41.890 } moveCount:0
+05-05 14:41:41.965 18267 18267 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=499213525, downTime=499213452, phoneEventTime=14:41:41.963 } moveCount:0
+05-05 14:41:43.679 18267 18267 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=499215238, downTime=499215238, phoneEventTime=14:41:43.676 } moveCount:0
+05-05 14:41:43.776 18267 18267 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=499215336, downTime=499215238, phoneEventTime=14:41:43.774 } moveCount:0
+05-05 14:41:44.050 18267 18267 W [RNScreens]: backTitleVisible prop is not available on Android
+05-05 14:41:44.050 18267 18267 W [RNScreens]: backTitleFontFamily prop is not available on Android
+05-05 14:41:44.050 18267 18267 W [RNScreens]: disableBackButtonMenu prop is not available on Android
+05-05 14:41:44.050 18267 18267 W [RNScreens]: largeTitleFontFamily prop is not available on Android
+05-05 14:41:44.050 18267 18267 W [RNScreens]: largeTitleFontWeight prop is not available on Android
+05-05 14:41:44.050 18267 18267 W [RNScreens]: largeTitleHideShadow prop is not available on Android
+05-05 14:41:44.440 18267 18699 W RenderInspector: QueueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=2, avg=27 ms, max=29 ms.
+05-05 14:41:49.918 18267 18267 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=499221476, downTime=499221476, phoneEventTime=14:41:49.913 } moveCount:0
+05-05 14:41:49.973 18267 18267 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=499221533, downTime=499221476, phoneEventTime=14:41:49.971 } moveCount:0
+05-05 14:41:50.277 18267 18699 W RenderInspector: QueueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=5, avg=24 ms, max=29 ms.
+05-05 14:41:51.248 18267 18272 W sinalseguro.app: Cleared Reference was only reachable from finalizer (only reported once)
+05-05 14:41:51.695 18267 18267 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=499223255, downTime=499223255, phoneEventTime=14:41:51.692 } moveCount:0
+05-05 14:41:53.604 18267 18267 W WindowOnBackDispatcher: OnBackInvokedCallback is not enabled for the application.
+05-05 14:41:53.604 18267 18267 W WindowOnBackDispatcher: Set 'android:enableOnBackInvokedCallback="true"' in the application manifest.
+05-05 14:41:53.610 18267 18267 I ForceDarkHelperStubImpl: setViewRootImplForceDark: false for br.com.sinalseguro.app.MainActivity@7e686bc, reason: AppDarkModeEnable
+05-05 14:41:53.657 18267 18267 W sinalseguro.app: type=1400 audit(0.0:2337535): avc:  denied  { read } for  name="u:object_r:vendor_display_prop:s0" dev="tmpfs" ino=457 scontext=u:r:untrusted_app:s0:c136,c258,c512,c768 tcontext=u:object_r:vendor_display_prop:s0 tclass=file permissive=0
+05-05 14:41:53.660 18267 18267 W libc    : Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+05-05 14:41:53.660 18267 18267 W libc    : Access denied finding property "vendor.gpp.create_frc_extension"
+05-05 14:41:53.661 18267 18267 I ForceDarkHelperStubImpl: setViewRootImplForceDark: false for br.com.sinalseguro.app.MainActivity@7e686bc, reason: AppDarkModeEnable
+05-05 14:41:53.664 18267 18267 D VRI[MainActivity]: vri.reportNextDraw android.view.ViewRootImpl.performTraversals:4923 android.view.ViewRootImpl.doTraversal:3553 android.view.ViewRootImpl$TraversalRunnable.run:11520 android.view.Choreographer$CallbackRecord.run:1730 android.view.Choreographer$CallbackRecord.run:1739
+05-05 14:41:53.664 18267 18267 D VRI[MainActivity]: vri.Setup new sync=wmsSync-VRI[MainActivity]#2
+05-05 14:41:53.692 18267 18699 D HWUI    : makeCurrent grContext:0xb400006f5a03ddb0 reset mTextureAvailable
+05-05 14:41:53.702 18267 18267 D VRI[MainActivity]: vri.reportDrawFinished
+05-05 14:41:53.771 18267 18267 I HandWritingStubImpl: refreshLastKeyboardType: 1
+05-05 14:41:53.771 18267 18267 I HandWritingStubImpl: getCurrentKeyboardType: 1
+05-05 14:41:53.805 18267 18267 D MiuiMultiWindowUtils: freeform resolution args raw data:{  "wide_default":{    "freeform_args": {        "vertical_portrait":{"aspect_ratio":0.626, "original_ratio":0.5643,"original_scale":0.74,"top_margin":0.168,"left_margin":0.484},        "horizontal_portrait":{"aspect_ratio":0.626, "original_ratio":0.5643,"original_scale":0.74,"top_margin":0.1222,"left_margin":0.59745},        "vertical_landscape":{"aspect_ratio":1.6, "original_ratio":1,"original_scale":0.604,"top_margin":0.2596,"left_margin":0.2624},        "horizontal_landscape":{"aspect_ratio":1.6, "original_ratio":1,"original_scale":0.604,"top_margin":0.213,"left_margin":0.3758}    },    "mini_freeform_args":{        "vertical_portrait":{"original_ratio":0.147},        "horizontal_portrait":{"original_ratio":0.147},        "vertical_landscape":{"original_ratio":0.165},        "horizontal_landscape":{"original_ratio":0.165}    }  },  "narrow_default": {    "freeform_args": {        "vertical_portrait":{"aspect_ratio":0.626, "original_ratio":1,"original_scale":0.74,"top_margin":0.0753,"left_margin":-1},        "horizontal_portrait":{"aspect_ratio":0.626, "original_ratio":1,"original_scale":0.5756,"top_margin":-1,"left_margin":0.0753},        "vertical_landscape":{"aspect_ratio":1.6, "original_ratio":0.6847,"original_scale":0.587,"top_margin":0.0753,"left_margin":-1},        "horizontal_landscape":{"aspect_ratio":1.6, "original_ratio":0.6847,"original_scale":0.587,"top_margin":-1,"left_margin":0.0753}    },    "mini_freeform_args":{        "vertical_portrait":{"original_ratio":0.26},        "horizontal_portrait":{"original_ratio":0.26},        "vertical_landscape":{"original_ratio":0.293},        "horizontal_landscape":{"original_ratio":0.293}    }  },  "regular_default": {    "freeform_args": {      "vertical_portrait":{"aspect_ratio":0.625, "original_ratio":1,"original_scale":0.7,"top_margin":0.109,"left_margin":-1},      "horizontal_portrait":{"aspect_ratio":0.6667, "original_ratio":1,"original_scale":0.6102,"top_margin":-1,"left_margin":0.026},      "vertical_landscape":{"aspect_ratio":1.6, "original_ratio":1,"original_scale":0.4244,"top_margin":0.109,"left_margin":-1},      "horizontal_landscape":{"aspect_ratio":1.6, "original_ratio":1,"original_scale":0.4244,"top_margin":-1,"left_margin":0.026}    },    "mini_freeform_args":{      "vertical_portrait":{"original_ratio":0.25},      "horizontal_portrait":{"original_ratio":0.25},      "vertical_landscape":{"original_ratio":0.25},      "horizontal_landscape":{"original_ratio":0.25}    }  },  "pad_default": {    "freeform_args": {      "vertical_portrait":{"aspect_ratio":0.5625, "original_ratio":0.375,"original_scale":0.835,"top_margin":0.049,"left_margin":0.2775},      "horizontal_portrait":{"aspect_ratio":0.5625, "original_ratio":0.375,"original_scale":0.835,"top_margin":-1,"left_margin":0.6525},      "vertical_landscape":{"aspect_ratio":-1, "original_ratio":1,"original_scale":0.468,"top_margin":0.049,"left_margin":-1},      "horizontal_landscape":{"aspect_ratio":-1, "original_ratio":1,"original_scale":0.468,"top_margin":-1,"left_margin":0.4976}    },    "mini_freeform_args":{      "vertical_portrait":{"original_ratio":0.144},      "horizontal_portrait":{"original_ratio":0.144},      "vertical_landscape":{"original_ratio":0.2},      "horizontal_landscape":{"original_ratio":0.2}    }  }}
+05-05 14:41:53.806 18267 18267 D MiuiMultiWindowUtils: initFreeFormResolutionArgs failed, device is sapphire
+05-05 14:41:53.807 18267 18267 D IS_CTS_MODE: false
+05-05 14:41:53.807 18267 18267 D MULTI_WINDOW_SWITCH_ENABLED: false
+05-05 14:41:54.009 18267 18267 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=499225562, downTime=499223255, phoneEventTime=14:41:53.999 } moveCount:2
+05-05 14:41:55.248 18267 18267 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=499226807, downTime=499226807, phoneEventTime=14:41:55.244 } moveCount:0
+05-05 14:41:55.289 18267 18267 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=499226848, downTime=499226807, phoneEventTime=14:41:55.286 } moveCount:0
+05-05 14:41:55.524 18267 18267 W [RNScreens]: backTitleVisible prop is not available on Android
+05-05 14:41:55.524 18267 18267 W [RNScreens]: backTitleFontFamily prop is not available on Android
+05-05 14:41:55.524 18267 18267 W [RNScreens]: disableBackButtonMenu prop is not available on Android
+05-05 14:41:55.524 18267 18267 W [RNScreens]: largeTitleFontFamily prop is not available on Android
+05-05 14:41:55.524 18267 18267 W [RNScreens]: largeTitleFontWeight prop is not available on Android
+05-05 14:41:55.524 18267 18267 W [RNScreens]: largeTitleHideShadow prop is not available on Android
+05-05 14:41:55.528 18267 18267 W WindowOnBackDispatcher: sendCancelIfRunning: isInProgress=false callback=android.view.ViewRootImpl$$ExternalSyntheticLambda12@22968ec
+05-05 14:41:55.686 18267 18267 I HandWritingStubImpl: refreshLastKeyboardType: 1
+05-05 14:41:55.686 18267 18267 I HandWritingStubImpl: getCurrentKeyboardType: 1
+05-05 14:41:55.892 18267 18267 D UserSceneDetector: invoke error.
+05-05 14:41:58.515 18267 18267 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=499230074, downTime=499230074, phoneEventTime=14:41:58.512 } moveCount:0
+05-05 14:41:58.591 18267 18267 I MIUIInput: [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=499230150, downTime=499230074, phoneEventTime=14:41:58.587 } moveCount:0
+05-05 14:41:58.728 18267 18267 D ScrollerOptimizationManager: registerConfigChangedListener
+05-05 14:41:58.729 18267 18267 W libc    : Access denied finding property "ro.vendor.mi_sf.new_dynamic_refresh_rate"
+05-05 14:41:58.729 18267 18267 D SplineOverScroller: dynamic params is false
+05-05 14:41:58.730 18267 18267 I sinalseguro.app: hiddenapi: Accessing hidden field Landroid/widget/ScrollView;->mScroller:Landroid/widget/OverScroller; (runtime_flags=0, domain=platform, api=unsupported) from Lcom/facebook/react/views/scroll/ReactScrollView; (domain=app, TargetSdkVersion=36) using reflection: allowed
+05-05 14:41:58.743 18267 18267 W WindowOnBackDispatcher: OnBackInvokedCallback is not enabled for the application.
+05-05 14:41:58.743 18267 18267 W WindowOnBackDispatcher: Set 'android:enableOnBackInvokedCallback="true"' in the application manifest.
+05-05 14:41:58.748 18267 18267 I ForceDarkHelperStubImpl: setViewRootImplForceDark: false for br.com.sinalseguro.app.MainActivity@7e686bc, reason: AppDarkModeEnable
+05-05 14:41:58.813 18267 18267 W libc    : Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+05-05 14:41:58.813 18267 18267 W libc    : Access denied finding property "vendor.gpp.create_frc_extension"
+05-05 14:41:58.809 18267 18267 W sinalseguro.app: type=1400 audit(0.0:2337539): avc:  denied  { read } for  name="u:object_r:vendor_display_prop:s0" dev="tmpfs" ino=457 scontext=u:r:untrusted_app:s0:c136,c258,c512,c768 tcontext=u:object_r:vendor_display_prop:s0 tclass=file permissive=0
+05-05 14:41:58.814 18267 18267 I ForceDarkHelperStubImpl: setViewRootImplForceDark: false for br.com.sinalseguro.app.MainActivity@7e686bc, reason: AppDarkModeEnable
+05-05 14:41:58.816 18267 18267 D VRI[MainActivity]: vri.reportNextDraw android.view.ViewRootImpl.performTraversals:4923 android.view.ViewRootImpl.doTraversal:3553 android.view.ViewRootImpl$TraversalRunnable.run:11520 android.view.Choreographer$CallbackRecord.run:1730 android.view.Choreographer$CallbackRecord.run:1739
+05-05 14:41:58.816 18267 18267 D VRI[MainActivity]: vri.Setup new sync=wmsSync-VRI[MainActivity]#4
+05-05 14:41:58.916 18267 18267 D VRI[MainActivity]: vri.reportDrawFinished

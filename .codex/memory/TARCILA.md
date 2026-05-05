@@ -40,3 +40,10 @@ Papel: guardia de identidade visual SinalSeguro para mobile.
   - SOS com bolha 3D mais realista e anel discreto, porem legivel;
   - modais com linguagem de produto, botao de ajuda `(?)` e sem justificativas tecnicas na camada principal;
   - Cofre/Player com menos texto e mais acao por icones.
+
+## Ajuste visual - 2026-05-05 - browser final
+
+- Roberto aprovou a direcao de manter os tres atalhos oficiais visiveis na Home: `Policia`, `Bombeiros` e `SAMU`; o numero `190` nao deve aparecer no rotulo visual do botao.
+- A bolha SOS deve ter apenas uma transparencia superior em degradê, sem segunda faixa em formato de charuto.
+- O estado `ATIVO` deve ficar acima das particulas e usar somente sombra verde no texto, sem faixa/charuto atras, sem trocar a massa magenta/rosa principal do botao.
+- Browser local esta aberto em `http://localhost:8081/`; a Home tambem foi validada no Android instalado com os botoes `Policia`, `Bombeiros` e `SAMU`, sem numero no rotulo de `Policia`.

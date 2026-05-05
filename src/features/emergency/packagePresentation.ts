@@ -31,6 +31,71 @@ function formatFullDate(dateValue: string) {
   });
 }
 
+function durationMsBetween(startValue?: string, endValue?: string) {
+  if (!startValue || !endValue) return null;
+
+  const startedAt = new Date(startValue).getTime();
+  const completedAt = new Date(endValue).getTime();
+  if (!Number.isFinite(startedAt) || !Number.isFinite(completedAt)) return null;
+
+  return Math.max(0, completedAt - startedAt);
+}
+
+export function formatElapsedDuration(milliseconds: number) {
+  const totalSeconds = Math.max(0, Math.round(milliseconds / 1000));
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  if (hours > 0) {
+    return `${hours}h ${String(minutes).padStart(2, "0")}min`;
+  }
+
+  if (minutes > 0) {
+    return `${minutes}min ${String(seconds).padStart(2, "0")}s`;
+  }
+
+  return `${seconds}s`;
+}
+
+export function getPackageVideoDurationMs(packageRecord: EmergencyPackage) {
+  if (packageRecord.media.status !== "recorded_local") return null;
+
+  const durations = packageRecord.media.assets
+    .map((asset) => durationMsBetween(asset.recordedAt, asset.completedAt))
+    .filter((duration): duration is number => typeof duration === "number");
+
+  if (!durations.length) return null;
+  return Math.max(...durations);
+}
+
+export function getPackageEventDurationMs(packageRecord: EmergencyPackage) {
+  if (typeof packageRecord.capture.elapsedMs === "number") return Math.max(0, packageRecord.capture.elapsedMs);
+
+  const finishedDuration = durationMsBetween(packageRecord.capture.startedAt, packageRecord.capture.completedAt);
+  if (typeof finishedDuration === "number") return finishedDuration;
+
+  if (packageRecord.status === "recording_local") {
+    return Math.max(0, Date.now() - safeDate(packageRecord.capture.startedAt).getTime());
+  }
+
+  return getPackageVideoDurationMs(packageRecord);
+}
+
+export function formatPackageDurationLabel(packageRecord: EmergencyPackage) {
+  const videoDuration = getPackageVideoDurationMs(packageRecord);
+  if (typeof videoDuration === "number") return `Video ${formatElapsedDuration(videoDuration)}`;
+
+  const eventDuration = getPackageEventDurationMs(packageRecord);
+  if (typeof eventDuration === "number") return `Evento ${formatElapsedDuration(eventDuration)}`;
+
+  if (packageRecord.capture.plannedDurationSeconds > 0) {
+    return `Planejado ${formatElapsedDuration(packageRecord.capture.plannedDurationSeconds * 1000)}`;
+  }
+
+  return "Duracao ilimitada";
+}
+
 export function formatPackageTitle(packageRecord: EmergencyPackage) {
   return `SOS ${formatDate(packageRecord.createdAt)} ${formatTime(packageRecord.createdAt)}`;
 }
@@ -97,19 +162,19 @@ export function summarizeCapture(packageRecord: EmergencyPackage) {
 
 export function buildTelemetrySummary(packageRecord: EmergencyPackage) {
   const point = getPackageLocationPoint(packageRecord);
-  const items = [`Data: ${formatPackageDate(packageRecord)}`];
+  const items = [`Data e hora: ${formatPackageDate(packageRecord)}`, `Duracao: ${formatPackageDurationLabel(packageRecord)}`];
 
   if (point) {
-    items.push(`Local: ${point.latitude.toFixed(6)}, ${point.longitude.toFixed(6)}`);
-    items.push(`Precisao: ${Math.round(point.accuracyMeters)}m`);
+    items.push("Localizacao salva neste arquivo.");
+    items.push(`Precisao aproximada: ${Math.round(point.accuracyMeters)}m`);
     if (typeof point.speedMetersPerSecond === "number") {
-      items.push(`Velocidade: ${(point.speedMetersPerSecond * 3.6).toFixed(1)} km/h`);
+      items.push(`Movimento registrado: ${(point.speedMetersPerSecond * 3.6).toFixed(1)} km/h`);
     }
     if (typeof point.headingDegrees === "number") {
-      items.push(`Direcao: ${Math.round(point.headingDegrees)} graus`);
+      items.push(`Direcao registrada: ${Math.round(point.headingDegrees)} graus`);
     }
   } else {
-    items.push("Local: indisponivel");
+    items.push("Localizacao indisponivel neste arquivo.");
   }
 
   return items;

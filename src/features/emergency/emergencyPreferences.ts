@@ -7,7 +7,7 @@ export type EmergencyDurationSeconds = 0 | 60 | 300 | 900 | 1800 | 3600;
 export type LocalVideoCameraMode = "front" | "back" | "both";
 
 export type EmergencyPreferences = {
-  schemaVersion: 7;
+  schemaVersion: 8;
   defaultDurationSeconds: EmergencyDurationSeconds;
   inAppHoldMs: number;
   locationMode: "ask_when_needed" | "foreground_pre_authorized";
@@ -59,7 +59,7 @@ const PREFERENCES_KEY = "sinalseguro.emergency-preferences.v1";
 export const durationOptions: EmergencyDurationSeconds[] = [0, 60, 300, 900, 1800, 3600];
 
 export const defaultEmergencyPreferences: EmergencyPreferences = {
-  schemaVersion: 7,
+  schemaVersion: 8,
   defaultDurationSeconds: 0,
   inAppHoldMs: 1800,
   locationMode: "ask_when_needed",
@@ -69,7 +69,7 @@ export const defaultEmergencyPreferences: EmergencyPreferences = {
     codeHash: DEFAULT_FINISH_CODE_HASH
   },
   emergencyPhoneCall: {
-    call190ShortcutEnabled: false,
+    call190ShortcutEnabled: true,
     call190OnSosEnabled: false,
     callTrustedContactOnAlert: false,
     allowReceiverCall190: false
@@ -112,6 +112,13 @@ function normalizeDuration(value: unknown): EmergencyDurationSeconds {
     : defaultEmergencyPreferences.defaultDurationSeconds;
 }
 
+function isStoredSecurityCodeHash(value: unknown) {
+  return (
+    typeof value === "string" &&
+    (/^[a-f0-9]{64}$/i.test(value) || /^v2:[a-f0-9]{16,}:[a-f0-9]{64}$/i.test(value))
+  );
+}
+
 export function formatDuration(seconds: number) {
   if (seconds === 0) return "Ilimitado";
   if (seconds < 60) return `${seconds}s`;
@@ -125,20 +132,17 @@ export async function getEmergencyPreferences(): Promise<EmergencyPreferences> {
   try {
     const parsed = JSON.parse(raw) as Omit<Partial<EmergencyPreferences>, "schemaVersion"> & { schemaVersion?: number };
     const storedSchemaVersion = typeof parsed.schemaVersion === "number" ? parsed.schemaVersion : 0;
+    const rawFinishCodeHash =
+      typeof parsed.finishSafety?.codeHash === "string" ? parsed.finishSafety.codeHash : "";
     const parsedFinishCodeHash =
-      typeof parsed.finishSafety?.codeHash === "string" && /^[a-f0-9]{64}$/i.test(parsed.finishSafety.codeHash)
-        ? parsed.finishSafety.codeHash.toLowerCase()
+      isStoredSecurityCodeHash(rawFinishCodeHash)
+        ? rawFinishCodeHash.toLowerCase()
         : defaultEmergencyPreferences.finishSafety.codeHash;
     const normalizedFinishCodeHash =
       parsedFinishCodeHash === LEGACY_DEFAULT_FINISH_CODE_HASH
         ? defaultEmergencyPreferences.finishSafety.codeHash
         : parsedFinishCodeHash;
-    const normalizedCall190ShortcutEnabled =
-      storedSchemaVersion < 7
-        ? defaultEmergencyPreferences.emergencyPhoneCall.call190ShortcutEnabled
-        : typeof parsed.emergencyPhoneCall?.call190ShortcutEnabled === "boolean"
-          ? parsed.emergencyPhoneCall.call190ShortcutEnabled
-          : defaultEmergencyPreferences.emergencyPhoneCall.call190ShortcutEnabled;
+    const normalizedCall190ShortcutEnabled = true;
     const normalizedCall190OnSosEnabled =
       typeof parsed.emergencyPhoneCall?.call190OnSosEnabled === "boolean"
         ? parsed.emergencyPhoneCall.call190OnSosEnabled
@@ -163,7 +167,7 @@ export async function getEmergencyPreferences(): Promise<EmergencyPreferences> {
     return {
       ...defaultEmergencyPreferences,
       ...parsed,
-      schemaVersion: 7,
+      schemaVersion: 8,
       defaultDurationSeconds: normalizeDuration(parsed.defaultDurationSeconds),
       finishSafety: {
         ...defaultEmergencyPreferences.finishSafety,

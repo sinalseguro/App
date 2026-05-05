@@ -45,7 +45,7 @@ import {
   hashSecurityCode,
   hasSecurityCode,
   isProtectedAccessUnlocked,
-  verifySecurityCode,
+  verifySecurityCodeStatus,
   validateSecurityCodePair
 } from "@/security/protectedAccess";
 
@@ -77,6 +77,21 @@ function formatTrustedContactStatus(status: string) {
   if (status === "revoked" || status === "revogado") return "Revogado";
   return "Em revisao";
 }
+
+const legalConsentItems = [
+  {
+    title: "Uso emergencial",
+    text: "O SinalSeguro apoia um pedido de ajuda e guarda arquivos locais autorizados. Ele nao substitui 190, 193, 192 nem atendimento publico."
+  },
+  {
+    title: "Privacidade",
+    text: "Localizacao, video e audio so devem ser usados para protecao, orientacao e entrega autorizada dentro do fluxo SinalSeguro."
+  },
+  {
+    title: "Arquivos locais",
+    text: "Os arquivos ficam neste aparelho ate exclusao local ou envio futuro com backend, chaves, auditoria, termos completos e revisao juridica."
+  }
+];
 
 function SecurityCodeInput({
   label,
@@ -165,22 +180,6 @@ export default function SettingsScreen() {
     );
   }
 
-  async function toggleCall190Shortcut() {
-    if (!preferences) return;
-
-    const enabled = !preferences.emergencyPhoneCall.call190ShortcutEnabled;
-    await updatePreferences(
-      {
-        ...preferences,
-        emergencyPhoneCall: {
-          ...preferences.emergencyPhoneCall,
-          call190ShortcutEnabled: enabled
-        }
-      },
-      enabled ? "Atalho Policia 190 ativo na Home." : "Atalho Policia 190 removido da Home."
-    );
-  }
-
   async function toggleCall190OnSos() {
     if (!preferences) return;
 
@@ -194,46 +193,6 @@ export default function SettingsScreen() {
         }
       },
       enabled ? "Ligacao 190 junto com SOS ativada." : "Ligacao 190 junto com SOS desativada."
-    );
-  }
-
-  async function toggleTrustedContactCall() {
-    if (!preferences) return;
-
-    const enabled = !preferences.emergencyPhoneCall.callTrustedContactOnAlert;
-    await updatePreferences(
-      {
-        ...preferences,
-        emergencyPhoneCall: {
-          ...preferences.emergencyPhoneCall,
-          callTrustedContactOnAlert: enabled
-        }
-      },
-      enabled
-        ? "Chamada ao anjo marcada para quando houver anjo validado."
-        : "Chamada ao anjo desmarcada."
-    );
-  }
-
-  async function toggleReceiverCall190() {
-    if (!preferences) return;
-
-    const enabled = !preferences.emergencyPhoneCall.allowReceiverCall190;
-    await updatePreferences(
-      {
-        ...preferences,
-        emergencyPhoneCall: {
-          ...preferences.emergencyPhoneCall,
-          allowReceiverCall190: enabled
-        },
-        trustedStream: {
-          ...preferences.trustedStream,
-          allowReceiverRelayTo190: enabled
-        }
-      },
-      enabled
-        ? "Anjo autorizado podera acionar 190 dentro do fluxo seguro."
-        : "Permissao para anjo acionar 190 desmarcada."
     );
   }
 
@@ -272,9 +231,9 @@ export default function SettingsScreen() {
   async function changeSecurityCode() {
     if (!preferences) return;
 
-    const verified = await verifySecurityCode(preferences, currentFinishCode);
-    if (!verified) {
-      setSecurityCodeError("Codigo atual incorreto.");
+    const verification = await verifySecurityCodeStatus(preferences, currentFinishCode);
+    if (!verification.ok) {
+      setSecurityCodeError(verification.message);
       return;
     }
 
@@ -303,9 +262,9 @@ export default function SettingsScreen() {
   async function disableSecurityCode() {
     if (!preferences) return;
 
-    const verified = await verifySecurityCode(preferences, currentFinishCode);
-    if (!verified) {
-      setSecurityCodeError("Codigo atual incorreto.");
+    const verification = await verifySecurityCodeStatus(preferences, currentFinishCode);
+    if (!verification.ok) {
+      setSecurityCodeError(verification.message);
       return;
     }
 
@@ -475,7 +434,7 @@ export default function SettingsScreen() {
       duracao:
         "Este tempo controla apenas a gravacao local. O chamado de emergencia continua ativo ate a usuaria encerrar pelo botao SOS.",
       encerramento:
-        "Quando o codigo estiver ativo, ele protege o encerramento do SOS e o acesso a areas sensiveis do app por alguns minutos.",
+        "Quando ativo, o codigo protege o encerramento do SOS e o acesso as areas privadas do app.",
       localizacao:
         "Autorizar localizacao antes da emergencia reduz etapas no momento do acionamento. A permissao pode ser revogada no sistema.",
       login:
@@ -584,6 +543,15 @@ export default function SettingsScreen() {
         >
           {activePanel === "termos" ? (
             <View style={styles.dialogStack}>
+              {legalConsentItems.map((item) => (
+                <View key={item.title} style={styles.consentSummaryItem}>
+                  <BookOpenCheck size={18} color={theme.colors.primary} />
+                  <View style={styles.consentSummaryText}>
+                    <Text style={styles.consentSummaryTitle}>{item.title}</Text>
+                    <Text style={styles.consentSummaryBody}>{item.text}</Text>
+                  </View>
+                </View>
+              ))}
               <ButtonIcon
                 icon={<ShieldCheck size={18} color={theme.colors.primary} />}
                 label={preferences?.legalConsent.privacyAccepted ? "Privacidade aceita localmente" : "Aceitar termos locais"}
@@ -702,9 +670,10 @@ export default function SettingsScreen() {
                 </Text>
               </View>
               <ButtonIcon
+                disabled
                 icon={<PhoneCall size={18} color={theme.colors.primary} />}
-                label={preferences?.emergencyPhoneCall.call190ShortcutEnabled ? "Atalho 190 ativo" : "Ativar atalho 190"}
-                onPress={toggleCall190Shortcut}
+                label="Policia sempre na Home"
+                style={styles.selectedOption}
               />
               <ButtonIcon
                 icon={<PhoneCall size={18} color={theme.colors.primary} />}
@@ -717,31 +686,31 @@ export default function SettingsScreen() {
                 style={preferences?.emergencyPhoneCall.call190OnSosEnabled ? styles.selectedOption : undefined}
               />
               <ButtonIcon
+                disabled
                 icon={<PhoneCall size={18} color={theme.colors.primary} />}
                 label={
                   preferences?.emergencyPhoneCall.callTrustedContactOnAlert
-                    ? "Chamada ao anjo marcada"
-                    : "Ativar chamada ao anjo"
+                    ? "Chamada ao anjo aguardando gestao"
+                    : "Atalho de anjo desativado"
                 }
-                onPress={toggleTrustedContactCall}
               />
               <ButtonIcon
+                disabled
                 icon={<ShieldCheck size={18} color={theme.colors.primary} />}
                 label={
                   preferences?.emergencyPhoneCall.allowReceiverCall190
-                    ? "Anjo pode acionar 190"
-                    : "Permitir anjo acionar 190"
+                    ? "Anjo 190 aguardando contrato"
+                    : "Anjo 190 bloqueado ate aceite"
                 }
-                onPress={toggleReceiverCall190}
               />
               <ButtonIcon
                 icon={<Video size={18} color={theme.colors.primary} />}
-                label={preferences?.trustedStream.requestedMedia.video ? "Video para anjos ativo" : "Video para anjos"}
+                label={preferences?.trustedStream.requestedMedia.video ? "Video para anjos solicitado" : "Preparar video para anjos"}
                 onPress={() => toggleStreamScope("video")}
               />
               <ButtonIcon
                 icon={<Mic size={18} color={theme.colors.primary} />}
-                label={preferences?.trustedStream.requestedMedia.audio ? "Audio para anjos ativo" : "Audio para anjos"}
+                label={preferences?.trustedStream.requestedMedia.audio ? "Audio para anjos solicitado" : "Preparar audio para anjos"}
                 onPress={() => toggleStreamScope("audio")}
               />
               <ButtonIcon
@@ -757,8 +726,8 @@ export default function SettingsScreen() {
                 icon={<LockKeyhole size={18} color={theme.colors.primary} />}
                 label={
                   preferences?.trustedStream.allowReceiverEncryptedSave
-                    ? "Salvar no app do anjo ativo"
-                    : "Salvar no app do anjo"
+                    ? "Salvamento no app do anjo solicitado"
+                    : "Preparar salvamento no app do anjo"
                 }
                 onPress={toggleReceiverEncryptedSave}
               />
@@ -849,6 +818,32 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: theme.spacing.lg,
     paddingVertical: theme.spacing.md
+  },
+  consentSummaryBody: {
+    color: theme.colors.textMuted,
+    fontSize: theme.typography.small,
+    fontWeight: "700",
+    lineHeight: 19
+  },
+  consentSummaryItem: {
+    alignItems: "flex-start",
+    backgroundColor: theme.colors.surfaceMuted,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    flexDirection: "row",
+    gap: theme.spacing.sm,
+    padding: theme.spacing.md
+  },
+  consentSummaryText: {
+    flex: 1,
+    gap: 2
+  },
+  consentSummaryTitle: {
+    color: theme.colors.text,
+    fontSize: theme.typography.small,
+    fontWeight: "900",
+    lineHeight: 18
   },
   dialogStack: {
     gap: theme.spacing.md

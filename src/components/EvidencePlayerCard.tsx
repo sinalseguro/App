@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { VideoView, useVideoPlayer } from "expo-video";
-import { CalendarClock, FileLock2, MapPin, Pause, Play, RotateCcw, Video } from "lucide-react-native";
+import { CalendarClock, Clock3, FileLock2, MapPin, Pause, Play, RotateCcw, Video } from "lucide-react-native";
 import { theme } from "@/design/theme";
 import { EmergencyPackage } from "@/features/emergency/types";
 import {
   formatPackageDate,
+  formatPackageDurationLabel,
   formatPackageTitle,
   summarizeLocation
 } from "@/features/emergency/packagePresentation";
@@ -33,19 +34,20 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   const previewHint = hasMedia
     ? "Video local"
     : packageRecord
-      ? "Sem video"
-      : "Escolha arquivo";
+      ? "Nenhum video neste arquivo"
+      : "Abra um item do cofre";
   const packageDateLabel = packageRecord ? formatPackageDate(packageRecord) : undefined;
   const mediaSummary = hasMedia
     ? mediaAssets.length > 1
       ? `${mediaAssets.length} videos locais`
       : "1 video local"
     : packageRecord
-      ? "Sem video"
-      : "Escolha arquivo";
+      ? "Nenhum video neste arquivo"
+      : "Abra um item do cofre";
   const playerAccessibilityLabel = packageRecord
     ? `Visualizar ${formatPackageTitle(packageRecord)} no player seguro`
     : "Player seguro sem arquivo selecionado";
+  const playbackDisabled = !packageRecord || !hasMedia;
 
   useEffect(() => {
     setPlaying(false);
@@ -60,32 +62,22 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   }, [selectedAssetIndex]);
 
   useEffect(() => {
-    if (!playing || !packageRecord) return;
+    if (!playing || !packageRecord || !hasMedia) return;
 
     const timer = setInterval(() => {
-      if (hasMedia) {
-        const duration = player.duration;
-        const currentTime = player.currentTime;
+      const duration = player.duration;
+      const currentTime = player.currentTime;
 
-        if (Number.isFinite(duration) && duration > 0) {
-          const nextProgress = Math.min(100, (currentTime / duration) * 100);
-          setProgress(nextProgress);
+      if (Number.isFinite(duration) && duration > 0) {
+        const nextProgress = Math.min(100, (currentTime / duration) * 100);
+        setProgress(nextProgress);
 
-          if (nextProgress >= 99.5) {
-            player.pause();
-            setPlaying(false);
-          }
-          return;
-        }
-      }
-
-      setProgress((currentProgress) => {
-        const nextProgress = Math.min(100, currentProgress + 6);
-        if (nextProgress >= 100) {
+        if (nextProgress >= 99.5) {
+          player.pause();
           setPlaying(false);
         }
-        return nextProgress;
-      });
+        return;
+      }
     }, 360);
 
     return () => clearInterval(timer);
@@ -95,13 +87,18 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     if (!packageRecord) return;
 
     setPreviewTouched(true);
+    if (!hasMedia) {
+      player.pause();
+      setPlaying(false);
+      setProgress(0);
+      return;
+    }
+
     setPlaying((currentValue) => {
-      if (hasMedia) {
-        if (currentValue) {
-          player.pause();
-        } else {
-          player.play();
-        }
+      if (currentValue) {
+        player.pause();
+      } else {
+        player.play();
       }
       return !currentValue;
     });
@@ -112,10 +109,14 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
 
     setPreviewTouched(true);
     setProgress(0);
-    if (hasMedia) {
-      player.currentTime = 0;
-      player.play();
+    if (!hasMedia) {
+      player.pause();
+      setPlaying(false);
+      return;
     }
+
+    player.currentTime = 0;
+    player.play();
     setPlaying(true);
   }
 
@@ -178,7 +179,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
           </View>
         ) : null}
         <View style={styles.timelineHeader}>
-          <Text style={styles.timelineLabel}>{hasMedia ? "Reproducao" : "Revisao"}</Text>
+          <Text style={styles.timelineLabel}>{hasMedia ? "Reproducao" : "Previa"}</Text>
           <Text style={styles.timelineValue}>{Math.round(progress)}%</Text>
         </View>
         <View style={styles.timelineTrack}>
@@ -188,28 +189,28 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
           <Pressable
             accessibilityLabel={playing ? "Pausar revisao local" : "Reproduzir revisao local"}
             accessibilityRole="button"
-            accessibilityState={{ disabled: !packageRecord, selected: playing }}
-            disabled={!packageRecord}
+            accessibilityState={{ disabled: playbackDisabled, selected: playing }}
+            disabled={playbackDisabled}
             onPress={toggleLocalPlayback}
             style={({ pressed }) => [
               styles.controlButton,
-              !packageRecord && styles.controlButtonDisabled,
-              pressed && packageRecord && styles.controlButtonPressed
+              playbackDisabled && styles.controlButtonDisabled,
+              pressed && !playbackDisabled && styles.controlButtonPressed
             ]}
           >
             {playing ? <Pause size={18} color={theme.colors.textOnDark} /> : <Play size={18} color={theme.colors.textOnDark} />}
-            <Text style={styles.controlLabel}>{playing ? "Pausar" : hasMedia ? "Reproduzir" : "Revisar"}</Text>
+            <Text style={styles.controlLabel}>{playing ? "Pausar" : hasMedia ? "Reproduzir" : "Sem video local"}</Text>
           </Pressable>
           <Pressable
             accessibilityLabel="Reiniciar revisao local"
             accessibilityRole="button"
-            accessibilityState={{ disabled: !packageRecord }}
-            disabled={!packageRecord}
+            accessibilityState={{ disabled: playbackDisabled }}
+            disabled={playbackDisabled}
             onPress={restartLocalPlayback}
             style={({ pressed }) => [
               styles.secondaryControlButton,
-              !packageRecord && styles.controlButtonDisabled,
-              pressed && packageRecord && styles.controlButtonPressed
+              playbackDisabled && styles.controlButtonDisabled,
+              pressed && !playbackDisabled && styles.controlButtonPressed
             ]}
           >
             <RotateCcw size={18} color={theme.colors.primary} />
@@ -228,6 +229,10 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
           <View style={styles.detailItem}>
             <CalendarClock size={17} color={theme.colors.primary} />
             <Text numberOfLines={1} style={styles.detailText}>{packageDateLabel}</Text>
+          </View>
+          <View style={styles.detailItem}>
+            <Clock3 size={17} color={theme.colors.primary} />
+            <Text numberOfLines={1} style={styles.detailText}>{formatPackageDurationLabel(packageRecord)}</Text>
           </View>
           <View style={styles.detailItem}>
             <MapPin size={17} color={theme.colors.primary} />

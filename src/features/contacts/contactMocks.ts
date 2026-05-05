@@ -5,12 +5,12 @@ export const trustedContactsMock: TrustedContact[] = [
     id: "anjo-1",
     name: "Contato de confianca",
     status: "pendente",
-    description: "Convite criado em modo demonstracao. O aceite real exigira conta propria."
+    description: "Convite pendente. O vinculo nasce quando a pessoa aceita com a propria conta."
   },
   {
     id: "anjo-2",
     name: "Rede familiar",
     status: "pendente",
-    description: "Exemplo visual para validar a interface; aceite real exige conta propria e contrato."
+    description: "Rede de apoio pendente. Compartilhamento depende de aceite e autorizacao."
   }
 ];

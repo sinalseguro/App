@@ -10,6 +10,7 @@ const requiredFiles = [
   "app/_layout.tsx",
   "app/index.tsx",
   "app/arquivos.tsx",
+  "app/configuracoes.tsx",
   "app/convite.tsx",
   "app/funcionamento.tsx",
   "src/components/AppTopBar.tsx",
@@ -91,9 +92,10 @@ if (!launchScreen.includes("Carregando SinalSeguro") || launchScreen.includes("g
 
 const localEvidenceRail = await readFile("src/components/LocalEvidenceRail.tsx", "utf8");
 const localFilesScreen = await readFile("app/arquivos.tsx", "utf8");
+const settingsScreen = await readFile("app/configuracoes.tsx", "utf8");
 
 if (!localEvidenceRail.includes("onDeletePackage") || !localEvidenceRail.includes("Compartilhar")) {
-  throw new Error("Cofre local precisa expor acoes de visualizar, compartilhar bloqueado e excluir local.");
+  throw new Error("Cofre local precisa expor acoes de visualizar, compartilhar pelo app e excluir local.");
 }
 
 if (
@@ -105,8 +107,33 @@ if (
   throw new Error("Cofre local precisa usar grade vertical de icones com acoes agrupadas em linhas e colunas.");
 }
 
-if (!localFilesScreen.includes("Excluir pacote local?") || !localFilesScreen.includes("Finalize o chamado antes")) {
+if (!localEvidenceRail.includes("formatPackageDurationLabel") || !localEvidenceRail.includes("fileDuration")) {
+  throw new Error("Grade do cofre precisa mostrar duracao/tempo de gravacao do arquivo.");
+}
+
+if (!localFilesScreen.includes("Excluir arquivo local?") || !localFilesScreen.includes("Finalize o chamado antes")) {
   throw new Error("Exclusao local de pacote precisa confirmar acao destrutiva e bloquear chamado ativo.");
+}
+
+if (
+  !localFilesScreen.includes("Linking.canOpenURL") ||
+  !localFilesScreen.includes("Google Maps") ||
+  !localFilesScreen.includes("localizacao exata deste registro")
+) {
+  throw new Error("Abertura de mapa precisa validar plataforma e avisar envio de localizacao a app externo.");
+}
+
+if (
+  !settingsScreen.includes("legalConsentItems") ||
+  !settingsScreen.includes("Uso emergencial") ||
+  !settingsScreen.includes("Privacidade") ||
+  !settingsScreen.includes("Arquivos locais")
+) {
+  throw new Error("Termos e privacidade precisam exibir resumo visivel antes do aceite local.");
+}
+
+if (!settingsScreen.includes("Atalho de anjo desativado") || !settingsScreen.includes("Anjo 190 bloqueado ate aceite")) {
+  throw new Error("Atalho de anjo precisa permanecer desativado ate gestao, aceite e contrato futuros.");
 }
 
 const panicButton = await readFile("src/components/PanicButton.tsx", "utf8");
@@ -115,8 +142,12 @@ if (!panicButton.includes("particleConfigs") || !panicButton.includes("buttonArm
   throw new Error("Botao SOS ativo precisa ter estado visual proprio e particulas discretas.");
 }
 
-if (panicButton.includes("#16A34A") || panicButton.includes("187, 247, 208")) {
-  throw new Error("Botao SOS ativo nao pode usar animacao/glow verde; deve seguir a identidade visual SinalSeguro.");
+if (
+  !panicButton.includes("theme.colors.secure") ||
+  !panicButton.includes("zIndex: 8") ||
+  panicButton.includes("activeStatusGlow")
+) {
+  throw new Error("Texto ATIVO precisa ficar acima das particulas e usar apenas sombra verde, sem faixa atras do texto.");
 }
 
 if (!panicButton.includes("width: \"75%\"") || !panicButton.includes("aspectRatio: 1")) {
@@ -141,8 +172,8 @@ if (homeScreen.includes("Alert.alert") || localFilesScreen.includes("Alert.alert
   throw new Error("Fluxos criticos da Home e Cofre devem usar modal SinalSeguro, nao Alert nativo.");
 }
 
-if (!homeScreen.includes("showPoliceShortcut={preferences.emergencyPhoneCall.call190ShortcutEnabled}")) {
-  throw new Error("Home precisa respeitar preferencia local do atalho 190 configuravel.");
+if (homeScreen.includes("showPoliceShortcut={preferences.emergencyPhoneCall.call190ShortcutEnabled}")) {
+  throw new Error("Home nao pode ocultar Policia 190; Policia, Bombeiros e SAMU devem vir ativos por padrao.");
 }
 
 const emergencyTopBar = await readFile("src/features/emergency-home/EmergencyTopBar.tsx", "utf8");
@@ -166,20 +197,37 @@ if (emergencyDrawer.includes("backend/P2P")) {
 }
 
 if (
-  !emergencyCallTarget.includes("Policia 190") ||
+  !emergencyCallTarget.includes("Policia") ||
+  !emergencyCallTarget.includes("\"190\"") ||
   !emergencyCallTarget.includes("\"193\"") ||
   !emergencyCallTarget.includes("\"192\"")
 ) {
-  throw new Error("Home precisa manter atalhos oficiais Policia 190, Bombeiros 193 e SAMU 192.");
+  throw new Error("Home precisa manter atalhos oficiais Policia, Bombeiros e SAMU com numeros preservados no fluxo de chamada.");
 }
 
-if (!emergencyCallDock.includes("showPoliceShortcut") || !emergencyCallDock.includes("target.number !== \"190\"")) {
-  throw new Error("Dock de chamadas precisa permitir ocultar o atalho 190 quando a usuaria desativar.");
+if (emergencyCallDock.includes("showPoliceShortcut") || emergencyCallDock.includes("target.number !== \"190\"")) {
+  throw new Error("Dock de chamadas nao pode filtrar Policia 190 no padrao atual.");
+}
+
+if (!emergencyCallDock.includes("emergencyCallTargets.map")) {
+  throw new Error("Dock de chamadas precisa renderizar Policia 190, Bombeiros 193 e SAMU 192 por padrao.");
 }
 
 const emergencyPreferences = await readFile("src/features/emergency/emergencyPreferences.ts", "utf8");
+const protectedAccess = await readFile("src/security/protectedAccess.ts", "utf8");
+
+if (
+  !protectedAccess.includes("HASH_VERSION = \"v2\"") ||
+  !protectedAccess.includes("KDF_ROUNDS") ||
+  !protectedAccess.includes("MAX_FAILED_ATTEMPTS") ||
+  !protectedAccess.includes("verifySecurityCodeStatus") ||
+  !protectedAccess.includes("formatLockoutMessage")
+) {
+  throw new Error("Codigo de seguranca precisa usar hash versionado com sal, iteracoes e bloqueio comunicado.");
+}
 const emergencyMediaRecorder = await readFile("src/features/emergency/EmergencyMediaRecorder.tsx", "utf8");
 const mediaCapture = await readFile("src/features/emergency/mediaCapture.ts", "utf8");
+const packagePresentation = await readFile("src/features/emergency/packagePresentation.ts", "utf8");
 const privateMediaReadiness = await readFile("scripts/android-private-media-readiness.mjs", "utf8");
 const androidPrepare = await readFile("scripts/prepare-android-bundled-debug.mjs", "utf8");
 
@@ -187,10 +235,22 @@ if (!emergencyPreferences.includes("finishSafety") || !emergencyPreferences.incl
   throw new Error("Encerramento seguro precisa ser configuravel e usar hash local do codigo.");
 }
 
+if (!emergencyPreferences.includes("schemaVersion: 8") || !emergencyPreferences.includes("call190ShortcutEnabled: true")) {
+  throw new Error("Preferencias precisam migrar para atalhos oficiais ativos por padrao.");
+}
+
 if (
   !emergencyPreferences.includes("durationOptions: EmergencyDurationSeconds[] = [0, 60, 300, 900, 1800, 3600]")
 ) {
   throw new Error("Tempo de gravacao precisa manter opcoes Ilimitado, 1, 5, 15, 30 e 60 minutos.");
+}
+
+if (
+  !packagePresentation.includes("formatPackageDurationLabel") ||
+  !packagePresentation.includes("getPackageVideoDurationMs") ||
+  !packagePresentation.includes("geo:")
+) {
+  throw new Error("Apresentacao do pacote precisa expor duracao e links de mapa multiplataforma.");
 }
 
 if (/const DEFAULT_FINISH_CODE_HASH = "e41d64/.test(emergencyPreferences)) {
@@ -216,6 +276,16 @@ if (
   !emergencyMediaRecorder.includes("preserveLocalVideoAsset")
 ) {
   throw new Error("Encerramento manual do SOS nao pode descartar video antes de anexar ao cofre.");
+}
+
+if (
+  !mediaCapture.includes("MAX_INLINE_MEDIA_HASH_BYTES") ||
+  !mediaCapture.includes("metadata_sha256_pending_streaming") ||
+  !mediaCapture.includes("content_sha256") ||
+  !mediaCapture.includes("Falha ao indexar video local no cofre") ||
+  !mediaCapture.includes("copiedToPrivateSandbox")
+) {
+  throw new Error("Captura de midia precisa limitar hash inline, registrar integridade e limpar arquivo sem indice no cofre.");
 }
 
 if (

@@ -30,7 +30,7 @@ Fonte de verdade operacional: este repositorio, `AGENTS.md`, `.codex/AGENTS.md` 
 - `ResourceTile`: icone de recurso usado em telas fixas.
 - `PanicButton`: SOS circular responsivo com gesto de pressao longa.
 - `EmergencySettingsDrawer`: menu retratil padrao da Home e do Cofre, somente com acoes iconograficas.
-- `EmergencyCallDock`: atalhos oficiais 190, 193 e 192.
+- `EmergencyCallDock`: atalhos oficiais `Policia`, `Bombeiros` e `SAMU`, com numeros preservados no fluxo de chamada.
 - `EvidencePlayerCard`: player seguro local/recebido.
 - `LocalEvidenceRail`: grade vertical de pacotes locais com acoes em linhas/colunas.
 - `SafeScreen`: base rolavel para paginas informativas e configuracoes.
@@ -44,8 +44,9 @@ Fonte de verdade operacional: este repositorio, `AGENTS.md`, `.codex/AGENTS.md` 
 - Pressao longa aciona ou encerra o chamado.
 - Chamado ativo muda o estado para encerramento e liga particulas discretas.
 - O texto auxiliar externo `Solte` nao deve aparecer na Home.
-- Atalhos oficiais ficam visiveis no rodape: `Policia 190`, `Bombeiros 193`, `SAMU 192`.
-- O 190 pode ser ocultado por preferencia; 193 e 192 seguem visiveis.
+- Atalhos oficiais ficam visiveis no rodape: `Policia`, `Bombeiros`, `SAMU`.
+- Os numeros oficiais continuam preservados no fluxo de chamada e nos modais de confirmacao: `190`, `193` e `192`.
+- Os tres atalhos oficiais devem vir ativos por padrao; Anjo fica como atalho futuro desativado ate gestao propria, aceite real e auditoria.
 - Os modais de chamada devem destacar `190`, `193` ou `192` como numero grande, com sombra e contraste.
 
 ## Encerramento do chamado

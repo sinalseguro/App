@@ -14,7 +14,7 @@ export class EmergencyCallTarget {
 }
 
 export const emergencyCallTargets = [
-  new EmergencyCallTarget("Policia 190", "Policia Militar", "190", "police"),
+  new EmergencyCallTarget("Policia", "Policia Militar", "190", "police"),
   new EmergencyCallTarget("Bombeiros", "Corpo de Bombeiros", "193", "fire"),
   new EmergencyCallTarget("SAMU", "SAMU", "192", "samu")
 ] as const;
