@@ -58,3 +58,14 @@ Papel: seguranca, LGPD e QA.
 - Gates aprovados nesta rodada: `typecheck`, `lint`, `test`, `private:android:readiness` e `git diff --check`.
 - APK privado final gerado com SHA-256 `daf5a22d163acc468a9470e1bd2178606f1b547c55bdf824a22eefe5d3f022d1` e instalado por USB no Android `23129RA5FL` com `adb install -r`: `Success`.
 - Evidencias finais salvas em `docs/evidencias/android/2026-05-05-apk-privado-final/`, incluindo Home instalada e logcat de pos-instalacao.
+
+## QA/Security - 2026-05-05 - midia criptografada por chunks
+
+- Bloqueio corrigido: videos novos nao devem ficar como MP4 claro persistente no sandbox do app.
+- `EncryptedVideoStore` cifra chunks individualmente e apaga o temporario da camera apos preservacao.
+- `VideoCryptoService` usa AEAD autenticado por chunk e chave simetrica unica por video.
+- Manifesto tambem e cifrado/autenticado e contem hashes, nonces, tags, offsets e metadados necessarios para auditoria local.
+- `EncryptedVideoDataSource` cobre leitura parcial, seek e replay sem arquivo descriptografado completo.
+- Player URI atual fica impedido de abrir ciphertext; liberar reproducao segura so depois de adaptador local de range.
+- Testes aprovados: chunk valido, range parcial, seek, replay, chunk corrompido e chave invalida.
+- Validacoes aprovadas: `npm run typecheck`, `npm run lint`, `npm test`.

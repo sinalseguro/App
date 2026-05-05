@@ -6,6 +6,7 @@ const requiredFiles = [
   ".codex/memory/CRISTINE.md",
   "docs/00_PLANO_MOBILE.md",
   "docs/03_TIMELINE.md",
+  "docs/30_MIDIA_CRIPTOGRAFADA_CHUNKS.md",
   "docs/api/openapi.yaml",
   "app/_layout.tsx",
   "app/index.tsx",
@@ -34,6 +35,11 @@ const requiredFiles = [
   "src/features/emergency/emergencyOutbox.ts",
   "src/features/emergency/EmergencyMediaRecorder.tsx",
   "src/features/emergency/mediaCapture.ts",
+  "src/features/emergency/VideoCryptoService.ts",
+  "src/features/emergency/EncryptedVideoManifest.ts",
+  "src/features/emergency/EncryptedVideoStore.ts",
+  "src/features/emergency/EncryptedVideoDataSource.ts",
+  "scripts/encrypted-video-store.test.ts",
   "src/storage/secureJsonStore.ts",
   "scripts/android-private-media-readiness.mjs",
   "android/app/src/main/res/drawable-xxhdpi/splashscreen_logo.png"
@@ -279,13 +285,14 @@ if (
 }
 
 if (
-  !mediaCapture.includes("MAX_INLINE_MEDIA_HASH_BYTES") ||
-  !mediaCapture.includes("metadata_sha256_pending_streaming") ||
-  !mediaCapture.includes("content_sha256") ||
+  !mediaCapture.includes("EncryptedVideoStore") ||
+  !mediaCapture.includes("preserveEncryptedVideoAsset") ||
+  !mediaCapture.includes("encryptedStore.deleteEncryptedAsset") ||
   !mediaCapture.includes("Falha ao indexar video local no cofre") ||
-  !mediaCapture.includes("copiedToPrivateSandbox")
+  mediaCapture.includes("MAX_INLINE_MEDIA_HASH_BYTES") ||
+  mediaCapture.includes("metadata_sha256_pending_streaming")
 ) {
-  throw new Error("Captura de midia precisa limitar hash inline, registrar integridade e limpar arquivo sem indice no cofre.");
+  throw new Error("Captura de midia precisa preservar video em chunks criptografados e limpar arquivos sem indice no cofre.");
 }
 
 if (
@@ -297,8 +304,50 @@ if (
   throw new Error("Midia privada precisa configurar frontal, traseira e tentativa de duas cameras com fallback seguro.");
 }
 
-if (!mediaCapture.includes("EncodingType.Base64") || !mediaCapture.includes("deleteAsync(sourceUri")) {
-  throw new Error("Midia local precisa gerar hash de conteudo e remover arquivo temporario da camera.");
+const videoCryptoService = await readFile("src/features/emergency/VideoCryptoService.ts", "utf8");
+const encryptedVideoStore = await readFile("src/features/emergency/EncryptedVideoStore.ts", "utf8");
+const encryptedVideoDataSource = await readFile("src/features/emergency/EncryptedVideoDataSource.ts", "utf8");
+const encryptedVideoTests = await readFile("scripts/encrypted-video-store.test.ts", "utf8");
+
+if (
+  !videoCryptoService.includes("xchacha20poly1305") ||
+  !videoCryptoService.includes("encryptedVideoKeyBytes = 32") ||
+  !videoCryptoService.includes("encryptedVideoNonceBytes = 24") ||
+  !videoCryptoService.includes("Falha de autenticacao do chunk criptografado")
+) {
+  throw new Error("Criptografia de video precisa usar chave simetrica forte, nonce unico e AEAD autenticado por chunk.");
+}
+
+if (
+  !encryptedVideoStore.includes("EncodingType.Base64") ||
+  !encryptedVideoStore.includes("position") ||
+  !encryptedVideoStore.includes("length") ||
+  !encryptedVideoStore.includes("manifestNonce") ||
+  !encryptedVideoStore.includes("manifestTag") ||
+  !encryptedVideoStore.includes("chunked_plaintext_sha256") ||
+  !encryptedVideoStore.includes("recipientKeyEnvelopes") ||
+  !encryptedVideoStore.includes("pending_secure_derivation") ||
+  !encryptedVideoStore.includes("delete(sourceUri")
+) {
+  throw new Error("Store criptografado precisa ler por faixa, cifrar manifesto/chunks e preparar thumbnail/envelopes futuros.");
+}
+
+if (
+  !encryptedVideoDataSource.includes("readRange") ||
+  !encryptedVideoDataSource.includes("readChunk") ||
+  !encryptedVideoDataSource.includes("Chunk de video corrompido") ||
+  !encryptedVideoDataSource.includes("integridade")
+) {
+  throw new Error("Fonte de video criptografado precisa suportar range/seek e erros de autenticacao.");
+}
+
+if (
+  !encryptedVideoTests.includes("readRange") ||
+  !encryptedVideoTests.includes("wrongKey") ||
+  !encryptedVideoTests.includes("corruptedChunk") ||
+  !encryptedVideoTests.includes("replayRange")
+) {
+  throw new Error("Testes de midia criptografada precisam cobrir chunks, seek, replay e falha de autenticacao.");
 }
 
 if (

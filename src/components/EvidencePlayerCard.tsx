@@ -23,7 +23,8 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   const [selectedAssetIndex, setSelectedAssetIndex] = useState(0);
   const mediaAssets = packageRecord?.media.status === "recorded_local" ? packageRecord.media.assets : [];
   const videoAsset = mediaAssets[selectedAssetIndex];
-  const player = useVideoPlayer(videoAsset?.uri ?? null, (videoPlayer) => {
+  const canUseInternalDirectPlayer = Boolean(videoAsset && videoAsset.encryptionStatus !== "encrypted_chunked_xchacha20poly1305");
+  const player = useVideoPlayer(canUseInternalDirectPlayer ? videoAsset?.uri ?? null : null, (videoPlayer) => {
     videoPlayer.loop = false;
     videoPlayer.muted = false;
   });
@@ -32,7 +33,9 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   const selectedTitle = packageRecord ? formatPackageTitle(packageRecord) : title;
   const previewTitle = previewTouched && packageRecord ? selectedTitle : title;
   const previewHint = hasMedia
-    ? "Video local"
+    ? canUseInternalDirectPlayer
+      ? "Video local"
+      : "Video criptografado em chunks"
     : packageRecord
       ? "Nenhum video neste arquivo"
       : "Abra um item do cofre";
@@ -47,7 +50,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   const playerAccessibilityLabel = packageRecord
     ? `Visualizar ${formatPackageTitle(packageRecord)} no player seguro`
     : "Player seguro sem arquivo selecionado";
-  const playbackDisabled = !packageRecord || !hasMedia;
+  const playbackDisabled = !packageRecord || !hasMedia || !canUseInternalDirectPlayer;
 
   useEffect(() => {
     setPlaying(false);
@@ -62,7 +65,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   }, [selectedAssetIndex]);
 
   useEffect(() => {
-    if (!playing || !packageRecord || !hasMedia) return;
+    if (!playing || !packageRecord || !hasMedia || !canUseInternalDirectPlayer) return;
 
     const timer = setInterval(() => {
       const duration = player.duration;
@@ -81,13 +84,13 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     }, 360);
 
     return () => clearInterval(timer);
-  }, [hasMedia, packageRecord, player, playing]);
+  }, [canUseInternalDirectPlayer, hasMedia, packageRecord, player, playing]);
 
   function toggleLocalPlayback() {
     if (!packageRecord) return;
 
     setPreviewTouched(true);
-    if (!hasMedia) {
+    if (!hasMedia || !canUseInternalDirectPlayer) {
       player.pause();
       setPlaying(false);
       setProgress(0);
@@ -97,7 +100,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     setPlaying((currentValue) => {
       if (currentValue) {
         player.pause();
-      } else {
+      } else if (canUseInternalDirectPlayer) {
         player.play();
       }
       return !currentValue;
@@ -109,7 +112,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
 
     setPreviewTouched(true);
     setProgress(0);
-    if (!hasMedia) {
+    if (!hasMedia || !canUseInternalDirectPlayer) {
       player.pause();
       setPlaying(false);
       return;
@@ -134,7 +137,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
           pressed && packageRecord && styles.previewPressed
         ]}
       >
-        {hasMedia ? (
+        {hasMedia && canUseInternalDirectPlayer ? (
           <VideoView
             contentFit="contain"
             nativeControls
@@ -143,7 +146,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
           />
         ) : (
           <View style={styles.playBadge}>
-            <Video size={36} color={theme.colors.textOnDark} />
+            {hasMedia ? <FileLock2 size={36} color={theme.colors.textOnDark} /> : <Video size={36} color={theme.colors.textOnDark} />}
           </View>
         )}
         <Text style={styles.previewTitle}>{previewTitle}</Text>
@@ -199,7 +202,9 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
             ]}
           >
             {playing ? <Pause size={18} color={theme.colors.textOnDark} /> : <Play size={18} color={theme.colors.textOnDark} />}
-            <Text style={styles.controlLabel}>{playing ? "Pausar" : hasMedia ? "Reproduzir" : "Sem video local"}</Text>
+            <Text style={styles.controlLabel}>
+              {playing ? "Pausar" : hasMedia && !canUseInternalDirectPlayer ? "Fonte segura" : hasMedia ? "Reproduzir" : "Sem video local"}
+            </Text>
           </Pressable>
           <Pressable
             accessibilityLabel="Reiniciar revisao local"

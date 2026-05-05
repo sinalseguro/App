@@ -15,7 +15,8 @@
     "doctor": "npx expo-doctor@latest",
     "typecheck": "node node_modules/typescript/bin/tsc --noEmit",
     "lint": "node scripts/lint-check.mjs",
-    "test": "node scripts/smoke-test.mjs",
+    "test": "node scripts/smoke-test.mjs && npm run test:crypto",
+    "test:crypto": "tsx scripts/encrypted-video-store.test.ts",
     "assets:qr": "node scripts/generate-qr-assets.mjs",
     "release:android:readiness": "node scripts/android-release-readiness.mjs",
     "private:android:readiness": "node scripts/android-private-media-readiness.mjs",
@@ -27,6 +28,8 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
+    "@noble/ciphers": "^2.2.0",
+    "@noble/hashes": "^2.0.1",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@tanstack/react-query": "^5.90.7",
     "babel-preset-expo": "~54.0.10",
@@ -61,6 +64,7 @@
   "devDependencies": {
     "@types/react": "~19.1.10",
     "qrcode": "^1.5.4",
+    "tsx": "^4.21.0",
     "typescript": "~5.9.2"
   }
 }

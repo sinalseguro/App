@@ -23,15 +23,36 @@ export type LocalMediaAsset = {
   uri: string;
   fileName: string;
   mimeType: "video/mp4";
-  storage: "app_private_sandbox";
+  storage: "app_private_sandbox" | "app_private_encrypted_chunks";
   cameraMode: "front" | "back";
   requestedCameraMode?: "front" | "back" | "both";
   sizeBytes: number;
   sha256: string;
-  hashMode: "content_sha256" | "metadata_sha256_pending_streaming";
+  hashMode: "content_sha256" | "metadata_sha256_pending_streaming" | "chunked_plaintext_sha256";
   recordedAt: string;
   completedAt: string;
-  encryptionStatus: "local_sandbox_pending_backend_envelope";
+  encryptionStatus: "local_sandbox_pending_backend_envelope" | "encrypted_chunked_xchacha20poly1305";
+  encryptedVideo?: EncryptedVideoEnvelope;
+};
+
+export type EncryptedVideoEnvelope = {
+  protocolVersion: "sinalseguro.encrypted-video.v1";
+  algorithm: "xchacha20poly1305";
+  packageId: string;
+  keyRef: string;
+  manifestUri: string;
+  manifestNonce: string;
+  manifestTag: string;
+  manifestSha256: string;
+  storageDirectoryUri: string;
+  chunkSizeBytes: number;
+  chunkCount: number;
+  plaintextSizeBytes: number;
+  encryptedSizeBytes: number;
+  codec: "video/mp4";
+  durationMs?: number | null;
+  recipientKeyEnvelopes: [];
+  playbackAdapter: "range_data_source_required";
 };
 
 export type MediaCaptureManifest =

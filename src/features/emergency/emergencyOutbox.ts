@@ -1,5 +1,5 @@
 import { deleteSecureRecord, listSecureRecords, saveSecureRecord } from "@/storage/secureJsonStore";
-import * as FileSystem from "expo-file-system/legacy";
+import { deleteLocalMediaAssets } from "./mediaCapture";
 import { EmergencyPackage } from "./types";
 
 const EMERGENCY_NAMESPACE = "sinalseguro.emergency-packages.v1";
@@ -60,12 +60,9 @@ export async function deleteEmergencyPackage(packageId: string) {
     }
 
     if (packageRecord.media.status === "recorded_local") {
-      const deletionResults = await Promise.allSettled(
-        packageRecord.media.assets.map((asset) => FileSystem.deleteAsync(asset.uri, { idempotent: true }))
-      );
-      const failedDeletion = deletionResults.some((result) => result.status === "rejected");
-
-      if (failedDeletion) {
+      try {
+        await deleteLocalMediaAssets(packageRecord.media.assets);
+      } catch {
         throw new Error("Nao foi possivel remover todos os arquivos locais. O pacote foi mantido para nova tentativa.");
       }
     }

@@ -47,7 +47,19 @@ Quando a sessao for retomada apos limite de uso, troca de agente, interrupcao de
 
 ## Proximo checkpoint
 
-Etapa ativa: continuidade do refino UX/IX do SOS, Cofre/Player e validacao manual do APK privado Android com midia local.
+Etapa ativa: midia privada criptografada por chunks, adaptador de playback seguro por range e validacao manual do APK privado Android com midia local.
+
+Estado ativo em 2026-05-05:
+
+- Ada foi nomeada gerente operacional desta tarefa de midia, sob coordenacao de Ze;
+- Schneier e Myers revisaram o risco atual: MP4 claro em sandbox, hash em Base64 para arquivos grandes e player abrindo URI direta;
+- `EncryptedVideoStore` passou a preservar videos novos em chunks cifrados com chave unica por video;
+- algoritmo implementado: XChaCha20-Poly1305 com chave de 32 bytes, nonce unico por chunk e AEAD autenticado;
+- manifesto cifrado/autenticado registra chunks, offsets, tamanhos, hashes, nonces, tags, codec, duracao pendente, thumbnail segura pendente e envelopes futuros;
+- `EncryptedVideoDataSource` fornece leitura por range para seek, replay e reproducao parcial sem descriptografar o video inteiro;
+- o player interno nao abre ciphertext como URI de video; reproducao segura de assets cifrados depende do proximo bloco: adaptador nativo ou servidor HTTP local loopback com suporte a `Range`;
+- testes unitarios cobrem chunk, seek, replay, corrupcao e chave invalida;
+- documento de continuidade: `docs/30_MIDIA_CRIPTOGRAFADA_CHUNKS.md`.
 
 Estado ativo em 2026-05-04:
 

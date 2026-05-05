@@ -3,6 +3,34 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-05 - Midia criptografada em chunks
+
+Status: implementado localmente e validado por typecheck, lint e testes unitarios.
+
+Especialistas acionados:
+
+- Ada/Ritchie: mapeamento do fluxo de gravacao, armazenamento, manifesto e player.
+- Schneier/Myers: riscos de arquivo claro, hash em memoria, chunk corrompido, chave invalida e QA de regressao.
+
+Decisoes:
+
+- Videos novos deixam de ser preservados como MP4 claro no sandbox e passam para `EncryptedVideoStore`.
+- Cada video recebe chave simetrica unica e chunks cifrados individualmente com XChaCha20-Poly1305.
+- Manifesto seguro passa a guardar offsets, tamanhos, nonces, tags, hashes, codec, thumbnail pendente e envelopes futuros.
+- `EncryptedVideoDataSource` implementa leitura por range para seek/replay sem descriptografar o arquivo inteiro.
+- Player URI atual nao deve abrir ciphertext; assets cifrados ficam marcados como dependentes de adaptador local de range.
+- Proxima etapa tecnica e ligar a fonte por range ao player nativo/local HTTP loopback e medir TTFF, memoria e CPU em Android real.
+
+Documentacao:
+
+- `docs/30_MIDIA_CRIPTOGRAFADA_CHUNKS.md`.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado.
+- `npm run lint`: aprovado.
+- `npm test`: aprovado com smoke e testes de cripto/range.
+
 ## 2026-05-02 - Checkpoint inicial
 
 Status: publicado no GitHub; aguardando instaladores assinados.
