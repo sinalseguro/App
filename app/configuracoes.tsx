@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
-import { Linking, StyleSheet, Text, TextInput, View } from "react-native";
+import { Linking, Platform, StyleSheet, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 import { Camera as ExpoCamera } from "expo-camera";
 import * as Location from "expo-location";
@@ -412,6 +412,16 @@ export default function SettingsScreen() {
   }
 
   async function openSystemSettings() {
+    if (Platform.OS === "web" || typeof Linking.openSettings !== "function") {
+      setInfoDialog({
+        title: "Ajustes do sistema",
+        message: "No navegador, ajuste permissoes diretamente nas configuracoes do site.",
+        icon: <SettingsIcon size={18} color={theme.colors.primary} />,
+        actions: [{ label: "Entendi" }]
+      });
+      return;
+    }
+
     await Linking.openSettings();
   }
 

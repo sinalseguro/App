@@ -58,6 +58,26 @@ Validacoes:
 - `npm run typecheck`: aprovado.
 - `npm test`: aprovado.
 
+## 2026-05-05 - Interface de midia do Cofre e Player
+
+Status: implementado e validado no browser local.
+
+Decisoes:
+
+- Este chat fica dedicado apenas a interface de midia; integracao backend/mobile/CRM segue na sessao bifurcada `019df9a8-1894-7002-b7f8-199eaaf3f118`.
+- `LocalEvidenceRail` agora diferencia visualmente arquivo protegido, local, parcial e vazio sem expor jargao tecnico.
+- `EvidencePlayerCard` passou a tratar estados de video legado, video protegido e ausencia de midia com rotulos centralizados.
+- `mediaInterfacePresentation` centraliza rotulos de protecao, tamanho, camera, armazenamento e playback.
+- O topo da rota `/arquivos` reflete `Player seguro` ou `Cofre local` conforme o painel ativo.
+- Browser web foi corrigido para nao quebrar em `Linking.openSettings()` quando a tela de Configuracoes for acessada durante validacao.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado.
+- `npm run lint`: aprovado.
+- `npm test`: aprovado.
+- Browser local: `http://localhost:8081/arquivos?painel=cofre` e `http://localhost:8081/arquivos?painel=player` renderizaram sem erro.
+
 ## 2026-05-02 - Checkpoint inicial
 
 Status: publicado no GitHub; aguardando instaladores assinados.

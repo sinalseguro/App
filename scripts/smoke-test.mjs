@@ -31,6 +31,7 @@ const requiredFiles = [
   "src/features/invitations/invitationService.ts",
   "src/features/evidence/evidencePolicy.ts",
   "src/features/emergency/packagePresentation.ts",
+  "src/features/emergency/mediaInterfacePresentation.ts",
   "src/features/emergency/emergencyPreferences.ts",
   "src/features/emergency/emergencyRecorder.ts",
   "src/features/emergency/RemoteSharingPlan.ts",
@@ -112,6 +113,8 @@ if (!launchScreen.includes("Carregando SinalSeguro") || launchScreen.includes("g
 }
 
 const localEvidenceRail = await readFile("src/components/LocalEvidenceRail.tsx", "utf8");
+const evidencePlayerCard = await readFile("src/components/EvidencePlayerCard.tsx", "utf8");
+const mediaInterfacePresentation = await readFile("src/features/emergency/mediaInterfacePresentation.ts", "utf8");
 const localFilesScreen = await readFile("app/arquivos.tsx", "utf8");
 const settingsScreen = await readFile("app/configuracoes.tsx", "utf8");
 
@@ -132,7 +135,36 @@ if (!localEvidenceRail.includes("formatPackageDurationLabel") || !localEvidenceR
   throw new Error("Grade do cofre precisa mostrar duracao/tempo de gravacao do arquivo.");
 }
 
-if (!localFilesScreen.includes("Excluir arquivo local?") || !localFilesScreen.includes("Finalize o chamado antes")) {
+if (
+  !localEvidenceRail.includes("getPackageMediaProtectionLabel") ||
+  !localEvidenceRail.includes("mediaBadgeProtected") ||
+  !localEvidenceRail.includes("FileLock2")
+) {
+  throw new Error("Grade do cofre precisa identificar arquivos de midia protegidos sem jargao tecnico.");
+}
+
+if (
+  !evidencePlayerCard.includes("isEncryptedVideoAsset") ||
+  !evidencePlayerCard.includes("Arquivo protegido") ||
+  !evidencePlayerCard.includes("getAssetStorageLabel") ||
+  !evidencePlayerCard.includes("getAssetPlaybackLabel")
+) {
+  throw new Error("Player precisa tratar video protegido, legado e ausencia de midia com estados distintos.");
+}
+
+if (
+  !mediaInterfacePresentation.includes("Player seguro pendente") ||
+  !mediaInterfacePresentation.includes("partes protegidas") ||
+  !mediaInterfacePresentation.includes("getPackageMediaProtectionLabel")
+) {
+  throw new Error("Apresentacao de midia precisa centralizar rotulos de protecao, armazenamento e playback.");
+}
+
+if (
+  !localFilesScreen.includes("Excluir arquivo local?") ||
+  !localFilesScreen.includes("Finalize o chamado antes") ||
+  !localFilesScreen.includes("topBarContextLabel")
+) {
   throw new Error("Exclusao local de pacote precisa confirmar acao destrutiva e bloquear chamado ativo.");
 }
 

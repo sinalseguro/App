@@ -1,7 +1,11 @@
 import { ReactNode } from "react";
 import { Pressable, ScrollView, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
-import { Archive, ChevronDown, ChevronUp, Eye, MapPin, Share2, Square, Trash2 } from "lucide-react-native";
+import { Archive, ChevronDown, ChevronUp, Eye, FileLock2, MapPin, Share2, Square, Trash2 } from "lucide-react-native";
 import { theme } from "@/design/theme";
+import {
+  getPackageMediaCountLabel,
+  getPackageMediaProtectionLabel
+} from "@/features/emergency/mediaInterfacePresentation";
 import {
   formatPackageDate,
   formatPackageDurationLabel,
@@ -90,6 +94,8 @@ export function LocalEvidenceRail({
         const expanded = packageRecord.id === expandedPackageId;
         const active = packageRecord.status === "recording_local";
         const packageTitle = formatPackageTitle(packageRecord);
+        const protectionLabel = getPackageMediaProtectionLabel(packageRecord);
+        const hasProtectedMedia = protectionLabel === "Protegido" || protectionLabel === "Parcialmente protegido";
 
         return (
           <View
@@ -111,12 +117,21 @@ export function LocalEvidenceRail({
               ]}
             >
               <View style={[styles.fileIcon, selected && styles.fileIconSelected]}>
-                <Archive size={28} color={selected ? theme.colors.textOnDark : theme.colors.primary} />
+                {hasProtectedMedia ? (
+                  <FileLock2 size={28} color={selected ? theme.colors.textOnDark : theme.colors.primary} />
+                ) : (
+                  <Archive size={28} color={selected ? theme.colors.textOnDark : theme.colors.primary} />
+                )}
+              </View>
+              <View style={[styles.mediaBadge, hasProtectedMedia && styles.mediaBadgeProtected]}>
+                <Text style={[styles.mediaBadgeText, hasProtectedMedia && styles.mediaBadgeTextProtected]}>
+                  {active ? "Gravando" : protectionLabel}
+                </Text>
               </View>
               <Text numberOfLines={2} style={styles.fileTitle}>{packageTitle}</Text>
               <Text numberOfLines={1} style={styles.fileDate}>{formatPackageDate(packageRecord)}</Text>
               <Text numberOfLines={1} style={styles.fileDuration}>{formatPackageDurationLabel(packageRecord)}</Text>
-              <Text style={styles.fileStatus}>{formatPackageSubtitle(packageRecord)}</Text>
+              <Text style={styles.fileStatus}>{active ? formatPackageSubtitle(packageRecord) : getPackageMediaCountLabel(packageRecord)}</Text>
               {expanded ? (
                 <ChevronUp size={18} color={theme.colors.textMuted} />
               ) : (
@@ -266,6 +281,28 @@ const styles = StyleSheet.create({
   fileIconSelected: {
     backgroundColor: theme.colors.primary,
     borderColor: theme.colors.primary
+  },
+  mediaBadge: {
+    backgroundColor: theme.colors.surfaceMuted,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.pill,
+    borderWidth: 1,
+    minHeight: 22,
+    paddingHorizontal: theme.spacing.sm,
+    justifyContent: "center"
+  },
+  mediaBadgeProtected: {
+    backgroundColor: "rgba(20, 108, 67, 0.1)",
+    borderColor: "rgba(20, 108, 67, 0.24)"
+  },
+  mediaBadgeText: {
+    color: theme.colors.textMuted,
+    fontSize: 10,
+    fontWeight: "900",
+    textAlign: "center"
+  },
+  mediaBadgeTextProtected: {
+    color: theme.colors.secure
   },
   fileStatus: {
     color: theme.colors.textMuted,

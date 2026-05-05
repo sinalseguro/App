@@ -65,6 +65,10 @@ Estado ativo em 2026-05-05:
 - `EmergencyDeliveryPlan.remoteSharing` registra video, audio e localizacao em tempo real como canais futuros criptografados ponta a ponta, liberados somente durante emergencia ativa;
 - conveniados permanecem fase futura separada, exigindo contrato, RBAC, MFA, retencao, auditoria e RIPD/DPIA;
 - documento de continuidade: `docs/31_ARQUITETURA_COMPARTILHAMENTO_TEMPO_REAL.md`.
+- em 2026-05-05, Roberto bifurcou backend/mobile/CRM para a sessao `019df9a8-1894-7002-b7f8-199eaaf3f118`; este chat deve continuar focado apenas na interface de midia;
+- interface de midia refinada com rotulos centralizados em `mediaInterfacePresentation`, badges de protecao no Cofre e estados claros no Player;
+- browser local validado em `http://localhost:8081/arquivos?painel=cofre` e `http://localhost:8081/arquivos?painel=player`;
+- correção web pequena: `Linking.openSettings()` passa a ter fallback em navegador para nao bloquear validacao visual.
 
 Estado ativo em 2026-05-04:
 

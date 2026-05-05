@@ -1,8 +1,18 @@
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { VideoView, useVideoPlayer } from "expo-video";
-import { CalendarClock, Clock3, FileLock2, MapPin, Pause, Play, RotateCcw, Video } from "lucide-react-native";
+import { CalendarClock, Clock3, FileLock2, HardDrive, MapPin, Pause, Play, RotateCcw, Video } from "lucide-react-native";
 import { theme } from "@/design/theme";
+import {
+  getAssetPlaybackLabel,
+  getAssetProtectionLabel,
+  getAssetSizeLabel,
+  getAssetStorageLabel,
+  getCameraLabel,
+  getPackageMediaCountLabel,
+  getPackageMediaProtectionLabel,
+  isEncryptedVideoAsset
+} from "@/features/emergency/mediaInterfacePresentation";
 import { EmergencyPackage } from "@/features/emergency/types";
 import {
   formatPackageDate,
@@ -23,7 +33,8 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   const [selectedAssetIndex, setSelectedAssetIndex] = useState(0);
   const mediaAssets = packageRecord?.media.status === "recorded_local" ? packageRecord.media.assets : [];
   const videoAsset = mediaAssets[selectedAssetIndex];
-  const canUseInternalDirectPlayer = Boolean(videoAsset && videoAsset.encryptionStatus !== "encrypted_chunked_xchacha20poly1305");
+  const encryptedAsset = isEncryptedVideoAsset(videoAsset);
+  const canUseInternalDirectPlayer = Boolean(videoAsset && !encryptedAsset);
   const player = useVideoPlayer(canUseInternalDirectPlayer ? videoAsset?.uri ?? null : null, (videoPlayer) => {
     videoPlayer.loop = false;
     videoPlayer.muted = false;
@@ -35,15 +46,15 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   const previewHint = hasMedia
     ? canUseInternalDirectPlayer
       ? "Video local"
-      : "Video criptografado em chunks"
+      : "Arquivo protegido"
     : packageRecord
       ? "Nenhum video neste arquivo"
       : "Abra um item do cofre";
   const packageDateLabel = packageRecord ? formatPackageDate(packageRecord) : undefined;
   const mediaSummary = hasMedia
     ? mediaAssets.length > 1
-      ? `${mediaAssets.length} videos locais`
-      : "1 video local"
+      ? `${getPackageMediaCountLabel(packageRecord)} - ${getPackageMediaProtectionLabel(packageRecord)}`
+      : `${getPackageMediaCountLabel(packageRecord)} - ${getAssetProtectionLabel(videoAsset)}`
     : packageRecord
       ? "Nenhum video neste arquivo"
       : "Abra um item do cofre";
@@ -176,13 +187,14 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
                   ]}
                 >
                   {asset.cameraMode === "front" ? "Frontal" : "Traseira"}
+                  {isEncryptedVideoAsset(asset) ? " protegida" : ""}
                 </Text>
               </Pressable>
             ))}
           </View>
         ) : null}
         <View style={styles.timelineHeader}>
-          <Text style={styles.timelineLabel}>{hasMedia ? "Reproducao" : "Previa"}</Text>
+          <Text style={styles.timelineLabel}>{hasMedia && encryptedAsset ? "Player seguro" : hasMedia ? "Reproducao" : "Previa"}</Text>
           <Text style={styles.timelineValue}>{Math.round(progress)}%</Text>
         </View>
         <View style={styles.timelineTrack}>
@@ -203,7 +215,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
           >
             {playing ? <Pause size={18} color={theme.colors.textOnDark} /> : <Play size={18} color={theme.colors.textOnDark} />}
             <Text style={styles.controlLabel}>
-              {playing ? "Pausar" : hasMedia && !canUseInternalDirectPlayer ? "Fonte segura" : hasMedia ? "Reproduzir" : "Sem video local"}
+              {playing ? "Pausar" : getAssetPlaybackLabel(videoAsset)}
             </Text>
           </Pressable>
           <Pressable
@@ -226,7 +238,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
 
       <View style={styles.secureBadge}>
         <FileLock2 size={16} color={theme.colors.primary} />
-        <Text style={styles.secureBadgeText}>Privado</Text>
+        <Text style={styles.secureBadgeText}>{getPackageMediaProtectionLabel(packageRecord)}</Text>
       </View>
 
       {packageRecord ? (
@@ -246,6 +258,14 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
           <View style={styles.detailItem}>
             <FileLock2 size={17} color={theme.colors.primary} />
             <Text numberOfLines={1} style={styles.detailText}>{mediaSummary}</Text>
+          </View>
+          <View style={styles.detailItem}>
+            <Video size={17} color={theme.colors.primary} />
+            <Text numberOfLines={1} style={styles.detailText}>{getCameraLabel(videoAsset)}</Text>
+          </View>
+          <View style={styles.detailItem}>
+            <HardDrive size={17} color={theme.colors.primary} />
+            <Text numberOfLines={1} style={styles.detailText}>{`${getAssetStorageLabel(videoAsset)} - ${getAssetSizeLabel(videoAsset)}`}</Text>
           </View>
         </View>
       ) : null}

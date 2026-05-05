@@ -195,7 +195,7 @@ export default function LocalFilesScreen() {
     setHelpDialog({
       title: "Player seguro",
       message:
-        "O player abre videos salvos neste aparelho e mostra os dados do arquivo selecionado. Quando ainda nao houver video, abra o cofre e escolha outro item.",
+        "O player mostra a midia do arquivo selecionado e seus dados principais. Quando ainda nao houver video, abra o cofre e escolha outro item.",
       icon: <HelpCircle size={18} color={theme.colors.primary} />,
       actions: [{ label: "Entendi" }]
     });
@@ -309,6 +309,7 @@ export default function LocalFilesScreen() {
   }
 
   const selectedPackage = packages.find((packageRecord) => packageRecord.id === selectedPackageId);
+  const topBarContextLabel = activeDialog === "player" ? "Player seguro" : "Cofre local";
   const platformMapLabel = Platform.OS === "ios" ? "Maps" : Platform.OS === "android" ? "Maps" : "Mapa";
   const mapDialogMessage = mapPackage
     ? `${buildTelemetrySummary(mapPackage).join("\n")}\n\nAo abrir um mapa externo, a localizacao exata deste registro sera enviada ao app ou servico escolhido.`
@@ -317,7 +318,7 @@ export default function LocalFilesScreen() {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.shell} testID="local-files-screen">
         <AppTopBar
-          contextLabel="Cofre local"
+          contextLabel={topBarContextLabel}
           menuIcon="settings"
           menuOpen={menuOpen}
           onMenuPress={() => setMenuOpen((current) => !current)}
