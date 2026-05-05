@@ -31,6 +31,33 @@ Validacoes:
 - `npm run lint`: aprovado.
 - `npm test`: aprovado com smoke e testes de cripto/range.
 
+## 2026-05-05 - Plano remoto EC2, P2P e conveniados
+
+Status: implementado como contrato local de arquitetura; transmissao real segue bloqueada.
+
+Especialistas acionados:
+
+- Ritchie/Kim: EC2 como servidor de coordenacao `sinalseguro-api`.
+- Ada: contrato mobile para sessao remota durante emergencia ativa.
+- Schneier/Doneda/Myers: bloqueios de compartilhamento, chaves, auditoria, RBAC e fase futura de conveniados.
+
+Decisoes:
+
+- A EC2 existente sera considerada coordenadora de login, dispositivos, diretorio de chaves publicas, envelopes de chave, sinalizacao P2P e auditoria.
+- O transporte preferencial futuro para anjos e P2P com criptografia ponta a ponta; servidor nao deve acessar midia/audio/localizacao em claro.
+- Compartilhamento em tempo real fica limitado ao periodo de emergencia ativa.
+- Conveniados ficam separados em fase futura com contrato, RBAC, MFA, retencao, auditoria e RIPD/DPIA.
+- `EmergencyDeliveryPlan` ganhou `remoteSharing` e pacotes antigos sao normalizados ao listar.
+
+Documentacao:
+
+- `docs/31_ARQUITETURA_COMPARTILHAMENTO_TEMPO_REAL.md`.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado.
+- `npm test`: aprovado.
+
 ## 2026-05-02 - Checkpoint inicial
 
 Status: publicado no GitHub; aguardando instaladores assinados.

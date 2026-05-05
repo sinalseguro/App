@@ -1,6 +1,7 @@
 import * as Crypto from "expo-crypto";
 import { captureForegroundLocation } from "./locationCapture";
 import { listEmergencyPackages, saveEmergencyPackage } from "./emergencyOutbox";
+import { emergencyRemoteSharingPlanner } from "./RemoteSharingPlan";
 import {
   EmergencyExchangeEnvelope,
   EmergencyFinishReason,
@@ -116,20 +117,7 @@ async function createEmergencyPackage({
     },
     location,
     media: mediaPendingManifest,
-    deliveryPlan: {
-      api: {
-        status: "waiting_backend" as const,
-        endpoint: "/alerts" as const
-      },
-      p2p: {
-        status: "waiting_adapter" as const,
-        candidates: ["webrtc", "nearby", "multipeer"] as const
-      },
-      trustedContacts: trustedContactIds.map((contactId) => ({
-        contactId,
-        status: "local_reference_pending_contract" as const
-      }))
-    }
+    deliveryPlan: emergencyRemoteSharingPlanner.buildDeliveryPlan({ trustedContactIds })
   };
 
   const packageRecord = await attachIntegrity(packageWithoutIntegrity);

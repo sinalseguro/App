@@ -1,5 +1,6 @@
 import { deleteSecureRecord, listSecureRecords, saveSecureRecord } from "@/storage/secureJsonStore";
 import { deleteLocalMediaAssets } from "./mediaCapture";
+import { emergencyRemoteSharingPlanner } from "./RemoteSharingPlan";
 import { EmergencyPackage } from "./types";
 
 const EMERGENCY_NAMESPACE = "sinalseguro.emergency-packages.v1";
@@ -26,13 +27,7 @@ function normalizeEmergencyPackage(packageRecord: EmergencyPackage): EmergencyPa
       media: "local_recording_enabled_with_explicit_permission",
       sharing: "blocked_until_contract_backend_audit"
     },
-    deliveryPlan: {
-      ...packageRecord.deliveryPlan,
-      trustedContacts: packageRecord.deliveryPlan.trustedContacts.map((contact) => ({
-        contactId: contact.contactId,
-        status: "local_reference_pending_contract" as const
-      }))
-    }
+    deliveryPlan: emergencyRemoteSharingPlanner.normalizeDeliveryPlan(packageRecord.deliveryPlan)
   };
 }
 

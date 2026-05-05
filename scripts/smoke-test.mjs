@@ -7,6 +7,7 @@ const requiredFiles = [
   "docs/00_PLANO_MOBILE.md",
   "docs/03_TIMELINE.md",
   "docs/30_MIDIA_CRIPTOGRAFADA_CHUNKS.md",
+  "docs/31_ARQUITETURA_COMPARTILHAMENTO_TEMPO_REAL.md",
   "docs/api/openapi.yaml",
   "app/_layout.tsx",
   "app/index.tsx",
@@ -32,6 +33,7 @@ const requiredFiles = [
   "src/features/emergency/packagePresentation.ts",
   "src/features/emergency/emergencyPreferences.ts",
   "src/features/emergency/emergencyRecorder.ts",
+  "src/features/emergency/RemoteSharingPlan.ts",
   "src/features/emergency/emergencyOutbox.ts",
   "src/features/emergency/EmergencyMediaRecorder.tsx",
   "src/features/emergency/mediaCapture.ts",
@@ -72,6 +74,19 @@ if (!emergencyRecorder.includes("locationConsentMode = \"foreground_when_trigger
 
 if (!emergencyRecorder.includes("blocked_until_contract_backend_audit") || emergencyRecorder.includes(legacyDeliveryStatus)) {
   throw new Error("Pacotes locais nao podem prometer entrega ou compartilhamento sem contrato/backend/auditoria.");
+}
+
+const remoteSharingPlan = await readFile("src/features/emergency/RemoteSharingPlan.ts", "utf8");
+
+if (
+  !remoteSharingPlan.includes("planned_ec2_coordination") ||
+  !remoteSharingPlan.includes("key_envelope_distribution") ||
+  !remoteSharingPlan.includes("p2p_signaling") ||
+  !remoteSharingPlan.includes("e2ee_required_before_transport") ||
+  !remoteSharingPlan.includes("share_only_while_emergency_recording_local") ||
+  !remoteSharingPlan.includes("rbac_mfa_audit_retention_required")
+) {
+  throw new Error("Plano remoto precisa modelar EC2, chaves, P2P, E2EE, compartilhamento ativo e conveniados futuros.");
 }
 
 const locationCapture = await readFile("src/features/emergency/locationCapture.ts", "utf8");

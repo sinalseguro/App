@@ -77,6 +77,46 @@ export type MediaCaptureManifest =
 
 export type EmergencyFinishReason = "manual_finish" | "recording_duration_elapsed" | "immediate_package";
 
+export type EmergencyRemoteSharingPlan = {
+  coordinator: {
+    status: "planned_ec2_coordination";
+    service: "sinalseguro-api";
+    responsibilities: readonly [
+      "login",
+      "device_binding",
+      "recipient_registry",
+      "public_key_directory",
+      "key_envelope_distribution",
+      "p2p_signaling",
+      "audit"
+    ];
+  };
+  auth: {
+    status: "login_required_before_remote_sharing";
+    modes: readonly ["oidc_prepared", "device_binding", "mfa_future"];
+  };
+  keyExchange: {
+    status: "waiting_backend_key_registry";
+    mediaKeyPolicy: "one_symmetric_key_per_asset_wrapped_per_recipient";
+    liveSessionKeyPolicy: "ephemeral_session_keys_wrapped_per_authorized_recipient";
+  };
+  realtime: {
+    status: "waiting_realtime_adapter";
+    channels: readonly ["video", "audio", "location"];
+    encryption: "e2ee_required_before_transport";
+    activeOnlyPolicy: "share_only_while_emergency_recording_local";
+  };
+  p2p: {
+    status: "waiting_adapter";
+    candidates: readonly ["webrtc", "nearby", "multipeer"];
+    fallback: "server_store_and_forward_future";
+  };
+  conveniados: {
+    status: "future_contract_required";
+    accessPolicy: "rbac_mfa_audit_retention_required";
+  };
+};
+
 export type EmergencyDeliveryPlan = {
   api: {
     status: "waiting_backend";
@@ -90,6 +130,7 @@ export type EmergencyDeliveryPlan = {
     contactId: string;
     status: "local_reference_pending_contract";
   }>;
+  remoteSharing: EmergencyRemoteSharingPlan;
 };
 
 export type EmergencyPackage = {

@@ -69,3 +69,12 @@ Papel: seguranca, LGPD e QA.
 - Player URI atual fica impedido de abrir ciphertext; liberar reproducao segura so depois de adaptador local de range.
 - Testes aprovados: chunk valido, range parcial, seek, replay, chunk corrompido e chave invalida.
 - Validacoes aprovadas: `npm run typecheck`, `npm run lint`, `npm test`.
+
+## QA/Security - 2026-05-05 - arquitetura EC2/P2P/conveniados
+
+- EC2 entra como coordenadora de login, dispositivos, diretorio de chaves publicas, envelopes de chave, sinalizacao P2P e auditoria.
+- Video, audio e localizacao em tempo real continuam bloqueados ate existir login, aceite do anjo, chave publica valida e canal criptografado.
+- P2P deve ser criptografado ponta a ponta; servidor nao deve receber midia/localizacao em claro.
+- Compartilhamento ao vivo so pode existir durante emergencia ativa.
+- Conveniados ficam fora do fluxo de anjos ate contrato, RBAC, MFA, retencao, auditoria e RIPD/DPIA.
+- Validacoes aprovadas: `npm run typecheck`, `npm test`.

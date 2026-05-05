@@ -60,6 +60,11 @@ Estado ativo em 2026-05-05:
 - o player interno nao abre ciphertext como URI de video; reproducao segura de assets cifrados depende do proximo bloco: adaptador nativo ou servidor HTTP local loopback com suporte a `Range`;
 - testes unitarios cobrem chunk, seek, replay, corrupcao e chave invalida;
 - documento de continuidade: `docs/30_MIDIA_CRIPTOGRAFADA_CHUNKS.md`.
+- Ritchie assumiu a frente tecnica do plano remoto EC2/P2P/conveniados, sob coordenacao de Ze;
+- `RemoteSharingPlan` foi criado para modelar a EC2 como coordenadora de login, dispositivos, chaves publicas, envelopes de chave, sinalizacao P2P e auditoria;
+- `EmergencyDeliveryPlan.remoteSharing` registra video, audio e localizacao em tempo real como canais futuros criptografados ponta a ponta, liberados somente durante emergencia ativa;
+- conveniados permanecem fase futura separada, exigindo contrato, RBAC, MFA, retencao, auditoria e RIPD/DPIA;
+- documento de continuidade: `docs/31_ARQUITETURA_COMPARTILHAMENTO_TEMPO_REAL.md`.
 
 Estado ativo em 2026-05-04:
 
