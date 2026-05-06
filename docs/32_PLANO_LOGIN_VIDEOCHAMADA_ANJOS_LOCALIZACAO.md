@@ -17,6 +17,18 @@ Preparar a evolucao do app para login real, videochamada de emergencia com anjo 
 - Midia local ja tem arquitetura de chunks criptografados em `docs/30_MIDIA_CRIPTOGRAFADA_CHUNKS.md`.
 - Compartilhamento remoto seguro ja tem desenho base em `docs/31_ARQUITETURA_COMPARTILHAMENTO_TEMPO_REAL.md`.
 
+## Checkpoint F0 - 2026-05-05
+
+- Google Auth Platform foi criada no projeto Google Cloud `sinalseguro`.
+- Branding OAuth usa nome `SinalSeguro`, suporte e contato operacional da conta SinalSeguro.
+- Publico esta como `Externo` e status `Testando`.
+- Client OAuth Android `SinalSeguro Android privado` foi criado para package `br.com.sinalseguro.app` e SHA-1 do APK privado atual.
+- Conta SinalSeguro foi adicionada como usuaria de teste.
+- Client ID real ficou somente no Keychain local, em `.env.local` ignorado pelo Git e em `/etc/sinalseguro-api.env` na EC2.
+- JSON baixado pelo console foi removido de `Downloads`.
+- EC2 foi reiniciada e validada com health/readiness, `nginx -t`, `sinalseguro-api`, `cereusia-crm` e hash de `cereusia.conf`.
+- O valor real do client ID nao foi registrado em Git, docs ou memoria.
+
 ## Principios obrigatorios
 
 - Login e identidade nao podem depender de conta do navegador local do operador.

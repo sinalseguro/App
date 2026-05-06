@@ -1045,3 +1045,27 @@ Decisoes:
 Documento operacional:
 
 - `docs/32_PLANO_LOGIN_VIDEOCHAMADA_ANJOS_LOCALIZACAO.md`.
+
+## 2026-05-05 - F0 OIDC Android configurada
+
+Status: Google Auth Platform configurada e backend preparado.
+
+Entregas:
+
+- projeto Google Cloud `sinalseguro` recebeu configuracao Google Auth Platform;
+- publico OAuth ficou `Externo` em modo `Testando`;
+- client OAuth Android criado para `br.com.sinalseguro.app` com SHA-1 do APK privado atual;
+- conta SinalSeguro adicionada como usuaria de teste;
+- client ID real guardado apenas no Keychain local, `.env.local` ignorado pelo Git e `/etc/sinalseguro-api.env` da EC2;
+- JSON baixado pelo Console foi removido de `Downloads`;
+- API reiniciada e validada na EC2.
+
+Validacao:
+
+- `sinalseguro-api`: ativo.
+- `cereusia-crm`: ativo.
+- readiness local EC2: `database=ok`.
+- health por host `api.sinalseguro.com.br`: `ok`.
+- `nginx -t`: aprovado.
+- hash de `/etc/nginx/sites-available/cereusia.conf`: inalterado.
+- `POST /api/auth/google` com token invalido retornou erro controlado, sem falha 500.

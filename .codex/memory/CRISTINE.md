@@ -419,3 +419,14 @@ Proximas acoes atualizadas:
 - Menores e conveniados continuam bloqueados para uso real ate politica ECA Digital/LGPD, contrato, RBAC, MFA, retencao e RIPD/DPIA.
 - Lacunas dos especialistas incorporadas ao plano: OpenAPI unico, modelo de chaves, envelopes, WebRTC/STUN/TURN, outbox remota, RBAC, retencao, testes fim a fim e threat model.
 - Prioridade pratica da proxima fase: fechar `OIDC + devices + chaves publicas + anjos + envelopes + emergency_sessions` antes de midia real, localizacao continua ou P2P critico.
+
+## Memoria viva - 2026-05-05 - F0 OIDC Android configurada
+
+- Google Auth Platform foi criada no projeto `sinalseguro`.
+- Publico OAuth ficou `Externo` em modo `Testando`.
+- Client OAuth Android `SinalSeguro Android privado` foi criado para package `br.com.sinalseguro.app` e SHA-1 do APK privado atual.
+- Conta SinalSeguro foi adicionada como usuaria de teste.
+- Client ID real nao deve ser escrito em docs, memoria, codigo ou Git; ele ficou no Keychain local, em `.env.local` ignorado e em `/etc/sinalseguro-api.env`.
+- O JSON baixado automaticamente pelo Console foi removido de `Downloads`.
+- A EC2 foi reiniciada e validada: API ativa, CRM ativo, readiness `database=ok`, `nginx -t` aprovado e `cereusia.conf` inalterado.
+- `POST /api/auth/google` com token invalido retornou erro controlado, confirmando endpoint ativo sem expor configuracao.
