@@ -1,5 +1,7 @@
 import * as Crypto from "expo-crypto";
 import { deleteSecureRecord, listSecureRecords, saveSecureRecord } from "@/storage/secureJsonStore";
+import { ApiTrustedContact, apiClient } from "@/services/apiClient";
+import { deviceBindingService } from "@/services/deviceBinding";
 import { LocalInvitation } from "./types";
 
 const INVITATION_NAMESPACE = "sinalseguro.invitations.v1";
@@ -27,15 +29,56 @@ export function buildInvitationShareText(invitation: LocalInvitation) {
   ].join("\n");
 }
 
-export async function createLocalInvitation(displayLabel = "Anjo de confianca") {
+function buildInvitationUrls(token: string, inviteUrl?: string) {
+  const encodedInvitationCode = encodeURIComponent(token);
+  return {
+    deepLinkUrl: `sinalseguro://convite?convite=${encodedInvitationCode}`,
+    inviteUrl: inviteUrl ?? `${PUBLIC_INVITE_URL}?convite=${encodedInvitationCode}`
+  };
+}
+
+async function createBackendInvitation(displayLabel: string): Promise<LocalInvitation | null> {
+  const currentSession = await apiClient.getStoredSession();
+  if (!currentSession) return null;
+
+  await deviceBindingService.registerAuthenticatedDevice();
+  const trustedContact = await apiClient.createTrustedContact({ displayLabel });
+  const invitation = await apiClient.createInvitation({
+    displayLabel,
+    trustedContactId: trustedContact.id
+  });
+
+  if (!invitation.token) {
+    throw new Error("A API nao retornou token claro para compartilhamento unico.");
+  }
+
+  const urls = buildInvitationUrls(invitation.token, invitation.invite_url);
+  return {
+    id: invitation.id,
+    backendInvitationId: invitation.id,
+    trustedContactId: trustedContact.id,
+    token: invitation.token,
+    displayLabel: invitation.display_label,
+    inviteUrl: urls.inviteUrl,
+    deepLinkUrl: urls.deepLinkUrl,
+    createdAt: invitation.created_at,
+    expiresAt: invitation.expires_at,
+    singleUsePolicy: "backend_single_use_enforced",
+    status: "pendente",
+    syncStatus: "backend_validated"
+  };
+}
+
+async function createLocalPreInvitation(displayLabel: string) {
   const now = new Date();
   const invitationCode = await createOpaqueToken();
+  const urls = buildInvitationUrls(invitationCode);
   const invitation: LocalInvitation = {
     id: Crypto.randomUUID(),
     token: invitationCode,
     displayLabel,
-    inviteUrl: `${PUBLIC_INVITE_URL}?convite=${encodeURIComponent(invitationCode)}`,
-    deepLinkUrl: `sinalseguro://convite?convite=${encodeURIComponent(invitationCode)}`,
+    inviteUrl: urls.inviteUrl,
+    deepLinkUrl: urls.deepLinkUrl,
     createdAt: now.toISOString(),
     expiresAt: addDays(now, 7).toISOString(),
     singleUsePolicy: "backend_validation_required",
@@ -43,8 +86,23 @@ export async function createLocalInvitation(displayLabel = "Anjo de confianca") 
     syncStatus: "local_pre_invite"
   };
 
+  return invitation;
+}
+
+export async function createLocalInvitation(displayLabel = "Anjo de confianca") {
+  const invitation = (await createBackendInvitation(displayLabel)) ?? (await createLocalPreInvitation(displayLabel));
   await saveSecureRecord(INVITATION_NAMESPACE, invitation);
   return invitation;
+}
+
+export async function acceptBackendInvitation(token: string, displayLabel?: string): Promise<ApiTrustedContact> {
+  const currentSession = await apiClient.getStoredSession();
+  if (!currentSession) {
+    throw new Error("Entre com sua propria conta SinalSeguro antes de aceitar o convite.");
+  }
+
+  await deviceBindingService.registerAuthenticatedDevice();
+  return apiClient.acceptInvitation({ displayLabel, token });
 }
 
 export async function listLocalInvitations() {

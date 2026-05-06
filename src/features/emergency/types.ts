@@ -51,6 +51,10 @@ export type EncryptedVideoEnvelope = {
   encryptedSizeBytes: number;
   codec: "video/mp4";
   durationMs?: number | null;
+  plaintextCleanup?: {
+    attemptedAt: string;
+    status: "deleted" | "cleanup_pending";
+  };
   recipientKeyEnvelopes: [];
   playbackAdapter: "range_data_source_required";
 };

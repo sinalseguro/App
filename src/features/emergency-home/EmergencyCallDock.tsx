@@ -48,10 +48,7 @@ const styles = StyleSheet.create({
   },
   callButton: {
     alignItems: "center",
-    backgroundColor: theme.colors.surface,
-    borderColor: theme.colors.border,
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
+    ...theme.buttonSurface,
     flex: 1,
     gap: theme.spacing.xs,
     justifyContent: "center",
@@ -60,7 +57,7 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing.sm
   },
   callButtonPressed: {
-    backgroundColor: theme.colors.surfaceMuted
+    ...theme.buttonSurfacePressed
   },
   callIcon: {
     alignItems: "center",

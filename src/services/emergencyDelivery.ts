@@ -1,5 +1,6 @@
 import { EmergencyPackage } from "@/features/emergency/types";
 import { ApiEmergencySession, ApiRequestError, apiClient, apiConfig } from "@/services/apiClient";
+import { deviceBindingService } from "@/services/deviceBinding";
 
 export type EmergencySyncResult =
   | {
@@ -68,9 +69,10 @@ export async function syncEmergencySessionWithApi(
   }
 
   try {
+    const registeredDeviceId = deviceId ?? (await deviceBindingService.getRegisteredApiDeviceId());
     const remoteSession = await apiClient.createEmergencySession({
       clientAlertId: packageRecord.clientAlertId,
-      deviceId,
+      deviceId: registeredDeviceId,
       idempotencyKey: packageRecord.idempotencyKey,
       kind: packageRecord.kind,
       locationAccuracyMeters: packageAccuracyMeters(packageRecord),

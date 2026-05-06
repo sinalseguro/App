@@ -60,6 +60,57 @@ const DeviceSchema = z.object({
   updated_at: z.string()
 });
 
+const ConsentScopeSchema = z.enum([
+  "login",
+  "terms",
+  "privacy",
+  "location",
+  "alerts",
+  "media_homologation",
+  "emergency_data_sharing",
+  "receiver_encrypted_save"
+]);
+
+const ConsentRecordSchema = z.object({
+  id: z.string(),
+  device: z.string().nullable().optional(),
+  scope: ConsentScopeSchema,
+  version: z.string(),
+  accepted: z.boolean(),
+  accepted_at: z.string(),
+  evidence: z.record(z.string(), z.unknown()).optional(),
+  created_at: z.string()
+});
+
+const TrustedContactSchema = z.object({
+  id: z.string(),
+  display_label: z.string(),
+  status: z.string(),
+  can_receive_alerts: z.boolean(),
+  can_receive_media: z.boolean(),
+  can_receive_location: z.boolean(),
+  accepted_at: z.string().nullable().optional(),
+  revoked_at: z.string().nullable().optional(),
+  created_at: z.string(),
+  updated_at: z.string()
+});
+
+const TrustedContactListSchema = z.array(TrustedContactSchema);
+
+const InvitationSchema = z.object({
+  id: z.string(),
+  trusted_contact: z.string(),
+  display_label: z.string(),
+  status: z.string(),
+  expires_at: z.string(),
+  accepted_at: z.string().nullable().optional(),
+  created_at: z.string(),
+  token: z.string().optional(),
+  invite_url: z.string().optional()
+});
+
+const InvitationListSchema = z.array(InvitationSchema);
+
 const EmergencySessionSchema = z.object({
   id: z.string(),
   device: z.string().nullable().optional(),
@@ -104,6 +155,10 @@ const P2PSignalSchema = z.object({
 export type ApiUser = z.infer<typeof ApiUserSchema>;
 export type ApiSession = z.infer<typeof ApiSessionSchema>;
 export type ApiDevice = z.infer<typeof DeviceSchema>;
+export type ApiConsentScope = z.infer<typeof ConsentScopeSchema>;
+export type ApiConsentRecord = z.infer<typeof ConsentRecordSchema>;
+export type ApiTrustedContact = z.infer<typeof TrustedContactSchema>;
+export type ApiInvitation = z.infer<typeof InvitationSchema>;
 export type ApiEmergencySession = z.infer<typeof EmergencySessionSchema>;
 export type ApiKeyEnvelope = z.infer<typeof KeyEnvelopeSchema>;
 export type ApiP2PSignal = z.infer<typeof P2PSignalSchema>;
@@ -114,6 +169,32 @@ export type RegisterDeviceInput = {
   platform?: "android" | "ios" | "web";
   publicKey?: string;
   pushToken?: string;
+};
+
+export type CreateConsentRecordInput = {
+  accepted: boolean;
+  acceptedAt?: string;
+  deviceId?: string | null;
+  evidence?: Record<string, unknown>;
+  scope: ApiConsentScope;
+  version: string;
+};
+
+export type CreateTrustedContactInput = {
+  canReceiveAlerts?: boolean;
+  canReceiveLocation?: boolean;
+  canReceiveMedia?: boolean;
+  displayLabel: string;
+};
+
+export type CreateInvitationInput = {
+  displayLabel: string;
+  trustedContactId: string;
+};
+
+export type AcceptInvitationInput = {
+  displayLabel?: string;
+  token: string;
 };
 
 export type CreateEmergencySessionInput = {
@@ -280,6 +361,82 @@ export class SinalSeguroApiClient {
         platform: input.platform ?? currentPlatform(),
         public_key: input.publicKey,
         push_token: input.pushToken
+      },
+      method: "POST"
+    });
+  }
+
+  async createConsentRecord(input: CreateConsentRecordInput) {
+    return this.request("/consents/", ConsentRecordSchema, {
+      authenticated: true,
+      body: {
+        accepted: input.accepted,
+        accepted_at: toApiDateTime(input.acceptedAt),
+        device: input.deviceId ?? null,
+        evidence: input.evidence ?? {},
+        scope: input.scope,
+        version: input.version
+      },
+      method: "POST"
+    });
+  }
+
+  async createTrustedContact(input: CreateTrustedContactInput) {
+    return this.request("/trusted-contacts/", TrustedContactSchema, {
+      authenticated: true,
+      body: {
+        can_receive_alerts: input.canReceiveAlerts ?? true,
+        can_receive_location: input.canReceiveLocation ?? true,
+        can_receive_media: input.canReceiveMedia ?? false,
+        display_label: input.displayLabel
+      },
+      method: "POST"
+    });
+  }
+
+  async listTrustedContacts() {
+    return this.request("/trusted-contacts/", TrustedContactListSchema, {
+      authenticated: true
+    });
+  }
+
+  async revokeTrustedContact(trustedContactId: string) {
+    return this.request(`/trusted-contacts/${trustedContactId}/revoke/`, TrustedContactSchema, {
+      authenticated: true,
+      method: "POST"
+    });
+  }
+
+  async createInvitation(input: CreateInvitationInput) {
+    return this.request("/invitations/", InvitationSchema, {
+      authenticated: true,
+      body: {
+        display_label: input.displayLabel,
+        trusted_contact: input.trustedContactId
+      },
+      method: "POST"
+    });
+  }
+
+  async listInvitations() {
+    return this.request("/invitations/", InvitationListSchema, {
+      authenticated: true
+    });
+  }
+
+  async revokeInvitation(invitationId: string) {
+    return this.request(`/invitations/${invitationId}/revoke/`, InvitationSchema, {
+      authenticated: true,
+      method: "POST"
+    });
+  }
+
+  async acceptInvitation(input: AcceptInvitationInput) {
+    return this.request("/invitations/accept", TrustedContactSchema, {
+      authenticated: true,
+      body: {
+        display_label: input.displayLabel,
+        token: input.token
       },
       method: "POST"
     });

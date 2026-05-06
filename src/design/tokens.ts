@@ -50,6 +50,27 @@ export const shadow = {
   elevation: 3
 };
 
+export const buttonShadow = {
+  boxShadow: "0 4px 10px rgba(18, 10, 32, 0.12)",
+  shadowColor: colors.splashBackground,
+  shadowOpacity: 0.12,
+  shadowRadius: 10,
+  shadowOffset: { width: 0, height: 4 },
+  elevation: 3
+};
+
+export const buttonSurface = {
+  backgroundColor: "rgba(236, 64, 122, 0.12)",
+  borderColor: "rgba(236, 64, 122, 0.42)",
+  borderRadius: radius.md,
+  borderWidth: 1
+};
+
+export const buttonSurfacePressed = {
+  backgroundColor: "rgba(236, 64, 122, 0.18)",
+  borderColor: "rgba(236, 64, 122, 0.58)"
+};
+
 export const motion = {
   fastMs: 140,
   normalMs: 220,

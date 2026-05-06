@@ -1,5 +1,6 @@
 import { ReactNode, useCallback, useState } from "react";
 import { router, useFocusEffect } from "expo-router";
+import { useKeepAwake } from "expo-keep-awake";
 import { Linking, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { LockKeyhole, PhoneCall } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -40,12 +41,23 @@ type ProtectedRouteRequest = {
   route: EmergencyHomeRoute;
 };
 
-function CallNumberHero({ target }: { target: EmergencyCallTarget }) {
+function EmergencyRecordingWakeLock() {
+  useKeepAwake("sinalseguro.emergency-recording", { suppressDeactivateWarnings: true });
+  return null;
+}
+
+function CallNumberHero({ onPress, target }: { onPress: () => void; target: EmergencyCallTarget }) {
   return (
-    <View style={styles.callNumberPanel}>
+    <Pressable
+      accessibilityHint={`Liga para ${target.number}`}
+      accessibilityLabel={`${target.number} ${target.description}`}
+      accessibilityRole="button"
+      onPress={onPress}
+      style={({ pressed }) => [styles.callNumberPanel, pressed && styles.callNumberPanelPressed]}
+    >
       <Text style={styles.callNumber}>{target.number}</Text>
       <Text style={styles.callService}>{target.description}</Text>
-    </View>
+    </Pressable>
   );
 }
 
@@ -57,6 +69,8 @@ export default function HomeScreen() {
   const [finishCodeInput, setFinishCodeInput] = useState("");
   const [finishConfirmationOpen, setFinishConfirmationOpen] = useState(false);
   const [finishError, setFinishError] = useState("");
+  const [finishInProgress, setFinishInProgress] = useState(false);
+  const [stopRecordingRequestSerial, setStopRecordingRequestSerial] = useState(0);
   const [protectedRouteRequest, setProtectedRouteRequest] = useState<ProtectedRouteRequest | null>(null);
   const [protectedRouteCodeInput, setProtectedRouteCodeInput] = useState("");
   const [protectedRouteError, setProtectedRouteError] = useState("");
@@ -95,18 +109,20 @@ export default function HomeScreen() {
   }
 
   function confirmEmergencyCall(target: EmergencyCallTarget) {
+    const callTarget = () => {
+      void Linking.openURL(target.callUri);
+    };
+
     setDialog({
       title: `Ligar para ${target.description}?`,
       message: "",
-      children: <CallNumberHero target={target} />,
+      children: <CallNumberHero target={target} onPress={callTarget} />,
       icon: <PhoneCall size={18} color={theme.colors.primary} />,
       actions: [
         { label: "Cancelar", tone: "muted" },
         {
           label: "Ligar",
-          onPress: () => {
-            void Linking.openURL(target.callUri);
-          }
+          onPress: callTarget
         }
       ]
     });
@@ -196,7 +212,7 @@ export default function HomeScreen() {
   }
 
   function requestFinishActiveCall() {
-    if (!activePackageId) return;
+    if (!activePackageId || finishInProgress) return;
 
     setFinishError("");
     setFinishCodeInput("");
@@ -206,39 +222,32 @@ export default function HomeScreen() {
       return;
     }
 
-    setDialog({
-      title: "Encerrar chamado ativo?",
-      message: "O pacote sera encerrado e preservado no cofre local deste dispositivo. Nenhuma evidencia sera apagada.",
-      icon: <LockKeyhole size={18} color={theme.colors.primary} />,
-      actions: [
-        { label: "Cancelar", tone: "muted" },
-        {
-          label: "Encerrar",
-          tone: "danger",
-          onPress: () => {
-            void handleFinishActiveCall();
-          }
-        }
-      ]
-    });
+    void handleFinishActiveCall();
   }
 
   async function handleFinishActiveCall() {
-    if (!activePackageId) return;
+    if (!activePackageId || finishInProgress) return;
 
-    setRecordingStatus("Finalizando chamado...");
-    const result = await finishEmergencyPackage(activePackageId, "manual_finish");
-    await refreshOutboxCount();
+    setFinishInProgress(true);
+    setStopRecordingRequestSerial((current) => current + 1);
+    setRecordingStatus("Encerrando gravacao local e preservando arquivo seguro...");
 
-    if (!result) {
-      setRecordingStatus("Nenhum chamado ativo encontrado.");
-      return;
+    try {
+      const result = await finishEmergencyPackage(activePackageId, "manual_finish");
+      await refreshOutboxCount();
+
+      if (!result) {
+        setRecordingStatus("Nenhum chamado ativo encontrado.");
+        return;
+      }
+
+      setRecordingStatus("Chamado encerrado. O video sera anexado ao cofre assim que a criptografia local terminar.");
+      setFinishConfirmationOpen(false);
+      setFinishCodeInput("");
+      setFinishError("");
+    } finally {
+      setFinishInProgress(false);
     }
-
-    setRecordingStatus("Chamado encerrado e preservado no cofre local.");
-    setFinishConfirmationOpen(false);
-    setFinishCodeInput("");
-    setFinishError("");
   }
 
   async function confirmFinishWithCode() {
@@ -281,6 +290,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      {activePackageId || finishInProgress ? <EmergencyRecordingWakeLock /> : null}
       <View style={styles.homeShell} testID="home-emergency-screen">
         <EmergencyTopBar
           active={Boolean(activePackageId)}
@@ -305,12 +315,13 @@ export default function HomeScreen() {
             activePackageId={activePackageId}
             preferences={preferences}
             onMediaAttached={refreshOutboxCount}
+            stopRequestSerial={stopRecordingRequestSerial}
             onStatusChange={setRecordingStatus}
           />
           <View style={styles.panicStage}>
             <PanicButton
               active={Boolean(activePackageId)}
-              label={activePackageId ? "Segurar para encerrar" : "Segurar para acionar"}
+              label={activePackageId ? (finishInProgress ? "Encerrando gravacao" : "Segurar para encerrar") : "Segurar para acionar"}
               holdMs={preferences.inAppHoldMs}
               onTrigger={handlePanicTrigger}
             />
@@ -468,13 +479,14 @@ const styles = StyleSheet.create({
   },
   callNumberPanel: {
     alignItems: "center",
-    backgroundColor: theme.colors.surfaceMuted,
-    borderColor: theme.colors.border,
+    ...theme.buttonSurface,
     borderRadius: theme.radius.lg,
-    borderWidth: 1,
     gap: theme.spacing.xs,
     paddingHorizontal: theme.spacing.lg,
     paddingVertical: theme.spacing.md
+  },
+  callNumberPanelPressed: {
+    ...theme.buttonSurfacePressed
   },
   callService: {
     color: theme.colors.text,

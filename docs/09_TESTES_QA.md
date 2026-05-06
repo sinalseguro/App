@@ -97,3 +97,24 @@ Checklist complementar de Myers:
 - confirmar que `Policia`, `Bombeiros` e `SAMU` aparecem por padrao e nao sao ocultados por preferencia local;
 - confirmar que fallback web do cofre usa memoria volatil e nao `sessionStorage`;
 - confirmar que a documentacao de splash corresponde ao `app.json` atual.
+
+## Checkpoint 2026-05-06 - Midia criptografada C2
+
+Checklist executado:
+
+- rodar `npm run typecheck`, `npm test`, `npm run lint` e `npm run build:android:private`;
+- instalar o APK privado no Android fisico conectado por ADB;
+- acionar SOS por gesto longo e confirmar estado ativo sem travamento;
+- encerrar SOS por gesto longo e aguardar preservacao criptografada;
+- confirmar asset cifrado com `manifest.sseg`, chunks `.sseg` e `thumbnail.sseg`;
+- confirmar por ADB absoluto que `cache/Camera` fica vazio apos preservacao;
+- confirmar por ADB absoluto que `cache/VideoThumbnails` fica vazio apos derivacao da thumbnail;
+- confirmar que nao ha `.mp4` claro nos caches nativos apos preservacao verificada;
+- salvar screenshot/logcat/inventario em `docs/evidencias/android/2026-05-06-capture-cleanup-thumbnail/`.
+
+Resultado:
+
+- aprovado no Android fisico `192.168.0.4:5555`;
+- APK SHA-256 `024150800908109199f84e1be2ef5bd9c72ae1f6986ecee0a8269f2c44ca1323`;
+- asset validado `7c967904-589c-452c-85fc-8203aee83be9`, com `manifest.sseg`, 22 chunks e `thumbnail.sseg`;
+- `cache/Camera` e `cache/VideoThumbnails` vazios no inventario final.

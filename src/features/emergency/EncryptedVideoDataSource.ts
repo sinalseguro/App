@@ -14,6 +14,12 @@ export type EncryptedVideoRangeRequest = {
   start: number;
   length: number;
   readSealedChunk: EncryptedVideoChunkReader;
+  verifyPlaintextHash?: boolean;
+};
+
+export type EncryptedVideoRangeStreamRequest = EncryptedVideoRangeRequest & {
+  abortSignal?: AbortSignal;
+  onChunk: (bytes: Uint8Array, context: { chunkIndex: number; start: number; endExclusive: number }) => Promise<void> | void;
 };
 
 export class EncryptedVideoDataSource {
@@ -23,7 +29,13 @@ export class EncryptedVideoDataSource {
     this.cryptoService = cryptoService;
   }
 
-  async readChunk(key: Uint8Array, manifest: EncryptedVideoManifest, chunkIndex: number, readSealedChunk: EncryptedVideoChunkReader) {
+  async readChunk(
+    key: Uint8Array,
+    manifest: EncryptedVideoManifest,
+    chunkIndex: number,
+    readSealedChunk: EncryptedVideoChunkReader,
+    options: { verifyPlaintextHash?: boolean } = {}
+  ) {
     const chunk = manifest.chunks[chunkIndex];
     if (!chunk) {
       throw new Error("Chunk de video fora do manifesto.");
@@ -41,14 +53,14 @@ export class EncryptedVideoDataSource {
       encryptedVideoChunkAad(manifest.assetId, chunk)
     );
 
-    if (sha256Hex(plaintextBytes) !== chunk.plaintextSha256) {
+    if (options.verifyPlaintextHash !== false && sha256Hex(plaintextBytes) !== chunk.plaintextSha256) {
       throw new Error("Chunk de video falhou na verificacao de integridade.");
     }
 
     return plaintextBytes;
   }
 
-  async readRange({ key, manifest, start, length, readSealedChunk }: EncryptedVideoRangeRequest) {
+  async readRange({ key, manifest, start, length, readSealedChunk, verifyPlaintextHash = true }: EncryptedVideoRangeRequest) {
     if (start < 0 || length < 0) {
       throw new Error("Faixa de video invalida.");
     }
@@ -66,12 +78,61 @@ export class EncryptedVideoDataSource {
       if (chunkEnd <= start) continue;
       if (chunkStart >= endExclusive) break;
 
-      const plaintextChunk = await this.readChunk(key, manifest, chunk.index, readSealedChunk);
+      const plaintextChunk = await this.readChunk(key, manifest, chunk.index, readSealedChunk, {
+        verifyPlaintextHash
+      });
       const sliceStart = Math.max(0, start - chunkStart);
       const sliceEnd = Math.min(plaintextChunk.length, endExclusive - chunkStart);
       rangeParts.push(plaintextChunk.subarray(sliceStart, sliceEnd));
     }
 
     return concatBytes(rangeParts);
+  }
+
+  async streamRange({
+    key,
+    manifest,
+    start,
+    length,
+    readSealedChunk,
+    verifyPlaintextHash = true,
+    abortSignal,
+    onChunk
+  }: EncryptedVideoRangeStreamRequest) {
+    if (start < 0 || length < 0) {
+      throw new Error("Faixa de video invalida.");
+    }
+
+    if (length === 0 || start >= manifest.plaintextSizeBytes) {
+      return;
+    }
+
+    const endExclusive = Math.min(start + length, manifest.plaintextSizeBytes);
+
+    for (const chunk of manifest.chunks) {
+      throwIfAborted(abortSignal);
+      const chunkStart = chunk.plaintextOffset;
+      const chunkEnd = chunk.plaintextOffset + chunk.plaintextSizeBytes;
+      if (chunkEnd <= start) continue;
+      if (chunkStart >= endExclusive) break;
+
+      const plaintextChunk = await this.readChunk(key, manifest, chunk.index, readSealedChunk, {
+        verifyPlaintextHash
+      });
+      throwIfAborted(abortSignal);
+      const sliceStart = Math.max(0, start - chunkStart);
+      const sliceEnd = Math.min(plaintextChunk.length, endExclusive - chunkStart);
+      await onChunk(plaintextChunk.subarray(sliceStart, sliceEnd), {
+        chunkIndex: chunk.index,
+        start: chunkStart + sliceStart,
+        endExclusive: chunkStart + sliceEnd
+      });
+    }
+  }
+}
+
+function throwIfAborted(abortSignal?: AbortSignal) {
+  if (abortSignal?.aborted) {
+    throw new Error("Leitura de video cancelada.");
   }
 }

@@ -19,6 +19,28 @@ export type EncryptedVideoChunkManifest = {
   ciphertextSha256: string;
 };
 
+export type EncryptedVideoThumbnailManifest =
+  | {
+      status: "pending_secure_derivation";
+      reason: string;
+    }
+  | {
+      status: "encrypted_image_v1";
+      thumbnailUri: string;
+      mimeType: "image/jpeg";
+      width: number;
+      height: number;
+      capturedAtMs: number;
+      plaintextSizeBytes: number;
+      sealedSizeBytes: number;
+      ciphertextSizeBytes: number;
+      nonce: string;
+      tag: string;
+      plaintextSha256: string;
+      ciphertextSha256: string;
+      generatedAt: string;
+    };
+
 export type EncryptedVideoManifest = {
   protocolVersion: typeof encryptedVideoProtocolVersion;
   algorithm: typeof encryptedVideoAlgorithm;
@@ -38,10 +60,7 @@ export type EncryptedVideoManifest = {
   completedAt: string;
   cameraMode: ActualCameraMode;
   requestedCameraMode?: RequestedCameraMode;
-  thumbnail: {
-    status: "pending_secure_derivation";
-    reason: string;
-  };
+  thumbnail: EncryptedVideoThumbnailManifest;
   recipientKeyEnvelopes: [];
   chunks: EncryptedVideoChunkManifest[];
 };
@@ -64,6 +83,15 @@ export function encryptedVideoManifestAad(assetId: string, packageId: string) {
   return {
     protocolVersion: encryptedVideoProtocolVersion,
     scope: "manifest",
+    assetId,
+    packageId
+  };
+}
+
+export function encryptedVideoThumbnailAad(assetId: string, packageId: string) {
+  return {
+    protocolVersion: encryptedVideoProtocolVersion,
+    scope: "thumbnail",
     assetId,
     packageId
   };

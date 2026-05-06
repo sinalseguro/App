@@ -13,6 +13,7 @@ type EmergencyMediaRecorderProps = {
   activePackageId: string | null;
   preferences: EmergencyPreferences;
   onMediaAttached?: () => void;
+  stopRequestSerial?: number;
   onStatusChange?: (status: string) => void;
 };
 
@@ -22,15 +23,27 @@ function cameraModeLabel(mode: ActualCameraMode) {
   return mode === "front" ? "frontal" : "traseira";
 }
 
+function getRuntimeCameraMode(requestedCameraMode: EmergencyPreferences["localVideoCapture"]["cameraMode"]) {
+  if (Platform.OS === "android" && requestedCameraMode === "both") {
+    return "front";
+  }
+
+  return requestedCameraMode;
+}
+
 export function EmergencyMediaRecorder({
   activePackageId,
   preferences,
   onMediaAttached,
+  stopRequestSerial = 0,
   onStatusChange
 }: EmergencyMediaRecorderProps) {
   const frontCameraRef = useRef<CameraView | null>(null);
   const backCameraRef = useRef<CameraView | null>(null);
   const recordingRef = useRef(false);
+  const onMediaAttachedRef = useRef(onMediaAttached);
+  const onStatusChangeRef = useRef(onStatusChange);
+  const handledStopRequestSerialRef = useRef(0);
   const [cameraReadyByMode, setCameraReadyByMode] = useState<CameraReadyByMode>(emptyCameraReadyState);
   const [dualFallbackUnlocked, setDualFallbackUnlocked] = useState(false);
   const [forcedSingleCameraMode, setForcedSingleCameraMode] = useState<ActualCameraMode | null>(null);
@@ -38,36 +51,61 @@ export function EmergencyMediaRecorder({
 
   const mediaEnabled = Boolean(activePackageId && preferences.localVideoCapture.requestOnSos);
   const requestedCameraMode = preferences.localVideoCapture.cameraMode;
+  const runtimeCameraMode = getRuntimeCameraMode(requestedCameraMode);
   const activeCameraModes = useMemo<ActualCameraMode[]>(
     () =>
-      requestedCameraMode === "both"
+      runtimeCameraMode === "both"
         ? forcedSingleCameraMode
           ? [forcedSingleCameraMode]
           : ["front", "back"]
-        : [requestedCameraMode === "back" ? "back" : "front"],
-    [forcedSingleCameraMode, requestedCameraMode]
+        : [runtimeCameraMode === "back" ? "back" : "front"],
+    [forcedSingleCameraMode, runtimeCameraMode]
   );
   const allRequestedCamerasReady = activeCameraModes.every((mode) => cameraReadyByMode[mode]);
   const anyRequestedCameraReady = activeCameraModes.some((mode) => cameraReadyByMode[mode]);
   const canStartRecording =
-    requestedCameraMode === "both"
+    runtimeCameraMode === "both"
       ? allRequestedCamerasReady || (dualFallbackUnlocked && anyRequestedCameraReady)
       : allRequestedCamerasReady;
   const modeLabel =
-    requestedCameraMode === "both" && !forcedSingleCameraMode
+    requestedCameraMode === "both" && runtimeCameraMode !== "both"
+      ? `${cameraModeLabel(activeCameraModes[0])} (modo leve)`
+      : runtimeCameraMode === "both" && !forcedSingleCameraMode
       ? "frontal + traseira"
-      : `${cameraModeLabel(activeCameraModes[0])}${requestedCameraMode === "both" ? " (fallback)" : ""}`;
+      : `${cameraModeLabel(activeCameraModes[0])}${runtimeCameraMode === "both" ? " (fallback)" : ""}`;
+
+  function stopActiveRecording() {
+    if (!recordingRef.current) return;
+
+    onStatusChangeRef.current?.("Encerrando gravacao local e preparando arquivo seguro.");
+    void frontCameraRef.current?.stopRecording();
+    void backCameraRef.current?.stopRecording();
+  }
+
+  useEffect(() => {
+    onMediaAttachedRef.current = onMediaAttached;
+    onStatusChangeRef.current = onStatusChange;
+  }, [onMediaAttached, onStatusChange]);
 
   useEffect(() => {
     setCameraReadyByMode(emptyCameraReadyState);
     setDualFallbackUnlocked(false);
     setForcedSingleCameraMode(null);
-  }, [activePackageId, requestedCameraMode]);
+  }, [activePackageId, runtimeCameraMode]);
+
+  useEffect(() => {
+    if (stopRequestSerial <= 0 || handledStopRequestSerialRef.current === stopRequestSerial) {
+      return;
+    }
+
+    handledStopRequestSerialRef.current = stopRequestSerial;
+    stopActiveRecording();
+  }, [stopRequestSerial]);
 
   useEffect(() => {
     if (
       !mediaEnabled ||
-      requestedCameraMode !== "both" ||
+      runtimeCameraMode !== "both" ||
       mediaPermissionStatus !== "granted" ||
       forcedSingleCameraMode ||
       allRequestedCamerasReady
@@ -84,7 +122,7 @@ export function EmergencyMediaRecorder({
       setCameraReadyByMode(emptyCameraReadyState);
       setDualFallbackUnlocked(true);
       setForcedSingleCameraMode("front");
-      onStatusChange?.("Camera dupla nao ficou pronta; tentando camera frontal como fallback local.");
+      onStatusChangeRef.current?.("Camera dupla nao ficou pronta; tentando camera frontal como fallback local.");
     }, 1600);
     return () => clearTimeout(timeout);
   }, [
@@ -93,14 +131,13 @@ export function EmergencyMediaRecorder({
     forcedSingleCameraMode,
     mediaEnabled,
     mediaPermissionStatus,
-    onStatusChange,
-    requestedCameraMode
+    runtimeCameraMode
   ]);
 
   useEffect(() => {
     if (
       !mediaEnabled ||
-      requestedCameraMode !== "both" ||
+      runtimeCameraMode !== "both" ||
       forcedSingleCameraMode !== "front" ||
       mediaPermissionStatus !== "granted" ||
       cameraReadyByMode.front
@@ -111,7 +148,7 @@ export function EmergencyMediaRecorder({
     const timeout = setTimeout(() => {
       setCameraReadyByMode(emptyCameraReadyState);
       setForcedSingleCameraMode("back");
-      onStatusChange?.("Fallback frontal nao ficou pronto; tentando camera traseira.");
+      onStatusChangeRef.current?.("Fallback frontal nao ficou pronto; tentando camera traseira.");
     }, 2200);
     return () => clearTimeout(timeout);
   }, [
@@ -119,8 +156,7 @@ export function EmergencyMediaRecorder({
     forcedSingleCameraMode,
     mediaEnabled,
     mediaPermissionStatus,
-    onStatusChange,
-    requestedCameraMode
+    runtimeCameraMode
   ]);
 
   useEffect(() => {
@@ -150,7 +186,7 @@ export function EmergencyMediaRecorder({
 
       if (!cameraAuthorization.granted || !microphoneAuthorization.granted) {
         setMediaPermissionStatus("denied");
-        onStatusChange?.("Chamado ativo sem video: camera ou microfone nao autorizados neste dispositivo.");
+        onStatusChangeRef.current?.("Chamado ativo sem video: camera ou microfone nao autorizados neste dispositivo.");
         return;
       }
 
@@ -162,7 +198,7 @@ export function EmergencyMediaRecorder({
     return () => {
       cancelled = true;
     };
-  }, [mediaEnabled, onStatusChange]);
+  }, [mediaEnabled]);
 
   useEffect(() => {
     if (
@@ -197,8 +233,10 @@ export function EmergencyMediaRecorder({
 
       recordingRef.current = true;
       const startedAt = new Date().toISOString();
-      onStatusChange?.(
-        requestedCameraMode === "both" && availableCameras.length === 2
+      onStatusChangeRef.current?.(
+        requestedCameraMode === "both" && runtimeCameraMode !== "both"
+          ? "Gravacao local iniciada em modo leve no Android para evitar travamento."
+          : runtimeCameraMode === "both" && availableCameras.length === 2
           ? "Gravacao local iniciada com camera frontal e traseira. O aparelho precisa sustentar captura dupla."
           : `Gravacao local de video e audio iniciada pela camera ${cameraModeLabel(availableCameras[0].mode)}.`
       );
@@ -231,22 +269,24 @@ export function EmergencyMediaRecorder({
         if (attachedAssets.length > 0) {
           const cameraSummary = attachedAssets.map((asset) => cameraModeLabel(asset.cameraMode)).join(" + ");
           const statusMessage =
-            requestedCameraMode === "both" && attachedAssets.length < 2
+            requestedCameraMode === "both" && runtimeCameraMode !== "both"
+              ? `Captura em modo leve no Android; video ${cameraSummary} preservado no cofre.`
+              : runtimeCameraMode === "both" && attachedAssets.length < 2
               ? `Captura dupla limitada pelo aparelho; video ${cameraSummary} preservado no cofre.`
               : `Video local ${cameraSummary} preservado no cofre. Abra o player para revisar.`;
           if (!ignoreStatusUpdates) {
-            onStatusChange?.(statusMessage);
+            onStatusChangeRef.current?.(statusMessage);
           }
-          onMediaAttached?.();
+          onMediaAttachedRef.current?.();
           return;
         }
 
         if (!ignoreStatusUpdates) {
-          onStatusChange?.("Nenhum video foi retornado pelas cameras. O pacote segue preservado com metadados.");
+          onStatusChangeRef.current?.("Nenhum video foi retornado pelas cameras. O pacote segue preservado com metadados.");
         }
       } catch {
         if (!ignoreStatusUpdates) {
-          onStatusChange?.("Gravacao local interrompida. O pacote segue preservado com metadados e localizacao.");
+          onStatusChangeRef.current?.("Gravacao local interrompida. O pacote segue preservado com metadados e localizacao.");
         }
       } finally {
         recordingRef.current = false;
@@ -258,8 +298,7 @@ export function EmergencyMediaRecorder({
     return () => {
       ignoreStatusUpdates = true;
       if (recordingRef.current) {
-        void frontCameraRef.current?.stopRecording();
-        void backCameraRef.current?.stopRecording();
+        stopActiveRecording();
       }
     };
   }, [
@@ -268,10 +307,9 @@ export function EmergencyMediaRecorder({
     canStartRecording,
     mediaEnabled,
     mediaPermissionStatus,
-    onMediaAttached,
-    onStatusChange,
     preferences.defaultDurationSeconds,
-    requestedCameraMode
+    requestedCameraMode,
+    runtimeCameraMode
   ]);
 
   if (!mediaEnabled || Platform.OS === "web" || mediaPermissionStatus !== "granted") return null;
@@ -299,6 +337,8 @@ export function EmergencyMediaRecorder({
                 [mode]: true
               }))
             }
+            videoBitrate={1_200_000}
+            videoQuality="480p"
             style={[styles.cameraPreview, activeCameraModes.length > 1 && styles.cameraPreviewDual]}
           />
         ))}

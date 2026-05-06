@@ -15,20 +15,24 @@ type TraceConfig = {
 const brandSymbol = require("../../assets/brand/sinalseguro-symbol.png");
 
 const particleConfigs: TraceConfig[] = [
-  { delay: 0, duration: 5400, left: 12, top: 20, driftX: 10, driftY: -22, size: 9 },
-  { delay: 520, duration: 6800, left: 74, top: 22, driftX: -12, driftY: 18, size: 7 },
-  { delay: 980, duration: 6200, left: 28, top: 68, driftX: 15, driftY: -16, size: 6 },
-  { delay: 1420, duration: 7600, left: 82, top: 66, driftX: -18, driftY: -20, size: 8 },
-  { delay: 1980, duration: 7000, left: 50, top: 16, driftX: -8, driftY: 24, size: 5 },
-  { delay: 2380, duration: 6400, left: 18, top: 84, driftX: 20, driftY: -12, size: 4 },
-  { delay: 2860, duration: 8000, left: 66, top: 82, driftX: -16, driftY: -18, size: 6 },
-  { delay: 3320, duration: 7200, left: 42, top: 54, driftX: 9, driftY: -28, size: 5 }
+  { delay: 0, duration: 5200, left: 12, top: 20, driftX: 14, driftY: -28, size: 10 },
+  { delay: 360, duration: 6400, left: 74, top: 22, driftX: -16, driftY: 24, size: 8 },
+  { delay: 720, duration: 5900, left: 28, top: 68, driftX: 20, driftY: -22, size: 7 },
+  { delay: 1080, duration: 7200, left: 82, top: 66, driftX: -24, driftY: -26, size: 9 },
+  { delay: 1440, duration: 6600, left: 50, top: 16, driftX: -12, driftY: 30, size: 6 },
+  { delay: 1800, duration: 6100, left: 18, top: 84, driftX: 26, driftY: -16, size: 5 },
+  { delay: 2160, duration: 7600, left: 66, top: 82, driftX: -22, driftY: -24, size: 7 },
+  { delay: 2520, duration: 6800, left: 42, top: 54, driftX: 13, driftY: -34, size: 6 },
+  { delay: 2880, duration: 7000, left: 8, top: 52, driftX: 26, driftY: 18, size: 6 },
+  { delay: 3240, duration: 7400, left: 90, top: 42, driftX: -28, driftY: 20, size: 7 },
+  { delay: 3600, duration: 6200, left: 34, top: 32, driftX: 18, driftY: 24, size: 4 },
+  { delay: 3960, duration: 7800, left: 58, top: 72, driftX: -18, driftY: -30, size: 5 }
 ];
 
 function AnimatedBrandParticle({ config, value }: { config: TraceConfig; value: Animated.Value }) {
   const opacity = value.interpolate({
     inputRange: [0, 0.25, 0.75, 1],
-    outputRange: [0.04, 0.18, 0.12, 0.04]
+    outputRange: [0.08, 0.34, 0.22, 0.08]
   });
   const scale = value.interpolate({
     inputRange: [0, 0.5, 1],
@@ -115,11 +119,11 @@ export function BrandBackground({ active = false }: BrandBackgroundProps) {
 
   const watermarkOpacity = watermarkPulse.interpolate({
     inputRange: [0, 1],
-    outputRange: active ? [0.06, 0.1] : [0.04, 0.075]
+    outputRange: active ? [0.1, 0.14] : [0.08, 0.12]
   });
   const watermarkScale = watermarkPulse.interpolate({
     inputRange: [0, 1],
-    outputRange: active ? [1.01, 1.045] : [1, 1.025]
+    outputRange: active ? [1.05, 1.09] : [1.04, 1.08]
   });
   const activeHaloOpacity = watermarkPulse.interpolate({
     inputRange: [0, 1],
@@ -179,11 +183,11 @@ const styles = StyleSheet.create({
     top: "18%"
   },
   watermark: {
-    height: "80%",
-    left: "-4%",
+    height: "106%",
+    left: "-20%",
     position: "absolute",
-    top: "7%",
-    width: "108%"
+    top: "-6%",
+    width: "140%"
   },
   watermarkImage: {
     height: "100%",

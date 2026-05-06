@@ -14,6 +14,10 @@ export type VideoCryptoRandomSource = {
   getRandomBytes: (byteCount: number) => Uint8Array;
 };
 
+declare const require: (moduleName: string) => {
+  getRandomBytes: (length: number) => Uint8Array;
+};
+
 export type EncryptedVideoChunkCryptoResult = {
   sealedBytes: Uint8Array;
   nonce: string;
@@ -26,14 +30,18 @@ function defaultRandomSource(): VideoCryptoRandomSource {
     getRandomBytes: (byteCount) => {
       const bytes = new Uint8Array(byteCount);
       const webCrypto = globalThis.crypto;
-      if (!webCrypto?.getRandomValues) {
-        throw new Error("Fonte criptografica segura indisponivel para gerar chave/nonce de video.");
+      if (webCrypto?.getRandomValues) {
+        webCrypto.getRandomValues(bytes);
+        return bytes;
       }
 
-      webCrypto.getRandomValues(bytes);
-      return bytes;
+      return getExpoRandomBytes(byteCount);
     }
   };
+}
+
+function getExpoRandomBytes(byteCount: number) {
+  return require("expo-crypto").getRandomBytes(byteCount);
 }
 
 export function stableJson(value: unknown): string {

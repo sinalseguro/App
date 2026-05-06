@@ -49,6 +49,38 @@ Quando a sessao for retomada apos limite de uso, troca de agente, interrupcao de
 
 Etapa ativa: midia privada criptografada por chunks, adaptador de playback seguro por range e validacao manual do APK privado Android com midia local.
 
+Estado ativo em 2026-05-06:
+
+- especialistas coordenados por Ze nesta rodada: Ada/Schneier revisaram gravacao/criptografia, Myers revisou reproducao e evidencias Android, Ritchie/Knuth revisaram continuidade tecnica;
+- causa principal do travamento no Android: configuracao `both` montava duas cameras e o aparelho permitia apenas uma camera ativa;
+- preferencia padrao de video local passou para camera frontal e, no Android, `both` e convertido em runtime para `frontal (modo leve)`;
+- player deixou de preparar video criptografado automaticamente ao abrir a tela; a preparacao agora ocorre somente no toque em `Reproduzir`;
+- `EncryptedVideoPlaybackCache` foi criado como ponte transitoria para `expo-video`, gerando cache privado sob demanda, com progresso e yield/backpressure;
+- `EncryptedVideoDataSource` ganhou opcao de pular hash plaintext no caminho de playback, mantendo AEAD e hash do ciphertext para reduzir CPU;
+- chunks novos passaram para 512 KB, preservacao faz yield a cada chunk e o player reduz updates de progresso para evitar re-render excessivo;
+- validacoes locais aprovadas: `npm run typecheck`, `npm test`, `npm run lint`, `npm run build:android:private`;
+- APK final instalado no Android fisico via ADB, SHA-256 `f2a1144a70be15aeb993436cc27b658b6c20958537ba427cf1444ef9d8746edd`;
+- Android validado: SOS iniciou sem travar, encerrou corretamente, cofre/player abriu, video de 1min01s nao ficou limitado a 2s, e video final de 33s foi preservado com 13 chunks protegidos e reproduzido no player interno;
+- evidencias salvas em `docs/evidencias/android/2026-05-06-player-duration/`;
+- complemento validado no mesmo dia: Player Seguro agora faz preload automatico apenas do asset selecionado, aborta preparo antigo em troca de video, mostra timeline `0:00 / 0:31`, permite play/pause, seek para `0:24 / 0:31`, fullscreen nativo e retorno ao modal;
+- APK privado final desta etapa: SHA-256 `f19623b9b9aa10d7cbd1262c3b1ad2a864d32db91acefd7a0974091366660df2`, instalado no Android fisico via ADB Wi-Fi `192.168.0.4:5555`;
+- evidencias do Player Seguro salvas em `docs/evidencias/android/2026-05-06-player-preload-controls/`;
+- complemento final validado no mesmo dia: Player Seguro passou a usar `EncryptedVideoLoopbackServer` em `127.0.0.1` com URL de capacidade efemera e suporte a `Range`, descriptografando somente chunks/faixas solicitados pelo `expo-video`;
+- `EncryptedVideoPlaybackCache` ficou como limpeza/compatibilidade de cache legado, nao como caminho principal de reproducao criptografada;
+- APK privado da etapa `Range`: SHA-256 `82e1ab82251a9ed812204bb06021e41f0ebd627d5c8bc6a6d26ff45e1c1c46e1`, instalado no Android fisico via ADB Wi-Fi `192.168.0.4:5555`;
+- validacao Android do `Range`: primeiro frame, timeline `0:00 / 0:32`, seek para `0:24 / 0:31`, fullscreen nativo, retorno ao modal, reproducao completa ate `0:31 / 0:31` e replay com `Pausar` em `0:01 / 0:31`;
+- evidencias do Player Seguro por `Range` salvas em `docs/evidencias/android/2026-05-06-player-range-streaming/`;
+- complemento C2 fechado nesta retomada: `SecureVideoThumbnailStore` gera thumbnail segura, cifra como `thumbnail.sseg` e apaga a thumbnail clara temporaria;
+- `CameraCaptureResidueCleaner` limpa residuos `.mp4` de `cache/Camera` somente apos `EncryptedVideoStore` reabrir e verificar chave, manifesto, chunks, hashes agregados e thumbnail cifrada;
+- falha de preservacao nao apaga MP4 claro original; falha de limpeza fica registrada como `plaintextCleanup.status = cleanup_pending`;
+- validacoes locais aprovadas no fechamento C2: `npm run typecheck`, `npm test`, `npm run lint`, `npm run build:android:private`;
+- APK privado C2 instalado no Android fisico `192.168.0.4:5555`, SHA-256 `024150800908109199f84e1be2ef5bd9c72ae1f6986ecee0a8269f2c44ca1323`;
+- Android C2 validado: SOS iniciou, encerramento preservou asset `7c967904-589c-452c-85fc-8203aee83be9` com `manifest.sseg`, 22 chunks protegidos e `thumbnail.sseg`;
+- inventario ADB absoluto confirmou `cache/Camera` vazio, `cache/VideoThumbnails` vazio e nenhum `.mp4` claro nesses caches apos preservacao;
+- evidencias C2 salvas em `docs/evidencias/android/2026-05-06-capture-cleanup-thumbnail/`;
+- tentativa de reinstalacao final apos recompilar o mesmo APK nao foi repetida porque o ADB Wi-Fi `192.168.0.4:5555` caiu e `adb connect` retornou timeout; o hash do APK final permaneceu o mesmo ja validado;
+- limite consciente restante: em producao final, avaliar substituicao do loopback local por data source nativo; a interface de midia local esta apta para a proxima etapa de envelopes/chaves/sessao remota sem novas mudancas visuais.
+
 Estado ativo em 2026-05-05:
 
 - Ada foi nomeada gerente operacional desta tarefa de midia, sob coordenacao de Ze;
@@ -430,3 +462,54 @@ Proximas acoes atualizadas:
 - O JSON baixado automaticamente pelo Console foi removido de `Downloads`.
 - A EC2 foi reiniciada e validada: API ativa, CRM ativo, readiness `database=ok`, `nginx -t` aprovado e `cereusia.conf` inalterado.
 - `POST /api/auth/google` com token invalido retornou erro controlado, confirmando endpoint ativo sem expor configuracao.
+
+## Memoria viva - 2026-05-05 - Diretriz gratuita, responsaveis e menores
+
+- Roberto definiu que o projeto deve seguir sempre pelos niveis gratuitos enquanto for tecnicamente viavel.
+- Nao ativar billing pago, TURN pago, servico gerenciado pago ou upgrade de Google Cloud/AWS/Cloudflare sem aprovacao explicita, estimativa, limite e registro.
+- Android real esta conectado para a proxima validacao do login do app.
+- Convites de anjos ficam restritos a contas adultas verificadas ou responsaveis autorizados.
+- Pais/responsaveis podem adicionar filhos/dependentes e configurar a propria conta como anjo/responsavel do menor.
+- Filhos/dependentes menores nao podem convidar anjos, conveniados ou terceiros.
+- O bloqueio de convite por menor deve existir no app e na API.
+- Fluxos com criancas/adolescentes devem seguir LGPD e Lei 15.211/2025/ECA Digital: minimizacao, consentimento adequado, finalidade clara, retencao, auditoria saneada e revisao Doneda/Schneier.
+- Threat model deve cobrir risco de agressor ser responsavel legal ou ter acesso ao aparelho.
+
+## Memoria viva - 2026-05-06 - Complemento F1/F2/F3 sem sobrescrever 019df9
+
+- Retomada executada em modo append-only, tratando a sessao `019df9a8-1894-7002-b7f8-199eaaf3f118` como referencia consolidada.
+- Fase 0 reconfirmada: `.env.local` possui as chaves esperadas sem imprimir valores; API publica respondeu `health=ok` e `ready database=ok`; EC2 manteve `sinalseguro-api` e `cereusia-crm` ativos.
+- Hash de `/etc/nginx/sites-available/cereusia.conf` permaneceu `8cdcd9e3e7495371e84bd49fc81bee308f56a18698cff9144a4c1d12e4f6474c`; `nginx -t` exige `sudo` por permissao de leitura dos certificados e foi aprovado com `sudo`.
+- Mobile agora tem `DeviceBindingService` POO: gera semente privada local no SecureStore, publica apenas material publico/hash de dispositivo, registra `/devices/` apos login e limpa apenas o vinculo remoto no logout.
+- Login por e-mail e Google agora executa bootstrap autenticado: `/auth/me`, registro de dispositivo e consentimentos versionados; falha parcial de consentimento nao derruba a sessao quando a API remota ainda nao tiver migracao aplicada.
+- Consentimentos ganharam escopo `login` na API e no contrato OpenAPI local; backend recebeu migracao `consents.0002_add_login_scope`.
+- Convites de anjos agora usam API quando ha sessao autenticada: cria trusted contact, cria convite opaco/expiravel/uso unico e preserva fallback local pre-convite quando nao ha login.
+- Aceite de convite no app exige conta propria e registra dispositivo antes de chamar a API; backend passou a negar aceite sem dispositivo ativo com chave publica/hash e protege aceite com lock transacional.
+- Diferenca encontrada ainda pendente: bloqueio de convites por menores depende do modelo de responsaveis/dependentes/age assurance, que ainda nao existe no backend atual; nao foi criado campo improvisado.
+- Validacoes mobile: `npm run typecheck`, `npm run lint`, `npm test` aprovados; `npm run private:android:readiness` aprovado com pendencia local conhecida de Node `20.16.0` abaixo do Node publico exigido.
+- Validacoes API: `manage.py check`, `makemigrations --check --dry-run`, `manage.py test` e `manage.py spectacular --validate` aprovados.
+- Servidor Expo web subiu em `http://localhost:8081`; Chrome estava em uso ativo pelo Roberto em pagina externa, entao Zé nao tomou a janela para nao interromper o usuario.
+- Proximo bloco incompleto: aplicar/deployar migracao API na EC2, validar login Google real no Android fisico, aceitar convite fim a fim com duas contas/dispositivos e entao iniciar envelopes de emergencia.
+
+## Memoria viva - 2026-05-06 - Deploy API F1/F2/F3 aplicado
+
+- `infra/aws/deploy-api.sh` executado apos validacao local, sem alterar `cereusia.conf`.
+- Migração `consents.0002_add_login_scope` aplicada na EC2.
+- `sinalseguro-api` reiniciado e validado; `cereusia-crm` permaneceu ativo.
+- Health publico: `https://api.sinalseguro.com.br/api/health` respondeu `ok`; readiness publico respondeu `database=ok`.
+- `showmigrations consents` na EC2 confirmou `[X] 0002_add_login_scope`.
+- `sudo nginx -t` aprovado e hash de `/etc/nginx/sites-available/cereusia.conf` permaneceu `8cdcd9e3e7495371e84bd49fc81bee308f56a18698cff9144a4c1d12e4f6474c`.
+- `POST /api/auth/google` com token invalido retornou erro controlado, sem expor configuracao.
+- Proximo bloco incompleto agora e validacao Android real do Google OIDC, convite fim a fim com duas contas/dispositivos e envelopes de emergencia.
+
+## Memoria viva - 2026-05-06 - UX/IX Anjos integrada
+
+- Tarcila/Norman orientaram a tela de Anjos para linguagem calma, protetiva e alinhada a identidade SinalSeguro, sem parecer fluxo emergencial.
+- Ritchie/Ada orientaram a integracao para nao tratar mocks ou pre-convites locais como anjos reais.
+- Tela `app/contatos.tsx` passou a usar `Anjos de confianca`, banner de estado, cards de prontidao, modal `BrandedDialog` e secoes separadas para anjos autorizados, convites validados pela API e pre-convites locais.
+- `trustedContactsMock` deixou de ser usado na tela integrada; vinculo real vem de `/trusted-contacts/` e convite real vem de `/invitations/`.
+- API client mobile ganhou listagem e revogacao de trusted contacts e invitations, preservando autenticacao e sem expor tokens ou payload sensivel.
+- Modal de convite informa que apenas o convite sera enviado; evidencias, localizacao e dados sensiveis nao sao enviados nesta etapa.
+- Validacoes locais aprovadas: `npm run typecheck`, `npm run lint`, `npm test`.
+- Browser Use validou `http://localhost:8081/contatos`, incluindo tela principal e modal de convite; o browser ficou aberto para comentarios do Roberto.
+- Proximo bloco incompleto: validar login Google real no Android fisico, convite fim a fim com duas contas/dispositivos e iniciar envelopes de emergencia.

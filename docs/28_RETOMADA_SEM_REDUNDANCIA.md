@@ -128,3 +128,23 @@ Se o Android continuar indisponivel, registrar o bloqueio e seguir para a proxim
 - Evidencia principal: `docs/evidencias/android/2026-05-05-apk-privado-final/home-apk-final-after-wake.png`.
 - Evidencia de estado final inativo: `docs/evidencias/android/2026-05-05-apk-privado-final/estado-final-aparelho.png`.
 - Proxima etapa: `API e Anjos`, detalhada em `docs/29_PROXIMA_ETAPA_API_ANJOS.md`.
+
+## Fechamento de midia segura C2 em 2026-05-06
+
+- Nao reabrir o modulo de midia criptografada sem nova regressao objetiva.
+- Implementado `SecureVideoThumbnailStore`: thumbnail segura cifrada como `thumbnail.sseg` e exclusao da thumbnail clara temporaria.
+- Implementado `CameraCaptureResidueCleaner`: limpeza restrita de residuos `.mp4` em `cache/Camera` apos preservacao verificada.
+- `EncryptedVideoStore` agora verifica chave, manifesto, chunks, hashes agregados e thumbnail antes de apagar o MP4 claro temporario.
+- Validacoes aprovadas: `npm run typecheck`, `npm test`, `npm run lint`, `npm run build:android:private`.
+- APK privado C2: `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `024150800908109199f84e1be2ef5bd9c72ae1f6986ecee0a8269f2c44ca1323`.
+- Android fisico `192.168.0.4:5555`: SOS iniciou, encerrou e preservou asset `7c967904-589c-452c-85fc-8203aee83be9` com `manifest.sseg`, 22 chunks e `thumbnail.sseg`.
+- Inventario ADB absoluto confirmou `cache/Camera` vazio, `cache/VideoThumbnails` vazio e nenhum `.mp4` claro nesses caches apos preservacao.
+- Evidencias: `docs/evidencias/android/2026-05-06-capture-cleanup-thumbnail/`.
+- Reinstalacao final apos recompilacao nao foi repetida porque o ADB Wi-Fi saiu do ar; `adb connect 192.168.0.4:5555` retornou timeout. O APK recompilado manteve o mesmo SHA-256 ja validado.
+
+### Proxima retomada recomendada
+
+1. Entrar direto na etapa de envelopes/chaves/sessao remota para anjos autenticados via EC2/API.
+2. Usar `docs/30_MIDIA_CRIPTOGRAFADA_CHUNKS.md` apenas como contrato da midia local ja concluida.
+3. Usar `docs/31_ARQUITETURA_COMPARTILHAMENTO_TEMPO_REAL.md` e `docs/32_PLANO_LOGIN_VIDEOCHAMADA_ANJOS_LOCALIZACAO.md` para a proxima frente.
+4. Nao repetir build Android ou QA do player, salvo se a proxima mudanca tocar em `src/features/emergency/*Video*`, `EvidencePlayerCard` ou captura SOS.

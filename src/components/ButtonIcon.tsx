@@ -32,10 +32,7 @@ export function ButtonIcon({ icon, label, style, accessibilityState, ...props }:
 const styles = StyleSheet.create({
   button: {
     alignItems: "center",
-    backgroundColor: theme.colors.surface,
-    borderColor: theme.colors.border,
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
+    ...theme.buttonSurface,
     flexDirection: "row",
     gap: theme.spacing.md,
     minHeight: 56,
@@ -43,7 +40,7 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing.md
   },
   buttonPressed: {
-    backgroundColor: theme.colors.surfaceMuted
+    ...theme.buttonSurfacePressed
   },
   buttonDisabled: {
     opacity: 0.48

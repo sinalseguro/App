@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from "react";
-import { Linking, Platform, StyleSheet, Text, TextInput, View } from "react-native";
+import { Linking, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 import { Camera as ExpoCamera } from "expo-camera";
 import * as Google from "expo-auth-session/providers/google";
@@ -32,7 +32,10 @@ import { ProtectedAccessGate } from "@/components/ProtectedAccessGate";
 import { ResourceTile } from "@/components/ResourceTile";
 import { theme } from "@/design/theme";
 import { trustedContactsMock } from "@/features/contacts/contactMocks";
+import { EmergencySettingsDrawer } from "@/features/emergency-home/EmergencySettingsDrawer";
+import { EmergencyHomePanel, EmergencyHomeRoute } from "@/features/emergency-home/routes";
 import {
+  defaultEmergencyPreferences,
   durationOptions,
   EmergencyDurationSeconds,
   EmergencyPreferences,
@@ -51,6 +54,7 @@ import {
   validateSecurityCodePair
 } from "@/security/protectedAccess";
 import { ApiSession, apiClient, apiConfig } from "@/services/apiClient";
+import { DeviceBootstrapResult, deviceBindingService } from "@/services/deviceBinding";
 import { getGoogleOidcAuthRequestConfig, getGoogleOidcReadiness } from "@/services/googleOidc";
 
 WebBrowser.maybeCompleteAuthSession();
@@ -147,11 +151,13 @@ export default function SettingsScreen() {
   const [accessReady, setAccessReady] = useState(false);
   const [accessGateVisible, setAccessGateVisible] = useState(false);
   const [apiSession, setApiSession] = useState<ApiSession | null>(null);
+  const [registeredDeviceId, setRegisteredDeviceId] = useState<string | null>(null);
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginBusy, setLoginBusy] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [loginNotice, setLoginNotice] = useState("");
+  const [menuOpen, setMenuOpen] = useState(false);
   const [, setStatusText] = useState("Carregando preferencias de emergencia...");
 
   async function refreshReadiness() {
@@ -165,6 +171,7 @@ export default function SettingsScreen() {
     const nextPreferences = await getEmergencyPreferences();
     setPreferences(nextPreferences);
     setApiSession(await apiClient.getStoredSession());
+    setRegisteredDeviceId(await deviceBindingService.getRegisteredApiDeviceId());
     await refreshReadiness();
     if (hasSecurityCode(nextPreferences)) {
       setAccessGateVisible(!(await isProtectedAccessUnlocked()));
@@ -236,8 +243,9 @@ export default function SettingsScreen() {
         ...currentSession,
         user
       };
+      const bootstrap = await completeDeviceBootstrap(nextPreferencesOrCurrent());
       setApiSession(nextSession);
-      setLoginNotice("Sessao SinalSeguro validada.");
+      setLoginNotice(buildLoginBootstrapNotice("Sessao SinalSeguro validada.", bootstrap));
     } catch (error) {
       await apiClient.clearSession();
       setApiSession(null);
@@ -245,6 +253,26 @@ export default function SettingsScreen() {
     } finally {
       setLoginBusy(false);
     }
+  }
+
+  function nextPreferencesOrCurrent() {
+    return preferences ?? defaultEmergencyPreferences;
+  }
+
+  function buildLoginBootstrapNotice(prefix: string, bootstrap: DeviceBootstrapResult) {
+    if (bootstrap.consentStatus === "recorded") {
+      return `${prefix} Dispositivo registrado e consentimentos sincronizados.`;
+    }
+    if (bootstrap.consentStatus === "partial") {
+      return `${prefix} Dispositivo registrado; alguns consentimentos aguardam a API atualizada.`;
+    }
+    return `${prefix} Dispositivo registrado.`;
+  }
+
+  async function completeDeviceBootstrap(currentPreferences: EmergencyPreferences) {
+    const bootstrap = await deviceBindingService.completeAuthenticatedBootstrap(currentPreferences);
+    setRegisteredDeviceId(bootstrap.device.id);
+    return bootstrap;
   }
 
   async function loginWithEmailPassword() {
@@ -260,9 +288,10 @@ export default function SettingsScreen() {
 
     try {
       const session = await apiClient.loginWithEmail(email, loginPassword);
+      const bootstrap = await completeDeviceBootstrap(nextPreferencesOrCurrent());
       setApiSession(session);
       setLoginPassword("");
-      setLoginNotice("Conta SinalSeguro conectada neste aparelho.");
+      setLoginNotice(buildLoginBootstrapNotice("Conta SinalSeguro conectada neste aparelho.", bootstrap));
     } catch (error) {
       setLoginError(error instanceof Error ? error.message : "Nao foi possivel entrar agora.");
     } finally {
@@ -277,7 +306,9 @@ export default function SettingsScreen() {
 
     try {
       await apiClient.logout();
+      await deviceBindingService.clearRegisteredDeviceSession();
       setApiSession(null);
+      setRegisteredDeviceId(null);
       setLoginNotice("Conta desconectada deste aparelho.");
     } catch (error) {
       setLoginError(error instanceof Error ? error.message : "Nao foi possivel sair agora.");
@@ -317,8 +348,9 @@ export default function SettingsScreen() {
       }
 
       const session = await apiClient.loginWithGoogleIdToken(googleJwt);
+      const bootstrap = await completeDeviceBootstrap(nextPreferencesOrCurrent());
       setApiSession(session);
-      setLoginNotice("Conta Google conectada ao SinalSeguro.");
+      setLoginNotice(buildLoginBootstrapNotice("Conta Google conectada ao SinalSeguro.", bootstrap));
     } catch (error) {
       setLoginError(error instanceof Error ? error.message : "Nao foi possivel entrar com Google agora.");
     } finally {
@@ -612,10 +644,37 @@ export default function SettingsScreen() {
     video: "Video local"
   } satisfies Record<Exclude<SettingsPanel, null>, string>;
 
+  function openMenuRoute(route: EmergencyHomeRoute, panel?: EmergencyHomePanel) {
+    setMenuOpen(false);
+    if (route === "/arquivos" && panel) {
+      router.push({ pathname: "/arquivos", params: { painel: panel } });
+      return;
+    }
+    router.push(route);
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.shell} testID="settings-screen">
-        <AppTopBar contextLabel="Configuracoes" showBack />
+        <AppTopBar
+          contextLabel="Configuracoes"
+          menuIcon="settings"
+          menuOpen={menuOpen}
+          onMenuPress={() => setMenuOpen((current) => !current)}
+          showBack
+          showMenu
+        />
+
+        {menuOpen ? (
+          <>
+            <Pressable
+              accessibilityLabel="Fechar menu"
+              onPress={() => setMenuOpen(false)}
+              style={styles.menuBackdrop}
+            />
+            <EmergencySettingsDrawer onNavigate={openMenuRoute} />
+          </>
+        ) : null}
 
         <View style={styles.content}>
           <View style={styles.resourceGrid}>
@@ -722,6 +781,14 @@ export default function SettingsScreen() {
                   {apiConfig.apiEnabled && apiConfig.apiBaseUrl
                     ? `API configurada em ${apiConfig.apiBaseUrl}.`
                     : "API SinalSeguro desabilitada neste build."}
+                </Text>
+              </View>
+              <View style={styles.inlineInfo}>
+                <LockKeyhole size={18} color={registeredDeviceId ? theme.colors.secure : theme.colors.textMuted} />
+                <Text style={styles.inlineInfoText}>
+                  {registeredDeviceId
+                    ? "Dispositivo autenticado registrado para esta conta."
+                    : "Dispositivo sera registrado apos login validado."}
                 </Text>
               </View>
               {apiSession?.user ? (
@@ -1113,6 +1180,11 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.small,
     fontWeight: "800",
     lineHeight: 18
+  },
+  menuBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "transparent",
+    zIndex: 20
   },
   resourceGrid: {
     flexDirection: "row",

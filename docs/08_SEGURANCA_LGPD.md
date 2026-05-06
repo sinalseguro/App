@@ -29,12 +29,14 @@ Responsaveis: Schneier e Doneda
 ## Bloqueios
 
 - Dados reais sem base legal e documentacao.
+- Ativacao de servico pago, billing ou upgrade de infraestrutura sem aprovacao explicita, limite de custo e registro em memoria.
 - Gravacao oculta.
 - Localizacao continua por padrao.
 - Camera e microfone no primeiro instalavel Android/iOS.
 - Conteudo sensivel em push.
 - Compartilhamento com orgaos sem convenio.
-- Menores sem analise ECA Digital/LGPD.
+- Convites de anjos iniciados por menores.
+- Menores sem politica ECA Digital/LGPD, responsavel verificado, consentimento adequado e controles contra abuso.
 
 ## Revisoes obrigatorias
 
@@ -42,6 +44,19 @@ Responsaveis: Schneier e Doneda
 - RIPD/DPIA antes de midia real.
 - Politica de retencao antes de upload.
 - Termos e privacidade antes de participantes reais.
+- Matriz de dados de criancas/adolescentes antes de ativar perfis de filhos/dependentes.
+
+## Responsaveis, filhos e anjos
+
+Decisao 2026-05-05:
+
+- adultos/responsaveis verificados podem adicionar filhos/dependentes;
+- os responsaveis podem ser configurados como anjos padrao dos filhos/dependentes;
+- menores nao podem convidar anjos, conveniados ou terceiros;
+- convites devem ser bloqueados no app e tambem no backend;
+- perfil de menor deve coletar apenas dados minimos para identificacao, seguranca e acionamento;
+- video/audio/localizacao envolvendo menor exige consentimento versionado do responsavel, finalidade clara, retencao definida e revisao Doneda/Schneier;
+- o risco de o agressor ser responsavel legal deve entrar no threat model antes de uso real.
 
 ## Decisao Etapa 1 Android
 

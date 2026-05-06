@@ -87,7 +87,7 @@ export const defaultEmergencyPreferences: EmergencyPreferences = {
   },
   localVideoCapture: {
     status: "enabled_local",
-    cameraMode: "both",
+    cameraMode: "front",
     requestOnSos: true,
     requiresExplicitConsent: true
   },

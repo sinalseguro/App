@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   },
   iconSlot: {
     alignItems: "center",
-    backgroundColor: theme.colors.surfaceMuted,
+    backgroundColor: "transparent",
     borderRadius: theme.radius.pill,
     height: 40,
     justifyContent: "center",
@@ -64,20 +64,15 @@ const styles = StyleSheet.create({
   },
   tile: {
     alignItems: "center",
-    backgroundColor: theme.colors.surface,
-    borderColor: theme.colors.border,
-    borderRadius: theme.radius.md,
-    borderWidth: 1,
+    ...theme.buttonSurface,
     flex: 1,
     gap: theme.spacing.xs,
     justifyContent: "center",
     minHeight: 92,
     minWidth: 100,
-    padding: theme.spacing.sm,
-    ...theme.shadow
+    padding: theme.spacing.sm
   },
   tilePressed: {
-    borderColor: theme.colors.primary,
-    transform: [{ translateY: 1 }]
+    ...theme.buttonSurfacePressed
   }
 });

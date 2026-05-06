@@ -5,9 +5,13 @@ import { LocalVideoCameraMode } from "./emergencyPreferences";
 import {
   EncryptedVideoChunkManifest,
   EncryptedVideoManifest,
+  EncryptedVideoThumbnailManifest,
   encryptedVideoChunkAad,
-  encryptedVideoManifestAad
+  encryptedVideoManifestAad,
+  encryptedVideoThumbnailAad
 } from "./EncryptedVideoManifest";
+import { CameraCaptureResidueCleaner } from "./CameraCaptureResidueCleaner";
+import { SecureVideoThumbnailStore } from "./SecureVideoThumbnailStore";
 import { EncryptedVideoEnvelope, LocalMediaAsset } from "./types";
 import {
   createSha256,
@@ -21,6 +25,7 @@ import { base64ToBytes, bytesToBase64, bytesToHex, bytesToUtf8, utf8ToBytes } fr
 
 export const encryptedMediaDirectory = `${FileSystem.documentDirectory ?? ""}sinalseguro-media-encrypted/`;
 export const encryptedVideoDefaultChunkSizeBytes = 512 * 1024;
+const preserveYieldEveryChunks = 1;
 
 type LocalFileInfo = {
   exists: boolean;
@@ -83,12 +88,21 @@ export function encryptedVideoKeyRef(assetId: string) {
 }
 
 export class EncryptedVideoStore {
+  private readonly captureResidueCleaner: CameraCaptureResidueCleaner;
   private readonly cryptoService: VideoCryptoService;
   private readonly fileSystem: VideoFileSystemAdapter;
+  private readonly thumbnailStore: SecureVideoThumbnailStore;
 
-  constructor(cryptoService = new VideoCryptoService(), fileSystem = defaultVideoFileSystemAdapter()) {
+  constructor(
+    cryptoService = new VideoCryptoService(),
+    fileSystem = defaultVideoFileSystemAdapter(),
+    thumbnailStore = new SecureVideoThumbnailStore(cryptoService, fileSystem),
+    captureResidueCleaner = new CameraCaptureResidueCleaner()
+  ) {
+    this.captureResidueCleaner = captureResidueCleaner;
     this.cryptoService = cryptoService;
     this.fileSystem = fileSystem;
+    this.thumbnailStore = thumbnailStore;
   }
 
   async preserveEncryptedVideoAsset({
@@ -158,10 +172,20 @@ export class EncryptedVideoStore {
           ciphertextSha256: sha256Hex(encrypted.sealedBytes)
         });
         offset += plaintextBytes.length;
+        if (chunks.length % preserveYieldEveryChunks === 0) {
+          await yieldToRuntime();
+        }
       }
 
       const plaintextSha256 = hashDigestHex(plaintextHash);
       const ciphertextSha256 = hashDigestHex(ciphertextHash);
+      const thumbnail = await this.thumbnailStore.deriveEncryptAndDeletePlainThumbnail({
+        assetId,
+        packageId,
+        sourceUri,
+        storageDirectoryUri,
+        videoKey
+      });
       const manifest: EncryptedVideoManifest = {
         protocolVersion: encryptedVideoProtocolVersion,
         algorithm: encryptedVideoAlgorithm,
@@ -181,10 +205,7 @@ export class EncryptedVideoStore {
         completedAt,
         cameraMode,
         requestedCameraMode,
-        thumbnail: {
-          status: "pending_secure_derivation",
-          reason: "Thumbnail sera derivado de faixa descriptografada temporaria em adaptador nativo/streaming."
-        },
+        thumbnail,
         recipientKeyEnvelopes: [],
         chunks
       };
@@ -216,7 +237,8 @@ export class EncryptedVideoStore {
         playbackAdapter: "range_data_source_required"
       };
 
-      await this.fileSystem.delete(sourceUri);
+      await this.verifyPreservedEncryptedVideo({ encryptedVideo, manifest, videoKey });
+      const plaintextCleanup = await this.deletePlaintextAfterVerifiedPreservation(sourceUri);
 
       return {
         id: assetId,
@@ -233,16 +255,164 @@ export class EncryptedVideoStore {
         recordedAt: startedAt,
         completedAt,
         encryptionStatus: "encrypted_chunked_xchacha20poly1305",
-        encryptedVideo
+        encryptedVideo: {
+          ...encryptedVideo,
+          plaintextCleanup
+        }
       };
     } catch (error) {
       await this.fileSystem.delete(storageDirectoryUri).catch(() => undefined);
       if (keySaved) {
         await deleteSecret(keyRef).catch(() => undefined);
       }
-      await this.fileSystem.delete(sourceUri).catch(() => undefined);
       throw error;
     }
+  }
+
+  private async verifyPreservedEncryptedVideo({
+    encryptedVideo,
+    manifest,
+    videoKey
+  }: {
+    encryptedVideo: EncryptedVideoEnvelope;
+    manifest: EncryptedVideoManifest;
+    videoKey: Uint8Array;
+  }) {
+    const storedKey = await readVideoKey(encryptedVideo.keyRef);
+    if (bytesToBase64(storedKey) !== bytesToBase64(videoKey)) {
+      throw new Error("Chave local do video nao confere apos gravacao segura.");
+    }
+
+    const sealedManifest = base64ToBytes(await this.fileSystem.readBase64File(encryptedVideo.manifestUri));
+    if (sha256Hex(sealedManifest) !== encryptedVideo.manifestSha256) {
+      throw new Error("Manifesto criptografado nao confere apos gravacao segura.");
+    }
+
+    const manifestBytes = this.cryptoService.decryptManifest(
+      storedKey,
+      sealedManifest,
+      encryptedVideo.manifestNonce,
+      encryptedVideoManifestAad(manifest.assetId, manifest.packageId)
+    );
+    const reopenedManifest = JSON.parse(bytesToUtf8(manifestBytes)) as EncryptedVideoManifest;
+    if (stableJson(reopenedManifest) !== stableJson(manifest)) {
+      throw new Error("Manifesto reaberto diverge do manifesto preservado.");
+    }
+
+    if (
+      manifest.assetId !== encryptedVideo.storageDirectoryUri.split("/").filter(Boolean).at(-1) ||
+      manifest.packageId !== encryptedVideo.packageId ||
+      manifest.chunkCount !== manifest.chunks.length
+    ) {
+      throw new Error("Manifesto criptografado possui metadados incoerentes.");
+    }
+
+    const plaintextHash = cryptoHash();
+    const ciphertextHash = cryptoHash();
+    const seenNonces = new Set<string>();
+    let expectedOffset = 0;
+    let totalPlaintextSizeBytes = 0;
+    let totalEncryptedSizeBytes = 0;
+
+    for (const chunk of manifest.chunks) {
+      if (
+        chunk.index !== seenNonces.size ||
+        chunk.plaintextOffset !== expectedOffset ||
+        chunk.plaintextSizeBytes <= 0 ||
+        seenNonces.has(chunk.nonce)
+      ) {
+        throw new Error("Manifesto de chunks possui offsets, indices ou nonces incoerentes.");
+      }
+      seenNonces.add(chunk.nonce);
+
+      const sealedChunk = base64ToBytes(await this.fileSystem.readBase64File(chunk.chunkUri));
+      if (sha256Hex(sealedChunk) !== chunk.ciphertextSha256) {
+        throw new Error("Chunk criptografado nao confere apos gravacao segura.");
+      }
+
+      const plaintextChunk = this.cryptoService.decryptChunk(
+        storedKey,
+        sealedChunk,
+        chunk.nonce,
+        encryptedVideoChunkAad(manifest.assetId, chunk)
+      );
+      if (
+        plaintextChunk.length !== chunk.plaintextSizeBytes ||
+        sha256Hex(plaintextChunk) !== chunk.plaintextSha256
+      ) {
+        throw new Error("Chunk descriptografado nao confere apos gravacao segura.");
+      }
+
+      plaintextHash.update(plaintextChunk);
+      ciphertextHash.update(sealedChunk);
+      expectedOffset += plaintextChunk.length;
+      totalPlaintextSizeBytes += plaintextChunk.length;
+      totalEncryptedSizeBytes += sealedChunk.length;
+      if (chunk.index % preserveYieldEveryChunks === 0) {
+        await yieldToRuntime();
+      }
+    }
+
+    if (
+      totalPlaintextSizeBytes !== manifest.plaintextSizeBytes ||
+      totalEncryptedSizeBytes !== manifest.encryptedSizeBytes ||
+      hashDigestHex(plaintextHash) !== manifest.plaintextSha256 ||
+      hashDigestHex(ciphertextHash) !== manifest.ciphertextSha256
+    ) {
+      throw new Error("Hashes agregados do video criptografado nao conferem.");
+    }
+
+    await this.verifyEncryptedThumbnail(manifest.thumbnail, manifest, storedKey);
+  }
+
+  private async verifyEncryptedThumbnail(
+    thumbnail: EncryptedVideoThumbnailManifest,
+    manifest: EncryptedVideoManifest,
+    videoKey: Uint8Array
+  ) {
+    if (thumbnail.status !== "encrypted_image_v1") return;
+
+    const sealedThumbnail = base64ToBytes(await this.fileSystem.readBase64File(thumbnail.thumbnailUri));
+    if (sha256Hex(sealedThumbnail) !== thumbnail.ciphertextSha256) {
+      throw new Error("Thumbnail criptografada nao confere apos gravacao segura.");
+    }
+
+    const plaintextThumbnail = this.cryptoService.decryptChunk(
+      videoKey,
+      sealedThumbnail,
+      thumbnail.nonce,
+      encryptedVideoThumbnailAad(manifest.assetId, manifest.packageId)
+    );
+    if (
+      plaintextThumbnail.length !== thumbnail.plaintextSizeBytes ||
+      sha256Hex(plaintextThumbnail) !== thumbnail.plaintextSha256
+    ) {
+      throw new Error("Thumbnail descriptografada nao confere apos gravacao segura.");
+    }
+  }
+
+  private async deletePlaintextAfterVerifiedPreservation(sourceUri: string) {
+    const attemptedAt = new Date().toISOString();
+    let sourceDeleted = false;
+
+    try {
+      await this.fileSystem.delete(sourceUri);
+      sourceDeleted = true;
+    } catch {
+      sourceDeleted = false;
+    }
+
+    await this.captureResidueCleaner.cleanupAfterSuccessfulPreservation({ sourceUri }).catch(() => undefined);
+
+    if (!sourceDeleted) {
+      const sourceInfo = await this.fileSystem.getInfo(sourceUri).catch(() => ({ exists: true }));
+      sourceDeleted = !sourceInfo.exists;
+    }
+
+    return {
+      attemptedAt,
+      status: sourceDeleted ? "deleted" : "cleanup_pending"
+    } as const;
   }
 
   async readManifest(asset: LocalMediaAsset) {
@@ -295,4 +465,8 @@ function cryptoHash() {
 
 function hashDigestHex(hash: ReturnType<typeof cryptoHash>) {
   return bytesToHex(hash.digest());
+}
+
+function yieldToRuntime() {
+  return new Promise<void>((resolve) => setTimeout(resolve, 0));
 }

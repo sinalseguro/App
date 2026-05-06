@@ -31,12 +31,17 @@ Preparar a evolucao do app para login real, videochamada de emergencia com anjo 
 
 ## Principios obrigatorios
 
+- Desenvolvimento, testes e operacao inicial devem permanecer em niveis gratuitos sempre que tecnicamente viavel.
+- Nenhum billing pago, TURN pago, servico gerenciado pago ou upgrade de Google Cloud/AWS/Cloudflare deve ser ativado sem aprovacao explicita, estimativa de custo, limite de gasto e registro em memoria.
 - Login e identidade nao podem depender de conta do navegador local do operador.
 - Cada anjo deve ter conta propria, aceite expresso, dispositivo proprio e chave publica propria.
 - Video, audio e localizacao ao vivo so podem ser compartilhados enquanto a emergencia estiver ativa.
 - O servidor pode autenticar, autorizar, auditar, sinalizar e distribuir envelopes de chave, mas nao deve precisar descriptografar midia, audio ou localizacao.
 - Conveniados entram em fase futura separada, com contrato, RBAC, MFA, retencao, auditoria, base juridica e RIPD/DPIA.
-- Menores de idade ficam bloqueados para uso real ate existir politica especifica de idade, responsavel, risco do agressor ser responsavel legal e revisao ECA Digital/LGPD.
+- Convites de anjos sao recurso restrito a contas adultas verificadas.
+- Menores de idade podem existir como perfis/dependentes vinculados a responsavel legal verificado, mas nao podem convidar anjos, conveniados ou terceiros.
+- Responsaveis podem adicionar filhos/dependentes e configurar a propria conta como anjo/responsavel do menor, com consentimento versionado, trilha de auditoria e revisao ECA Digital/LGPD.
+- O modelo de menores deve considerar o risco de o agressor ser responsavel legal; nenhum compartilhamento automatico de midia, localizacao ou historico sensivel deve ocorrer sem regra de seguranca aprovada.
 
 ## Arquitetura alvo
 
@@ -76,6 +81,7 @@ Pronto quando:
 - Enviar apenas chave publica e hash para o backend.
 - Permitir revogacao de dispositivo e rotacao de chave.
 - Registrar consentimentos versionados para login, emergencia, midia, localizacao e anjos.
+- Classificar conta como `adulto`, `responsavel` ou `menor_dependente`, sem confiar apenas em texto livre informado pelo usuario.
 
 Pronto quando:
 
@@ -83,12 +89,30 @@ Pronto quando:
 - chave privada nunca sai do aparelho;
 - logs nao contem token, IP em claro, user-agent em claro, coordenada ou payload sensivel.
 
+### Fase 1.1 - Responsaveis, filhos e maioridade
+
+- Criar modelo minimo de vinculo `responsavel_dependente`, com responsavel adulto verificado e filho/dependente menor.
+- Permitir que responsaveis adicionem filhos/dependentes e gerenciem destinatarios de emergencia do menor.
+- Bloquear no app e na API qualquer convite de anjo iniciado por conta menor.
+- Tratar pais/responsaveis como anjos padrao do menor somente apos aceite, dispositivo registrado e chave publica valida.
+- Registrar consentimento versionado do responsavel e aviso de finalidade para emergencia, localizacao, video/audio e armazenamento.
+- Aplicar minimizacao: o perfil do menor deve coletar apenas o necessario para identificacao, seguranca e acionamento.
+- Adiar chat, rede social, videochamada livre ou compartilhamento amplo envolvendo menor ate politica de moderacao, denuncia, bloqueio, idade e revisao juridica.
+
+Pronto quando:
+
+- API nega convite criado por menor mesmo que o app falhe;
+- responsavel consegue vincular dependente sem expor dados sensiveis em logs;
+- o menor consegue acionar emergencia para responsaveis autorizados;
+- Doneda/Schneier aprovam matriz de dados, risco de responsavel agressor, consentimento e retencao.
+
 ### Fase 2 - Anjos e convites
 
 - Criar convite opaco, expiravel e de uso unico.
 - Anjo aceita convite com conta propria.
+- Convite so pode ser criado por conta adulta/responsavel autorizada; conta menor nao pode convidar.
 - Anjo registra dispositivo e chave publica.
-- Usuaria pode revogar, pausar ou bloquear anjo.
+- Usuaria adulta ou responsavel pode revogar, pausar ou bloquear anjo.
 - API retorna apenas anjos autorizados e com chave valida para emergencia.
 
 Pronto quando:
@@ -145,6 +169,7 @@ Pronto quando:
 - CRM deve separar gestao operacional de dados sensiveis.
 - Modulos iniciais:
   - usuarios e dispositivos;
+  - responsaveis, filhos/dependentes e politica de maioridade;
   - anjos, convites e consentimentos;
   - sessoes de emergencia com status saneado;
   - auditoria;
@@ -165,7 +190,7 @@ Pronto quando:
 - Atualizar politica de privacidade, termos, matriz LGPD, RIPD/DPIA e retencao.
 - Declarar camera, microfone, localizacao, identificadores, conta, contatos e dados sensiveis nas lojas.
 - Criar fluxo de exclusao de conta e exportacao quando aplicavel.
-- Bloquear menores ate politica ECA Digital especifica.
+- Ativar perfis de menores somente com politica ECA Digital/LGPD especifica, responsavel verificado, consentimento adequado, minimizacao e controles contra abuso.
 - Validar Apple Sign-In se houver outro login social no iOS publico.
 
 Pronto quando:
@@ -188,6 +213,7 @@ Pronto quando:
 Antes de ativar video/audio/localizacao reais para anjos, fechar estes contratos:
 
 - OpenAPI unico para `auth`, `devices`, `trusted_contacts`, `recipient_public_keys`, `emergency_sessions`, `key_envelopes`, `p2p_signaling`, `location_stream` e `audit`.
+- OpenAPI e modelo de dominio para `guardians`, `dependents`, `age_assurance`, `guardian_consents` e bloqueio server-side de convites por menores.
 - Modelo de chaves por dispositivo: geracao local, armazenamento seguro, chave publica, assinatura ou verificacao, rotacao, revogacao e perda de aparelho.
 - Envelope de chave: algoritmo, AAD, versao de esquema, destinatarios multiplos, reenvio, revogacao e acesso apos encerramento.
 - WebRTC: STUN/TURN, politica de relay, autenticacao da sinalizacao, expiracao de offer/answer/ICE, mitigacao de spam e fallback.
@@ -202,7 +228,7 @@ Prioridade pratica: concluir `OIDC + devices + chaves publicas + anjos + envelop
 ## Gates de compliance e loja
 
 - LGPD: matriz de dados, bases legais, controlador/operador, encarregado/canal, finalidades, retencao, descarte, compartilhamentos, RIPD/DPIA, direitos do titular e logs saneados.
-- ECA Digital: classificar acesso provavel por adolescentes, definir politica de idade, evitar supervisao parental generica quando o responsavel puder ser agressor, e bloquear chat/video/rede social sem moderacao, denuncia e bloqueio.
+- ECA Digital / Lei 15.211/2025: classificar acesso provavel por criancas/adolescentes, definir politica de idade, permitir responsaveis adicionarem filhos/dependentes, bloquear convites iniciados por menores, evitar supervisao parental generica quando o responsavel puder ser agressor, e bloquear chat/video/rede social sem moderacao, denuncia e bloqueio.
 - Google Play: Data Safety consistente com SDKs/backend, politica de privacidade ativa, prominent disclosure para camera/microfone/localizacao, account deletion e formulario/video para background location se existir.
 - Apple: App Privacy Details, exclusao de conta no app, Sign in with Apple quando exigido por login social, push sem dado sensivel, suporte/moderacao para comunicacao entre usuarios.
 - Videochamada: somente homologacao controlada ate consentimento especifico, indicador visivel de camera/microfone, retencao definida, auditoria e RIPD.

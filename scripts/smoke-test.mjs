@@ -39,9 +39,17 @@ const requiredFiles = [
   "src/features/emergency/EmergencyMediaRecorder.tsx",
   "src/features/emergency/mediaCapture.ts",
   "src/features/emergency/VideoCryptoService.ts",
+  "src/features/emergency/CameraCaptureResidueCleaner.ts",
   "src/features/emergency/EncryptedVideoManifest.ts",
   "src/features/emergency/EncryptedVideoStore.ts",
   "src/features/emergency/EncryptedVideoDataSource.ts",
+  "src/features/emergency/EncryptedVideoRangeHttp.ts",
+  "src/features/emergency/EncryptedVideoLoopbackServer.ts",
+  "src/features/emergency/EncryptedVideoPlaybackCache.ts",
+  "src/features/emergency/SecureVideoThumbnailStore.ts",
+  "src/services/apiClient.ts",
+  "src/services/deviceBinding.ts",
+  "src/services/googleOidc.ts",
   "scripts/encrypted-video-store.test.ts",
   "src/storage/secureJsonStore.ts",
   "scripts/android-private-media-readiness.mjs",
@@ -60,6 +68,10 @@ if (packageJson.main !== "expo-router/entry") {
 
 if (!packageJson.dependencies.expo || !packageJson.dependencies["expo-router"]) {
   throw new Error("Dependencias Expo essenciais ausentes.");
+}
+
+if (!packageJson.dependencies["expo-keep-awake"]) {
+  throw new Error("Chamado ativo precisa manter tela acordada para permitir encerramento manual.");
 }
 
 const emergencyRecorder = await readFile("src/features/emergency/emergencyRecorder.ts", "utf8");
@@ -146,8 +158,11 @@ if (
 if (
   !evidencePlayerCard.includes("isEncryptedVideoAsset") ||
   !evidencePlayerCard.includes("Arquivo protegido") ||
+  !evidencePlayerCard.includes("EncryptedVideoLoopbackServer") ||
+  !evidencePlayerCard.includes("loopbackSessionRef") ||
+  !evidencePlayerCard.includes("replaceAsync") ||
   !evidencePlayerCard.includes("getAssetStorageLabel") ||
-  !evidencePlayerCard.includes("getAssetPlaybackLabel")
+  !evidencePlayerCard.includes("preparingPlayback")
 ) {
   throw new Error("Player precisa tratar video protegido, legado e ausencia de midia com estados distintos.");
 }
@@ -227,6 +242,14 @@ if (homeScreen.includes("Alert.alert") || localFilesScreen.includes("Alert.alert
 
 if (homeScreen.includes("showPoliceShortcut={preferences.emergencyPhoneCall.call190ShortcutEnabled}")) {
   throw new Error("Home nao pode ocultar Policia 190; Policia, Bombeiros e SAMU devem vir ativos por padrao.");
+}
+
+if (
+  !homeScreen.includes("useKeepAwake") ||
+  !homeScreen.includes("EmergencyRecordingWakeLock") ||
+  !homeScreen.includes("activePackageId || finishInProgress")
+) {
+  throw new Error("Home precisa manter tela acordada enquanto chamado ativo ou encerramento estiver em progresso.");
 }
 
 const emergencyTopBar = await readFile("src/features/emergency-home/EmergencyTopBar.tsx", "utf8");
@@ -311,6 +334,9 @@ if (/const DEFAULT_FINISH_CODE_HASH = "e41d64/.test(emergencyPreferences)) {
 }
 
 const secureStorage = await readFile("src/security/secureStorage.ts", "utf8");
+const apiClient = await readFile("src/services/apiClient.ts", "utf8");
+const deviceBinding = await readFile("src/services/deviceBinding.ts", "utf8");
+const invitationService = await readFile("src/features/invitations/invitationService.ts", "utf8");
 
 if (secureStorage.includes("sessionStorage") || !secureStorage.includes("Platform.OS !== \"web\"")) {
   throw new Error("SecureStore web precisa ser simulador volatil em memoria, sem sessionStorage/localStorage.");
@@ -318,6 +344,44 @@ if (secureStorage.includes("sessionStorage") || !secureStorage.includes("Platfor
 
 if (!secureStorage.includes("nativeSecretKey") || !secureStorage.includes("nativeSecureStoreAllowedKey")) {
   throw new Error("SecureStore nativo precisa normalizar chaves para evitar caracteres invalidos no Android.");
+}
+
+if (
+  !apiClient.includes("loginWithGoogleIdToken") ||
+  !apiClient.includes("createConsentRecord") ||
+  !apiClient.includes("createTrustedContact") ||
+  !apiClient.includes("acceptInvitation") ||
+  !apiClient.includes("\"login\"")
+) {
+  throw new Error("Cliente API POO precisa cobrir Google real, consentimentos, anjos e aceite de convite.");
+}
+
+if (
+  !deviceBinding.includes("class DeviceBindingService") ||
+  !deviceBinding.includes("DEVICE_PRIVATE_SECRET_KEY") ||
+  !deviceBinding.includes("createPrivateRecord") ||
+  !deviceBinding.includes("publicKeySha256") ||
+  !deviceBinding.includes("completeAuthenticatedBootstrap") ||
+  !deviceBinding.includes("privateSeedHex")
+) {
+  throw new Error("Bootstrap autenticado precisa registrar dispositivo sem exportar chave privada local.");
+}
+
+if (
+  !settingsScreen.includes("completeDeviceBootstrap") ||
+  !settingsScreen.includes("Dispositivo autenticado registrado") ||
+  !settingsScreen.includes("clearRegisteredDeviceSession")
+) {
+  throw new Error("Login precisa registrar dispositivo, sincronizar consentimentos e limpar vinculo remoto no logout.");
+}
+
+if (
+  !invitationService.includes("createBackendInvitation") ||
+  !invitationService.includes("backend_single_use_enforced") ||
+  !invitationService.includes("acceptBackendInvitation") ||
+  !invitationService.includes("registerAuthenticatedDevice")
+) {
+  throw new Error("Convites de anjo precisam usar API quando ha login e exigir dispositivo registrado no aceite.");
 }
 
 if (!emergencyRecorder.includes("activeStartPromise") || !emergencyRecorder.includes("Ja existe chamado local ativo")) {
@@ -351,9 +415,26 @@ if (
   throw new Error("Midia privada precisa configurar frontal, traseira e tentativa de duas cameras com fallback seguro.");
 }
 
+if (
+  !emergencyMediaRecorder.includes("onMediaAttachedRef") ||
+  !emergencyMediaRecorder.includes("onStatusChangeRef") ||
+  !emergencyMediaRecorder.includes("stopRequestSerial") ||
+  !emergencyMediaRecorder.includes("stopActiveRecording") ||
+  !emergencyMediaRecorder.includes('videoQuality="480p"') ||
+  !emergencyMediaRecorder.includes("videoBitrate={1_200_000}") ||
+  /\[\s*activeCameraModes[\s\S]*onMediaAttached[\s\S]*\]/.test(emergencyMediaRecorder) ||
+  /\[\s*activeCameraModes[\s\S]*onStatusChange[\s\S]*\]/.test(emergencyMediaRecorder)
+) {
+  throw new Error("Gravador precisa parar por sinal explicito, nao reiniciar por callback, e limitar peso da midia local.");
+}
+
 const videoCryptoService = await readFile("src/features/emergency/VideoCryptoService.ts", "utf8");
+const cameraCaptureResidueCleaner = await readFile("src/features/emergency/CameraCaptureResidueCleaner.ts", "utf8");
 const encryptedVideoStore = await readFile("src/features/emergency/EncryptedVideoStore.ts", "utf8");
 const encryptedVideoDataSource = await readFile("src/features/emergency/EncryptedVideoDataSource.ts", "utf8");
+const encryptedVideoLoopbackServer = await readFile("src/features/emergency/EncryptedVideoLoopbackServer.ts", "utf8");
+const encryptedVideoPlaybackCache = await readFile("src/features/emergency/EncryptedVideoPlaybackCache.ts", "utf8");
+const secureVideoThumbnailStore = await readFile("src/features/emergency/SecureVideoThumbnailStore.ts", "utf8");
 const encryptedVideoTests = await readFile("scripts/encrypted-video-store.test.ts", "utf8");
 
 if (
@@ -373,14 +454,38 @@ if (
   !encryptedVideoStore.includes("manifestTag") ||
   !encryptedVideoStore.includes("chunked_plaintext_sha256") ||
   !encryptedVideoStore.includes("recipientKeyEnvelopes") ||
-  !encryptedVideoStore.includes("pending_secure_derivation") ||
-  !encryptedVideoStore.includes("delete(sourceUri")
+  !encryptedVideoStore.includes("verifyPreservedEncryptedVideo") ||
+  !encryptedVideoStore.includes("deletePlaintextAfterVerifiedPreservation") ||
+  !encryptedVideoStore.includes("plaintextCleanup") ||
+  !encryptedVideoStore.includes("cleanup_pending")
 ) {
-  throw new Error("Store criptografado precisa ler por faixa, cifrar manifesto/chunks e preparar thumbnail/envelopes futuros.");
+  throw new Error("Store criptografado precisa ler por faixa, cifrar manifesto/chunks, verificar integridade e limpar plaintext so apos preservacao segura.");
+}
+
+if (
+  !cameraCaptureResidueCleaner.includes("CameraCaptureResidueCleaner") ||
+  !cameraCaptureResidueCleaner.includes("cacheDirectory") ||
+  !cameraCaptureResidueCleaner.includes('cameraCacheDirectoryName = "Camera"') ||
+  !cameraCaptureResidueCleaner.includes(".mp4") ||
+  cameraCaptureResidueCleaner.includes("sinalseguro-media-encrypted")
+) {
+  throw new Error("Limpeza de residuos precisa ficar restrita a MP4 temporario do cache da camera.");
+}
+
+if (
+  !secureVideoThumbnailStore.includes("SecureVideoThumbnailStore") ||
+  !secureVideoThumbnailStore.includes("expo-video-thumbnails") ||
+  !secureVideoThumbnailStore.includes("thumbnail.sseg") ||
+  !secureVideoThumbnailStore.includes("encryptedVideoThumbnailAad") ||
+  !secureVideoThumbnailStore.includes("finally") ||
+  !secureVideoThumbnailStore.includes("delete(plaintextThumbnailUri")
+) {
+  throw new Error("Thumbnail segura precisa cifrar o derivado e apagar a imagem clara temporaria.");
 }
 
 if (
   !encryptedVideoDataSource.includes("readRange") ||
+  !encryptedVideoDataSource.includes("streamRange") ||
   !encryptedVideoDataSource.includes("readChunk") ||
   !encryptedVideoDataSource.includes("Chunk de video corrompido") ||
   !encryptedVideoDataSource.includes("integridade")
@@ -389,12 +494,38 @@ if (
 }
 
 if (
+  !encryptedVideoLoopbackServer.includes("127.0.0.1") ||
+  !encryptedVideoLoopbackServer.includes("parseSingleRange") ||
+  !encryptedVideoLoopbackServer.includes("streamRange") ||
+  !encryptedVideoLoopbackServer.includes("GET") ||
+  !encryptedVideoLoopbackServer.includes("HEAD")
+) {
+  throw new Error("Player criptografado precisa usar loopback local com Range e descriptografia sob demanda.");
+}
+
+if (evidencePlayerCard.includes("preparePlayableUri(")) {
+  throw new Error("EvidencePlayerCard nao pode voltar a preparar MP4 claro completo para video criptografado.");
+}
+
+if (
+  !encryptedVideoPlaybackCache.includes("preparePlayableUri") ||
+  !encryptedVideoPlaybackCache.includes("writeBytes") ||
+  !encryptedVideoPlaybackCache.includes("deletePlayableUri") ||
+  !encryptedVideoPlaybackCache.includes("sinalseguro-player-cache")
+) {
+  throw new Error("Player precisa preparar cache temporario a partir dos chunks criptografados e limpar o arquivo de reproducao.");
+}
+
+if (
   !encryptedVideoTests.includes("readRange") ||
+  !encryptedVideoTests.includes("streamRange") ||
   !encryptedVideoTests.includes("wrongKey") ||
   !encryptedVideoTests.includes("corruptedChunk") ||
-  !encryptedVideoTests.includes("replayRange")
+  !encryptedVideoTests.includes("replayRange") ||
+  !encryptedVideoTests.includes("SecureVideoThumbnailStore") ||
+  !encryptedVideoTests.includes("CameraCaptureResidueCleaner")
 ) {
-  throw new Error("Testes de midia criptografada precisam cobrir chunks, seek, replay e falha de autenticacao.");
+  throw new Error("Testes de midia criptografada precisam cobrir chunks, seek, replay, thumbnail, limpeza e falha de autenticacao.");
 }
 
 if (

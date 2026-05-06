@@ -51,11 +51,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AuthToken"
-  /auth/oidc:
+  /auth/google:
     post:
       tags: [auth]
       security: []
-      summary: Login Google/Apple via OIDC
+      summary: Login Google via OIDC ID token
       requestBody:
         required: true
         content:
@@ -291,36 +291,50 @@ components:
           format: password
     OidcLoginRequest:
       type: object
-      required: [provider, idToken]
+      required: [id_token]
       properties:
-        provider:
-          type: string
-          enum: [google, apple]
-        idToken:
+        id_token:
           type: string
     AuthToken:
       type: object
-      required: [accessToken, refreshToken, expiresIn]
+      required: [access, refresh]
       properties:
-        accessToken:
+        access:
           type: string
-        refreshToken:
+        refresh:
           type: string
-        expiresIn:
-          type: integer
+        user:
+          $ref: "#/components/schemas/User"
+    User:
+      type: object
+      required: [id, email, role]
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        display_name:
+          type: string
+        role:
+          type: string
     DeviceRegistration:
       type: object
-      required: [platform, pushToken]
+      required: [platform]
       properties:
         platform:
           type: string
-          enum: [android, ios]
+          enum: [android, ios, web]
         pushToken:
           type: string
         appVersion:
           type: string
         deviceLabel:
           type: string
+        publicKey:
+          type: string
+          description: Material publico do dispositivo; chave privada permanece no app.
     Device:
       type: object
       required: [id, platform, status]
@@ -370,6 +384,7 @@ components:
         scope:
           type: string
           enum:
+            - login
             - terms
             - privacy
             - location

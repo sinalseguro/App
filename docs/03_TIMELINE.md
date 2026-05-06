@@ -31,6 +31,39 @@ Validacoes:
 - `npm run lint`: aprovado.
 - `npm test`: aprovado com smoke e testes de cripto/range.
 
+## 2026-05-06 - Midia segura C2: thumbnail cifrada e limpeza de residuos
+
+Status: implementado e validado localmente no Android fisico.
+
+Especialistas acionados:
+
+- Ada: arquitetura POO de store, thumbnail e limpeza de residuos.
+- Schneier: regra de nao apagar MP4 claro antes de preservar e verificar copia cifrada.
+- Myers: inventario ADB absoluto para provar ausencia de residuo claro no cache nativo.
+
+Decisoes:
+
+- `EncryptedVideoStore` reabre a chave local, o manifesto cifrado e todos os chunks antes de apagar qualquer arquivo claro temporario da captura.
+- `SecureVideoThumbnailStore` gera a thumbnail a partir do video original, cifra como `thumbnail.sseg` e apaga a thumbnail clara temporaria mesmo em falha.
+- `CameraCaptureResidueCleaner` limpa somente residuos `.mp4` sob `cache/Camera` depois de preservacao verificada, sem tocar no diretorio cifrado.
+- Falhas de thumbnail viram `pending_secure_derivation`; falhas de limpeza viram `cleanup_pending`; falhas de preservacao nao apagam o video claro original.
+- O modelo permanece preparado para envelopes de chave por destinatario na fase futura de compartilhamento com anjos/EC2/P2P.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado.
+- `npm test`: aprovado.
+- `npm run lint`: aprovado.
+- `npm run build:android:private`: aprovado.
+- APK privado instalado no Android fisico `192.168.0.4:5555`, SHA-256 `024150800908109199f84e1be2ef5bd9c72ae1f6986ecee0a8269f2c44ca1323`.
+- SOS iniciou e encerrou; asset `7c967904-589c-452c-85fc-8203aee83be9` foi preservado com `manifest.sseg`, chunks `.sseg` e `thumbnail.sseg`.
+- Inventario ADB absoluto confirmou `cache/Camera` vazio, `cache/VideoThumbnails` vazio e nenhum `.mp4` claro nesses caches apos preservacao.
+- Evidencias em `docs/evidencias/android/2026-05-06-capture-cleanup-thumbnail/`.
+
+Proximo bloco:
+
+- Retomar a trilha remota sem alterar esta interface de midia: envelopes de chave, sessao de emergencia e entrega controlada para anjos autenticados via EC2/API, mantendo midia/audio/localizacao criptografados.
+
 ## 2026-05-05 - Plano remoto EC2, P2P e conveniados
 
 Status: implementado como contrato local de arquitetura; transmissao real segue bloqueada.
@@ -1069,3 +1102,164 @@ Validacao:
 - `nginx -t`: aprovado.
 - hash de `/etc/nginx/sites-available/cereusia.conf`: inalterado.
 - `POST /api/auth/google` com token invalido retornou erro controlado, sem falha 500.
+
+## 2026-05-05 - Diretriz gratuita e perfis de menores
+
+Status: regra de produto/compliance registrada para a proxima fase.
+
+Decisoes:
+
+- desenvolvimento, testes e operacao inicial devem permanecer em niveis gratuitos sempre que tecnicamente viavel;
+- nenhum billing pago, TURN pago, servico gerenciado pago ou upgrade de Google Cloud/AWS/Cloudflare deve ser ativado sem aprovacao explicita, limite de custo e registro em memoria;
+- Android real esta conectado para a proxima validacao do login do app;
+- convites de anjos ficam restritos a contas adultas verificadas ou responsaveis autorizados;
+- pais/responsaveis podem adicionar filhos/dependentes e configurar a propria conta como anjo/responsavel do menor;
+- filhos/dependentes menores nao podem convidar anjos, conveniados ou terceiros;
+- o bloqueio deve existir no app e no backend, nao apenas na interface;
+- o desenho deve considerar o risco de o agressor ser responsavel legal antes de ativar uso real com menores.
+
+Documentos atualizados:
+
+- `docs/32_PLANO_LOGIN_VIDEOCHAMADA_ANJOS_LOCALIZACAO.md`;
+- `docs/08_SEGURANCA_LGPD.md`.
+
+## 2026-05-06 - Complemento F1/F2/F3 API, dispositivos e anjos
+
+Status: implementado localmente, validado em mobile/API e publicado na EC2.
+
+Entregas:
+
+- `DeviceBindingService` POO criado no mobile para gerar segredo privado local, publicar apenas material publico/hash e registrar dispositivo autenticado em `/devices/`;
+- login por e-mail e Google passou a executar bootstrap autenticado com `/auth/me`, registro de dispositivo e consentimentos versionados;
+- API client mobile recebeu contratos para consentimentos, trusted contacts, convites e aceite de convite;
+- convites de anjo usam API quando ha login e mantem fallback local pre-convite quando nao ha sessao;
+- tela de convite aceita vinculo somente com conta propria e dispositivo registrado;
+- backend adicionou escopo de consentimento `login` e migracao `consents.0002_add_login_scope`;
+- backend passou a negar aceite de convite sem dispositivo ativo com chave publica/hash e protege o aceite com transacao.
+
+Validacao:
+
+- Mobile: `npm run typecheck`, `npm run lint`, `npm test`.
+- Android privado: `npm run private:android:readiness` com a pendencia local conhecida de Node `20.16.0`.
+- API: `manage.py check`, `makemigrations --check --dry-run`, `manage.py test`, `manage.py spectacular --validate`.
+- EC2: health/readiness `ok`, `sinalseguro-api` ativo, `cereusia-crm` ativo, `sudo nginx -t` aprovado, hash de `cereusia.conf` inalterado.
+- Deploy: `infra/aws/deploy-api.sh` executado com sucesso; migração `consents.0002_add_login_scope` aplicada e confirmada por `showmigrations`.
+
+Bloqueio registrado:
+
+- Bloqueio real de convites criados por menores depende de modelo de responsaveis/dependentes/age assurance ainda inexistente; nao foi criado campo improvisado.
+
+Proximo bloco:
+
+- Validar login Google real no Android fisico, testar convite com duas contas/dispositivos e iniciar envelopes de emergencia.
+
+## 2026-05-06 - UX/IX da interface de Anjos integrada
+
+Status: implementado no mobile e validado no browser local.
+
+Entregas:
+
+- tela `Anjos de confianca` reorganizada com padrao visual SinalSeguro, `StatusBanner`, `ButtonIcon`, `InviteCard` e `BrandedDialog`;
+- mocks de anjos deixaram de alimentar a tela integrada;
+- tela passou a listar vinculos reais por `/trusted-contacts/` e convites reais por `/invitations/` quando houver sessao autenticada;
+- pre-convites locais continuam permitidos sem login, mas aparecem em secao propria para nao simular anjo autorizado;
+- modal de convite confirma antes do compartilhamento e informa que evidencias, localizacao e dados sensiveis nao sao enviados;
+- API client mobile recebeu listagem e revogacao de trusted contacts e invitations.
+
+Validacao:
+
+- `npm run typecheck`;
+- `npm run lint`;
+- `npm test`;
+- Browser Use em `http://localhost:8081/contatos`, com tela principal e modal de convite verificados visualmente.
+
+Proximo bloco:
+
+- Validar login Google real no Android fisico, convite fim a fim com duas contas/dispositivos e iniciar envelopes de emergencia.
+
+## 2026-05-06 - Midia criptografada funcional no Android
+
+Status: implementado e validado em Android fisico.
+
+Entregas:
+
+- gravacao Android estabilizada em camera frontal por padrao e modo leve quando a preferencia antiga estiver em `both`;
+- `EncryptedVideoPlaybackCache` criado para preparar playback criptografado somente sob demanda no player interno;
+- player deixou de descriptografar/preparar automaticamente ao abrir a tela, reduzindo travamento no cofre/player;
+- chunks novos ajustados para 512 KB com yield/backpressure e menos updates de progresso no React;
+- `EncryptedVideoDataSource` passou a permitir caminho de playback sem hash plaintext redundante, mantendo autenticacao AEAD e verificacao do ciphertext.
+
+Validacao:
+
+- `npm run typecheck`;
+- `npm test`;
+- `npm run lint`;
+- `npm run build:android:private`;
+- APK instalado no Android fisico via ADB, SHA-256 `f2a1144a70be15aeb993436cc27b658b6c20958537ba427cf1444ef9d8746edd`;
+- SOS iniciou sem travar, encerrou e preservou video no cofre;
+- player abriu video de `1min01s` com `47 partes protegidas` e video final de `33s` com `13 partes protegidas`;
+- evidencias em `docs/evidencias/android/2026-05-06-player-duration/`.
+
+Proximo bloco:
+
+- substituir cache privado transitorio por data source nativo ou servidor local loopback com `Range`, para reproduzir videos grandes sem materializar arquivo claro completo.
+
+## 2026-05-06 - Player Seguro com preload, timeline e fullscreen
+
+Status: implementado e validado em Android fisico.
+
+Entregas:
+
+- `EvidencePlayerCard` inicia preload automatico apenas do video criptografado selecionado ao abrir o Player;
+- troca de asset aborta o preparo anterior, limpa cache parcial e prepara somente o novo asset;
+- `EncryptedVideoPlaybackCache` recebeu cancelamento por `AbortSignal`, progresso por chunk e limpeza de arquivo parcial em erro/cancelamento;
+- controles customizados do Player incluem play/pause, reiniciar, timeline com toque/arraste para seek e botao de tela cheia;
+- timeline usa duracao do manifesto/asset como fallback ate o `expo-video` publicar `duration`, evitando `0:00 / 0:00` apos preload concluido;
+- `VideoView` usa `textureView` para melhorar captura/overlay no Android e `enterFullscreen()` para fullscreen nativo.
+
+Validacao:
+
+- `npm run typecheck`;
+- `npm test`;
+- `npm run lint`;
+- `npm run build:android:private`;
+- APK instalado no Android fisico via ADB Wi-Fi `192.168.0.4:5555`;
+- SHA-256 final do APK: `f19623b9b9aa10d7cbd1262c3b1ad2a864d32db91acefd7a0974091366660df2`;
+- Player abriu com preload automatico, exibiu primeiro frame, timeline `0:00 / 0:31`, play/pause, seek para `0:24 / 0:31`, fullscreen nativo e retorno ao modal;
+- evidencias em `docs/evidencias/android/2026-05-06-player-preload-controls/`.
+
+Proximo bloco:
+
+- evoluir a ponte de cache transitorio para data source nativo ou servidor loopback `Range`, mantendo o contrato de chunks criptografados para videos grandes e compartilhamento futuro.
+
+## 2026-05-06 - Player Seguro por Range local
+
+Status: implementado e validado em Android fisico.
+
+Entregas:
+
+- `EncryptedVideoDataSource` passou a expor streaming por faixa, descriptografando somente os chunks que intersectam o range solicitado;
+- `EncryptedVideoRangeHttp` centraliza parse de `Range`, rejeicao de multirange/range invalido e headers `206/200/416` sem dependencias nativas;
+- `EncryptedVideoLoopbackServer` abre uma sessao efemera em `127.0.0.1`, com URL de capacidade aleatoria, `GET/HEAD` apenas, cleanup de sockets e encerramento ao trocar asset, desmontar player ou app ir para background;
+- `EvidencePlayerCard` usa o loopback como fonte principal do `expo-video`, mantendo controles customizados de play/pause, reiniciar, timeline e fullscreen;
+- `EncryptedVideoPlaybackCache` ficou como compatibilidade/limpeza de cache legado, nao como caminho principal de reproducao criptografada;
+- smoke tests e testes unitarios passaram a cobrir streaming parcial e helpers HTTP de range.
+
+Validacao:
+
+- `npm run typecheck`;
+- `npm test`;
+- `npm run lint`;
+- `npm run build:android:private`;
+- APK instalado no Android fisico via ADB Wi-Fi `192.168.0.4:5555`;
+- SHA-256 final do APK: `82e1ab82251a9ed812204bb06021e41f0ebd627d5c8bc6a6d26ff45e1c1c46e1`;
+- Player abriu com primeiro frame, timeline `0:00 / 0:32`, seek para `0:24 / 0:31`, fullscreen nativo em `00:25 / 00:32`, retorno ao modal, reproducao completa ate `0:31 / 0:31` e replay com botao `Pausar` em `0:01 / 0:31`;
+- evidencias em `docs/evidencias/android/2026-05-06-player-range-streaming/`.
+
+Observacao:
+
+- ainda existem arquivos `cache/Camera/*.mp4` gerados pela captura nativa antes da preservacao criptografada; eles nao sao o cache de playback do Player Seguro. O proximo bloco de hardening deve limpar esses residuos de captura assim que a preservacao criptografada for confirmada.
+
+Proximo bloco:
+
+- limpeza segura dos residuos temporarios de captura, thumbnail segura e avaliacao de data source nativo para substituir o loopback em producao final.

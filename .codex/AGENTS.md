@@ -33,17 +33,15 @@ Cristine é a gerente AI mobile. Ela mantém compatibilidade de memória com Zé
 
 ## Checkpoint atual
 
-Fase 1: Home SOS fixa, splash aprovada, modais padronizados e Cofre iconografico.
+Fase vigente: midia privada criptografada local fechada para homologacao Android, pronta para a proxima etapa de envelopes de chave, sessao remota e anjos.
 
 Estado:
-- tela inicial fixa, sem rolagem, com logo real no topo, SOS central e menu retratil por engrenagem;
-- Tarcila supervisiona identidade visual e exige validacao fisica do splash nativo no proximo Android conectado;
-- cofre local foi refatorado para tela fixa por icones, com Player e trilha em modais;
-- fluxos criticos usam `BrandedDialog`, nao `Alert.alert`;
-- cofre local exige confirmacao para excluir e bloqueia exclusao de chamado ativo;
-- SOS tem singleton no servico para evitar dois chamados ativos no mesmo dispositivo;
-- web e apenas simulador volatil, sem dados reais;
-- build privado de homologacao local habilita video/audio no sandbox do app; backend, P2P, streaming e compartilhamento externo continuam bloqueados ate revisoes juridica, seguranca e infraestrutura.
-- `app.json` mantem o padrao publico sem `CAMERA`/`RECORD_AUDIO`; o build privado ativa essas permissoes pelo Manifest nativo preparado.
-- APK privado instalado no Android `192.168.0.4:5555` tem SHA-256 `056e41d7e1e91aef10c6763bb094bfe27973693c8c163b222c6f4be2952be67b`.
-- inicializacao fria validada sem crash no log isolado do SinalSeguro.
+- SOS e Cofre/Player seguem com UX aprovada para esta etapa; nao redesenhar sem novo comentario visual do Roberto.
+- Videos novos sao preservados por `EncryptedVideoStore` em chunks `.sseg` com chave unica, manifesto cifrado/autenticado e playback por loopback local `127.0.0.1` com `Range`.
+- Player Seguro usa preload do asset selecionado, timeline custom, seek, replay e fullscreen nativo.
+- Thumbnail segura e salva como `thumbnail.sseg`; thumbnail clara temporaria e removida.
+- MP4 claro temporario da captura nativa so e apagado depois de reabrir e verificar chave, manifesto, chunks, hashes e thumbnail.
+- Falha de preservacao nao apaga o MP4 original; falha de limpeza fica como `cleanup_pending`.
+- Build privado C2 validado em Android fisico `192.168.0.4:5555`; APK SHA-256 `024150800908109199f84e1be2ef5bd9c72ae1f6986ecee0a8269f2c44ca1323`.
+- Evidencias principais: `docs/evidencias/android/2026-05-06-capture-cleanup-thumbnail/`.
+- Proxima etapa correta: envelopes de chave, sessao remota de emergencia e entrega controlada para anjos autenticados via EC2/API, sem mexer novamente na interface de midia salvo regressao comprovada.

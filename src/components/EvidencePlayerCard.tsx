@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { AppState, LayoutChangeEvent, PanResponder, Pressable, StyleSheet, Text, View } from "react-native";
 import { VideoView, useVideoPlayer } from "expo-video";
-import { CalendarClock, Clock3, FileLock2, HardDrive, MapPin, Pause, Play, RotateCcw, Video } from "lucide-react-native";
+import { CalendarClock, Clock3, FileLock2, HardDrive, MapPin, Maximize2, Pause, Play, RotateCcw, Video } from "lucide-react-native";
 import { theme } from "@/design/theme";
+import { EncryptedVideoLoopbackServer, EncryptedVideoLoopbackSession } from "@/features/emergency/EncryptedVideoLoopbackServer";
+import { EncryptedVideoPlaybackCache } from "@/features/emergency/EncryptedVideoPlaybackCache";
 import {
-  getAssetPlaybackLabel,
   getAssetProtectionLabel,
   getAssetSizeLabel,
   getAssetStorageLabel,
@@ -13,7 +14,7 @@ import {
   getPackageMediaProtectionLabel,
   isEncryptedVideoAsset
 } from "@/features/emergency/mediaInterfacePresentation";
-import { EmergencyPackage } from "@/features/emergency/types";
+import { EmergencyPackage, LocalMediaAsset } from "@/features/emergency/types";
 import {
   formatPackageDate,
   formatPackageDurationLabel,
@@ -30,12 +31,23 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   const [previewTouched, setPreviewTouched] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [playableUri, setPlayableUri] = useState<string | null>(null);
+  const [playbackError, setPlaybackError] = useState("");
+  const [preparingPlayback, setPreparingPlayback] = useState(false);
+  const [preparationProgress, setPreparationProgress] = useState(0);
   const [selectedAssetIndex, setSelectedAssetIndex] = useState(0);
+  const [timelineWidth, setTimelineWidth] = useState(0);
+  const loopbackServerRef = useRef(new EncryptedVideoLoopbackServer());
+  const loopbackSessionRef = useRef<EncryptedVideoLoopbackSession | null>(null);
+  const playbackCacheRef = useRef(new EncryptedVideoPlaybackCache());
+  const preloadAbortRef = useRef<AbortController | null>(null);
+  const selectedAssetIdRef = useRef<string | undefined>(undefined);
+  const videoViewRef = useRef<VideoView | null>(null);
   const mediaAssets = packageRecord?.media.status === "recorded_local" ? packageRecord.media.assets : [];
   const videoAsset = mediaAssets[selectedAssetIndex];
   const encryptedAsset = isEncryptedVideoAsset(videoAsset);
-  const canUseInternalDirectPlayer = Boolean(videoAsset && !encryptedAsset);
-  const player = useVideoPlayer(canUseInternalDirectPlayer ? videoAsset?.uri ?? null : null, (videoPlayer) => {
+  const canUseInternalDirectPlayer = Boolean(videoAsset && playableUri && !preparingPlayback && !playbackError);
+  const player = useVideoPlayer(null, (videoPlayer) => {
     videoPlayer.loop = false;
     videoPlayer.muted = false;
   });
@@ -44,9 +56,15 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   const selectedTitle = packageRecord ? formatPackageTitle(packageRecord) : title;
   const previewTitle = previewTouched && packageRecord ? selectedTitle : title;
   const previewHint = hasMedia
-    ? canUseInternalDirectPlayer
-      ? "Video local"
-      : "Arquivo protegido"
+    ? preparingPlayback
+      ? `Preparando player seguro ${preparationProgress}%`
+      : playbackError
+        ? "Video indisponivel"
+        : canUseInternalDirectPlayer
+          ? "Video local"
+          : encryptedAsset
+            ? "Arquivo protegido pronto"
+            : "Video local"
     : packageRecord
       ? "Nenhum video neste arquivo"
       : "Abra um item do cofre";
@@ -61,7 +79,20 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   const playerAccessibilityLabel = packageRecord
     ? `Visualizar ${formatPackageTitle(packageRecord)} no player seguro`
     : "Player seguro sem arquivo selecionado";
-  const playbackDisabled = !packageRecord || !hasMedia || !canUseInternalDirectPlayer;
+  const playbackDisabled = !packageRecord || !hasMedia || preparingPlayback;
+  const playableDuration = getPlayableDurationSeconds(player.duration, videoAsset);
+  const canSeek = canUseInternalDirectPlayer && playableDuration > 0;
+  const currentTimeLabel = formatPlaybackTime(canUseInternalDirectPlayer ? player.currentTime : 0);
+  const durationLabel = formatPlaybackTime(canUseInternalDirectPlayer ? playableDuration : 0);
+  const playbackButtonLabel = playing
+    ? "Pausar"
+    : preparingPlayback
+      ? "Preparando"
+      : playbackError
+        ? "Indisponivel"
+        : hasMedia
+          ? "Reproduzir"
+          : "Sem video local";
 
   useEffect(() => {
     setPlaying(false);
@@ -71,22 +102,139 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   }, [packageRecord?.id]);
 
   useEffect(() => {
+    void playbackCacheRef.current.clearAll().catch(() => undefined);
+
+    const subscription = AppState.addEventListener("change", (state) => {
+      if (state !== "active") {
+        player.pause();
+        setPlaying(false);
+        setPlayableUri(null);
+        setPreparationProgress(0);
+        setPreparingPlayback(false);
+        setProgress(0);
+        void closeLoopbackSession();
+      }
+    });
+
+    return () => {
+      subscription.remove();
+      void closeLoopbackSession();
+    };
+  }, [player]);
+
+  useEffect(() => {
     setPlaying(false);
     setProgress(0);
+    setPreparationProgress(0);
   }, [selectedAssetIndex]);
 
   useEffect(() => {
-    if (!playing || !packageRecord || !hasMedia || !canUseInternalDirectPlayer) return;
+    selectedAssetIdRef.current = videoAsset?.id;
+  }, [videoAsset?.id]);
+
+  useEffect(() => {
+    const selectedAsset = videoAsset;
+    const playbackCache = playbackCacheRef.current;
+    const preloadController = new AbortController();
+
+    preloadAbortRef.current?.abort();
+    void closeLoopbackSession();
+    preloadAbortRef.current = preloadController;
+    setPlayableUri(null);
+    setPlaybackError("");
+    setPreparingPlayback(false);
+    setPreparationProgress(0);
+    setProgress(0);
+    player.pause();
+    void player.replaceAsync(null);
+
+    if (!selectedAsset) {
+      preloadAbortRef.current = null;
+      return;
+    }
+
+    if (!selectedAsset.encryptedVideo) {
+      setPlayableUri(selectedAsset.uri);
+      preloadAbortRef.current = null;
+    } else {
+      void prepareEncryptedPlayback(selectedAsset, preloadController.signal);
+    }
+
+    return () => {
+      preloadController.abort();
+      if (preloadAbortRef.current === preloadController) {
+        preloadAbortRef.current = null;
+      }
+      player.pause();
+      void player.replaceAsync(null);
+      playbackCache.deletePlayableUri(selectedAsset.id);
+      void closeLoopbackSession();
+    };
+  }, [player, videoAsset]);
+
+  async function prepareEncryptedPlayback(
+    selectedAsset = videoAsset,
+    abortSignal?: AbortSignal
+  ) {
+    if (!selectedAsset?.encryptedVideo) return null;
+
+    setPlaybackError("");
+    setPreparingPlayback(true);
+    setPreparationProgress(0);
+
+    try {
+      await closeLoopbackSession();
+      const nextSession = await loopbackServerRef.current.open(selectedAsset, abortSignal);
+      if (abortSignal?.aborted || selectedAssetIdRef.current !== selectedAsset.id) {
+        await nextSession.close().catch(() => undefined);
+        return null;
+      }
+      loopbackSessionRef.current = nextSession;
+      const nextPlayableUri = nextSession.uri;
+      setPreparationProgress(100);
+      setPlayableUri(nextPlayableUri);
+      await player.replaceAsync({
+        contentType: "progressive",
+        uri: nextPlayableUri,
+        useCaching: false
+      });
+      return nextPlayableUri;
+    } catch {
+      if (abortSignal?.aborted) {
+        return null;
+      }
+      setPlaybackError("Nao foi possivel preparar este video para reproducao local.");
+      player.pause();
+      setPlaying(false);
+      return null;
+    } finally {
+      if (!abortSignal?.aborted && selectedAssetIdRef.current === selectedAsset.id) {
+        setPreparingPlayback(false);
+      }
+    }
+  }
+
+  useEffect(() => {
+    player.pause();
+    setPlaying(false);
+    setProgress(0);
+    if (playableUri && !encryptedAsset) {
+      void player.replaceAsync(playableUri);
+    }
+  }, [playableUri, player]);
+
+  useEffect(() => {
+    if (!packageRecord || !hasMedia || !canUseInternalDirectPlayer) return;
 
     const timer = setInterval(() => {
-      const duration = player.duration;
+      const duration = getPlayableDurationSeconds(player.duration, videoAsset);
       const currentTime = player.currentTime;
 
-      if (Number.isFinite(duration) && duration > 0) {
+      if (duration > 0) {
         const nextProgress = Math.min(100, (currentTime / duration) * 100);
         setProgress(nextProgress);
 
-        if (nextProgress >= 99.5) {
+        if (playing && nextProgress >= 99.5) {
           player.pause();
           setPlaying(false);
         }
@@ -95,43 +243,104 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     }, 360);
 
     return () => clearInterval(timer);
-  }, [canUseInternalDirectPlayer, hasMedia, packageRecord, player, playing]);
+  }, [canUseInternalDirectPlayer, hasMedia, packageRecord, player, playing, videoAsset]);
 
-  function toggleLocalPlayback() {
+  const timelinePanResponder = useMemo(
+    () =>
+      PanResponder.create({
+        onMoveShouldSetPanResponder: () => canSeek,
+        onStartShouldSetPanResponder: () => canSeek,
+        onPanResponderGrant: (event) => seekFromTimelinePosition(event.nativeEvent.locationX),
+        onPanResponderMove: (event) => seekFromTimelinePosition(event.nativeEvent.locationX)
+      }),
+    [canSeek, player, timelineWidth]
+  );
+
+  async function toggleLocalPlayback() {
     if (!packageRecord) return;
 
     setPreviewTouched(true);
-    if (!hasMedia || !canUseInternalDirectPlayer) {
+    if (!hasMedia) {
       player.pause();
       setPlaying(false);
       setProgress(0);
       return;
     }
 
+    if (!canUseInternalDirectPlayer) {
+      const preparedUri = videoAsset?.encryptedVideo ? await prepareEncryptedPlayback(videoAsset) : playableUri;
+      if (!preparedUri) return;
+    }
+
     setPlaying((currentValue) => {
       if (currentValue) {
         player.pause();
-      } else if (canUseInternalDirectPlayer) {
+      } else {
         player.play();
       }
       return !currentValue;
     });
   }
 
-  function restartLocalPlayback() {
+  async function restartLocalPlayback() {
     if (!packageRecord) return;
 
     setPreviewTouched(true);
     setProgress(0);
-    if (!hasMedia || !canUseInternalDirectPlayer) {
+    if (!hasMedia) {
       player.pause();
       setPlaying(false);
       return;
     }
 
+    if (!canUseInternalDirectPlayer) {
+      const preparedUri = videoAsset?.encryptedVideo ? await prepareEncryptedPlayback(videoAsset) : playableUri;
+      if (!preparedUri) return;
+    }
+
     player.currentTime = 0;
     player.play();
     setPlaying(true);
+  }
+
+  function handleTimelineLayout(event: LayoutChangeEvent) {
+    setTimelineWidth(event.nativeEvent.layout.width);
+  }
+
+  function seekFromTimelinePosition(locationX: number) {
+    if (!canSeek || timelineWidth <= 0) return;
+
+    const nextProgress = Math.max(0, Math.min(1, locationX / timelineWidth));
+    player.currentTime = nextProgress * playableDuration;
+    setProgress(nextProgress * 100);
+  }
+
+  async function openFullscreen() {
+    if (!canUseInternalDirectPlayer || preparingPlayback) return;
+
+    setPreviewTouched(true);
+    try {
+      await videoViewRef.current?.enterFullscreen();
+    } catch {
+      setPlaybackError("Nao foi possivel abrir o video em tela cheia neste dispositivo.");
+    }
+  }
+
+  async function retryPlaybackPreparation() {
+    if (!videoAsset?.encryptedVideo || preparingPlayback) return;
+
+    const retryController = new AbortController();
+    preloadAbortRef.current?.abort();
+    preloadAbortRef.current = retryController;
+    await prepareEncryptedPlayback(videoAsset, retryController.signal);
+  }
+
+  async function closeLoopbackSession() {
+    const currentSession = loopbackSessionRef.current;
+    loopbackSessionRef.current = null;
+    if (currentSession) {
+      await currentSession.close().catch(() => undefined);
+    }
   }
 
   return (
@@ -150,9 +359,13 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
       >
         {hasMedia && canUseInternalDirectPlayer ? (
           <VideoView
+            allowsPictureInPicture={false}
             contentFit="contain"
-            nativeControls
+            fullscreenOptions={{ enable: true, orientation: "landscape", autoExitOnRotate: true }}
+            nativeControls={false}
             player={player}
+            ref={videoViewRef}
+            surfaceType="textureView"
             style={styles.videoView}
           />
         ) : (
@@ -195,10 +408,18 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
         ) : null}
         <View style={styles.timelineHeader}>
           <Text style={styles.timelineLabel}>{hasMedia && encryptedAsset ? "Player seguro" : hasMedia ? "Reproducao" : "Previa"}</Text>
-          <Text style={styles.timelineValue}>{Math.round(progress)}%</Text>
+          <Text style={styles.timelineValue}>{canUseInternalDirectPlayer ? `${currentTimeLabel} / ${durationLabel}` : `${Math.round(progress)}%`}</Text>
         </View>
-        <View style={styles.timelineTrack}>
+        <View
+          accessibilityLabel="Linha do tempo do video"
+          accessibilityRole="adjustable"
+          accessibilityState={{ disabled: !canSeek }}
+          onLayout={handleTimelineLayout}
+          style={[styles.timelineTrack, !canSeek && styles.timelineTrackDisabled]}
+          {...timelinePanResponder.panHandlers}
+        >
           <View style={[styles.timelineFill, { width: `${progress}%` }]} />
+          {canSeek ? <View style={[styles.timelineThumb, { left: `${progress}%` }]} /> : null}
         </View>
         <View style={styles.controlRow}>
           <Pressable
@@ -206,7 +427,9 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
             accessibilityRole="button"
             accessibilityState={{ disabled: playbackDisabled, selected: playing }}
             disabled={playbackDisabled}
-            onPress={toggleLocalPlayback}
+            onPress={() => {
+              void toggleLocalPlayback();
+            }}
             style={({ pressed }) => [
               styles.controlButton,
               playbackDisabled && styles.controlButtonDisabled,
@@ -214,16 +437,16 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
             ]}
           >
             {playing ? <Pause size={18} color={theme.colors.textOnDark} /> : <Play size={18} color={theme.colors.textOnDark} />}
-            <Text style={styles.controlLabel}>
-              {playing ? "Pausar" : getAssetPlaybackLabel(videoAsset)}
-            </Text>
+            <Text style={styles.controlLabel}>{playbackButtonLabel}</Text>
           </Pressable>
           <Pressable
             accessibilityLabel="Reiniciar revisao local"
             accessibilityRole="button"
             accessibilityState={{ disabled: playbackDisabled }}
             disabled={playbackDisabled}
-            onPress={restartLocalPlayback}
+            onPress={() => {
+              void restartLocalPlayback();
+            }}
             style={({ pressed }) => [
               styles.secondaryControlButton,
               playbackDisabled && styles.controlButtonDisabled,
@@ -233,7 +456,36 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
             <RotateCcw size={18} color={theme.colors.primary} />
             <Text style={styles.secondaryControlLabel}>Reiniciar</Text>
           </Pressable>
+          <Pressable
+            accessibilityLabel="Abrir video em tela cheia"
+            accessibilityRole="button"
+            accessibilityState={{ disabled: !canUseInternalDirectPlayer || preparingPlayback }}
+            disabled={!canUseInternalDirectPlayer || preparingPlayback}
+            onPress={() => {
+              void openFullscreen();
+            }}
+            style={({ pressed }) => [
+              styles.iconControlButton,
+              (!canUseInternalDirectPlayer || preparingPlayback) && styles.controlButtonDisabled,
+              pressed && canUseInternalDirectPlayer && !preparingPlayback && styles.controlButtonPressed
+            ]}
+          >
+            <Maximize2 size={18} color={theme.colors.primary} />
+          </Pressable>
         </View>
+        {playbackError ? (
+          <Pressable
+            accessibilityLabel="Tentar preparar video novamente"
+            accessibilityRole="button"
+            disabled={preparingPlayback}
+            onPress={() => {
+              void retryPlaybackPreparation();
+            }}
+            style={({ pressed }) => [styles.retryButton, pressed && !preparingPlayback && styles.controlButtonPressed]}
+          >
+            <Text style={styles.retryLabel}>Tentar novamente</Text>
+          </Pressable>
+        ) : null}
       </View>
 
       <View style={styles.secureBadge}>
@@ -355,6 +607,31 @@ const styles = StyleSheet.create({
     fontSize: theme.typography.small,
     lineHeight: 18
   },
+  iconControlButton: {
+    alignItems: "center",
+    backgroundColor: theme.colors.surface,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    justifyContent: "center",
+    minHeight: 44,
+    width: 48
+  },
+  retryButton: {
+    alignItems: "center",
+    backgroundColor: theme.colors.surface,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    minHeight: 38,
+    justifyContent: "center",
+    paddingHorizontal: theme.spacing.md
+  },
+  retryLabel: {
+    color: theme.colors.primary,
+    fontSize: theme.typography.small,
+    fontWeight: "900"
+  },
   secondaryControlButton: {
     alignItems: "center",
     backgroundColor: theme.colors.surface,
@@ -393,7 +670,9 @@ const styles = StyleSheet.create({
   timelineFill: {
     backgroundColor: theme.colors.accent,
     borderRadius: theme.radius.pill,
-    height: "100%"
+    height: 7,
+    position: "absolute",
+    top: 3
   },
   timelineHeader: {
     alignItems: "center",
@@ -410,14 +689,27 @@ const styles = StyleSheet.create({
   timelineTrack: {
     backgroundColor: "rgba(30, 27, 46, 0.14)",
     borderRadius: theme.radius.pill,
-    height: 7,
-    overflow: "hidden"
+    height: 14
+  },
+  timelineTrackDisabled: {
+    opacity: 0.62
+  },
+  timelineThumb: {
+    backgroundColor: theme.colors.surface,
+    borderColor: theme.colors.accent,
+    borderRadius: 7,
+    borderWidth: 2,
+    height: 14,
+    marginLeft: -7,
+    position: "absolute",
+    top: -3,
+    width: 14
   },
   timelineValue: {
     color: theme.colors.textMuted,
     fontSize: 12,
     fontWeight: "900",
-    minWidth: 42,
+    minWidth: 88,
     textAlign: "right"
   },
   preview: {
@@ -473,3 +765,29 @@ const styles = StyleSheet.create({
     width: "100%"
   }
 });
+
+function formatPlaybackTime(value: number) {
+  if (!Number.isFinite(value) || value <= 0) return "0:00";
+
+  const totalSeconds = Math.max(0, Math.floor(value));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
+function getPlayableDurationSeconds(nativeDuration: number, asset: LocalMediaAsset | undefined) {
+  if (Number.isFinite(nativeDuration) && nativeDuration > 0) return nativeDuration;
+
+  const encryptedDurationMs = asset?.encryptedVideo?.durationMs;
+  if (typeof encryptedDurationMs === "number" && encryptedDurationMs > 0) {
+    return encryptedDurationMs / 1000;
+  }
+
+  if (!asset?.recordedAt || !asset.completedAt) return 0;
+
+  const recordedAt = Date.parse(asset.recordedAt);
+  const completedAt = Date.parse(asset.completedAt);
+  if (!Number.isFinite(recordedAt) || !Number.isFinite(completedAt) || completedAt <= recordedAt) return 0;
+
+  return (completedAt - recordedAt) / 1000;
+}
