@@ -102,6 +102,34 @@ APK privado atual com midia local para validacao:
 - Cold start validado no Android fisico com `TotalTime: 4487`, sem crash fatal no `logcat` filtrado por PID do app.
 - A validacao de toque SOS/camera permanece manual no aparelho, porque a injecao de toque por ADB nao acionou os controles nesta rodada.
 
+## OIDC Google
+
+O app esta preparado para login Google via `expo-auth-session` e troca do ID token no backend SinalSeguro por JWT interno.
+
+Variaveis publicas do app:
+
+- `EXPO_PUBLIC_GOOGLE_OIDC_ANDROID_CLIENT_ID`
+- `EXPO_PUBLIC_GOOGLE_OIDC_WEB_CLIENT_ID`
+- `EXPO_PUBLIC_GOOGLE_OIDC_IOS_CLIENT_ID`
+
+Variavel segura do backend, sempre fora do Git:
+
+- `GOOGLE_OIDC_CLIENT_IDS`
+
+Configuracao Android para o client OAuth:
+
+- Package name: `br.com.sinalseguro.app`
+- SHA-1 local do APK debug privado atual: `5E:8F:16:06:2E:A3:CD:2C:4A:0D:54:78:76:BA:A6:F3:8C:AB:F6:25`
+
+Para esta fase, usar primeiro o client OAuth **Android**. O valor gerado deve ser colocado em `EXPO_PUBLIC_GOOGLE_OIDC_ANDROID_CLIENT_ID` no ambiente de build do app e tambem em `GOOGLE_OIDC_CLIENT_IDS` no backend, separado por virgula caso existam outros clients futuros.
+
+Regras:
+
+- Nao usar client secret no app.
+- Nao reutilizar client OAuth do CereusIA; o SinalSeguro deve manter audiencia propria e isolada.
+- Backend aceita apenas audiencias listadas em `GOOGLE_OIDC_CLIENT_IDS`.
+- Google/iCloud ficam bloqueados visualmente quando o client ID da plataforma atual nao estiver configurado.
+
 ## Evidencias visuais
 
 | Tela | Print |

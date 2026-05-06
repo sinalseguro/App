@@ -405,3 +405,17 @@ Proximas acoes atualizadas:
 - APK instalado por USB no Android `23129RA5FL` com `adb install -r`: `Success`.
 - Evidencias Android finais: `docs/evidencias/android/2026-05-05-apk-privado-final/home-apk-final-after-wake.png` e `docs/evidencias/android/2026-05-05-apk-privado-final/estado-final-aparelho.png`.
 - Proxima fase do plano global: `API e Anjos`, documentada em `docs/29_PROXIMA_ETAPA_API_ANJOS.md`.
+
+## Memoria viva - 2026-05-05 - Plano OIDC, videochamada e localizacao ao vivo
+
+- Roberto pediu continuidade com EC2 como servidor de login, CRM/Gestao e compartilhamento de chaves para anjos.
+- Cristine deve tratar a etapa como fases retomaveis, sem reabrir toda a memoria historica.
+- Documento de continuidade criado: `docs/32_PLANO_LOGIN_VIDEOCHAMADA_ANJOS_LOCALIZACAO.md`.
+- A primeira execucao e configurar Google Auth Platform do projeto `sinalseguro`, criar OAuth client Android para `br.com.sinalseguro.app` e configurar o client ID real somente em ambiente seguro local/build e em `/etc/sinalseguro-api.env`.
+- Nao imprimir nem versionar client IDs reais, client secrets, tokens, senhas ou chaves privadas.
+- Video/audio ao vivo para anjo autorizado deve usar WebRTC P2P; API fica como coordenador de identidade, convites, envelopes de chave, sinalizacao e auditoria.
+- Localizacao em tempo real so pode trafegar durante emergencia ativa, para anjo aceito, em canal criptografado, sem coordenada em log.
+- CRM/Gestao deve nascer com usuarios, dispositivos, anjos, convites, consentimentos, auditoria, politicas/termos e hub de login.
+- Menores e conveniados continuam bloqueados para uso real ate politica ECA Digital/LGPD, contrato, RBAC, MFA, retencao e RIPD/DPIA.
+- Lacunas dos especialistas incorporadas ao plano: OpenAPI unico, modelo de chaves, envelopes, WebRTC/STUN/TURN, outbox remota, RBAC, retencao, testes fim a fim e threat model.
+- Prioridade pratica da proxima fase: fechar `OIDC + devices + chaves publicas + anjos + envelopes + emergency_sessions` antes de midia real, localizacao continua ou P2P critico.

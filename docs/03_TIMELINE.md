@@ -1022,3 +1022,26 @@ Escopo inicial da proxima fase:
 - Implementar dominios iniciais de `auth`, `devices`, `consents`, `trusted_contacts`, `invitations`, `alerts`, `app_updates` e auditoria saneada.
 - Conectar o mobile via cliente API minimo, preservando fallback local/offline.
 - Manter midia real, streaming, P2P critico e integracao oficial com orgaos publicos fora do escopo ate revisoes juridica, LGPD, seguranca e convenios.
+
+## 2026-05-05 - Plano OIDC, videochamada e localizacao ao vivo
+
+Status: documentado para continuidade e pronto para execucao em fases.
+
+Especialistas:
+
+- Ada/Ritchie/Kim: arquitetura app, API, EC2, OIDC, dispositivos e chaves.
+- Brenda/Berners: CRM, hub de login e gestao operacional.
+- Norman/Tarcila: UX/IX de login, anjos, consentimentos e CRM.
+- Schneier/Doneda/Myers: seguranca, LGPD, ECA Digital, lojas e QA.
+
+Decisoes:
+
+- A proxima execucao tecnica comeca por Google Auth Platform no projeto `sinalseguro`, client OAuth Android e configuracao segura de `GOOGLE_OIDC_CLIENT_IDS`.
+- Videochamada para anjo autorizado sera desenhada como WebRTC P2P, com API apenas para login, convites, auditoria, envelopes de chave e sinalizacao.
+- Localizacao em tempo real fica limitada ao periodo de emergencia ativa, com canal criptografado e sem coordenadas em logs.
+- CRM/Gestao tera modulos de usuarios, dispositivos, anjos, convites, consentimentos, auditoria, termos e hub de login; conveniados ficam em modulo futuro separado.
+- Menores ficam bloqueados para uso real ate politica especifica ECA Digital/LGPD.
+
+Documento operacional:
+
+- `docs/32_PLANO_LOGIN_VIDEOCHAMADA_ANJOS_LOCALIZACAO.md`.

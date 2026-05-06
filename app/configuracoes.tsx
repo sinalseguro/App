@@ -2,7 +2,9 @@ import { ReactNode, useEffect, useState } from "react";
 import { Linking, Platform, StyleSheet, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 import { Camera as ExpoCamera } from "expo-camera";
+import * as Google from "expo-auth-session/providers/google";
 import * as Location from "expo-location";
+import * as WebBrowser from "expo-web-browser";
 import {
   BookOpenCheck,
   Camera,
@@ -48,6 +50,10 @@ import {
   verifySecurityCodeStatus,
   validateSecurityCodePair
 } from "@/security/protectedAccess";
+import { ApiSession, apiClient, apiConfig } from "@/services/apiClient";
+import { getGoogleOidcAuthRequestConfig, getGoogleOidcReadiness } from "@/services/googleOidc";
+
+WebBrowser.maybeCompleteAuthSession();
 
 type PermissionStatusText = "pendente" | "permitido" | "negado" | "bloqueado";
 type SettingsPanel = "duracao" | "encerramento" | "localizacao" | "compartilhamento" | "video" | "atalhos" | "termos" | "login" | null;
@@ -125,6 +131,8 @@ function SecurityCodeInput({
 }
 
 export default function SettingsScreen() {
+  const googleOidcReadiness = getGoogleOidcReadiness();
+  const [googleRequest, , promptGoogleAsync] = Google.useIdTokenAuthRequest(getGoogleOidcAuthRequestConfig());
   const [preferences, setPreferences] = useState<EmergencyPreferences | null>(null);
   const [foregroundStatus, setForegroundStatus] = useState<PermissionStatusText>("pendente");
   const [backgroundStatus, setBackgroundStatus] = useState<PermissionStatusText>("bloqueado");
@@ -138,6 +146,12 @@ export default function SettingsScreen() {
   const [infoDialog, setInfoDialog] = useState<InfoDialog | null>(null);
   const [accessReady, setAccessReady] = useState(false);
   const [accessGateVisible, setAccessGateVisible] = useState(false);
+  const [apiSession, setApiSession] = useState<ApiSession | null>(null);
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginBusy, setLoginBusy] = useState(false);
+  const [loginError, setLoginError] = useState("");
+  const [loginNotice, setLoginNotice] = useState("");
   const [, setStatusText] = useState("Carregando preferencias de emergencia...");
 
   async function refreshReadiness() {
@@ -150,6 +164,7 @@ export default function SettingsScreen() {
   async function loadSettings() {
     const nextPreferences = await getEmergencyPreferences();
     setPreferences(nextPreferences);
+    setApiSession(await apiClient.getStoredSession());
     await refreshReadiness();
     if (hasSecurityCode(nextPreferences)) {
       setAccessGateVisible(!(await isProtectedAccessUnlocked()));
@@ -201,6 +216,129 @@ export default function SettingsScreen() {
     setNewFinishCode("");
     setRepeatFinishCode("");
     setSecurityCodeError("");
+  }
+
+  async function refreshApiSession() {
+    setLoginError("");
+    setLoginNotice("");
+    setLoginBusy(true);
+
+    try {
+      const currentSession = await apiClient.getStoredSession();
+      if (!currentSession) {
+        setApiSession(null);
+        setLoginNotice("Nenhuma conta SinalSeguro conectada neste aparelho.");
+        return;
+      }
+
+      const user = await apiClient.getMe();
+      const nextSession = {
+        ...currentSession,
+        user
+      };
+      setApiSession(nextSession);
+      setLoginNotice("Sessao SinalSeguro validada.");
+    } catch (error) {
+      await apiClient.clearSession();
+      setApiSession(null);
+      setLoginError(error instanceof Error ? error.message : "Nao foi possivel validar a sessao.");
+    } finally {
+      setLoginBusy(false);
+    }
+  }
+
+  async function loginWithEmailPassword() {
+    const email = loginEmail.trim().toLowerCase();
+    if (!email || !loginPassword) {
+      setLoginError("Informe e-mail e senha da conta SinalSeguro.");
+      return;
+    }
+
+    setLoginBusy(true);
+    setLoginError("");
+    setLoginNotice("");
+
+    try {
+      const session = await apiClient.loginWithEmail(email, loginPassword);
+      setApiSession(session);
+      setLoginPassword("");
+      setLoginNotice("Conta SinalSeguro conectada neste aparelho.");
+    } catch (error) {
+      setLoginError(error instanceof Error ? error.message : "Nao foi possivel entrar agora.");
+    } finally {
+      setLoginBusy(false);
+    }
+  }
+
+  async function logoutApiSession() {
+    setLoginBusy(true);
+    setLoginError("");
+    setLoginNotice("");
+
+    try {
+      await apiClient.logout();
+      setApiSession(null);
+      setLoginNotice("Conta desconectada deste aparelho.");
+    } catch (error) {
+      setLoginError(error instanceof Error ? error.message : "Nao foi possivel sair agora.");
+    } finally {
+      setLoginBusy(false);
+    }
+  }
+
+  async function loginWithGoogle() {
+    setLoginBusy(true);
+    setLoginError("");
+    setLoginNotice("");
+
+    if (!googleOidcReadiness.currentPlatformConfigured) {
+      setLoginBusy(false);
+      setLoginError("Client ID Google OIDC nao configurado para esta plataforma.");
+      return;
+    }
+
+    if (!googleRequest) {
+      setLoginBusy(false);
+      setLoginError("Login Google ainda esta carregando. Tente novamente em alguns segundos.");
+      return;
+    }
+
+    try {
+      const response = await promptGoogleAsync();
+      if (response.type !== "success") {
+        setLoginNotice("Login Google cancelado.");
+        return;
+      }
+
+      const googleJwt = response.params.id_token;
+      if (!googleJwt) {
+        setLoginError("Google nao retornou ID token para validacao.");
+        return;
+      }
+
+      const session = await apiClient.loginWithGoogleIdToken(googleJwt);
+      setApiSession(session);
+      setLoginNotice("Conta Google conectada ao SinalSeguro.");
+    } catch (error) {
+      setLoginError(error instanceof Error ? error.message : "Nao foi possivel entrar com Google agora.");
+    } finally {
+      setLoginBusy(false);
+    }
+  }
+
+  async function checkApiConnection() {
+    setLoginBusy(true);
+    setLoginError("");
+    setLoginNotice("");
+
+    try {
+      const health = await apiClient.getHealth();
+      setLoginNotice(`API SinalSeguro online${health.status ? `: ${health.status}` : ""}.`);
+    } catch (error) {
+      setLoginError(error instanceof Error ? error.message : "API SinalSeguro indisponivel.");
+    } finally {
+      setLoginBusy(false);
+    }
   }
 
   async function saveNewSecurityCode() {
@@ -490,7 +628,7 @@ export default function SettingsScreen() {
             <ResourceTile
               icon={<UserCircle2 size={24} color={theme.colors.primary} />}
               label="Login"
-              description="Google/Apple"
+              description={apiSession?.user?.email ? "Conectado" : "Conta"}
               onPress={() => setActivePanel("login")}
             />
           </View>
@@ -572,16 +710,99 @@ export default function SettingsScreen() {
 
           {activePanel === "login" ? (
             <View style={styles.dialogStack}>
+              <View style={[styles.statusPill, apiSession?.user && styles.statusPillActive]}>
+                <KeyRound size={18} color={apiSession?.user ? theme.colors.textOnDark : theme.colors.primary} />
+                <Text style={[styles.statusPillText, apiSession?.user && styles.statusPillTextActive]}>
+                  {apiSession?.user?.email ?? "Conta SinalSeguro desconectada"}
+                </Text>
+              </View>
+              <View style={styles.inlineInfo}>
+                <ShieldCheck size={18} color={apiConfig.apiEnabled ? theme.colors.secure : theme.colors.textMuted} />
+                <Text style={styles.inlineInfoText}>
+                  {apiConfig.apiEnabled && apiConfig.apiBaseUrl
+                    ? `API configurada em ${apiConfig.apiBaseUrl}.`
+                    : "API SinalSeguro desabilitada neste build."}
+                </Text>
+              </View>
+              {apiSession?.user ? (
+                <>
+                  <ButtonIcon
+                    disabled={loginBusy}
+                    icon={<RefreshCw size={18} color={theme.colors.primary} />}
+                    label="Validar sessao"
+                    onPress={refreshApiSession}
+                  />
+                  <ButtonIcon
+                    disabled={loginBusy}
+                    icon={<LockKeyhole size={18} color={theme.colors.danger} />}
+                    label="Sair desta conta"
+                    onPress={logoutApiSession}
+                    style={styles.dangerOption}
+                  />
+                </>
+              ) : (
+                <>
+                  <View style={styles.fieldGroup}>
+                    <Text style={styles.fieldLabel}>E-mail</Text>
+                    <TextInput
+                      accessibilityLabel="E-mail SinalSeguro"
+                      autoCapitalize="none"
+                      autoComplete="email"
+                      autoCorrect={false}
+                      keyboardType="email-address"
+                      onChangeText={setLoginEmail}
+                      placeholder="conta@sinalseguro.com.br"
+                      placeholderTextColor={theme.colors.textMuted}
+                      style={styles.textInput}
+                      textContentType="emailAddress"
+                      value={loginEmail}
+                    />
+                  </View>
+                  <View style={styles.fieldGroup}>
+                    <Text style={styles.fieldLabel}>Senha</Text>
+                    <TextInput
+                      accessibilityLabel="Senha SinalSeguro"
+                      autoCapitalize="none"
+                      autoComplete="password"
+                      autoCorrect={false}
+                      onChangeText={setLoginPassword}
+                      placeholder="Senha da conta"
+                      placeholderTextColor={theme.colors.textMuted}
+                      secureTextEntry
+                      style={styles.textInput}
+                      textContentType="password"
+                      value={loginPassword}
+                    />
+                  </View>
+                  <ButtonIcon
+                    disabled={loginBusy}
+                    icon={<KeyRound size={18} color={theme.colors.primary} />}
+                    label={loginBusy ? "Conectando..." : "Entrar com e-mail"}
+                    onPress={loginWithEmailPassword}
+                  />
+                </>
+              )}
               <ButtonIcon
-                icon={<KeyRound size={18} color={theme.colors.primary} />}
-                label="Entrar com Google"
-                onPress={() => showOidcPlan("Google")}
+                disabled={loginBusy}
+                icon={<RefreshCw size={18} color={theme.colors.primary} />}
+                label="Testar API"
+                onPress={checkApiConnection}
               />
               <ButtonIcon
+                disabled={loginBusy}
+                icon={<KeyRound size={18} color={theme.colors.primary} />}
+                label="Entrar com Google"
+                onPress={loginWithGoogle}
+                style={googleOidcReadiness.currentPlatformConfigured ? undefined : styles.disabledOidcOption}
+              />
+              <ButtonIcon
+                disabled={loginBusy}
                 icon={<KeyRound size={18} color={theme.colors.primary} />}
                 label="Entrar com Apple/iCloud"
                 onPress={() => showOidcPlan("Apple/iCloud")}
               />
+              {loginError ? <Text style={styles.errorText}>{loginError}</Text> : null}
+              {loginNotice ? <Text style={styles.noticeText}>{loginNotice}</Text> : null}
             </View>
           ) : null}
 
@@ -862,6 +1083,9 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.danger,
     borderWidth: 2
   },
+  disabledOidcOption: {
+    opacity: 0.7
+  },
   errorText: {
     color: theme.colors.danger,
     fontSize: theme.typography.small,
@@ -901,6 +1125,17 @@ const styles = StyleSheet.create({
   selectedOption: {
     borderColor: theme.colors.primary,
     borderWidth: 2
+  },
+  textInput: {
+    backgroundColor: theme.colors.surfaceMuted,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    color: theme.colors.text,
+    fontSize: theme.typography.body,
+    fontWeight: "800",
+    minHeight: 52,
+    paddingHorizontal: theme.spacing.md
   },
   noticeText: {
     color: theme.colors.secure,
