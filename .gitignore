@@ -28,6 +28,9 @@ distribution/android/out/
 *.apk
 *.aab
 *.ipa
+*.apk.sha256
+*.aab.sha256
+*.ipa.sha256
 *.mobileprovision
 *.cer
 *.der
