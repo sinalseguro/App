@@ -17,6 +17,8 @@
       "supportsTablet": false,
       "bundleIdentifier": "br.com.sinalseguro.app",
       "infoPlist": {
+        "NSFaceIDUsageDescription": "O SinalSeguro pode usar Face ID apenas para proteger o acesso local ao cofre, quando esse bloqueio estiver ativado.",
+        "NSLocationAlwaysUsageDescription": "O SinalSeguro pode usar localizacao em segundo plano somente em homologacao autorizada, com consentimento e notificacao persistente.",
         "NSLocationWhenInUseUsageDescription": "O SinalSeguro usa sua localizacao apenas quando voce autoriza o envio em um alerta."
       }
     },
