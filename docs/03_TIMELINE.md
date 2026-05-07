@@ -5,7 +5,7 @@ Supervisao: Ze
 
 ## 2026-05-07 - Frente 1.1: chaves reais por dispositivo
 
-Status: concluido, publicado em producao e homologado no Android fisico; iOS sera validado posteriormente.
+Status: concluido, publicado em producao e homologado no Android e no iPhone fisicos.
 
 Especialistas acionados:
 
@@ -31,6 +31,7 @@ Validacoes:
 - `npm test`: aprovado, incluindo prova Ed25519.
 - Backend `manage.py check`: aprovado.
 - Backend `manage.py test sinalseguro_api.tests.test_platform_base`: aprovado.
+- iPhone fisico: build corrigido com xcconfig temporario, `Info.plist` sem URL scheme vazio, login Google sem fechar o app e API confirmando iOS ativo com `ed25519-v1`.
 
 Fora de escopo:
 
@@ -38,7 +39,7 @@ Fora de escopo:
 
 ## 2026-05-07 - Frente 1 iOS: build fisico instalado e limpeza entre plataformas
 
-Status: build iOS privada compilada e instalada no iPhone fisico; login iOS ainda bloqueado por aparelho bloqueado.
+Status: build iOS privada compilada, instalada e validada no iPhone fisico.
 
 Especialistas acionados:
 
@@ -51,9 +52,10 @@ Decisoes:
 - Ao alternar Android -> iOS, limpar regeneraveis Android antes da build iOS: `android/app/build`, `android/build`, `android/.gradle` e temporarios `sinalseguro-android-*`.
 - Ao alternar iOS -> Android, limpar regeneraveis iOS antes da build Android: `ios/build`, DerivedData temporario `sinalseguro-ios-deriveddata` e logs temporarios, preservando `ios/Pods` quando a proxima build iOS ainda for necessaria.
 - Builds iOS usam segredo local em `.env.local` e xcconfig temporario fora do Git; logs de Xcode/devices devem ser redigidos antes de qualquer registro.
+- `npm run prepare:build:ios:secure-config` gera `/private/tmp/sinalseguro-ios-secrets.xcconfig` a partir do ambiente local e impede build iOS sem Web Client ID, iOS Client ID e URL scheme configurados.
 - `ios/Podfile` passou a corrigir o script phase do `EXConstants` no `post_install`, porque o caminho iCloud contem espaco e o podspec do Expo nao cotava `$PODS_TARGET_SRCROOT`.
 - `app.config.js` fornece `iosUrlScheme` ao plugin Google Sign-In somente a partir de ambiente local, sem versionar o valor real.
-- Scripts versionados foram adicionados em `scripts/` na raiz para o workflow local: `prepare-platform-build.mjs` e `patch-ios-pods-path-spaces.mjs`, chamados no app por `prepare:build:ios`, `prepare:build:android` e `patch:ios:path-spaces`.
+- Scripts versionados foram adicionados em `scripts/` na raiz para o workflow local: `prepare-platform-build.mjs` e `patch-ios-pods-path-spaces.mjs`, chamados no app por `prepare:build:ios`, `prepare:build:android` e `patch:ios:path-spaces`; o script app-local `scripts/prepare-ios-secure-build-config.mjs` gera o xcconfig iOS temporario sem imprimir valores reais.
 
 Validacoes:
 
@@ -63,11 +65,12 @@ Validacoes:
 - Instalacao no iPhone via `ios-deploy`: aprovada.
 - API publica segue `health=ok` e readiness `database=ok`.
 - EC2: `sinalseguro-api` e `cereusia-crm` ativos.
+- Frente 1.1 iOS: build corrigido validou URL schemes, `Entrar com Google` nao fechou mais o app e a API confirmou dispositivo iOS ativo com `key_algorithm=ed25519-v1`.
 
 Bloqueios:
 
 - `devicectl` nao encontrou provider CoreDevice, mas `ios-deploy` funcionou para instalar.
-- Lancamento remoto falhou porque o iPhone estava bloqueado; login Google iOS, `/auth/google`, SecureStore, `/devices/` iOS e teste de convites Android/iOS dependem do iPhone desbloqueado e do Android reconectado no ADB.
+- Teste de convites Android/iOS segue fora desta frente e depende de novo prompt com Android reconectado no ADB.
 
 ## 2026-05-05 - Midia criptografada em chunks
 
@@ -1637,7 +1640,7 @@ Decisoes:
 
 Ordem atual:
 
-1. Frente 1.1 - chaves reais por dispositivo. Status: concluida, publicada em producao e homologada no Android fisico; iOS sera validado posteriormente.
+1. Frente 1.1 - chaves reais por dispositivo. Status: concluida, publicada em producao e homologada no Android e no iPhone fisicos.
 2. Frente 1.2 - midia critica, gravacao, criptografia, player e performance.
 3. Frente 1.3 - perfis, familia, maioridade e papeis.
 4. Frente 2 - anjos e convites.
@@ -1650,7 +1653,7 @@ Ordem atual:
 
 ## 2026-05-07 - Frente 1.1 Android: homologacao fisica pos-deploy concluida
 
-Status: Android concluido; iOS fica para validacao posterior.
+Status: Android concluido; iOS homologado no iPhone fisico.
 
 Validacao fisica:
 
@@ -1672,5 +1675,5 @@ Validacao tecnica:
 Decisao operacional:
 
 - homologacao Android da Frente 1.1 esta fechada;
-- iPhone/iOS sera retomado depois, sem bloquear a proxima frente Android/backend;
+- atualizacao posterior em 2026-05-07: iPhone/iOS tambem foi homologado com build corrigido, Google Sign-In sem fechamento do app e API confirmando `ed25519-v1` ativo;
 - Frente 1.2 de midia critica pode ser aberta em chat proprio, sem alterar o contrato de chaves/dispositivos.

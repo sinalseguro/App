@@ -12,6 +12,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "prepare:build:ios": "node ../../scripts/prepare-platform-build.mjs ios",
+    "prepare:build:ios:secure-config": "node scripts/prepare-ios-secure-build-config.mjs",
     "prepare:build:android": "node ../../scripts/prepare-platform-build.mjs android",
     "patch:ios:path-spaces": "node ../../scripts/patch-ios-pods-path-spaces.mjs",
     "postprocess:ios:release": "node ../../scripts/postprocess-ios-release-app.mjs",

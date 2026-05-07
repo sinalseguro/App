@@ -56,7 +56,14 @@ Android concluido em 2026-05-07:
 - consulta saneada na API de producao confirmou dispositivo Android ativo com `key_algorithm=ed25519-v1`, chave publica presente, hash publico presente e `key_registered_at` preenchido;
 - varredura de logcat do processo nao encontrou padroes de e-mail, Bearer, ID token, refresh token, chave privada ou `key_proof`.
 
-iOS fica para validacao posterior, conforme decisao operacional do usuario.
+iOS concluido em 2026-05-07:
+
+- build `Release` para iPhone fisico recompilado com xcconfig temporario fora do Git, gerado por `npm run prepare:build:ios:secure-config`;
+- build inicial iOS carregava URL scheme Google vazio e fechava ao tocar em `Entrar com Google`; o rebuild corrigido validou `Info.plist` sem entrada vazia e com scheme Google presente, sem imprimir o valor real;
+- pacote corrigido empacotado com SHA-256 `f95031a9f9d339b737702bc0540c4ab9bdab79c7d91e95e4b87fd6cd759b8546`;
+- app corrigido instalado e aberto no iPhone fisico via `ios-deploy`;
+- `Entrar com Google` deixou de fechar o app, a sessao foi validada e a API de producao confirmou dispositivo iOS ativo com `key_algorithm=ed25519-v1`, chave publica presente, hash publico presente e `key_registered_at` preenchido;
+- `devicectl` permaneceu instavel por CoreDevice, entao instalacao/abertura fisica usou `ios-deploy` com logs redigidos.
 
 ## Fora de escopo nesta frente
 

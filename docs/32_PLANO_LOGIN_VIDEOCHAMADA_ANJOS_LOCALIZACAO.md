@@ -13,7 +13,7 @@ Preparar a evolucao do app para login real, videochamada de emergencia com anjo 
 - App mobile ja possui cliente API POO em `src/services/apiClient.ts`.
 - Login por e-mail e Google OIDC estao preparados na tela `Configuracoes > Login`.
 - Google OIDC Android foi validado em aparelho fisico com Google Sign-In nativo, JWT interno, SecureStore, `auth/me`, `/devices/` e logout.
-- Google OIDC iOS ja possui OAuth Client ID privado para bundle `br.com.sinalseguro.app`, valor configurado no app/backend sem registro em Git; build iOS privada foi instalada no iPhone, mas login iOS ainda depende do aparelho desbloqueado para teste fisico.
+- Google OIDC iOS ja possui OAuth Client ID privado para bundle `br.com.sinalseguro.app`, valor configurado no app/backend sem registro em Git; build iOS privada foi instalada no iPhone e login Google foi validado fisicamente sem registrar Client ID, e-mail ou URL scheme real.
 - Apple Sign-In esta implementado no app/API, mas so deve ser ativado em build iOS com Apple Developer Program/Team e capability `Sign in with Apple`; Personal Team gratuito fica com `EXPO_PUBLIC_APPLE_SIGN_IN_ENABLED=0`.
 - EC2 do SinalSeguro esta preparada como API/CRM isolada em `https://api.sinalseguro.com.br/api` e `https://gestao.sinalseguro.com.br`.
 - Midia local ja tem arquitetura de chunks criptografados em `docs/30_MIDIA_CRIPTOGRAFADA_CHUNKS.md`.
@@ -67,7 +67,7 @@ Documento canonico: `../../../docs/tecnico/FRENTES_GLOBAIS_APP_BACKEND_MIDIA_ANJ
 
 Ordem:
 
-1. Frente 1.1 - chaves reais por dispositivo, assinatura, rotacao, revogacao e perda de aparelho. Status: concluida, publicada em producao e homologada no Android fisico; iOS sera validado posteriormente.
+1. Frente 1.1 - chaves reais por dispositivo, assinatura, rotacao, revogacao e perda de aparelho. Status: concluida, publicada em producao e homologada no Android e no iPhone fisicos.
 2. Frente 1.2 - midia critica, gravacao, criptografia, player e performance.
 3. Frente 1.3 - perfis, familia, maioridade e papeis.
 4. Frente 2 - anjos e convites.
@@ -274,7 +274,7 @@ Prioridade pratica: concluir `OIDC + devices + chaves publicas + anjos + envelop
 - Login social persiste JWT em SecureStore e valida `auth/me` quando necessario.
 - Bootstrap autenticado registra dispositivo em `/devices/`, sem push token nesta frente.
 - Logout chama revogacao do refresh token e limpa a sessao local.
-- Base de chave publica real foi implementada, publicada e homologada no Android fisico na Frente 1.1 com Ed25519, prova de posse, rotacao e revogacao/perda; iOS sera validado posteriormente.
+- Base de chave publica real foi implementada, publicada e homologada no Android e no iPhone fisicos na Frente 1.1 com Ed25519, prova de posse, rotacao e revogacao/perda.
 - Validacao Android fisica ficou pendente porque ADB nao encontrou aparelho.
 
 ## Checkpoint complementar Frente 1 Android - 2026-05-07

@@ -33,7 +33,7 @@ Cristine é a gerente AI mobile. Ela mantém compatibilidade de memória com Zé
 
 ## Checkpoint atual
 
-Fase vigente: midia privada criptografada local fechada para homologacao Android, pronta para a proxima etapa de envelopes de chave, sessao remota e anjos.
+Fase vigente: Frente 1.1 de chaves reais por dispositivo fechada em Android e iPhone fisicos, pronta para a Frente 1.2 de midia critica/envelopes sem redesenhar SOS/Cofre/Player.
 
 Estado:
 - SOS e Cofre/Player seguem com UX aprovada para esta etapa; nao redesenhar sem novo comentario visual do Roberto.
@@ -42,6 +42,10 @@ Estado:
 - Thumbnail segura e salva como `thumbnail.sseg`; thumbnail clara temporaria e removida.
 - MP4 claro temporario da captura nativa so e apagado depois de reabrir e verificar chave, manifesto, chunks, hashes e thumbnail.
 - Falha de preservacao nao apaga o MP4 original; falha de limpeza fica como `cleanup_pending`.
-- Build privado C2 validado em Android fisico `192.168.0.4:5555`; APK SHA-256 `024150800908109199f84e1be2ef5bd9c72ae1f6986ecee0a8269f2c44ca1323`.
+- Frente 1.1 gera chave Ed25519 por dispositivo, guarda a chave privada somente no SecureStore e envia a API apenas chave publica/hash, metadados saneados e prova de posse.
+- Backend publicado exige `key_proof`, rejeita assinatura invalida quando aplicavel e registra rotacao/perda por endpoint dedicado.
+- Android fisico e iPhone fisico validaram Google Sign-In, JWT interno, SecureStore e dispositivo autenticado com `key_algorithm=ed25519-v1`.
+- Build iOS privado corrigido deve usar `npm run prepare:build:ios:secure-config` e `-xcconfig /private/tmp/sinalseguro-ios-secrets.xcconfig` para evitar URL scheme Google vazio no `Info.plist`.
+- Build privado C2 de midia local validado em Android fisico; APK SHA-256 `024150800908109199f84e1be2ef5bd9c72ae1f6986ecee0a8269f2c44ca1323`.
 - Evidencias principais: `docs/evidencias/android/2026-05-06-capture-cleanup-thumbnail/`.
-- Proxima etapa correta: envelopes de chave, sessao remota de emergencia e entrega controlada para anjos autenticados via EC2/API, sem mexer novamente na interface de midia salvo regressao comprovada.
+- Proxima etapa correta: Frente 1.2, midia critica/envelopes de chave, sessao remota de emergencia e entrega controlada para anjos autenticados via EC2/API, sem mexer novamente na interface de midia salvo regressao comprovada.

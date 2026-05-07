@@ -17,7 +17,7 @@ Referencia canonica do projeto: `../../../docs/tecnico/ESTADO_ATUAL_APP_BACKEND_
 - Backend Django/DRF ja esta implementado/publicado em base modular; a API nao deve mais ser descrita como placeholder em documentos atuais.
 - API publica `https://api.sinalseguro.com.br/api` foi validada nesta atualizacao com `health=ok` e readiness `database=ok`.
 - Frente 1 de identidade social/sessao concluida em Android fisico e iOS logado; o antigo bloqueio de `Custom URI scheme` fica como registro historico.
-- Frente 1.1 de chaves reais por dispositivo esta concluida, publicada em producao e homologada no Android fisico; iOS sera validado posteriormente.
+- Frente 1.1 de chaves reais por dispositivo esta concluida, publicada em producao e homologada no Android e no iPhone fisicos.
 - Proxima frente: midia critica, gravacao, criptografia, player e performance.
 - APK privado Android da homologacao 1.1: SHA-256 `9b37ed50604da58cd4bbe11622de7802c0335140e262e895b444da30ea5217f7`; release publico tecnico continua `android-v0.1.0-internal.2`.
 - Dados reais sensiveis, midia remota, localizacao ao vivo, videochamada, conveniados e orgaos publicos permanecem fora do MVP publico ate revisao juridica, seguranca, QA, retencao e RIPD/DPIA.

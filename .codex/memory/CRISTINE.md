@@ -56,17 +56,18 @@ Estado ativo em 2026-05-07:
 - documentacao da frente: `docs/33_CHAVES_REAIS_DISPOSITIVO.md`;
 - validacoes aprovadas: `npm run typecheck`, `npm run lint`, `npm test`, `manage.py check` e `manage.py test sinalseguro_api.tests.test_platform_base`;
 - deploy da API com migracao foi concluido: `sinalseguro-api` e `cereusia-crm` ativos, `nginx -t` aprovado, `cereusia.conf` intacto, API publica `health=ok` e readiness `database=ok`;
-- Android fisico ja homologou a Frente 1.1 contra a API publicada; iOS fica para validacao posterior;
+- Android fisico e iPhone fisico homologaram a Frente 1.1 contra a API publicada;
 - Frente 1 Android foi validada com Google Sign-In nativo, JWT interno SinalSeguro, SecureStore, `auth/me`, registro autenticado em `/devices/` e logout com refresh revogado;
 - OAuth iOS privado foi criado/configurado sem registrar Client ID real; `.env.local` contem as variaveis iOS esperadas e o valor real nao deve ser impresso;
 - EC2 recebeu a audiencia iOS em `/etc/sinalseguro-api.env`; somente `sinalseguro-api` foi reiniciado e `cereusia-crm` permaneceu ativo;
 - iOS foi compilado em `Release` para iPhone fisico e instalado via `ios-deploy`;
+- build iOS deve gerar antes o xcconfig temporario com `npm run prepare:build:ios:secure-config`; sem esse arquivo, o URL scheme Google pode ficar vazio no `Info.plist` e o app pode fechar ao iniciar Google Sign-In;
 - `ios/Podfile` corrige no `post_install` o script phase do `EXConstants` para funcionar em caminho iCloud com espaco;
 - `app.config.js` injeta `iosUrlScheme` do Google Sign-In apenas por ambiente local, sem versionar valor real;
-- lancamento remoto iOS ficou bloqueado porque o iPhone estava bloqueado; login Google iOS e registro `/devices/` iOS dependem de aparelho desbloqueado;
+- iPhone fisico validou Google Sign-In e registrou `/devices/` iOS com `key_algorithm=ed25519-v1`, chave publica/hash presentes e `key_registered_at` preenchido;
 - Android nao apareceu no ADB nesta retomada; teste de convites entre Android/iOS depende de reconectar/desbloquear o Android;
 - workflow padrao em maquinas com pouco espaco: antes de alternar Android/iOS, limpar regeneraveis da plataforma anterior e preservar fonte, locks, Pods necessarios e segredos locais;
-- scripts de apoio ficam em `scripts/` na raiz e sao chamados no app por `npm run prepare:build:ios`, `npm run prepare:build:android` e `npm run patch:ios:path-spaces`.
+- scripts globais de apoio ficam em `scripts/` na raiz e sao chamados no app por `npm run prepare:build:ios`, `npm run prepare:build:android` e `npm run patch:ios:path-spaces`; o script app-local `scripts/prepare-ios-secure-build-config.mjs` gera o xcconfig iOS temporario sem imprimir valores sensiveis.
 
 ## Memoria viva - 2026-05-07 - Frente 1.1 Android homologada
 
@@ -77,7 +78,17 @@ Estado ativo em 2026-05-07:
 - `Validar sessao` retornou `Sessao SinalSeguro validada. Dispositivo registrado e consentimentos sincronizados.`.
 - Consulta saneada na API de producao confirmou Android ativo com `key_algorithm=ed25519-v1`, chave publica/hash presentes e `key_registered_at` preenchido.
 - Logcat do processo nao mostrou padroes de e-mail, Bearer, ID token, refresh token, chave privada ou `key_proof`.
-- iOS fica para validacao posterior; proxima frente viavel: Frente 1.2, midia critica.
+- iOS tambem homologado no iPhone fisico; proxima frente viavel: Frente 1.2, midia critica.
+
+## Memoria viva - 2026-05-07 - Frente 1.1 iOS homologada
+
+- Primeiro build iOS da Frente 1.1 instalou, mas levava URL scheme Google vazio no `Info.plist`; ao tocar em `Entrar com Google`, o app fechava.
+- Correção mobile: adicionado `scripts/prepare-ios-secure-build-config.mjs` e atalho `npm run prepare:build:ios:secure-config`, que leem `.env.local`/ambiente local, validam Web Client ID, iOS Client ID e URL scheme sem imprimir valores, e geram `/private/tmp/sinalseguro-ios-secrets.xcconfig` com permissao `0600`.
+- Rebuild `Release` com `-xcconfig /private/tmp/sinalseguro-ios-secrets.xcconfig` passou no iPhone fisico; validacao saneada do bundle confirmou zero URL schemes vazios, scheme Google presente e `sinalseguro` presente.
+- Pacote iOS corrigido: SHA-256 `f95031a9f9d339b737702bc0540c4ab9bdab79c7d91e95e4b87fd6cd759b8546`.
+- `ios-deploy` reinstalou e abriu o app corrigido; `devicectl` continuou indisponivel por CoreDevice.
+- Backend de producao confirmou dispositivo iOS ativo com `key_algorithm=ed25519-v1`, chave publica/hash presentes e `key_registered_at` preenchido.
+- Gates mobile apos a correcao iOS: `npm run typecheck`, `npm run lint`, `npm test` e `git diff --check` aprovados.
 
 Estado ativo em 2026-05-06:
 

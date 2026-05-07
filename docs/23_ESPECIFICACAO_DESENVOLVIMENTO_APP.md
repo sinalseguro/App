@@ -36,7 +36,7 @@ Referencia canonica do projeto: `../../../docs/tecnico/ESTADO_ATUAL_APP_BACKEND_
 - App mobile ja possui cliente API real em `src/services/apiClient.ts`, com base padrao `https://api.sinalseguro.com.br/api`.
 - Backend Django/DRF modular ja implementa auth, Google/Apple OIDC, devices, trusted_contacts, invitations, consents, emergency_sessions, key_envelopes, p2p_signals, audit, Admin e CRM inicial.
 - API publica validada nesta atualizacao com `health=ok` e readiness `database=ok`.
-- Android privado ja resolveu localmente o redirect OAuth nativo; falta ajuste externo `Custom URI scheme` no Google Cloud para repetir login real.
+- Google Sign-In nativo ja foi validado em Android e iPhone privados; o bloqueio de `Custom URI scheme` pertence ao caminho historico por navegador.
 - Testes mobile desta atualizacao: `typecheck`, `lint` e `test` aprovados.
 
 ## Principios de arquitetura
@@ -206,9 +206,9 @@ Endpoint de atualizacao planejado:
 
 ## Login e consentimentos
 
-- Login por e-mail, Google OIDC e Apple Sign-In estao preparados no app/API, sem client secret no app.
-- Google Android aguarda habilitacao externa de `Custom URI scheme` no OAuth Android privado do Google Cloud para validacao fisica fim a fim.
-- Google iOS depende de OAuth Client ID iOS do bundle `br.com.sinalseguro.app`.
+- Login por e-mail, Google Sign-In nativo e Apple Sign-In estao preparados no app/API, sem client secret no app.
+- Google Sign-In nativo foi validado em Android e iPhone privados, com JWT interno, `auth/me`, sessao no `SecureStore` e registro autenticado de dispositivo.
+- A Frente 1.1 ja migrou dispositivos para chaves Ed25519 reais, prova de posse e revogacao/perda de aparelho.
 - Apple Sign-In so deve ser ativado com Apple Developer Program/Team e capability correta.
 - A conta de administracao ou homologacao nunca deve ser versionada com token, senha ou chave.
 - Termos de uso, privacidade e compartilhamento emergencial devem ter versao e aceite por dispositivo.

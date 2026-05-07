@@ -34,7 +34,7 @@ Regras novas:
 
 Sequencia atual:
 
-1. Frente 1.1 - chaves reais por dispositivo. Status: concluida, publicada em producao e homologada no Android fisico; iOS sera validado posteriormente.
+1. Frente 1.1 - chaves reais por dispositivo. Status: concluida, publicada em producao e homologada no Android e no iPhone fisicos.
 2. Frente 1.2 - midia critica, gravacao, criptografia, player e performance.
 3. Frente 1.3 - perfis, familia, maioridade e papeis.
 4. Frente 2 - anjos e convites.

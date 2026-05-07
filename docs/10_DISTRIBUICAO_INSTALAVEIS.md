@@ -12,8 +12,8 @@ Revisao juridica/LGPD: Doneda
 - APK privado local mais recente apos correcao de redirect OAuth Android: `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `e975046c54c756af14feba64fe40b83877252bb96bca0d97f2d334624218801b`.
 - O APK privado local mais recente nao foi publicado em GitHub Releases e nao deve ser divulgado como artefato publico.
 - API publica validada com `health=ok` e readiness `database=ok`.
-- Bloqueio Android atual antes de novo release de auth: habilitar `Custom URI scheme` no OAuth Android privado do Google Cloud e validar login fisico fim a fim.
-- iOS segue pendente de TestFlight/App Store, Apple Developer Program/capability quando aplicavel e validacao fisica de login.
+- Bloqueio Android historico de `Custom URI scheme` foi superado pelo fluxo Google Sign-In nativo; auth privado ja foi validado fisicamente.
+- iOS segue pendente de TestFlight/App Store e Apple Developer Program/capability para distribuicao publica; a validacao fisica privada de login ja foi concluida.
 - Gates locais desta atualizacao documental: `npm run typecheck`, `npm run lint` e `npm test` aprovados.
 
 Atualizacao privada iOS em 2026-05-07:
@@ -22,7 +22,7 @@ Atualizacao privada iOS em 2026-05-07:
 - Build iOS `Release` local para iPhone fisico foi aprovada com Xcode e instalada via `ios-deploy`.
 - O `.app` compilado contem a URL scheme Google esperada, mas o valor nao deve ser impresso, registrado ou documentado.
 - TestFlight/App Store continuam pendentes; este build instalado e apenas artefato privado de homologacao fisica.
-- Login iOS ainda depende do iPhone desbloqueado para abertura do app e interacao com Google Sign-In.
+- Login iOS foi validado fisicamente; novas instalacoes/testes manuais exigem iPhone desbloqueado para abertura do app e interacao com Google Sign-In.
 
 Workflow local obrigatorio por pouco espaco:
 
@@ -30,7 +30,7 @@ Workflow local obrigatorio por pouco espaco:
 - Antes de alternar de iOS para Android, limpar somente regeneraveis iOS: `ios/build`, DerivedData temporario `sinalseguro-ios-deriveddata` e logs temporarios `sinalseguro-ios-*.log`.
 - Preservar fonte, locks, `ios/Pods` quando a proxima compilacao iOS ainda for necessaria, `.env.local`, xcconfig temporario ativo e arquivos de configuracao versionados.
 - Nunca limpar ou recriar segredos por comando que imprima valores no terminal.
-- Scripts versionados de apoio ficam em `scripts/` na raiz: `prepare-platform-build.mjs` e `patch-ios-pods-path-spaces.mjs`. Atalhos no app: `npm run prepare:build:ios`, `npm run prepare:build:android` e `npm run patch:ios:path-spaces`.
+- Scripts versionados globais ficam em `scripts/` na raiz: `prepare-platform-build.mjs` e `patch-ios-pods-path-spaces.mjs`. O app tambem tem `scripts/prepare-ios-secure-build-config.mjs` para gerar xcconfig iOS temporario sem imprimir valores reais. Atalhos no app: `npm run prepare:build:ios`, `npm run prepare:build:android`, `npm run prepare:build:ios:secure-config` e `npm run patch:ios:path-spaces`.
 
 ## Canais publicos
 
