@@ -67,7 +67,7 @@ Documento canonico: `../../../docs/tecnico/FRENTES_GLOBAIS_APP_BACKEND_MIDIA_ANJ
 
 Ordem:
 
-1. Frente 1.1 - chaves reais por dispositivo, assinatura, rotacao, revogacao e perda de aparelho. Status: concluida tecnicamente e publicada em producao; homologacao fisica pos-deploy bloqueada por ausencia de aparelho conectado/desbloqueado.
+1. Frente 1.1 - chaves reais por dispositivo, assinatura, rotacao, revogacao e perda de aparelho. Status: concluida, publicada em producao e homologada no Android fisico; iOS sera validado posteriormente.
 2. Frente 1.2 - midia critica, gravacao, criptografia, player e performance.
 3. Frente 1.3 - perfis, familia, maioridade e papeis.
 4. Frente 2 - anjos e convites.
@@ -274,7 +274,7 @@ Prioridade pratica: concluir `OIDC + devices + chaves publicas + anjos + envelop
 - Login social persiste JWT em SecureStore e valida `auth/me` quando necessario.
 - Bootstrap autenticado registra dispositivo em `/devices/`, sem push token nesta frente.
 - Logout chama revogacao do refresh token e limpa a sessao local.
-- Base de chave publica real foi implementada e publicada na Frente 1.1 com Ed25519, prova de posse, rotacao e revogacao/perda; homologacao fisica pos-deploy depende de aparelho conectado/desbloqueado.
+- Base de chave publica real foi implementada, publicada e homologada no Android fisico na Frente 1.1 com Ed25519, prova de posse, rotacao e revogacao/perda; iOS sera validado posteriormente.
 - Validacao Android fisica ficou pendente porque ADB nao encontrou aparelho.
 
 ## Checkpoint complementar Frente 1 Android - 2026-05-07

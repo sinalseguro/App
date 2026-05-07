@@ -5,7 +5,7 @@ Supervisao: Ze
 
 ## 2026-05-07 - Frente 1.1: chaves reais por dispositivo
 
-Status: concluido tecnicamente e publicado em producao; homologacao fisica pos-deploy bloqueada por ausencia de aparelho conectado/desbloqueado.
+Status: concluido, publicado em producao e homologado no Android fisico; iOS sera validado posteriormente.
 
 Especialistas acionados:
 
@@ -1618,7 +1618,7 @@ Decisao operacional:
 
 Proxima frente recomendada:
 
-- Frente 1.1, chaves reais por dispositivo, esta em execucao na sessao `019e0346-97cd-7153-87ba-730bd455b5db`. A proxima frente apos ela e Frente 1.2, midia critica. Rede de anjos passa a ser Frente 2, depois das chaves reais, da midia critica e da frente de perfis/familia/maioridade.
+- Frente 1.1, chaves reais por dispositivo, esta concluida, publicada em producao e homologada no Android fisico. A proxima frente e Frente 1.2, midia critica. Rede de anjos passa a ser Frente 2, depois das chaves reais, da midia critica e da frente de perfis/familia/maioridade.
 
 ## 2026-05-07 - Frentes globais reorganizadas
 
@@ -1637,7 +1637,7 @@ Decisoes:
 
 Ordem atual:
 
-1. Frente 1.1 - chaves reais por dispositivo. Status: em execucao na sessao `019e0346-97cd-7153-87ba-730bd455b5db`.
+1. Frente 1.1 - chaves reais por dispositivo. Status: concluida, publicada em producao e homologada no Android fisico; iOS sera validado posteriormente.
 2. Frente 1.2 - midia critica, gravacao, criptografia, player e performance.
 3. Frente 1.3 - perfis, familia, maioridade e papeis.
 4. Frente 2 - anjos e convites.
@@ -1647,3 +1647,30 @@ Ordem atual:
 8. Frente 6 - localizacao em tempo real.
 9. Frente 7 - conveniados e orgaos.
 10. Frente 8 - compliance, lojas, academico e empresa.
+
+## 2026-05-07 - Frente 1.1 Android: homologacao fisica pos-deploy concluida
+
+Status: Android concluido; iOS fica para validacao posterior.
+
+Validacao fisica:
+
+- APK privado recompilado com a Frente 1.1 e instalado no Android fisico via ADB apos estabilizar o transporte;
+- app abriu sem crash e a rota `sinalseguro://configuracoes` abriu `Configuracoes`;
+- `Configuracoes > Login` mostrou sessao conectada e dispositivo autenticado registrado;
+- `Testar API` retornou `API SinalSeguro online: ok.`;
+- `Validar sessao` executou `auth/me`, bootstrap autenticado de dispositivo e consentimentos, retornando `Sessao SinalSeguro validada. Dispositivo registrado e consentimentos sincronizados.`;
+- consulta saneada na API de producao confirmou Android ativo com `key_algorithm=ed25519-v1`, chave publica presente, hash publico presente e `key_registered_at` preenchido;
+- logcat do processo do app nao apresentou padroes de e-mail, Bearer, ID token, refresh token, chave privada ou `key_proof`.
+
+Validacao tecnica:
+
+- APK validado: `android/app/build/outputs/apk/debug/app-debug.apk`;
+- SHA-256 do APK: `9b37ed50604da58cd4bbe11622de7802c0335140e262e895b444da30ea5217f7`;
+- API publica: `health=ok` e readiness `database=ok`;
+- `git diff --check`: aprovado.
+
+Decisao operacional:
+
+- homologacao Android da Frente 1.1 esta fechada;
+- iPhone/iOS sera retomado depois, sem bloquear a proxima frente Android/backend;
+- Frente 1.2 de midia critica pode ser aberta em chat proprio, sem alterar o contrato de chaves/dispositivos.

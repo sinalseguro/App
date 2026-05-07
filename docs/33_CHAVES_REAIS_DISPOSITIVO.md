@@ -47,12 +47,16 @@ Substituir o vinculo/hash provisorio por um par de chaves real por dispositivo. 
 
 ## Homologacao fisica pos-deploy
 
-Bloqueada operacionalmente em 2026-05-07:
+Android concluido em 2026-05-07:
 
-- `adb devices -l` nao listou Android conectado;
-- `xcrun devicectl list devices` nao encontrou provider/dispositivo iOS.
+- APK privado recompilado, instalado no Android fisico e aberto sem crash;
+- `Configuracoes > Login` confirmou sessao conectada, API configurada e dispositivo autenticado registrado;
+- `Testar API` no app fisico retornou `API SinalSeguro online: ok.`;
+- `Validar sessao` executou bootstrap autenticado e retornou `Sessao SinalSeguro validada. Dispositivo registrado e consentimentos sincronizados.`;
+- consulta saneada na API de producao confirmou dispositivo Android ativo com `key_algorithm=ed25519-v1`, chave publica presente, hash publico presente e `key_registered_at` preenchido;
+- varredura de logcat do processo nao encontrou padroes de e-mail, Bearer, ID token, refresh token, chave privada ou `key_proof`.
 
-Retestar Android/iOS fisicos quando os aparelhos estiverem conectados e desbloqueados.
+iOS fica para validacao posterior, conforme decisao operacional do usuario.
 
 ## Fora de escopo nesta frente
 

@@ -56,7 +56,7 @@ Estado ativo em 2026-05-07:
 - documentacao da frente: `docs/33_CHAVES_REAIS_DISPOSITIVO.md`;
 - validacoes aprovadas: `npm run typecheck`, `npm run lint`, `npm test`, `manage.py check` e `manage.py test sinalseguro_api.tests.test_platform_base`;
 - deploy da API com migracao foi concluido: `sinalseguro-api` e `cereusia-crm` ativos, `nginx -t` aprovado, `cereusia.conf` intacto, API publica `health=ok` e readiness `database=ok`;
-- pendente operacional: reteste fisico Android/iOS contra a API publicada quando houver aparelho conectado/desbloqueado;
+- Android fisico ja homologou a Frente 1.1 contra a API publicada; iOS fica para validacao posterior;
 - Frente 1 Android foi validada com Google Sign-In nativo, JWT interno SinalSeguro, SecureStore, `auth/me`, registro autenticado em `/devices/` e logout com refresh revogado;
 - OAuth iOS privado foi criado/configurado sem registrar Client ID real; `.env.local` contem as variaveis iOS esperadas e o valor real nao deve ser impresso;
 - EC2 recebeu a audiencia iOS em `/etc/sinalseguro-api.env`; somente `sinalseguro-api` foi reiniciado e `cereusia-crm` permaneceu ativo;
@@ -67,6 +67,17 @@ Estado ativo em 2026-05-07:
 - Android nao apareceu no ADB nesta retomada; teste de convites entre Android/iOS depende de reconectar/desbloquear o Android;
 - workflow padrao em maquinas com pouco espaco: antes de alternar Android/iOS, limpar regeneraveis da plataforma anterior e preservar fonte, locks, Pods necessarios e segredos locais;
 - scripts de apoio ficam em `scripts/` na raiz e sao chamados no app por `npm run prepare:build:ios`, `npm run prepare:build:android` e `npm run patch:ios:path-spaces`.
+
+## Memoria viva - 2026-05-07 - Frente 1.1 Android homologada
+
+- Android fisico recebeu o APK privado da Frente 1.1, SHA-256 `9b37ed50604da58cd4bbe11622de7802c0335140e262e895b444da30ea5217f7`.
+- App abriu sem crash; a rota `sinalseguro://configuracoes` abriu `Configuracoes`.
+- `Configuracoes > Login` confirmou sessao conectada, API configurada e dispositivo autenticado registrado.
+- `Testar API` retornou `API SinalSeguro online: ok.`.
+- `Validar sessao` retornou `Sessao SinalSeguro validada. Dispositivo registrado e consentimentos sincronizados.`.
+- Consulta saneada na API de producao confirmou Android ativo com `key_algorithm=ed25519-v1`, chave publica/hash presentes e `key_registered_at` preenchido.
+- Logcat do processo nao mostrou padroes de e-mail, Bearer, ID token, refresh token, chave privada ou `key_proof`.
+- iOS fica para validacao posterior; proxima frente viavel: Frente 1.2, midia critica.
 
 Estado ativo em 2026-05-06:
 
