@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as SplashScreen from "expo-splash-screen";
+import * as WebBrowser from "expo-web-browser";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LogBox, Platform, View } from "react-native";
 import { AppLaunchScreen } from "@/components/AppLaunchScreen";
@@ -10,6 +11,7 @@ import { theme } from "@/design/theme";
 const queryClient = new QueryClient();
 
 LogBox.ignoreLogs(["Unable to activate keep awake"]);
+WebBrowser.maybeCompleteAuthSession();
 
 if (Platform.OS !== "web") {
   void SplashScreen.preventAutoHideAsync();
@@ -68,6 +70,7 @@ export default function RootLayout() {
           <Stack.Screen name="convite" />
           <Stack.Screen name="configuracoes" />
           <Stack.Screen name="funcionamento" />
+          <Stack.Screen name="oauthredirect" />
         </Stack>
       </QueryClientProvider>
     </View>

@@ -4,13 +4,13 @@
 
 App mobile Android e iOS do SinalSeguro.
 
-Status: Home SOS fixa, splash aprovada, modais SinalSeguro, Cofre por icones, configuracoes iconograficas, consentimentos locais, endpoint de atualizacao e APK debug com bundle JS embutido validados em Android fisico.
+Status: MVP tecnico controlado com Home SOS, Cofre, Player, midia local criptografada em chunks, cliente API real, sessao segura, login Google/Apple preparado, anjos/convites API-backed e APK privado Android validado ate bloqueio externo do Google OAuth.
 Coordenacao geral: Ze.  
 Gerente AI mobile: Cristine.
 
 ## Objetivo
 
-Criar um app gratuito para pessoas em situacao de vulnerabilidade, com rede de anjos, pre-convite local, botao de panico in-app, alerta discreto, localizacao pontual consentida e cofre local. A integracao API-first so sera ativada em build homologado, com backend, contrato, chaves e auditoria.
+Criar um app gratuito para pessoas em situacao de vulnerabilidade, com rede de anjos, pre-convite local, botao de panico in-app, alerta discreto, localizacao pontual consentida e cofre local. A integracao API-first ja existe para homologacao controlada via `https://api.sinalseguro.com.br/api`; dados reais sensiveis, midia remota, videochamada, localizacao ao vivo e conveniados seguem bloqueados ate contrato, chaves, auditoria, RIPD/DPIA, retencao e revisao juridica/seguranca.
 
 O app nao substitui 190, 180, delegacias, saude, assistencia social, Defensoria, Ministerio Publico, Judiciario ou qualquer servico oficial.
 
@@ -22,6 +22,25 @@ O app nao substitui 190, 180, delegacias, saude, assistencia social, Defensoria,
 - Android 7+.
 - iOS 15.1+.
 - Design system unico para Android e iOS.
+
+## Estado real app/backend - 2026-05-07
+
+Referencia canonica do projeto: `../../../docs/tecnico/ESTADO_ATUAL_APP_BACKEND_2026-05-07.md`.
+
+- API publica validada: `health=ok` e readiness `database=ok`.
+- Cliente API real em `src/services/apiClient.ts`, com base padrao `https://api.sinalseguro.com.br/api`.
+- Login por e-mail, Google OIDC e Apple Sign-In estao preparados no app/API; Apple fica condicionado por env e capability.
+- Android privado corrige redirect OAuth nativo com schemes `sinalseguro` e `br.com.sinalseguro.app`.
+- Bloqueio atual: habilitar `Custom URI scheme` no OAuth Android privado do Google Cloud e repetir login fisico para validar `/auth/google`, JWT, `auth/me`, `/devices/` e logout.
+- Gates desta atualizacao documental: `npm run typecheck`, `npm run lint` e `npm test` aprovados.
+
+## Metodo de engenharia com IA
+
+O desenvolvimento do app usa **Spec-Driven AI Development com memoria documental local**.
+
+Isso significa que a IA apoia engenharia de requisitos, especificacao, implementacao, revisao e testes a partir dos documentos do repositorio. A memoria funciona em abordagem RAG-like: antes de gerar codigo ou documentacao, o contexto e recuperado de `AGENTS.md`, `.codex/AGENTS.md`, `.codex/memory/CRISTINE.md`, `docs/03_TIMELINE.md` e das especificacoes em `docs/`.
+
+Essa tecnica complementa a engenharia tradicional: stack, arquitetura, contrato de API, seguranca, LGPD, testes e criterios de aceite continuam documentados e validados. Mudancas tecnicas passam por Schneier e Myers; mudancas visuais passam por Norman, Tarcila e Myers.
 
 ## Comandos
 
@@ -59,7 +78,8 @@ Os QR codes apontam para paginas publicas estaveis. Elas serao atualizadas para 
 
 Status atual:
 
-- Android: APK interno 2 assinado, validado em aparelho fisico via ADB Wi-Fi e publicado em GitHub Releases.
+- Android: APK interno 2 assinado publicado em GitHub Releases continua sendo o release publico tecnico atual.
+- Android privado local: APK debug com bundle JS embutido foi recompilado apos correcao do redirect OAuth; nao e release publico nem artefato de loja.
 - iOS: TestFlight/App Store pendente.
 - GitHub Releases: canal tecnico ativo para artefatos Android.
 
@@ -89,18 +109,18 @@ Checkpoint tecnico atual:
 - Pre-convite local com codigo opaco, expiracao sugerida e compartilhamento permitido pelo sistema somente para instalar/aceitar convite.
 - Pacote local de emergencia com horario, consentimento, georreferencia pontual autorizada, hash e video/audio local quando a usuaria conceder camera e microfone no build privado.
 - Area `Cofre local` para acessar pacotes e videos preservados neste dispositivo e verificar o que permanece bloqueado ate backend, contrato, chaves e auditoria.
-- Build privado de midia local habilita `CAMERA` e `RECORD_AUDIO` para homologacao controlada; transmissao, compartilhamento externo, P2P e backend real continuam bloqueados.
+- Build privado de midia local habilita `CAMERA` e `RECORD_AUDIO` para homologacao controlada; transmissao, compartilhamento externo, P2P critico e envio remoto de midia continuam bloqueados.
 
 APK privado atual com midia local para validacao:
 
 - Caminho: `android/app/build/outputs/apk/debug/app-debug.apk`.
-- SHA-256: `f5a407ca1937f589f8d1c1f4dc1d2f251e8cf1f7031e59ef76f3ac3373724f15`.
+- SHA-256 atual apos correcao do redirect OAuth Android: `e975046c54c756af14feba64fe40b83877252bb96bca0d97f2d334624218801b`.
 - Build local: `npm run build:android:private`.
-- Observacao: o aparelho foi reinstalado pelo transporte ADB Wi-Fi ativo `192.168.0.4:5555`; o USB nao apareceu como transporte separado em `adb devices -l` nesta rodada.
+- Observacao: este hash representa o APK privado local mais recente registrado na documentacao, nao o release publico `android-v0.1.0-internal.2`.
 - O APK debug atual embute o bundle JS e desliga o suporte nativo de desenvolvedor apenas neste modo de validacao, abrindo sem Metro, sem `adb reverse` e sem depender de `localhost:8081`.
 - O gate publico `npm run release:android:readiness` fica bloqueado enquanto este workspace contiver a instrumentacao privada de midia (`expo-camera`/`expo-video`). Para loja/publico, usar perfil ou branch sem midia local ate a liberacao juridica.
-- Cold start validado no Android fisico com `TotalTime: 4487`, sem crash fatal no `logcat` filtrado por PID do app.
-- A validacao de toque SOS/camera permanece manual no aparelho, porque a injecao de toque por ADB nao acionou os controles nesta rodada.
+- Validacao Android mais recente confirmou que `br.com.sinalseguro.app:/oauthredirect`, `sinalseguro:/oauthredirect` e `sinalseguro://configuracoes` resolvem para o app.
+- Login Google real ainda depende de habilitar `Custom URI scheme` no OAuth Android privado do Google Cloud.
 
 ## OIDC Google
 

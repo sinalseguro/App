@@ -4,6 +4,7 @@ const requiredFiles = [
   "AGENTS.md",
   ".codex/AGENTS.md",
   ".codex/memory/CRISTINE.md",
+  "app.config.js",
   "docs/00_PLANO_MOBILE.md",
   "docs/03_TIMELINE.md",
   "docs/30_MIDIA_CRIPTOGRAFADA_CHUNKS.md",
@@ -48,12 +49,14 @@ const requiredFiles = [
   "src/features/emergency/EncryptedVideoPlaybackCache.ts",
   "src/features/emergency/SecureVideoThumbnailStore.ts",
   "src/services/apiClient.ts",
+  "src/services/appleIdentity.ts",
   "src/services/deviceBinding.ts",
+  "src/services/deviceKeyProof.ts",
   "src/services/googleOidc.ts",
   "scripts/encrypted-video-store.test.ts",
+  "scripts/device-key-proof.test.ts",
   "src/storage/secureJsonStore.ts",
-  "scripts/android-private-media-readiness.mjs",
-  "android/app/src/main/res/drawable-xxhdpi/splashscreen_logo.png"
+  "scripts/android-private-media-readiness.mjs"
 ];
 
 for (const file of requiredFiles) {
@@ -129,6 +132,18 @@ const evidencePlayerCard = await readFile("src/components/EvidencePlayerCard.tsx
 const mediaInterfacePresentation = await readFile("src/features/emergency/mediaInterfacePresentation.ts", "utf8");
 const localFilesScreen = await readFile("app/arquivos.tsx", "utf8");
 const settingsScreen = await readFile("app/configuracoes.tsx", "utf8");
+const deviceBinding = await readFile("src/services/deviceBinding.ts", "utf8");
+const deviceKeyProof = await readFile("src/services/deviceKeyProof.ts", "utf8");
+
+if (
+  !deviceKeyProof.includes("ed25519-v1") ||
+  !deviceKeyProof.includes("buildDeviceKeyProof") ||
+  !deviceKeyProof.includes("verifyDeviceKeyProof") ||
+  !deviceBinding.includes("legacyPublicKeySha256") ||
+  !deviceBinding.includes("replacesPublicKeySha256")
+) {
+  throw new Error("Vinculo de dispositivo precisa usar Ed25519, prova de posse e migracao do hash legado.");
+}
 
 if (!localEvidenceRail.includes("onDeletePackage") || !localEvidenceRail.includes("Compartilhar")) {
   throw new Error("Cofre local precisa expor acoes de visualizar, compartilhar pelo app e excluir local.");
@@ -335,7 +350,6 @@ if (/const DEFAULT_FINISH_CODE_HASH = "e41d64/.test(emergencyPreferences)) {
 
 const secureStorage = await readFile("src/security/secureStorage.ts", "utf8");
 const apiClient = await readFile("src/services/apiClient.ts", "utf8");
-const deviceBinding = await readFile("src/services/deviceBinding.ts", "utf8");
 const invitationService = await readFile("src/features/invitations/invitationService.ts", "utf8");
 
 if (secureStorage.includes("sessionStorage") || !secureStorage.includes("Platform.OS !== \"web\"")) {
@@ -348,6 +362,7 @@ if (!secureStorage.includes("nativeSecretKey") || !secureStorage.includes("nativ
 
 if (
   !apiClient.includes("loginWithGoogleIdToken") ||
+  !apiClient.includes("loginWithAppleIdentityToken") ||
   !apiClient.includes("createConsentRecord") ||
   !apiClient.includes("createTrustedContact") ||
   !apiClient.includes("acceptInvitation") ||

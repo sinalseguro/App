@@ -4,6 +4,7 @@ import path from "node:path";
 
 const androidRoot = path.join(process.cwd(), "android");
 const buildGradlePath = path.join(androidRoot, "app", "build.gradle");
+const localPropertiesPath = path.join(androidRoot, "local.properties");
 const mainApplicationPath = path.join(
   androidRoot,
   "app",
@@ -38,6 +39,23 @@ function ensureAndroidProject() {
   run("npx", ["expo", "prebuild", "--platform", "android", "--no-install"]);
 }
 
+function escapeLocalPropertiesPath(value) {
+  return value.replaceAll("\\", "\\\\").replaceAll(":", "\\:");
+}
+
+function ensureAndroidSdkLocation() {
+  if (existsSync(localPropertiesPath)) {
+    return;
+  }
+
+  const sdkDir = process.env.ANDROID_HOME || process.env.ANDROID_SDK_ROOT;
+  if (!sdkDir) {
+    return;
+  }
+
+  writeFileSync(localPropertiesPath, `sdk.dir=${escapeLocalPropertiesPath(sdkDir)}\n`);
+}
+
 function replaceOnce(contents, search, replacement, description) {
   if (contents.includes(replacement)) {
     return contents;
@@ -53,13 +71,18 @@ function replaceOnce(contents, search, replacement, description) {
 function patchBuildGradle() {
   let contents = readFileSync(buildGradlePath, "utf8");
 
-  contents = replaceOnce(
-    contents,
-    'def releaseKeyPassword = System.getenv("SINAL_APP_ANDROID_KEY_PASSWORD")\n',
-    'def releaseKeyPassword = System.getenv("SINAL_APP_ANDROID_KEY_PASSWORD")\n' +
-      'def sinalBundleDebugJs = (findProperty("sinalBundleDebugJs") ?: "false").toBoolean()\n',
-    "declarar sinalBundleDebugJs"
-  );
+  if (!contents.includes("def sinalBundleDebugJs =")) {
+    const signingAnchor = 'def releaseKeyPassword = System.getenv("SINAL_APP_ANDROID_KEY_PASSWORD")\n';
+    const projectRootAnchor = "def projectRoot = rootDir.getAbsoluteFile().getParentFile().getAbsolutePath()\n";
+    const anchor = contents.includes(signingAnchor) ? signingAnchor : projectRootAnchor;
+
+    contents = replaceOnce(
+      contents,
+      anchor,
+      `${anchor}def sinalBundleDebugJs = (findProperty("sinalBundleDebugJs") ?: "false").toBoolean()\n`,
+      "declarar sinalBundleDebugJs"
+    );
+  }
 
   if (!contents.includes("debuggableVariants = []")) {
     contents = replaceOnce(
@@ -137,6 +160,7 @@ function patchAndroidManifest() {
 }
 
 ensureAndroidProject();
+ensureAndroidSdkLocation();
 patchBuildGradle();
 patchMainApplication();
 patchAndroidManifest();

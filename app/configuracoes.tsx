@@ -2,9 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { Linking, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { router } from "expo-router";
 import { Camera as ExpoCamera } from "expo-camera";
-import * as Google from "expo-auth-session/providers/google";
 import * as Location from "expo-location";
-import * as WebBrowser from "expo-web-browser";
 import {
   BookOpenCheck,
   Camera,
@@ -53,11 +51,17 @@ import {
   verifySecurityCodeStatus,
   validateSecurityCodePair
 } from "@/security/protectedAccess";
-import { ApiSession, apiClient, apiConfig } from "@/services/apiClient";
+import { ApiRequestError, ApiSession, apiClient, apiConfig } from "@/services/apiClient";
+import { AppleIdentityCancelledError, appleIdentityService } from "@/services/appleIdentity";
 import { DeviceBootstrapResult, deviceBindingService } from "@/services/deviceBinding";
-import { getGoogleOidcAuthRequestConfig, getGoogleOidcReadiness } from "@/services/googleOidc";
-
-WebBrowser.maybeCompleteAuthSession();
+import { beginGoogleOidcAuthorizationAsync, consumeGoogleOidcLoginStatus, getGoogleOidcReadiness } from "@/services/googleOidc";
+import {
+  beginNativeGoogleSignInAsync,
+  buildGoogleSignInNotice,
+  completeGoogleSignInFromRedirect,
+  getNativeGoogleSignInReadiness,
+  signOutNativeGoogleIfAvailable
+} from "@/services/googleSignIn";
 
 type PermissionStatusText = "pendente" | "permitido" | "negado" | "bloqueado";
 type SettingsPanel = "duracao" | "encerramento" | "localizacao" | "compartilhamento" | "video" | "atalhos" | "termos" | "login" | null;
@@ -68,6 +72,19 @@ type InfoDialog = {
   icon?: ReactNode;
   actions: BrandedDialogAction[];
 };
+
+function getErrorMessage(error: unknown, fallback: string) {
+  if (!(error instanceof Error)) return fallback;
+  return error.message || fallback;
+}
+
+function isActiveDeviceLoginBlocked(error: unknown) {
+  if (!(error instanceof ApiRequestError) || error.status !== 409) return false;
+  if (!error.details || typeof error.details !== "object") return false;
+
+  const details = error.details as { code?: unknown };
+  return details.code === "active_device_login_blocked";
+}
 
 function toPermissionStatus(status: Location.PermissionStatus): PermissionStatusText {
   if (status === Location.PermissionStatus.GRANTED) return "permitido";
@@ -136,7 +153,11 @@ function SecurityCodeInput({
 
 export default function SettingsScreen() {
   const googleOidcReadiness = getGoogleOidcReadiness();
-  const [googleRequest, , promptGoogleAsync] = Google.useIdTokenAuthRequest(getGoogleOidcAuthRequestConfig());
+  const nativeGoogleReadiness = getNativeGoogleSignInReadiness();
+  const googleNativePlatform = Platform.OS === "android" || Platform.OS === "ios";
+  const googleLoginConfigured = googleNativePlatform
+    ? nativeGoogleReadiness.currentPlatformConfigured
+    : googleOidcReadiness.currentPlatformConfigured;
   const [preferences, setPreferences] = useState<EmergencyPreferences | null>(null);
   const [foregroundStatus, setForegroundStatus] = useState<PermissionStatusText>("pendente");
   const [backgroundStatus, setBackgroundStatus] = useState<PermissionStatusText>("bloqueado");
@@ -157,8 +178,26 @@ export default function SettingsScreen() {
   const [loginBusy, setLoginBusy] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [loginNotice, setLoginNotice] = useState("");
+  const [appleLoginAvailable, setAppleLoginAvailable] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [, setStatusText] = useState("Carregando preferencias de emergencia...");
+
+  function showLoginFailureMessage(message: string, title = "Login nao concluido") {
+    setLoginError(message);
+    setInfoDialog({
+      title,
+      message,
+      icon: <LockKeyhole size={18} color={theme.colors.danger} />,
+      actions: [{ label: "Entendi" }]
+    });
+  }
+
+  function showLoginFailure(error: unknown, fallback: string) {
+    showLoginFailureMessage(
+      getErrorMessage(error, fallback),
+      isActiveDeviceLoginBlocked(error) ? "Login bloqueado neste aparelho" : "Login nao concluido"
+    );
+  }
 
   async function refreshReadiness() {
     const readiness = await getLocationPermissionReadiness();
@@ -172,6 +211,15 @@ export default function SettingsScreen() {
     setPreferences(nextPreferences);
     setApiSession(await apiClient.getStoredSession());
     setRegisteredDeviceId(await deviceBindingService.getRegisteredApiDeviceId());
+    const googleLoginStatus = await consumeGoogleOidcLoginStatus();
+    if (googleLoginStatus) {
+      setActivePanel("login");
+      if (googleLoginStatus.kind === "success") {
+        setLoginNotice(googleLoginStatus.message);
+      } else {
+        showLoginFailureMessage(googleLoginStatus.message);
+      }
+    }
     await refreshReadiness();
     if (hasSecurityCode(nextPreferences)) {
       setAccessGateVisible(!(await isProtectedAccessUnlocked()));
@@ -182,6 +230,10 @@ export default function SettingsScreen() {
 
   useEffect(() => {
     void loadSettings();
+  }, []);
+
+  useEffect(() => {
+    void appleIdentityService.isAvailable().then(setAppleLoginAvailable).catch(() => setAppleLoginAvailable(false));
   }, []);
 
   async function updatePreferences(nextPreferences: EmergencyPreferences, message: string) {
@@ -260,13 +312,7 @@ export default function SettingsScreen() {
   }
 
   function buildLoginBootstrapNotice(prefix: string, bootstrap: DeviceBootstrapResult) {
-    if (bootstrap.consentStatus === "recorded") {
-      return `${prefix} Dispositivo registrado e consentimentos sincronizados.`;
-    }
-    if (bootstrap.consentStatus === "partial") {
-      return `${prefix} Dispositivo registrado; alguns consentimentos aguardam a API atualizada.`;
-    }
-    return `${prefix} Dispositivo registrado.`;
+    return buildGoogleSignInNotice(prefix, bootstrap);
   }
 
   async function completeDeviceBootstrap(currentPreferences: EmergencyPreferences) {
@@ -287,13 +333,14 @@ export default function SettingsScreen() {
     setLoginNotice("");
 
     try {
-      const session = await apiClient.loginWithEmail(email, loginPassword);
+      const deviceContext = await deviceBindingService.getLoginDeviceContext();
+      const session = await apiClient.loginWithEmail(email, loginPassword, deviceContext);
       const bootstrap = await completeDeviceBootstrap(nextPreferencesOrCurrent());
       setApiSession(session);
       setLoginPassword("");
       setLoginNotice(buildLoginBootstrapNotice("Conta SinalSeguro conectada neste aparelho.", bootstrap));
     } catch (error) {
-      setLoginError(error instanceof Error ? error.message : "Nao foi possivel entrar agora.");
+      showLoginFailure(error, "Nao foi possivel entrar agora.");
     } finally {
       setLoginBusy(false);
     }
@@ -305,7 +352,11 @@ export default function SettingsScreen() {
     setLoginNotice("");
 
     try {
-      await apiClient.logout();
+      const deviceContext = await deviceBindingService.getLogoutDeviceContext();
+      await apiClient.logout(deviceContext);
+      if (googleNativePlatform) {
+        await signOutNativeGoogleIfAvailable();
+      }
       await deviceBindingService.clearRegisteredDeviceSession();
       setApiSession(null);
       setRegisteredDeviceId(null);
@@ -322,37 +373,74 @@ export default function SettingsScreen() {
     setLoginError("");
     setLoginNotice("");
 
-    if (!googleOidcReadiness.currentPlatformConfigured) {
+    if (!googleLoginConfigured) {
       setLoginBusy(false);
-      setLoginError("Client ID Google OIDC nao configurado para esta plataforma.");
-      return;
-    }
-
-    if (!googleRequest) {
-      setLoginBusy(false);
-      setLoginError("Login Google ainda esta carregando. Tente novamente em alguns segundos.");
+      showLoginFailureMessage(
+        Platform.OS === "ios"
+          ? "Google no iPhone exige EXPO_PUBLIC_GOOGLE_OIDC_WEB_CLIENT_ID, EXPO_PUBLIC_GOOGLE_OIDC_IOS_CLIENT_ID e o Client ID iOS liberado na API."
+          : "Google Android exige EXPO_PUBLIC_GOOGLE_OIDC_WEB_CLIENT_ID local."
+      );
       return;
     }
 
     try {
-      const response = await promptGoogleAsync();
+      if (googleNativePlatform) {
+        const completion = await beginNativeGoogleSignInAsync();
+        setApiSession(completion.session);
+        setRegisteredDeviceId(completion.bootstrap.device.id);
+        setLoginNotice(completion.notice);
+        return;
+      }
+
+      const response = await beginGoogleOidcAuthorizationAsync();
       if (response.type !== "success") {
         setLoginNotice("Login Google cancelado.");
         return;
       }
 
-      const googleJwt = response.params.id_token;
-      if (!googleJwt) {
-        setLoginError("Google nao retornou ID token para validacao.");
-        return;
+      setLoginNotice("Login Google autorizado; validando com o SinalSeguro.");
+      const completion = await completeGoogleSignInFromRedirect(response.params);
+      setApiSession(completion.session);
+      setRegisteredDeviceId(completion.bootstrap.device.id);
+      setLoginNotice(completion.notice);
+    } catch (error) {
+      if (googleNativePlatform && error instanceof ApiRequestError) {
+        await signOutNativeGoogleIfAvailable();
       }
+      showLoginFailure(error, "Nao foi possivel entrar com Google agora.");
+    } finally {
+      setLoginBusy(false);
+    }
+  }
 
-      const session = await apiClient.loginWithGoogleIdToken(googleJwt);
+  async function loginWithApple() {
+    setLoginBusy(true);
+    setLoginError("");
+    setLoginNotice("");
+
+    if (!appleLoginAvailable) {
+      setLoginBusy(false);
+      showLoginFailureMessage("Login Apple indisponivel neste aparelho ou assinatura/capability ainda nao habilitada.");
+      return;
+    }
+
+    try {
+      const appleLogin = await appleIdentityService.signIn();
+      const deviceContext = await deviceBindingService.getLoginDeviceContext();
+      const session = await apiClient.loginWithAppleIdentityToken(
+        appleLogin.identityToken,
+        appleLogin.displayName,
+        deviceContext
+      );
       const bootstrap = await completeDeviceBootstrap(nextPreferencesOrCurrent());
       setApiSession(session);
-      setLoginNotice(buildLoginBootstrapNotice("Conta Google conectada ao SinalSeguro.", bootstrap));
+      setLoginNotice(buildLoginBootstrapNotice("Conta Apple conectada ao SinalSeguro.", bootstrap));
     } catch (error) {
-      setLoginError(error instanceof Error ? error.message : "Nao foi possivel entrar com Google agora.");
+      if (error instanceof AppleIdentityCancelledError) {
+        setLoginNotice(error.message);
+        return;
+      }
+      showLoginFailure(error, "Nao foi possivel entrar com Apple agora.");
     } finally {
       setLoginBusy(false);
     }
@@ -595,16 +683,6 @@ export default function SettingsScreen() {
     await Linking.openSettings();
   }
 
-  function showOidcPlan(provider: "Google" | "Apple/iCloud") {
-    setInfoDialog({
-      title: `Login ${provider}`,
-      message:
-        `Entrada com ${provider} preparada. A ativacao final acontece pela conta segura do SinalSeguro.`,
-      icon: <KeyRound size={18} color={theme.colors.primary} />,
-      actions: [{ label: "Entendi" }]
-    });
-  }
-
   function showPanelHelp(panel: Exclude<SettingsPanel, null>) {
     const helpByPanel = {
       atalhos:
@@ -791,6 +869,19 @@ export default function SettingsScreen() {
                     : "Dispositivo sera registrado apos login validado."}
                 </Text>
               </View>
+              <View style={styles.inlineInfo}>
+                <KeyRound
+                  size={18}
+                  color={googleLoginConfigured ? theme.colors.secure : theme.colors.textMuted}
+                />
+                <Text style={styles.inlineInfoText}>
+                  {googleLoginConfigured
+                    ? googleNativePlatform
+                      ? `Google Sign-In nativo configurado para ${Platform.OS === "ios" ? "iOS" : "Android"}.`
+                      : "Google OIDC configurado para esta plataforma."
+                    : "Google ainda nao configurado para esta plataforma."}
+                </Text>
+              </View>
               {apiSession?.user ? (
                 <>
                   <ButtonIcon
@@ -860,13 +951,14 @@ export default function SettingsScreen() {
                 icon={<KeyRound size={18} color={theme.colors.primary} />}
                 label="Entrar com Google"
                 onPress={loginWithGoogle}
-                style={googleOidcReadiness.currentPlatformConfigured ? undefined : styles.disabledOidcOption}
+                style={googleLoginConfigured ? undefined : styles.disabledOidcOption}
               />
               <ButtonIcon
-                disabled={loginBusy}
+                disabled={loginBusy || !appleLoginAvailable}
                 icon={<KeyRound size={18} color={theme.colors.primary} />}
                 label="Entrar com Apple/iCloud"
-                onPress={() => showOidcPlan("Apple/iCloud")}
+                onPress={loginWithApple}
+                style={appleLoginAvailable ? undefined : styles.disabledOidcOption}
               />
               {loginError ? <Text style={styles.errorText}>{loginError}</Text> : null}
               {loginNotice ? <Text style={styles.noticeText}>{loginNotice}</Text> : null}

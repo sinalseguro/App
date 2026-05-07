@@ -3,6 +3,16 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## Estado real do backlog em 2026-05-07
+
+Referencia canonica app/backend: `../../../docs/tecnico/ESTADO_ATUAL_APP_BACKEND_2026-05-07.md`.
+
+- Epicos A/B/C estao implementados em base de MVP tecnico controlado: app shell, design system, Home SOS, Cofre, Player, pacote local, midia criptografada de homologacao e fluxo local seguro.
+- Epico D evoluiu alem do planejamento inicial: API Django modular existe, cliente API mobile existe, anjos/convites/consentimentos usam API quando autenticados e ha contratos para emergencia, envelopes e sinalizacao P2P.
+- O que ainda nao esta pronto no Epico D: login Google real fim a fim no Android apos ajuste externo do Google Cloud, par de chaves real por dispositivo, convite/aceite/revogacao com contas/dispositivos proprios e envelopes de chave em fluxo completo.
+- Epico E tem release Android tecnico `android-v0.1.0-internal.2` publicado e APK privado local mais recente `e975046c54c756af14feba64fe40b83877252bb96bca0d97f2d334624218801b`; iOS permanece pendente.
+- Nenhum item de midia remota, localizacao ao vivo, videochamada, conveniados ou orgaos publicos deve ser promovido para producao sem Doneda, Schneier e Myers.
+
 ## Legenda
 
 - `MVP`: entra na primeira versao controlada.

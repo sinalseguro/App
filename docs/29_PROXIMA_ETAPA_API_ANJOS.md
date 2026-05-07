@@ -1,70 +1,112 @@
-# 29 - Proxima etapa do plano global: API e Anjos
+# 29 - API e Anjos: estado real e proxima validacao
 
-Data: 2026-05-05
+Data original: 2026-05-05
+Atualizacao de estado real: 2026-05-07
 Coordenacao: Ze e Cristine
-Base revisada: `docs/00_PLANO_MOBILE.md`, `docs/01_CRONOGRAMA.md`, `docs/02_BACKLOG.md`, `docs/07_ARQUITETURA.md`, `docs/api/openapi.yaml` e `services/api/README.md`
+Base revisada: `docs/00_PLANO_MOBILE.md`, `docs/01_CRONOGRAMA.md`, `docs/02_BACKLOG.md`, `docs/07_ARQUITETURA.md`, `docs/api/openapi.yaml`, `services/api/README.md` e `../../../docs/tecnico/ESTADO_ATUAL_APP_BACKEND_2026-05-07.md`.
 
-## Conclusao da etapa atual antes da virada
+## Mudanca de status
 
-A etapa mobile privada deve ser fechada antes de iniciar novo escopo:
+Este documento nasceu como plano para iniciar a fase "API e Anjos". Em 2026-05-07, a situacao real mudou: a API Django ja nao e placeholder e a integracao mobile ja existe em base controlada.
 
-1. Validar no browser os ultimos ajustes visuais da Home. Concluido em `http://localhost:8081/`.
-2. Gerar novo APK privado, porque houve mudanca de codigo apos o APK instalado. Concluido com SHA-256 `daf5a22d163acc468a9470e1bd2178606f1b547c55bdf824a22eefe5d3f022d1`.
-3. Instalar no Android conectado. Concluido via USB no Android `23129RA5FL`.
-4. Validar abertura, Home e logs. Concluido; evidencias em `docs/evidencias/android/2026-05-05-apk-privado-final/`.
-5. Registrar hash do APK, evidencias, timeline e memoria. Concluido.
-6. Commitar e publicar o checkpoint. Pendente apenas se Roberto quiser fechar no remoto agora.
+O conteudo abaixo substitui a leitura antiga de "proxima fase = construir API do zero". A leitura correta agora e:
 
-## Proxima fase segundo o plano
+- API modular ja implementada/publicada;
+- cliente API mobile ja implementado;
+- anjos/convites ja usam API quando ha sessao autenticada;
+- a Frente 1 foi concluida para login/sessao/dispositivo;
+- a proxima frente viavel e `Frente 1.1 - chaves reais por dispositivo`;
+- anjos/convites ficam como Frente 2, depois de chaves reais, midia critica e da Frente 1.3 de perfis/familia/maioridade.
 
-O plano global aponta a proxima fase como **API e Anjos**.
+## Reorganizacao global - 2026-05-07
 
-Referencias:
+Documento canonico: `../../../docs/tecnico/FRENTES_GLOBAIS_APP_BACKEND_MIDIA_ANJOS.md`.
 
-- Cronograma: Fase 4, `API e anjos`.
-- Backlog: Epico D, itens `D01` a `D04`.
-- Arquitetura: app API-first, outbox local com retry, P2P apenas futuro/best-effort.
-- OpenAPI: dominios `auth`, `devices`, `trusted_contacts`, `invitations`, `consents`, `alerts`, `app_updates` e auditoria.
-- Backend existente: `services/api` e um placeholder Django com `GET /api/health` e `GET /api/health/ready`.
+Regras novas:
 
-## Escopo recomendado da fase
+- pais/responsaveis podem adicionar filhos menores como protegidos;
+- filhos menores nao adicionam anjos, conveniados ou terceiros;
+- filhos menores nao sao anjos ate maioridade e fluxo proprio;
+- adulto pode ser anjo de varios usuarios, mas so atende uma ocorrencia SOS ativa por vez;
+- a pessoa protegida pode chamar anjos por audio/video; localizacao e canal separado;
+- anjo em segundo plano recebe chamada/alerta e abre camera/microfone apenas apos aceitar;
+- modulo atual de midia criptografada por JS/Base64/loopback nao deve ser base final para chamada longa ou conveniados.
 
-1. Evoluir `services/api` de placeholder para API Django modular.
-2. Criar modelos e endpoints iniciais sem dados reais:
-   - autenticacao propria e OIDC preparado;
-   - registro de dispositivo;
-   - consentimentos versionados;
-   - convites opacos, expiraveis e de uso unico;
-   - rede de anjos com estados `pendente`, `aceito`, `revogado`;
-   - consulta de atualizacao do app.
-3. Implementar cliente API mobile em `src/services/` usando o contrato OpenAPI.
-4. Substituir mocks de convites/anjos por adaptadores locais que possam operar offline e sincronizar depois.
-5. Manter alerta real, upload de midia, streaming e acionamento oficial bloqueados ate revisao juridica, RIPD/DPIA, retencao, RBAC e auditoria.
+Sequencia atual:
 
-## Critérios de pronto
+1. Frente 1.1 - chaves reais por dispositivo. Status: em execucao na sessao `019e0346-97cd-7153-87ba-730bd455b5db`.
+2. Frente 1.2 - midia critica, gravacao, criptografia, player e performance.
+3. Frente 1.3 - perfis, familia, maioridade e papeis.
+4. Frente 2 - anjos e convites.
+5. Frente 3 - ocorrencia SOS e roteamento.
+6. Frente 4 - chamada audio/video.
+7. Frente 5 - midia operacional e nuvem cifrada.
+8. Frente 6 - localizacao em tempo real.
+9. Frente 7 - conveniados e orgaos.
 
-- API local sobe com banco isolado e health/readiness.
-- Endpoints principais cobertos por testes de contrato e casos de erro.
-- Nenhum segredo entra no Git.
-- Logs sem tokens, coordenadas, payloads sensiveis, midia ou dados pessoais reais.
-- Mobile compila e segue funcionando offline quando a API estiver indisponivel.
-- Convite de anjo exige conta propria, aceite e consentimento; nao permite usar uma conta logada do navegador como segredo ou prova de identidade.
-- Documentacao de seguranca e LGPD atualizada antes de qualquer dado real.
+## Estado real app/backend
 
-## Fora desta fase
+- API publica: `https://api.sinalseguro.com.br/api`.
+- Health publico validado: `ok`.
+- Readiness publico validado: `database=ok`.
+- Backend Django/DRF implementa `accounts`, `devices`, `trusted_contacts`, `invitations`, `consents`, `emergency`, `audit` e `crm`.
+- Endpoints ativos incluem `auth/register`, `auth/login`, `auth/google`, `auth/apple`, `auth/refresh`, `auth/logout`, `auth/me`, `devices`, `trusted-contacts`, `invitations`, `consents`, `emergency-sessions`, `key-envelopes`, `p2p-signals`, `audit-events`, `admin` e `crm`.
+- App mobile possui `src/services/apiClient.ts` com metodos para autenticacao, sessao, dispositivo, consentimentos, anjos, convites, emergencia, envelopes e sinalizacao.
+- Tela de Anjos separa anjos autorizados, convites reais de API e pre-convites locais.
+- Convite real exige sessao propria; pre-convite local continua como fallback de baixa conectividade/pre-auth.
+
+## Estado apos Frente 1
+
+O bloqueio da Frente 1 nao era falta de API. Depois da etapa historica de `Custom URI scheme`, o Android passou para Google Sign-In nativo e a Frente 1 foi concluida em Android fisico e iOS logado.
+
+Validado:
+
+1. Login Google real no Android fisico.
+2. `POST /api/auth/google`.
+3. Emissao de JWT interno.
+4. Persistencia segura da sessao no SecureStore.
+5. `GET /api/auth/me`.
+6. Registro autenticado em `/api/devices/`.
+7. Logout com revogacao de refresh token.
+8. Sessao unica entre iOS e Android, com bloqueio claro do segundo dispositivo para a mesma conta.
+
+## Proxima validacao obrigatoria
+
+1. Frente 1.1: gerar par de chaves real por dispositivo.
+2. Provar posse da chave privada sem expo-la.
+3. Assinar operacoes criticas selecionadas.
+4. Validar rotacao, revogacao e perda de aparelho.
+5. Revalidar convite/aceite/revogacao de anjo somente depois das chaves reais.
+9. Criar convite real de anjo com conta autenticada.
+10. Aceitar convite com conta/dispositivo proprio do anjo.
+11. Revogar anjo e verificar auditoria/estado.
+
+## Proximo bloco tecnico apos login
+
+- Substituir vinculo/hash provisório por par de chaves real do dispositivo.
+- Gerar chave privada local sem sair do aparelho.
+- Publicar apenas chave publica/hash no backend.
+- Implementar assinatura/verificacao, rotacao, revogacao e perda de aparelho.
+- Criar envelopes de chave por anjo autorizado.
+- Validar `/emergency-sessions/` com idempotency key e reenvio seguro.
+
+## Fora desta validacao
 
 - Convenio ou integracao oficial com orgaos publicos.
 - Envio real de midia.
 - Streaming ao vivo.
+- Localizacao ao vivo.
 - P2P como caminho critico.
 - Dados reais de vitimas, anjos ou atendimentos.
 - Credenciais, tokens, secrets ou configuracoes privadas versionadas.
 
-## Primeira tarefa tecnica da fase
+## Criterios de pronto
 
-Criar a base modular da API:
-
-1. Apps Django: `accounts`, `devices`, `consents`, `trusted_contacts`, `invitations`, `alerts`, `audit`.
-2. Serializacao e validacao alinhadas ao OpenAPI.
-3. Testes de `health`, `ready`, criacao de convite, aceite controlado e registro de consentimento.
-4. Cliente mobile minimo para `health` e `app_updates`, mantendo fallback local.
+- `npm run typecheck`, `npm run lint` e `npm test` aprovados.
+- API publica com `health=ok` e readiness `database=ok`.
+- Backend local revalidado quando `services/api/.venv` for restaurado.
+- Nenhum segredo entra no Git.
+- Logs sem tokens, coordenadas, payloads sensiveis, midia ou dados pessoais reais.
+- Mobile continua funcionando offline quando a API estiver indisponivel.
+- Convite de anjo exige conta propria, aceite, dispositivo e consentimento.
+- Documentacao de seguranca/LGPD atualizada antes de qualquer dado real.

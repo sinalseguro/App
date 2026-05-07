@@ -1,6 +1,7 @@
 # 23 - Especificacao de desenvolvimento do app
 
-Data: 2026-05-03  
+Data: 2026-05-03
+Atualizacao de estado real: 2026-05-07
 Fonte de verdade operacional: este repositorio, `AGENTS.md`, `.codex/AGENTS.md` e `.codex/memory/CRISTINE.md`.
 
 ## Stack
@@ -11,6 +12,32 @@ Fonte de verdade operacional: este repositorio, `AGENTS.md`, `.codex/AGENTS.md` 
 - Android 7+ (`minSdkVersion 24`, `targetSdkVersion 36`).
 - iOS 15.1+.
 - Design system proprio em `src/design/`.
+
+## Metodo de desenvolvimento com IA
+
+O app segue **Spec-Driven AI Development com memoria documental local**.
+
+Na pratica, cada evolucao deve partir de especificacao, memoria e criterios de aceite antes do codigo. A IA consulta os documentos do repositorio em abordagem RAG-like, considera os agentes especializados do projeto e so entao apoia implementacao, revisao, teste e atualizacao documental.
+
+Fontes principais:
+
+- `AGENTS.md` e `.codex/AGENTS.md` do projeto;
+- `.codex/memory/CRISTINE.md`;
+- `docs/03_TIMELINE.md`;
+- especificacoes em `apps/mobile/docs/`;
+- documento mestre `../../../docs/tecnico/METODOLOGIA_IA_ENGENHARIA_SOFTWARE.md`.
+
+Gates obrigatorios continuam sendo seguranca, LGPD, QA, testes, logs saneados e separacao explicita entre MVP, homologacao, fase futura, dependencia juridica e dependencia de convenio.
+
+## Estado real app/backend - 2026-05-07
+
+Referencia canonica do projeto: `../../../docs/tecnico/ESTADO_ATUAL_APP_BACKEND_2026-05-07.md`.
+
+- App mobile ja possui cliente API real em `src/services/apiClient.ts`, com base padrao `https://api.sinalseguro.com.br/api`.
+- Backend Django/DRF modular ja implementa auth, Google/Apple OIDC, devices, trusted_contacts, invitations, consents, emergency_sessions, key_envelopes, p2p_signals, audit, Admin e CRM inicial.
+- API publica validada nesta atualizacao com `health=ok` e readiness `database=ok`.
+- Android privado ja resolveu localmente o redirect OAuth nativo; falta ajuste externo `Custom URI scheme` no Google Cloud para repetir login real.
+- Testes mobile desta atualizacao: `typecheck`, `lint` e `test` aprovados.
 
 ## Principios de arquitetura
 
@@ -148,20 +175,28 @@ Bloqueadas tambem no build privado:
 - `WRITE_EXTERNAL_STORAGE`.
 - backup Android de evidencias locais (`android:allowBackup="false"` no Manifest nativo preparado pelo build privado).
 
-## API futura
+## API atual e contratos
 
-Contratos previstos em `docs/api/openapi.yaml`:
+Cliente atual: `src/services/apiClient.ts`. Contratos previstos/evolutivos em `docs/api/openapi.yaml`:
 
 - `auth`.
 - `devices`.
 - `trusted_contacts`.
 - `invitations`.
 - `consents`.
-- `alerts`.
-- `delivery_attempts`.
-- `media_assets`.
+- `emergency_sessions`.
+- `key_envelopes`.
+- `p2p_signals`.
 - `audit_events`.
 - `app_updates`.
+
+Ainda permanecem como fase posterior para producao publica:
+
+- fanout completo de alertas;
+- `delivery_attempts`;
+- `media_assets` remotos;
+- localizacao ao vivo;
+- WebRTC/P2P critico.
 
 Endpoint de atualizacao planejado:
 
@@ -171,7 +206,10 @@ Endpoint de atualizacao planejado:
 
 ## Login e consentimentos
 
-- Login Google/Apple/iCloud fica preparado como fluxo OIDC futuro, sem client secret no app.
+- Login por e-mail, Google OIDC e Apple Sign-In estao preparados no app/API, sem client secret no app.
+- Google Android aguarda habilitacao externa de `Custom URI scheme` no OAuth Android privado do Google Cloud para validacao fisica fim a fim.
+- Google iOS depende de OAuth Client ID iOS do bundle `br.com.sinalseguro.app`.
+- Apple Sign-In so deve ser ativado com Apple Developer Program/Team e capability correta.
 - A conta de administracao ou homologacao nunca deve ser versionada com token, senha ou chave.
 - Termos de uso, privacidade e compartilhamento emergencial devem ter versao e aceite por dispositivo.
 - Quem recebe stream, arquivo ou localizacao deve aceitar compromisso de sigilo e uso somente no SinalSeguro ou por exportacao auditada para finalidade legal.

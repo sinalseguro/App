@@ -2,6 +2,18 @@
 
 Responsavel: Myers
 
+## Estado de QA em 2026-05-07
+
+Referencia canonica: `../../../docs/tecnico/ESTADO_ATUAL_APP_BACKEND_2026-05-07.md`.
+
+- Gates desta atualizacao documental aprovados: `npm run typecheck`, `npm run lint` e `npm test`.
+- API publica validada por health/readiness: `health=ok` e `database=ok`.
+- Android privado mais recente ja valida resolucao dos redirects `br.com.sinalseguro.app:/oauthredirect`, `sinalseguro:/oauthredirect` e `sinalseguro://configuracoes`.
+- Frente 1 de identidade social/sessao concluida em Android fisico e iOS logado; o bloqueio de `Custom URI scheme` fica apenas como evidencia historica.
+- Proximo bloqueio de QA: Frente 1.1 precisa provar chaves reais por dispositivo, posse da chave privada, rotacao, revogacao, perda de aparelho, assinatura de operacoes criticas e nao exposicao de segredo em logs.
+- Ainda precisam de reteste depois das chaves reais: convite/aceite com duas contas/dispositivos, envelopes de chave, emergencia autenticada, logout com blacklist e alternancia de anjo em ocorrencia ativa.
+- Testes locais do backend nao foram repetidos nesta rodada porque `services/api/.venv` esta ausente no workspace raiz.
+
 ## Matriz inicial
 
 | Area | Cenarios |

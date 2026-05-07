@@ -2,7 +2,10 @@
   "expo": {
     "name": "SinalSeguro",
     "slug": "sinalseguro-app",
-    "scheme": "sinalseguro",
+    "scheme": [
+      "sinalseguro",
+      "br.com.sinalseguro.app"
+    ],
     "version": "0.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
@@ -79,7 +82,8 @@
       ],
       "expo-font",
       "expo-video",
-      "expo-web-browser"
+      "expo-web-browser",
+      "@react-native-google-signin/google-signin"
     ],
     "experiments": {
       "typedRoutes": true

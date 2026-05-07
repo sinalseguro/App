@@ -1,7 +1,7 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 import path from "node:path";
 
-const ignored = new Set(["node_modules", ".git", ".expo", "dist", "build", "coverage"]);
+const ignored = new Set(["node_modules", ".git", ".expo", "android", "ios", "dist", "build", "coverage"]);
 const checkedExtensions = new Set([".ts", ".tsx", ".md", ".json", ".yaml", ".yml"]);
 const forbidden = [/senha\s*=/i, /token\s*=/i, /api[_-]?key\s*=/i, /private key/i, /BEGIN RSA PRIVATE KEY/];
 

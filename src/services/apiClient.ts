@@ -2,6 +2,7 @@ import { Platform } from "react-native";
 import { z } from "zod";
 
 import { deleteSecret, readSecret, saveSecret } from "@/security/secureStorage";
+import { DeviceKeyProof } from "@/services/deviceKeyProof";
 
 const DEFAULT_API_BASE_URL = "https://api.sinalseguro.com.br/api";
 const API_SESSION_SECRET_KEY = "api.session.v1";
@@ -53,7 +54,12 @@ const DeviceSchema = z.object({
   platform: z.string(),
   device_label: z.string(),
   app_version: z.string(),
+  key_algorithm: z.string().optional(),
+  key_registered_at: z.string().nullable().optional(),
+  key_rotated_at: z.string().nullable().optional(),
   public_key_sha256: z.string().optional(),
+  revocation_reason: z.string().optional(),
+  revoked_at: z.string().nullable().optional(),
   status: z.string(),
   last_seen_at: z.string().nullable().optional(),
   created_at: z.string(),
@@ -166,9 +172,34 @@ export type ApiP2PSignal = z.infer<typeof P2PSignalSchema>;
 export type RegisterDeviceInput = {
   appVersion: string;
   deviceLabel: string;
+  keyAlgorithm?: string;
+  keyProof: DeviceKeyProof;
   platform?: "android" | "ios" | "web";
   publicKey?: string;
   pushToken?: string;
+  replacesPublicKeySha256?: string;
+};
+
+export type RotateDeviceKeyInput = {
+  appVersion: string;
+  deviceLabel: string;
+  keyAlgorithm: string;
+  keyProof: DeviceKeyProof;
+  platform: "android" | "ios" | "web";
+  publicKey: string;
+};
+
+export type LoginDeviceContext = {
+  appVersion: string;
+  deviceLabel: string;
+  legacyPublicKeySha256?: string;
+  platform: "android" | "ios" | "web";
+  publicKeySha256: string;
+};
+
+export type LogoutDeviceContext = {
+  deviceId?: string | null;
+  publicKeySha256?: string | null;
 };
 
 export type CreateConsentRecordInput = {
@@ -255,6 +286,27 @@ function toApiDateTime(value?: string) {
   return value ?? new Date().toISOString();
 }
 
+function toLoginDevicePayload(deviceContext?: LoginDeviceContext | null) {
+  if (!deviceContext) return {};
+
+  return {
+    device_app_version: deviceContext.appVersion,
+    device_label: deviceContext.deviceLabel,
+    device_legacy_public_key_sha256: deviceContext.legacyPublicKeySha256,
+    device_platform: deviceContext.platform,
+    device_public_key_sha256: deviceContext.publicKeySha256
+  };
+}
+
+function toLogoutDevicePayload(deviceContext?: LogoutDeviceContext | null) {
+  if (!deviceContext) return {};
+
+  return {
+    device_id: deviceContext.deviceId ?? undefined,
+    device_public_key_sha256: deviceContext.publicKeySha256 ?? undefined
+  };
+}
+
 async function parseResponseBody(response: Response) {
   const text = await response.text();
   if (!text) return null;
@@ -296,10 +348,10 @@ export class SinalSeguroApiClient {
     return this.request("/health", HealthSchema, { authenticated: false });
   }
 
-  async loginWithEmail(email: string, password: string) {
+  async loginWithEmail(email: string, password: string, deviceContext?: LoginDeviceContext | null) {
     const tokenResponse = await this.request("/auth/login", AuthTokenResponseSchema, {
       authenticated: false,
-      body: { email, password },
+      body: { ...toLoginDevicePayload(deviceContext), email, password },
       method: "POST"
     });
     const session: ApiSession = {
@@ -317,10 +369,10 @@ export class SinalSeguroApiClient {
     return session;
   }
 
-  async loginWithGoogleIdToken(idToken: string) {
+  async loginWithGoogleIdToken(idToken: string, deviceContext?: LoginDeviceContext | null) {
     const tokenResponse = await this.request("/auth/google", AuthTokenResponseSchema, {
       authenticated: false,
-      body: { id_token: idToken },
+      body: { ...toLoginDevicePayload(deviceContext), id_token: idToken },
       method: "POST"
     });
     const session: ApiSession = {
@@ -330,16 +382,50 @@ export class SinalSeguroApiClient {
     };
 
     await this.saveSession(session);
+    if (!session.user) {
+      session.user = await this.getMe();
+      await this.saveSession(session);
+    }
+
     return session;
   }
 
-  async logout() {
+  async loginWithAppleIdentityToken(
+    identityToken: string,
+    displayName?: string,
+    deviceContext?: LoginDeviceContext | null
+  ) {
+    const tokenResponse = await this.request("/auth/apple", AuthTokenResponseSchema, {
+      authenticated: false,
+      body: {
+        ...toLoginDevicePayload(deviceContext),
+        display_name: displayName,
+        id_token: identityToken
+      },
+      method: "POST"
+    });
+    const session: ApiSession = {
+      access: tokenResponse.access,
+      refresh: tokenResponse.refresh,
+      user: tokenResponse.user ?? null
+    };
+
+    await this.saveSession(session);
+    if (!session.user) {
+      session.user = await this.getMe();
+      await this.saveSession(session);
+    }
+
+    return session;
+  }
+
+  async logout(deviceContext?: LogoutDeviceContext | null) {
     const session = await this.getStoredSession();
     try {
       if (session?.refresh) {
         await this.request("/auth/logout", z.unknown(), {
           authenticated: true,
-          body: { refresh: session.refresh },
+          body: { ...toLogoutDevicePayload(deviceContext), refresh: session.refresh },
           method: "POST"
         });
       }
@@ -358,10 +444,43 @@ export class SinalSeguroApiClient {
       body: {
         app_version: input.appVersion,
         device_label: input.deviceLabel,
+        key_algorithm: input.keyAlgorithm,
+        key_proof: input.keyProof,
         platform: input.platform ?? currentPlatform(),
         public_key: input.publicKey,
-        push_token: input.pushToken
+        push_token: input.pushToken,
+        replaces_public_key_sha256: input.replacesPublicKeySha256
       },
+      method: "POST"
+    });
+  }
+
+  async rotateDeviceKey(deviceId: string, input: RotateDeviceKeyInput) {
+    return this.request(`/devices/${deviceId}/rotate-key/`, DeviceSchema, {
+      authenticated: true,
+      body: {
+        app_version: input.appVersion,
+        device_label: input.deviceLabel,
+        key_algorithm: input.keyAlgorithm,
+        key_proof: input.keyProof,
+        platform: input.platform,
+        public_key: input.publicKey
+      },
+      method: "POST"
+    });
+  }
+
+  async revokeDevice(deviceId: string, reason: "manual" | "logout" | "lost" | "rotated" = "manual") {
+    return this.request(`/devices/${deviceId}/revoke/`, DeviceSchema, {
+      authenticated: true,
+      body: { reason },
+      method: "POST"
+    });
+  }
+
+  async markDeviceLost(deviceId: string) {
+    return this.request(`/devices/${deviceId}/mark-lost/`, DeviceSchema, {
+      authenticated: true,
       method: "POST"
     });
   }

@@ -12,7 +12,9 @@ Preparar a evolucao do app para login real, videochamada de emergencia com anjo 
 
 - App mobile ja possui cliente API POO em `src/services/apiClient.ts`.
 - Login por e-mail e Google OIDC estao preparados na tela `Configuracoes > Login`.
-- Google OIDC depende do client OAuth Android real no ambiente do app e de `GOOGLE_OIDC_CLIENT_IDS` no backend.
+- Google OIDC Android foi validado em aparelho fisico com Google Sign-In nativo, JWT interno, SecureStore, `auth/me`, `/devices/` e logout.
+- Google OIDC iOS ja possui OAuth Client ID privado para bundle `br.com.sinalseguro.app`, valor configurado no app/backend sem registro em Git; build iOS privada foi instalada no iPhone, mas login iOS ainda depende do aparelho desbloqueado para teste fisico.
+- Apple Sign-In esta implementado no app/API, mas so deve ser ativado em build iOS com Apple Developer Program/Team e capability `Sign in with Apple`; Personal Team gratuito fica com `EXPO_PUBLIC_APPLE_SIGN_IN_ENABLED=0`.
 - EC2 do SinalSeguro esta preparada como API/CRM isolada em `https://api.sinalseguro.com.br/api` e `https://gestao.sinalseguro.com.br`.
 - Midia local ja tem arquitetura de chunks criptografados em `docs/30_MIDIA_CRIPTOGRAFADA_CHUNKS.md`.
 - Compartilhamento remoto seguro ja tem desenho base em `docs/31_ARQUITETURA_COMPARTILHAMENTO_TEMPO_REAL.md`.
@@ -29,6 +31,16 @@ Preparar a evolucao do app para login real, videochamada de emergencia com anjo 
 - EC2 foi reiniciada e validada com health/readiness, `nginx -t`, `sinalseguro-api`, `cereusia-crm` e hash de `cereusia.conf`.
 - O valor real do client ID nao foi registrado em Git, docs ou memoria.
 
+## Checkpoint F1 - 2026-05-07
+
+- Android abandonou o fluxo por navegador/Custom URI para esta frente e passou a usar Google Sign-In nativo.
+- Backend emitiu JWT interno SinalSeguro via Google, sessao foi persistida em SecureStore, `auth/me` retornou usuario, `/devices/` registrou aparelho autenticado e logout revogou refresh token.
+- OAuth iOS privado foi criado/configurado e a audiencia foi adicionada ao env isolado da EC2; `sinalseguro-api` e `cereusia-crm` permaneceram ativos.
+- `ios/Podfile` corrige o script phase do Expo Constants para caminhos com espaco no iCloud.
+- Build iOS `Release` para iPhone fisico foi aprovada e instalada via `ios-deploy`.
+- Login iOS e teste de convites Android/iOS seguem bloqueados ate iPhone desbloqueado e Android reconectado/desbloqueado.
+- Em maquinas com pouco espaco, alternar Android/iOS exige limpar regeneraveis da plataforma anterior antes de compilar a proxima.
+
 ## Principios obrigatorios
 
 - Desenvolvimento, testes e operacao inicial devem permanecer em niveis gratuitos sempre que tecnicamente viavel.
@@ -42,6 +54,33 @@ Preparar a evolucao do app para login real, videochamada de emergencia com anjo 
 - Menores de idade podem existir como perfis/dependentes vinculados a responsavel legal verificado, mas nao podem convidar anjos, conveniados ou terceiros.
 - Responsaveis podem adicionar filhos/dependentes e configurar a propria conta como anjo/responsavel do menor, com consentimento versionado, trilha de auditoria e revisao ECA Digital/LGPD.
 - O modelo de menores deve considerar o risco de o agressor ser responsavel legal; nenhum compartilhamento automatico de midia, localizacao ou historico sensivel deve ocorrer sem regra de seguranca aprovada.
+- Funcionamento em segundo plano significa prontidao para acionar/receber chamada ou ocorrencia, nao camera, microfone ou GPS permanentes.
+- Camera, microfone e GPS so abrem durante ocorrencia ativa, com permissao e indicador do sistema.
+- A pessoa protegida pode abrir chamada de audio/video com anjos ou responsaveis autorizados; localizacao nao entra nessa chamada por padrao.
+- Filhos menores acionam SOS para pais/responsaveis e, futuramente, conveniados autorizados; eles nao convidam anjos nem viram anjos antes da maioridade.
+- Uma pessoa adulta pode ser anjo de varios usuarios, mas so pode atender uma ocorrencia ativa por vez; alternancia precisa ser explicita e auditada.
+- O modulo atual de midia criptografada por JS/Base64/loopback e prova tecnica de homologacao; chamadas longas, conveniados e nuvem exigem refatoracao para WebRTC nativo, gravacao segmentada, criptografia nativa por segmento e player nativo.
+
+## Frentes globais atualizadas - 2026-05-07
+
+Documento canonico: `../../../docs/tecnico/FRENTES_GLOBAIS_APP_BACKEND_MIDIA_ANJOS.md`.
+
+Ordem:
+
+1. Frente 1.1 - chaves reais por dispositivo, assinatura, rotacao, revogacao e perda de aparelho. Status: concluida tecnicamente e publicada em producao; homologacao fisica pos-deploy bloqueada por ausencia de aparelho conectado/desbloqueado.
+2. Frente 1.2 - midia critica, gravacao, criptografia, player e performance.
+3. Frente 1.3 - perfis, familia, maioridade e papeis.
+4. Frente 2 - anjos e convites.
+5. Frente 3 - ocorrencia SOS e roteamento.
+6. Frente 4 - chamada audio/video sem localizacao por padrao.
+7. Frente 5 - midia operacional e nuvem cifrada.
+8. Frente 6 - localizacao em tempo real como canal separado.
+9. Frente 7 - conveniados e orgaos.
+10. Frente 8 - compliance, lojas, academico e empresa.
+
+Proxima frente viavel apos a Frente 1.1:
+
+- Frente 1.2, midia critica. A rede de anjos nao deve avancar antes de chave real por dispositivo, prova de posse, midia critica estabilizada e regras de perfis/familia/maioridade.
 
 ## Arquitetura alvo
 
@@ -66,6 +105,8 @@ flowchart LR
 - Guardar client ID apenas em ambiente seguro do app e backend; nenhum valor real entra em Git ou memoria.
 - Configurar `GOOGLE_OIDC_CLIENT_IDS` na EC2 e reiniciar `sinalseguro-api`.
 - Validar `Entrar com Google` no Android e `POST /api/auth/google` no backend.
+- Criar OAuth Client ID iOS para `br.com.sinalseguro.app` antes de validar `Entrar com Google` no iPhone.
+- Ativar `EXPO_PUBLIC_APPLE_SIGN_IN_ENABLED=1` apenas quando o Bundle ID possuir capability Apple Sign-In no Team correto.
 
 Pronto quando:
 
@@ -225,6 +266,60 @@ Antes de ativar video/audio/localizacao reais para anjos, fechar estes contratos
 
 Prioridade pratica: concluir `OIDC + devices + chaves publicas + anjos + envelopes + emergency_sessions` antes de midia real, localizacao continua ou P2P critico.
 
+## Checkpoint Frente 1 Android - 2026-05-06
+
+- API publica reconfirmada com `health=ok` e readiness `database=ok`.
+- Ambiente local do app contem as variaveis esperadas de API/Google OIDC sem valores registrados.
+- `Configuracoes > Login` passou a informar se Google OIDC esta configurado para a plataforma atual.
+- Login social persiste JWT em SecureStore e valida `auth/me` quando necessario.
+- Bootstrap autenticado registra dispositivo em `/devices/`, sem push token nesta frente.
+- Logout chama revogacao do refresh token e limpa a sessao local.
+- Base de chave publica real foi implementada e publicada na Frente 1.1 com Ed25519, prova de posse, rotacao e revogacao/perda; homologacao fisica pos-deploy depende de aparelho conectado/desbloqueado.
+- Validacao Android fisica ficou pendente porque ADB nao encontrou aparelho.
+
+## Checkpoint complementar Frente 1 Android - 2026-05-07
+
+- Android fisico foi validado por ADB apos instabilidade do transporte USB, sem registrar IP, serial ou e-mail.
+- Build Android privado passou e gerou `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `c527276c91ed274295062fb0d194b1c6f1f5e8ee0e9a00574e433f618247de31`.
+- App abriu no pacote `br.com.sinalseguro.app` em Android 15.
+- `Configuracoes > Login` confirmou API configurada, dispositivo a registrar apos login e Google OIDC configurado para Android, sem exibir Client ID.
+- `Testar API` no app fisico respondeu `API SinalSeguro online: ok.`.
+- `Entrar com Google` abriu o OAuth do Google, mas o provedor bloqueou antes do consentimento com `Erro 400: invalid_request` e mensagem saneada `Custom URI scheme is not enabled for your Android client.`
+- Como nao houve ID token, seguem nao validados no caminho real: `POST /auth/google`, JWT interno, persistencia final no SecureStore, `auth/me`, `/devices/` autenticado e logout com revogacao do refresh token.
+- Acao externa necessaria: habilitar custom URI scheme no OAuth Android privado do Google Cloud e repetir o login fisico sem imprimir Client ID, token ou e-mail.
+
+## Checkpoint redirect OAuth Android corrigido - 2026-05-07
+
+- Documento canônico de estado app/backend: `../../../docs/tecnico/ESTADO_ATUAL_APP_BACKEND_2026-05-07.md`.
+- Diagnóstico local confirmou que o APK aceitava `sinalseguro://`, mas não aceitava `br.com.sinalseguro.app:/oauthredirect`, redirect nativo usado pelo provider Google do Expo no Android.
+- `app.json` passou a registrar os schemes `sinalseguro` e `br.com.sinalseguro.app`.
+- Prebuild Android atualizou o Manifest nativo.
+- APK privado recompilado e reinstalado no Android físico.
+- ADB confirmou que `br.com.sinalseguro.app:/oauthredirect`, `sinalseguro:/oauthredirect` e `sinalseguro://configuracoes` resolvem para `br.com.sinalseguro.app`.
+- Gates aprovados na rodada: `npm run typecheck`, `npm run lint`, `npm test`, `npm run build:android:private` e `git diff --check`.
+- APK privado local atualizado: SHA-256 `e975046c54c756af14feba64fe40b83877252bb96bca0d97f2d334624218801b`.
+- Bloqueio restante segue externo: habilitar `Custom URI scheme` no OAuth Android privado do Google Cloud e repetir o login real.
+
+## Checkpoint callback OAuth Android corrigido - 2026-05-07
+
+- Google Cloud: `Custom URI scheme` habilitado no OAuth Android privado sem registrar Client ID real e sem billing/free trial.
+- O Google passou a chegar ao seletor de conta e retornar codigo para o app.
+- O bloqueio seguinte era local: `sinalseguro://oauthredirect` entrava em `Unmatched Route`.
+- O app agora tem rota `oauthredirect`, `maybeCompleteAuthSession` no layout raiz e fluxo Google PKCE com estado efemero no SecureStore.
+- A conclusao troca codigo por ID token, chama `POST /auth/google`, persiste JWT, valida usuario quando necessario, registra `/devices/` e sincroniza consentimentos.
+- API publica reconfirmada: `health=ok` e readiness `database=ok`.
+- Gates aprovados: `npm run typecheck`, `npm run lint`, `npm test` e `npm run build:android:private`.
+- APK privado instalado no Android fisico: SHA-256 `669ccbc6a701b6f1ecec18d9bda93761074be3c754e918042e73e197b672d8b0`.
+- Bloqueio restante e operacional: aparelho entrou em keyguard/NotificationShade e precisa ser desbloqueado para a validacao final de login/logout.
+
+## Checkpoint OAuth Google em producao - 2026-05-07
+
+- Google Auth Platform estava em `Testing`, com acesso limitado a usuarios de teste.
+- A tela de escopos foi conferida antes da mudanca e nao listava escopos confidenciais nem restritos.
+- O app OAuth foi publicado em producao para publico externo, sem billing/free trial e sem registrar Client ID real.
+- Esse ajuste remove a necessidade de pre-cadastro manual de test users para login basico.
+- O reteste Android fim a fim permanece pendente porque o ADB perdeu o dispositivo apos a publicacao; reconectar/desbloquear antes de repetir login.
+
 ## Gates de compliance e loja
 
 - LGPD: matriz de dados, bases legais, controlador/operador, encarregado/canal, finalidades, retencao, descarte, compartilhamentos, RIPD/DPIA, direitos do titular e logs saneados.
@@ -233,6 +328,30 @@ Prioridade pratica: concluir `OIDC + devices + chaves publicas + anjos + envelop
 - Apple: App Privacy Details, exclusao de conta no app, Sign in with Apple quando exigido por login social, push sem dado sensivel, suporte/moderacao para comunicacao entre usuarios.
 - Videochamada: somente homologacao controlada ate consentimento especifico, indicador visivel de camera/microfone, retencao definida, auditoria e RIPD.
 - Localizacao em tempo real: nao entra direto no MVP publico; comecar por localizacao pontual consentida e evoluir para tempo real apenas com disclosure, revogacao e revisao de loja.
+
+## Checkpoint Frente 1 Android concluida - 2026-05-07
+
+- Android deixou de usar navegador/Custom URI para login Google porque o provedor continuou bloqueando o fluxo por politica de resposta segura.
+- Fluxo Android agora e Google Sign-In nativo via Play Services, com Web Client ID mantido somente em ambiente seguro local/EC2.
+- EC2: audiencia Web adicionada apenas ao ambiente SinalSeguro; somente `sinalseguro-api` foi reiniciado; `cereusia-crm` permaneceu ativo e `cereusia.conf` nao foi alterado.
+- Android fisico validou seletor nativo Google, `/auth/google`, JWT interno, SecureStore, `auth/me`, registro autenticado em `/devices/` e logout com revogacao de refresh token.
+- Logs do processo do app nao expuseram token, refresh token, access token, Client ID real ou e-mail.
+- Gates aprovados: `npm run typecheck`, `npm run lint`, `npm test`, `git diff --check` e build Android privado.
+- APK privado validado: SHA-256 `1ca183fe0c68bd4ad45f9330da1ef93ca14bbd1789d5ed0015eada2a19d4087f`.
+- Limite restante para anjos reais: deployar/homologar a Frente 1.1 de chaves reais por dispositivo e fechar as frentes seguintes de midia critica e perfis/familia/maioridade.
+
+## Checkpoint sessao unica iOS/Android - 2026-05-07
+
+- iPhone fisico concluiu login Google no app privado e backend manteve dispositivo iOS ativo.
+- Android foi recompilado no modo debug bundled, reinstalado via ADB Wi-Fi e abriu sem crash.
+- O fluxo `Configuracoes > Login > Entrar com Google` no Android mostrou modal de bloqueio quando a mesma conta ja estava ativa no iPhone.
+- A mensagem exibida orienta logout no aparelho ativo ou uso/criacao de outra conta.
+- Backend confirmou bloqueio recente com dispositivo ativo `ios` e tentativa corrente `android`.
+- Estado final saneado do usuario: Android revogado, iOS ativo, chave publica/hash presentes no dispositivo ativo e push token ausente.
+- API publica segue `health=ok` e readiness `database=ok`.
+- Gates da rodada: `npm run typecheck`, `npm run lint`, `npm test`, `manage.py test sinalseguro_api.tests.test_platform_base` e `git diff --check`.
+- Nenhum Client ID real, token, e-mail pessoal, IP, serial, user-agent, push token ou payload sigiloso foi registrado.
+- Frente 1.1 de chaves reais por dispositivo foi implementada localmente na sessao `019e0346-97cd-7153-87ba-730bd455b5db`. Proxima frente apos deploy/homologacao: Frente 1.2, midia critica, gravacao, criptografia, player e performance. Rede de anjos passa a ser Frente 2, depois da Frente 1.3 de perfis/familia/maioridade.
 
 ## Fontes normativas para revisao
 

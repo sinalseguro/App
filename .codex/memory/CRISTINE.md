@@ -49,6 +49,25 @@ Quando a sessao for retomada apos limite de uso, troca de agente, interrupcao de
 
 Etapa ativa: midia privada criptografada por chunks, adaptador de playback seguro por range e validacao manual do APK privado Android com midia local.
 
+Estado ativo em 2026-05-07:
+
+- Frente 1.1 foi implementada localmente: app gera chave Ed25519 por dispositivo, guarda o segredo no SecureStore nativo, envia apenas chave publica, hash, metadados saneados e prova de posse;
+- backend exige `key_proof` em `/devices/`, rejeita assinatura invalida, suporta migracao de hash legado por `replaces_public_key_sha256`, rotacao em `/devices/{id}/rotate-key/` e perda em `/devices/{id}/mark-lost/`;
+- documentacao da frente: `docs/33_CHAVES_REAIS_DISPOSITIVO.md`;
+- validacoes aprovadas: `npm run typecheck`, `npm run lint`, `npm test`, `manage.py check` e `manage.py test sinalseguro_api.tests.test_platform_base`;
+- deploy da API com migracao foi concluido: `sinalseguro-api` e `cereusia-crm` ativos, `nginx -t` aprovado, `cereusia.conf` intacto, API publica `health=ok` e readiness `database=ok`;
+- pendente operacional: reteste fisico Android/iOS contra a API publicada quando houver aparelho conectado/desbloqueado;
+- Frente 1 Android foi validada com Google Sign-In nativo, JWT interno SinalSeguro, SecureStore, `auth/me`, registro autenticado em `/devices/` e logout com refresh revogado;
+- OAuth iOS privado foi criado/configurado sem registrar Client ID real; `.env.local` contem as variaveis iOS esperadas e o valor real nao deve ser impresso;
+- EC2 recebeu a audiencia iOS em `/etc/sinalseguro-api.env`; somente `sinalseguro-api` foi reiniciado e `cereusia-crm` permaneceu ativo;
+- iOS foi compilado em `Release` para iPhone fisico e instalado via `ios-deploy`;
+- `ios/Podfile` corrige no `post_install` o script phase do `EXConstants` para funcionar em caminho iCloud com espaco;
+- `app.config.js` injeta `iosUrlScheme` do Google Sign-In apenas por ambiente local, sem versionar valor real;
+- lancamento remoto iOS ficou bloqueado porque o iPhone estava bloqueado; login Google iOS e registro `/devices/` iOS dependem de aparelho desbloqueado;
+- Android nao apareceu no ADB nesta retomada; teste de convites entre Android/iOS depende de reconectar/desbloquear o Android;
+- workflow padrao em maquinas com pouco espaco: antes de alternar Android/iOS, limpar regeneraveis da plataforma anterior e preservar fonte, locks, Pods necessarios e segredos locais;
+- scripts de apoio ficam em `scripts/` na raiz e sao chamados no app por `npm run prepare:build:ios`, `npm run prepare:build:android` e `npm run patch:ios:path-spaces`.
+
 Estado ativo em 2026-05-06:
 
 - especialistas coordenados por Ze nesta rodada: Ada/Schneier revisaram gravacao/criptografia, Myers revisou reproducao e evidencias Android, Ritchie/Knuth revisaram continuidade tecnica;
@@ -63,22 +82,22 @@ Estado ativo em 2026-05-06:
 - Android validado: SOS iniciou sem travar, encerrou corretamente, cofre/player abriu, video de 1min01s nao ficou limitado a 2s, e video final de 33s foi preservado com 13 chunks protegidos e reproduzido no player interno;
 - evidencias salvas em `docs/evidencias/android/2026-05-06-player-duration/`;
 - complemento validado no mesmo dia: Player Seguro agora faz preload automatico apenas do asset selecionado, aborta preparo antigo em troca de video, mostra timeline `0:00 / 0:31`, permite play/pause, seek para `0:24 / 0:31`, fullscreen nativo e retorno ao modal;
-- APK privado final desta etapa: SHA-256 `f19623b9b9aa10d7cbd1262c3b1ad2a864d32db91acefd7a0974091366660df2`, instalado no Android fisico via ADB Wi-Fi `192.168.0.4:5555`;
+- APK privado final desta etapa: SHA-256 `f19623b9b9aa10d7cbd1262c3b1ad2a864d32db91acefd7a0974091366660df2`, instalado no Android fisico via ADB Wi-Fi `[ip-redigido]:5555`;
 - evidencias do Player Seguro salvas em `docs/evidencias/android/2026-05-06-player-preload-controls/`;
-- complemento final validado no mesmo dia: Player Seguro passou a usar `EncryptedVideoLoopbackServer` em `127.0.0.1` com URL de capacidade efemera e suporte a `Range`, descriptografando somente chunks/faixas solicitados pelo `expo-video`;
+- complemento final validado no mesmo dia: Player Seguro passou a usar `EncryptedVideoLoopbackServer` em `[ip-redigido]` com URL de capacidade efemera e suporte a `Range`, descriptografando somente chunks/faixas solicitados pelo `expo-video`;
 - `EncryptedVideoPlaybackCache` ficou como limpeza/compatibilidade de cache legado, nao como caminho principal de reproducao criptografada;
-- APK privado da etapa `Range`: SHA-256 `82e1ab82251a9ed812204bb06021e41f0ebd627d5c8bc6a6d26ff45e1c1c46e1`, instalado no Android fisico via ADB Wi-Fi `192.168.0.4:5555`;
+- APK privado da etapa `Range`: SHA-256 `82e1ab82251a9ed812204bb06021e41f0ebd627d5c8bc6a6d26ff45e1c1c46e1`, instalado no Android fisico via ADB Wi-Fi `[ip-redigido]:5555`;
 - validacao Android do `Range`: primeiro frame, timeline `0:00 / 0:32`, seek para `0:24 / 0:31`, fullscreen nativo, retorno ao modal, reproducao completa ate `0:31 / 0:31` e replay com `Pausar` em `0:01 / 0:31`;
 - evidencias do Player Seguro por `Range` salvas em `docs/evidencias/android/2026-05-06-player-range-streaming/`;
 - complemento C2 fechado nesta retomada: `SecureVideoThumbnailStore` gera thumbnail segura, cifra como `thumbnail.sseg` e apaga a thumbnail clara temporaria;
 - `CameraCaptureResidueCleaner` limpa residuos `.mp4` de `cache/Camera` somente apos `EncryptedVideoStore` reabrir e verificar chave, manifesto, chunks, hashes agregados e thumbnail cifrada;
 - falha de preservacao nao apaga MP4 claro original; falha de limpeza fica registrada como `plaintextCleanup.status = cleanup_pending`;
 - validacoes locais aprovadas no fechamento C2: `npm run typecheck`, `npm test`, `npm run lint`, `npm run build:android:private`;
-- APK privado C2 instalado no Android fisico `192.168.0.4:5555`, SHA-256 `024150800908109199f84e1be2ef5bd9c72ae1f6986ecee0a8269f2c44ca1323`;
+- APK privado C2 instalado no Android fisico `[ip-redigido]:5555`, SHA-256 `024150800908109199f84e1be2ef5bd9c72ae1f6986ecee0a8269f2c44ca1323`;
 - Android C2 validado: SOS iniciou, encerramento preservou asset `7c967904-589c-452c-85fc-8203aee83be9` com `manifest.sseg`, 22 chunks protegidos e `thumbnail.sseg`;
 - inventario ADB absoluto confirmou `cache/Camera` vazio, `cache/VideoThumbnails` vazio e nenhum `.mp4` claro nesses caches apos preservacao;
 - evidencias C2 salvas em `docs/evidencias/android/2026-05-06-capture-cleanup-thumbnail/`;
-- tentativa de reinstalacao final apos recompilar o mesmo APK nao foi repetida porque o ADB Wi-Fi `192.168.0.4:5555` caiu e `adb connect` retornou timeout; o hash do APK final permaneceu o mesmo ja validado;
+- tentativa de reinstalacao final apos recompilar o mesmo APK nao foi repetida porque o ADB Wi-Fi `[ip-redigido]:5555` caiu e `adb connect` retornou timeout; o hash do APK final permaneceu o mesmo ja validado;
 - limite consciente restante: em producao final, avaliar substituicao do loopback local por data source nativo; a interface de midia local esta apta para a proxima etapa de envelopes/chaves/sessao remota sem novas mudancas visuais.
 
 Estado ativo em 2026-05-05:
@@ -112,13 +131,13 @@ Estado ativo em 2026-05-04:
 - codigo de seguranca para encerramento segue local, opcional, salvo como hash e sem codigo universal padrao;
 - midia privada permanece restrita a homologacao controlada; build publico continua sem camera/microfone, streaming, upload, P2P, compartilhamento externo ou integracao oficial;
 - script/gate privado de APK Android permanece separado do gate publico;
-- Android fisico de referencia recente: `23129RA5FL`, ADB Wi-Fi `192.168.0.4:5555`;
+- Android fisico de referencia recente: `23129RA5FL`, ADB Wi-Fi `[ip-redigido]:5555`;
 - proxima validacao manual no aparelho deve confirmar: SOS inicia camera, encerramento preserva video, Cofre lista pacote e Player reproduz midia local;
 - pendencias tecnicas: hash incremental/binario para videos longos, cota/retencao local, homologacao juridica/seguranca para transmissao, backend, anjos reais, chaves, retencao e exportacao.
 
 Estado ativo em 2026-05-03:
 
-- APK privado com midia local instalado no Android `192.168.0.4:5555`;
+- APK privado com midia local instalado no Android `[ip-redigido]:5555`;
 - hash vigente `b6993cf4056d9926e582e9579621f4e32f468fc83e1cc66185678652b51df22f`;
 - abertura fria revalidada sem crash fatal;
 - topo revisado por Tarcila para usar o simbolo `sinalseguro-symbol.png` como logomarca sem texto, mantendo `SinalSeguro` como texto responsivo de interface;
@@ -149,7 +168,7 @@ Estado em 2026-05-02:
 - area `Arquivos locais` foi criada para listar pacotes gravados, hash, status de georreferencia, midia bloqueada e plano de envio futuro;
 - convites e pacotes pequenos usam cofre local do sistema via `expo-secure-store`, com indice sem dado sensivel em `AsyncStorage`;
 - alerta permanece simulado ate outbox criptografada, API e revisoes de seguranca/QA.
-- validacao Android fisica dos recursos locais foi concluida em `23129RA5FL`, Android 15, via ADB Wi-Fi `192.168.0.5:5555`;
+- validacao Android fisica dos recursos locais foi concluida em `23129RA5FL`, Android 15, via ADB Wi-Fi `[ip-redigido]:5555`;
 - APK debug validado: `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `a3b04d9e29349319ead70200c75c030d980b6b1b67feb8a5d34ec78c6b6b71b5`;
 - convites, deep link, alerta local, georreferencia consentida, negacao de localizacao, arquivos locais e persistencia foram validados;
 - Myers/Schneier identificaram `SYSTEM_ALERT_WINDOW` no manifest debug gerado pelo Expo; foi corrigido no APK e criado plugin local de hardening para proximos prebuilds;
@@ -188,7 +207,7 @@ Estado em 2026-05-02:
 - registro historico: a microcopy do SOS chegou a usar `Solte`; no checkpoint posterior, esse texto auxiliar foi removido da Home para reduzir ruido no acionamento;
 - API real ficou bloqueada por flag de ambiente, sem endpoint hardcoded ativo por padrao;
 - share sheet do sistema ficou documentado como excecao exclusiva para pre-convite sem evidencia;
-- Navegador abriu `http://127.0.0.1:8081` com titulo `SinalSeguro`, mas preview web ficou preto no dev-client; validacao visual oficial segue no Android fisico;
+- Navegador abriu `http://[ip-redigido]:8081` com titulo `SinalSeguro`, mas preview web ficou preto no dev-client; validacao visual oficial segue no Android fisico;
 - readiness Android passou com Node 24 e acesso remoto GitHub, restando apenas pendencias esperadas de assinatura e nativo gerado;
 - evidencias ficaram em `docs/evidencias/android/2026-05-03-ux-cofre/`;
 - relatorio complementar ficou em `docs/18_VALIDACAO_UX_SPLASH_COFRE_ANDROID.md`;
@@ -264,7 +283,7 @@ Estado em 2026-05-02:
 - registro historico: o drawer da Home chegou a separar modo e ajuda em botoes irmaos; no checkpoint posterior, modo/status foram retirados da Home e mantidos como configuracoes por modal;
 - relatorio complementar ficou em `docs/24_CONTINUIDADE_COFRE_ENCERRAMENTO_QA.md`;
 - gates aprovados no complemento: `typecheck`, `lint`, `test`, `git diff --check`, `release:android:readiness` com Node 24 e `assembleDebug`;
-- ADB continuou sem dispositivo; `adb connect 192.168.0.5:5555` retornou `Connection refused`.
+- ADB continuou sem dispositivo; `adb connect [ip-redigido]:5555` retornou `Connection refused`.
 
 Proximas acoes:
 
@@ -289,7 +308,7 @@ Proximas acoes:
 - `android/app/build.gradle` deve manter a propriedade `sinalBundleDebugJs` somente para validacao fisica; builds normais de desenvolvimento podem continuar usando Metro.
 - `MainApplication.kt` usa `BuildConfig.DEBUG && !BuildConfig.SINAL_BUNDLED_DEBUG` para desativar o suporte nativo de desenvolvedor apenas no APK bundled de validacao.
 - `app/_layout.tsx` tem fallback de `SplashScreen.hideAsync()` em 350 ms para evitar retencao da splash se o `onLayout` atrasar.
-- APK instalado e validado no aparelho `192.168.0.4:5555`, modelo `23129RA5FL`, com SHA-256 `2bd9055863a51f46d4c41f24b768e22b25f43984990e0313f5fc4baa5d599c83`.
+- APK instalado e validado no aparelho `[ip-redigido]:5555`, modelo `23129RA5FL`, com SHA-256 `2bd9055863a51f46d4c41f24b768e22b25f43984990e0313f5fc4baa5d599c83`.
 - O USB foi informado como conectado, mas `adb devices -l` mostrou apenas ADB Wi-Fi; manter esse detalhe em proximas validacoes para nao confundir transporte fisico com transporte ADB.
 - Validacao independente final: Metro parado, `adb reverse --remove-all`, cold start `TotalTime: 5700`, PID `7357` ativo, sem `Unable to load script`, `Failed to connect`, `FATAL EXCEPTION`, `AndroidRuntime` ou `setValueWithKeyAsync` no log isolado do SinalSeguro.
 - SOS de teste entrou em `CHAMADO ATIVO`, capturou localizacao pontual e nao reproduziu o erro antigo de `ExpoSecureStore`.
@@ -333,7 +352,7 @@ Proximas acoes atualizadas:
 - APK privado com midia local gerado por `npm run build:android:private`.
 - Artefato: `android/app/build/outputs/apk/debug/app-debug.apk`, tamanho aproximado 103 MB.
 - SHA-256: `056e41d7e1e91aef10c6763bb094bfe27973693c8c163b222c6f4be2952be67b`.
-- Instalado com sucesso no Android `192.168.0.4:5555`, modelo `23129RA5FL`.
+- Instalado com sucesso no Android `[ip-redigido]:5555`, modelo `23129RA5FL`.
 - Permissoes concedidas via ADB: camera, microfone, localizacao fina/aproximada e notificacoes.
 - Cold start validado: `TotalTime: 4103`, PID `31065`, sem `FATAL`, `AndroidRuntime`, erro de bundle Metro ou `setValueWithKeyAsync` no log isolado.
 - Captura aprovada para evidencia local: `docs/assets/mobile/2026-05-03-android-private-media-home.png`.
@@ -358,7 +377,7 @@ Proximas acoes atualizadas:
 - Tarcila/Norman: anel agora fica em camada SVG recortada pela propria area circular do botao, discreto e responsivo.
 - Ada/Hedy: `Duas cameras` tenta captura frontal+traseira; se a plataforma nao deixar as duas prontas, o recorder tenta fallback frontal e depois traseiro.
 - Configuracoes mostra a camera selecionada diretamente no card `Midia`.
-- APK privado reinstalado no Android `192.168.0.4:5555`; SHA-256 `2fbef1caee679d901b1e3f6dac2cf3966aa2621d4da8ef1f24d8631b71b99d46`.
+- APK privado reinstalado no Android `[ip-redigido]:5555`; SHA-256 `2fbef1caee679d901b1e3f6dac2cf3966aa2621d4da8ef1f24d8631b71b99d46`.
 - Cold start do app instalado: `TotalTime: 3442`; log filtrado sem fatal/RedBox/Exception.
 - Browser simulator ativo em `http://localhost:8081/` para validacao comentada.
 
@@ -379,7 +398,7 @@ Proximas acoes atualizadas:
 - Tarcila/Norman mantiveram a decisao de nao criar um segundo aro externo: o anel continua preso a circunferencia do botao para preservar a forma e a responsividade.
 - O contraste do trilho e do progresso foi aumentado com opacidade e espessura maiores, tanto no acionamento quanto no encerramento.
 - Ada/Hedy ajustaram a migracao de preferencias: qualquer configuracao anterior ao `schemaVersion 6` volta para `Duas cameras`, evitando aparelhos antigos ficarem presos em frontal/traseira.
-- Myers reinstalou o APK privado no Android `192.168.0.4:5555`, SHA-256 `f5a407ca1937f589f8d1c1f4dc1d2f251e8cf1f7031e59ef76f3ac3373724f15`, cold start `TotalTime: 4487` e logcat filtrado por PID sem falhas criticas.
+- Myers reinstalou o APK privado no Android `[ip-redigido]:5555`, SHA-256 `f5a407ca1937f589f8d1c1f4dc1d2f251e8cf1f7031e59ef76f3ac3373724f15`, cold start `TotalTime: 4487` e logcat filtrado por PID sem falhas criticas.
 - Evidencias visuais salvas em `docs/assets/mobile/2026-05-03-android-ring-visivel-home.png` e `docs/assets/mobile/2026-05-03-android-ring-visivel-hold.png`; log filtrado em `docs/evidencias/android/2026-05-03-ring-player-private/logcat-launch-app.txt`.
 
 ## Memoria viva - 2026-05-04 - Drawer Cofre/Player e Configuracoes limpa
@@ -513,3 +532,105 @@ Proximas acoes atualizadas:
 - Validacoes locais aprovadas: `npm run typecheck`, `npm run lint`, `npm test`.
 - Browser Use validou `http://localhost:8081/contatos`, incluindo tela principal e modal de convite; o browser ficou aberto para comentarios do Roberto.
 - Proximo bloco incompleto: validar login Google real no Android fisico, convite fim a fim com duas contas/dispositivos e iniciar envelopes de emergencia.
+
+## Memoria viva - 2026-05-06 - Frente 1 Android em chat limpo
+
+- Retomada iniciou pelos status obrigatorios: `apps/mobile` e `repos/empresa` tinham mudancas locais pendentes; `repos/portais` estava limpo. Nada foi revertido.
+- Arquivos locais de memoria foram lidos; `.env.local` existe e contem variaveis de API/Google OIDC, sem valores impressos.
+- API publica validada: `health=ok` e readiness `database=ok`.
+- Ajuste mobile aplicado: sessao social agora busca `auth/me` quando necessario antes de concluir login; painel Login mostra estado de Google OIDC configurado/pendente sem expor Client ID.
+- Bootstrap autenticado existente continua registrando `/devices/`, persistindo JWT no SecureStore e limpando vinculo remoto local no logout.
+- A base de chave do dispositivo ainda e compromisso publico/hash derivado de segredo local; par de chaves criptografico real, assinatura, rotacao e revogacao ficam para Frente 1.1.
+- Validacoes aprovadas: `npm run typecheck`, `npm run lint`, `npm test`, `npm run private:android:readiness`, `git diff --check` e health/readiness publicos.
+- Validacao Android fisica bloqueada: ADB nao listou aparelho e `adb connect [ip-redigido]:5555` retornou conexao recusada.
+- Proxima frente recomendada: rede de anjos, convite, aceite, revogacao e chave publica real por dispositivo.
+
+## Memoria viva - 2026-05-07 - Frente 1 Android validada ate o Google OAuth
+
+- Android fisico foi disponibilizado por USB; ADB USB ficou instavel, mas a instalacao e lancamento foram concluidos por transporte ADB local sem registrar IP, serial ou e-mail.
+- `npm run build:android:private` passou apos ajuste no script de preparo Android para o prebuild atual e criacao local de `android/local.properties` a partir do SDK configurado.
+- APK instalado: `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `c527276c91ed274295062fb0d194b1c6f1f5e8ee0e9a00574e433f618247de31`.
+- App abriu em Android 15 no pacote `br.com.sinalseguro.app`; `Configuracoes > Login` mostrou API configurada, dispositivo a registrar apos login e Google OIDC configurado para Android, sem expor Client ID.
+- `Testar API` no app fisico retornou `API SinalSeguro online: ok.`; health publico segue `ok` e readiness segue `database=ok`.
+- `Entrar com Google` abriu OAuth no Google, mas o provedor bloqueou antes do consentimento com `Erro 400: invalid_request` e mensagem saneada `Custom URI scheme is not enabled for your Android client.`
+- Como o bloqueio ocorreu antes de receber ID token, ainda nao foi possivel validar no caminho real `POST /auth/google`, JWT interno, `auth/me`, registro autenticado em `/devices/` e logout com revogacao do refresh token.
+- Logs foram revisados sem crash do app e sem registrar token, refresh token, ID token, Client ID real, e-mail pessoal, IP em claro, user-agent em claro ou payload sigiloso.
+- Proximo passo antes da Frente 2: ajustar o OAuth Android privado no Google Cloud para habilitar custom URI scheme e repetir login fisico; Frente 1.1 deve trocar o vinculo/hash atual por par de chaves real do dispositivo.
+
+## Memoria viva - 2026-05-07 - Redirect OAuth Android corrigido localmente
+
+- ADB confirmou a tela do Google: `Acesso bloqueado: a solicitacao do app SinalSeguro e invalida`, `Erro 400: invalid_request` e `Custom URI scheme is not enabled for your Android client.`
+- Diagnostico local: o APK aceitava `sinalseguro://`, mas nao aceitava `br.com.sinalseguro.app:/oauthredirect`, que e o redirect nativo padrao usado pelo provider Google do Expo no Android.
+- Correcao aplicada: `app.json` agora registra os schemes `sinalseguro` e `br.com.sinalseguro.app`.
+- Prebuild Android atualizou o Manifest; APK privado recompilado e reinstalado no aparelho fisico.
+- ADB confirmou que `br.com.sinalseguro.app:/oauthredirect`, `sinalseguro:/oauthredirect` e `sinalseguro://configuracoes` resolvem para o app.
+- Gates aprovados: `typecheck`, `lint`, `test`, `build:android:private` e `git diff --check`.
+- APK atualizado: SHA-256 `e975046c54c756af14feba64fe40b83877252bb96bca0d97f2d334624218801b`.
+- Sobre usuarios de teste: com escopos atuais `openid`, `profile` e `email`, a documentacao oficial do Google indica excecao para Sign in with Google no modo Testing; nao deve ser necessario pre-cadastrar cada usuaria enquanto o app nao pedir escopos sensiveis/restritos.
+- Bloqueio restante: habilitar `Custom URI scheme` no OAuth Android privado do Google Cloud e aguardar propagacao antes de repetir o login real.
+
+## Memoria viva - 2026-05-07 - Documentacao app/backend reconciliada
+
+- Roberto pediu atualizar a documentacao do projeto conforme a situacao real do app/backend.
+- Snapshot canonico criado no projeto raiz: `docs/tecnico/ESTADO_ATUAL_APP_BACKEND_2026-05-07.md`.
+- Documentacao raiz/tecnica atualizada para registrar que a API Django/DRF nao e mais placeholder: auth, Google/Apple OIDC, devices, trusted contacts, invitations, consents, emergency sessions, key envelopes, P2P signals, audit, Admin e CRM inicial existem.
+- Documentacao mobile atualizada: README, `docs/00_PLANO_MOBILE.md`, `docs/02_BACKLOG.md`, `docs/07_ARQUITETURA.md`, `docs/09_TESTES_QA.md`, `docs/10_DISTRIBUICAO_INSTALAVEIS.md`, `docs/23_ESPECIFICACAO_DESENVOLVIMENTO_APP.md`, `docs/29_PROXIMA_ETAPA_API_ANJOS.md`, `docs/32_PLANO_LOGIN_VIDEOCHAMADA_ANJOS_LOCALIZACAO.md` e `docs/03_TIMELINE.md`.
+- API publica validada novamente: `health=ok` e readiness `database=ok`.
+- Gates mobile desta atualizacao documental: `npm run typecheck`, `npm run lint` e `npm test` aprovados.
+- Testes locais do backend nao foram repetidos porque `services/api/.venv` esta ausente apos higienizacao de dependencias regeneraveis.
+- Proximo passo tecnico permanece: habilitar `Custom URI scheme` no OAuth Android privado do Google Cloud e repetir login fisico fim a fim.
+
+## Memoria viva - 2026-05-07 - Callback Google Android corrigido
+
+- Google Cloud: `Custom URI scheme` foi habilitado no OAuth Android privado do projeto `sinalseguro`, sem registrar Client ID real e sem ativar billing/free trial.
+- Apos o ajuste externo, o OAuth deixou de bloquear em `Custom URI scheme is not enabled` e chegou ao seletor de conta/retorno com codigo.
+- Novo bloqueio local identificado: o retorno `sinalseguro://oauthredirect?...` caia em `Unmatched Route` do Expo Router.
+- Mobile corrigido: criado `app/oauthredirect.tsx`, `WebBrowser.maybeCompleteAuthSession()` movido para o layout raiz e fluxo Google passou a usar PKCE com estado efemero no SecureStore.
+- A conclusao do login agora troca codigo por ID token, chama `POST /auth/google`, persiste JWT no SecureStore, valida usuario quando necessario e executa bootstrap autenticado de dispositivo/consentimentos.
+- `node_modules` precisou ser recriado por `npm ci` porque pacotes Expo locais estavam incompletos apos reinstalacoes parciais.
+- Gates aprovados: `npm run typecheck`, `npm run lint`, `npm test` e `npm run build:android:private`.
+- API publica reconfirmada: `health=ok` e readiness `database=ok`.
+- APK privado instalado no Android fisico, SHA-256 `669ccbc6a701b6f1ecec18d9bda93761074be3c754e918042e73e197b672d8b0`.
+- Validacao fisica final esta bloqueada pelo keyguard/NotificationShade do aparelho; `wm dismiss-keyguard` nao desbloqueou. Ao desbloquear, repetir login Google e confirmar JWT, `auth/me`, `/devices/` e logout.
+
+## Memoria viva - 2026-05-07 - OAuth Google publicado
+
+- Google Auth Platform estava em `Testing`, restringindo acesso a usuarios de teste.
+- Antes de publicar, a tela `Acesso a dados` foi conferida e nao listava escopos confidenciais nem restritos.
+- O app OAuth foi publicado em producao para publico externo, sem billing/free trial e sem registrar Client ID real.
+- ADB perdeu o dispositivo apos a publicacao; proxima validacao exige reconectar/desbloquear o Android fisico e repetir o login.
+
+## Memoria viva - 2026-05-07 - Frente 1 Android concluida com Google Sign-In nativo
+
+- Diagnostico final: no Android, o caminho por navegador/Custom URI continuou bloqueado pela politica de resposta segura do Google mesmo apos publicacao OAuth; Android passou para Google Sign-In nativo via Play Services.
+- `@react-native-google-signin/google-signin` foi integrado ao app privado; `Configuracoes > Login` usa o fluxo nativo no Android e mantem AuthSession/PKCE como base futura/nao Android.
+- Web Client ID foi criado para audiencia de ID token e guardado apenas em ambiente seguro local/EC2; valores reais, client secret, tokens, e-mails e payloads nao foram versionados nem documentados.
+- EC2: somente `/etc/sinalseguro-api.env` do SinalSeguro recebeu a nova audiencia; apenas `sinalseguro-api` foi reiniciado. `cereusia-crm` permaneceu ativo e `cereusia.conf` nao foi alterado.
+- Android fisico validado: seletor nativo de contas abriu, login Google emitiu sessao SinalSeguro, JWT interno foi persistido no SecureStore, `auth/me` validou a conta, `/devices/` registrou o dispositivo e logout revogou a sessao/refresh token interno.
+- Logcat filtrado pelo processo do app nao registrou token, refresh token, access token, Client ID real ou e-mail.
+- Gates aprovados: `npm run typecheck`, `npm run lint`, `npm test`, `git diff --check` e build Android privado.
+- APK privado validado: SHA-256 `1ca183fe0c68bd4ad45f9330da1ef93ca14bbd1789d5ed0015eada2a19d4087f`.
+- Pendencia Frente 1.1: par de chaves real do dispositivo, assinatura, rotacao, revogacao e perda de aparelho. Nao enviar push token nem chave privada.
+
+## Memoria viva - 2026-05-07 - iOS logado e Android bloqueado corretamente
+
+- iPhone fisico concluiu login Google no app privado; backend confirmou dispositivo iOS ativo, chave publica/hash presentes e push token ausente.
+- Android foi recompilado com `npm run build:android:debug:bundled`, instalado via ADB Wi-Fi e abriu sem crash.
+- `Configuracoes > Login` no Android mostrou Google Sign-In nativo configurado para Android.
+- Com a mesma conta ativa no iPhone, o Android recebeu modal `Login bloqueado neste aparelho`, orientando logout no dispositivo ativo ou uso/criacao de outra conta.
+- Backend confirmou evento recente `login_blocked_active_device` com ativo `ios` e tentativa `android`; estado permaneceu Android revogado e iOS ativo.
+- Validacoes aprovadas: `npm run typecheck`, `npm run lint`, `npm test`, `manage.py test sinalseguro_api.tests.test_platform_base` e `git diff --check` em `apps/mobile`/`repos/empresa`.
+- Regra operacional consolidada: ao alternar Android/iOS nesta maquina, limpar regeneraveis da plataforma anterior; scripts globais ficam em `scripts/` na raiz e devem ser comentados.
+- Proxima frente recomendada: rede de anjos, convite, aceite, revogacao e chave publica real por dispositivo.
+
+## Memoria viva - 2026-05-07 - Frentes globais reorganizadas
+
+- Roberto redefiniu regras de pais, filhos, anjos, ocorrencia e midia antes da proxima implementacao.
+- Documento canonico criado: `docs/tecnico/FRENTES_GLOBAIS_APP_BACKEND_MIDIA_ANJOS.md`.
+- Proxima frente viavel passa a ser Frente 1.1: chaves reais por dispositivo, assinatura, rotacao, revogacao e perda de aparelho.
+- Frente 1.2 fica dedicada a perfis, familia, maioridade e papeis: pais/responsaveis podem adicionar filhos menores como protegidos; filhos menores nao convidam anjos, nao sao anjos e so acionam pais/responsaveis ou conveniados autorizados.
+- Frente 2 passa a ser rede de anjos e convites, depois de chaves reais e modelo familiar.
+- Anjo adulto pode estar vinculado a varios usuarios, mas so atende uma ocorrencia ativa por vez; alternancia deve ser explicita e auditada.
+- Background nao significa camera/microfone/GPS permanentes. Significa prontidao para acionar/receber ocorrencia; midia e localizacao so abrem durante ocorrencia ativa com permissao.
+- Audio/video com anjos/responsaveis fica separado de localizacao. Localizacao vira Frente 6.
+- Modulo atual de midia JS/Base64/loopback e prova tecnica; para chamada longa/conveniados/nuvem, refatorar para WebRTC nativo, gravacao segmentada, criptografia nativa por segmento e player nativo.

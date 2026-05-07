@@ -3,12 +3,44 @@ info:
   title: SinalSeguro Mobile API - Etapa 06
   version: 0.1.0
   description: >
-    Contrato inicial para o MVP mobile controlado. Nao autoriza uso em producao
-    com dados reais sem matriz LGPD, RIPD/DPIA, termos, retencao e revisao de
-    seguranca.
+    Contrato inicial para o MVP mobile controlado. Em 2026-05-07, a API real
+    evoluiu para base Django/DRF modular com auth, Google/Apple OIDC, devices,
+    trusted contacts, invitations, consents, emergency sessions, key envelopes,
+    p2p signals, audit, Admin e CRM inicial. Este arquivo permanece como
+    contrato mobile evolutivo e nao autoriza uso em producao com dados reais sem
+    matriz LGPD, RIPD/DPIA, termos, retencao e revisao de seguranca.
+x-sinalseguro-current-state:
+  date: "2026-05-07"
+  statusDocument: "../../../docs/tecnico/ESTADO_ATUAL_APP_BACKEND_2026-05-07.md"
+  publicApi: "https://api.sinalseguro.com.br/api"
+  validated:
+    health: "ok"
+    readiness: "database=ok"
+  activeBackendEndpoints:
+    - /health
+    - /health/ready
+    - /schema
+    - /auth/register
+    - /auth/login
+    - /auth/google
+    - /auth/apple
+    - /auth/refresh
+    - /auth/logout
+    - /auth/me
+    - /devices/
+    - /devices/{id}/rotate-key/
+    - /devices/{id}/mark-lost/
+    - /trusted-contacts/
+    - /invitations/
+    - /invitations/accept
+    - /consents/
+    - /emergency-sessions/
+    - /key-envelopes/
+    - /p2p-signals/
+    - /audit-events/
 servers:
   - url: https://api.sinalseguro.com.br/api
-    description: Producao futura via dominio oficial
+    description: API publica operacional para MVP controlado; dados reais seguem bloqueados por compliance
   - url: https://homolog.api.sinalseguro.com.br/api
     description: Homologacao controlada
 security:
@@ -69,10 +101,33 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AuthToken"
+  /auth/apple:
+    post:
+      tags: [auth]
+      security: []
+      summary: Login Apple via OIDC ID token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/OidcLoginRequest"
+      responses:
+        "200":
+          description: Tokens emitidos
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthToken"
   /devices:
     post:
       tags: [devices]
-      summary: Registrar dispositivo e push token
+      summary: Registrar dispositivo com chave publica e prova de posse
+      description: >
+        A chave privada permanece somente no aparelho. A API recebe chave publica
+        Ed25519 versionada, metadados saneados e assinatura do payload de
+        registro. Registros legados podem informar `replaces_public_key_sha256`
+        para migrar o mesmo dispositivo sem expor segredo.
       requestBody:
         required: true
         content:
@@ -82,6 +137,41 @@ paths:
       responses:
         "201":
           description: Dispositivo registrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+  /devices/{deviceId}/rotate-key:
+    post:
+      tags: [devices]
+      summary: Rotacionar chave publica do dispositivo autenticado
+      description: >
+        Atualiza a chave publica do dispositivo apos assinatura Ed25519 com a
+        nova chave. Nao recebe nem retorna chave privada.
+      parameters:
+        - $ref: "#/components/parameters/DeviceId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeviceKeyRotation"
+      responses:
+        "200":
+          description: Chave rotacionada
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Device"
+  /devices/{deviceId}/mark-lost:
+    post:
+      tags: [devices]
+      summary: Revogar dispositivo por perda de aparelho
+      parameters:
+        - $ref: "#/components/parameters/DeviceId"
+      responses:
+        "200":
+          description: Dispositivo revogado por perda
           content:
             application/json:
               schema:
@@ -279,6 +369,13 @@ components:
       schema:
         type: string
         format: uuid
+    DeviceId:
+      name: deviceId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
   schemas:
     LoginRequest:
       type: object
@@ -295,6 +392,16 @@ components:
       properties:
         id_token:
           type: string
+        device_platform:
+          type: string
+          enum: [android, ios, web]
+        device_public_key_sha256:
+          type: string
+          pattern: "^[0-9a-f]{64}$"
+        device_legacy_public_key_sha256:
+          type: string
+          pattern: "^[0-9a-f]{64}$"
+          description: Hash legado usado apenas para migrar o mesmo aparelho para Ed25519.
     AuthToken:
       type: object
       required: [access, refresh]
@@ -321,31 +428,78 @@ components:
           type: string
     DeviceRegistration:
       type: object
-      required: [platform]
+      required: [platform, public_key, key_proof]
       properties:
         platform:
           type: string
           enum: [android, ios, web]
-        pushToken:
+        push_token:
           type: string
-        appVersion:
+        app_version:
           type: string
-        deviceLabel:
+        device_label:
           type: string
-        publicKey:
+        key_algorithm:
           type: string
-          description: Material publico do dispositivo; chave privada permanece no app.
+          enum: [ed25519-v1]
+        public_key:
+          type: string
+          description: Chave publica `sseg-device-public-key-v1:ed25519:<base64url-raw-32>`.
+        key_proof:
+          $ref: "#/components/schemas/DeviceKeyProof"
+        replaces_public_key_sha256:
+          type: string
+          pattern: "^[0-9a-f]{64}$"
+          description: Hash do vinculo legado que sera substituido no mesmo dispositivo.
+    DeviceKeyRotation:
+      allOf:
+        - $ref: "#/components/schemas/DeviceRegistration"
+    DeviceKeyProof:
+      type: object
+      required: [schema_version, algorithm, signed_at, nonce, payload_sha256, signature]
+      properties:
+        schema_version:
+          type: string
+          enum: [sinalseguro.device-key-proof.v1]
+        algorithm:
+          type: string
+          enum: [ed25519-v1]
+        signed_at:
+          type: string
+          format: date-time
+        nonce:
+          type: string
+          description: Valor aleatorio base64url por assinatura.
+        payload_sha256:
+          type: string
+          pattern: "^[0-9a-f]{64}$"
+        signature:
+          type: string
+          description: Assinatura Ed25519 base64url do payload canonico.
     Device:
       type: object
-      required: [id, platform, status]
+      required: [id, platform, status, public_key_sha256]
       properties:
         id:
           type: string
           format: uuid
         platform:
           type: string
+        key_algorithm:
+          type: string
+          enum: [ed25519-v1, sha256-public-commitment-v1]
+        public_key_sha256:
+          type: string
+          pattern: "^[0-9a-f]{64}$"
         status:
           type: string
+          enum: [active, revoked]
+        revoked_at:
+          type: string
+          format: date-time
+        revocation_reason:
+          type: string
+          enum: [logout, lost, manual, rotated]
     CreateInvitation:
       type: object
       required: [displayLabel]
