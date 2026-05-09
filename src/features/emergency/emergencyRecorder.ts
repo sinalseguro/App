@@ -8,6 +8,7 @@ import {
   EmergencyKind,
   EmergencyPackage,
   LocalMediaAsset,
+  MediaCaptureDiagnosticSummary,
   MediaCaptureManifest
 } from "./types";
 
@@ -209,6 +210,59 @@ export async function attachLocalMediaAsset(packageId: string, asset: LocalMedia
       status: "recorded_local",
       recordingMode: "video",
       assets: [...existingAssets, asset],
+      policy:
+        "Video local preservado no sandbox privado do app. Exportacao, envio a anjos e descriptografia por envelope dependem de backend, contrato, RBAC e auditoria."
+    }
+  };
+
+  const updatedPackage = await attachIntegrity(packageWithoutIntegrity);
+  await saveEmergencyPackage(updatedPackage);
+
+  return buildEmergencyPackageResult(updatedPackage);
+}
+
+export async function attachLocalMediaDiagnostics(packageId: string, diagnostic: MediaCaptureDiagnosticSummary) {
+  const packages = await listEmergencyPackages();
+  const packageRecord = packages.find((record) => record.id === packageId);
+
+  if (!packageRecord) return null;
+
+  const packageWithoutIntegrity: EmergencyPackageWithoutIntegrity = {
+    ...stripIntegrity(packageRecord),
+    updatedAt: new Date().toISOString(),
+    media:
+      packageRecord.media.status === "blocked_public_build"
+        ? packageRecord.media
+        : {
+            ...packageRecord.media,
+            diagnostic
+          }
+  };
+
+  const updatedPackage = await attachIntegrity(packageWithoutIntegrity);
+  await saveEmergencyPackage(updatedPackage);
+
+  return buildEmergencyPackageResult(updatedPackage);
+}
+
+export async function replaceLocalMediaAsset(packageId: string, currentAssetId: string, nextAsset: LocalMediaAsset) {
+  const packages = await listEmergencyPackages();
+  const packageRecord = packages.find((record) => record.id === packageId);
+
+  if (!packageRecord || packageRecord.media.status !== "recorded_local") return null;
+
+  const nextAssets = packageRecord.media.assets
+    .filter((asset) => asset.id !== nextAsset.id || asset.id === currentAssetId)
+    .map((asset) => (asset.id === currentAssetId ? nextAsset : asset));
+  const hasReplacement = nextAssets.some((asset) => asset.id === nextAsset.id);
+  if (!hasReplacement) return null;
+
+  const packageWithoutIntegrity: EmergencyPackageWithoutIntegrity = {
+    ...stripIntegrity(packageRecord),
+    updatedAt: new Date().toISOString(),
+    media: {
+      ...packageRecord.media,
+      assets: nextAssets,
       policy:
         "Video local preservado no sandbox privado do app. Exportacao, envio a anjos e descriptografia por envelope dependem de backend, contrato, RBAC e auditoria."
     }

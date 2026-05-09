@@ -1,7 +1,10 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
+import { createRequire } from "node:module";
 import path from "node:path";
 
+const require = createRequire(import.meta.url);
+const { syncSinalSeguroMediaEngine } = require("../plugins/with-sinalseguro-media-engine");
 const androidRoot = path.join(process.cwd(), "android");
 const buildGradlePath = path.join(androidRoot, "app", "build.gradle");
 const localPropertiesPath = path.join(androidRoot, "local.properties");
@@ -160,6 +163,7 @@ function patchAndroidManifest() {
 }
 
 ensureAndroidProject();
+syncSinalSeguroMediaEngine(process.cwd());
 ensureAndroidSdkLocation();
 patchBuildGradle();
 patchMainApplication();

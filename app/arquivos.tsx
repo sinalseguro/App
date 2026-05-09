@@ -20,6 +20,7 @@ import {
   getEmergencyPreferences
 } from "@/features/emergency/emergencyPreferences";
 import { finishEmergencyPackage } from "@/features/emergency/emergencyRecorder";
+import { runPlaintextMediaStorageMaintenance } from "@/features/emergency/PlaintextMediaResidueCleaner";
 import { EmergencyPackage } from "@/features/emergency/types";
 import { isProtectedAccessUnlocked, verifySecurityCodeStatus } from "@/security/protectedAccess";
 import { checkAppUpdate } from "@/services/appUpdateService";
@@ -52,7 +53,7 @@ export default function LocalFilesScreen() {
   const [accessReady, setAccessReady] = useState(false);
   const [accessGateVisible, setAccessGateVisible] = useState(false);
 
-  async function refreshPackages() {
+  async function refreshPackages(nextStatus?: string) {
     const records = await listEmergencyPackages();
     setPackages(records);
     setSelectedPackageId((currentSelectedId) => {
@@ -64,11 +65,7 @@ export default function LocalFilesScreen() {
       if (currentExpandedId && records.some((record) => record.id === currentExpandedId)) return currentExpandedId;
       return undefined;
     });
-    setStatus(
-      records.length
-        ? "Arquivos carregados."
-        : "Nenhum arquivo local neste dispositivo."
-    );
+    setStatus(nextStatus ?? (records.length ? "Arquivos carregados." : "Nenhum arquivo local neste dispositivo."));
   }
 
   useEffect(() => {
@@ -81,7 +78,16 @@ export default function LocalFilesScreen() {
       }
 
       setAccessReady(true);
-      await refreshPackages();
+      setStatus("Verificando residuos de midia local...");
+      const maintenance = await runPlaintextMediaStorageMaintenance().catch(() => null);
+      const maintenanceStatus = maintenance
+        ? maintenance.migrationBlockedCount > 0 || maintenance.blockedReferencedCount > 0
+          ? "Arquivos carregados. Ha midia clara legada referenciada que exige nova tentativa de migracao."
+          : maintenance.migratedReferencedCount > 0 || maintenance.deletedCount > 0
+            ? "Arquivos carregados. Midia legada foi protegida ou removida."
+            : undefined
+        : "Arquivos carregados. Nao foi possivel concluir a verificacao de residuos.";
+      await refreshPackages(maintenanceStatus);
     }
 
     void bootScreen();
@@ -92,6 +98,12 @@ export default function LocalFilesScreen() {
       setActiveDialog(params.painel);
     }
   }, [params.painel]);
+
+  useEffect(() => {
+    if (activeDialog === "player" || activeDialog === "cofre") {
+      void refreshPackages();
+    }
+  }, [activeDialog]);
 
   async function finishPackageNow(packageId: string) {
     const result = await finishEmergencyPackage(packageId, "manual_finish");

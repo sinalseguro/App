@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useState } from "react";
+import { ReactNode, useCallback, useRef, useState } from "react";
 import { router, useFocusEffect } from "expo-router";
 import { useKeepAwake } from "expo-keep-awake";
 import { Linking, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
@@ -13,13 +13,15 @@ import { EmergencyCallTarget } from "@/features/emergency-home/EmergencyCallTarg
 import { EmergencySettingsDrawer } from "@/features/emergency-home/EmergencySettingsDrawer";
 import { EmergencyTopBar } from "@/features/emergency-home/EmergencyTopBar";
 import { EmergencyHomePanel, EmergencyHomeRoute } from "@/features/emergency-home/routes";
+import { CameraCaptureResidueCleaner } from "@/features/emergency/CameraCaptureResidueCleaner";
 import { countPendingEmergencyPackages } from "@/features/emergency/emergencyOutbox";
-import { EmergencyMediaRecorder } from "@/features/emergency/EmergencyMediaRecorder";
+import { EmergencyMediaRecorder, MediaStopRequestResult } from "@/features/emergency/EmergencyMediaRecorder";
 import {
   finishEmergencyPackage,
   getActiveEmergencyPackage,
   startEmergencyPackage
 } from "@/features/emergency/emergencyRecorder";
+import { appendMediaOperationalLog } from "@/features/emergency/MediaOperationalLog";
 import {
   defaultEmergencyPreferences,
   EmergencyPreferences,
@@ -40,6 +42,14 @@ type ProtectedRouteRequest = {
   panel?: EmergencyHomePanel;
   route: EmergencyHomeRoute;
 };
+
+type PendingMediaStopRequest = {
+  resolve: (result: MediaStopRequestResult) => void;
+  serial: number;
+  timeout: ReturnType<typeof setTimeout>;
+};
+
+const mediaStopWaitTimeoutMs = 30000;
 
 function EmergencyRecordingWakeLock() {
   useKeepAwake("sinalseguro.emergency-recording", { suppressDeactivateWarnings: true });
@@ -70,15 +80,22 @@ export default function HomeScreen() {
   const [finishConfirmationOpen, setFinishConfirmationOpen] = useState(false);
   const [finishError, setFinishError] = useState("");
   const [finishInProgress, setFinishInProgress] = useState(false);
+  const [startInProgress, setStartInProgress] = useState(false);
   const [stopRecordingRequestSerial, setStopRecordingRequestSerial] = useState(0);
   const [protectedRouteRequest, setProtectedRouteRequest] = useState<ProtectedRouteRequest | null>(null);
   const [protectedRouteCodeInput, setProtectedRouteCodeInput] = useState("");
   const [protectedRouteError, setProtectedRouteError] = useState("");
   const [dialog, setDialog] = useState<HomeDialog | null>(null);
   const [recordingStatus, setRecordingStatus] = useState("Pronto para iniciar um chamado seguro.");
+  const pendingMediaStopRequestRef = useRef<PendingMediaStopRequest | null>(null);
+  const finishInProgressRef = useRef(false);
+  const stopRecordingRequestSerialRef = useRef(0);
 
   async function refreshOutboxCount() {
     const activePackage = await getActiveEmergencyPackage();
+    if (!activePackage && Platform.OS !== "web") {
+      await new CameraCaptureResidueCleaner().cleanupAfterSuccessfulPreservation().catch(() => undefined);
+    }
     setActivePackageId(activePackage?.id ?? null);
     setOutboxCount(await countPendingEmergencyPackages());
   }
@@ -143,6 +160,8 @@ export default function HomeScreen() {
   async function handlePanicTrigger() {
     setMenuOpen(false);
 
+    if (startInProgress) return;
+
     if (activePackageId) {
       requestFinishActiveCall();
       return;
@@ -172,6 +191,13 @@ export default function HomeScreen() {
     }
 
     setRecordingStatus("Iniciando chamado seguro...");
+    setStartInProgress(true);
+    appendMediaOperationalLog("emergency_start_requested", {
+      defaultDurationSeconds: preferences.defaultDurationSeconds,
+      localVideoEnabled: preferences.localVideoCapture.requestOnSos,
+      platform: Platform.OS,
+      requestedCameraMode: preferences.localVideoCapture.cameraMode
+    });
 
     try {
       const result = await startEmergencyPackage({
@@ -194,11 +220,19 @@ export default function HomeScreen() {
         result.packageRecord.location.status === "captured"
           ? "Localizacao preservada."
           : "Localizacao nao registrada.";
+      appendMediaOperationalLog("emergency_start_package_created", {
+        localVideoEnabled: preferences.localVideoCapture.requestOnSos,
+        locationCaptured: result.packageRecord.location.status === "captured",
+        platform: Platform.OS
+      });
 
       setRecordingStatus(
         `Chamado ativo. Gravacao ${formatDuration(preferences.defaultDurationSeconds)}. ${locationText} Arquivo no cofre local.`
       );
-    } catch {
+    } catch (error) {
+      appendMediaOperationalLog("emergency_start_error", {
+        platform: Platform.OS
+      }, error);
       setActivePackageId(null);
       setRecordingStatus("Nao foi possivel iniciar o chamado neste aparelho.");
       setDialog({
@@ -208,11 +242,13 @@ export default function HomeScreen() {
         icon: <LockKeyhole size={18} color={theme.colors.danger} />,
         actions: [{ label: "Entendi", tone: "danger" }]
       });
+    } finally {
+      setStartInProgress(false);
     }
   }
 
   function requestFinishActiveCall() {
-    if (!activePackageId || finishInProgress) return;
+    if (!activePackageId || finishInProgress || finishInProgressRef.current) return;
 
     setFinishError("");
     setFinishCodeInput("");
@@ -226,14 +262,25 @@ export default function HomeScreen() {
   }
 
   async function handleFinishActiveCall() {
-    if (!activePackageId || finishInProgress) return;
+    if (!activePackageId || finishInProgress || finishInProgressRef.current) return;
 
+    const packageId = activePackageId;
+    let mediaStopResult: MediaStopRequestResult | null = null;
+    finishInProgressRef.current = true;
     setFinishInProgress(true);
-    setStopRecordingRequestSerial((current) => current + 1);
-    setRecordingStatus("Encerrando gravacao local e preservando arquivo seguro...");
+    setRecordingStatus("Encerrando chamado seguro...");
+    appendMediaOperationalLog("emergency_finish_button_pressed", {
+      platform: Platform.OS
+    });
 
     try {
-      const result = await finishEmergencyPackage(activePackageId, "manual_finish");
+      const stopSerial = signalMediaRecorderStop();
+      if (stopSerial) {
+        setRecordingStatus("Encerrando gravacao local e preparando arquivo seguro.");
+        mediaStopResult = await waitForMediaRecorderStop(stopSerial);
+      }
+
+      const result = await finishEmergencyPackage(packageId, "manual_finish");
       await refreshOutboxCount();
 
       if (!result) {
@@ -241,13 +288,97 @@ export default function HomeScreen() {
         return;
       }
 
-      setRecordingStatus("Chamado encerrado. O video sera anexado ao cofre assim que a criptografia local terminar.");
+      const attachedAssetsAfterFinish =
+        result.packageRecord.media.status === "recorded_local" ? result.packageRecord.media.assets.length : 0;
+      appendMediaOperationalLog("emergency_finish_package_result", {
+        attachedAssetCount: attachedAssetsAfterFinish,
+        mediaRecorded: result.packageRecord.media.status === "recorded_local",
+        platform: Platform.OS
+      });
+      if (attachedAssetsAfterFinish > 0) {
+        setRecordingStatus("Chamado encerrado. Video preservado no cofre local.");
+      } else if (mediaStopResult?.status === "error") {
+        setRecordingStatus("Chamado encerrado. O video local ainda esta sendo protegido e sera anexado ao cofre.");
+      } else {
+        setRecordingStatus(
+          "Chamado encerrado. A camera local foi interrompida; se o iOS devolver o arquivo, o video sera anexado ao cofre."
+        );
+      }
       setFinishConfirmationOpen(false);
       setFinishCodeInput("");
       setFinishError("");
+    } catch (error) {
+      appendMediaOperationalLog("emergency_finish_package_error", {
+        platform: Platform.OS
+      }, error);
+      setRecordingStatus("Nao foi possivel encerrar o chamado neste aparelho. Tente novamente pelo botao seguro.");
     } finally {
+      finishInProgressRef.current = false;
       setFinishInProgress(false);
     }
+  }
+
+  function handleMediaStopRequestSettled(serial: number, result: MediaStopRequestResult) {
+    if (serial <= 0 || serial !== stopRecordingRequestSerialRef.current) return;
+
+    appendMediaOperationalLog("emergency_media_stop_settled", {
+      attachedAssets: result.attachedAssets,
+      platform: Platform.OS,
+      status: result.status
+    });
+    if (result.status === "attached" && result.attachedAssets > 0) {
+      void refreshOutboxCount();
+      setRecordingStatus("Video finalizado e preservado no cofre local.");
+    }
+
+    const pendingRequest = pendingMediaStopRequestRef.current;
+    if (pendingRequest?.serial === serial) {
+      clearTimeout(pendingRequest.timeout);
+      pendingMediaStopRequestRef.current = null;
+      pendingRequest.resolve(result);
+    }
+  }
+
+  function signalMediaRecorderStop() {
+    if (!preferences.localVideoCapture.requestOnSos || Platform.OS === "web") {
+      return null;
+    }
+
+    const serial = stopRecordingRequestSerialRef.current + 1;
+    stopRecordingRequestSerialRef.current = serial;
+    appendMediaOperationalLog("emergency_media_stop_signal", {
+      platform: Platform.OS,
+      stopRequestSerial: serial
+    });
+    setStopRecordingRequestSerial(serial);
+    return serial;
+  }
+
+  function waitForMediaRecorderStop(serial: number) {
+    const previousRequest = pendingMediaStopRequestRef.current;
+    if (previousRequest) {
+      clearTimeout(previousRequest.timeout);
+      previousRequest.resolve({ attachedAssets: 0, status: "error" });
+    }
+
+    return new Promise<MediaStopRequestResult>((resolve) => {
+      const timeout = setTimeout(() => {
+        if (pendingMediaStopRequestRef.current?.serial !== serial) return;
+
+        pendingMediaStopRequestRef.current = null;
+        appendMediaOperationalLog("emergency_media_stop_timeout", {
+          platform: Platform.OS,
+          timeoutMs: mediaStopWaitTimeoutMs
+        });
+        resolve({ attachedAssets: 0, status: "error" });
+      }, mediaStopWaitTimeoutMs);
+
+      pendingMediaStopRequestRef.current = {
+        resolve,
+        serial,
+        timeout
+      };
+    });
   }
 
   async function confirmFinishWithCode() {
@@ -290,10 +421,10 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {activePackageId || finishInProgress ? <EmergencyRecordingWakeLock /> : null}
+      {activePackageId || finishInProgress || startInProgress ? <EmergencyRecordingWakeLock /> : null}
       <View style={styles.homeShell} testID="home-emergency-screen">
         <EmergencyTopBar
-          active={Boolean(activePackageId)}
+          active={Boolean(activePackageId || startInProgress)}
           menuOpen={menuOpen}
           onToggleMenu={() => setMenuOpen((current) => !current)}
         />
@@ -310,18 +441,27 @@ export default function HomeScreen() {
         ) : null}
 
         <View style={styles.emergencySurface}>
-          <BrandBackground active={Boolean(activePackageId)} />
+          <BrandBackground active={Boolean(activePackageId || startInProgress)} />
           <EmergencyMediaRecorder
             activePackageId={activePackageId}
             preferences={preferences}
             onMediaAttached={refreshOutboxCount}
+            onStopRequestSettled={handleMediaStopRequestSettled}
             stopRequestSerial={stopRecordingRequestSerial}
             onStatusChange={setRecordingStatus}
           />
           <View style={styles.panicStage}>
             <PanicButton
-              active={Boolean(activePackageId)}
-              label={activePackageId ? (finishInProgress ? "Encerrando gravacao" : "Segurar para encerrar") : "Segurar para acionar"}
+              active={Boolean(activePackageId || startInProgress)}
+              label={
+                startInProgress
+                  ? "Preparando chamado"
+                  : activePackageId
+                  ? finishInProgress
+                    ? "Encerrando gravacao"
+                    : "Segurar para encerrar"
+                  : "Segurar para acionar"
+              }
               holdMs={preferences.inAppHoldMs}
               onTrigger={handlePanicTrigger}
             />

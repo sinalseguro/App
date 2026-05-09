@@ -1,6 +1,8 @@
 import * as FileSystem from "expo-file-system/legacy";
 import { LocalVideoCameraMode } from "./emergencyPreferences";
 import { EncryptedVideoStore } from "./EncryptedVideoStore";
+import { appendMediaOperationalLog } from "./MediaOperationalLog";
+import { cleanupNativeMediaResidues } from "./SinalSeguroMediaEngine";
 import { attachLocalMediaAsset } from "./emergencyRecorder";
 import { LocalMediaAsset } from "./types";
 
@@ -11,6 +13,9 @@ type PreserveLocalVideoInput = {
   requestedCameraMode?: LocalVideoCameraMode;
   startedAt: string;
   completedAt?: string;
+  chunkSizeBytes?: number;
+  diagnosticRunId?: string;
+  verificationMode?: "full" | "bounded";
 };
 
 export function canPreserveLocalMedia() {
@@ -23,9 +28,13 @@ export async function preserveLocalVideoAsset({
   cameraMode,
   requestedCameraMode,
   startedAt,
-  completedAt = new Date().toISOString()
+  completedAt = new Date().toISOString(),
+  chunkSizeBytes,
+  verificationMode,
+  diagnosticRunId
 }: PreserveLocalVideoInput) {
   if (!canPreserveLocalMedia()) {
+    appendMediaOperationalLog("preserve_filesystem_unavailable");
     throw new Error("Sistema de arquivos privado indisponivel para midia local.");
   }
 
@@ -33,13 +42,20 @@ export async function preserveLocalVideoAsset({
   let encryptedAsset: LocalMediaAsset | null = null;
 
   try {
+    appendMediaOperationalLog("preserve_local_video_start", {
+      actualCameraMode: cameraMode,
+      requestedCameraMode: requestedCameraMode ?? cameraMode
+    });
     encryptedAsset = await encryptedStore.preserveEncryptedVideoAsset({
       packageId,
       sourceUri,
       cameraMode,
       requestedCameraMode,
       startedAt,
-      completedAt
+      completedAt,
+      chunkSizeBytes,
+      verificationMode,
+      diagnosticRunId
     });
 
     const attachedPackage = await attachLocalMediaAsset(packageId, encryptedAsset);
@@ -47,8 +63,23 @@ export async function preserveLocalVideoAsset({
       throw new Error("Falha ao indexar video local no cofre.");
     }
 
+    appendMediaOperationalLog("preserve_local_video_attached", {
+      actualCameraMode: cameraMode,
+      chunkCount: encryptedAsset.encryptedVideo?.chunkCount ?? 0,
+      sizeBytes: encryptedAsset.sizeBytes
+    });
+    const cleanupSummary = await cleanupNativeMediaResidues();
+    appendMediaOperationalLog("native_engine_cleanup", {
+      deletedBytes: cleanupSummary.deletedBytes,
+      deletedFiles: cleanupSummary.deletedFiles,
+      nativeStatus: cleanupSummary.status
+    });
     return encryptedAsset;
   } catch (error) {
+    appendMediaOperationalLog("preserve_local_video_error", {
+      actualCameraMode: cameraMode,
+      encryptedAssetCreated: Boolean(encryptedAsset)
+    }, error);
     if (encryptedAsset) {
       await encryptedStore.deleteEncryptedAsset(encryptedAsset).catch(() => undefined);
     }

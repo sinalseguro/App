@@ -12,12 +12,14 @@ Foi adotada a marca ja aprovada nos portais:
 - `assets/brand/sinalseguro-symbol.png`.
 - `assets/brand/sinalseguro-icon.png`, derivado do simbolo aprovado para uso como icone de app, adaptive icon Android e splash interno.
 
+Atualizacao em 2026-05-08: Tarcila removeu os sinais/ondas do canto superior direito do simbolo. A regra vigente para app, adaptive icon, splash, README e telas internas e usar a marca sem ondas, preservando escudo, cabelo, rosto branco e paleta.
+
 O README do app usa a logo horizontal para reconhecimento imediato do projeto e mantem linguagem de seguranca, gratuidade e limites.
 
 ## Aplicacao no app
 
 - Nome oficial: `SinalSeguro`.
-- Lockup da tela inicial: simbolo aprovado + nome `SinalSeguro` + assinatura `Rede de Protecao e Amparo`.
+- Lockup da tela inicial: simbolo aprovado + nome `SinalSeguro`, sem assinatura textual.
 - Icone do app: fundo `#1E1B2E` com simbolo aprovado centralizado, sem marcas de terceiros.
 - Splash: logo SinalSeguro sobre fundo institucional escuro.
 - Nenhuma tela deve usar marca de orgao publico, governo, universidade ou parceiro como se houvesse convenio confirmado.

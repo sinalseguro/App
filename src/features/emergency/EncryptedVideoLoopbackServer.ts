@@ -2,6 +2,7 @@ import * as Crypto from "expo-crypto";
 import { EncryptedVideoDataSource } from "./EncryptedVideoDataSource";
 import { EncryptedVideoManifest } from "./EncryptedVideoManifest";
 import type { VideoFileSystemAdapter } from "./EncryptedVideoStore";
+import { createMediaDiagnosticRun, startMediaDiagnosticEvent } from "./MediaDiagnostics";
 import { LocalMediaAsset } from "./types";
 import { base64ToBytes, bytesToHex } from "./videoByteEncoding";
 import {
@@ -59,35 +60,50 @@ export class EncryptedVideoLoopbackServer {
     this.keyReader = keyReader;
   }
 
-  async open(asset: LocalMediaAsset, abortSignal?: AbortSignal): Promise<EncryptedVideoLoopbackSession> {
+  async open(
+    asset: LocalMediaAsset,
+    abortSignal?: AbortSignal,
+    diagnosticRunId = createMediaDiagnosticRun("loopback")
+  ): Promise<EncryptedVideoLoopbackSession> {
+    const openTimer = startMediaDiagnosticEvent(diagnosticRunId, "loopback_open");
     if (!asset.encryptedVideo) {
+      openTimer.finish("error", undefined, new Error("missing_encrypted_video"));
       throw new Error("Streaming local exige video criptografado.");
     }
 
-    throwIfAborted(abortSignal);
-    const manifest = await this.store.readManifest(asset);
-    throwIfAborted(abortSignal);
-    const key = await this.keyReader(asset.encryptedVideo.keyRef);
-    throwIfAborted(abortSignal);
-    const capability = bytesToHex(Crypto.getRandomBytes(24));
-    const sockets = new Set<TcpSocketInstance>();
-    const server = await this.listen(asset, manifest, key, capability, sockets);
-    const address = server.address();
-    const port = address && "port" in address ? address.port : 0;
-    if (!port) {
-      closeServer(server, sockets);
-      throw new Error("Servidor local do player nao retornou porta valida.");
-    }
-
-    if (abortSignal?.aborted) {
-      closeServer(server, sockets);
+    try {
       throwIfAborted(abortSignal);
-    }
+      const manifest = await this.store.readManifest(asset);
+      throwIfAborted(abortSignal);
+      const key = await this.keyReader(asset.encryptedVideo.keyRef);
+      throwIfAborted(abortSignal);
+      const capability = bytesToHex(Crypto.getRandomBytes(24));
+      const sockets = new Set<TcpSocketInstance>();
+      const server = await this.listen(asset, manifest, key, capability, sockets, diagnosticRunId);
+      const address = server.address();
+      const port = address && "port" in address ? address.port : 0;
+      if (!port) {
+        closeServer(server, sockets);
+        throw new Error("Servidor local do player nao retornou porta valida.");
+      }
 
-    return {
-      close: () => closeServer(server, sockets),
-      uri: `http://${localHost}:${port}/${capability}/${asset.id}.mp4`
-    };
+      if (abortSignal?.aborted) {
+        closeServer(server, sockets);
+        throwIfAborted(abortSignal);
+      }
+      openTimer.finish("ok", {
+        chunkCount: manifest.chunkCount,
+        plaintextSizeBytes: manifest.plaintextSizeBytes
+      });
+
+      return {
+        close: () => closeServer(server, sockets),
+        uri: `http://${localHost}:${port}/${capability}/${asset.id}.mp4`
+      };
+    } catch (error) {
+      openTimer.finish(abortSignal?.aborted ? "cancelled" : "error", undefined, error);
+      throw error;
+    }
   }
 
   private listen(
@@ -95,7 +111,8 @@ export class EncryptedVideoLoopbackServer {
     manifest: EncryptedVideoManifest,
     key: Uint8Array,
     capability: string,
-    sockets: Set<TcpSocketInstance>
+    sockets: Set<TcpSocketInstance>,
+    diagnosticRunId: string
   ) {
     return new Promise<TcpServerInstance>((resolve, reject) => {
       const tcpSocketModule = require("react-native-tcp-socket");
@@ -103,7 +120,7 @@ export class EncryptedVideoLoopbackServer {
       const server = TcpSocket.createServer((socket: TcpSocketInstance) => {
         sockets.add(socket);
         socket.setEncoding?.("utf8");
-        this.handleConnection(socket, asset, manifest, key, capability).finally(() => {
+        this.handleConnection(socket, asset, manifest, key, capability, diagnosticRunId).finally(() => {
           sockets.delete(socket);
         });
       }) as TcpServerInstance;
@@ -118,7 +135,8 @@ export class EncryptedVideoLoopbackServer {
     asset: LocalMediaAsset,
     manifest: EncryptedVideoManifest,
     key: Uint8Array,
-    capability: string
+    capability: string,
+    diagnosticRunId: string
   ) {
     const abortController = new AbortController();
     let headerBuffer = "";
@@ -140,7 +158,7 @@ export class EncryptedVideoLoopbackServer {
         if (headerEnd < 0) return;
 
         const headerText = headerBuffer.slice(0, headerEnd);
-        this.respondToRequest(socket, asset, manifest, key, capability, headerText, abortController.signal)
+        this.respondToRequest(socket, asset, manifest, key, capability, headerText, abortController.signal, diagnosticRunId)
           .catch(() => {
             if (!abortController.signal.aborted) {
               socket.end(buildErrorHeaders(500));
@@ -158,17 +176,21 @@ export class EncryptedVideoLoopbackServer {
     key: Uint8Array,
     capability: string,
     headerText: string,
-    abortSignal: AbortSignal
+    abortSignal: AbortSignal,
+    diagnosticRunId: string
   ) {
+    const streamTimer = startMediaDiagnosticEvent(diagnosticRunId, "loopback_stream");
     const request = parseHttpRequestHeader(headerText);
     const expectedPath = `/${capability}/${asset.id}.mp4`;
 
     if (request.path !== expectedPath) {
+      streamTimer.finish("error", { httpStatus: 404 }, new Error("loopback_path_mismatch"));
       socket.end(buildErrorHeaders(404));
       return;
     }
 
     if (request.method !== "GET" && request.method !== "HEAD") {
+      streamTimer.finish("error", { httpStatus: 405 }, new Error("loopback_method_not_allowed"));
       socket.end(buildErrorHeaders(405));
       return;
     }
@@ -177,6 +199,7 @@ export class EncryptedVideoLoopbackServer {
     try {
       range = parseSingleRange(request.headers.range, manifest.plaintextSizeBytes);
     } catch {
+      streamTimer.finish("error", { httpStatus: 416, method: request.method }, new Error("loopback_invalid_range"));
       socket.end(buildErrorHeaders(416));
       return;
     }
@@ -195,23 +218,50 @@ export class EncryptedVideoLoopbackServer {
     );
 
     if (request.method === "HEAD") {
+      streamTimer.finish("ok", {
+        httpStatus: range.status,
+        method: "HEAD",
+        rangeLengthBytes: range.length
+      });
       socket.end();
       return;
     }
 
-    await this.dataSource.streamRange({
-      abortSignal,
-      key,
-      length: range.length,
-      manifest,
-      readSealedChunk: async (chunkManifest) =>
-        base64ToBytes(await this.store.getFileSystem().readBase64File(chunkManifest.chunkUri)),
-      start: range.start,
-      verifyPlaintextHash: false,
-      onChunk: async (bytes) => {
-        await writeAndDrain(socket, bytes);
-      }
-    });
+    let streamedBytes = 0;
+    let streamedChunks = 0;
+    try {
+      await this.dataSource.streamRange({
+        abortSignal,
+        key,
+        length: range.length,
+        manifest,
+        readSealedChunk: async (chunkManifest) =>
+          base64ToBytes(await this.store.getFileSystem().readBase64File(chunkManifest.chunkUri)),
+        start: range.start,
+        verifyPlaintextHash: false,
+        onChunk: async (bytes) => {
+          streamedBytes += bytes.length;
+          streamedChunks += 1;
+          await writeAndDrain(socket, bytes);
+        }
+      });
+      streamTimer.finish("ok", {
+        httpStatus: range.status,
+        method: "GET",
+        rangeLengthBytes: range.length,
+        streamedBytes,
+        streamedChunks
+      });
+    } catch (error) {
+      streamTimer.finish(abortSignal.aborted ? "cancelled" : "error", {
+        httpStatus: range.status,
+        method: "GET",
+        rangeLengthBytes: range.length,
+        streamedBytes,
+        streamedChunks
+      }, error);
+      throw error;
+    }
 
     socket.end();
   }

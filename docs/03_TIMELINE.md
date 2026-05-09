@@ -393,7 +393,7 @@ Decisoes:
 - Nome oficial permanece `SinalSeguro` em app, README, portal e label Android.
 - Icone do app usa o simbolo aprovado em fundo institucional `#1E1B2E`.
 - Splash usa logo SinalSeguro e fundo institucional, sem marcas de terceiros.
-- Tela inicial usa `BrandLockup` com simbolo, nome e assinatura `Rede de Protecao e Amparo`.
+- Tela inicial usa `BrandLockup` com simbolo e nome, sem assinatura textual.
 - Botao de panico simulado passa para `colors.panic = #C2185B`.
 - Sombra do design system passa a usar `shadowOpacity`, evitando reduzir a opacidade do botao.
 
@@ -1677,3 +1677,310 @@ Decisao operacional:
 - homologacao Android da Frente 1.1 esta fechada;
 - atualizacao posterior em 2026-05-07: iPhone/iOS tambem foi homologado com build corrigido, Google Sign-In sem fechamento do app e API confirmando `ed25519-v1` ativo;
 - Frente 1.2 de midia critica pode ser aberta em chat proprio, sem alterar o contrato de chaves/dispositivos.
+
+## 2026-05-07 - Frente 1.2: abertura do diagnostico de midia critica
+
+Status: diagnostico aberto; sem alteracao de codigo mobile.
+
+Confirmacoes:
+
+- Frente 1.1 de chaves reais por dispositivo esta fechada, publicada e homologada em Android/iPhone fisicos.
+- `apps/mobile`, `repos/empresa` e `repos/portais` estavam limpos em `main...origin/main` no inicio da Frente 1.2.
+- Contratos de chaves/dispositivos ficam congelados nesta frente salvo reconciliacao explicita.
+
+Mapa tecnico inicial:
+
+- captura: `EmergencyMediaRecorder.tsx` e `mediaCapture.ts`;
+- cofre/pacote: `emergencyRecorder.ts`, `types.ts` e apresentacao de midia;
+- criptografia: `VideoCryptoService.ts`, `EncryptedVideoStore.ts`, `EncryptedVideoManifest.ts`, `EncryptedVideoDataSource.ts` e `videoByteEncoding.ts`;
+- player: `EvidencePlayerCard.tsx`, `EncryptedVideoLoopbackServer.ts`, `EncryptedVideoRangeHttp.ts` e `EncryptedVideoPlaybackCache.ts`;
+- thumbnails e residuos: `SecureVideoThumbnailStore.ts` e `CameraCaptureResidueCleaner.ts`;
+- testes: `scripts/encrypted-video-store.test.ts`.
+
+Leitura inicial:
+
+- o caminho atual JS/Base64/loopback e funcional em homologacao, mas potencialmente caro para videos longos;
+- a preservacao criptografa e depois verifica novamente todos os chunks antes da limpeza, preservando seguranca mas dobrando custo de leitura/descriptografia/hash;
+- o player falha com mensagem generica, sem causa tecnica saneada suficiente.
+
+Bloqueio de reproducao imediata:
+
+- nenhum Android apareceu em `adb devices -l`;
+- iPhone apareceu em `xcrun xctrace list devices`, mas `xcrun devicectl list devices` retornou erro de CoreDevice/provedor.
+
+Proximo passo:
+
+- medir Android/iOS fisicos com gravacoes de 30s, 60s, 3min e 5min;
+- registrar CPU, memoria, I/O, chunks, tempos de criptografia/descriptografia, preservacao, thumbnail, limpeza e tempo ate primeiro frame;
+- decidir correcao pontual ou refatoracao nativa apenas apos evidencia.
+
+Validacoes nesta abertura:
+
+- `npm run test:crypto`: aprovado;
+- `git diff --check`: aprovado antes das edicoes documentais.
+
+## 2026-05-07 - Frente 1.2: equipe operacional e telemetria saneada
+
+Status: implementacao inicial de instrumentacao local; sem rede, sem midia remota e sem alteracao de chaves/dispositivos.
+
+Equipe acionada sob coordenacao de Ze:
+
+- Ada/Cristine: mapeamento dos pontos de instrumentacao em gravacao, preservacao, thumbnail, limpeza, loopback e player;
+- Schneier: regras de telemetria saneada, bloqueio de URI/capability/chaves/tokens/coordenadas e gates do loopback;
+- Myers: matriz Android/iOS fisica para medir CPU, memoria, I/O, chunks, preservacao e tempo ate primeiro frame;
+- Doneda: fica como gate se houver mudanca de consentimento, retencao, compartilhamento, upload ou uso real de midia;
+- Knuth: rastreabilidade em docs, memoria e timeline.
+
+Implementado:
+
+- novo `src/features/emergency/MediaDiagnostics.ts`;
+- eventos estruturados em memoria, sem `console.log` livre, sem rede e sem exportacao automatica;
+- snapshot saneado anexado ao `encryptedVideo.diagnostics` do asset local;
+- marcadores para `capture_recording`, `preserve_source_stat`, `preserve_encrypt_chunks`, `preserve_thumbnail`, `preserve_verify`, `preserve_cleanup`, `preserve_total`, `loopback_open`, `loopback_stream`, `playback_prepare` e `playback_first_progress`;
+- filtros de seguranca para impedir metricas com `uri`, `url`, `path`, `key`, `token`, `nonce`, `tag`, `sha`, coordenada, payload, e-mail, IP ou capability;
+- player persiste diagnostico saneado no pacote local apos preparo e primeiro progresso, sem registrar URL do loopback.
+
+Proxima validacao fisica:
+
+- reconectar/desbloquear Android e repetir matriz Myers de 30s, 60s, 3min e 5min;
+- repetir no iPhone quando instalacao/lancamento fisico estiver estavel;
+- usar os snapshots `encryptedVideo.diagnostics` apenas como apoio de QA, sem anexar midia real ou caminhos sensiveis.
+
+## 2026-05-08 - Frente 1.2: correcao iOS para pacote sem video
+
+Status: correcao incremental implementada e build iOS instalado; validacao manual final pendente por iPhone bloqueado.
+
+Evidencia:
+
+- Android fisico segue funcional para gravacao, cofre e player cifrado;
+- no iPhone Release, testes manuais mostraram que a gravacao iniciava, mas o player recebia pacote sem asset (`Sem midia`, `Nenhum video neste arquivo`);
+- inventario do container confirmou ausencia de `manifest.sseg`, chunks e thumbnails apos o teste;
+- isso isola o bug antes do player: o encerramento iOS nao retornava/preservava o video;
+- apos a atualizacao inicial, um SOS anterior continuou ativo depois da reinstalacao e o encerramento pelo botao ainda demorava cerca de 30s, apontando dependencia indevida do retorno da camera.
+
+Implementado:
+
+- `EmergencyMediaRecorder` passou a usar captura iOS segmentada em H.264 (`avc1`) com segmentos curtos;
+- cada segmento e preservado como asset cifrado assim que fecha;
+- o encerramento do SOS passa a aceitar segmentos ja preservados em vez de depender de um unico arquivo longo;
+- registro historico: `HomeScreen` chegou a finalizar o pacote local imediatamente no botao seguro e a parar a camera em paralelo, sem aguardar `recordAsync`/`stopRecording`;
+- se o iOS devolver um segmento apos o encerramento, o pacote ja finalizado ainda pode receber o asset cifrado;
+- o player identifica segmentos repetidos da mesma camera por indice.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `npm test`: aprovado;
+- `git diff --check`: aprovado;
+- build `Release` iOS aprovado com xcconfig local saneado;
+- instalacao do novo build no iPhone fisico aprovada;
+- logs fisicos: iPhone visto por USB em `xcdevice`; `devicectl` sem provider CoreDevice; `ios-deploy` instalou Release, mas launch/debug foi bloqueado pelo lockscreen;
+- lancamento remoto bloqueado pelo lockscreen; proxima acao e iPhone desbloqueado, SOS manual de pelo menos 12s, encerramento rapido pelo botao e conferencia de `manifest.sseg`/chunks no container.
+
+## 2026-05-08 - Frente 1.2: iOS ainda sem asset e diagnostico persistido
+
+Status: nova correcao incremental instalada; proximo SOS manual deve confirmar se o iOS passa a devolver arquivo ou, em falha, mostrar causa tecnica saneada no cofre/player.
+
+Evidencia adicional:
+
+- Roberto validou novo SOS no iPhone com mais de 30s; o botao de encerramento passou a funcionar corretamente;
+- o pacote recem-gravado ainda apareceu no cofre como `Sem midia` e o player nao rodou por ausencia de asset;
+- o container continuou sem midia cifrada apos os pacotes antigos, confirmando que a falha segue antes do player;
+- preferencias locais baixadas do iPhone mostraram `cameraMode=front`, entao o problema nao era tentativa de duas cameras;
+- a tipagem local do `expo-camera` indica que `480p`, `720p`, `1080p` e `2160p` sao qualidades Android; iOS deve usar `4:3`.
+
+Implementado:
+
+- `EmergencyMediaRecorder` agora usa `videoQuality="4:3"` no iOS e mantem `480p` no Android;
+- o app persiste diagnostico de captura no proprio pacote quando a camera nao monta, nao retorna arquivo, falha durante gravacao ou perde permissao;
+- o cofre/player exibem causa tecnica saneada em vez de apenas `Nenhum video neste arquivo`, sem URI, caminho, chave, token, coordenada, e-mail, IP ou payload sensivel;
+- o diagnostico adicionou a etapa `capture_mount` e continua usando apenas metricas agregadas;
+- build `Release` iOS recompilado e instalado no iPhone fisico; launch automatico foi bloqueado por lockscreen, mas a instalacao concluiu.
+
+Controle fisico do iPhone pelo Mac:
+
+- iPhone Mirroring da Apple nao atende este aparelho porque exige iOS 18 ou posterior e o iPhone de teste esta em iOS 16.7.15;
+- QuickTime/AirPlay podem ajudar como visualizacao/gravacao da tela, mas nao entregam toque/controle remoto confiavel para QA automatizado;
+- Appium 2 + XCUITest e a rota viavel para controle por MacBook: `appium-xcuitest-driver` foi instalado localmente e o WebDriverAgent compilou/assinou, mas o Xcode recusou iniciar o runner no iPhone fisico com erro de execucao de teste;
+- pendencia operacional: configurar/preinstalar WebDriverAgentRunner assinado para este iPhone ou ajustar a combinacao Appium/Xcode/WDA antes de usar toque/screenshot remoto em tempo real.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `npm test`: aprovado;
+- build `Release` iOS: aprovado;
+- instalacao no iPhone fisico: aprovada;
+- `git diff --check`: pendente apos atualizacao documental final.
+
+## 2026-05-08 - Frente 1.2: iOS Debug com log operacional persistente
+
+Status: controle remoto total do iPhone ainda bloqueado; app iOS fisico instalado em Debug com log operacional saneado para diagnostico do pacote `Sem midia`.
+
+Evidencia:
+
+- novo teste manual no iPhone as 07:56 ainda gerou item `Sem midia`/`Sem video`;
+- inventario do container apos o teste mostrou ausencia de `manifest.sseg`, chunks, thumbnails e arquivos em `Library/Caches/Camera`;
+- a falha segue antes do player/loopback/criptografia de playback: a camera iOS nao entregou arquivo preservavel para o cofre;
+- Appium foi atualizado para rota Appium 3 + XCUITest driver recente, mas o WebDriverAgent continuou bloqueado pelo Xcode com erro de inicializacao de runner no iPhone fisico.
+
+Implementado:
+
+- novo `MediaOperationalLog` grava JSONL local em `Documents/sinalseguro-debug/media-operational-log.jsonl` apenas no iOS;
+- o log e persistente, limitado em tamanho, sem rede, sem `console.log` livre e com saneamento de URI, caminho, chave, token, nonce, tag, hash, coordenada, payload, e-mail, IP e capability;
+- foram instrumentadas etapas de inicio/encerramento do SOS, prontidao da camera, `recordAsync`, stop solicitado, preservacao local, cifragem de chunks, verificacao e pacote sem asset;
+- build `Debug` iOS com bundle embutido foi compilado e instalado no iPhone fisico via USB.
+
+Proxima validacao:
+
+- executar novo SOS no iPhone com o build Debug instalado;
+- encerrar pelo botao seguro;
+- puxar `Documents/sinalseguro-debug/media-operational-log.jsonl`;
+- se o log indicar camera nao pronta/montada, testar preview iOS com tamanho real/visivel;
+- se indicar `recordAsync` sem retorno ou erro de codec, remover `codec`/bitrate iOS e testar default nativo antes de decidir modulo nativo.
+
+## 2026-05-08 - Frente 1.2: causa iOS isolada por log operacional
+
+Status: correcao pontual aplicada e novo Release instalado; reteste fisico pendente com iPhone desbloqueado.
+
+Evidencia coletada:
+
+- JSONL operacional confirmou permissao concedida, camera pronta e `recordAsync` iniciado no iPhone;
+- ao encerrar o SOS, o app registrou stop solicitado com zero assets;
+- em seguida, o componente de camera desmontou ainda com gravacao ativa;
+- nao houve retorno de arquivo nem inicio/sucesso de preservacao cifrada antes do pacote aparecer `Sem midia`.
+
+Decisao:
+
+- player continua sintoma, nao causa primaria;
+- a falha estava na ordem de encerramento: o pacote era finalizado e a camera desmontada antes de a API nativa devolver o arquivo.
+
+Implementado:
+
+- `HomeScreen` agora sinaliza o stop da camera e aguarda `waitForMediaRecorderStop` antes de `finishEmergencyPackage`;
+- `EmergencyMediaRecorder` liquida o stop com `attached`, `empty`, `error` ou `idle`;
+- timeout de 9s registra `emergency_media_stop_timeout` saneado e permite finalizar o chamado mesmo se o iOS nao responder;
+- smoke test garante que `waitForMediaRecorderStop` ocorra antes de `finishEmergencyPackage`.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `npm test`: aprovado;
+- `git diff --check`: aprovado;
+- build iOS `Release`: aprovado;
+- instalacao no iPhone fisico: aprovada; auto-launch bloqueado porque o aparelho estava travado.
+
+Proxima validacao:
+
+- desbloquear o iPhone, abrir SinalSeguro manualmente, iniciar SOS por pelo menos 20s e encerrar pelo botao seguro;
+- conferir cofre/player;
+- se continuar `Sem midia`, baixar o JSONL e procurar `emergency_media_stop_timeout`, retorno de `recordAsync` e eventos de preservacao.
+
+## 2026-05-08 - Frente 1.2: iOS `recordAsync` falha antes do encerramento
+
+Status: nova correcao incremental aplicada; Release precisa de reteste fisico.
+
+Evidencia do teste 10:35:
+
+- o cofre/player mostrou `Gravacao de video interrompida pela camera`;
+- JSONL operacional confirmou camera pronta, permissao concedida e `recordAsync` chamado;
+- `recordAsync` falhou em menos de 1s, antes de qualquer `capture_preserve_start`;
+- ao encerrar o SOS, o gravador ja estava `idle`, logo o botao nao era mais a causa do pacote sem midia neste teste;
+- tambem houve duas tentativas de inicio do SOS antes de o primeiro pacote terminar de ser criado.
+
+Implementado:
+
+- `HomeScreen` bloqueia duplo acionamento enquanto o pacote SOS ainda esta sendo criado (`startInProgress`);
+- iOS ganha warm-up curto entre `onCameraReady` e `recordAsync`;
+- se `recordAsync` falhar rapido no iOS, o app registra `capture_record_async_retry`, aguarda e tenta novamente antes de classificar falha definitiva;
+- diagnostico pode diferenciar `camera_output_not_ready` de erro generico de gravacao.
+
+Validacoes locais:
+
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `npm test`: aprovado;
+- `git diff --check`: aprovado.
+
+## 2026-05-08 - Frente 1.2: iOS grava, mas preservacao cifrada atrasava cofre
+
+Status: hotfix aplicado; novo build iOS Release precisa de reteste fisico.
+
+Evidencia do teste 11:16:
+
+- `recordAsync` passou a retornar arquivo no iPhone;
+- fonte clara temporaria tinha cerca de 4,8 MB e foi transformada em 10 chunks cifrados;
+- criptografia levou aproximadamente 29s e a verificacao completa levou mais 27s;
+- o timeout de encerramento de 9s finalizou o pacote antes de `preserve_local_video_attached`;
+- os chunks cifrados e `manifest.sseg` existiam no container, mas o cofre foi aberto antes do indice ser atualizado.
+
+Implementado:
+
+- iOS passa a gravar em H.264 (`avc1`), `480p` e bitrate alvo controlado;
+- chunks iOS aumentados para 2 MB para reduzir overhead de FileSystem/base64;
+- verificacao iOS passa a modo `bounded`: valida chave, manifesto autenticado, consistencia de metadados e chunks de borda; a autenticacao completa continua acontecendo por chunk no playback;
+- timeout de encerramento subiu para 30s e foi adicionado bloqueio sincrono contra multiplos encerramentos simultaneos;
+- mensagem de timeout passou a indicar que a midia ainda esta sendo protegida, sem classificar falsamente como camera interrompida.
+
+Decisao Schneier/Myers:
+
+- hotfix incremental e aceitavel para homologacao fisica, porque nao persiste video claro permanentemente e mantem AEAD/hash por chunk;
+- para producao, permanece obrigatoria refatoracao nativa de captura segmentada, criptografia nativa por segmento e player/data source nativo.
+
+## 2026-05-08 - Frente 1.2: iOS saturava encerramento com ciclo continuo
+
+Status: hotfix adicional implementado; build iOS Release precisa ser reinstalado e retestado.
+
+Evidencia do teste fisico mais recente:
+
+- o container do iPhone ja continha `manifest.sseg`, chunks e thumbnails cifrados, portanto havia midia preservada;
+- o JSONL mostrou nova sessao com varios segmentos iOS sucessivos, cada um gravado, cifrado e verificado durante o SOS;
+- nao apareceu evento `emergency_finish_button_pressed` na sessao mais recente antes da coleta, indicando que o toque de encerramento ficou atrasado ou nao entrou no handler enquanto o JS seguia ocupado;
+- havia arquivo temporario de camera em cache durante a sessao ativa, reforcando que o app ainda estava em ciclo de captura.
+
+Correcao aplicada:
+
+- iOS fisico de homologacao deixa de gravar/cifrar indefinidamente durante o SOS;
+- a captura iOS agora preserva um unico segmento curto H.264/480p por chamado e encerra o ciclo pesado, mantendo o chamado ativo com metadados ate o usuario finalizar pelo botao;
+- cofre/player atualizam a lista ao abrir os modais para reduzir leitura de indice antigo;
+- home executa limpeza de residuos de camera quando nao ha chamado ativo.
+
+Decisao Schneier/Myers:
+
+- a solucao e uma contencao incremental para homologacao no iPhone 8/iOS 16, reduzindo risco de travamento e de residuo claro temporario;
+- para gravacao real de varios minutos, a decisao tecnica continua sendo refatorar para captura nativa segmentada, criptografia nativa por segmento e player/data source nativo.
+
+## 2026-05-09 - Frente 1.2: motor nativo versionado e build Android
+
+Status: primeira ponte nativa persistente implementada e validada no Android; iOS aguardando novo gate de espaco/Pods.
+
+Implementado:
+
+- `SinalSeguroMediaEngine` foi adicionado como ponte JS com interface minima para `encryptSegment`, `openEncryptedAsset`, `closePlaybackHandle` e `cleanupMediaResidues`;
+- Android recebeu modulo nativo Kotlin com AES-256-GCM por segmento, restricao a storage privado do app, handles saneados de playback e limpeza de residuos nativos;
+- iOS recebeu templates Swift/ObjC equivalentes com CryptoKit/AES-GCM, restricao a Documents/Caches/Application Support/tmp e bridge React Native;
+- como `android/` e `ios/` sao regeneraveis/ignorados no Git, o motor foi persistido por `plugins/with-sinalseguro-media-engine.js` e templates em `plugins/native-media-engine/`;
+- `app.json`, build Android privado e dashboard iOS passam a sincronizar o motor nativo antes de build/prebuild;
+- envelopes atuais continuam em `js_chunked_v1` com `range_data_source_required`; o player so usa `native_encrypted_source` quando um ativo novo declarar `storageEngine: "native_segmented_v1"`;
+- o loopback JS permanece fallback de homologacao para ativos existentes, sem virar caminho principal de novos ativos nativos;
+- metadados futuros de P2P foram preparados no envelope (`keyId`, `packageId`, `emergencySessionId`, `envelopeScope`) sem alterar contratos da Frente 1.1.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `npm test`: aprovado;
+- `npm run test:crypto`: aprovado;
+- `npm run test:device-keys`: aprovado;
+- `git diff --check`: aprovado;
+- build Android privado pelo dashboard aprovado em 2026-05-09, APK em `distribution/android/out/sinalseguro-android.apk`, SHA-256 `9d60f820a4dc8d9556482df957b409637b111ab5988a0e8122da6cc03879f9bc`;
+- readiness Android privado aprovado com `CAMERA`, `RECORD_AUDIO`, bloqueio de permissao externa e `allowBackup=false`;
+- visual web local validado em `http://localhost:19006/` e `http://localhost:19006/arquivos?painel=player`: Home SOS, modal Player Seguro sem arquivo e modal Cofre local renderizaram sem quebra visual aparente.
+
+Limites ainda abertos:
+
+- iOS build/test nao foi executado nesta passada porque a limpeza removeu `ios/Pods` e o espaco livre apos o build Android ficou abaixo do gate de 14 GiB;
+- testes fisicos Android/iPhone de 30s, 60s, 3min e 5min ainda precisam ser feitos com ativo nativo real;
+- a captura segmentada nativa ainda nao substituiu a captura Expo; esta etapa fechou a ponte nativa persistente e o caminho de compatibilidade.

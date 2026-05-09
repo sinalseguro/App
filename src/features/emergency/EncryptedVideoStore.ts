@@ -11,6 +11,12 @@ import {
   encryptedVideoThumbnailAad
 } from "./EncryptedVideoManifest";
 import { CameraCaptureResidueCleaner } from "./CameraCaptureResidueCleaner";
+import {
+  createMediaDiagnosticRun,
+  startMediaDiagnosticEvent,
+  summarizeMediaDiagnostics
+} from "./MediaDiagnostics";
+import { appendMediaOperationalLog } from "./MediaOperationalLog";
 import { SecureVideoThumbnailStore } from "./SecureVideoThumbnailStore";
 import { EncryptedVideoEnvelope, LocalMediaAsset } from "./types";
 import {
@@ -42,6 +48,9 @@ export type PreserveEncryptedVideoInput = {
   startedAt: string;
   completedAt?: string;
   chunkSizeBytes?: number;
+  cleanupPlaintextSource?: boolean;
+  diagnosticRunId?: string;
+  verificationMode?: "full" | "bounded";
 };
 
 export type VideoFileSystemAdapter = {
@@ -112,10 +121,35 @@ export class EncryptedVideoStore {
     requestedCameraMode,
     startedAt,
     completedAt = new Date().toISOString(),
-    chunkSizeBytes = encryptedVideoDefaultChunkSizeBytes
+    chunkSizeBytes = encryptedVideoDefaultChunkSizeBytes,
+    cleanupPlaintextSource = true,
+    diagnosticRunId = createMediaDiagnosticRun("preserve"),
+    verificationMode = "full"
   }: PreserveEncryptedVideoInput): Promise<LocalMediaAsset> {
-    const sourceInfo = await this.fileSystem.getInfo(sourceUri);
+    const preserveTotalTimer = startMediaDiagnosticEvent(diagnosticRunId, "preserve_total");
+    const sourceStatTimer = startMediaDiagnosticEvent(diagnosticRunId, "preserve_source_stat");
+    let sourceInfo: LocalFileInfo;
+    try {
+      sourceInfo = await this.fileSystem.getInfo(sourceUri);
+      appendMediaOperationalLog("preserve_source_stat", {
+        sourceExists: sourceInfo.exists,
+        sourceSizeBytes: sourceInfo.size ?? 0
+      });
+      sourceStatTimer.finish("ok", {
+        sourceSizeBytes: sourceInfo.size ?? 0
+      });
+    } catch (error) {
+      appendMediaOperationalLog("preserve_source_stat_error", {}, error);
+      sourceStatTimer.finish("error", undefined, error);
+      preserveTotalTimer.finish("error", undefined, error);
+      throw error;
+    }
     if (!sourceInfo.exists || !sourceInfo.size || sourceInfo.size <= 0) {
+      appendMediaOperationalLog("preserve_source_unavailable", {
+        sourceExists: sourceInfo.exists,
+        sourceSizeBytes: sourceInfo.size ?? 0
+      });
+      preserveTotalTimer.finish("error", undefined, new Error("media_source_unavailable"));
       throw new Error("Arquivo de video local incompleto ou indisponivel.");
     }
     const sourceSizeBytes = sourceInfo.size;
@@ -141,51 +175,97 @@ export class EncryptedVideoStore {
       await saveSecret(keyRef, bytesToBase64(videoKey));
       keySaved = true;
 
-      while (offset < sourceSizeBytes) {
-        const nextLength = Math.min(chunkSizeBytes, sourceSizeBytes - offset);
-        const plaintextBytes = base64ToBytes(await this.fileSystem.readBase64(sourceUri, offset, nextLength));
-        if (plaintextBytes.length === 0) {
-          throw new Error("Leitura de chunk vazia durante preservacao criptografada.");
-        }
-
-        const chunkIndex = chunks.length;
-        const chunkBase = {
-          index: chunkIndex,
-          plaintextOffset: offset,
-          plaintextSizeBytes: plaintextBytes.length
-        };
-        const encrypted = this.cryptoService.encryptChunk(videoKey, plaintextBytes, encryptedVideoChunkAad(assetId, chunkBase));
-        const chunkUri = `${chunksDirectoryUri}${String(chunkIndex).padStart(6, "0")}.sseg`;
-
-        await this.fileSystem.writeBase64(chunkUri, bytesToBase64(encrypted.sealedBytes));
-        plaintextHash.update(plaintextBytes);
-        ciphertextHash.update(encrypted.sealedBytes);
-        encryptedSizeBytes += encrypted.sealedBytes.length;
-        chunks.push({
-          ...chunkBase,
-          chunkUri,
-          sealedSizeBytes: encrypted.sealedBytes.length,
-          ciphertextSizeBytes: encrypted.ciphertextBytes.length,
-          nonce: encrypted.nonce,
-          tag: encrypted.tag,
-          plaintextSha256: sha256Hex(plaintextBytes),
-          ciphertextSha256: sha256Hex(encrypted.sealedBytes)
+      const encryptTimer = startMediaDiagnosticEvent(diagnosticRunId, "preserve_encrypt_chunks");
+      try {
+        appendMediaOperationalLog("preserve_encrypt_chunks_start", {
+          chunkSizeBytes,
+          sourceSizeBytes
         });
-        offset += plaintextBytes.length;
-        if (chunks.length % preserveYieldEveryChunks === 0) {
-          await yieldToRuntime();
+        while (offset < sourceSizeBytes) {
+          const nextLength = Math.min(chunkSizeBytes, sourceSizeBytes - offset);
+          const plaintextBytes = base64ToBytes(await this.fileSystem.readBase64(sourceUri, offset, nextLength));
+          if (plaintextBytes.length === 0) {
+            throw new Error("Leitura de chunk vazia durante preservacao criptografada.");
+          }
+
+          const chunkIndex = chunks.length;
+          const chunkBase = {
+            index: chunkIndex,
+            plaintextOffset: offset,
+            plaintextSizeBytes: plaintextBytes.length
+          };
+          const encrypted = this.cryptoService.encryptChunk(videoKey, plaintextBytes, encryptedVideoChunkAad(assetId, chunkBase));
+          const chunkUri = `${chunksDirectoryUri}${String(chunkIndex).padStart(6, "0")}.sseg`;
+
+          await this.fileSystem.writeBase64(chunkUri, bytesToBase64(encrypted.sealedBytes));
+          plaintextHash.update(plaintextBytes);
+          ciphertextHash.update(encrypted.sealedBytes);
+          encryptedSizeBytes += encrypted.sealedBytes.length;
+          chunks.push({
+            ...chunkBase,
+            chunkUri,
+            sealedSizeBytes: encrypted.sealedBytes.length,
+            ciphertextSizeBytes: encrypted.ciphertextBytes.length,
+            nonce: encrypted.nonce,
+            tag: encrypted.tag,
+            plaintextSha256: sha256Hex(plaintextBytes),
+            ciphertextSha256: sha256Hex(encrypted.sealedBytes)
+          });
+          offset += plaintextBytes.length;
+          if (chunks.length % preserveYieldEveryChunks === 0) {
+            await yieldToRuntime();
+          }
         }
+        encryptTimer.finish("ok", {
+          chunkCount: chunks.length,
+          chunkSizeBytes,
+          encryptedSizeBytes,
+          sourceSizeBytes
+        });
+        appendMediaOperationalLog("preserve_encrypt_chunks_success", {
+          chunkCount: chunks.length,
+          chunkSizeBytes,
+          encryptedSizeBytes,
+          sourceSizeBytes
+        });
+      } catch (error) {
+        appendMediaOperationalLog("preserve_encrypt_chunks_error", {
+          chunkCount: chunks.length,
+          chunkSizeBytes,
+          encryptedSizeBytes,
+          sourceSizeBytes
+        }, error);
+        encryptTimer.finish("error", {
+          chunkCount: chunks.length,
+          chunkSizeBytes,
+          encryptedSizeBytes,
+          sourceSizeBytes
+        }, error);
+        throw error;
       }
 
       const plaintextSha256 = hashDigestHex(plaintextHash);
       const ciphertextSha256 = hashDigestHex(ciphertextHash);
-      const thumbnail = await this.thumbnailStore.deriveEncryptAndDeletePlainThumbnail({
-        assetId,
-        packageId,
-        sourceUri,
-        storageDirectoryUri,
-        videoKey
-      });
+      const thumbnailTimer = startMediaDiagnosticEvent(diagnosticRunId, "preserve_thumbnail");
+      const thumbnail = await this.thumbnailStore
+        .deriveEncryptAndDeletePlainThumbnail({
+          assetId,
+          packageId,
+          sourceUri,
+          storageDirectoryUri,
+          videoKey
+        })
+        .then((result) => {
+          thumbnailTimer.finish("ok", {
+            encrypted: result.status === "encrypted_image_v1",
+            sourceSizeBytes
+          });
+          return result;
+        })
+        .catch((error) => {
+          thumbnailTimer.finish("error", { sourceSizeBytes }, error);
+          throw error;
+        });
       const manifest: EncryptedVideoManifest = {
         protocolVersion: encryptedVideoProtocolVersion,
         algorithm: encryptedVideoAlgorithm,
@@ -221,7 +301,11 @@ export class EncryptedVideoStore {
         protocolVersion: encryptedVideoProtocolVersion,
         algorithm: encryptedVideoAlgorithm,
         packageId,
+        keyId: keyRef,
         keyRef,
+        emergencySessionId: null,
+        envelopeScope: "media_asset",
+        storageEngine: "js_chunked_v1",
         manifestUri,
         manifestNonce: encryptedManifest.nonce,
         manifestTag: encryptedManifest.tag,
@@ -237,8 +321,70 @@ export class EncryptedVideoStore {
         playbackAdapter: "range_data_source_required"
       };
 
-      await this.verifyPreservedEncryptedVideo({ encryptedVideo, manifest, videoKey });
-      const plaintextCleanup = await this.deletePlaintextAfterVerifiedPreservation(sourceUri);
+      const verifyTimer = startMediaDiagnosticEvent(diagnosticRunId, "preserve_verify");
+      try {
+        await this.verifyPreservedEncryptedVideo({ encryptedVideo, manifest, mode: verificationMode, videoKey });
+        verifyTimer.finish("ok", {
+          chunkCount: chunks.length,
+          encryptedSizeBytes,
+          sourceSizeBytes,
+          verificationMode
+        });
+        appendMediaOperationalLog("preserve_verify_success", {
+          chunkCount: chunks.length,
+          encryptedSizeBytes,
+          sourceSizeBytes,
+          verificationMode
+        });
+      } catch (error) {
+        appendMediaOperationalLog("preserve_verify_error", {
+          chunkCount: chunks.length,
+          encryptedSizeBytes,
+          sourceSizeBytes,
+          verificationMode
+        }, error);
+        verifyTimer.finish("error", {
+          chunkCount: chunks.length,
+          encryptedSizeBytes,
+          sourceSizeBytes,
+          verificationMode
+        }, error);
+        throw error;
+      }
+      const cleanupTimer = startMediaDiagnosticEvent(diagnosticRunId, "preserve_cleanup");
+      const plaintextCleanup = cleanupPlaintextSource
+        ? await this.deletePlaintextAfterVerifiedPreservation(sourceUri)
+            .then((result) => {
+              cleanupTimer.finish("ok", {
+                sourceDeleted: result.status === "deleted",
+                sourceSizeBytes
+              });
+              return result;
+            })
+            .catch((error) => {
+              cleanupTimer.finish("error", { sourceSizeBytes }, error);
+              throw error;
+            })
+        : {
+            attemptedAt: new Date().toISOString(),
+            status: "cleanup_pending" as const
+          };
+      if (!cleanupPlaintextSource) {
+        cleanupTimer.finish("ok", {
+          sourceDeleted: false,
+          sourceSizeBytes
+        });
+      }
+      preserveTotalTimer.finish("ok", {
+        chunkCount: chunks.length,
+        encryptedSizeBytes,
+        sourceSizeBytes
+      });
+      appendMediaOperationalLog("preserve_total_success", {
+        chunkCount: chunks.length,
+        encryptedSizeBytes,
+        sourceSizeBytes
+      });
 
       return {
         id: assetId,
@@ -257,10 +403,21 @@ export class EncryptedVideoStore {
         encryptionStatus: "encrypted_chunked_xchacha20poly1305",
         encryptedVideo: {
           ...encryptedVideo,
+          diagnostics: summarizeMediaDiagnostics(diagnosticRunId),
           plaintextCleanup
         }
       };
     } catch (error) {
+      appendMediaOperationalLog("preserve_total_error", {
+        chunkCount: chunks.length,
+        encryptedSizeBytes,
+        sourceSizeBytes
+      }, error);
+      preserveTotalTimer.finish("error", {
+        chunkCount: chunks.length,
+        encryptedSizeBytes,
+        sourceSizeBytes
+      }, error);
       await this.fileSystem.delete(storageDirectoryUri).catch(() => undefined);
       if (keySaved) {
         await deleteSecret(keyRef).catch(() => undefined);
@@ -272,10 +429,12 @@ export class EncryptedVideoStore {
   private async verifyPreservedEncryptedVideo({
     encryptedVideo,
     manifest,
+    mode,
     videoKey
   }: {
     encryptedVideo: EncryptedVideoEnvelope;
     manifest: EncryptedVideoManifest;
+    mode: "full" | "bounded";
     videoKey: Uint8Array;
   }) {
     const storedKey = await readVideoKey(encryptedVideo.keyRef);
@@ -307,8 +466,6 @@ export class EncryptedVideoStore {
       throw new Error("Manifesto criptografado possui metadados incoerentes.");
     }
 
-    const plaintextHash = cryptoHash();
-    const ciphertextHash = cryptoHash();
     const seenNonces = new Set<string>();
     let expectedOffset = 0;
     let totalPlaintextSizeBytes = 0;
@@ -324,7 +481,19 @@ export class EncryptedVideoStore {
         throw new Error("Manifesto de chunks possui offsets, indices ou nonces incoerentes.");
       }
       seenNonces.add(chunk.nonce);
+      expectedOffset += chunk.plaintextSizeBytes;
+      totalPlaintextSizeBytes += chunk.plaintextSizeBytes;
+      totalEncryptedSizeBytes += chunk.sealedSizeBytes;
+    }
 
+    if (
+      totalPlaintextSizeBytes !== manifest.plaintextSizeBytes ||
+      totalEncryptedSizeBytes !== manifest.encryptedSizeBytes
+    ) {
+      throw new Error("Totais declarados no manifesto criptografado nao conferem.");
+    }
+
+    const verifyChunk = async (chunk: EncryptedVideoChunkManifest) => {
       const sealedChunk = base64ToBytes(await this.fileSystem.readBase64File(chunk.chunkUri));
       if (sha256Hex(sealedChunk) !== chunk.ciphertextSha256) {
         throw new Error("Chunk criptografado nao confere apos gravacao segura.");
@@ -343,19 +512,42 @@ export class EncryptedVideoStore {
         throw new Error("Chunk descriptografado nao confere apos gravacao segura.");
       }
 
+      return { plaintextChunk, sealedChunk };
+    };
+
+    if (mode === "bounded") {
+      const sampleChunks: EncryptedVideoChunkManifest[] =
+        manifest.chunks.length > 1
+          ? [manifest.chunks[0], manifest.chunks[manifest.chunks.length - 1]]
+          : [...manifest.chunks];
+      for (const chunk of sampleChunks) {
+        await verifyChunk(chunk);
+        await yieldToRuntime();
+      }
+
+      await this.verifyEncryptedThumbnail(manifest.thumbnail, manifest, storedKey);
+      return;
+    }
+
+    const plaintextHash = cryptoHash();
+    const ciphertextHash = cryptoHash();
+    let verifiedPlaintextSizeBytes = 0;
+    let verifiedEncryptedSizeBytes = 0;
+
+    for (const chunk of manifest.chunks) {
+      const { plaintextChunk, sealedChunk } = await verifyChunk(chunk);
       plaintextHash.update(plaintextChunk);
       ciphertextHash.update(sealedChunk);
-      expectedOffset += plaintextChunk.length;
-      totalPlaintextSizeBytes += plaintextChunk.length;
-      totalEncryptedSizeBytes += sealedChunk.length;
+      verifiedPlaintextSizeBytes += plaintextChunk.length;
+      verifiedEncryptedSizeBytes += sealedChunk.length;
       if (chunk.index % preserveYieldEveryChunks === 0) {
         await yieldToRuntime();
       }
     }
 
     if (
-      totalPlaintextSizeBytes !== manifest.plaintextSizeBytes ||
-      totalEncryptedSizeBytes !== manifest.encryptedSizeBytes ||
+      verifiedPlaintextSizeBytes !== manifest.plaintextSizeBytes ||
+      verifiedEncryptedSizeBytes !== manifest.encryptedSizeBytes ||
       hashDigestHex(plaintextHash) !== manifest.plaintextSha256 ||
       hashDigestHex(ciphertextHash) !== manifest.ciphertextSha256
     ) {
@@ -391,7 +583,7 @@ export class EncryptedVideoStore {
     }
   }
 
-  private async deletePlaintextAfterVerifiedPreservation(sourceUri: string) {
+  async deletePlaintextAfterVerifiedPreservation(sourceUri: string) {
     const attemptedAt = new Date().toISOString();
     let sourceDeleted = false;
 

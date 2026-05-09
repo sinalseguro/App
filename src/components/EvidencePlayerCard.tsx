@@ -6,11 +6,23 @@ import { theme } from "@/design/theme";
 import { EncryptedVideoLoopbackServer, EncryptedVideoLoopbackSession } from "@/features/emergency/EncryptedVideoLoopbackServer";
 import { EncryptedVideoPlaybackCache } from "@/features/emergency/EncryptedVideoPlaybackCache";
 import {
+  createMediaDiagnosticRun,
+  startMediaDiagnosticEvent,
+  summarizeMediaDiagnostics
+} from "@/features/emergency/MediaDiagnostics";
+import {
+  NativePlaybackHandle,
+  closeNativePlaybackHandle,
+  openNativeEncryptedAsset
+} from "@/features/emergency/SinalSeguroMediaEngine";
+import { attachLocalMediaAsset } from "@/features/emergency/emergencyRecorder";
+import {
   getAssetProtectionLabel,
   getAssetSizeLabel,
   getAssetStorageLabel,
   getCameraLabel,
   getPackageMediaCountLabel,
+  getPackageMediaDiagnosticLabel,
   getPackageMediaProtectionLabel,
   isEncryptedVideoAsset
 } from "@/features/emergency/mediaInterfacePresentation";
@@ -39,12 +51,16 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   const [timelineWidth, setTimelineWidth] = useState(0);
   const loopbackServerRef = useRef(new EncryptedVideoLoopbackServer());
   const loopbackSessionRef = useRef<EncryptedVideoLoopbackSession | null>(null);
+  const nativePlaybackHandleRef = useRef<NativePlaybackHandle | null>(null);
   const playbackCacheRef = useRef(new EncryptedVideoPlaybackCache());
+  const playbackDiagnosticRunRef = useRef(createMediaDiagnosticRun("playback"));
+  const playbackFirstProgressTimerRef = useRef<ReturnType<typeof startMediaDiagnosticEvent> | null>(null);
   const preloadAbortRef = useRef<AbortController | null>(null);
   const selectedAssetIdRef = useRef<string | undefined>(undefined);
   const videoViewRef = useRef<VideoView | null>(null);
   const mediaAssets = packageRecord?.media.status === "recorded_local" ? packageRecord.media.assets : [];
   const videoAsset = mediaAssets[selectedAssetIndex];
+  const hasRepeatedCameraMode = new Set(mediaAssets.map((asset) => asset.cameraMode)).size < mediaAssets.length;
   const encryptedAsset = isEncryptedVideoAsset(videoAsset);
   const canUseInternalDirectPlayer = Boolean(videoAsset && playableUri && !preparingPlayback && !playbackError);
   const player = useVideoPlayer(null, (videoPlayer) => {
@@ -55,6 +71,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   const title = mode === "received" ? "Player seguro recebido" : "Player seguro local";
   const selectedTitle = packageRecord ? formatPackageTitle(packageRecord) : title;
   const previewTitle = previewTouched && packageRecord ? selectedTitle : title;
+  const mediaDiagnosticLabel = getPackageMediaDiagnosticLabel(packageRecord);
   const previewHint = hasMedia
     ? preparingPlayback
       ? `Preparando player seguro ${preparationProgress}%`
@@ -66,7 +83,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
             ? "Arquivo protegido pronto"
             : "Video local"
     : packageRecord
-      ? "Nenhum video neste arquivo"
+      ? mediaDiagnosticLabel ?? "Nenhum video neste arquivo"
       : "Abra um item do cofre";
   const packageDateLabel = packageRecord ? formatPackageDate(packageRecord) : undefined;
   const mediaSummary = hasMedia
@@ -74,7 +91,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
       ? `${getPackageMediaCountLabel(packageRecord)} - ${getPackageMediaProtectionLabel(packageRecord)}`
       : `${getPackageMediaCountLabel(packageRecord)} - ${getAssetProtectionLabel(videoAsset)}`
     : packageRecord
-      ? "Nenhum video neste arquivo"
+      ? mediaDiagnosticLabel ?? "Nenhum video neste arquivo"
       : "Abra um item do cofre";
   const playerAccessibilityLabel = packageRecord
     ? `Visualizar ${formatPackageTitle(packageRecord)} no player seguro`
@@ -112,13 +129,13 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
         setPreparationProgress(0);
         setPreparingPlayback(false);
         setProgress(0);
-        void closeLoopbackSession();
+        void closePlaybackHandles();
       }
     });
 
     return () => {
       subscription.remove();
-      void closeLoopbackSession();
+      void closePlaybackHandles();
     };
   }, [player]);
 
@@ -130,6 +147,8 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
 
   useEffect(() => {
     selectedAssetIdRef.current = videoAsset?.id;
+    playbackDiagnosticRunRef.current = createMediaDiagnosticRun("playback");
+    playbackFirstProgressTimerRef.current = null;
   }, [videoAsset?.id]);
 
   useEffect(() => {
@@ -138,7 +157,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     const preloadController = new AbortController();
 
     preloadAbortRef.current?.abort();
-    void closeLoopbackSession();
+    void closePlaybackHandles();
     preloadAbortRef.current = preloadController;
     setPlayableUri(null);
     setPlaybackError("");
@@ -168,7 +187,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
       player.pause();
       void player.replaceAsync(null);
       playbackCache.deletePlayableUri(selectedAsset.id);
-      void closeLoopbackSession();
+      void closePlaybackHandles();
     };
   }, [player, videoAsset]);
 
@@ -178,15 +197,42 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   ) {
     if (!selectedAsset?.encryptedVideo) return null;
 
+    const diagnosticRunId = playbackDiagnosticRunRef.current;
+    const prepareTimer = startMediaDiagnosticEvent(diagnosticRunId, "playback_prepare");
     setPlaybackError("");
     setPreparingPlayback(true);
     setPreparationProgress(0);
 
     try {
-      await closeLoopbackSession();
-      const nextSession = await loopbackServerRef.current.open(selectedAsset, abortSignal);
+      await closePlaybackHandles();
+      const nativePlaybackHandle = await openNativeEncryptedAsset(selectedAsset);
+      if (nativePlaybackHandle) {
+        if (abortSignal?.aborted || selectedAssetIdRef.current !== selectedAsset.id) {
+          await closeNativePlaybackHandle(nativePlaybackHandle).catch(() => undefined);
+          prepareTimer.finish("cancelled", undefined, new Error("playback_asset_changed"));
+          return null;
+        }
+        nativePlaybackHandleRef.current = nativePlaybackHandle;
+        const nextPlayableUri = nativePlaybackHandle.playableUri;
+        setPreparationProgress(100);
+        setPlayableUri(nextPlayableUri);
+        await player.replaceAsync({
+          contentType: "progressive",
+          uri: nextPlayableUri,
+          useCaching: false
+        });
+        prepareTimer.finish("ok", {
+          chunkCount: selectedAsset.encryptedVideo.chunkCount,
+          playbackAdapter: "native_encrypted_source",
+          plaintextSizeBytes: selectedAsset.encryptedVideo.plaintextSizeBytes
+        });
+        void persistPlaybackDiagnostics(selectedAsset);
+        return nextPlayableUri;
+      }
+      const nextSession = await loopbackServerRef.current.open(selectedAsset, abortSignal, diagnosticRunId);
       if (abortSignal?.aborted || selectedAssetIdRef.current !== selectedAsset.id) {
         await nextSession.close().catch(() => undefined);
+        prepareTimer.finish("cancelled", undefined, new Error("playback_asset_changed"));
         return null;
       }
       loopbackSessionRef.current = nextSession;
@@ -198,11 +244,20 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
         uri: nextPlayableUri,
         useCaching: false
       });
+      prepareTimer.finish("ok", {
+        chunkCount: selectedAsset.encryptedVideo.chunkCount,
+        plaintextSizeBytes: selectedAsset.encryptedVideo.plaintextSizeBytes
+      });
+      void persistPlaybackDiagnostics(selectedAsset);
       return nextPlayableUri;
-    } catch {
+    } catch (error) {
       if (abortSignal?.aborted) {
+        prepareTimer.finish("cancelled", undefined, error);
+        void persistPlaybackDiagnostics(selectedAsset);
         return null;
       }
+      prepareTimer.finish("error", undefined, error);
+      void persistPlaybackDiagnostics(selectedAsset);
       setPlaybackError("Nao foi possivel preparar este video para reproducao local.");
       player.pause();
       setPlaying(false);
@@ -233,6 +288,16 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
       if (duration > 0) {
         const nextProgress = Math.min(100, (currentTime / duration) * 100);
         setProgress(nextProgress);
+
+        if (playing && currentTime > 0 && playbackFirstProgressTimerRef.current) {
+          playbackFirstProgressTimerRef.current.finish("ok", {
+            currentTimeMs: currentTime * 1000,
+            durationMs: duration * 1000,
+            progressPercent: nextProgress
+          });
+          playbackFirstProgressTimerRef.current = null;
+          void persistPlaybackDiagnostics(videoAsset);
+        }
 
         if (playing && nextProgress >= 99.5) {
           player.pause();
@@ -275,7 +340,13 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     setPlaying((currentValue) => {
       if (currentValue) {
         player.pause();
+        playbackFirstProgressTimerRef.current?.finish("cancelled", undefined, new Error("playback_paused"));
+        playbackFirstProgressTimerRef.current = null;
       } else {
+        playbackFirstProgressTimerRef.current = startMediaDiagnosticEvent(
+          playbackDiagnosticRunRef.current,
+          "playback_first_progress"
+        );
         player.play();
       }
       return !currentValue;
@@ -299,6 +370,10 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     }
 
     player.currentTime = 0;
+    playbackFirstProgressTimerRef.current = startMediaDiagnosticEvent(
+      playbackDiagnosticRunRef.current,
+      "playback_first_progress"
+    );
     player.play();
     setPlaying(true);
   }
@@ -343,6 +418,45 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     }
   }
 
+  async function closeNativePlaybackSession() {
+    const currentHandle = nativePlaybackHandleRef.current;
+    nativePlaybackHandleRef.current = null;
+    await closeNativePlaybackHandle(currentHandle).catch(() => undefined);
+  }
+
+  async function closePlaybackHandles() {
+    await Promise.all([closeLoopbackSession(), closeNativePlaybackSession()]);
+  }
+
+  async function persistPlaybackDiagnostics(asset?: LocalMediaAsset) {
+    if (!packageRecord || !asset?.encryptedVideo) return;
+
+    const nextSnapshot = summarizeMediaDiagnostics(playbackDiagnosticRunRef.current);
+    const previousSnapshot = asset.encryptedVideo.diagnostics;
+    const eventsByKey = new Map(
+      [...(previousSnapshot?.events ?? []), ...nextSnapshot.events].map((event) => [
+        `${event.runId}:${event.stage}:${event.startedAt}`,
+        event
+      ])
+    );
+    await attachLocalMediaAsset(packageRecord.id, {
+      ...asset,
+      encryptedVideo: {
+        ...asset.encryptedVideo,
+        diagnostics: {
+          ...nextSnapshot,
+          events: [...eventsByKey.values()]
+        }
+      }
+    }).catch(() => undefined);
+  }
+
+  function formatAssetSwitchLabel(asset: LocalMediaAsset, index: number) {
+    const cameraLabel = asset.cameraMode === "front" ? "Frontal" : "Traseira";
+    const segmentLabel = hasRepeatedCameraMode ? ` ${index + 1}` : "";
+    return `${cameraLabel}${segmentLabel}${isEncryptedVideoAsset(asset) ? " protegida" : ""}`;
+  }
+
   return (
     <View style={styles.card}>
       <Pressable
@@ -383,7 +497,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
           <View style={styles.assetSwitchRow}>
             {mediaAssets.map((asset, index) => (
               <Pressable
-                accessibilityLabel={`Selecionar video da camera ${asset.cameraMode === "front" ? "frontal" : "traseira"}`}
+                accessibilityLabel={`Selecionar ${formatAssetSwitchLabel(asset, index)}`}
                 accessibilityRole="button"
                 accessibilityState={{ selected: selectedAssetIndex === index }}
                 key={asset.id}
@@ -399,8 +513,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
                     selectedAssetIndex === index && styles.assetSwitchLabelSelected
                   ]}
                 >
-                  {asset.cameraMode === "front" ? "Frontal" : "Traseira"}
-                  {isEncryptedVideoAsset(asset) ? " protegida" : ""}
+                  {formatAssetSwitchLabel(asset, index)}
                 </Text>
               </Pressable>
             ))}

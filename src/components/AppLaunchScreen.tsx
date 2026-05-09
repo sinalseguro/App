@@ -23,7 +23,6 @@ export function AppLaunchScreen() {
       <View style={styles.brand}>
         <Image source={require("../../assets/brand/sinalseguro-symbol.png")} style={styles.symbol} />
         <Text style={styles.name}>SinalSeguro</Text>
-        <Text style={styles.tagline}>Rede de Protecao e Amparo</Text>
       </View>
       <View accessibilityRole="progressbar" accessibilityLabel="Carregando SinalSeguro" style={styles.loadingTrack}>
         <Animated.View style={[styles.loadingFill, { width: progressWidth }]} />
@@ -70,13 +69,5 @@ const styles = StyleSheet.create({
     height: 132,
     resizeMode: "contain",
     width: 132
-  },
-  tagline: {
-    color: theme.colors.textOnDarkMuted,
-    fontSize: theme.typography.small,
-    fontWeight: "700",
-    letterSpacing: 0,
-    textAlign: "center",
-    textTransform: "uppercase"
   }
 });

@@ -4,6 +4,7 @@ import { Archive, ChevronDown, ChevronUp, Eye, FileLock2, MapPin, Share2, Square
 import { theme } from "@/design/theme";
 import {
   getPackageMediaCountLabel,
+  getPackageMediaDiagnosticLabel,
   getPackageMediaProtectionLabel
 } from "@/features/emergency/mediaInterfacePresentation";
 import {
@@ -95,6 +96,7 @@ export function LocalEvidenceRail({
         const active = packageRecord.status === "recording_local";
         const packageTitle = formatPackageTitle(packageRecord);
         const protectionLabel = getPackageMediaProtectionLabel(packageRecord);
+        const diagnosticLabel = getPackageMediaDiagnosticLabel(packageRecord);
         const hasProtectedMedia = protectionLabel === "Protegido" || protectionLabel === "Parcialmente protegido";
 
         return (
@@ -131,7 +133,9 @@ export function LocalEvidenceRail({
               <Text numberOfLines={2} style={styles.fileTitle}>{packageTitle}</Text>
               <Text numberOfLines={1} style={styles.fileDate}>{formatPackageDate(packageRecord)}</Text>
               <Text numberOfLines={1} style={styles.fileDuration}>{formatPackageDurationLabel(packageRecord)}</Text>
-              <Text style={styles.fileStatus}>{active ? formatPackageSubtitle(packageRecord) : getPackageMediaCountLabel(packageRecord)}</Text>
+              <Text style={styles.fileStatus}>
+                {active ? formatPackageSubtitle(packageRecord) : diagnosticLabel ?? getPackageMediaCountLabel(packageRecord)}
+              </Text>
               {expanded ? (
                 <ChevronUp size={18} color={theme.colors.textMuted} />
               ) : (

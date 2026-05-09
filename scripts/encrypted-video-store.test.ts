@@ -3,6 +3,14 @@ import { CameraCaptureResidueCleaner, CaptureResidueFileSystemAdapter } from "..
 import { EncryptedVideoDataSource } from "../src/features/emergency/EncryptedVideoDataSource";
 import { EncryptedVideoPlaybackCache, PlaybackCacheFileSystem } from "../src/features/emergency/EncryptedVideoPlaybackCache";
 import { buildStreamingHeaders, parseHttpRequestHeader, parseSingleRange } from "../src/features/emergency/EncryptedVideoRangeHttp";
+import { PlaintextMediaResidueCleaner } from "../src/features/emergency/PlaintextMediaResidueCleaner";
+import {
+  clearMediaDiagnosticEvents,
+  createMediaDiagnosticRun,
+  listMediaDiagnosticEvents,
+  startMediaDiagnosticEvent,
+  summarizeMediaDiagnostics
+} from "../src/features/emergency/MediaDiagnostics";
 import {
   EncryptedVideoChunkManifest,
   EncryptedVideoManifest,
@@ -297,6 +305,29 @@ function buildPlaybackCache(sealedChunkSource = sealedChunks) {
 }
 
 async function run() {
+  clearMediaDiagnosticEvents();
+  const diagnosticRunId = createMediaDiagnosticRun("unit");
+  const diagnosticTimer = startMediaDiagnosticEvent(diagnosticRunId, "preserve_encrypt_chunks");
+  diagnosticTimer.finish("ok", {
+    chunkCount: 3,
+    keyRef: "secret-key-ref",
+    manifestUri: "file:///private/path/manifest.sseg",
+    nonce: "secret-nonce",
+    platform: "android",
+    sourceSizeBytes: 1536,
+    url: "http://127.0.0.1:1234/capability/video.mp4"
+  });
+  const diagnosticEvents = listMediaDiagnosticEvents(diagnosticRunId);
+  assert.equal(diagnosticEvents.length, 1);
+  assert.equal(diagnosticEvents[0].metrics?.chunkCount, 3);
+  assert.equal(diagnosticEvents[0].metrics?.platform, "android");
+  assert.equal(diagnosticEvents[0].metrics?.sourceSizeBytes, 1536);
+  assert.equal("keyRef" in (diagnosticEvents[0].metrics ?? {}), false);
+  assert.equal("manifestUri" in (diagnosticEvents[0].metrics ?? {}), false);
+  assert.equal("nonce" in (diagnosticEvents[0].metrics ?? {}), false);
+  assert.equal("url" in (diagnosticEvents[0].metrics ?? {}), false);
+  assert.equal(summarizeMediaDiagnostics(diagnosticRunId).events.length, 1);
+
   const firstChunk = await dataSource.readChunk(key, manifest, 0, readSealedChunk);
   assert.deepEqual(firstChunk, plaintext.subarray(0, chunkSizeBytes));
 
@@ -516,6 +547,27 @@ async function run() {
   assert.equal(residueFileSystem.entries.has("cache://Camera/fresh.mp4"), true);
   assert.equal(residueFileSystem.entries.has("cache://Camera/thumbnail.jpg"), true);
   assert.equal(residueFileSystem.entries.has("cache://Other/other.mp4"), true);
+
+  const legacyPlaintextFileSystem = new MemoryCaptureResidueFileSystem();
+  legacyPlaintextFileSystem.entries.set("doc://sinalseguro-media/referenced.mp4", { modificationTime: 1000, size: 10 });
+  legacyPlaintextFileSystem.entries.set("doc://sinalseguro-media/stale.mp4", { modificationTime: 1000, size: 11 });
+  legacyPlaintextFileSystem.entries.set("doc://sinalseguro-media/fresh.mp4", { modificationTime: 1_800_000, size: 12 });
+  legacyPlaintextFileSystem.entries.set("doc://sinalseguro-media/note.txt", { modificationTime: 1000, size: 13 });
+  const legacyPlaintextCleaner = new PlaintextMediaResidueCleaner(
+    legacyPlaintextFileSystem,
+    "doc://sinalseguro-media/"
+  );
+  const legacyPlaintextCleanup = await legacyPlaintextCleaner.cleanupUnreferencedLegacyVideos({
+    nowMs: 2_000_000,
+    referencedUris: ["doc://sinalseguro-media/referenced.mp4"],
+    staleBeforeMs: 1_500_000
+  });
+  assert.equal(legacyPlaintextCleanup.blockedReferencedCount, 1);
+  assert.equal(legacyPlaintextCleanup.deletedCount, 1);
+  assert.equal(legacyPlaintextFileSystem.entries.has("doc://sinalseguro-media/referenced.mp4"), true);
+  assert.equal(legacyPlaintextFileSystem.entries.has("doc://sinalseguro-media/stale.mp4"), false);
+  assert.equal(legacyPlaintextFileSystem.entries.has("doc://sinalseguro-media/fresh.mp4"), true);
+  assert.equal(legacyPlaintextFileSystem.entries.has("doc://sinalseguro-media/note.txt"), true);
 
   console.log("Testes de video criptografado em chunks aprovados.");
 }

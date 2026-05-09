@@ -10,6 +10,11 @@ const requiredFiles = [
   "docs/30_MIDIA_CRIPTOGRAFADA_CHUNKS.md",
   "docs/31_ARQUITETURA_COMPARTILHAMENTO_TEMPO_REAL.md",
   "docs/api/openapi.yaml",
+  "plugins/with-sinalseguro-media-engine.js",
+  "plugins/native-media-engine/android/SinalSeguroMediaEngineModule.kt",
+  "plugins/native-media-engine/android/SinalSeguroMediaEnginePackage.kt",
+  "plugins/native-media-engine/ios/SinalSeguroMediaEngine.swift",
+  "plugins/native-media-engine/ios/SinalSeguroMediaEngine.m",
   "app/_layout.tsx",
   "app/index.tsx",
   "app/arquivos.tsx",
@@ -41,12 +46,14 @@ const requiredFiles = [
   "src/features/emergency/mediaCapture.ts",
   "src/features/emergency/VideoCryptoService.ts",
   "src/features/emergency/CameraCaptureResidueCleaner.ts",
+  "src/features/emergency/PlaintextMediaResidueCleaner.ts",
   "src/features/emergency/EncryptedVideoManifest.ts",
   "src/features/emergency/EncryptedVideoStore.ts",
   "src/features/emergency/EncryptedVideoDataSource.ts",
   "src/features/emergency/EncryptedVideoRangeHttp.ts",
   "src/features/emergency/EncryptedVideoLoopbackServer.ts",
   "src/features/emergency/EncryptedVideoPlaybackCache.ts",
+  "src/features/emergency/SinalSeguroMediaEngine.ts",
   "src/features/emergency/SecureVideoThumbnailStore.ts",
   "src/services/apiClient.ts",
   "src/services/appleIdentity.ts",
@@ -121,6 +128,10 @@ if (!appConfig.includes("\"image\": \"./assets/brand/sinalseguro-splash-approved
   throw new Error("Splash nativa precisa usar o layout aprovado por Tarcila com logo, nome e fundo institucional.");
 }
 
+if (!appConfig.includes("./plugins/with-sinalseguro-media-engine")) {
+  throw new Error("Motor nativo de midia precisa estar registrado como config plugin persistente.");
+}
+
 const launchScreen = await readFile("src/components/AppLaunchScreen.tsx", "utf8");
 
 if (!launchScreen.includes("Carregando SinalSeguro") || launchScreen.includes("glow")) {
@@ -174,6 +185,8 @@ if (
   !evidencePlayerCard.includes("isEncryptedVideoAsset") ||
   !evidencePlayerCard.includes("Arquivo protegido") ||
   !evidencePlayerCard.includes("EncryptedVideoLoopbackServer") ||
+  !evidencePlayerCard.includes("openNativeEncryptedAsset") ||
+  !evidencePlayerCard.includes("nativePlaybackHandleRef") ||
   !evidencePlayerCard.includes("loopbackSessionRef") ||
   !evidencePlayerCard.includes("replaceAsync") ||
   !evidencePlayerCard.includes("getAssetStorageLabel") ||
@@ -184,7 +197,9 @@ if (
 
 if (
   !mediaInterfacePresentation.includes("Player seguro pendente") ||
+  !mediaInterfacePresentation.includes("Player seguro nativo") ||
   !mediaInterfacePresentation.includes("partes protegidas") ||
+  !mediaInterfacePresentation.includes("segmentos protegidos") ||
   !mediaInterfacePresentation.includes("getPackageMediaProtectionLabel")
 ) {
   throw new Error("Apresentacao de midia precisa centralizar rotulos de protecao, armazenamento e playback.");
@@ -265,6 +280,25 @@ if (
   !homeScreen.includes("activePackageId || finishInProgress")
 ) {
   throw new Error("Home precisa manter tela acordada enquanto chamado ativo ou encerramento estiver em progresso.");
+}
+
+if (
+  !homeScreen.includes("waitForMediaRecorderStop") ||
+  !homeScreen.includes("mediaStopWaitTimeoutMs") ||
+  !homeScreen.includes("finishInProgressRef") ||
+  !homeScreen.includes("emergency_media_stop_timeout") ||
+  homeScreen.indexOf("await waitForMediaRecorderStop(stopSerial)") > homeScreen.indexOf("finishEmergencyPackage(packageId")
+) {
+  throw new Error("Home iOS precisa aguardar stop da camera, bloquear duplo encerramento e finalizar pacote sem perder midia.");
+}
+
+if (
+  !homeScreen.includes("startInProgress") ||
+  !homeScreen.includes("if (startInProgress) return") ||
+  !homeScreen.includes("setStartInProgress(true)") ||
+  !homeScreen.includes("setStartInProgress(false)")
+) {
+  throw new Error("Home precisa bloquear duplo acionamento enquanto o pacote SOS ainda esta sendo criado.");
 }
 
 const emergencyTopBar = await readFile("src/features/emergency-home/EmergencyTopBar.tsx", "utf8");
@@ -430,27 +464,46 @@ if (
   throw new Error("Midia privada precisa configurar frontal, traseira e tentativa de duas cameras com fallback seguro.");
 }
 
+const recorderStartEffectDependencyList =
+  emergencyMediaRecorder.match(/void startRecording\(\);[\s\S]*?\}, \[([\s\S]*?)\]\);/)?.[1] ?? "";
+
 if (
   !emergencyMediaRecorder.includes("onMediaAttachedRef") ||
   !emergencyMediaRecorder.includes("onStatusChangeRef") ||
   !emergencyMediaRecorder.includes("stopRequestSerial") ||
   !emergencyMediaRecorder.includes("stopActiveRecording") ||
-  !emergencyMediaRecorder.includes('videoQuality="480p"') ||
-  !emergencyMediaRecorder.includes("videoBitrate={1_200_000}") ||
-  /\[\s*activeCameraModes[\s\S]*onMediaAttached[\s\S]*\]/.test(emergencyMediaRecorder) ||
-  /\[\s*activeCameraModes[\s\S]*onStatusChange[\s\S]*\]/.test(emergencyMediaRecorder)
+  !emergencyMediaRecorder.includes("iosRecordStartWarmupMs") ||
+  !emergencyMediaRecorder.includes("capture_record_async_retry") ||
+  !emergencyMediaRecorder.includes("shouldRetryIosRecordAsync") ||
+  !emergencyMediaRecorder.includes("iosHomologationMaxSegmentsPerCall") ||
+  !emergencyMediaRecorder.includes("capture_ios_segment_limit_reached") ||
+  !emergencyMediaRecorder.includes('const iosRecordingVideoCodec: VideoCodec = "avc1"') ||
+  !emergencyMediaRecorder.includes('const recordingVideoQuality: VideoQuality = "480p"') ||
+  !emergencyMediaRecorder.includes('Platform.OS === "ios" ? 650_000 : 1_200_000') ||
+  !emergencyMediaRecorder.includes("iosEncryptedChunkSizeBytes") ||
+  !emergencyMediaRecorder.includes('verificationMode: Platform.OS === "ios" ? "bounded" : "full"') ||
+  !emergencyMediaRecorder.includes("videoQuality={recordingVideoQuality}") ||
+  !emergencyMediaRecorder.includes("videoBitrate={recordingVideoBitrate}") ||
+  recorderStartEffectDependencyList.includes("onMediaAttached") ||
+  recorderStartEffectDependencyList.includes("onStatusChange")
 ) {
   throw new Error("Gravador precisa parar por sinal explicito, nao reiniciar por callback, e limitar peso da midia local.");
 }
 
 const videoCryptoService = await readFile("src/features/emergency/VideoCryptoService.ts", "utf8");
 const cameraCaptureResidueCleaner = await readFile("src/features/emergency/CameraCaptureResidueCleaner.ts", "utf8");
+const plaintextMediaResidueCleaner = await readFile("src/features/emergency/PlaintextMediaResidueCleaner.ts", "utf8");
 const encryptedVideoStore = await readFile("src/features/emergency/EncryptedVideoStore.ts", "utf8");
 const encryptedVideoDataSource = await readFile("src/features/emergency/EncryptedVideoDataSource.ts", "utf8");
 const encryptedVideoLoopbackServer = await readFile("src/features/emergency/EncryptedVideoLoopbackServer.ts", "utf8");
 const encryptedVideoPlaybackCache = await readFile("src/features/emergency/EncryptedVideoPlaybackCache.ts", "utf8");
+const sinalSeguroMediaEngine = await readFile("src/features/emergency/SinalSeguroMediaEngine.ts", "utf8");
+const mediaEnginePlugin = await readFile("plugins/with-sinalseguro-media-engine.js", "utf8");
+const androidMediaEngine = await readFile("plugins/native-media-engine/android/SinalSeguroMediaEngineModule.kt", "utf8");
+const iosMediaEngine = await readFile("plugins/native-media-engine/ios/SinalSeguroMediaEngine.swift", "utf8");
 const secureVideoThumbnailStore = await readFile("src/features/emergency/SecureVideoThumbnailStore.ts", "utf8");
 const encryptedVideoTests = await readFile("scripts/encrypted-video-store.test.ts", "utf8");
+const secureJsonStore = await readFile("src/storage/secureJsonStore.ts", "utf8");
 
 if (
   !videoCryptoService.includes("xchacha20poly1305") ||
@@ -462,6 +515,15 @@ if (
 }
 
 if (
+  !mediaEnginePlugin.includes("syncSinalSeguroMediaEngine") ||
+  !mediaEnginePlugin.includes("withDangerousMod") ||
+  !mediaEnginePlugin.includes("SinalSeguroMediaEnginePackage") ||
+  !mediaEnginePlugin.includes("project.pbxproj")
+) {
+  throw new Error("Config plugin do motor nativo precisa sincronizar Android/iOS e poder ser chamado pelos scripts locais.");
+}
+
+if (
   !encryptedVideoStore.includes("EncodingType.Base64") ||
   !encryptedVideoStore.includes("position") ||
   !encryptedVideoStore.includes("length") ||
@@ -469,12 +531,45 @@ if (
   !encryptedVideoStore.includes("manifestTag") ||
   !encryptedVideoStore.includes("chunked_plaintext_sha256") ||
   !encryptedVideoStore.includes("recipientKeyEnvelopes") ||
+  !encryptedVideoStore.includes('storageEngine: "js_chunked_v1"') ||
+  !encryptedVideoStore.includes("keyId: keyRef") ||
+  !encryptedVideoStore.includes('envelopeScope: "media_asset"') ||
   !encryptedVideoStore.includes("verifyPreservedEncryptedVideo") ||
   !encryptedVideoStore.includes("deletePlaintextAfterVerifiedPreservation") ||
   !encryptedVideoStore.includes("plaintextCleanup") ||
   !encryptedVideoStore.includes("cleanup_pending")
 ) {
   throw new Error("Store criptografado precisa ler por faixa, cifrar manifesto/chunks, verificar integridade e limpar plaintext so apos preservacao segura.");
+}
+
+if (
+  !sinalSeguroMediaEngine.includes("encryptSegmentWithNativeMediaEngine") ||
+  !sinalSeguroMediaEngine.includes("openNativeEncryptedAsset") ||
+  !sinalSeguroMediaEngine.includes("cleanupNativeMediaResidues") ||
+  !sinalSeguroMediaEngine.includes("native_segmented_v1") ||
+  !sinalSeguroMediaEngine.includes("native_encrypted_source")
+) {
+  throw new Error("Ponte JS do motor nativo precisa expor cifragem, playback e limpeza com fallback seguro.");
+}
+
+if (
+  !androidMediaEngine.includes("AES/GCM/NoPadding") ||
+  !androidMediaEngine.includes("privateFileFromUri") ||
+  !androidMediaEngine.includes("file_outside_app_private_storage") ||
+  !androidMediaEngine.includes("cleanupMediaResidues") ||
+  !androidMediaEngine.includes("openEncryptedAsset")
+) {
+  throw new Error("Motor nativo Android precisa cifrar segmento, restringir storage privado e abrir handles saneados.");
+}
+
+if (
+  !iosMediaEngine.includes("AES.GCM.seal") ||
+  !iosMediaEngine.includes("privateFileURL") ||
+  !iosMediaEngine.includes("file_outside_app_private_storage") ||
+  !iosMediaEngine.includes("cleanupMediaResidues") ||
+  !iosMediaEngine.includes("openEncryptedAsset")
+) {
+  throw new Error("Motor nativo iOS precisa cifrar segmento, restringir storage privado e abrir handles saneados.");
 }
 
 if (
@@ -485,6 +580,27 @@ if (
   cameraCaptureResidueCleaner.includes("sinalseguro-media-encrypted")
 ) {
   throw new Error("Limpeza de residuos precisa ficar restrita a MP4 temporario do cache da camera.");
+}
+
+if (
+  !plaintextMediaResidueCleaner.includes("PlaintextMediaResidueCleaner") ||
+  !plaintextMediaResidueCleaner.includes("legacyPlaintextMediaDirectory") ||
+  !plaintextMediaResidueCleaner.includes("runPlaintextMediaStorageMaintenance") ||
+  !plaintextMediaResidueCleaner.includes("replaceLocalMediaAsset") ||
+  !plaintextMediaResidueCleaner.includes("cleanupPlaintextSource: false") ||
+  !plaintextMediaResidueCleaner.includes("blockedReferencedCount")
+) {
+  throw new Error("Residuos de MP4 claro legado precisam ser migrados quando referenciados e limpos quando nao referenciados.");
+}
+
+if (
+  !secureJsonStore.includes("xchacha20poly1305") ||
+  !secureJsonStore.includes("encryptedItemKey") ||
+  !secureJsonStore.includes("getOrCreateNamespaceKey") ||
+  !secureJsonStore.includes("readRecord") ||
+  secureJsonStore.includes("await saveSecret(itemKey(namespace")
+) {
+  throw new Error("Registros JSON grandes do cofre precisam sair do payload direto do SecureStore e ficar cifrados no AsyncStorage.");
 }
 
 if (

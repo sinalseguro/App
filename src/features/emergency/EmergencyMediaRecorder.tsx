@@ -1,23 +1,51 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
-import { Camera, CameraView } from "expo-camera";
+import { Camera, CameraView, type CameraRecordingOptions, type VideoCodec, type VideoQuality } from "expo-camera";
 import { theme } from "@/design/theme";
 import { EmergencyPreferences } from "./emergencyPreferences";
+import { createMediaDiagnosticRun, startMediaDiagnosticEvent, summarizeMediaDiagnostics } from "./MediaDiagnostics";
+import { appendMediaOperationalLog } from "./MediaOperationalLog";
+import { attachLocalMediaDiagnostics } from "./emergencyRecorder";
 import { preserveLocalVideoAsset } from "./mediaCapture";
+import type { MediaCaptureFailureReason } from "./types";
 
 type MediaPermissionStatus = "idle" | "requesting" | "granted" | "denied";
 type ActualCameraMode = "front" | "back";
 type CameraReadyByMode = Record<ActualCameraMode, boolean>;
+type ActiveCaptureController = {
+  attachedAssetCount: number;
+  packageId: string;
+  startedAtMs: number;
+  stopRequested: boolean;
+};
+export type MediaStopRequestResult = {
+  attachedAssets: number;
+  status: "attached" | "empty" | "error" | "idle";
+};
 
 type EmergencyMediaRecorderProps = {
   activePackageId: string | null;
   preferences: EmergencyPreferences;
   onMediaAttached?: () => void;
+  onStopRequestSettled?: (serial: number, result: MediaStopRequestResult) => void;
   stopRequestSerial?: number;
   onStatusChange?: (status: string) => void;
 };
 
 const emptyCameraReadyState: CameraReadyByMode = { back: false, front: false };
+const iosSegmentDurationSeconds = 12;
+const iosHomologationMaxSegmentsPerCall = 1;
+const iosRecordStartWarmupMs = 850;
+const iosRecordRetryDelayMs = 700;
+const iosRecordRetryMaxAttempts = 2;
+const iosEncryptedChunkSizeBytes = 2 * 1024 * 1024;
+const iosRecordingVideoCodec: VideoCodec = "avc1";
+const recordingVideoQuality: VideoQuality = "480p";
+const recordingVideoBitrate = Platform.OS === "ios" ? 650_000 : 1_200_000;
+
+function wait(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 function cameraModeLabel(mode: ActualCameraMode) {
   return mode === "front" ? "frontal" : "traseira";
@@ -31,19 +59,84 @@ function getRuntimeCameraMode(requestedCameraMode: EmergencyPreferences["localVi
   return requestedCameraMode;
 }
 
+function buildRecordingOptions(
+  defaultDurationSeconds: number,
+  startedAtMs: number
+): CameraRecordingOptions | null | undefined {
+  if (Platform.OS !== "ios") {
+    return defaultDurationSeconds > 0 ? { maxDuration: defaultDurationSeconds } : undefined;
+  }
+
+  if (defaultDurationSeconds > 0) {
+    const elapsedSeconds = (Date.now() - startedAtMs) / 1000;
+    const remainingSeconds = Math.ceil(defaultDurationSeconds - elapsedSeconds);
+    if (remainingSeconds <= 0) return null;
+
+    return {
+      codec: iosRecordingVideoCodec,
+      maxDuration: Math.max(1, Math.min(iosSegmentDurationSeconds, remainingSeconds))
+    };
+  }
+
+  return {
+    codec: iosRecordingVideoCodec,
+    maxDuration: iosSegmentDurationSeconds
+  };
+}
+
+function classifyCaptureFailureReason(error: unknown): MediaCaptureFailureReason {
+  if (error instanceof Error && error.message === "camera_no_file_returned") {
+    return "camera_no_file_returned";
+  }
+
+  if (error instanceof Error && /ready|output/i.test(`${error.name} ${error.message}`)) {
+    return "camera_output_not_ready";
+  }
+
+  if (error instanceof Error && /permission|authori[sz]|denied/i.test(`${error.name} ${error.message}`)) {
+    return "media_permissions_denied";
+  }
+
+  return "camera_recording_error";
+}
+
+function shouldRetryIosRecordAsync(error: unknown, attempt: number, elapsedMs: number) {
+  if (Platform.OS !== "ios" || attempt >= iosRecordRetryMaxAttempts) return false;
+  if (error instanceof Error && /permission|authori[sz]|denied/i.test(`${error.name} ${error.message}`)) return false;
+  return elapsedMs < 1500 || classifyCaptureFailureReason(error) === "camera_output_not_ready";
+}
+
+async function persistCaptureDiagnostic(
+  packageId: string,
+  reason: MediaCaptureFailureReason,
+  diagnosticRunId: string
+) {
+  await attachLocalMediaDiagnostics(packageId, {
+    schemaVersion: "sinalseguro.media-capture-diagnostic.v1",
+    status: "capture_failed",
+    reason,
+    recordedAt: new Date().toISOString(),
+    diagnostics: summarizeMediaDiagnostics(diagnosticRunId)
+  }).catch(() => undefined);
+}
+
 export function EmergencyMediaRecorder({
   activePackageId,
   preferences,
   onMediaAttached,
+  onStopRequestSettled,
   stopRequestSerial = 0,
   onStatusChange
 }: EmergencyMediaRecorderProps) {
   const frontCameraRef = useRef<CameraView | null>(null);
   const backCameraRef = useRef<CameraView | null>(null);
+  const activeCaptureControllerRef = useRef<ActiveCaptureController | null>(null);
   const recordingRef = useRef(false);
   const onMediaAttachedRef = useRef(onMediaAttached);
+  const onStopRequestSettledRef = useRef(onStopRequestSettled);
   const onStatusChangeRef = useRef(onStatusChange);
   const handledStopRequestSerialRef = useRef(0);
+  const pendingStopRequestSerialRef = useRef(0);
   const [cameraReadyByMode, setCameraReadyByMode] = useState<CameraReadyByMode>(emptyCameraReadyState);
   const [dualFallbackUnlocked, setDualFallbackUnlocked] = useState(false);
   const [forcedSingleCameraMode, setForcedSingleCameraMode] = useState<ActualCameraMode | null>(null);
@@ -74,18 +167,44 @@ export function EmergencyMediaRecorder({
       ? "frontal + traseira"
       : `${cameraModeLabel(activeCameraModes[0])}${runtimeCameraMode === "both" ? " (fallback)" : ""}`;
 
-  function stopActiveRecording() {
-    if (!recordingRef.current) return;
+  function stopActiveRecording(announce = true) {
+    appendMediaOperationalLog("capture_stop_requested", {
+      active: recordingRef.current,
+      attachedAssetCount: activeCaptureControllerRef.current?.attachedAssetCount ?? 0,
+      platform: Platform.OS,
+      requestedCameraMode,
+      runtimeCameraMode
+    });
+    if (!recordingRef.current) return false;
 
-    onStatusChangeRef.current?.("Encerrando gravacao local e preparando arquivo seguro.");
+    const activeCaptureController = activeCaptureControllerRef.current;
+    if (activeCaptureController) {
+      activeCaptureController.stopRequested = true;
+    }
+    if (announce) {
+      onStatusChangeRef.current?.("Encerrando gravacao local e preparando arquivo seguro.");
+    }
     void frontCameraRef.current?.stopRecording();
     void backCameraRef.current?.stopRecording();
+    if (Platform.OS === "ios" && activeCaptureController && activeCaptureController.attachedAssetCount > 0) {
+      settleStopRequest({ attachedAssets: activeCaptureController.attachedAssetCount, status: "attached" });
+    }
+    return true;
+  }
+
+  function settleStopRequest(result: MediaStopRequestResult) {
+    const serial = pendingStopRequestSerialRef.current;
+    if (serial <= 0) return;
+
+    pendingStopRequestSerialRef.current = 0;
+    onStopRequestSettledRef.current?.(serial, result);
   }
 
   useEffect(() => {
     onMediaAttachedRef.current = onMediaAttached;
+    onStopRequestSettledRef.current = onStopRequestSettled;
     onStatusChangeRef.current = onStatusChange;
-  }, [onMediaAttached, onStatusChange]);
+  }, [onMediaAttached, onStopRequestSettled, onStatusChange]);
 
   useEffect(() => {
     setCameraReadyByMode(emptyCameraReadyState);
@@ -99,6 +218,12 @@ export function EmergencyMediaRecorder({
     }
 
     handledStopRequestSerialRef.current = stopRequestSerial;
+    if (!recordingRef.current) {
+      onStopRequestSettledRef.current?.(stopRequestSerial, { attachedAssets: 0, status: "idle" });
+      return;
+    }
+
+    pendingStopRequestSerialRef.current = stopRequestSerial;
     stopActiveRecording();
   }, [stopRequestSerial]);
 
@@ -160,6 +285,27 @@ export function EmergencyMediaRecorder({
   ]);
 
   useEffect(() => {
+    appendMediaOperationalLog("capture_readiness_snapshot", {
+      activeCameraCount: activeCameraModes.length,
+      anyRequestedCameraReady,
+      canStartRecording,
+      mediaEnabled,
+      mediaPermissionStatus,
+      platform: Platform.OS,
+      requestedCameraMode,
+      runtimeCameraMode
+    });
+  }, [
+    activeCameraModes.length,
+    anyRequestedCameraReady,
+    canStartRecording,
+    mediaEnabled,
+    mediaPermissionStatus,
+    requestedCameraMode,
+    runtimeCameraMode
+  ]);
+
+  useEffect(() => {
     if (!mediaEnabled || Platform.OS === "web") {
       setCameraReadyByMode(emptyCameraReadyState);
       setDualFallbackUnlocked(false);
@@ -172,6 +318,11 @@ export function EmergencyMediaRecorder({
 
     async function prepareMediaPermissions() {
       setMediaPermissionStatus("requesting");
+      appendMediaOperationalLog("capture_permissions_request", {
+        platform: Platform.OS,
+        requestedCameraMode,
+        runtimeCameraMode
+      });
 
       const currentCameraPermission = await Camera.getCameraPermissionsAsync();
       const cameraAuthorization = currentCameraPermission.granted
@@ -186,11 +337,21 @@ export function EmergencyMediaRecorder({
 
       if (!cameraAuthorization.granted || !microphoneAuthorization.granted) {
         setMediaPermissionStatus("denied");
+        appendMediaOperationalLog("capture_permissions_denied", {
+          cameraGranted: cameraAuthorization.granted,
+          microphoneGranted: microphoneAuthorization.granted,
+          platform: Platform.OS
+        });
         onStatusChangeRef.current?.("Chamado ativo sem video: camera ou microfone nao autorizados neste dispositivo.");
         return;
       }
 
       setMediaPermissionStatus("granted");
+      appendMediaOperationalLog("capture_permissions_granted", {
+        platform: Platform.OS,
+        requestedCameraMode,
+        runtimeCameraMode
+      });
     }
 
     void prepareMediaPermissions();
@@ -217,6 +378,14 @@ export function EmergencyMediaRecorder({
     async function startRecording() {
       const currentPackageId = activePackageId;
       if (!currentPackageId) return;
+      appendMediaOperationalLog("capture_start_effect_entered", {
+        activeCameraCount: activeCameraModes.length,
+        canStartRecording,
+        mediaPermissionStatus,
+        platform: Platform.OS,
+        requestedCameraMode,
+        runtimeCameraMode
+      });
 
       const cameraRefs: Record<ActualCameraMode, CameraView | null> = {
         back: backCameraRef.current,
@@ -229,10 +398,25 @@ export function EmergencyMediaRecorder({
             Boolean(entry.camera) && cameraReadyByMode[entry.mode]
         );
 
-      if (availableCameras.length === 0) return;
+      if (availableCameras.length === 0) {
+        appendMediaOperationalLog("capture_no_available_camera_ref", {
+          backReady: cameraReadyByMode.back,
+          frontReady: cameraReadyByMode.front,
+          platform: Platform.OS,
+          requestedCameraMode,
+          runtimeCameraMode
+        });
+        return;
+      }
 
       recordingRef.current = true;
-      const startedAt = new Date().toISOString();
+      const activeCaptureController: ActiveCaptureController = {
+        attachedAssetCount: 0,
+        packageId: currentPackageId,
+        startedAtMs: Date.now(),
+        stopRequested: false
+      };
+      activeCaptureControllerRef.current = activeCaptureController;
       onStatusChangeRef.current?.(
         requestedCameraMode === "both" && runtimeCameraMode !== "both"
           ? "Gravacao local iniciada em modo leve no Android para evitar travamento."
@@ -241,55 +425,248 @@ export function EmergencyMediaRecorder({
           : `Gravacao local de video e audio iniciada pela camera ${cameraModeLabel(availableCameras[0].mode)}.`
       );
 
+      let attachedAssetCount = 0;
+      let stopSettlementStatus: MediaStopRequestResult["status"] = "empty";
+
       try {
-        const recordingOptions =
-          preferences.defaultDurationSeconds > 0 ? { maxDuration: preferences.defaultDurationSeconds } : undefined;
         const recordingResults = await Promise.allSettled(
           availableCameras.map(async ({ camera, mode }) => {
-            const result = await camera.recordAsync(recordingOptions);
-            const completedAt = new Date().toISOString();
-            if (!result?.uri) {
-              throw new Error(`Camera ${mode} nao retornou arquivo de video.`);
-            }
+            const attachedAssets = [];
+            let segmentIndex = 0;
 
-            return preserveLocalVideoAsset({
-              packageId: currentPackageId,
-              sourceUri: result.uri,
-              cameraMode: mode,
-              requestedCameraMode,
-              startedAt,
-              completedAt
-            });
+            do {
+              const recordingOptions = buildRecordingOptions(
+                preferences.defaultDurationSeconds,
+                activeCaptureController.startedAtMs
+              );
+              if (recordingOptions === null) break;
+
+              const segmentStartedAt = new Date().toISOString();
+              const diagnosticRunId = createMediaDiagnosticRun(`capture-${mode}`);
+              const captureTimer = startMediaDiagnosticEvent(diagnosticRunId, "capture_recording");
+              const captureMetrics = {
+                actualCameraMode: mode,
+                fallbackUsed: requestedCameraMode !== mode,
+                iosSegmentedRecording: Platform.OS === "ios",
+                iosSegmentLimit: Platform.OS === "ios" ? iosHomologationMaxSegmentsPerCall : null,
+                plannedDurationSeconds: preferences.defaultDurationSeconds,
+                requestedCameraMode,
+                targetVideoBitrate: recordingVideoBitrate,
+                segmentDurationSeconds: recordingOptions?.maxDuration ?? null,
+                segmentIndex
+              };
+              let result;
+              if (Platform.OS === "ios" && segmentIndex === 0) {
+                appendMediaOperationalLog("capture_record_warmup_start", {
+                  actualCameraMode: mode,
+                  platform: Platform.OS,
+                  warmupMs: iosRecordStartWarmupMs
+                });
+                await wait(iosRecordStartWarmupMs);
+                appendMediaOperationalLog("capture_record_warmup_done", {
+                  actualCameraMode: mode,
+                  platform: Platform.OS
+                });
+                if (activeCaptureController.stopRequested || ignoreStatusUpdates) {
+                  break;
+                }
+              }
+
+              try {
+                for (let attempt = 1; attempt <= iosRecordRetryMaxAttempts; attempt += 1) {
+                  const attemptStartedAtMs = Date.now();
+                  try {
+                    appendMediaOperationalLog("capture_record_async_start", {
+                      actualCameraMode: mode,
+                      attempt,
+                      codec: recordingOptions?.codec ?? "default",
+                      iosSegmentedRecording: Platform.OS === "ios",
+                      maxDurationSeconds: recordingOptions?.maxDuration ?? null,
+                      maxFileSizeBytes: recordingOptions?.maxFileSize ?? null,
+                      platform: Platform.OS,
+                      requestedCameraMode,
+                      recordingStrategy:
+                        Platform.OS === "ios" ? "h264_480p_low_bitrate_single_segment_preview" : "default",
+                      segmentIndex,
+                      targetVideoBitrate: recordingVideoBitrate,
+                      videoQuality: recordingVideoQuality
+                    });
+                    result = await camera.recordAsync(recordingOptions);
+                    if (!result?.uri) {
+                      throw new Error("camera_no_file_returned");
+                    }
+                    break;
+                  } catch (recordError) {
+                    const elapsedMs = Date.now() - attemptStartedAtMs;
+                    if (shouldRetryIosRecordAsync(recordError, attempt, elapsedMs)) {
+                      appendMediaOperationalLog(
+                        "capture_record_async_retry",
+                        {
+                          actualCameraMode: mode,
+                          attempt,
+                          elapsedMs,
+                          platform: Platform.OS,
+                          reason: classifyCaptureFailureReason(recordError),
+                          segmentIndex
+                        },
+                        recordError
+                      );
+                      await wait(iosRecordRetryDelayMs);
+                      continue;
+                    }
+
+                    throw recordError;
+                  }
+                }
+                if (!result?.uri) throw new Error("camera_no_file_returned");
+
+                captureTimer.finish("ok", captureMetrics);
+                appendMediaOperationalLog("capture_record_async_result", {
+                  actualCameraMode: mode,
+                  hasFile: true,
+                  platform: Platform.OS,
+                  segmentIndex
+                });
+              } catch (error) {
+                captureTimer.finish("error", captureMetrics, error);
+                appendMediaOperationalLog(
+                  "capture_record_async_error",
+                  {
+                    actualCameraMode: mode,
+                    platform: Platform.OS,
+                    reason: classifyCaptureFailureReason(error),
+                    segmentIndex
+                  },
+                  error
+                );
+                await persistCaptureDiagnostic(
+                  currentPackageId,
+                  classifyCaptureFailureReason(error),
+                  diagnosticRunId
+                );
+                throw error;
+              }
+              const completedAt = new Date().toISOString();
+
+              appendMediaOperationalLog("capture_preserve_start", {
+                actualCameraMode: mode,
+                platform: Platform.OS,
+                segmentIndex
+              });
+              const attachedAsset = await preserveLocalVideoAsset({
+                packageId: currentPackageId,
+                sourceUri: result.uri,
+                cameraMode: mode,
+                requestedCameraMode,
+                startedAt: segmentStartedAt,
+                completedAt,
+                chunkSizeBytes: Platform.OS === "ios" ? iosEncryptedChunkSizeBytes : undefined,
+                diagnosticRunId,
+                verificationMode: Platform.OS === "ios" ? "bounded" : "full"
+              });
+              attachedAssets.push(attachedAsset);
+              activeCaptureController.attachedAssetCount += 1;
+              appendMediaOperationalLog("capture_preserve_success", {
+                actualCameraMode: mode,
+                attachedAssetCount: activeCaptureController.attachedAssetCount,
+                platform: Platform.OS,
+                segmentIndex
+              });
+              onMediaAttachedRef.current?.();
+              if (Platform.OS === "ios") {
+                if (!ignoreStatusUpdates) {
+                  onStatusChangeRef.current?.(
+                    `Video local ${cameraModeLabel(mode)} preservado em segmento seguro ${activeCaptureController.attachedAssetCount}.`
+                  );
+                }
+                if (activeCaptureController.stopRequested) {
+                  settleStopRequest({ attachedAssets: activeCaptureController.attachedAssetCount, status: "attached" });
+                }
+              }
+              segmentIndex += 1;
+              if (
+                Platform.OS === "ios" &&
+                segmentIndex >= iosHomologationMaxSegmentsPerCall &&
+                !activeCaptureController.stopRequested &&
+                !ignoreStatusUpdates
+              ) {
+                appendMediaOperationalLog("capture_ios_segment_limit_reached", {
+                  attachedAssetCount: activeCaptureController.attachedAssetCount,
+                  maxSegments: iosHomologationMaxSegmentsPerCall,
+                  platform: Platform.OS
+                });
+                onStatusChangeRef.current?.(
+                  "Video local iOS preservado em segmento seguro. O chamado segue ativo sem manter a camera em ciclo pesado."
+                );
+              }
+            } while (
+              Platform.OS === "ios" &&
+              segmentIndex < iosHomologationMaxSegmentsPerCall &&
+              !activeCaptureController.stopRequested &&
+              !ignoreStatusUpdates
+            );
+
+            return attachedAssets;
           })
         );
         const attachedAssets = recordingResults.flatMap((result) =>
-          result.status === "fulfilled" ? [result.value] : []
+          result.status === "fulfilled" ? result.value : []
         );
+        const rejectedRecordingCount = recordingResults.filter((result) => result.status === "rejected").length;
+        attachedAssetCount = attachedAssets.length;
+        stopSettlementStatus = attachedAssets.length > 0 ? "attached" : rejectedRecordingCount > 0 ? "error" : "empty";
 
         if (attachedAssets.length > 0) {
-          const cameraSummary = attachedAssets.map((asset) => cameraModeLabel(asset.cameraMode)).join(" + ");
+          appendMediaOperationalLog("capture_complete_with_assets", {
+            assetCount: attachedAssets.length,
+            platform: Platform.OS,
+            rejectedRecordingCount
+          });
+          const cameraSummary = Array.from(new Set(attachedAssets.map((asset) => cameraModeLabel(asset.cameraMode)))).join(
+            " + "
+          );
           const statusMessage =
             requestedCameraMode === "both" && runtimeCameraMode !== "both"
               ? `Captura em modo leve no Android; video ${cameraSummary} preservado no cofre.`
-              : runtimeCameraMode === "both" && attachedAssets.length < 2
+            : runtimeCameraMode === "both" && attachedAssets.length < 2
               ? `Captura dupla limitada pelo aparelho; video ${cameraSummary} preservado no cofre.`
-              : `Video local ${cameraSummary} preservado no cofre. Abra o player para revisar.`;
+              : Platform.OS === "ios" && attachedAssets.length > 1
+                ? `Video local ${cameraSummary} preservado em ${attachedAssets.length} segmentos seguros. Abra o player para revisar.`
+                : `Video local ${cameraSummary} preservado no cofre. Abra o player para revisar.`;
           if (!ignoreStatusUpdates) {
             onStatusChangeRef.current?.(statusMessage);
           }
-          onMediaAttachedRef.current?.();
           return;
         }
 
         if (!ignoreStatusUpdates) {
+          appendMediaOperationalLog("capture_complete_without_assets", {
+            platform: Platform.OS,
+            rejectedRecordingCount
+          });
           onStatusChangeRef.current?.("Nenhum video foi retornado pelas cameras. O pacote segue preservado com metadados.");
         }
-      } catch {
+      } catch (error) {
+        stopSettlementStatus = "error";
+        appendMediaOperationalLog("capture_effect_error", {
+          platform: Platform.OS,
+          requestedCameraMode,
+          runtimeCameraMode
+        }, error);
         if (!ignoreStatusUpdates) {
           onStatusChangeRef.current?.("Gravacao local interrompida. O pacote segue preservado com metadados e localizacao.");
         }
       } finally {
         recordingRef.current = false;
+        appendMediaOperationalLog("capture_effect_finalized", {
+          attachedAssetCount,
+          platform: Platform.OS,
+          stopSettlementStatus
+        });
+        if (activeCaptureControllerRef.current === activeCaptureController) {
+          activeCaptureControllerRef.current = null;
+        }
+        settleStopRequest({ attachedAssets: attachedAssetCount, status: stopSettlementStatus });
       }
     }
 
@@ -297,8 +674,15 @@ export function EmergencyMediaRecorder({
 
     return () => {
       ignoreStatusUpdates = true;
+      appendMediaOperationalLog("capture_component_cleanup", {
+        platform: Platform.OS,
+        recordingActive: recordingRef.current
+      });
+      if (activeCaptureControllerRef.current?.packageId === activePackageId) {
+        activeCaptureControllerRef.current.stopRequested = true;
+      }
       if (recordingRef.current) {
-        stopActiveRecording();
+        stopActiveRecording(false);
       }
     };
   }, [
@@ -315,8 +699,8 @@ export function EmergencyMediaRecorder({
   if (!mediaEnabled || Platform.OS === "web" || mediaPermissionStatus !== "granted") return null;
 
   return (
-    <View pointerEvents="none" style={styles.captureHost}>
-      <View style={styles.previewStack}>
+    <View pointerEvents="none" style={[styles.captureHost, Platform.OS === "ios" && styles.captureHostIos]}>
+      <View style={[styles.previewStack, Platform.OS === "ios" && styles.previewStackIos]}>
         {activeCameraModes.map((mode) => (
           <CameraView
             key={mode}
@@ -332,14 +716,51 @@ export function EmergencyMediaRecorder({
             mode="video"
             mute={false}
             onCameraReady={() =>
-              setCameraReadyByMode((current) => ({
-                ...current,
-                [mode]: true
-              }))
+              {
+                appendMediaOperationalLog("capture_camera_ready", {
+                  actualCameraMode: mode,
+                  platform: Platform.OS,
+                  requestedCameraMode,
+                  targetVideoBitrate: recordingVideoBitrate,
+                  videoQuality: recordingVideoQuality
+                });
+                setCameraReadyByMode((current) => ({
+                  ...current,
+                  [mode]: true
+                }));
+              }
             }
-            videoBitrate={1_200_000}
-            videoQuality="480p"
-            style={[styles.cameraPreview, activeCameraModes.length > 1 && styles.cameraPreviewDual]}
+            onMountError={() => {
+              appendMediaOperationalLog("capture_mount_error", {
+                actualCameraMode: mode,
+                platform: Platform.OS,
+                requestedCameraMode,
+                targetVideoBitrate: recordingVideoBitrate,
+                videoQuality: recordingVideoQuality
+              }, new Error("camera_mount_error"));
+              const diagnosticRunId = createMediaDiagnosticRun(`capture-${mode}`);
+              const mountTimer = startMediaDiagnosticEvent(diagnosticRunId, "capture_mount");
+              mountTimer.finish(
+                "error",
+                {
+                  actualCameraMode: mode,
+                  fallbackUsed: requestedCameraMode !== mode,
+                  requestedCameraMode
+                },
+                new Error("camera_mount_error")
+              );
+              if (activePackageId) {
+                void persistCaptureDiagnostic(activePackageId, "camera_mount_error", diagnosticRunId);
+              }
+              onStatusChangeRef.current?.("Camera local nao iniciou neste aparelho; o pacote seguira com metadados.");
+            }}
+            videoBitrate={recordingVideoBitrate}
+            videoQuality={recordingVideoQuality}
+            style={[
+              styles.cameraPreview,
+              Platform.OS === "ios" && styles.cameraPreviewIos,
+              activeCameraModes.length > 1 && styles.cameraPreviewDual
+            ]}
           />
         ))}
       </View>
@@ -355,6 +776,12 @@ const styles = StyleSheet.create({
     height: 38,
     opacity: 0.16,
     width: 48
+  },
+  cameraPreviewIos: {
+    borderRadius: 9,
+    height: 92,
+    opacity: 0.72,
+    width: 124
   },
   cameraPreviewDual: {
     height: 32,
@@ -374,6 +801,10 @@ const styles = StyleSheet.create({
     right: theme.spacing.lg,
     width: 132,
     zIndex: 8
+  },
+  captureHostIos: {
+    height: 130,
+    width: 156
   },
   captureLabel: {
     color: theme.colors.textOnDark,
@@ -396,5 +827,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 6,
     top: 5
+  },
+  previewStackIos: {
+    right: 16,
+    top: 8
   }
 });

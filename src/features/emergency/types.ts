@@ -23,7 +23,7 @@ export type LocalMediaAsset = {
   uri: string;
   fileName: string;
   mimeType: "video/mp4";
-  storage: "app_private_sandbox" | "app_private_encrypted_chunks";
+  storage: "app_private_sandbox" | "app_private_encrypted_chunks" | "app_private_native_segments";
   cameraMode: "front" | "back";
   requestedCameraMode?: "front" | "back" | "both";
   sizeBytes: number;
@@ -31,15 +31,68 @@ export type LocalMediaAsset = {
   hashMode: "content_sha256" | "metadata_sha256_pending_streaming" | "chunked_plaintext_sha256";
   recordedAt: string;
   completedAt: string;
-  encryptionStatus: "local_sandbox_pending_backend_envelope" | "encrypted_chunked_xchacha20poly1305";
+  encryptionStatus:
+    | "local_sandbox_pending_backend_envelope"
+    | "encrypted_chunked_xchacha20poly1305"
+    | "encrypted_native_segmented_v1";
   encryptedVideo?: EncryptedVideoEnvelope;
+};
+
+export type MediaDiagnosticsSnapshot = {
+  schemaVersion: "sinalseguro.media-diagnostics.v1";
+  runId: string;
+  recordedAt: string;
+  events: Array<{
+    schemaVersion: "sinalseguro.media-diagnostic-event.v1";
+    runId: string;
+    stage:
+      | "capture_mount"
+      | "capture_recording"
+      | "loopback_open"
+      | "loopback_stream"
+      | "native_engine_cleanup"
+      | "native_engine_encrypt_segment"
+      | "native_engine_open_playback"
+      | "playback_first_progress"
+      | "playback_prepare"
+      | "preserve_cleanup"
+      | "preserve_encrypt_chunks"
+      | "preserve_source_stat"
+      | "preserve_thumbnail"
+      | "preserve_total"
+      | "preserve_verify";
+    status: "cancelled" | "error" | "ok";
+    startedAt: string;
+    durationMs: number;
+    metrics?: Record<string, boolean | number | string | null>;
+    errorCode?: "cancelled" | "media_error";
+  }>;
+};
+
+export type MediaCaptureFailureReason =
+  | "camera_mount_error"
+  | "camera_no_file_returned"
+  | "camera_output_not_ready"
+  | "camera_recording_error"
+  | "media_permissions_denied";
+
+export type MediaCaptureDiagnosticSummary = {
+  schemaVersion: "sinalseguro.media-capture-diagnostic.v1";
+  status: "capture_failed";
+  reason: MediaCaptureFailureReason;
+  recordedAt: string;
+  diagnostics: MediaDiagnosticsSnapshot;
 };
 
 export type EncryptedVideoEnvelope = {
   protocolVersion: "sinalseguro.encrypted-video.v1";
   algorithm: "xchacha20poly1305";
   packageId: string;
+  keyId?: string;
   keyRef: string;
+  emergencySessionId?: string | null;
+  envelopeScope?: "media_asset";
+  storageEngine?: "js_chunked_v1" | "native_segmented_v1";
   manifestUri: string;
   manifestNonce: string;
   manifestTag: string;
@@ -55,8 +108,14 @@ export type EncryptedVideoEnvelope = {
     attemptedAt: string;
     status: "deleted" | "cleanup_pending";
   };
+  diagnostics?: MediaDiagnosticsSnapshot;
   recipientKeyEnvelopes: [];
-  playbackAdapter: "range_data_source_required";
+  playbackAdapter: "range_data_source_required" | "native_encrypted_source";
+  nativePlayback?: {
+    engine: "SinalSeguroMediaEngine";
+    sourceUri?: string;
+    segmentManifestUri?: string;
+  };
 };
 
 export type MediaCaptureManifest =
@@ -65,12 +124,14 @@ export type MediaCaptureManifest =
       recordingMode: "video";
       assets: [];
       policy: string;
+      diagnostic?: MediaCaptureDiagnosticSummary;
     }
   | {
       status: "recorded_local";
       recordingMode: "video";
       assets: LocalMediaAsset[];
       policy: string;
+      diagnostic?: MediaCaptureDiagnosticSummary;
     }
   | {
       status: "blocked_public_build";
