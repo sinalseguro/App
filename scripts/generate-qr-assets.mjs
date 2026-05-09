@@ -10,23 +10,27 @@ const installers = [
     label: "Android",
     qrFile: "sinalseguro-android.svg",
     publicUrl: "https://www.sinalseguro.com.br/baixar/android",
-    releaseAsset: "https://github.com/sinalseguro/App/releases/latest/download/sinalseguro-android.apk",
-    status: "pendente_build_assinado"
+    releaseAsset: "https://www.sinalseguro.com.br/downloads/private/android/SinalSeguro-privado-0.1.0-20260509.apk",
+    checksumAsset: "https://www.sinalseguro.com.br/downloads/private/checksums.txt",
+    sha256: "9060cfd4aca875fe1d171e65bb12a3f80c4f8e920fd3afb642cb41a384570f04",
+    status: "privado_teste_controlado"
   },
   {
     platform: "ios",
     label: "iOS",
     qrFile: "sinalseguro-ios.svg",
     publicUrl: "https://www.sinalseguro.com.br/baixar/ios",
-    releaseAsset: "TestFlight/App Store pendente de conta, assinatura e revisao Apple",
-    status: "pendente_testflight_app_store"
+    releaseAsset: "https://www.sinalseguro.com.br/downloads/private/ios/SinalSeguro-privado-0.1.0-20260506-release.ipa",
+    checksumAsset: "https://www.sinalseguro.com.br/downloads/private/checksums.txt",
+    sha256: "27e4eb55e267a75b53b1a6a569ba0afe42ab2c8380e2e6093940bb78c3618493",
+    status: "privado_teste_controlado"
   }
 ];
 
 await mkdir(outputDir, { recursive: true });
 
 for (const installer of installers) {
-  const svg = await QRCode.toString(installer.publicUrl, {
+  const svg = await QRCode.toString(installer.releaseAsset, {
     type: "svg",
     errorCorrectionLevel: "M",
     margin: 2,
@@ -43,11 +47,19 @@ await writeFile(
   manifestPath,
   `${JSON.stringify(
     {
-      generatedAt: "2026-05-02",
+      generatedAt: "2026-05-09",
       owner: "SinalSeguro",
       manager: "Cristine",
       visualApproval: "Tarcila",
-      installers
+      distribution: "private_ec2",
+      installers,
+      repositories: [
+        {
+          label: "App SinalSeguro",
+          url: "https://github.com/sinalseguro/App",
+          status: "codigo_aberto"
+        }
+      ]
     },
     null,
     2
