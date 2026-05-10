@@ -121,6 +121,7 @@ function AnimatedParticle({
 
 export function PanicButton({ active = false, label, holdMs, onTrigger }: PanicButtonProps) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const triggeredRef = useRef(false);
   const progress = useRef(new Animated.Value(0)).current;
   const pulse = useRef(new Animated.Value(0)).current;
   const [holding, setHolding] = useState(false);
@@ -192,12 +193,27 @@ export function PanicButton({ active = false, label, holdMs, onTrigger }: PanicB
       clearTimeout(timerRef.current);
       timerRef.current = null;
     }
+    triggeredRef.current = false;
     progress.stopAnimation();
     progress.setValue(0);
     setHolding(false);
   }
 
+  function fireTrigger() {
+    if (triggeredRef.current) return;
+    triggeredRef.current = true;
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+    progress.stopAnimation();
+    progress.setValue(0);
+    setHolding(false);
+    onTrigger();
+  }
+
   function startHold() {
+    triggeredRef.current = false;
     setHolding(true);
     progress.setValue(0);
     Animated.timing(progress, {
@@ -205,12 +221,7 @@ export function PanicButton({ active = false, label, holdMs, onTrigger }: PanicB
       toValue: 1,
       useNativeDriver: false
     }).start();
-    timerRef.current = setTimeout(() => {
-      timerRef.current = null;
-      setHolding(false);
-      progress.setValue(0);
-      onTrigger();
-    }, holdMs);
+    timerRef.current = setTimeout(fireTrigger, holdMs);
   }
 
   const armedGlowOpacity = pulse.interpolate({
@@ -239,6 +250,8 @@ export function PanicButton({ active = false, label, holdMs, onTrigger }: PanicB
       <Pressable
         accessibilityRole="button"
         accessibilityLabel={label}
+        delayLongPress={holdMs}
+        onLongPress={fireTrigger}
         onPressIn={startHold}
         onPressOut={clearHold}
         style={({ pressed }) => [

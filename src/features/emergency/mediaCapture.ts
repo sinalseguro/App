@@ -4,7 +4,7 @@ import { EncryptedVideoStore } from "./EncryptedVideoStore";
 import { appendMediaOperationalLog } from "./MediaOperationalLog";
 import { cleanupNativeMediaResidues } from "./SinalSeguroMediaEngine";
 import { attachLocalMediaAsset } from "./emergencyRecorder";
-import { LocalMediaAsset } from "./types";
+import { LocalMediaAsset, MediaCaptureCompatibilityProfile } from "./types";
 
 type PreserveLocalVideoInput = {
   packageId: string;
@@ -14,6 +14,7 @@ type PreserveLocalVideoInput = {
   startedAt: string;
   completedAt?: string;
   chunkSizeBytes?: number;
+  captureProfile?: MediaCaptureCompatibilityProfile;
   diagnosticRunId?: string;
   verificationMode?: "full" | "bounded";
 };
@@ -30,6 +31,7 @@ export async function preserveLocalVideoAsset({
   startedAt,
   completedAt = new Date().toISOString(),
   chunkSizeBytes,
+  captureProfile,
   verificationMode,
   diagnosticRunId
 }: PreserveLocalVideoInput) {
@@ -54,6 +56,7 @@ export async function preserveLocalVideoAsset({
       startedAt,
       completedAt,
       chunkSizeBytes,
+      captureProfile,
       verificationMode,
       diagnosticRunId
     });

@@ -33,19 +33,22 @@ Cristine é a gerente AI mobile. Ela mantém compatibilidade de memória com Zé
 
 ## Checkpoint atual
 
-Fase vigente: Frente 1.1 de chaves reais por dispositivo fechada em Android e iPhone fisicos, pronta para a Frente 1.2 de midia critica/envelopes sem redesenhar SOS/Cofre/Player.
+Fase vigente: Frente 1.2 de midia critica em checkpoint de interrupcao. Implementacao local validada por gates, mas ainda nao declarar concluida ate instalar e testar fisicamente o APK novo em Android e repetir no iPhone.
 
 Estado:
-- SOS e Cofre/Player seguem com UX aprovada para esta etapa; nao redesenhar sem novo comentario visual do Roberto.
-- Videos novos sao preservados por `EncryptedVideoStore` em chunks `.sseg` com chave unica, manifesto cifrado/autenticado e playback por loopback local `127.0.0.1` com `Range`.
-- Player Seguro usa preload do asset selecionado, timeline custom, seek, replay e fullscreen nativo.
-- Thumbnail segura e salva como `thumbnail.sseg`; thumbnail clara temporaria e removida.
-- MP4 claro temporario da captura nativa so e apagado depois de reabrir e verificar chave, manifesto, chunks, hashes e thumbnail.
-- Falha de preservacao nao apaga o MP4 original; falha de limpeza fica como `cleanup_pending`.
+- SOS e Cofre/Player seguem com UX base aprovada; as mudancas desta frente foram restritas ao encerramento, feedback de progresso, captura/preservacao e timeline do player.
+- Roberto confirmou que o bug de demora ao encerrar persistia no Android e no iPhone; esta retomada corrigiu a saida visual imediata do chamado ativo e manteve a camera anexando midia em paralelo.
+- Home/SOS usa `FinishProgressDialog` para informar encerramento/protecao da midia e bloqueia novo SOS enquanto ha midia pendente.
+- Android e iOS usam perfil conservador de homologacao: segmentos de 12s, 480p, bitrate alvo 650 kbps e metadados de compatibilidade de camera/hardware.
+- `LocalMediaAsset`, manifesto e envelope cifrado aceitam `captureProfile` para preparar P2P futuro sem implementar chamada real.
+- `Cofre` diferencia protegido, processando e sem midia com causa saneada.
+- `EvidencePlayerCard` recebeu ajuste de sincronismo de timeline nos segundos iniciais.
+- `SecureJsonStore` e `emergencyRecorder` evitam varredura de todos os pacotes ao finalizar/anexar/diagnosticar pacote especifico.
 - Frente 1.1 gera chave Ed25519 por dispositivo, guarda a chave privada somente no SecureStore e envia a API apenas chave publica/hash, metadados saneados e prova de posse.
 - Backend publicado exige `key_proof`, rejeita assinatura invalida quando aplicavel e registra rotacao/perda por endpoint dedicado.
 - Android fisico e iPhone fisico validaram Google Sign-In, JWT interno, SecureStore e dispositivo autenticado com `key_algorithm=ed25519-v1`.
 - Build iOS privado corrigido deve usar `npm run prepare:build:ios:secure-config` e `-xcconfig /private/tmp/sinalseguro-ios-secrets.xcconfig` para evitar URL scheme Google vazio no `Info.plist`.
-- Build privado C2 de midia local validado em Android fisico; APK SHA-256 `024150800908109199f84e1be2ef5bd9c72ae1f6986ecee0a8269f2c44ca1323`.
-- Evidencias principais: `docs/evidencias/android/2026-05-06-capture-cleanup-thumbnail/`.
-- Proxima etapa correta: Frente 1.2, midia critica/envelopes de chave, sessao remota de emergencia e entrega controlada para anjos autenticados via EC2/API, sem mexer novamente na interface de midia salvo regressao comprovada.
+- APK privado mais recente gerado apos a correcao: `distribution/android/out/sinalseguro-android.apk`, SHA-256 `d00beb8f7b551300a1f750ca059ad294f040947d796868176124eb44003df9f4`.
+- Esse APK ainda precisa de instalacao/validacao fisica final; o teste anterior mostrou modal preso em 24% e topo ainda como `CHAMADO ATIVO`, antes da ultima correcao de segmentacao Android + saida visual imediata.
+- Retomada obrigatoria: ler `docs/28_RETOMADA_SEM_REDUNDANCIA.md` e `docs/03_TIMELINE.md`, checar `df -h /`, instalar/testar o APK novo, coletar screenshots imediato/2s/8s/fim, revisar logcat saneado e residuos claros.
+- Nao iniciar a UI final de chamada P2P/anjo nesta frente; manter apenas compatibilidade de captura/envelope e liberacao correta de camera/microfone para a frente seguinte.

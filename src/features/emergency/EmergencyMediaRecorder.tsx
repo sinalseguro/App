@@ -7,7 +7,7 @@ import { createMediaDiagnosticRun, startMediaDiagnosticEvent, summarizeMediaDiag
 import { appendMediaOperationalLog } from "./MediaOperationalLog";
 import { attachLocalMediaDiagnostics } from "./emergencyRecorder";
 import { preserveLocalVideoAsset } from "./mediaCapture";
-import type { MediaCaptureFailureReason } from "./types";
+import type { MediaCaptureCompatibilityProfile, MediaCaptureFailureReason } from "./types";
 
 type MediaPermissionStatus = "idle" | "requesting" | "granted" | "denied";
 type ActualCameraMode = "front" | "back";
@@ -33,7 +33,7 @@ type EmergencyMediaRecorderProps = {
 };
 
 const emptyCameraReadyState: CameraReadyByMode = { back: false, front: false };
-const iosSegmentDurationSeconds = 12;
+const mobileSegmentDurationSeconds = 12;
 const iosHomologationMaxSegmentsPerCall = 1;
 const iosRecordStartWarmupMs = 850;
 const iosRecordRetryDelayMs = 700;
@@ -41,7 +41,7 @@ const iosRecordRetryMaxAttempts = 2;
 const iosEncryptedChunkSizeBytes = 2 * 1024 * 1024;
 const iosRecordingVideoCodec: VideoCodec = "avc1";
 const recordingVideoQuality: VideoQuality = "480p";
-const recordingVideoBitrate = Platform.OS === "ios" ? 650_000 : 1_200_000;
+const recordingVideoBitrate = 650_000;
 
 function wait(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -59,29 +59,120 @@ function getRuntimeCameraMode(requestedCameraMode: EmergencyPreferences["localVi
   return requestedCameraMode;
 }
 
+function getCaptureProfilePlatform(): MediaCaptureCompatibilityProfile["platform"] {
+  if (Platform.OS === "android" || Platform.OS === "ios" || Platform.OS === "web") return Platform.OS;
+  if (Platform.OS === "windows" || Platform.OS === "macos") return Platform.OS;
+  return "web";
+}
+
+function getCaptureCompatibilityTier({
+  actualCameraMode,
+  requestedCameraMode,
+  runtimeCameraMode
+}: {
+  actualCameraMode: ActualCameraMode;
+  requestedCameraMode: EmergencyPreferences["localVideoCapture"]["cameraMode"];
+  runtimeCameraMode: EmergencyPreferences["localVideoCapture"]["cameraMode"];
+}): MediaCaptureCompatibilityProfile["compatibilityTier"] {
+  if (Platform.OS === "ios") return "ios_h264_low_bitrate_segmented";
+  if (Platform.OS === "android" && (requestedCameraMode === "both" || runtimeCameraMode === "both") && actualCameraMode) {
+    return requestedCameraMode === runtimeCameraMode ? "android_single_camera_conservative" : "android_single_camera_fallback";
+  }
+  if (Platform.OS === "android") return "android_single_camera_conservative";
+  return "generic_single_camera_conservative";
+}
+
+async function getCameraPictureSizes(camera: CameraView) {
+  return camera.getAvailablePictureSizesAsync().catch(() => []);
+}
+
+async function getCameraLenses(camera: CameraView) {
+  return camera.getAvailableLensesAsync().catch(() => []);
+}
+
+async function getAvailableVideoCodecs() {
+  if (Platform.OS !== "ios") return [];
+  return CameraView.getAvailableVideoCodecsAsync().catch(() => []);
+}
+
+async function buildCaptureCompatibilityProfile({
+  camera,
+  mode,
+  recordingOptions,
+  requestedCameraMode,
+  runtimeCameraMode
+}: {
+  camera: CameraView;
+  mode: ActualCameraMode;
+  recordingOptions: CameraRecordingOptions | null | undefined;
+  requestedCameraMode: EmergencyPreferences["localVideoCapture"]["cameraMode"];
+  runtimeCameraMode: EmergencyPreferences["localVideoCapture"]["cameraMode"];
+}): Promise<MediaCaptureCompatibilityProfile> {
+  const [pictureSizes, lenses, videoCodecs] = await Promise.all([
+    getCameraPictureSizes(camera),
+    getCameraLenses(camera),
+    getAvailableVideoCodecs()
+  ]);
+
+  return {
+    schemaVersion: "sinalseguro.media-capture-profile.v1",
+    platform: getCaptureProfilePlatform(),
+    platformVersion: String(Platform.Version),
+    requestedCameraMode,
+    runtimeCameraMode,
+    actualCameraMode: mode,
+    compatibilityTier: getCaptureCompatibilityTier({ actualCameraMode: mode, requestedCameraMode, runtimeCameraMode }),
+    recordingContainer: "mp4",
+    videoCodec: Platform.OS === "ios" ? "h264" : "platform_default_h264_mp4",
+    videoQuality: recordingVideoQuality,
+    targetVideoBitrate: recordingVideoBitrate,
+    segmentDurationSeconds: recordingOptions?.maxDuration ?? null,
+    pictureSizeCount: pictureSizes.length,
+    pictureSizesSample: pictureSizes.slice(0, 8),
+    availableLenses: lenses.slice(0, 8),
+    availableVideoCodecs: videoCodecs.slice(0, 8),
+    p2pCompatibility: {
+      callMediaInterop: "recording_profile_conservative_mp4_h264",
+      envelopeScope: "media_asset",
+      requiresRecipientKeyEnvelope: true,
+      supportsDeferredRecipientEnvelope: true
+    }
+  };
+}
+
 function buildRecordingOptions(
   defaultDurationSeconds: number,
   startedAtMs: number
 ): CameraRecordingOptions | null | undefined {
-  if (Platform.OS !== "ios") {
-    return defaultDurationSeconds > 0 ? { maxDuration: defaultDurationSeconds } : undefined;
-  }
-
   if (defaultDurationSeconds > 0) {
     const elapsedSeconds = (Date.now() - startedAtMs) / 1000;
     const remainingSeconds = Math.ceil(defaultDurationSeconds - elapsedSeconds);
     if (remainingSeconds <= 0) return null;
 
-    return {
-      codec: iosRecordingVideoCodec,
-      maxDuration: Math.max(1, Math.min(iosSegmentDurationSeconds, remainingSeconds))
-    };
+    const maxDuration = Math.max(1, Math.min(mobileSegmentDurationSeconds, remainingSeconds));
+    return Platform.OS === "ios" ? { codec: iosRecordingVideoCodec, maxDuration } : { maxDuration };
   }
 
-  return {
-    codec: iosRecordingVideoCodec,
-    maxDuration: iosSegmentDurationSeconds
-  };
+  return Platform.OS === "ios"
+    ? {
+        codec: iosRecordingVideoCodec,
+        maxDuration: mobileSegmentDurationSeconds
+      }
+    : { maxDuration: mobileSegmentDurationSeconds };
+}
+
+function shouldContinueSegmentedRecording({
+  activeCaptureController,
+  ignoreStatusUpdates,
+  segmentIndex
+}: {
+  activeCaptureController: ActiveCaptureController;
+  ignoreStatusUpdates: boolean;
+  segmentIndex: number;
+}) {
+  if (activeCaptureController.stopRequested || ignoreStatusUpdates) return false;
+  if (Platform.OS === "ios") return segmentIndex < iosHomologationMaxSegmentsPerCall;
+  return Platform.OS === "android";
 }
 
 function classifyCaptureFailureReason(error: unknown): MediaCaptureFailureReason {
@@ -399,6 +490,18 @@ export function EmergencyMediaRecorder({
         );
 
       if (availableCameras.length === 0) {
+        const diagnosticRunId = createMediaDiagnosticRun("capture-readiness");
+        const readinessTimer = startMediaDiagnosticEvent(diagnosticRunId, "capture_mount");
+        readinessTimer.finish(
+          "error",
+          {
+            backReady: cameraReadyByMode.back,
+            frontReady: cameraReadyByMode.front,
+            requestedCameraMode,
+            runtimeCameraMode
+          },
+          new Error("camera_output_not_ready")
+        );
         appendMediaOperationalLog("capture_no_available_camera_ref", {
           backReady: cameraReadyByMode.back,
           frontReady: cameraReadyByMode.front,
@@ -406,6 +509,7 @@ export function EmergencyMediaRecorder({
           requestedCameraMode,
           runtimeCameraMode
         });
+        await persistCaptureDiagnostic(currentPackageId, "camera_output_not_ready", diagnosticRunId);
         return;
       }
 
@@ -444,11 +548,22 @@ export function EmergencyMediaRecorder({
               const segmentStartedAt = new Date().toISOString();
               const diagnosticRunId = createMediaDiagnosticRun(`capture-${mode}`);
               const captureTimer = startMediaDiagnosticEvent(diagnosticRunId, "capture_recording");
+              const captureProfile = await buildCaptureCompatibilityProfile({
+                camera,
+                mode,
+                recordingOptions,
+                requestedCameraMode,
+                runtimeCameraMode
+              });
               const captureMetrics = {
                 actualCameraMode: mode,
+                availableLensCount: captureProfile.availableLenses.length,
+                availableVideoCodecCount: captureProfile.availableVideoCodecs.length,
+                compatibilityTier: captureProfile.compatibilityTier,
                 fallbackUsed: requestedCameraMode !== mode,
                 iosSegmentedRecording: Platform.OS === "ios",
                 iosSegmentLimit: Platform.OS === "ios" ? iosHomologationMaxSegmentsPerCall : null,
+                pictureSizeCount: captureProfile.pictureSizeCount,
                 plannedDurationSeconds: preferences.defaultDurationSeconds,
                 requestedCameraMode,
                 targetVideoBitrate: recordingVideoBitrate,
@@ -472,13 +587,14 @@ export function EmergencyMediaRecorder({
                 }
               }
 
-              try {
-                for (let attempt = 1; attempt <= iosRecordRetryMaxAttempts; attempt += 1) {
+                try {
+                  for (let attempt = 1; attempt <= iosRecordRetryMaxAttempts; attempt += 1) {
                   const attemptStartedAtMs = Date.now();
                   try {
                     appendMediaOperationalLog("capture_record_async_start", {
                       actualCameraMode: mode,
                       attempt,
+                      compatibilityTier: captureProfile.compatibilityTier,
                       codec: recordingOptions?.codec ?? "default",
                       iosSegmentedRecording: Platform.OS === "ios",
                       maxDurationSeconds: recordingOptions?.maxDuration ?? null,
@@ -486,7 +602,9 @@ export function EmergencyMediaRecorder({
                       platform: Platform.OS,
                       requestedCameraMode,
                       recordingStrategy:
-                        Platform.OS === "ios" ? "h264_480p_low_bitrate_single_segment_preview" : "default",
+                        Platform.OS === "ios" || Platform.OS === "android"
+                          ? "h264_480p_low_bitrate_segmented"
+                          : "default",
                       segmentIndex,
                       targetVideoBitrate: recordingVideoBitrate,
                       videoQuality: recordingVideoQuality
@@ -561,6 +679,7 @@ export function EmergencyMediaRecorder({
                 startedAt: segmentStartedAt,
                 completedAt,
                 chunkSizeBytes: Platform.OS === "ios" ? iosEncryptedChunkSizeBytes : undefined,
+                captureProfile,
                 diagnosticRunId,
                 verificationMode: Platform.OS === "ios" ? "bounded" : "full"
               });
@@ -573,7 +692,7 @@ export function EmergencyMediaRecorder({
                 segmentIndex
               });
               onMediaAttachedRef.current?.();
-              if (Platform.OS === "ios") {
+              if (Platform.OS === "ios" || Platform.OS === "android") {
                 if (!ignoreStatusUpdates) {
                   onStatusChangeRef.current?.(
                     `Video local ${cameraModeLabel(mode)} preservado em segmento seguro ${activeCaptureController.attachedAssetCount}.`
@@ -600,10 +719,11 @@ export function EmergencyMediaRecorder({
                 );
               }
             } while (
-              Platform.OS === "ios" &&
-              segmentIndex < iosHomologationMaxSegmentsPerCall &&
-              !activeCaptureController.stopRequested &&
-              !ignoreStatusUpdates
+              shouldContinueSegmentedRecording({
+                activeCaptureController,
+                ignoreStatusUpdates,
+                segmentIndex
+              })
             );
 
             return attachedAssets;
@@ -639,11 +759,27 @@ export function EmergencyMediaRecorder({
           return;
         }
 
+        appendMediaOperationalLog("capture_complete_without_assets", {
+          platform: Platform.OS,
+          rejectedRecordingCount
+        });
+        const emptyDiagnosticRunId = createMediaDiagnosticRun("capture-empty");
+        const emptyCaptureTimer = startMediaDiagnosticEvent(emptyDiagnosticRunId, "capture_recording");
+        emptyCaptureTimer.finish(
+          "error",
+          {
+            rejectedRecordingCount,
+            requestedCameraMode,
+            runtimeCameraMode
+          },
+          new Error("camera_no_file_returned")
+        );
+        await persistCaptureDiagnostic(
+          currentPackageId,
+          rejectedRecordingCount > 0 ? "camera_recording_error" : "camera_no_file_returned",
+          emptyDiagnosticRunId
+        );
         if (!ignoreStatusUpdates) {
-          appendMediaOperationalLog("capture_complete_without_assets", {
-            platform: Platform.OS,
-            rejectedRecordingCount
-          });
           onStatusChangeRef.current?.("Nenhum video foi retornado pelas cameras. O pacote segue preservado com metadados.");
         }
       } catch (error) {
@@ -653,6 +789,19 @@ export function EmergencyMediaRecorder({
           requestedCameraMode,
           runtimeCameraMode
         }, error);
+        if (attachedAssetCount === 0) {
+          const effectDiagnosticRunId = createMediaDiagnosticRun("capture-effect");
+          const effectTimer = startMediaDiagnosticEvent(effectDiagnosticRunId, "capture_recording");
+          effectTimer.finish(
+            "error",
+            {
+              requestedCameraMode,
+              runtimeCameraMode
+            },
+            error
+          );
+          await persistCaptureDiagnostic(currentPackageId, "camera_recording_error", effectDiagnosticRunId);
+        }
         if (!ignoreStatusUpdates) {
           onStatusChangeRef.current?.("Gravacao local interrompida. O pacote segue preservado com metadados e localizacao.");
         }

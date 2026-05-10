@@ -47,7 +47,20 @@ export function getAssetStorageLabel(asset?: LocalMediaAsset) {
   return "Arquivo local";
 }
 
+function isPackageMediaStillProcessing(packageRecord?: EmergencyPackage) {
+  return Boolean(
+    packageRecord &&
+      packageRecord.status !== "recording_local" &&
+      packageRecord.media.status === "pending_local_recording" &&
+      !packageRecord.media.diagnostic
+  );
+}
+
 export function getPackageMediaProtectionLabel(packageRecord?: EmergencyPackage) {
+  if (isPackageMediaStillProcessing(packageRecord)) {
+    return "Processando";
+  }
+
   if (!packageRecord || packageRecord.media.status !== "recorded_local" || !packageRecord.media.assets.length) {
     return "Sem midia";
   }
@@ -59,6 +72,10 @@ export function getPackageMediaProtectionLabel(packageRecord?: EmergencyPackage)
 }
 
 export function getPackageMediaDiagnosticLabel(packageRecord?: EmergencyPackage) {
+  if (isPackageMediaStillProcessing(packageRecord)) {
+    return "Processando video local";
+  }
+
   const reason =
     packageRecord?.media.status === "pending_local_recording" || packageRecord?.media.status === "recorded_local"
       ? packageRecord.media.diagnostic?.reason
@@ -81,6 +98,7 @@ export function getPackageMediaDiagnosticLabel(packageRecord?: EmergencyPackage)
 }
 
 export function getPackageMediaCountLabel(packageRecord?: EmergencyPackage) {
+  if (isPackageMediaStillProcessing(packageRecord)) return "Processando";
   if (!packageRecord || packageRecord.media.status !== "recorded_local") return "Sem video";
   const count = packageRecord.media.assets.length;
   if (count === 1) return "1 video";

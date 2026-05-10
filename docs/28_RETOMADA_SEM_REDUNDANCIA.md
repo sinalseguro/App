@@ -148,3 +148,57 @@ Se o Android continuar indisponivel, registrar o bloqueio e seguir para a proxim
 2. Usar `docs/30_MIDIA_CRIPTOGRAFADA_CHUNKS.md` apenas como contrato da midia local ja concluida.
 3. Usar `docs/31_ARQUITETURA_COMPARTILHAMENTO_TEMPO_REAL.md` e `docs/32_PLANO_LOGIN_VIDEOCHAMADA_ANJOS_LOCALIZACAO.md` para a proxima frente.
 4. Nao repetir build Android ou QA do player, salvo se a proxima mudanca tocar em `src/features/emergency/*Video*`, `EvidencePlayerCard` ou captura SOS.
+
+## Checkpoint de interrupcao - Frente 1.2 em 2026-05-10
+
+Status: checkpoint salvo para retomada; nao declarar a Frente 1.2 como concluida ate nova instalacao e validacao fisica.
+
+Pedido que motivou este checkpoint:
+
+- Roberto confirmou que o encerramento ainda demorava no Android e no iPhone;
+- Roberto confirmou que havia arquivos extras no Cofre e alguns sem midia;
+- Roberto confirmou que o Player abria, mas a timeline nao acompanhava com fluidez nos segundos iniciais;
+- Roberto pediu modal de encerramento com barra de progresso informando etapas como encerrando e criptografando;
+- Roberto reforcou que a frente precisa considerar diversidade de cameras/hardware Android/iOS e preparar compatibilidade para chamada P2P futura com anjo usando o mesmo app.
+
+Implementado neste checkpoint:
+
+- `PanicButton` ganhou fallback por `onLongPress` nativo com guarda contra disparo duplo, mantendo a UX de pressao longa.
+- Home/SOS ganhou `FinishProgressDialog` com barra de progresso, estados `running`, `done`, `warning` e `error`, acao `Abrir cofre` e bloqueio de novo SOS enquanto a midia ainda esta pendente.
+- O encerramento deixou de aguardar a camera para manter o pacote ativo: sinaliza o recorder, remove o estado visual de chamado ativo, finaliza o pacote e deixa o recorder montado por `mediaRecorderPackageId` para anexar midia tardia.
+- Diagnostico saneado de pacote sem midia passou a ser persistido no fechamento quando a camera nao devolve asset.
+- Android tambem passou a gravar em segmentos curtos de 12s e bitrate conservador de 650 kbps, alinhado ao perfil de homologacao e reduzindo a janela maxima de espera do `recordAsync`.
+- `EmergencyMediaRecorder` passou a registrar perfil de compatibilidade de captura por asset: plataforma, versao, camera solicitada/runtime/real, qualidade, bitrate, duracao do segmento, quantidade/amostra de tamanhos disponiveis, lentes, codecs iOS e metadados de compatibilidade P2P.
+- `LocalMediaAsset`, manifesto e envelope cifrado agora aceitam `captureProfile`.
+- `Cofre`/apresentacao agora diferencia pacote ainda `Processando` quando a midia esta pendente sem diagnostico.
+- `EvidencePlayerCard` atualiza progresso por estado com intervalo menor, melhorando sincronismo da timeline nos primeiros segundos.
+- `SecureJsonStore` ganhou busca direta por ID; `emergencyRecorder` deixou de varrer todos os pacotes para finalizar/anexar/diagnosticar um pacote especifico.
+- `expo-video`/build Android privado passou a garantir suporte declarativo a picture-in-picture no `MainActivity` para reduzir erro nativo ruidoso do player.
+
+Evidencia fisica antes da ultima correcao:
+
+- APK anterior foi instalado no Android `5686add7` / `23129RA5FL`.
+- O long press por ADB so disparou apos fallback; o modal apareceu, mas travou em `Encerrando gravacao` 24% e o topo ainda mostrava `CHAMADO ATIVO`.
+- Logcat mostrou que a camera Android/CameraX so fechou muito depois e havia `Recorder: stop() called on a recording that is no longer active`.
+- Esse teste confirmou a regressao relatada por Roberto: feedback visual melhorou, mas o fluxo ainda ficava preso quando o recorder demorava.
+- A correcao posterior foi segmentar tambem Android em 12s/650 kbps e tirar imediatamente o chamado do estado visual ativo; essa correcao ainda precisa de instalacao e teste fisico.
+
+Validacoes locais executadas apos a correcao de segmentacao:
+
+- `npm run typecheck`: aprovado.
+- `npm run lint`: aprovado.
+- `npm test -- --runInBand`: aprovado, incluindo `test:crypto` e `test:device-keys`.
+- `git diff --check`: aprovado.
+- Limpeza de regeneraveis executada com `./scripts/higienizar-reciclaveis-mobile.sh all --deep --xcode-derived-data --select all --apply`, recuperando cerca de 2,7 GiB reais.
+- APK privado gerado em `distribution/android/out/sinalseguro-android.apk`, SHA-256 `d00beb8f7b551300a1f750ca059ad294f040947d796868176124eb44003df9f4`.
+
+Pendencias obrigatorias da proxima retomada:
+
+1. Rodar `df -h /`; se houver menos de 10 GiB livres, limpar regeneraveis antes de novo build/teste.
+2. Instalar o APK SHA-256 `d00beb8f7b551300a1f750ca059ad294f040947d796868176124eb44003df9f4` ou rebuildar se houver nova mudanca.
+3. No Android fisico, iniciar SOS, aguardar pelo menos 20s, encerrar por long press e capturar screenshots imediato, 2s, 8s e fim.
+4. Aceite visual esperado: o topo sai de `CHAMADO ATIVO` logo apos o long press; modal mostra progresso; Cofre termina como protegido, processando ou sem midia com causa saneada.
+5. Verificar com `run-as` que `cache/Camera` e `cache/VideoThumbnails` nao deixam `.mp4` claro permanente.
+6. Abrir Player e validar timeline nos primeiros segundos e seek.
+7. Repetir iPhone fisico quando houver janela de build/instalacao, porque Roberto confirmou que a demora tambem existia no iPhone.
+8. Nao avancar interface final de chamada P2P/anjo nesta frente; manter apenas compatibilidade de captura/envelope e liberacao correta de camera/microfone para a frente de chamada.

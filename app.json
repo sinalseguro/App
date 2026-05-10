@@ -82,7 +82,12 @@
         }
       ],
       "expo-font",
-      "expo-video",
+      [
+        "expo-video",
+        {
+          "supportsPictureInPicture": true
+        }
+      ],
       "expo-web-browser",
       "@react-native-google-signin/google-signin"
     ],

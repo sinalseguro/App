@@ -31,11 +31,41 @@ export type LocalMediaAsset = {
   hashMode: "content_sha256" | "metadata_sha256_pending_streaming" | "chunked_plaintext_sha256";
   recordedAt: string;
   completedAt: string;
+  captureProfile?: MediaCaptureCompatibilityProfile;
   encryptionStatus:
     | "local_sandbox_pending_backend_envelope"
     | "encrypted_chunked_xchacha20poly1305"
     | "encrypted_native_segmented_v1";
   encryptedVideo?: EncryptedVideoEnvelope;
+};
+
+export type MediaCaptureCompatibilityProfile = {
+  schemaVersion: "sinalseguro.media-capture-profile.v1";
+  platform: "android" | "ios" | "web" | "windows" | "macos";
+  platformVersion: string;
+  requestedCameraMode?: "front" | "back" | "both";
+  runtimeCameraMode: "front" | "back" | "both";
+  actualCameraMode: "front" | "back";
+  compatibilityTier:
+    | "android_single_camera_conservative"
+    | "android_single_camera_fallback"
+    | "ios_h264_low_bitrate_segmented"
+    | "generic_single_camera_conservative";
+  recordingContainer: "mp4";
+  videoCodec: "h264" | "platform_default_h264_mp4";
+  videoQuality: "2160p" | "1080p" | "720p" | "480p" | "4:3";
+  targetVideoBitrate: number;
+  segmentDurationSeconds: number | null;
+  pictureSizeCount: number | null;
+  pictureSizesSample: string[];
+  availableLenses: string[];
+  availableVideoCodecs: string[];
+  p2pCompatibility: {
+    callMediaInterop: "recording_profile_conservative_mp4_h264";
+    envelopeScope: "media_asset";
+    requiresRecipientKeyEnvelope: true;
+    supportsDeferredRecipientEnvelope: true;
+  };
 };
 
 export type MediaDiagnosticsSnapshot = {
@@ -108,6 +138,7 @@ export type EncryptedVideoEnvelope = {
     attemptedAt: string;
     status: "deleted" | "cleanup_pending";
   };
+  captureProfile?: MediaCaptureCompatibilityProfile;
   diagnostics?: MediaDiagnosticsSnapshot;
   recipientKeyEnvelopes: [];
   playbackAdapter: "range_data_source_required" | "native_encrypted_source";

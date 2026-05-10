@@ -1,4 +1,4 @@
-import { deleteSecureRecord, listSecureRecords, saveSecureRecord } from "@/storage/secureJsonStore";
+import { deleteSecureRecord, getSecureRecord, listSecureRecords, saveSecureRecord } from "@/storage/secureJsonStore";
 import { deleteLocalMediaAssets } from "./mediaCapture";
 import { emergencyRemoteSharingPlanner } from "./RemoteSharingPlan";
 import { EmergencyPackage } from "./types";
@@ -33,6 +33,11 @@ function normalizeEmergencyPackage(packageRecord: EmergencyPackage): EmergencyPa
 
 export async function saveEmergencyPackage(packageRecord: EmergencyPackage) {
   await saveSecureRecord(EMERGENCY_NAMESPACE, packageRecord);
+}
+
+export async function getEmergencyPackage(packageId: string) {
+  const packageRecord = await getSecureRecord<EmergencyPackage>(EMERGENCY_NAMESPACE, packageId);
+  return packageRecord ? normalizeEmergencyPackage(packageRecord) : null;
 }
 
 export async function listEmergencyPackages() {

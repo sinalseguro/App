@@ -479,7 +479,9 @@ if (
   !emergencyMediaRecorder.includes("capture_ios_segment_limit_reached") ||
   !emergencyMediaRecorder.includes('const iosRecordingVideoCodec: VideoCodec = "avc1"') ||
   !emergencyMediaRecorder.includes('const recordingVideoQuality: VideoQuality = "480p"') ||
-  !emergencyMediaRecorder.includes('Platform.OS === "ios" ? 650_000 : 1_200_000') ||
+  !emergencyMediaRecorder.includes("const mobileSegmentDurationSeconds = 12") ||
+  !emergencyMediaRecorder.includes("const recordingVideoBitrate = 650_000") ||
+  !emergencyMediaRecorder.includes("shouldContinueSegmentedRecording") ||
   !emergencyMediaRecorder.includes("iosEncryptedChunkSizeBytes") ||
   !emergencyMediaRecorder.includes('verificationMode: Platform.OS === "ios" ? "bounded" : "full"') ||
   !emergencyMediaRecorder.includes("videoQuality={recordingVideoQuality}") ||

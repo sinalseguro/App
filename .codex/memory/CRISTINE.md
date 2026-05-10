@@ -750,3 +750,19 @@ Proximas acoes atualizadas:
 - Build Android privado aprovado: `distribution/android/out/sinalseguro-android.apk`, SHA-256 `9d60f820a4dc8d9556482df957b409637b111ab5988a0e8122da6cc03879f9bc`.
 - Visual web local verificado em Home SOS, Player Seguro e Cofre local; sem quebra visual aparente.
 - Proxima retomada: liberar 14 GiB+, reinstalar Pods, rodar build iOS, depois testes fisicos 30s/60s/3min/5min Android e iPhone validando residuos claros, tempo ate primeiro frame e logs saneados.
+
+## Memoria viva - 2026-05-10 - Frente 1.2 interrupcao preservada
+
+- Roberto confirmou que o bug de encerramento lento persistia no Android e tambem no iPhone; nao tratar a frente como concluida sem novo teste fisico.
+- O teste Android anterior ao ultimo patch instalou APK no `23129RA5FL`; o modal de encerramento apareceu, mas ficou em 24% e o topo ainda mostrava `CHAMADO ATIVO`.
+- Logcat do teste anterior indicou fechamento tardio de CameraX e `Recorder: stop() called on a recording that is no longer active`, sem crash fatal React no recorte observado.
+- Apos esse teste, a Home passou a tirar o pacote do estado visual ativo imediatamente, manter o recorder montado por `mediaRecorderPackageId` e anexar midia tardia em paralelo.
+- `FinishProgressDialog` informa encerramento/protecao da midia, com progresso e estados saneados, e impede novo SOS enquanto ha midia pendente.
+- Android foi alinhado ao iOS no perfil conservador de homologacao: segmentos curtos de 12s, 480p e bitrate alvo 650 kbps.
+- `PanicButton` ganhou fallback `onLongPress` nativo e guarda contra duplo disparo, melhorando teste por ADB e acessibilidade sem alterar a intencao da UX.
+- `captureProfile` passou a registrar compatibilidade de camera/hardware e metadados preparatorios de envelope/P2P sem implementar chamada real.
+- Player Seguro teve ajuste de timeline por estado e polling mais frequente nos primeiros segundos.
+- Validacoes locais apos a ultima correcao: `npm run typecheck`, `npm run lint`, `npm test -- --runInBand` e `git diff --check` aprovados.
+- APK mais recente: `distribution/android/out/sinalseguro-android.apk`, SHA-256 `d00beb8f7b551300a1f750ca059ad294f040947d796868176124eb44003df9f4`.
+- Proxima retomada: checar espaco com `df -h /`, instalar/testar esse APK ou rebuildar se houver nova mudanca, coletar screenshots imediato/2s/8s/fim, revisar logcat, residuos `.mp4` claros e timeline do player.
+- Nao avancar para UI final de chamada P2P/anjo; apenas preservar compatibilidade de captura/envelope e liberacao correta de camera/microfone para a proxima frente.

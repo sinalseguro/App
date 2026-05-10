@@ -1,6 +1,6 @@
 import * as Crypto from "expo-crypto";
 import { captureForegroundLocation } from "./locationCapture";
-import { listEmergencyPackages, saveEmergencyPackage } from "./emergencyOutbox";
+import { getEmergencyPackage, listEmergencyPackages, saveEmergencyPackage } from "./emergencyOutbox";
 import { emergencyRemoteSharingPlanner } from "./RemoteSharingPlan";
 import {
   EmergencyExchangeEnvelope,
@@ -154,8 +154,7 @@ export async function startEmergencyPackage(input: RecordEmergencyPackageInput):
 }
 
 export async function finishEmergencyPackage(packageId: string, endReason: EmergencyFinishReason = "manual_finish") {
-  const packages = await listEmergencyPackages();
-  const activePackage = packages.find((packageRecord) => packageRecord.id === packageId);
+  const activePackage = await getEmergencyPackage(packageId);
 
   if (!activePackage) return null;
 
@@ -196,8 +195,7 @@ export async function finishExpiredActiveEmergencyPackage() {
 }
 
 export async function attachLocalMediaAsset(packageId: string, asset: LocalMediaAsset) {
-  const packages = await listEmergencyPackages();
-  const packageRecord = packages.find((record) => record.id === packageId);
+  const packageRecord = await getEmergencyPackage(packageId);
 
   if (!packageRecord) return null;
 
@@ -222,8 +220,7 @@ export async function attachLocalMediaAsset(packageId: string, asset: LocalMedia
 }
 
 export async function attachLocalMediaDiagnostics(packageId: string, diagnostic: MediaCaptureDiagnosticSummary) {
-  const packages = await listEmergencyPackages();
-  const packageRecord = packages.find((record) => record.id === packageId);
+  const packageRecord = await getEmergencyPackage(packageId);
 
   if (!packageRecord) return null;
 
@@ -246,8 +243,7 @@ export async function attachLocalMediaDiagnostics(packageId: string, diagnostic:
 }
 
 export async function replaceLocalMediaAsset(packageId: string, currentAssetId: string, nextAsset: LocalMediaAsset) {
-  const packages = await listEmergencyPackages();
-  const packageRecord = packages.find((record) => record.id === packageId);
+  const packageRecord = await getEmergencyPackage(packageId);
 
   if (!packageRecord || packageRecord.media.status !== "recorded_local") return null;
 

@@ -150,12 +150,27 @@ function ensurePermission(contents, permission) {
   );
 }
 
+function ensureMainActivitySupportsPictureInPicture(contents) {
+  const mainActivityPattern = /<activity\b[^>]*android:name="\.MainActivity"[^>]*>/;
+  const mainActivity = contents.match(mainActivityPattern)?.[0];
+
+  if (!mainActivity || mainActivity.includes("android:supportsPictureInPicture=")) {
+    return contents;
+  }
+
+  return contents.replace(
+    mainActivity,
+    mainActivity.replace(/>$/, ' android:supportsPictureInPicture="true">')
+  );
+}
+
 function patchAndroidManifest() {
   if (!existsSync(androidManifestPath)) return;
 
   let contents = readFileSync(androidManifestPath, "utf8");
   contents = ensurePermission(contents, "android.permission.CAMERA");
   contents = ensurePermission(contents, "android.permission.RECORD_AUDIO");
+  contents = ensureMainActivitySupportsPictureInPicture(contents);
   contents = contents.replace(/android:allowBackup="true"/g, 'android:allowBackup="false"');
   contents = contents.replace(/\s+android:fullBackupContent="@xml\/[^"]+"/g, "");
   contents = contents.replace(/\s+android:dataExtractionRules="@xml\/[^"]+"/g, "");

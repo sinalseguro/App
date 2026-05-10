@@ -78,3 +78,15 @@ Papel: seguranca, LGPD e QA.
 - Compartilhamento ao vivo so pode existir durante emergencia ativa.
 - Conveniados ficam fora do fluxo de anjos ate contrato, RBAC, MFA, retencao, auditoria e RIPD/DPIA.
 - Validacoes aprovadas: `npm run typecheck`, `npm test`.
+
+## QA/Security - 2026-05-10 - Frente 1.2 checkpoint interrompido
+
+- A frente nao esta aprovada para seguir para proxima etapa enquanto o APK mais recente nao for instalado e validado fisicamente em Android e iPhone.
+- Evidencia Android anterior ao ultimo patch: modal de encerramento travou em 24%, topo continuou `CHAMADO ATIVO` e CameraX fechou tarde; isso confirmou a observacao de Roberto.
+- Correcao posterior: saida visual imediata do chamado ativo, recorder mantido em paralelo para anexo tardio, bloqueio de novo SOS enquanto midia segue pendente e segmentacao Android curta.
+- Logs/diagnosticos de midia devem continuar saneados: sem URI, caminho local sensivel, token, chave, e-mail, IP, coordenada, payload ou midia.
+- `captureProfile` pode registrar capacidades tecnicas de camera/hardware e flags preparatorias de P2P; nao deve registrar localizacao nem dados pessoais.
+- Teste fisico obrigatorio: screenshots imediato/2s/8s/fim, logcat filtrado do processo, inventario `run-as` para ausencia de `.mp4` claro permanente em caches, cofre/player e timeline nos primeiros segundos.
+- Estados aceitaveis no cofre apos encerramento: protegido, processando, sem midia com causa saneada, falha de preservacao ou limpeza pendente.
+- Compartilhamento, upload, chamada WebRTC real e anjos seguem bloqueados; esta frente so prepara compatibilidade de envelope/camera/microfone.
+- Gates locais ja aprovados apos patch: `npm run typecheck`, `npm run lint`, `npm test -- --runInBand`, `git diff --check`.

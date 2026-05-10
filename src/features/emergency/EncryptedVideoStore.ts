@@ -18,7 +18,7 @@ import {
 } from "./MediaDiagnostics";
 import { appendMediaOperationalLog } from "./MediaOperationalLog";
 import { SecureVideoThumbnailStore } from "./SecureVideoThumbnailStore";
-import { EncryptedVideoEnvelope, LocalMediaAsset } from "./types";
+import { EncryptedVideoEnvelope, LocalMediaAsset, MediaCaptureCompatibilityProfile } from "./types";
 import {
   createSha256,
   encryptedVideoAlgorithm,
@@ -48,6 +48,7 @@ export type PreserveEncryptedVideoInput = {
   startedAt: string;
   completedAt?: string;
   chunkSizeBytes?: number;
+  captureProfile?: MediaCaptureCompatibilityProfile;
   cleanupPlaintextSource?: boolean;
   diagnosticRunId?: string;
   verificationMode?: "full" | "bounded";
@@ -122,6 +123,7 @@ export class EncryptedVideoStore {
     startedAt,
     completedAt = new Date().toISOString(),
     chunkSizeBytes = encryptedVideoDefaultChunkSizeBytes,
+    captureProfile,
     cleanupPlaintextSource = true,
     diagnosticRunId = createMediaDiagnosticRun("preserve"),
     verificationMode = "full"
@@ -285,6 +287,7 @@ export class EncryptedVideoStore {
         completedAt,
         cameraMode,
         requestedCameraMode,
+        captureProfile,
         thumbnail,
         recipientKeyEnvelopes: [],
         chunks
@@ -317,6 +320,7 @@ export class EncryptedVideoStore {
         encryptedSizeBytes,
         codec: "video/mp4",
         durationMs: null,
+        captureProfile,
         recipientKeyEnvelopes: [],
         playbackAdapter: "range_data_source_required"
       };
@@ -400,6 +404,7 @@ export class EncryptedVideoStore {
         hashMode: "chunked_plaintext_sha256",
         recordedAt: startedAt,
         completedAt,
+        captureProfile,
         encryptionStatus: "encrypted_chunked_xchacha20poly1305",
         encryptedVideo: {
           ...encryptedVideo,

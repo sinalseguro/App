@@ -43,6 +43,8 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   const [previewTouched, setPreviewTouched] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [currentTimeSeconds, setCurrentTimeSeconds] = useState(0);
+  const [durationSeconds, setDurationSeconds] = useState(0);
   const [playableUri, setPlayableUri] = useState<string | null>(null);
   const [playbackError, setPlaybackError] = useState("");
   const [preparingPlayback, setPreparingPlayback] = useState(false);
@@ -97,9 +99,9 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     ? `Visualizar ${formatPackageTitle(packageRecord)} no player seguro`
     : "Player seguro sem arquivo selecionado";
   const playbackDisabled = !packageRecord || !hasMedia || preparingPlayback;
-  const playableDuration = getPlayableDurationSeconds(player.duration, videoAsset);
+  const playableDuration = durationSeconds > 0 ? durationSeconds : getPlayableDurationSeconds(player.duration, videoAsset);
   const canSeek = canUseInternalDirectPlayer && playableDuration > 0;
-  const currentTimeLabel = formatPlaybackTime(canUseInternalDirectPlayer ? player.currentTime : 0);
+  const currentTimeLabel = formatPlaybackTime(canUseInternalDirectPlayer ? currentTimeSeconds : 0);
   const durationLabel = formatPlaybackTime(canUseInternalDirectPlayer ? playableDuration : 0);
   const playbackButtonLabel = playing
     ? "Pausar"
@@ -115,6 +117,8 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     setPlaying(false);
     setPreviewTouched(false);
     setProgress(0);
+    setCurrentTimeSeconds(0);
+    setDurationSeconds(0);
     setSelectedAssetIndex(0);
   }, [packageRecord?.id]);
 
@@ -129,6 +133,8 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
         setPreparationProgress(0);
         setPreparingPlayback(false);
         setProgress(0);
+        setCurrentTimeSeconds(0);
+        setDurationSeconds(0);
         void closePlaybackHandles();
       }
     });
@@ -142,6 +148,8 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   useEffect(() => {
     setPlaying(false);
     setProgress(0);
+    setCurrentTimeSeconds(0);
+    setDurationSeconds(0);
     setPreparationProgress(0);
   }, [selectedAssetIndex]);
 
@@ -164,6 +172,8 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     setPreparingPlayback(false);
     setPreparationProgress(0);
     setProgress(0);
+    setCurrentTimeSeconds(0);
+    setDurationSeconds(0);
     player.pause();
     void player.replaceAsync(null);
 
@@ -273,6 +283,8 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     player.pause();
     setPlaying(false);
     setProgress(0);
+    setCurrentTimeSeconds(0);
+    setDurationSeconds(0);
     if (playableUri && !encryptedAsset) {
       void player.replaceAsync(playableUri);
     }
@@ -281,10 +293,12 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   useEffect(() => {
     if (!packageRecord || !hasMedia || !canUseInternalDirectPlayer) return;
 
-    const timer = setInterval(() => {
+    const syncPlaybackState = () => {
       const duration = getPlayableDurationSeconds(player.duration, videoAsset);
-      const currentTime = player.currentTime;
+      const currentTime = Number.isFinite(player.currentTime) ? Math.max(0, player.currentTime) : 0;
 
+      setDurationSeconds(duration);
+      setCurrentTimeSeconds(currentTime);
       if (duration > 0) {
         const nextProgress = Math.min(100, (currentTime / duration) * 100);
         setProgress(nextProgress);
@@ -305,7 +319,10 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
         }
         return;
       }
-    }, 360);
+    };
+
+    syncPlaybackState();
+    const timer = setInterval(syncPlaybackState, playing ? 120 : 250);
 
     return () => clearInterval(timer);
   }, [canUseInternalDirectPlayer, hasMedia, packageRecord, player, playing, videoAsset]);
@@ -329,6 +346,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
       player.pause();
       setPlaying(false);
       setProgress(0);
+      setCurrentTimeSeconds(0);
       return;
     }
 
@@ -340,6 +358,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     setPlaying((currentValue) => {
       if (currentValue) {
         player.pause();
+        setCurrentTimeSeconds(Number.isFinite(player.currentTime) ? Math.max(0, player.currentTime) : 0);
         playbackFirstProgressTimerRef.current?.finish("cancelled", undefined, new Error("playback_paused"));
         playbackFirstProgressTimerRef.current = null;
       } else {
@@ -358,6 +377,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
 
     setPreviewTouched(true);
     setProgress(0);
+    setCurrentTimeSeconds(0);
     if (!hasMedia) {
       player.pause();
       setPlaying(false);
@@ -370,6 +390,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     }
 
     player.currentTime = 0;
+    setCurrentTimeSeconds(0);
     playbackFirstProgressTimerRef.current = startMediaDiagnosticEvent(
       playbackDiagnosticRunRef.current,
       "playback_first_progress"
@@ -386,7 +407,9 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     if (!canSeek || timelineWidth <= 0) return;
 
     const nextProgress = Math.max(0, Math.min(1, locationX / timelineWidth));
-    player.currentTime = nextProgress * playableDuration;
+    const nextTimeSeconds = nextProgress * playableDuration;
+    player.currentTime = nextTimeSeconds;
+    setCurrentTimeSeconds(nextTimeSeconds);
     setProgress(nextProgress * 100);
   }
 

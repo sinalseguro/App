@@ -155,6 +155,19 @@ export async function saveSecureRecord<T extends StoredRecord>(namespace: string
   }
 }
 
+export async function getSecureRecord<T extends StoredRecord>(namespace: string, id: string): Promise<T | null> {
+  const raw = await readRecord(namespace, id);
+  if (!raw) return null;
+
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    await deleteSecret(itemKey(namespace, id));
+    await AsyncStorage.removeItem(encryptedItemKey(namespace, id));
+    return null;
+  }
+}
+
 export async function listSecureRecords<T extends StoredRecord>(namespace: string): Promise<T[]> {
   const ids = await readIndex(namespace);
   const records: T[] = [];

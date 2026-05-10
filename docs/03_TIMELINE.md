@@ -3,6 +3,54 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-10 - Frente 1.2: checkpoint de interrupcao, encerramento e compatibilidade de midia
+
+Status: checkpoint salvo para retomada; implementacao local validada por gates, mas validacao fisica final ainda pendente.
+
+Especialistas acionados:
+
+- Ada/Cristine: captura segmentada, estado do recorder, compatibilidade Android/iOS e contrato mobile.
+- Katherine/Margaret: continuidade React Native/Expo, modal de encerramento e estado assicrono do SOS.
+- Norman/Myers: UX de encerramento, feedback visual, timeline do Player e evidencias Android.
+- Schneier/Doneda: logs saneados, sem upload/compartilhamento real, sem URI/chave/token/coordenada em diagnosticos.
+- Kim: limpeza de regeneraveis e controle de espaco antes de build.
+- Knuth: memoria, timeline e retomada sem redundancia.
+
+Implementado:
+
+- Modal de encerramento com barra de progresso, estados de sucesso/alerta/falha e acao para abrir o Cofre.
+- Encerramento do SOS deixa de depender visualmente do termino imediato da camera: o pacote sai do modo ativo, o recorder continua montado para anexar midia tardia e novo SOS fica bloqueado enquanto ha protecao pendente.
+- Diagnosticos saneados sao persistidos quando o pacote termina sem midia.
+- Android e iOS passam a seguir perfil conservador de midia: segmentos de 12s, 480p, bitrate de homologacao 650 kbps e H.264/MP4 quando a plataforma suporta.
+- Perfil de compatibilidade de captura foi adicionado aos assets/envelopes: plataforma, versao, camera solicitada/runtime/real, tier de compatibilidade, tamanhos/lentes/codecs disponiveis e flags de envelope futuro para P2P.
+- Player Seguro teve sincronismo de timeline ajustado com polling mais frequente e estado de tempo/duracao dedicado.
+- `PanicButton` ganhou `onLongPress` nativo como fallback, preservando o timer visual e evitando disparo duplo.
+- Busca direta por pacote no cofre seguro reduz custo ao finalizar/anexar/diagnosticar um pacote especifico.
+
+Evidencia Android obtida antes da ultima correcao:
+
+- APK instalado no Android fisico `5686add7` / `23129RA5FL`.
+- O modal apareceu, mas ficou em `Encerrando gravacao` 24% e o topo ainda mostrava `CHAMADO ATIVO`.
+- Logcat confirmou fechamento tardio da camera/CameraX e evento `Recorder: stop() called on a recording that is no longer active`.
+- A partir disso, foi aplicada correcao adicional: segmentacao Android curta e saida visual imediata do estado ativo.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado.
+- `npm run lint`: aprovado.
+- `npm test -- --runInBand`: aprovado.
+- `git diff --check`: aprovado.
+- Limpeza de regeneraveis recuperou cerca de 2,7 GiB reais.
+- APK privado gerado: `distribution/android/out/sinalseguro-android.apk`.
+- SHA-256 do APK: `d00beb8f7b551300a1f750ca059ad294f040947d796868176124eb44003df9f4`.
+
+Pendencias:
+
+- Instalar e validar fisicamente o APK `d00beb8f7b551300a1f750ca059ad294f040947d796868176124eb44003df9f4`.
+- Confirmar em Android fisico: encerramento visual imediato, modal evoluindo, Cofre protegido/processando/sem midia com causa saneada, ausencia de residuo `.mp4` claro permanente e Player com timeline fluida.
+- Repetir no iPhone fisico, pois Roberto confirmou que a demora de encerramento tambem ocorria no iPhone.
+- Nao iniciar UI final de chamada P2P/anjo neste checkpoint; manter apenas a compatibilidade de captura/envelope e liberacao correta de camera/microfone.
+
 ## 2026-05-07 - Frente 1.1: chaves reais por dispositivo
 
 Status: concluido, publicado em producao e homologado no Android e no iPhone fisicos.
