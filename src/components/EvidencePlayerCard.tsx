@@ -60,6 +60,9 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   const playbackDiagnosticRunRef = useRef(createMediaDiagnosticRun("playback"));
   const playbackFirstProgressTimerRef = useRef<ReturnType<typeof startMediaDiagnosticEvent> | null>(null);
   const playbackTemporaryCleanupTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const playbackTimeOffsetSecondsRef = useRef(0);
+  const playbackStartedAtMsRef = useRef<number | null>(null);
+  const playbackStartedFromBeginningRef = useRef(false);
   const preloadAbortRef = useRef<AbortController | null>(null);
   const selectedAssetIdRef = useRef<string | undefined>(undefined);
   const videoViewRef = useRef<VideoView | null>(null);
@@ -102,7 +105,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     ? `Visualizar ${formatPackageTitle(packageRecord)} no player seguro`
     : "Player seguro sem arquivo selecionado";
   const playbackDisabled = !packageRecord || !hasMedia || preparingPlayback;
-  const playableDuration = durationSeconds > 0 ? durationSeconds : getPlayableDurationSeconds(player.duration, videoAsset);
+  const playableDuration = durationSeconds > 0 ? durationSeconds : getPlayableDurationSeconds(getPlayerDurationSafely(), videoAsset);
   const canSeek = canUseInternalDirectPlayer && playableDuration > 0;
   const currentTimeLabel = formatPlaybackTime(canUseInternalDirectPlayer ? currentTimeSeconds : 0);
   const durationLabel = formatPlaybackTime(canUseInternalDirectPlayer ? playableDuration : 0);
@@ -123,6 +126,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     setCurrentTimeSeconds(0);
     setDurationSeconds(0);
     setSelectedAssetIndex(0);
+    resetPlaybackTimeline();
   }, [packageRecord?.id]);
 
   useEffect(() => {
@@ -130,7 +134,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
 
     const subscription = AppState.addEventListener("change", (state) => {
       if (state !== "active") {
-        player.pause();
+        pausePlayerSafely();
         setPlaying(false);
         setPlayableUri(null);
         setPreparationProgress(0);
@@ -138,6 +142,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
         setProgress(0);
         setCurrentTimeSeconds(0);
         setDurationSeconds(0);
+        resetPlaybackTimeline();
         playbackCacheRef.current.deletePlayableUri(selectedAssetIdRef.current ?? "");
         void closePlaybackHandles();
       }
@@ -155,6 +160,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     setCurrentTimeSeconds(0);
     setDurationSeconds(0);
     setPreparationProgress(0);
+    resetPlaybackTimeline();
   }, [selectedAssetIndex]);
 
   useEffect(() => {
@@ -178,8 +184,9 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     setProgress(0);
     setCurrentTimeSeconds(0);
     setDurationSeconds(0);
-    player.pause();
-    void player.replaceAsync(null);
+    resetPlaybackTimeline();
+    pausePlayerSafely();
+    void replacePlayerSafely(null);
 
     if (!selectedAsset) {
       preloadAbortRef.current = null;
@@ -198,8 +205,8 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
       if (preloadAbortRef.current === preloadController) {
         preloadAbortRef.current = null;
       }
-      player.pause();
-      void player.replaceAsync(null);
+      pausePlayerSafely();
+      void replacePlayerSafely(null);
       playbackCache.deletePlayableUri(selectedAsset.id);
       void closePlaybackHandles();
     };
@@ -240,11 +247,15 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
         setPreparationProgress(88);
         setPlayableUri(nextPlayableUri);
         scheduleTemporaryPlaybackCleanup(selectedAsset.id);
-        await player.replaceAsync({
-          contentType: "progressive",
-          uri: nextPlayableUri,
-          useCaching: false
-        });
+        if (
+          !(await replacePlayerSafely({
+            contentType: "progressive",
+            uri: nextPlayableUri,
+            useCaching: false
+          }))
+        ) {
+          throw new Error("player_replace_failed");
+        }
         setPreparationProgress(100);
         prepareTimer.finish("ok", {
           chunkCount: selectedAsset.encryptedVideo.chunkCount,
@@ -279,11 +290,15 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
         setPreparationProgress(100);
         setPlayableUri(nextPlayableUri);
         scheduleTemporaryPlaybackCleanup(selectedAsset.id);
-        await player.replaceAsync({
-          contentType: "progressive",
-          uri: nextPlayableUri,
-          useCaching: false
-        });
+        if (
+          !(await replacePlayerSafely({
+            contentType: "progressive",
+            uri: nextPlayableUri,
+            useCaching: false
+          }))
+        ) {
+          throw new Error("player_replace_failed");
+        }
         prepareTimer.finish("ok", {
           chunkCount: selectedAsset.encryptedVideo.chunkCount,
           playbackAdapter: "temporary_playback_cache",
@@ -306,11 +321,15 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
       setPreparationProgress(100);
       setPlayableUri(nextPlayableUri);
       scheduleTemporaryPlaybackCleanup(selectedAsset.id);
-      await player.replaceAsync({
-        contentType: "progressive",
-        uri: nextPlayableUri,
-        useCaching: false
-      });
+      if (
+        !(await replacePlayerSafely({
+          contentType: "progressive",
+          uri: nextPlayableUri,
+          useCaching: false
+        }))
+      ) {
+        throw new Error("player_replace_failed");
+      }
       prepareTimer.finish("ok", {
         chunkCount: selectedAsset.encryptedVideo.chunkCount,
         plaintextSizeBytes: selectedAsset.encryptedVideo.plaintextSizeBytes
@@ -326,7 +345,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
       prepareTimer.finish("error", undefined, error);
       void persistPlaybackDiagnostics(selectedAsset);
       setPlaybackError("Nao foi possivel preparar este video para reproducao local.");
-      player.pause();
+      pausePlayerSafely();
       setPlaying(false);
       return null;
     } finally {
@@ -337,13 +356,14 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   }
 
   useEffect(() => {
-    player.pause();
+    pausePlayerSafely();
     setPlaying(false);
     setProgress(0);
     setCurrentTimeSeconds(0);
     setDurationSeconds(0);
+    resetPlaybackTimeline();
     if (playableUri && !encryptedAsset) {
-      void player.replaceAsync(playableUri);
+      void replacePlayerSafely(playableUri);
     }
   }, [playableUri, player]);
 
@@ -351,8 +371,12 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     if (!packageRecord || !hasMedia || !canUseInternalDirectPlayer) return;
 
     const syncPlaybackState = () => {
-      const duration = getPlayableDurationSeconds(player.duration, videoAsset);
-      const currentTime = Number.isFinite(player.currentTime) ? Math.max(0, player.currentTime) : 0;
+      const duration = getPlayableDurationSeconds(getPlayerDurationSafely(), videoAsset);
+      const nativeCurrentTime = getPlayerCurrentTimeSafely();
+      const currentTime = Math.min(
+        duration > 0 ? duration : Number.MAX_SAFE_INTEGER,
+        normalizePlaybackTime(nativeCurrentTime, playing)
+      );
 
       setDurationSeconds(duration);
       setCurrentTimeSeconds(currentTime);
@@ -371,7 +395,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
         }
 
         if (playing && nextProgress >= 99.5) {
-          player.pause();
+          pausePlayerSafely();
           setPlaying(false);
         }
         return;
@@ -400,7 +424,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
 
     setPreviewTouched(true);
     if (!hasMedia) {
-      player.pause();
+      pausePlayerSafely();
       setPlaying(false);
       setProgress(0);
       setCurrentTimeSeconds(0);
@@ -414,16 +438,20 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
 
     setPlaying((currentValue) => {
       if (currentValue) {
-        player.pause();
-        setCurrentTimeSeconds(Number.isFinite(player.currentTime) ? Math.max(0, player.currentTime) : 0);
+        pausePlayerSafely();
+        playbackStartedAtMsRef.current = null;
+        playbackStartedFromBeginningRef.current = false;
+        setCurrentTimeSeconds(normalizePlaybackTime(getPlayerCurrentTimeSafely(), false));
         playbackFirstProgressTimerRef.current?.finish("cancelled", undefined, new Error("playback_paused"));
         playbackFirstProgressTimerRef.current = null;
       } else {
+        playbackStartedAtMsRef.current = Date.now();
+        playbackStartedFromBeginningRef.current = currentTimeSeconds <= 0.5 && progress <= 0.5;
         playbackFirstProgressTimerRef.current = startMediaDiagnosticEvent(
           playbackDiagnosticRunRef.current,
           "playback_first_progress"
         );
-        player.play();
+        if (!playPlayerSafely()) return currentValue;
       }
       return !currentValue;
     });
@@ -436,7 +464,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     setProgress(0);
     setCurrentTimeSeconds(0);
     if (!hasMedia) {
-      player.pause();
+      pausePlayerSafely();
       setPlaying(false);
       return;
     }
@@ -446,14 +474,15 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
       if (!preparedUri) return;
     }
 
-    player.currentTime = 0;
+    if (!seekPlayerSafely(playbackTimeOffsetSecondsRef.current)) return;
     setCurrentTimeSeconds(0);
+    playbackStartedAtMsRef.current = Date.now();
+    playbackStartedFromBeginningRef.current = true;
     playbackFirstProgressTimerRef.current = startMediaDiagnosticEvent(
       playbackDiagnosticRunRef.current,
       "playback_first_progress"
     );
-    player.play();
-    setPlaying(true);
+    setPlaying(playPlayerSafely());
   }
 
   function handleTimelineLayout(event: LayoutChangeEvent) {
@@ -465,9 +494,92 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
 
     const nextProgress = Math.max(0, Math.min(1, locationX / timelineWidth));
     const nextTimeSeconds = nextProgress * playableDuration;
-    player.currentTime = nextTimeSeconds;
+    if (!seekPlayerSafely(nextTimeSeconds + playbackTimeOffsetSecondsRef.current)) return;
+    playbackStartedAtMsRef.current = null;
+    playbackStartedFromBeginningRef.current = false;
     setCurrentTimeSeconds(nextTimeSeconds);
     setProgress(nextProgress * 100);
+  }
+
+  function normalizePlaybackTime(nativeCurrentTime: number, isCurrentlyPlaying: boolean) {
+    const playbackStartedAtMs = playbackStartedAtMsRef.current;
+    const isInitialNativeTimestamp =
+      (isCurrentlyPlaying || playbackStartedFromBeginningRef.current) &&
+      playbackTimeOffsetSecondsRef.current === 0 &&
+      playbackStartedFromBeginningRef.current &&
+      playbackStartedAtMs !== null &&
+      Date.now() - playbackStartedAtMs <= 2500 &&
+      nativeCurrentTime > 5;
+
+    if (isInitialNativeTimestamp) {
+      playbackTimeOffsetSecondsRef.current = nativeCurrentTime;
+      playbackStartedFromBeginningRef.current = false;
+      return 0;
+    }
+
+    return Math.max(0, nativeCurrentTime - playbackTimeOffsetSecondsRef.current);
+  }
+
+  function resetPlaybackTimeline() {
+    playbackTimeOffsetSecondsRef.current = 0;
+    playbackStartedAtMsRef.current = null;
+    playbackStartedFromBeginningRef.current = false;
+  }
+
+  function pausePlayerSafely() {
+    try {
+      player.pause();
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function playPlayerSafely() {
+    try {
+      player.play();
+      return true;
+    } catch {
+      setPlaybackError("Nao foi possivel iniciar este video neste dispositivo.");
+      return false;
+    }
+  }
+
+  async function replacePlayerSafely(source: Parameters<typeof player.replaceAsync>[0]) {
+    try {
+      await player.replaceAsync(source);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function seekPlayerSafely(nextTimeSeconds: number) {
+    try {
+      player.currentTime = nextTimeSeconds;
+      return true;
+    } catch {
+      setPlaybackError("Nao foi possivel posicionar este video neste dispositivo.");
+      return false;
+    }
+  }
+
+  function getPlayerCurrentTimeSafely() {
+    try {
+      const nextCurrentTime = player.currentTime;
+      return Number.isFinite(nextCurrentTime) ? Math.max(0, nextCurrentTime) : 0;
+    } catch {
+      return 0;
+    }
+  }
+
+  function getPlayerDurationSafely() {
+    try {
+      const nextDuration = player.duration;
+      return Number.isFinite(nextDuration) ? Math.max(0, nextDuration) : 0;
+    } catch {
+      return 0;
+    }
   }
 
   async function openFullscreen() {
@@ -517,8 +629,8 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
       playbackTemporaryCleanupTimerRef.current = null;
       if (selectedAssetIdRef.current !== assetId) return;
 
-      player.pause();
-      void player.replaceAsync(null);
+      pausePlayerSafely();
+      void replacePlayerSafely(null);
       playbackCacheRef.current.deletePlayableUri(assetId);
       void closePlaybackHandles();
       setPlayableUri(null);
@@ -526,6 +638,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
       setProgress(0);
       setCurrentTimeSeconds(0);
       setDurationSeconds(0);
+      resetPlaybackTimeline();
       setPreparationProgress(0);
       setPreparingPlayback(false);
     }, temporaryPlaybackTtlMs);

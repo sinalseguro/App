@@ -250,3 +250,41 @@ Proxima retomada obrigatoria:
 4. Repetir iPhone fisico antes de declarar a Frente 1.2 aprovada, com atencao a memoria, tempo de encerramento, residuos claros e liberacao de camera/microfone.
 5. Revisar ATS/iOS gerado antes de release se `NSAllowsArbitraryLoads=true` aparecer no `Info.plist`.
 6. So depois desses gates avaliar a proxima frente dependente; ainda nao implementar UI final de chamada P2P/anjo, upload, localizacao ou conveniados.
+
+## Checkpoint Android validado - Frente 1.2 em 2026-05-11
+
+Status: Android fisico passou na matriz desta rodada; Frente 1.2 permanece aberta ate iPhone fisico repetir os gates.
+
+Implementado apos o checkpoint nativo:
+
+- Android parou de usar `maxDuration` automatico no `recordAsync`; o stop passou a ser explicito para evitar `ERROR_DURATION_LIMIT_REACHED` sem URI e pacotes sem midia.
+- `SinalSeguroMediaEngine` Android prepara a fonte de playback com descriptografia em blocos, sem `CipherInputStream`, mantendo MP4 temporario somente em cache privado/no-backup.
+- `EvidencePlayerCard` ganhou normalizacao de offset inicial da timeline e wrappers seguros para chamadas do `expo-video` ao fechar/trocar player.
+- `scripts/smoke-test.mjs` bloqueia regressao desses contratos.
+
+Evidencia Android fisica:
+
+- Dispositivo: Android fisico `23129RA5FL` via USB.
+- APK final instalado: `android/app/build/outputs/apk/debug/app-debug.apk`.
+- SHA-256 final: `b4c8eb4aad7fb7c886bf5f726f179be633e03751a5eb9ae9b79c3ee061ada0f3`.
+- SOS 60s, 3min e ciclo longo executados; ao encerrar, a UI saiu de `CHAMADO ATIVO` em ate 0,5s.
+- Ciclo longo exibiu progresso de criptografia e terminou como `Video protegido`.
+- Player abriu fonte preparada, exibiu primeiro frame e manteve timeline coerente nos primeiros segundos.
+- Fechamento do player durante reproducao manteve o app vivo; log final nao mostrou crash do processo SinalSeguro nem erro de shared object liberado.
+- Inventario final saneado: 399 arquivos no sandbox, 0 midias claras persistentes, 17 `.nseg` e 375 `.sseg`.
+- `gfxinfo` do ciclo longo: 45992 frames, 239 janky frames (0,52%), p50 20ms, p90 29ms, p95 32ms, p99 38ms.
+
+Validacoes finais:
+
+- `npm run typecheck`: aprovado.
+- `npm run lint`: aprovado.
+- `npm test`: aprovado.
+- `npm run private:android:readiness`: aprovado com pendencia ambiental conhecida de Node local 20.16.0 para release publico.
+- `git diff --check`: aprovado.
+
+Retomada obrigatoria a partir daqui:
+
+1. Preservar `docs/29_PROXIMA_ETAPA_API_ANJOS 2.md` se ainda estiver untracked.
+2. Antes de nova build, limpar regeneraveis: `/` ficou abaixo do gate de 10 GiB apos o build Android.
+3. Repetir matriz no iPhone fisico: 30s, 60s, 3min e 5min, com screenshots, log saneado, inventario de residuos claros, tempo de encerramento, player e camera/microfone liberados.
+4. Nao declarar a Frente 1.2 concluida nem iniciar Frente 2/3/4/5 ate o iPhone fisico passar.

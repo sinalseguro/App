@@ -476,6 +476,8 @@ if (
   !emergencyMediaRecorder.includes("capture_record_async_retry") ||
   !emergencyMediaRecorder.includes("shouldRetryIosRecordAsync") ||
   !emergencyMediaRecorder.includes("iosHomologationMaxSegmentsPerCall") ||
+  !emergencyMediaRecorder.includes('if (Platform.OS === "android") return undefined') ||
+  !emergencyMediaRecorder.includes("ERROR_DURATION_LIMIT_REACHED") ||
   !emergencyMediaRecorder.includes("capture_ios_segment_limit_reached") ||
   !emergencyMediaRecorder.includes('const iosRecordingVideoCodec: VideoCodec = "avc1"') ||
   !emergencyMediaRecorder.includes('const recordingVideoQuality: VideoQuality = "480p"') ||
@@ -559,7 +561,9 @@ if (
 if (
   !androidMediaEngine.includes("AES/GCM/NoPadding") ||
   !androidMediaEngine.includes("CipherOutputStream") ||
-  !androidMediaEngine.includes("CipherInputStream") ||
+  !androidMediaEngine.includes("decryptAesGcmFile") ||
+  !androidMediaEngine.includes("cipher.update(buffer, 0, read)") ||
+  androidMediaEngine.includes("CipherInputStream") ||
   !androidMediaEngine.includes("sha256HexFile") ||
   !androidMediaEngine.includes("privateFileFromUri") ||
   !androidMediaEngine.includes("file_outside_app_private_storage") ||

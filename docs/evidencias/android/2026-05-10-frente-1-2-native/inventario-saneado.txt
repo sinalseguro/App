@@ -1,19 +1,38 @@
 Frente 1.2 Android fisico - inventario saneado
-Data: 2026-05-10
+Data: 2026-05-11
 Dispositivo: Android fisico 23129RA5FL via USB
-APK SHA-256: 5e664df9a9982569a0ce05e737af01fcc105057d892438e10ffbe07ac1f28afd
+APK SHA-256 final instalado: b4c8eb4aad7fb7c886bf5f726f179be633e03751a5eb9ae9b79c3ee061ada0f3
+APK local: android/app/build/outputs/apk/debug/app-debug.apk
 
 Resultados confirmados nesta rodada:
-- Build Android privado concluido com sucesso.
-- APK final instalado no Android fisico.
-- SOS curto validado antes do patch final de boot: encerramento visual saiu de CHAMADO ATIVO em ate 0,5s e cofre recebeu midia protegida.
-- Player abriu midia cifrada por fonte MP4 temporaria preparada em cache nativo, com barra de preparo e timeline funcional.
-- Durante a janela ativa do player pode existir 1 MP4 temporario em cache protegido.
-- Apos fechamento real do player, a contagem de midia clara persistente voltou a 0.
-- Apos relaunch com MP4 temporario artificial em cache nativo, a limpeza de boot reduziu a contagem para 0 apos estabilizacao do app.
-- Inventario final de midia clara persistente em cache/files: 0 arquivos .mp4/.mov/.3gp/.m4a/.wav/.webm.
+- Build Android privado final concluido e instalado no Android fisico.
+- SOS 60s, 3min e ciclo longo de homologacao foram executados no aparelho fisico.
+- Ao tocar para encerrar, a UI saiu de CHAMADO ATIVO em ate 0,5s; no ciclo longo o modal exibiu criptografia em andamento e finalizou como video protegido.
+- CameraX registrou fechamento de camera apos o encerramento, sem retornar ao estado ativo.
+- Cofre exibiu midia protegida apos preservacao cifrada.
+- Player abriu midia nativa cifrada por fonte MP4 temporaria preparada em cache privado/no-backup, com barra de preparo antes do play.
+- Timeline do player foi revalidada nos primeiros segundos: 0:00, 0:02 e 0:07 em capturas sucessivas do mesmo video longo, sem salto inicial de 14s.
+- Fechar o player durante reproducao nao derrubou o app; nao houve crash do processo SinalSeguro nem erro de shared object liberado do expo-video.
+- Durante playback pode existir MP4 temporario apenas enquanto o player esta ativo.
+- Apos fechamento real do player, o inventario final do sandbox confirmou 0 midias claras persistentes.
+
+Inventario final saneado do sandbox:
+- total de arquivos: 399
+- midias claras persistentes (.mp4/.mov/.3gp/.m4a/.wav/.webm): 0
+- arquivos nativos .nseg: 17
+- arquivos .sseg legados/compatibilidade: 375
+
+Performance observada no ciclo longo:
+- gfxinfo final: 45992 frames, 239 janky frames (0,52%), p50 20ms, p90 29ms, p95 32ms, p99 38ms.
+
+Gates locais finais:
+- npm run typecheck: aprovado.
+- npm run lint: aprovado.
+- npm test: aprovado, incluindo test:crypto e test:device-keys.
+- npm run private:android:readiness: aprovado com pendencia ambiental conhecida de Node local 20.16.0 para release publico.
+- git diff --check: aprovado.
 
 Politica de evidencia:
-- Capturas PNG/XML com rosto, ambiente ou tela pessoal foram removidas e nao devem ser versionadas.
-- Caminhos internos, ids brutos, tokens e payloads nao foram preservados neste resumo.
-- Frente 1.2 segue em homologacao privada ate repetir matriz Android longa e iPhone fisico.
+- Capturas PNG/XML/logcat detalhado ficaram apenas em /private/tmp para analise local e nao devem ser versionados por conterem tela, ambiente ou risco de identificacao.
+- Caminhos internos, ids brutos, tokens, payloads, URI, chaves, nonce/tag/hash bruto, IP, e-mail e coordenadas nao foram preservados neste resumo.
+- Frente 1.2 segue em homologacao privada ate repetir a matriz no iPhone fisico.

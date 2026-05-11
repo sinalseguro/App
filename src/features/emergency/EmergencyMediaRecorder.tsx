@@ -146,21 +146,24 @@ function buildRecordingOptions(
   defaultDurationSeconds: number,
   startedAtMs: number
 ): CameraRecordingOptions | null | undefined {
+  // Android/CameraX on the physical QA device finalizes `maxDuration` with
+  // ERROR_DURATION_LIMIT_REACHED but does not return a JS URI. Stop explicitly
+  // and let the native media engine stream-encrypt the resulting MP4.
+  if (Platform.OS === "android") return undefined;
+
   if (defaultDurationSeconds > 0) {
     const elapsedSeconds = (Date.now() - startedAtMs) / 1000;
     const remainingSeconds = Math.ceil(defaultDurationSeconds - elapsedSeconds);
     if (remainingSeconds <= 0) return null;
 
     const maxDuration = Math.max(1, Math.min(mobileSegmentDurationSeconds, remainingSeconds));
-    return Platform.OS === "ios" ? { codec: iosRecordingVideoCodec, maxDuration } : { maxDuration };
+    return { codec: iosRecordingVideoCodec, maxDuration };
   }
 
-  return Platform.OS === "ios"
-    ? {
-        codec: iosRecordingVideoCodec,
-        maxDuration: mobileSegmentDurationSeconds
-      }
-    : { maxDuration: mobileSegmentDurationSeconds };
+  return {
+    codec: iosRecordingVideoCodec,
+    maxDuration: mobileSegmentDurationSeconds
+  };
 }
 
 function shouldContinueSegmentedRecording({

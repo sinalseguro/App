@@ -19,7 +19,6 @@ import java.security.SecureRandom
 import java.time.Instant
 import java.util.UUID
 import javax.crypto.Cipher
-import javax.crypto.CipherInputStream
 import javax.crypto.CipherOutputStream
 import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -139,11 +138,7 @@ class SinalSeguroMediaEngineModule(
       val playableFile = File(playbackDirectory, "${safeFileStem(assetId)}-${UUID.randomUUID()}.mp4")
 
       try {
-        CipherInputStream(BufferedInputStream(FileInputStream(encryptedFile), 65536), cipher).use { decryptedInput ->
-          BufferedOutputStream(FileOutputStream(playableFile), 65536).use { output ->
-            decryptedInput.copyTo(output, 65536)
-          }
-        }
+        decryptAesGcmFile(encryptedFile, playableFile, cipher)
       } catch (error: Exception) {
         playableFile.delete()
         throw error
@@ -277,6 +272,25 @@ class SinalSeguroMediaEngineModule(
       accessFile.seek(accessFile.length() - byteCount)
       accessFile.readFully(bytes)
       return bytes
+    }
+  }
+
+  private fun decryptAesGcmFile(sourceFile: File, targetFile: File, cipher: Cipher) {
+    BufferedInputStream(FileInputStream(sourceFile), 65536).use { input ->
+      BufferedOutputStream(FileOutputStream(targetFile), 65536).use { output ->
+        val buffer = ByteArray(65536)
+        var read: Int
+        while (input.read(buffer).also { read = it } != -1) {
+          val decryptedChunk = cipher.update(buffer, 0, read)
+          if (decryptedChunk != null && decryptedChunk.isNotEmpty()) {
+            output.write(decryptedChunk)
+          }
+        }
+        val finalChunk = cipher.doFinal()
+        if (finalChunk != null && finalChunk.isNotEmpty()) {
+          output.write(finalChunk)
+        }
+      }
     }
   }
 

@@ -3,6 +3,49 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-11 - Frente 1.2: Android fisico validado com player e encerramento corrigidos
+
+Status: Android fisico aprovado para a matriz desta rodada; Frente 1.2 ainda nao esta concluida porque falta repetir o gate em iPhone fisico.
+
+Especialistas acionados:
+
+- Ada/Cristine: rota nativa Android, gravacao sem `maxDuration` automatico e preservacao cifrada.
+- Norman/Myers: encerramento visual, modal/progresso, cofre e timeline do Player nos primeiros segundos.
+- Schneier/Doneda: inventario sem midia clara persistente e logs/evidencias saneados.
+- Kim/Knuth: controle de espaco, hash do APK, timeline e memoria de retomada.
+
+Implementado nesta continuacao:
+
+- Android deixou de usar `maxDuration` no `recordAsync`; o encerramento agora e explicito para evitar `ERROR_DURATION_LIMIT_REACHED` sem URI e pacotes salvos sem midia.
+- `SinalSeguroMediaEngine` Android deixou de usar `CipherInputStream` no preparo do player e passou a descriptografar MP4 temporario com `cipher.update` em blocos e `doFinal`.
+- `EvidencePlayerCard` normaliza offset inicial da timeline e protege chamadas `pause`, `play`, `replace`, `seek`, `currentTime` e `duration` contra shared object liberado ao fechar o modal.
+- Smoke test foi ajustado para bloquear regressao desses tres pontos.
+
+Validacao Android fisica:
+
+- APK final instalado: `android/app/build/outputs/apk/debug/app-debug.apk`.
+- SHA-256 final: `b4c8eb4aad7fb7c886bf5f726f179be633e03751a5eb9ae9b79c3ee061ada0f3`.
+- Android fisico `23129RA5FL` via USB, build instalado em 2026-05-11 07:58.
+- SOS 60s, 3min e ciclo longo foram executados; encerramento visual saiu de `CHAMADO ATIVO` em ate 0,5s e o ciclo longo finalizou como `Video protegido`.
+- Inventario final saneado do sandbox: 399 arquivos, 0 midias claras persistentes, 17 `.nseg` e 375 `.sseg`.
+- Player revalidado: preparo antes do play, primeiro frame, timeline nos primeiros segundos em 0:00, 0:02 e 0:07, fechamento durante reproducao sem crash do processo SinalSeguro.
+- Log final do player nao mostrou `Process: br.com.sinalseguro.app`, `JavascriptException`, `Cannot use shared object` nem `VideoPlayer.pause`.
+- `gfxinfo` do ciclo longo: 45992 frames, 239 janky frames (0,52%), p50 20ms, p90 29ms, p95 32ms, p99 38ms.
+
+Gates finais:
+
+- `npm run typecheck`: aprovado.
+- `npm run lint`: aprovado.
+- `npm test`: aprovado.
+- `npm run private:android:readiness`: aprovado com pendencia ambiental conhecida de Node local 20.16.0 para release publico.
+- `git diff --check`: aprovado.
+
+Pendencias:
+
+- Repetir iPhone fisico antes de declarar a Frente 1.2 concluida.
+- Nao avancar chamada P2P/anjo, upload, localizacao ou conveniados; esta frente segue apenas com compatibilidade de captura/envelope/camera/microfone.
+- Antes de qualquer nova build Android/iOS, limpar regeneraveis porque o pos-build deixou `/` abaixo do gate de 10 GiB.
+
 ## 2026-05-10 - Frente 1.2: checkpoint de interrupcao, encerramento e compatibilidade de midia
 
 Status: checkpoint salvo para retomada; implementacao local validada por gates, mas validacao fisica final ainda pendente.

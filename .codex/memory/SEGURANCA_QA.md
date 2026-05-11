@@ -27,8 +27,18 @@ Papel: seguranca, LGPD e QA.
 
 ## Pendencia QA
 
-- APK privado foi instalado no Android `192.168.0.4:5555` e abriu sem crash em cold start.
-- Validacao manual do gesto SOS com camera ainda precisa de aprovacao do Roberto/Myers no aparelho fisico, porque a injecao de toque por ADB nao acionou os controles da tela.
+- Android fisico passou na matriz da Frente 1.2 em 2026-05-11.
+- Gate QA bloqueante atual: repetir iPhone fisico antes de declarar a Frente 1.2 concluida.
+
+## QA/Security - 2026-05-11 - Frente 1.2 Android validado
+
+- Android fisico `23129RA5FL` passou na matriz desta rodada com APK SHA-256 `b4c8eb4aad7fb7c886bf5f726f179be633e03751a5eb9ae9b79c3ee061ada0f3`.
+- SOS 60s, 3min e ciclo longo confirmaram saida visual de `CHAMADO ATIVO` em ate 0,5s, camera fechada pelo CameraX e cofre final como `Video protegido`.
+- Inventario final do sandbox: 399 arquivos, 0 midias claras persistentes, 17 `.nseg` e 375 `.sseg`.
+- Player final: preparo antes do play, timeline coerente nos primeiros segundos, fechamento durante reproducao sem crash do processo SinalSeguro e sem erro `Cannot use shared object`.
+- MP4 temporario de playback segue aceito apenas em cache privado/no-backup, durante janela ativa do player, com limpeza no fechamento/troca/background/TTL/entrada do app.
+- Logs/evidencias detalhadas ficaram fora do Git; resumo versionado nao preserva URI, caminho sensivel, chave, nonce/tag/hash bruto, token, IP, e-mail, coordenada, payload ou midia.
+- Frente 1.2 ainda nao esta aprovada globalmente: iPhone fisico precisa repetir a matriz antes de avancar P2P/anjo/upload/localizacao/conveniados.
 
 ## QA/Security - 2026-05-04
 

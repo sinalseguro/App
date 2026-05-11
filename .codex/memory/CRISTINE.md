@@ -47,7 +47,17 @@ Quando a sessao for retomada apos limite de uso, troca de agente, interrupcao de
 
 ## Proximo checkpoint
 
-Etapa ativa: midia privada criptografada por chunks, adaptador de playback seguro por range e validacao manual do APK privado Android com midia local.
+Etapa ativa: Frente 1.2 em homologacao privada; Android fisico validado nesta rodada, iPhone fisico ainda pendente antes de fechar a frente.
+
+Atualizacao de continuidade em 2026-05-11 - Frente 1.2 Android validado:
+
+- Android fisico `23129RA5FL` passou na matriz desta rodada, mas a Frente 1.2 ainda nao pode ser fechada sem iPhone fisico.
+- APK final instalado: `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `b4c8eb4aad7fb7c886bf5f726f179be633e03751a5eb9ae9b79c3ee061ada0f3`.
+- SOS 60s, 3min e ciclo longo confirmaram saida visual de `CHAMADO ATIVO` em ate 0,5s, modal/progresso e cofre terminando como `Video protegido`.
+- Player final confirmou preparo antes do play, timeline coerente nos primeiros segundos e fechamento durante reproducao sem crash do processo SinalSeguro.
+- Inventario final saneado do sandbox: 399 arquivos, 0 midias claras persistentes, 17 `.nseg` e 375 `.sseg`.
+- Gates finais aprovados: `typecheck`, `lint`, `test`, `private:android:readiness` com pendencia ambiental conhecida de Node 20.16.0, e `git diff --check`.
+- Proxima retomada: limpar regeneraveis antes de nova build, repetir matriz em iPhone fisico e nao avancar P2P/anjo/upload/localizacao/conveniados.
 
 Estado ativo em 2026-05-07:
 

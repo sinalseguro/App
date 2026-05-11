@@ -20,9 +20,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 
 ## Pendencias tecnicas
 
-- Validar manualmente no Android fisico o gesto SOS completo com camera em ambiente controlado.
-- Evoluir adaptadores de outbox/API quando backend estiver pronto.
-- Nao colocar blobs de midia no `SecureStore`; midia local deve permanecer em arquivo do sandbox do app com hash e criptografia por envelope na etapa de backend.
+- Repetir a matriz da Frente 1.2 no iPhone fisico antes de fechar midia critica.
+- Evoluir adaptadores de outbox/API somente quando a frente de backend/anjos for aberta.
+- Nao colocar blobs de midia no `SecureStore`; midia local deve permanecer em arquivo do sandbox do app com hash e criptografia por envelope.
+
+## Atualizacao tecnica - 2026-05-11 - Frente 1.2 Android validado
+
+- Android `recordAsync` deixou de receber `maxDuration` automatico; o stop explicito evita `ERROR_DURATION_LIMIT_REACHED` sem URI no CameraX e impede pacotes sem midia quando a camera excede o limite.
+- `SinalSeguroMediaEngineModule.kt` Android prepara playback nativo com AES-256-GCM em blocos usando `cipher.update` e `doFinal`, sem `CipherInputStream`; o MP4 claro existe apenas como temporario em cache privado/no-backup durante o player.
+- `EvidencePlayerCard` normaliza offset inicial da timeline e isola chamadas do `expo-video` com wrappers seguros para `play`, `pause`, `replace`, `seek`, `currentTime` e `duration`.
+- Smoke test cobre a rota Android sem `maxDuration`, a ausencia de `CipherInputStream` e a regra de player nativo/loopback legado.
+- APK final Android: `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `b4c8eb4aad7fb7c886bf5f726f179be633e03751a5eb9ae9b79c3ee061ada0f3`.
+- Android fisico validou SOS 60s, 3min e ciclo longo; inventario final saneado teve 0 midias claras persistentes, 17 `.nseg` e 375 `.sseg`.
+- iOS segue pendente: nao aprovar midia longa nem fechar Frente 1.2 ate repetir a matriz no iPhone fisico.
 
 ## Atualizacao tecnica - 2026-05-04
 
