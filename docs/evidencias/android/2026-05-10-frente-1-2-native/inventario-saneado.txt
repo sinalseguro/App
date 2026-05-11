@@ -1,0 +1,19 @@
+Frente 1.2 Android fisico - inventario saneado
+Data: 2026-05-10
+Dispositivo: Android fisico 23129RA5FL via USB
+APK SHA-256: 5e664df9a9982569a0ce05e737af01fcc105057d892438e10ffbe07ac1f28afd
+
+Resultados confirmados nesta rodada:
+- Build Android privado concluido com sucesso.
+- APK final instalado no Android fisico.
+- SOS curto validado antes do patch final de boot: encerramento visual saiu de CHAMADO ATIVO em ate 0,5s e cofre recebeu midia protegida.
+- Player abriu midia cifrada por fonte MP4 temporaria preparada em cache nativo, com barra de preparo e timeline funcional.
+- Durante a janela ativa do player pode existir 1 MP4 temporario em cache protegido.
+- Apos fechamento real do player, a contagem de midia clara persistente voltou a 0.
+- Apos relaunch com MP4 temporario artificial em cache nativo, a limpeza de boot reduziu a contagem para 0 apos estabilizacao do app.
+- Inventario final de midia clara persistente em cache/files: 0 arquivos .mp4/.mov/.3gp/.m4a/.wav/.webm.
+
+Politica de evidencia:
+- Capturas PNG/XML com rosto, ambiente ou tela pessoal foram removidas e nao devem ser versionadas.
+- Caminhos internos, ids brutos, tokens e payloads nao foram preservados neste resumo.
+- Frente 1.2 segue em homologacao privada ate repetir matriz Android longa e iPhone fisico.

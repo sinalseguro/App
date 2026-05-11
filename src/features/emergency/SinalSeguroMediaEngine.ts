@@ -1,4 +1,5 @@
 import { NativeModules, Platform } from "react-native";
+import { readSecret } from "@/security/secureStorage";
 import { LocalMediaAsset } from "./types";
 
 export type NativeMediaEngineName = "SinalSeguroMediaEngine";
@@ -44,6 +45,20 @@ export type NativePlaybackHandle = {
   openedAt: string;
 };
 
+export type NativeOpenEncryptedAssetInput = {
+  assetId: string;
+  packageId: string;
+  keyBase64: string;
+  nonceBase64: string;
+  tagBase64?: string;
+  ciphertextSha256?: string;
+  aad?: string;
+  emergencySessionId?: string | null;
+  storageEngine: NativeStorageEngine;
+  playbackAdapter: NativePlaybackAdapter;
+  sourceUri: string;
+};
+
 export type CleanupSummary = {
   schemaVersion: "sinalseguro.native-media-cleanup.v1";
   status: "ok" | "unavailable" | "error";
@@ -56,7 +71,7 @@ export type CleanupSummary = {
 
 type NativeMediaEngineModule = {
   encryptSegment(input: NativeEncryptedSegmentInput): Promise<EncryptedSegmentSummary>;
-  openEncryptedAsset(input: Record<string, unknown>): Promise<NativePlaybackHandle>;
+  openEncryptedAsset(input: NativeOpenEncryptedAssetInput): Promise<NativePlaybackHandle>;
   closePlaybackHandle(handleId: string): Promise<void>;
   cleanupMediaResidues(): Promise<CleanupSummary>;
 };
@@ -97,17 +112,24 @@ export async function openNativeEncryptedAsset(asset: LocalMediaAsset) {
     return null;
   }
 
+  const keyBase64 = await readSecret(asset.encryptedVideo.keyRef);
+  const sourceUri = asset.encryptedVideo.nativePlayback?.sourceUri ?? asset.uri;
+  if (!keyBase64 || !sourceUri) {
+    throw new Error("native_playback_key_unavailable");
+  }
+
   return module.openEncryptedAsset({
     assetId: asset.id,
     packageId: asset.encryptedVideo.packageId,
-    keyId: asset.encryptedVideo.keyId ?? asset.encryptedVideo.keyRef,
+    keyBase64,
+    nonceBase64: asset.encryptedVideo.manifestNonce,
+    tagBase64: asset.encryptedVideo.manifestTag,
+    ciphertextSha256: asset.encryptedVideo.manifestSha256,
+    aad: JSON.stringify({ assetId: asset.id, packageId: asset.encryptedVideo.packageId }),
     emergencySessionId: asset.encryptedVideo.emergencySessionId ?? null,
-    storageEngine: asset.encryptedVideo.storageEngine,
-    playbackAdapter: asset.encryptedVideo.playbackAdapter,
-    manifestUri: asset.encryptedVideo.manifestUri,
-    sourceUri: asset.encryptedVideo.nativePlayback?.sourceUri,
-    segmentManifestUri: asset.encryptedVideo.nativePlayback?.segmentManifestUri,
-    playableUri: asset.encryptedVideo.nativePlayback?.sourceUri ?? asset.uri
+    storageEngine: "native_segmented_v1",
+    playbackAdapter: "native_encrypted_source",
+    sourceUri
   });
 }
 

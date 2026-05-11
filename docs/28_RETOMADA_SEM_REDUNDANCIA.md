@@ -202,3 +202,51 @@ Pendencias obrigatorias da proxima retomada:
 6. Abrir Player e validar timeline nos primeiros segundos e seek.
 7. Repetir iPhone fisico quando houver janela de build/instalacao, porque Roberto confirmou que a demora tambem existia no iPhone.
 8. Nao avancar interface final de chamada P2P/anjo nesta frente; manter apenas compatibilidade de captura/envelope e liberacao correta de camera/microfone para a frente de chamada.
+
+## Checkpoint atualizado - Frente 1.2 em 2026-05-10
+
+Status: checkpoint salvo apos implementacao nativa e teste Android curto. Nao declarar a frente concluida.
+
+O que ja foi feito nesta retomada:
+
+- `SinalSeguroMediaEngine` virou rota principal para ativo novo `native_segmented_v1`;
+- Android nativo cifra por AES-256-GCM em blocos e calcula hashes incrementalmente;
+- JS/Base64/loopback permanece somente como fallback para ativo legado `js_chunked_v1`;
+- `FinishProgressDialog` e o cofre trabalham com estados explicitos de processamento;
+- Player Seguro prepara fonte MP4 temporaria em cache privado/no-backup antes de tocar, com barra de preparo e limpeza ao fechar, trocar, background, TTL e boot;
+- Home e Arquivos executam limpeza de residuos nativos na entrada;
+- evidencias PNG/XML/logcat detalhado foram removidas; a evidencia versionavel e apenas o inventario saneado.
+
+Validacoes ja executadas nesta retomada:
+
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `npm test`: aprovado;
+- `npm run test:crypto`: aprovado;
+- `npm run test:device-keys`: aprovado;
+- `npm run private:android:readiness`: aprovado com pendencia ambiental conhecida de Node local;
+- `npm run build:android:private`: aprovado;
+- `git diff --check`: aprovado.
+
+APK Android desta retomada:
+
+- caminho local: `android/app/build/outputs/apk/debug/app-debug.apk`;
+- SHA-256: `5e664df9a9982569a0ce05e737af01fcc105057d892438e10ffbe07ac1f28afd`;
+- instalado no Android fisico `23129RA5FL` via USB.
+
+Evidencia Android curta:
+
+- ao encerrar SOS curto, a UI saiu de `CHAMADO ATIVO` em ate 0,5s;
+- o cofre recebeu midia protegida;
+- o player abriu fonte preparada e a timeline funcionou;
+- apos fechamento real do player, inventario de midia clara persistente voltou a 0;
+- relaunch com MP4 temporario artificial no cache nativo limpou o arquivo apos estabilizacao do app.
+
+Proxima retomada obrigatoria:
+
+1. Rodar `git status --short --branch` e preservar `docs/29_PROXIMA_ETAPA_API_ANJOS 2.md` se ainda estiver untracked.
+2. Rodar `df -h /`; com 12 GiB livres ha margem para Android, mas iOS deve esperar 14 GiB+.
+3. Repetir Android fisico em 60s, 3min e 5min, com inventario `run-as`, logcat saneado, cofre/player e tempo ate primeiro frame.
+4. Repetir iPhone fisico antes de declarar a Frente 1.2 aprovada, com atencao a memoria, tempo de encerramento, residuos claros e liberacao de camera/microfone.
+5. Revisar ATS/iOS gerado antes de release se `NSAllowsArbitraryLoads=true` aparecer no `Info.plist`.
+6. So depois desses gates avaliar a proxima frente dependente; ainda nao implementar UI final de chamada P2P/anjo, upload, localizacao ou conveniados.

@@ -68,6 +68,25 @@ export type MediaCaptureCompatibilityProfile = {
   };
 };
 
+export type MediaProcessingState =
+  | "stop_requested"
+  | "camera_released"
+  | "plaintext_detected"
+  | "encrypting"
+  | "packaging"
+  | "cleanup"
+  | "attached"
+  | "no_media"
+  | "error";
+
+export type RecipientKeyEnvelope = {
+  schemaVersion: "sinalseguro.recipient-key-envelope.placeholder.v1";
+  status: "deferred_until_recipient_crypto";
+  recipientDeviceId?: string;
+  recipientKeyId?: string;
+  keyAgreement?: "x25519_future" | "backend_registry_pending";
+};
+
 export type MediaDiagnosticsSnapshot = {
   schemaVersion: "sinalseguro.media-diagnostics.v1";
   runId: string;
@@ -83,6 +102,10 @@ export type MediaDiagnosticsSnapshot = {
       | "native_engine_cleanup"
       | "native_engine_encrypt_segment"
       | "native_engine_open_playback"
+      | "native_engine_playback_prepare"
+      | "native_engine_segment_total"
+      | "player_cache_prepare"
+      | "player_loopback_skipped"
       | "playback_first_progress"
       | "playback_prepare"
       | "preserve_cleanup"
@@ -116,7 +139,7 @@ export type MediaCaptureDiagnosticSummary = {
 
 export type EncryptedVideoEnvelope = {
   protocolVersion: "sinalseguro.encrypted-video.v1";
-  algorithm: "xchacha20poly1305";
+  algorithm: "xchacha20poly1305" | "aes-256-gcm";
   packageId: string;
   keyId?: string;
   keyRef: string;
@@ -140,13 +163,15 @@ export type EncryptedVideoEnvelope = {
   };
   captureProfile?: MediaCaptureCompatibilityProfile;
   diagnostics?: MediaDiagnosticsSnapshot;
-  recipientKeyEnvelopes: [];
+  recipientKeyEnvelopes: RecipientKeyEnvelope[];
   playbackAdapter: "range_data_source_required" | "native_encrypted_source";
   nativePlayback?: {
     engine: "SinalSeguroMediaEngine";
     sourceUri?: string;
     segmentManifestUri?: string;
+    temporaryCleartextPolicy?: "cache_no_backup_delete_on_close";
   };
+  processingState?: MediaProcessingState;
 };
 
 export type MediaCaptureManifest =

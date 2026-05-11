@@ -2032,3 +2032,43 @@ Limites ainda abertos:
 - iOS build/test nao foi executado nesta passada porque a limpeza removeu `ios/Pods` e o espaco livre apos o build Android ficou abaixo do gate de 14 GiB;
 - testes fisicos Android/iPhone de 30s, 60s, 3min e 5min ainda precisam ser feitos com ativo nativo real;
 - a captura segmentada nativa ainda nao substituiu a captura Expo; esta etapa fechou a ponte nativa persistente e o caminho de compatibilidade.
+
+## 2026-05-10 - Frente 1.2: checkpoint nativo, Android curto e salvamento
+
+Status: implementacao nativa salva em homologacao privada; Frente 1.2 ainda nao concluida.
+
+Implementado:
+
+- `preserveLocalVideoAsset` virou roteador entre `SinalSeguroMediaEngine` nativo e fallback JS por chunks;
+- Android nativo usa AES-256-GCM por stream em blocos, hash incremental e storage privado;
+- envelopes aceitam algoritmo legado `xchacha20poly1305` e nativo `aes-256-gcm`, alem de `storageEngine`, `playbackAdapter`, `processingState`, `nativePlayback`, `captureProfile`, `keyId`, `packageId` e `emergencySessionId`;
+- Home/SOS ganhou estados explicitos para parada, camera liberada, criptografia, empacotamento, limpeza, anexo, sem midia e erro;
+- Player Seguro prepara MP4 temporario reproduzivel em cache privado/no-backup antes de tocar, com barra de preparo, TTL, limpeza ao fechar/trocar/background e limpeza de boot em Home/Arquivos;
+- loopback local fica apenas como fallback para ativos legados `js_chunked_v1`.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `npm test`: aprovado;
+- `npm run test:crypto`: aprovado;
+- `npm run test:device-keys`: aprovado;
+- `npm run private:android:readiness`: aprovado com pendencia ambiental conhecida de Node local;
+- `git diff --check`: aprovado;
+- `npm run build:android:private`: aprovado;
+- APK Android final: `android/app/build/outputs/apk/debug/app-debug.apk`;
+- SHA-256: `5e664df9a9982569a0ce05e737af01fcc105057d892438e10ffbe07ac1f28afd`.
+
+Android fisico `23129RA5FL`:
+
+- APK final instalado por USB;
+- teste curto confirmou saida visual de `CHAMADO ATIVO` em ate 0,5s, cofre com midia protegida e player abrindo fonte preparada;
+- inventario saneado confirmou 0 midias claras persistentes apos fechamento real do player;
+- teste de MP4 temporario artificial confirmou limpeza no relaunch apos estabilizacao do app.
+
+Limites:
+
+- evidencias visuais e logcat detalhado nao foram versionados por risco de identificacao; ficou apenas inventario saneado;
+- Android 60s/3min/5min e iPhone fisico ainda sao obrigatorios;
+- iOS nativo ainda nao esta aprovado para midia longa enquanto depender de leitura integral;
+- chamada P2P/anjo, upload, localizacao e conveniados continuam fora desta frente.

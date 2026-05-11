@@ -39,6 +39,8 @@ type EvidencePlayerCardProps = {
   mode?: "local" | "received";
 };
 
+const temporaryPlaybackTtlMs = 10 * 60 * 1000;
+
 export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePlayerCardProps) {
   const [previewTouched, setPreviewTouched] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -57,6 +59,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
   const playbackCacheRef = useRef(new EncryptedVideoPlaybackCache());
   const playbackDiagnosticRunRef = useRef(createMediaDiagnosticRun("playback"));
   const playbackFirstProgressTimerRef = useRef<ReturnType<typeof startMediaDiagnosticEvent> | null>(null);
+  const playbackTemporaryCleanupTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const preloadAbortRef = useRef<AbortController | null>(null);
   const selectedAssetIdRef = useRef<string | undefined>(undefined);
   const videoViewRef = useRef<VideoView | null>(null);
@@ -135,6 +138,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
         setProgress(0);
         setCurrentTimeSeconds(0);
         setDurationSeconds(0);
+        playbackCacheRef.current.deletePlayableUri(selectedAssetIdRef.current ?? "");
         void closePlaybackHandles();
       }
     });
@@ -215,8 +219,17 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
 
     try {
       await closePlaybackHandles();
-      const nativePlaybackHandle = await openNativeEncryptedAsset(selectedAsset);
-      if (nativePlaybackHandle) {
+      if (selectedAsset.encryptedVideo.storageEngine === "native_segmented_v1") {
+        const nativePrepareTimer = startMediaDiagnosticEvent(diagnosticRunId, "native_engine_playback_prepare");
+        setPreparationProgress(18);
+        const nativePlaybackHandle = await openNativeEncryptedAsset(selectedAsset);
+        nativePrepareTimer.finish(nativePlaybackHandle ? "ok" : "error", {
+          chunkCount: selectedAsset.encryptedVideo.chunkCount,
+          plaintextSizeBytes: selectedAsset.encryptedVideo.plaintextSizeBytes
+        });
+        if (!nativePlaybackHandle) {
+          throw new Error("native_playback_unavailable");
+        }
         if (abortSignal?.aborted || selectedAssetIdRef.current !== selectedAsset.id) {
           await closeNativePlaybackHandle(nativePlaybackHandle).catch(() => undefined);
           prepareTimer.finish("cancelled", undefined, new Error("playback_asset_changed"));
@@ -224,13 +237,15 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
         }
         nativePlaybackHandleRef.current = nativePlaybackHandle;
         const nextPlayableUri = nativePlaybackHandle.playableUri;
-        setPreparationProgress(100);
+        setPreparationProgress(88);
         setPlayableUri(nextPlayableUri);
+        scheduleTemporaryPlaybackCleanup(selectedAsset.id);
         await player.replaceAsync({
           contentType: "progressive",
           uri: nextPlayableUri,
           useCaching: false
         });
+        setPreparationProgress(100);
         prepareTimer.finish("ok", {
           chunkCount: selectedAsset.encryptedVideo.chunkCount,
           playbackAdapter: "native_encrypted_source",
@@ -239,6 +254,47 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
         void persistPlaybackDiagnostics(selectedAsset);
         return nextPlayableUri;
       }
+
+      const cachePrepareTimer = startMediaDiagnosticEvent(diagnosticRunId, "player_cache_prepare");
+      try {
+        const nextPlayableUri = await playbackCacheRef.current.preparePlayableUri(selectedAsset, {
+          abortSignal,
+          onProgress: ({ completedChunks, totalChunks }) => {
+            const nextProgress = totalChunks > 0 ? Math.round((completedChunks / totalChunks) * 86) : 0;
+            setPreparationProgress(Math.max(8, Math.min(94, nextProgress)));
+          }
+        });
+        cachePrepareTimer.finish("ok", {
+          chunkCount: selectedAsset.encryptedVideo.chunkCount,
+          plaintextSizeBytes: selectedAsset.encryptedVideo.plaintextSizeBytes
+        });
+        startMediaDiagnosticEvent(diagnosticRunId, "player_loopback_skipped").finish("ok", {
+          chunkCount: selectedAsset.encryptedVideo.chunkCount
+        });
+        if (abortSignal?.aborted || selectedAssetIdRef.current !== selectedAsset.id) {
+          playbackCacheRef.current.deletePlayableUri(selectedAsset.id);
+          prepareTimer.finish("cancelled", undefined, new Error("playback_asset_changed"));
+          return null;
+        }
+        setPreparationProgress(100);
+        setPlayableUri(nextPlayableUri);
+        scheduleTemporaryPlaybackCleanup(selectedAsset.id);
+        await player.replaceAsync({
+          contentType: "progressive",
+          uri: nextPlayableUri,
+          useCaching: false
+        });
+        prepareTimer.finish("ok", {
+          chunkCount: selectedAsset.encryptedVideo.chunkCount,
+          playbackAdapter: "temporary_playback_cache",
+          plaintextSizeBytes: selectedAsset.encryptedVideo.plaintextSizeBytes
+        });
+        void persistPlaybackDiagnostics(selectedAsset);
+        return nextPlayableUri;
+      } catch (cacheError) {
+        cachePrepareTimer.finish("error", undefined, cacheError);
+      }
+
       const nextSession = await loopbackServerRef.current.open(selectedAsset, abortSignal, diagnosticRunId);
       if (abortSignal?.aborted || selectedAssetIdRef.current !== selectedAsset.id) {
         await nextSession.close().catch(() => undefined);
@@ -249,6 +305,7 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
       const nextPlayableUri = nextSession.uri;
       setPreparationProgress(100);
       setPlayableUri(nextPlayableUri);
+      scheduleTemporaryPlaybackCleanup(selectedAsset.id);
       await player.replaceAsync({
         contentType: "progressive",
         uri: nextPlayableUri,
@@ -447,7 +504,35 @@ export function EvidencePlayerCard({ packageRecord, mode = "local" }: EvidencePl
     await closeNativePlaybackHandle(currentHandle).catch(() => undefined);
   }
 
+  function clearTemporaryPlaybackCleanupTimer() {
+    if (playbackTemporaryCleanupTimerRef.current) {
+      clearTimeout(playbackTemporaryCleanupTimerRef.current);
+      playbackTemporaryCleanupTimerRef.current = null;
+    }
+  }
+
+  function scheduleTemporaryPlaybackCleanup(assetId: string) {
+    clearTemporaryPlaybackCleanupTimer();
+    playbackTemporaryCleanupTimerRef.current = setTimeout(() => {
+      playbackTemporaryCleanupTimerRef.current = null;
+      if (selectedAssetIdRef.current !== assetId) return;
+
+      player.pause();
+      void player.replaceAsync(null);
+      playbackCacheRef.current.deletePlayableUri(assetId);
+      void closePlaybackHandles();
+      setPlayableUri(null);
+      setPlaying(false);
+      setProgress(0);
+      setCurrentTimeSeconds(0);
+      setDurationSeconds(0);
+      setPreparationProgress(0);
+      setPreparingPlayback(false);
+    }, temporaryPlaybackTtlMs);
+  }
+
   async function closePlaybackHandles() {
+    clearTemporaryPlaybackCleanupTimer();
     await Promise.all([closeLoopbackSession(), closeNativePlaybackSession()]);
   }
 

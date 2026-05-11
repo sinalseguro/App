@@ -2,7 +2,7 @@ import {
   encryptedVideoAlgorithm,
   encryptedVideoProtocolVersion
 } from "./VideoCryptoService";
-import type { MediaCaptureCompatibilityProfile } from "./types";
+import type { MediaCaptureCompatibilityProfile, RecipientKeyEnvelope } from "./types";
 
 type ActualCameraMode = "front" | "back";
 type RequestedCameraMode = "front" | "back" | "both";
@@ -63,7 +63,7 @@ export type EncryptedVideoManifest = {
   requestedCameraMode?: RequestedCameraMode;
   captureProfile?: MediaCaptureCompatibilityProfile;
   thumbnail: EncryptedVideoThumbnailManifest;
-  recipientKeyEnvelopes: [];
+  recipientKeyEnvelopes: RecipientKeyEnvelope[];
   chunks: EncryptedVideoChunkManifest[];
 };
 

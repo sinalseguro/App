@@ -548,6 +548,8 @@ if (
   !sinalSeguroMediaEngine.includes("encryptSegmentWithNativeMediaEngine") ||
   !sinalSeguroMediaEngine.includes("openNativeEncryptedAsset") ||
   !sinalSeguroMediaEngine.includes("cleanupNativeMediaResidues") ||
+  !sinalSeguroMediaEngine.includes("keyBase64") ||
+  !sinalSeguroMediaEngine.includes("ciphertextSha256") ||
   !sinalSeguroMediaEngine.includes("native_segmented_v1") ||
   !sinalSeguroMediaEngine.includes("native_encrypted_source")
 ) {
@@ -556,16 +558,23 @@ if (
 
 if (
   !androidMediaEngine.includes("AES/GCM/NoPadding") ||
+  !androidMediaEngine.includes("CipherOutputStream") ||
+  !androidMediaEngine.includes("CipherInputStream") ||
+  !androidMediaEngine.includes("sha256HexFile") ||
   !androidMediaEngine.includes("privateFileFromUri") ||
   !androidMediaEngine.includes("file_outside_app_private_storage") ||
   !androidMediaEngine.includes("cleanupMediaResidues") ||
-  !androidMediaEngine.includes("openEncryptedAsset")
+  !androidMediaEngine.includes("openEncryptedAsset") ||
+  androidMediaEngine.includes("val plaintext = sourceFile.readBytes()")
 ) {
-  throw new Error("Motor nativo Android precisa cifrar segmento, restringir storage privado e abrir handles saneados.");
+  throw new Error("Motor nativo Android precisa cifrar em blocos, restringir storage privado e abrir handles saneados.");
 }
 
 if (
   !iosMediaEngine.includes("AES.GCM.seal") ||
+  !iosMediaEngine.includes("AES.GCM.open") ||
+  !iosMediaEngine.includes("protectMediaFile") ||
+  !iosMediaEngine.includes("isExcludedFromBackup") ||
   !iosMediaEngine.includes("privateFileURL") ||
   !iosMediaEngine.includes("file_outside_app_private_storage") ||
   !iosMediaEngine.includes("cleanupMediaResidues") ||
@@ -636,8 +645,13 @@ if (
   throw new Error("Player criptografado precisa usar loopback local com Range e descriptografia sob demanda.");
 }
 
-if (evidencePlayerCard.includes("preparePlayableUri(")) {
-  throw new Error("EvidencePlayerCard nao pode voltar a preparar MP4 claro completo para video criptografado.");
+if (
+  !evidencePlayerCard.includes("preparePlayableUri(") ||
+  !evidencePlayerCard.includes("temporary_playback_cache") ||
+  !evidencePlayerCard.includes("player_loopback_skipped") ||
+  !evidencePlayerCard.includes("native_engine_playback_prepare")
+) {
+  throw new Error("EvidencePlayerCard precisa preparar fonte tocavel com progresso antes do play e manter loopback so como fallback.");
 }
 
 if (

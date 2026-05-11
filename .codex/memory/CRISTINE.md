@@ -766,3 +766,18 @@ Proximas acoes atualizadas:
 - APK mais recente: `distribution/android/out/sinalseguro-android.apk`, SHA-256 `d00beb8f7b551300a1f750ca059ad294f040947d796868176124eb44003df9f4`.
 - Proxima retomada: checar espaco com `df -h /`, instalar/testar esse APK ou rebuildar se houver nova mudanca, coletar screenshots imediato/2s/8s/fim, revisar logcat, residuos `.mp4` claros e timeline do player.
 - Nao avancar para UI final de chamada P2P/anjo; apenas preservar compatibilidade de captura/envelope e liberacao correta de camera/microfone para a proxima frente.
+
+## Memoria viva - 2026-05-10 - Frente 1.2 midia nativa salva
+
+- A retomada nao aplicou o pacote externo literalmente: `SinalSeguroMediaEngine` ficou como rota principal propria do app, com JS/Base64/loopback somente como fallback legado/homologacao.
+- `preserveLocalVideoAsset` agora roteia ativo novo para `native_segmented_v1` quando o modulo nativo esta disponivel; o envelope registra `aes-256-gcm`, `storageEngine`, `playbackAdapter`, `nativePlayback`, `processingState`, `captureProfile`, `keyId`, `packageId` e `emergencySessionId` opcional.
+- Android nativo passou a cifrar em blocos com AES-256-GCM, calcular hashes incrementalmente e restringir entrada/saida ao sandbox privado.
+- iOS tem template nativo AES-GCM e cache protegido/no-backup para playback, mas ainda nao deve ser aprovado para midia longa enquanto a implementacao de template usar leitura integral do arquivo.
+- `FinishProgressDialog` mostra estados explicitos de encerramento/protecao; apos camera liberada, o app pode seguir com progresso discreto e bloqueia novo SOS ate estado final ou limpeza pendente.
+- Player Seguro prepara MP4 temporario reproduzivel em cache privado, com barra de preparo, TTL de 10 minutos, limpeza ao fechar/trocar/background e limpeza de boot em Home/Arquivos.
+- Android fisico `23129RA5FL` recebeu o APK final e passou no teste curto: saida visual de `CHAMADO ATIVO` em ate 0,5s, cofre com midia protegida, player com fonte preparada e timeline funcional.
+- Inventario Android saneado confirmou 0 midias claras persistentes apos fechamento do player e limpeza de MP4 temporario artificial apos relaunch estabilizado.
+- Validacoes aprovadas: `npm run typecheck`, `npm run lint`, `npm test`, `npm run test:crypto`, `npm run test:device-keys`, `npm run private:android:readiness`, `npm run build:android:private` e `git diff --check`.
+- APK Android final desta rodada: `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `5e664df9a9982569a0ce05e737af01fcc105057d892438e10ffbe07ac1f28afd`.
+- Evidencia versionavel ficou apenas em `docs/evidencias/android/2026-05-10-frente-1-2-native/inventario-saneado.txt`; capturas PNG/XML e logcat detalhado foram removidos por conterem contexto pessoal ou risco de exposicao.
+- Proxima retomada: nao reimplementar o que ja passou; repetir Android 60s/3min/5min, iPhone fisico, logs saneados, residuos claros, tempo ate primeiro frame e liberacao de camera/microfone antes de fechar a Frente 1.2.

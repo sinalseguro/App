@@ -185,3 +185,34 @@ Risco aceito por Schneier para homologacao:
 - o video claro temporario so pode ser removido depois de manifest/chunks verificados no modo configurado;
 - o iOS fisico de homologacao registra apenas um segmento local ate a refatoracao nativa, para evitar travamento e residuo claro prolongado;
 - para producao, a decisao continua sendo migrar para criptografia nativa por segmento e player/data source nativo.
+
+## Complemento nativo 2026-05-10 - `native_segmented_v1`
+
+A Frente 1.2 passou a usar a ponte nativa como caminho principal para novos ativos quando disponivel.
+
+Contrato:
+
+- `js_chunked_v1` continua valido para ativos legados e homologacao;
+- `native_segmented_v1` usa `aes-256-gcm`, `playbackAdapter: "native_encrypted_source"` e metadados `nativePlayback`;
+- `recipientKeyEnvelopes` permanece preparatorio; nenhum envelope real de anjo foi criado nesta frente;
+- `captureProfile`, `packageId`, `keyId` e `emergencySessionId` existem para compatibilidade futura, sem chamada real, upload ou localizacao.
+
+Preservacao:
+
+- Android cifra por stream em blocos e calcula hashes de plaintext/ciphertext incrementalmente;
+- a chave fica no SecureStore e o segmento cifrado fica no sandbox privado;
+- falhas devem remover chave orfa, segmento parcial e registrar apenas erro saneado;
+- iOS tem template AES-GCM, mas ainda nao esta liberado para videos longos enquanto usar leitura integral do arquivo.
+
+Playback:
+
+- `.nseg` nao e fonte tocavel para `expo-video`;
+- o app prepara MP4 temporario em cache privado/no-backup antes do play e exibe progresso;
+- o temporario e apagado ao fechar player, trocar midia, app ir para background, expirar TTL ou na limpeza de boot;
+- loopback fica somente como fallback para `js_chunked_v1`.
+
+Checkpoint Android:
+
+- APK final validado no Android fisico curto: SHA-256 `5e664df9a9982569a0ce05e737af01fcc105057d892438e10ffbe07ac1f28afd`;
+- inventario saneado confirmou ausencia de midia clara persistente apos fechamento do player;
+- Frente 1.2 continua pendente de Android 60s/3min/5min e iPhone fisico antes de fechamento.

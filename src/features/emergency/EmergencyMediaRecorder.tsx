@@ -7,7 +7,7 @@ import { createMediaDiagnosticRun, startMediaDiagnosticEvent, summarizeMediaDiag
 import { appendMediaOperationalLog } from "./MediaOperationalLog";
 import { attachLocalMediaDiagnostics } from "./emergencyRecorder";
 import { preserveLocalVideoAsset } from "./mediaCapture";
-import type { MediaCaptureCompatibilityProfile, MediaCaptureFailureReason } from "./types";
+import type { MediaCaptureCompatibilityProfile, MediaCaptureFailureReason, MediaProcessingState } from "./types";
 
 type MediaPermissionStatus = "idle" | "requesting" | "granted" | "denied";
 type ActualCameraMode = "front" | "back";
@@ -20,6 +20,7 @@ type ActiveCaptureController = {
 };
 export type MediaStopRequestResult = {
   attachedAssets: number;
+  processingState?: MediaProcessingState;
   status: "attached" | "empty" | "error" | "idle";
 };
 
@@ -27,6 +28,7 @@ type EmergencyMediaRecorderProps = {
   activePackageId: string | null;
   preferences: EmergencyPreferences;
   onMediaAttached?: () => void;
+  onMediaProcessingStateChange?: (state: MediaProcessingState) => void;
   onStopRequestSettled?: (serial: number, result: MediaStopRequestResult) => void;
   stopRequestSerial?: number;
   onStatusChange?: (status: string) => void;
@@ -215,6 +217,7 @@ export function EmergencyMediaRecorder({
   activePackageId,
   preferences,
   onMediaAttached,
+  onMediaProcessingStateChange,
   onStopRequestSettled,
   stopRequestSerial = 0,
   onStatusChange
@@ -224,6 +227,7 @@ export function EmergencyMediaRecorder({
   const activeCaptureControllerRef = useRef<ActiveCaptureController | null>(null);
   const recordingRef = useRef(false);
   const onMediaAttachedRef = useRef(onMediaAttached);
+  const onMediaProcessingStateChangeRef = useRef(onMediaProcessingStateChange);
   const onStopRequestSettledRef = useRef(onStopRequestSettled);
   const onStatusChangeRef = useRef(onStatusChange);
   const handledStopRequestSerialRef = useRef(0);
@@ -268,6 +272,7 @@ export function EmergencyMediaRecorder({
     });
     if (!recordingRef.current) return false;
 
+    publishMediaProcessingState("stop_requested");
     const activeCaptureController = activeCaptureControllerRef.current;
     if (activeCaptureController) {
       activeCaptureController.stopRequested = true;
@@ -291,11 +296,20 @@ export function EmergencyMediaRecorder({
     onStopRequestSettledRef.current?.(serial, result);
   }
 
+  function publishMediaProcessingState(state: MediaProcessingState) {
+    appendMediaOperationalLog("capture_processing_state", {
+      platform: Platform.OS,
+      processingState: state
+    });
+    onMediaProcessingStateChangeRef.current?.(state);
+  }
+
   useEffect(() => {
     onMediaAttachedRef.current = onMediaAttached;
+    onMediaProcessingStateChangeRef.current = onMediaProcessingStateChange;
     onStopRequestSettledRef.current = onStopRequestSettled;
     onStatusChangeRef.current = onStatusChange;
-  }, [onMediaAttached, onStopRequestSettled, onStatusChange]);
+  }, [onMediaAttached, onMediaProcessingStateChange, onStopRequestSettled, onStatusChange]);
 
   useEffect(() => {
     setCameraReadyByMode(emptyCameraReadyState);
@@ -310,7 +324,7 @@ export function EmergencyMediaRecorder({
 
     handledStopRequestSerialRef.current = stopRequestSerial;
     if (!recordingRef.current) {
-      onStopRequestSettledRef.current?.(stopRequestSerial, { attachedAssets: 0, status: "idle" });
+      onStopRequestSettledRef.current?.(stopRequestSerial, { attachedAssets: 0, processingState: "no_media", status: "idle" });
       return;
     }
 
@@ -613,6 +627,8 @@ export function EmergencyMediaRecorder({
                     if (!result?.uri) {
                       throw new Error("camera_no_file_returned");
                     }
+                    publishMediaProcessingState("camera_released");
+                    publishMediaProcessingState("plaintext_detected");
                     break;
                   } catch (recordError) {
                     const elapsedMs = Date.now() - attemptStartedAtMs;
@@ -671,6 +687,7 @@ export function EmergencyMediaRecorder({
                 platform: Platform.OS,
                 segmentIndex
               });
+              publishMediaProcessingState("encrypting");
               const attachedAsset = await preserveLocalVideoAsset({
                 packageId: currentPackageId,
                 sourceUri: result.uri,
@@ -685,6 +702,7 @@ export function EmergencyMediaRecorder({
               });
               attachedAssets.push(attachedAsset);
               activeCaptureController.attachedAssetCount += 1;
+              publishMediaProcessingState("attached");
               appendMediaOperationalLog("capture_preserve_success", {
                 actualCameraMode: mode,
                 attachedAssetCount: activeCaptureController.attachedAssetCount,
@@ -699,7 +717,11 @@ export function EmergencyMediaRecorder({
                   );
                 }
                 if (activeCaptureController.stopRequested) {
-                  settleStopRequest({ attachedAssets: activeCaptureController.attachedAssetCount, status: "attached" });
+                  settleStopRequest({
+                    attachedAssets: activeCaptureController.attachedAssetCount,
+                    processingState: "attached",
+                    status: "attached"
+                  });
                 }
               }
               segmentIndex += 1;
@@ -763,6 +785,7 @@ export function EmergencyMediaRecorder({
           platform: Platform.OS,
           rejectedRecordingCount
         });
+        publishMediaProcessingState("no_media");
         const emptyDiagnosticRunId = createMediaDiagnosticRun("capture-empty");
         const emptyCaptureTimer = startMediaDiagnosticEvent(emptyDiagnosticRunId, "capture_recording");
         emptyCaptureTimer.finish(
@@ -784,6 +807,7 @@ export function EmergencyMediaRecorder({
         }
       } catch (error) {
         stopSettlementStatus = "error";
+        publishMediaProcessingState("error");
         appendMediaOperationalLog("capture_effect_error", {
           platform: Platform.OS,
           requestedCameraMode,
@@ -815,7 +839,12 @@ export function EmergencyMediaRecorder({
         if (activeCaptureControllerRef.current === activeCaptureController) {
           activeCaptureControllerRef.current = null;
         }
-        settleStopRequest({ attachedAssets: attachedAssetCount, status: stopSettlementStatus });
+        settleStopRequest({
+          attachedAssets: attachedAssetCount,
+          processingState:
+            stopSettlementStatus === "attached" ? "attached" : stopSettlementStatus === "empty" ? "no_media" : "error",
+          status: stopSettlementStatus
+        });
       }
     }
 

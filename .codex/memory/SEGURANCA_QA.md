@@ -90,3 +90,17 @@ Papel: seguranca, LGPD e QA.
 - Estados aceitaveis no cofre apos encerramento: protegido, processando, sem midia com causa saneada, falha de preservacao ou limpeza pendente.
 - Compartilhamento, upload, chamada WebRTC real e anjos seguem bloqueados; esta frente so prepara compatibilidade de envelope/camera/microfone.
 - Gates locais ja aprovados apos patch: `npm run typecheck`, `npm run lint`, `npm test -- --runInBand`, `git diff --check`.
+
+## QA/Security - 2026-05-10 - Frente 1.2 checkpoint nativo salvo
+
+- Frente 1.2 continua em homologacao privada; nao declarar concluida ate matriz Android 60s/3min/5min e iPhone fisico passarem.
+- Evidencias PNG/XML e logcat detalhado da rodada Android foram removidos por conterem tela/ambiente/risco de identificacao; somente o inventario saneado deve ser versionado.
+- Android fisico `23129RA5FL` validou o fluxo curto com APK final: saida visual de `CHAMADO ATIVO` em ate 0,5s, cofre protegido, player com preparo de fonte e timeline funcional.
+- Durante playback pode existir 1 MP4 temporario em cache privado/no-backup; a politica aceita isso apenas enquanto o player esta ativo, com limpeza no fechamento/troca/background/TTL e na entrada do app.
+- Inventario final Android confirmou 0 `.mp4/.mov/.3gp/.m4a/.wav/.webm` persistentes em cache/files apos fechamento real do player.
+- Teste de relaunch com MP4 temporario artificial confirmou limpeza apos estabilizacao do app; registrar que nao e uma promessa sincronica no primeiro frame da inicializacao.
+- Logs e diagnosticos seguem proibidos de conter URI, caminho sensivel, token, chave, nonce/tag/hash bruto, email, IP, coordenada, payload ou midia.
+- `captureProfile` e permitido apenas como metadado tecnico de camera/hardware; nao incluir localizacao nem dado pessoal.
+- Risco aberto: template iOS ainda usa leitura integral e precisa validacao fisica/memoria antes de aprovar midia longa.
+- Risco aberto antes de release: revisar ATS/iOS gerado se `NSAllowsArbitraryLoads=true` aparecer no `Info.plist`.
+- Gates aprovados nesta rodada: `typecheck`, `lint`, `test`, `test:crypto`, `test:device-keys`, `private:android:readiness`, `build:android:private` e `git diff --check`.

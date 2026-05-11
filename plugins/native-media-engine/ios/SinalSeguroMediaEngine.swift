@@ -33,7 +33,7 @@ class SinalSeguroMediaEngine: NSObject {
       let outputDirectory = try optionalString(input, "outputDirectoryUri")
         .map { try privateDirectoryURL(from: $0) }
         ?? nativeSegmentDirectory()
-      try fileManager.createDirectory(at: outputDirectory, withIntermediateDirectories: true)
+      try prepareSecureDirectory(outputDirectory)
 
       guard let keyData = Data(base64Encoded: keyBase64), keyData.count == 32 else {
         throw MediaEngineError("native_key_size_invalid")
@@ -52,6 +52,7 @@ class SinalSeguroMediaEngine: NSObject {
       sealedBytes.append(sealedBox.tag)
       let targetURL = outputDirectory.appendingPathComponent("\(safeFileStem(segmentId)).nseg")
       try sealedBytes.write(to: targetURL, options: [.atomic])
+      try protectMediaFile(targetURL)
       let sourceDeleted = deleteSource && ((try? fileManager.removeItem(at: sourceURL)) != nil)
 
       resolve([
@@ -83,12 +84,58 @@ class SinalSeguroMediaEngine: NSObject {
     rejecter reject: RCTPromiseRejectBlock
   ) {
     do {
-      guard let playableUri = optionalString(input, "playableUri") ?? optionalString(input, "sourceUri") else {
-        throw MediaEngineError("native_playable_uri_required")
+      let sourceUri = try requiredString(input, "sourceUri")
+      let assetId = try requiredString(input, "assetId")
+      let keyBase64 = try requiredString(input, "keyBase64")
+      let nonceBase64 = try requiredString(input, "nonceBase64")
+      let aad = optionalString(input, "aad") ?? ""
+      let encryptedURL = try privateFileURL(from: sourceUri)
+      guard fileManager.fileExists(atPath: encryptedURL.path) else {
+        throw MediaEngineError("native_playback_source_unavailable")
       }
-      let playableURL = try privateFileURL(from: playableUri)
-      guard fileManager.fileExists(atPath: playableURL.path) else {
-        throw MediaEngineError("native_playable_source_unavailable")
+
+      let sealedBytes = try Data(contentsOf: encryptedURL)
+      if let expectedCiphertextSha256 = optionalString(input, "ciphertextSha256"),
+         !expectedCiphertextSha256.isEmpty,
+         sha256Hex(sealedBytes) != expectedCiphertextSha256 {
+        throw MediaEngineError("native_playback_source_integrity_failed")
+      }
+
+      guard let keyData = Data(base64Encoded: keyBase64), keyData.count == 32,
+            let nonceData = Data(base64Encoded: nonceBase64), nonceData.count == 12,
+            sealedBytes.count >= 16 else {
+        throw MediaEngineError("native_playback_crypto_material_invalid")
+      }
+
+      let ciphertext = Data(sealedBytes.dropLast(16))
+      let tag = Data(sealedBytes.suffix(16))
+      if let tagBase64 = optionalString(input, "tagBase64"),
+         !tagBase64.isEmpty,
+         tag.base64EncodedString() != tagBase64 {
+        throw MediaEngineError("native_playback_tag_mismatch")
+      }
+      let sealedBox = try AES.GCM.SealedBox(
+        nonce: AES.GCM.Nonce(data: nonceData),
+        ciphertext: ciphertext,
+        tag: tag
+      )
+      let plaintext = try AES.GCM.open(
+        sealedBox,
+        using: SymmetricKey(data: keyData),
+        authenticating: Data(aad.utf8)
+      )
+
+      let playbackDirectory = cacheDirectory()
+        .appendingPathComponent("sinalseguro-native-media", isDirectory: true)
+        .appendingPathComponent("playback", isDirectory: true)
+      try prepareSecureDirectory(playbackDirectory)
+      let playableURL = playbackDirectory.appendingPathComponent("\(safeFileStem(assetId))-\(UUID().uuidString).mp4")
+      do {
+        try plaintext.write(to: playableURL, options: [.atomic])
+        try protectMediaFile(playableURL)
+      } catch {
+        try? fileManager.removeItem(at: playableURL)
+        throw error
       }
 
       let handleId = UUID().uuidString
@@ -113,7 +160,9 @@ class SinalSeguroMediaEngine: NSObject {
     resolver resolve: RCTPromiseResolveBlock,
     rejecter reject: RCTPromiseRejectBlock
   ) {
-    playbackHandles.removeValue(forKey: handleId)
+    if let playableURL = playbackHandles.removeValue(forKey: handleId) {
+      try? fileManager.removeItem(at: playableURL)
+    }
     resolve(nil)
   }
 
@@ -182,6 +231,30 @@ class SinalSeguroMediaEngine: NSObject {
     documentsDirectory()
       .appendingPathComponent("sinalseguro-native-media", isDirectory: true)
       .appendingPathComponent("segments", isDirectory: true)
+  }
+
+  private func prepareSecureDirectory(_ url: URL) throws {
+    try fileManager.createDirectory(at: url, withIntermediateDirectories: true)
+    try markExcludedFromBackup(url)
+    try? fileManager.setAttributes(
+      [.protectionKey: FileProtectionType.completeUntilFirstUserAuthentication],
+      ofItemAtPath: url.path
+    )
+  }
+
+  private func protectMediaFile(_ url: URL) throws {
+    try markExcludedFromBackup(url)
+    try? fileManager.setAttributes(
+      [.protectionKey: FileProtectionType.completeUnlessOpen],
+      ofItemAtPath: url.path
+    )
+  }
+
+  private func markExcludedFromBackup(_ url: URL) throws {
+    var resourceURL = url
+    var values = URLResourceValues()
+    values.isExcludedFromBackup = true
+    try? resourceURL.setResourceValues(values)
   }
 
   private func documentsDirectory() -> URL {

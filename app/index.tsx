@@ -24,7 +24,8 @@ import {
 } from "@/features/emergency/emergencyRecorder";
 import { createMediaDiagnosticRun, summarizeMediaDiagnostics } from "@/features/emergency/MediaDiagnostics";
 import { appendMediaOperationalLog } from "@/features/emergency/MediaOperationalLog";
-import type { MediaCaptureFailureReason } from "@/features/emergency/types";
+import { cleanupNativeMediaResidues } from "@/features/emergency/SinalSeguroMediaEngine";
+import type { MediaCaptureFailureReason, MediaProcessingState } from "@/features/emergency/types";
 import {
   defaultEmergencyPreferences,
   EmergencyPreferences,
@@ -52,7 +53,7 @@ type PendingMediaStopRequest = {
   timeout: ReturnType<typeof setTimeout>;
 };
 
-type FinishProgressStatus = "idle" | "running" | "done" | "warning" | "error";
+type FinishProgressStatus = "idle" | "running" | "background" | "done" | "warning" | "error";
 
 type FinishProgressState = {
   detail: string;
@@ -241,6 +242,79 @@ export default function HomeScreen() {
     }));
   }
 
+  function handleMediaProcessingStateChange(state: MediaProcessingState) {
+    if (!mediaStopPendingRef.current) return;
+
+    switch (state) {
+      case "stop_requested":
+        showFinishProgress({
+          detail: "Camera sinalizada para encerrar. Aguarde a liberacao do microfone e da camera.",
+          progress: 22,
+          status: "running",
+          title: "Encerrando gravacao"
+        });
+        return;
+      case "camera_released":
+        setRecordingStatus("Camera e microfone liberados. Video local segue em protecao.");
+        showFinishProgress({
+          detail: "Camera e microfone foram liberados. A criptografia continua em segundo plano controlado.",
+          progress: 42,
+          status: "background",
+          title: "Camera desligada"
+        });
+        return;
+      case "plaintext_detected":
+        showFinishProgress({
+          detail: "Arquivo temporario localizado. Iniciando empacotamento seguro.",
+          progress: 50,
+          status: "background",
+          title: "Empacotando video"
+        });
+        return;
+      case "encrypting":
+      case "packaging":
+        showFinishProgress({
+          detail: "Criptografando o video local antes de anexar ao cofre.",
+          progress: 68,
+          status: "background",
+          title: "Criptografando"
+        });
+        return;
+      case "cleanup":
+        showFinishProgress({
+          detail: "Removendo arquivo temporario claro e conferindo o cofre.",
+          progress: 86,
+          status: "background",
+          title: "Limpando temporarios"
+        });
+        return;
+      case "attached":
+        showFinishProgress({
+          detail: "Midia protegida e cofre atualizado.",
+          progress: 100,
+          status: "done",
+          title: "Video protegido"
+        });
+        return;
+      case "no_media":
+        showFinishProgress({
+          detail: "A camera encerrou sem devolver arquivo. O cofre mostra a causa tecnica saneada.",
+          progress: 100,
+          status: "warning",
+          title: "Chamado salvo sem video"
+        });
+        return;
+      case "error":
+        showFinishProgress({
+          detail: "Falha tecnica saneada durante a preservacao. Revise o cofre antes de novo teste.",
+          progress: 100,
+          status: "error",
+          title: "Falha na midia"
+        });
+        return;
+    }
+  }
+
   async function persistFinishNoMediaDiagnostic(packageId: string, reason: MediaCaptureFailureReason) {
     const diagnosticRunId = createMediaDiagnosticRun("capture-finish");
     await attachLocalMediaDiagnostics(packageId, {
@@ -293,6 +367,7 @@ export default function HomeScreen() {
       async function prepareScreen() {
         const nextPreferences = await getEmergencyPreferences();
         setPreferences(nextPreferences);
+        await cleanupNativeMediaResidues().catch(() => undefined);
         await refreshOutboxCount();
       }
 
@@ -485,7 +560,7 @@ export default function HomeScreen() {
         showFinishProgress({
           detail: "Chamado ja saiu do modo ativo. Criptografando e anexando a midia no cofre local.",
           progress: 58,
-          status: "running",
+          status: "background",
           title: "Criptografando video"
         });
       } else {
@@ -709,6 +784,7 @@ export default function HomeScreen() {
             activePackageId={mediaRecorderPackageId}
             preferences={preferences}
             onMediaAttached={refreshOutboxCount}
+            onMediaProcessingStateChange={handleMediaProcessingStateChange}
             onStopRequestSettled={handleMediaStopRequestSettled}
             stopRequestSerial={stopRecordingRequestSerial}
             onStatusChange={setRecordingStatus}

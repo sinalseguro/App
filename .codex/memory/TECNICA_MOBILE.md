@@ -53,3 +53,16 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Validacoes locais aprovadas antes da interrupcao: `npm run typecheck`, `npm run lint`, `npm test -- --runInBand`, `git diff --check`.
 - APK atual para validacao fisica: `distribution/android/out/sinalseguro-android.apk`, SHA-256 `d00beb8f7b551300a1f750ca059ad294f040947d796868176124eb44003df9f4`.
 - A correcao final ainda nao foi validada no aparelho; nao avancar arquitetura nem rede de anjos antes do teste fisico Android/iPhone.
+
+## Atualizacao tecnica - 2026-05-10 - rota nativa salva
+
+- `mediaCapture.preserveLocalVideoAsset` virou roteador: usa `SinalSeguroMediaEngine` para ativos novos quando disponivel e conserva o store JS por chunks como fallback legado.
+- Contrato de midia foi versionado para `xchacha20poly1305` legado e `aes-256-gcm` nativo, com `processingState`, `storageEngine`, `playbackAdapter` e metadados futuros de envelope por destinatario.
+- Android Kotlin deixou de usar leitura integral por `readBytes` e processa cifragem com stream em blocos, hashes incrementais e arquivos restritos ao sandbox privado.
+- `openEncryptedAsset` nativo prepara um MP4 temporario reproduzivel em `cache/sinalseguro-native-media/playback` para o `expo-video`; `.nseg` nunca e entregue diretamente como fonte de video.
+- `EvidencePlayerCard` diferencia fonte nativa, cache temporario e loopback legado; mostra preparo antes do play, agenda TTL de 10 minutos e limpa handle/cache em fechar, troca, background e timer.
+- Home e Arquivos chamam `cleanupNativeMediaResidues()` na entrada para cobrir force stop/relaunch e temporarios nativos orfaos.
+- `EmergencyMediaRecorder` emite estados explicitos de processamento para a UX de encerramento e para o cofre.
+- `scripts/smoke-test.mjs` foi atualizado para bloquear regressao do caminho nativo, do cache de playback e da regra de loopback como fallback.
+- Build Android privado final aprovado e instalado: `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `5e664df9a9982569a0ce05e737af01fcc105057d892438e10ffbe07ac1f28afd`.
+- Limite tecnico aberto: iOS nativo ainda precisa trocar leitura integral por fluxo segmentado antes de ser aprovado para videos longos.

@@ -4,11 +4,12 @@ import { base64ToBytes, bytesToBase64, bytesToHex, utf8ToBytes } from "./videoBy
 
 export const encryptedVideoProtocolVersion = "sinalseguro.encrypted-video.v1" as const;
 export const encryptedVideoAlgorithm = "xchacha20poly1305" as const;
+export const nativeEncryptedVideoAlgorithm = "aes-256-gcm" as const;
 export const encryptedVideoKeyBytes = 32;
 export const encryptedVideoNonceBytes = 24;
 export const encryptedVideoTagBytes = 16;
 
-export type EncryptedVideoAlgorithm = typeof encryptedVideoAlgorithm;
+export type EncryptedVideoAlgorithm = typeof encryptedVideoAlgorithm | typeof nativeEncryptedVideoAlgorithm;
 
 export type VideoCryptoRandomSource = {
   getRandomBytes: (byteCount: number) => Uint8Array;

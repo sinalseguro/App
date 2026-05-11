@@ -322,7 +322,8 @@ export class EncryptedVideoStore {
         durationMs: null,
         captureProfile,
         recipientKeyEnvelopes: [],
-        playbackAdapter: "range_data_source_required"
+        playbackAdapter: "range_data_source_required",
+        processingState: "attached"
       };
 
       const verifyTimer = startMediaDiagnosticEvent(diagnosticRunId, "preserve_verify");

@@ -33,22 +33,23 @@ Cristine é a gerente AI mobile. Ela mantém compatibilidade de memória com Zé
 
 ## Checkpoint atual
 
-Fase vigente: Frente 1.2 de midia critica em checkpoint de interrupcao. Implementacao local validada por gates, mas ainda nao declarar concluida ate instalar e testar fisicamente o APK novo em Android e repetir no iPhone.
+Fase vigente: Frente 1.2 de midia critica em homologacao privada. A rota nativa principal foi implementada e o Android fisico passou no teste curto, mas a frente nao esta concluida ate repetir a matriz longa Android e o iPhone fisico.
 
 Estado:
-- SOS e Cofre/Player seguem com UX base aprovada; as mudancas desta frente foram restritas ao encerramento, feedback de progresso, captura/preservacao e timeline do player.
-- Roberto confirmou que o bug de demora ao encerrar persistia no Android e no iPhone; esta retomada corrigiu a saida visual imediata do chamado ativo e manteve a camera anexando midia em paralelo.
-- Home/SOS usa `FinishProgressDialog` para informar encerramento/protecao da midia e bloqueia novo SOS enquanto ha midia pendente.
-- Android e iOS usam perfil conservador de homologacao: segmentos de 12s, 480p, bitrate alvo 650 kbps e metadados de compatibilidade de camera/hardware.
-- `LocalMediaAsset`, manifesto e envelope cifrado aceitam `captureProfile` para preparar P2P futuro sem implementar chamada real.
-- `Cofre` diferencia protegido, processando e sem midia com causa saneada.
-- `EvidencePlayerCard` recebeu ajuste de sincronismo de timeline nos segundos iniciais.
-- `SecureJsonStore` e `emergencyRecorder` evitam varredura de todos os pacotes ao finalizar/anexar/diagnosticar pacote especifico.
-- Frente 1.1 gera chave Ed25519 por dispositivo, guarda a chave privada somente no SecureStore e envia a API apenas chave publica/hash, metadados saneados e prova de posse.
-- Backend publicado exige `key_proof`, rejeita assinatura invalida quando aplicavel e registra rotacao/perda por endpoint dedicado.
-- Android fisico e iPhone fisico validaram Google Sign-In, JWT interno, SecureStore e dispositivo autenticado com `key_algorithm=ed25519-v1`.
-- Build iOS privado corrigido deve usar `npm run prepare:build:ios:secure-config` e `-xcconfig /private/tmp/sinalseguro-ios-secrets.xcconfig` para evitar URL scheme Google vazio no `Info.plist`.
-- APK privado mais recente gerado apos a correcao: `distribution/android/out/sinalseguro-android.apk`, SHA-256 `d00beb8f7b551300a1f750ca059ad294f040947d796868176124eb44003df9f4`.
-- Esse APK ainda precisa de instalacao/validacao fisica final; o teste anterior mostrou modal preso em 24% e topo ainda como `CHAMADO ATIVO`, antes da ultima correcao de segmentacao Android + saida visual imediata.
-- Retomada obrigatoria: ler `docs/28_RETOMADA_SEM_REDUNDANCIA.md` e `docs/03_TIMELINE.md`, checar `df -h /`, instalar/testar o APK novo, coletar screenshots imediato/2s/8s/fim, revisar logcat saneado e residuos claros.
-- Nao iniciar a UI final de chamada P2P/anjo nesta frente; manter apenas compatibilidade de captura/envelope e liberacao correta de camera/microfone para a frente seguinte.
+- `SinalSeguroMediaEngine` e a rota `native_segmented_v1` sao o caminho principal para ativos novos; JS/Base64/loopback ficam como fallback legado/homologacao para `js_chunked_v1`.
+- Android nativo usa AES-256-GCM com processamento em blocos, hashes incrementais, storage privado e limpeza de residuos nativos.
+- iOS tem template nativo AES-GCM sincronizado pelo plugin, mas ainda nao esta aprovado para midia longa enquanto depender de leitura integral em memoria.
+- Home/SOS usa `FinishProgressDialog` com estados explicitos de parada, camera liberada, criptografia, empacotamento, limpeza, anexo, sem midia e erro.
+- Ao encerrar, a tela sai de `CHAMADO ATIVO` rapidamente; o processamento restante continua como progresso discreto/bloqueio de novo SOS ate estado final ou limpeza pendente.
+- `LocalMediaAsset`, manifesto e envelope cifrado aceitam `captureProfile`, `storageEngine`, `playbackAdapter`, `nativePlayback`, `processingState`, `keyId`, `packageId`, `emergencySessionId` opcional e escopo futuro de envelope por destinatario.
+- Player Seguro nao envia `.nseg` direto ao `expo-video`; prepara MP4 temporario em cache privado/no-backup, exibe barra de preparo, agenda TTL de 10 minutos e apaga ao fechar, trocar midia, ir para background ou na limpeza de boot.
+- Home e Arquivos executam `cleanupNativeMediaResidues()` na entrada para remover temporarios nativos orfaos apos relaunch/force stop.
+- Cofre diferencia protegido, processando, sem midia com causa saneada, falha de preservacao e limpeza pendente.
+- Evidencia Android fisica saneada em `docs/evidencias/android/2026-05-10-frente-1-2-native/inventario-saneado.txt`; PNG/XML/logcat com rosto, ambiente ou dados pessoais foram removidos e nao devem ser versionados.
+- Android fisico `23129RA5FL`: APK final instalado, SOS curto saiu visualmente de `CHAMADO ATIVO` em ate 0,5s, cofre recebeu midia protegida, player abriu fonte temporaria preparada e timeline funcionou.
+- Inventario Android confirmou 0 midias claras persistentes apos fechamento real do player; teste com MP4 temporario artificial confirmou limpeza no relaunch apos estabilizacao do app.
+- APK Android validado nesta rodada: `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `5e664df9a9982569a0ce05e737af01fcc105057d892438e10ffbe07ac1f28afd`.
+- Gates locais aprovados nesta rodada: `npm run typecheck`, `npm run lint`, `npm test`, `npm run test:crypto`, `npm run test:device-keys`, `npm run private:android:readiness`, `git diff --check` e `npm run build:android:private`.
+- Frente 1.1 permanece fechada/intocada; Ed25519 segue para identidade/prova de dispositivo, e envelopes futuros de midia ainda exigirao chave/acordo criptografico apropriado.
+- Pendencias antes de avancar: repetir Android 60s/3min/5min, repetir iPhone fisico, revisar logs saneados, residuos claros, tempo ate primeiro frame, camera/microfone liberados e risco ATS iOS antes de release.
+- Nao iniciar UI final de chamada P2P/anjo, upload, localizacao, conveniados ou compartilhamento real nesta frente; manter apenas compatibilidade de captura/envelope/camera/microfone para as frentes seguintes.

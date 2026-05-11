@@ -21,6 +21,7 @@ import {
 } from "@/features/emergency/emergencyPreferences";
 import { finishEmergencyPackage } from "@/features/emergency/emergencyRecorder";
 import { runPlaintextMediaStorageMaintenance } from "@/features/emergency/PlaintextMediaResidueCleaner";
+import { cleanupNativeMediaResidues } from "@/features/emergency/SinalSeguroMediaEngine";
 import { EmergencyPackage } from "@/features/emergency/types";
 import { isProtectedAccessUnlocked, verifySecurityCodeStatus } from "@/security/protectedAccess";
 import { checkAppUpdate } from "@/services/appUpdateService";
@@ -79,6 +80,7 @@ export default function LocalFilesScreen() {
 
       setAccessReady(true);
       setStatus("Verificando residuos de midia local...");
+      await cleanupNativeMediaResidues().catch(() => undefined);
       const maintenance = await runPlaintextMediaStorageMaintenance().catch(() => null);
       const maintenanceStatus = maintenance
         ? maintenance.migrationBlockedCount > 0 || maintenance.blockedReferencedCount > 0
