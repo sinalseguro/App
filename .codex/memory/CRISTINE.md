@@ -847,3 +847,13 @@ Proximas acoes atualizadas:
 - Gates aprovados: `test:profiles`, `typecheck`, `lint`, `smoke-test`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
 - Checkpoint: `docs/38_CHECKPOINT_ABERTURA_FRENTE_1_3_PERFIS_PAPEIS_2026-05-13.md`.
 - Proximo passo: backend server-side para perfis, responsavel-protegido, autorizacoes por escopo e bloqueios de menoridade.
+
+## Memoria viva - 2026-05-13 - backend da Frente 1.3 publicado
+
+- Backend server-side de perfis/autorizacoes implementado e publicado na EC2 do SinalSeguro.
+- `profiles` adiciona perfil da conta, protegido, vinculo responsavel-protegido e autorizacao por escopo.
+- Convite backend exige perfil permitido; menor protegido e perfil ausente bloqueiam; responsavel por menor exige protegido/vinculo/autorizacao ativos.
+- `can_receive_media`, `can_receive_location`, key envelopes e P2P seguem bloqueados nesta frente.
+- App Android sincroniza perfil local com `/api/profiles/me` antes de criar convite backend.
+- Checkpoint: `docs/39_CHECKPOINT_FRENTE_1_3_BACKEND_PERFIS_AUTORIZACOES_2026-05-13.md`.
+- Proximo passo: build/install Android privado e validacao visual/manual contra EC2 real.

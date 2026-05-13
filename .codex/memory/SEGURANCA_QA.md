@@ -162,3 +162,14 @@ Papel: seguranca, LGPD e QA.
 - Compartilhamento real, P2P, upload, localizacao ao vivo e conveniados continuam bloqueados.
 - Gates aprovados na abertura: `npm run test:profiles`, `npm run typecheck`, `npm run lint`, `node scripts/smoke-test.mjs`, `npm test`, `npm run private:android:readiness` condicionado e `git diff --check`.
 - Para fechar a frente ainda faltam backend server-side de papeis/autorizacoes, validacao visual/manual e aceite de Roberto.
+
+## QA/Security - 2026-05-13 - Frente 1.3 backend
+
+- Perfil ausente/`unknown` bloqueia convite e aceite sensivel no backend.
+- Menor protegido nao cria convite e nao aceita atuar como anjo.
+- Responsavel por menor exige protegido ativo, vinculo ativo e autorizacao ativa para criar rede do menor.
+- `can_receive_media=True` e `can_receive_location=True` sao rejeitados no backend nesta frente.
+- `ConsentRecord.evidence` rejeita chaves sensiveis como CPF, documento, nascimento, endereco, localizacao, midia e relato.
+- `KeyEnvelopeSerializer` e `P2PSignalSerializer` bloqueiam criacao ate frente propria de autorizacao/midia/P2P.
+- Backup logico criado antes do deploy na EC2 e migrations aplicadas com readiness publico `database=ok`.
+- Testes Django cobrem perfil ausente, menor criando/aceitando, responsavel sem autorizacao, autorizacao ativa, consentimento sensivel, key envelope e P2P bloqueados.

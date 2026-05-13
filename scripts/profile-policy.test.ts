@@ -21,7 +21,8 @@ assert.equal(canCreateTrustedContactInvitation(adult).allowed, true);
 assert.equal(canCreateTrustedContactInvitation(minor).allowed, false);
 assert.equal(canCreateTrustedContactInvitation(minor).code, "minor_cannot_invite");
 assert.equal(canCreateTrustedContactInvitation(responsibleWithoutMinor).allowed, false);
-assert.equal(canCreateTrustedContactInvitation(responsibleWithMinor).allowed, true);
+assert.equal(canCreateTrustedContactInvitation(responsibleWithMinor).allowed, false);
+assert.equal(canCreateTrustedContactInvitation(responsibleWithMinor).code, "responsible_minor_missing");
 
 assert.equal(canAcceptAngelInvitation(null).allowed, false);
 assert.equal(canAcceptAngelInvitation(minor).allowed, false);

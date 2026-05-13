@@ -47,22 +47,22 @@ export const profileOptions: Array<{
   {
     kind: "adult_self_managed",
     label: "Sou adulto usando para mim",
-    description: "Permite preparar convites da propria rede de apoio."
+    description: "Permite preparar convites da própria rede de apoio."
   },
   {
     kind: "responsible_with_minor",
-    label: "Sou responsavel por menor",
-    description: "Permite autorizar contatos para um protegido menor, sem coletar dados sensiveis."
+    label: "Sou responsável por menor",
+    description: "Prepara a vinculação do protegido sem coletar documentos ou dados sensíveis."
   },
   {
     kind: "minor_protected",
     label: "Sou menor protegido",
-    description: "Mantem SOS local, mas bloqueia convite e atuacao como anjo."
+    description: "Mantém SOS local, mas bloqueia convite e atuação como anjo."
   },
   {
     kind: "responsible_without_minor",
-    label: "Responsavel sem menor vinculado",
-    description: "Estado conservador ate existir protegido menor nesta configuracao."
+    label: "Responsável sem menor vinculado",
+    description: "Estado conservador até existir protegido menor nesta configuração."
   }
 ];
 
@@ -103,15 +103,15 @@ export function isProtectionProfile(value: unknown): value is ProtectionProfile 
 }
 
 export function getProfileLabel(profile: ProtectionProfile | null) {
-  if (!profile) return "Perfil nao definido";
-  return profileOptions.find((option) => option.kind === profile.kind)?.label ?? "Perfil em revisao";
+  if (!profile) return "Perfil não definido";
+  return profileOptions.find((option) => option.kind === profile.kind)?.label ?? "Perfil em revisão";
 }
 
 export function getProfileSummary(profile: ProtectionProfile | null) {
   if (!profile) {
     return {
       text: "Configure quem usa este aparelho antes de criar rede de apoio.",
-      title: "Perfil nao definido",
+      title: "Perfil não definido",
       tone: "warning" as const
     };
   }
@@ -135,14 +135,14 @@ export function getProfileSummary(profile: ProtectionProfile | null) {
   if (profile.kind === "responsible_with_minor") {
     return {
       text: "Responsavel pode autorizar contatos para o menor, com escopos e revogacao.",
-      title: "Responsavel por menor",
-      tone: "secure" as const
+      title: "Responsável por menor",
+      tone: "warning" as const
     };
   }
 
   return {
     text: "Adicione o protegido menor antes de autorizar contatos.",
-    title: "Responsavel sem menor",
+    title: "Responsável sem menor",
     tone: "warning" as const
   };
 }
@@ -170,11 +170,11 @@ export function canCreateTrustedContactInvitation(profile: ProtectionProfile | n
 
   if (profile.kind === "responsible_with_minor") {
     return {
-      allowed: true,
-      code: "responsible_minor_allowed",
-      title: "Convite permitido",
-      message: "Responsavel pode autorizar contatos para o menor nesta etapa controlada.",
-      tone: "secure"
+      allowed: false,
+      code: "responsible_minor_missing",
+      title: "Autorização pendente",
+      message: "Responsavel precisa de protegido, vinculo e autorizacao ativos na API antes de criar convite.",
+      tone: "warning"
     };
   }
 

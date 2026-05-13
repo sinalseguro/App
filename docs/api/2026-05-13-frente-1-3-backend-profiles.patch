@@ -1,0 +1,1197 @@
+diff -ruN --exclude=.venv --exclude=__pycache__ --exclude=.pytest_cache --exclude=db.sqlite3 --exclude=staticfiles --exclude=media /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/README.md services/api/README.md
+--- /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/README.md	2026-05-09 08:42:28
++++ services/api/README.md	2026-05-13 17:17:58
+@@ -18,6 +18,10 @@
+ - `/api/devices/`
+ - `POST /api/devices/{id}/rotate-key/`
+ - `POST /api/devices/{id}/mark-lost/`
++- `GET/PATCH /api/profiles/me`
++- `/api/protected-subjects/`
++- `/api/responsible-links/`
++- `/api/profile-authorizations/`
+ - `/api/trusted-contacts/`
+ - `/api/invitations/`
+ - `POST /api/invitations/accept`
+@@ -72,6 +76,7 @@
+ 
+ - `accounts`: usuario por e-mail, papeis internos e equipe administrativa.
+ - `devices`: registro de dispositivo, push token futuro, chave publica Ed25519, prova de posse, rotacao, revogacao e perda de aparelho.
++- `profiles`: perfis protegidos, responsaveis, protegidos menores, vinculos e autorizacoes por escopo.
+ - `trusted_contacts`: anjos e convites opacos.
+ - `consents`: consentimentos versionados por escopo.
+ - `emergency`: sessoes de emergencia, envelopes de chave e sinalizacao P2P.
+@@ -128,6 +133,18 @@
+ - Registros legados por hash podem enviar `replaces_public_key_sha256` para migrar o mesmo dispositivo autenticado para Ed25519.
+ - Revogacao por logout, manual, rotacao ou perda fica registrada por motivo saneado; logs e auditoria nao devem guardar chave privada, token, e-mail pessoal, IP em claro ou payload sensivel.
+ - Key envelopes nao retornam `encrypted_key` em listagens comuns.
++- Frente 1.3: perfil ausente/indefinido bloqueia convite; menor protegido nao cria convite nem atua como anjo; responsavel por menor exige protegido ativo, vinculo ativo e autorizacao ativa.
++- Frente 1.3: `trusted_contacts` nao aceita `can_receive_media=True` nem `can_receive_location=True`; key envelopes e sinalizacao P2P seguem bloqueados ate frente propria.
++
++## Estado validado em 2026-05-13 - Frente 1.3
++
++- App `profiles` publicado em producao com migration `profiles.0001_initial`.
++- `trusted_contacts.0002_profile_subject_and_location_default` aplicado em producao.
++- Backup logico pre-deploy: `/opt/sinalseguro-api/backups/sinalseguro_prod_before_front13_20260513-201501.dump`.
++- API publica `https://api.sinalseguro.com.br/api/health`: `ok`.
++- Readiness publica `https://api.sinalseguro.com.br/api/health/ready`: `database=ok`.
++- `GET /api/profiles/me` sem token retorna `401`, confirmando rota ativa e protegida.
++- `nginx -t`, `cereusia-crm` e hash de `cereusia.conf` validados pelo script `infra/aws/deploy-api.sh`.
+ 
+ ## Estado validado em 2026-05-07
+ 
+diff -ruN --exclude=.venv --exclude=__pycache__ --exclude=.pytest_cache --exclude=db.sqlite3 --exclude=staticfiles --exclude=media /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/consents/serializers.py services/api/consents/serializers.py
+--- /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/consents/serializers.py	2026-05-05 20:43:02
++++ services/api/consents/serializers.py	2026-05-13 17:09:10
+@@ -1,6 +1,7 @@
+ from rest_framework import serializers
+ 
+ from .models import ConsentRecord
++from profiles.serializers import validate_minimized_evidence
+ 
+ 
+ class ConsentRecordSerializer(serializers.ModelSerializer):
+@@ -13,6 +14,9 @@
+         if value and value.owner != self.context["request"].user:
+             raise serializers.ValidationError("Dispositivo indisponivel para esta conta.")
+         return value
++
++    def validate_evidence(self, value):
++        return validate_minimized_evidence(value)
+ 
+     def create(self, validated_data):
+         return ConsentRecord.objects.create(user=self.context["request"].user, **validated_data)
+diff -ruN --exclude=.venv --exclude=__pycache__ --exclude=.pytest_cache --exclude=db.sqlite3 --exclude=staticfiles --exclude=media /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/emergency/serializers.py services/api/emergency/serializers.py
+--- /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/emergency/serializers.py	2026-05-05 20:41:58
++++ services/api/emergency/serializers.py	2026-05-13 17:09:10
+@@ -53,6 +53,9 @@
+             "encrypted_key": {"write_only": True},
+         }
+ 
++    def validate(self, attrs):
++        raise serializers.ValidationError("Envelope de chave para midia/P2P continua bloqueado nesta frente.")
++
+     def validate_emergency_session(self, value):
+         if value.owner != self.context["request"].user:
+             raise serializers.ValidationError("Sessao indisponivel para esta conta.")
+@@ -81,6 +84,9 @@
+         ]
+         read_only_fields = ["id", "sender", "consumed_at", "created_at"]
+ 
++    def validate(self, attrs):
++        raise serializers.ValidationError("Sinalizacao P2P continua bloqueada nesta frente.")
++
+     def validate_emergency_session(self, value):
+         user = self.context["request"].user
+         if value.owner != user and not value.key_envelopes.filter(recipient=user).exists():
+@@ -89,4 +95,3 @@
+ 
+     def create(self, validated_data):
+         return P2PSignal.objects.create(sender=self.context["request"].user, **validated_data)
+-
+diff -ruN --exclude=.venv --exclude=__pycache__ --exclude=.pytest_cache --exclude=db.sqlite3 --exclude=staticfiles --exclude=media /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/profiles/__init__.py services/api/profiles/__init__.py
+--- /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/profiles/__init__.py	1969-12-31 21:00:00
++++ services/api/profiles/__init__.py	2026-05-13 17:08:18
+@@ -0,0 +1 @@
++
+diff -ruN --exclude=.venv --exclude=__pycache__ --exclude=.pytest_cache --exclude=db.sqlite3 --exclude=staticfiles --exclude=media /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/profiles/admin.py services/api/profiles/admin.py
+--- /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/profiles/admin.py	1969-12-31 21:00:00
++++ services/api/profiles/admin.py	2026-05-13 17:08:18
+@@ -0,0 +1,34 @@
++from django.contrib import admin
++
++from .models import ProfileAuthorization, ProtectedSubject, ResponsibleLink, UserProfile
++
++
++@admin.register(UserProfile)
++class UserProfileAdmin(admin.ModelAdmin):
++    list_display = ("user", "kind", "status", "policy_version", "updated_at")
++    list_filter = ("kind", "status", "policy_version")
++    readonly_fields = ("id", "configured_at", "updated_at")
++    search_fields = ("user__email", "user__display_name")
++
++
++@admin.register(ProtectedSubject)
++class ProtectedSubjectAdmin(admin.ModelAdmin):
++    list_display = ("display_label", "guardian", "status", "policy_version", "updated_at")
++    list_filter = ("status", "policy_version")
++    readonly_fields = ("id", "created_at", "updated_at")
++    search_fields = ("display_label", "guardian__email")
++
++
++@admin.register(ResponsibleLink)
++class ResponsibleLinkAdmin(admin.ModelAdmin):
++    list_display = ("responsible", "protected_subject", "status", "policy_version", "updated_at")
++    list_filter = ("status", "policy_version")
++    readonly_fields = ("id", "created_at", "updated_at", "revoked_at")
++    search_fields = ("responsible__email", "protected_subject__display_label")
++
++
++@admin.register(ProfileAuthorization)
++class ProfileAuthorizationAdmin(admin.ModelAdmin):
++    list_display = ("scope", "status", "responsible_link", "version", "expires_at", "updated_at")
++    list_filter = ("scope", "status", "version")
++    readonly_fields = ("id", "created_at", "updated_at", "revoked_at")
+diff -ruN --exclude=.venv --exclude=__pycache__ --exclude=.pytest_cache --exclude=db.sqlite3 --exclude=staticfiles --exclude=media /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/profiles/apps.py services/api/profiles/apps.py
+--- /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/profiles/apps.py	1969-12-31 21:00:00
++++ services/api/profiles/apps.py	2026-05-13 17:08:18
+@@ -0,0 +1,6 @@
++from django.apps import AppConfig
++
++
++class ProfilesConfig(AppConfig):
++    default_auto_field = "django.db.models.BigAutoField"
++    name = "profiles"
+diff -ruN --exclude=.venv --exclude=__pycache__ --exclude=.pytest_cache --exclude=db.sqlite3 --exclude=staticfiles --exclude=media /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/profiles/migrations/0001_initial.py services/api/profiles/migrations/0001_initial.py
+--- /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/profiles/migrations/0001_initial.py	1969-12-31 21:00:00
++++ services/api/profiles/migrations/0001_initial.py	2026-05-13 17:12:00
+@@ -0,0 +1,169 @@
++# Generated for SinalSeguro Frente 1.3 profile gates.
++
++import django.db.models.deletion
++import uuid
++from django.conf import settings
++from django.db import migrations, models
++
++
++class Migration(migrations.Migration):
++    initial = True
++
++    dependencies = [
++        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
++    ]
++
++    operations = [
++        migrations.CreateModel(
++            name="ProtectedSubject",
++            fields=[
++                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
++                ("display_label", models.CharField(max_length=120)),
++                (
++                    "status",
++                    models.CharField(
++                        choices=[("active", "Ativo"), ("pending", "Pendente"), ("revoked", "Revogado")],
++                        default="pending",
++                        max_length=16,
++                    ),
++                ),
++                ("policy_version", models.CharField(default="frente-1.3-mvp-2026-05-13", max_length=64)),
++                ("created_at", models.DateTimeField(auto_now_add=True)),
++                ("updated_at", models.DateTimeField(auto_now=True)),
++                (
++                    "guardian",
++                    models.ForeignKey(
++                        on_delete=django.db.models.deletion.CASCADE,
++                        related_name="protected_subjects",
++                        to=settings.AUTH_USER_MODEL,
++                    ),
++                ),
++            ],
++            options={"ordering": ["display_label"]},
++        ),
++        migrations.CreateModel(
++            name="UserProfile",
++            fields=[
++                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
++                (
++                    "kind",
++                    models.CharField(
++                        choices=[
++                            ("unknown", "Indefinido"),
++                            ("adult_self", "Adulto protegido"),
++                            ("guardian", "Responsavel por menor"),
++                            ("minor_protected", "Menor protegido"),
++                            ("guardian_without_minor", "Responsavel sem menor vinculado"),
++                        ],
++                        default="unknown",
++                        max_length=32,
++                    ),
++                ),
++                (
++                    "status",
++                    models.CharField(choices=[("active", "Ativo"), ("revoked", "Revogado")], default="active", max_length=16),
++                ),
++                ("policy_version", models.CharField(default="frente-1.3-mvp-2026-05-13", max_length=64)),
++                ("configured_at", models.DateTimeField(auto_now_add=True)),
++                ("updated_at", models.DateTimeField(auto_now=True)),
++                (
++                    "user",
++                    models.OneToOneField(
++                        on_delete=django.db.models.deletion.CASCADE,
++                        related_name="protection_profile",
++                        to=settings.AUTH_USER_MODEL,
++                    ),
++                ),
++            ],
++            options={"ordering": ["user__email"]},
++        ),
++        migrations.CreateModel(
++            name="ResponsibleLink",
++            fields=[
++                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
++                (
++                    "status",
++                    models.CharField(
++                        choices=[("active", "Ativo"), ("pending", "Pendente"), ("revoked", "Revogado")],
++                        default="pending",
++                        max_length=16,
++                    ),
++                ),
++                ("policy_version", models.CharField(default="frente-1.3-mvp-2026-05-13", max_length=64)),
++                ("created_at", models.DateTimeField(auto_now_add=True)),
++                ("updated_at", models.DateTimeField(auto_now=True)),
++                ("revoked_at", models.DateTimeField(blank=True, null=True)),
++                (
++                    "protected_subject",
++                    models.ForeignKey(
++                        on_delete=django.db.models.deletion.CASCADE,
++                        related_name="responsible_links",
++                        to="profiles.protectedsubject",
++                    ),
++                ),
++                (
++                    "responsible",
++                    models.ForeignKey(
++                        on_delete=django.db.models.deletion.CASCADE,
++                        related_name="responsible_links",
++                        to=settings.AUTH_USER_MODEL,
++                    ),
++                ),
++            ],
++            options={"ordering": ["-created_at"]},
++        ),
++        migrations.CreateModel(
++            name="ProfileAuthorization",
++            fields=[
++                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
++                ("scope", models.CharField(choices=[("trusted_contact_network", "Rede de apoio")], max_length=48)),
++                (
++                    "status",
++                    models.CharField(
++                        choices=[("active", "Ativo"), ("pending", "Pendente"), ("revoked", "Revogado")],
++                        default="pending",
++                        max_length=16,
++                    ),
++                ),
++                ("version", models.CharField(default="frente-1.3-mvp-2026-05-13", max_length=64)),
++                ("evidence", models.JSONField(blank=True, default=dict)),
++                ("expires_at", models.DateTimeField(blank=True, null=True)),
++                ("created_at", models.DateTimeField(auto_now_add=True)),
++                ("updated_at", models.DateTimeField(auto_now=True)),
++                ("revoked_at", models.DateTimeField(blank=True, null=True)),
++                (
++                    "responsible_link",
++                    models.ForeignKey(
++                        on_delete=django.db.models.deletion.CASCADE,
++                        related_name="authorizations",
++                        to="profiles.responsiblelink",
++                    ),
++                ),
++            ],
++            options={"ordering": ["-created_at"]},
++        ),
++        migrations.AddIndex(
++            model_name="protectedsubject",
++            index=models.Index(fields=["guardian", "status"], name="profiles_pr_guardia_d48b92_idx"),
++        ),
++        migrations.AddIndex(
++            model_name="userprofile",
++            index=models.Index(fields=["kind", "status"], name="profiles_us_kind_6dfe28_idx"),
++        ),
++        migrations.AddIndex(
++            model_name="responsiblelink",
++            index=models.Index(fields=["responsible", "status"], name="profiles_re_respons_af068c_idx"),
++        ),
++        migrations.AddIndex(
++            model_name="responsiblelink",
++            index=models.Index(fields=["protected_subject", "status"], name="profiles_re_protect_a82197_idx"),
++        ),
++        migrations.AddIndex(
++            model_name="profileauthorization",
++            index=models.Index(fields=["scope", "status"], name="profiles_pr_scope_ccb710_idx"),
++        ),
++        migrations.AddIndex(
++            model_name="profileauthorization",
++            index=models.Index(fields=["expires_at"], name="profiles_pr_expires_cce188_idx"),
++        ),
++    ]
+diff -ruN --exclude=.venv --exclude=__pycache__ --exclude=.pytest_cache --exclude=db.sqlite3 --exclude=staticfiles --exclude=media /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/profiles/migrations/__init__.py services/api/profiles/migrations/__init__.py
+--- /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/profiles/migrations/__init__.py	1969-12-31 21:00:00
++++ services/api/profiles/migrations/__init__.py	2026-05-13 17:08:18
+@@ -0,0 +1 @@
++
+diff -ruN --exclude=.venv --exclude=__pycache__ --exclude=.pytest_cache --exclude=db.sqlite3 --exclude=staticfiles --exclude=media /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/profiles/models.py services/api/profiles/models.py
+--- /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/profiles/models.py	1969-12-31 21:00:00
++++ services/api/profiles/models.py	2026-05-13 17:08:18
+@@ -0,0 +1,118 @@
++import uuid
++
++from django.conf import settings
++from django.db import models
++
++
++PROFILE_POLICY_VERSION = "frente-1.3-mvp-2026-05-13"
++
++
++class UserProfile(models.Model):
++    class Kind(models.TextChoices):
++        UNKNOWN = "unknown", "Indefinido"
++        ADULT_SELF = "adult_self", "Adulto protegido"
++        GUARDIAN = "guardian", "Responsavel por menor"
++        MINOR_PROTECTED = "minor_protected", "Menor protegido"
++        GUARDIAN_WITHOUT_MINOR = "guardian_without_minor", "Responsavel sem menor vinculado"
++
++    class Status(models.TextChoices):
++        ACTIVE = "active", "Ativo"
++        REVOKED = "revoked", "Revogado"
++
++    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
++    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="protection_profile")
++    kind = models.CharField(max_length=32, choices=Kind.choices, default=Kind.UNKNOWN)
++    status = models.CharField(max_length=16, choices=Status.choices, default=Status.ACTIVE)
++    policy_version = models.CharField(max_length=64, default=PROFILE_POLICY_VERSION)
++    configured_at = models.DateTimeField(auto_now_add=True)
++    updated_at = models.DateTimeField(auto_now=True)
++
++    class Meta:
++        ordering = ["user__email"]
++        indexes = [
++            models.Index(fields=["kind", "status"]),
++        ]
++
++    def __str__(self) -> str:
++        return f"{self.user} - {self.kind}"
++
++
++class ProtectedSubject(models.Model):
++    class Status(models.TextChoices):
++        ACTIVE = "active", "Ativo"
++        PENDING = "pending", "Pendente"
++        REVOKED = "revoked", "Revogado"
++
++    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
++    guardian = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="protected_subjects")
++    display_label = models.CharField(max_length=120)
++    status = models.CharField(max_length=16, choices=Status.choices, default=Status.PENDING)
++    policy_version = models.CharField(max_length=64, default=PROFILE_POLICY_VERSION)
++    created_at = models.DateTimeField(auto_now_add=True)
++    updated_at = models.DateTimeField(auto_now=True)
++
++    class Meta:
++        ordering = ["display_label"]
++        indexes = [
++            models.Index(fields=["guardian", "status"]),
++        ]
++
++    def __str__(self) -> str:
++        return self.display_label
++
++
++class ResponsibleLink(models.Model):
++    class Status(models.TextChoices):
++        ACTIVE = "active", "Ativo"
++        PENDING = "pending", "Pendente"
++        REVOKED = "revoked", "Revogado"
++
++    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
++    responsible = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="responsible_links")
++    protected_subject = models.ForeignKey(ProtectedSubject, on_delete=models.CASCADE, related_name="responsible_links")
++    status = models.CharField(max_length=16, choices=Status.choices, default=Status.PENDING)
++    policy_version = models.CharField(max_length=64, default=PROFILE_POLICY_VERSION)
++    created_at = models.DateTimeField(auto_now_add=True)
++    updated_at = models.DateTimeField(auto_now=True)
++    revoked_at = models.DateTimeField(null=True, blank=True)
++
++    class Meta:
++        ordering = ["-created_at"]
++        indexes = [
++            models.Index(fields=["responsible", "status"]),
++            models.Index(fields=["protected_subject", "status"]),
++        ]
++
++    def __str__(self) -> str:
++        return f"{self.responsible} -> {self.protected_subject}"
++
++
++class ProfileAuthorization(models.Model):
++    class Scope(models.TextChoices):
++        TRUSTED_CONTACT_NETWORK = "trusted_contact_network", "Rede de apoio"
++
++    class Status(models.TextChoices):
++        ACTIVE = "active", "Ativo"
++        PENDING = "pending", "Pendente"
++        REVOKED = "revoked", "Revogado"
++
++    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
++    responsible_link = models.ForeignKey(ResponsibleLink, on_delete=models.CASCADE, related_name="authorizations")
++    scope = models.CharField(max_length=48, choices=Scope.choices)
++    status = models.CharField(max_length=16, choices=Status.choices, default=Status.PENDING)
++    version = models.CharField(max_length=64, default=PROFILE_POLICY_VERSION)
++    evidence = models.JSONField(default=dict, blank=True)
++    expires_at = models.DateTimeField(null=True, blank=True)
++    created_at = models.DateTimeField(auto_now_add=True)
++    updated_at = models.DateTimeField(auto_now=True)
++    revoked_at = models.DateTimeField(null=True, blank=True)
++
++    class Meta:
++        ordering = ["-created_at"]
++        indexes = [
++            models.Index(fields=["scope", "status"]),
++            models.Index(fields=["expires_at"]),
++        ]
++
++    def __str__(self) -> str:
++        return f"{self.scope} - {self.status}"
+diff -ruN --exclude=.venv --exclude=__pycache__ --exclude=.pytest_cache --exclude=db.sqlite3 --exclude=staticfiles --exclude=media /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/profiles/policies.py services/api/profiles/policies.py
+--- /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/profiles/policies.py	1969-12-31 21:00:00
++++ services/api/profiles/policies.py	2026-05-13 17:12:51
+@@ -0,0 +1,76 @@
++from dataclasses import dataclass
++
++from django.db.models import Q
++from django.utils import timezone
++
++from .models import ProfileAuthorization, ProtectedSubject, ResponsibleLink, UserProfile
++
++
++MOBILE_TO_API_KIND = {
++    "adult_self_managed": UserProfile.Kind.ADULT_SELF,
++    "minor_protected": UserProfile.Kind.MINOR_PROTECTED,
++    "responsible_without_minor": UserProfile.Kind.GUARDIAN_WITHOUT_MINOR,
++    "responsible_with_minor": UserProfile.Kind.GUARDIAN,
++}
++
++API_TO_MOBILE_KIND = {value: key for key, value in MOBILE_TO_API_KIND.items()}
++
++
++@dataclass(frozen=True)
++class GateDecision:
++    allowed: bool
++    code: str
++    message: str
++
++
++def normalize_profile_kind(kind: str) -> str:
++    return MOBILE_TO_API_KIND.get(kind, kind)
++
++
++def get_user_profile(user) -> UserProfile | None:
++    return UserProfile.objects.filter(user=user).first()
++
++
++def get_or_create_user_profile(user) -> UserProfile:
++    profile, _created = UserProfile.objects.get_or_create(user=user)
++    return profile
++
++
++def has_active_minor_authorization(user, protected_subject: ProtectedSubject | None = None) -> bool:
++    now = timezone.now()
++    queryset = ProfileAuthorization.objects.filter(
++        responsible_link__responsible=user,
++        responsible_link__status=ResponsibleLink.Status.ACTIVE,
++        responsible_link__protected_subject__status=ProtectedSubject.Status.ACTIVE,
++        scope=ProfileAuthorization.Scope.TRUSTED_CONTACT_NETWORK,
++        status=ProfileAuthorization.Status.ACTIVE,
++    ).filter(Q(expires_at__isnull=True) | Q(expires_at__gt=now))
++    if protected_subject is not None:
++        queryset = queryset.filter(responsible_link__protected_subject=protected_subject)
++    return queryset.exists()
++
++
++def can_create_trusted_contact(user, protected_subject: ProtectedSubject | None = None) -> GateDecision:
++    profile = get_user_profile(user)
++    if not profile or profile.status != UserProfile.Status.ACTIVE or profile.kind == UserProfile.Kind.UNKNOWN:
++        return GateDecision(False, "profile_missing", "Configure o perfil antes de criar convites.")
++    if profile.kind == UserProfile.Kind.ADULT_SELF:
++        if protected_subject is not None:
++            return GateDecision(False, "adult_subject_forbidden", "Adulto para si nao vincula protegido menor.")
++        return GateDecision(True, "adult_self_allowed", "Adulto protegido autorizado para rede propria.")
++    if profile.kind == UserProfile.Kind.MINOR_PROTECTED:
++        return GateDecision(False, "minor_cannot_invite", "Menor protegido nao cria convites.")
++    if profile.kind == UserProfile.Kind.GUARDIAN_WITHOUT_MINOR:
++        return GateDecision(False, "guardian_minor_missing", "Responsavel precisa de protegido menor ativo.")
++    if profile.kind == UserProfile.Kind.GUARDIAN and has_active_minor_authorization(user, protected_subject):
++        return GateDecision(True, "guardian_minor_authorized", "Responsavel autorizado para rede do menor.")
++    return GateDecision(False, "guardian_authorization_missing", "Responsavel precisa de vinculo e autorizacao ativos.")
++
++
++def can_accept_angel_invitation(user) -> GateDecision:
++    profile = get_user_profile(user)
++    if not profile or profile.status != UserProfile.Status.ACTIVE or profile.kind == UserProfile.Kind.UNKNOWN:
++        return GateDecision(False, "profile_missing", "Configure o perfil adulto antes de aceitar convite.")
++    if profile.kind == UserProfile.Kind.MINOR_PROTECTED:
++        return GateDecision(False, "minor_cannot_act_as_angel", "Menor protegido nao pode atuar como anjo.")
++    return GateDecision(True, "adult_can_accept", "Adulto com conta propria pode aceitar convite.")
+diff -ruN --exclude=.venv --exclude=__pycache__ --exclude=.pytest_cache --exclude=db.sqlite3 --exclude=staticfiles --exclude=media /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/profiles/serializers.py services/api/profiles/serializers.py
+--- /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/profiles/serializers.py	1969-12-31 21:00:00
++++ services/api/profiles/serializers.py	2026-05-13 17:08:18
+@@ -0,0 +1,123 @@
++from django.utils import timezone
++from rest_framework import serializers
++
++from .models import PROFILE_POLICY_VERSION, ProfileAuthorization, ProtectedSubject, ResponsibleLink, UserProfile
++from .policies import normalize_profile_kind
++
++
++SENSITIVE_EVIDENCE_KEYS = {
++    "address",
++    "birth_date",
++    "bo",
++    "cpf",
++    "document",
++    "document_number",
++    "full_birth_date",
++    "full_name",
++    "legal_name",
++    "location",
++    "media",
++    "nascimento",
++    "relato",
++    "rg",
++    "school",
++    "selfie",
++    "violence_report",
++}
++
++
++def validate_minimized_evidence(value):
++    if value in (None, ""):
++        return {}
++    if not isinstance(value, dict):
++        raise serializers.ValidationError("Evidencia precisa ser objeto simples.")
++    normalized_keys = {str(key).strip().lower() for key in value.keys()}
++    if normalized_keys & SENSITIVE_EVIDENCE_KEYS:
++        raise serializers.ValidationError("Evidencia contem dados sensiveis fora do escopo desta frente.")
++    return value
++
++
++class UserProfileSerializer(serializers.ModelSerializer):
++    kind = serializers.CharField()
++
++    class Meta:
++        model = UserProfile
++        fields = ["id", "kind", "status", "policy_version", "configured_at", "updated_at"]
++        read_only_fields = ["id", "status", "policy_version", "configured_at", "updated_at"]
++
++    def validate_kind(self, value):
++        normalized = normalize_profile_kind(value)
++        allowed = {choice[0] for choice in UserProfile.Kind.choices}
++        if normalized not in allowed:
++            raise serializers.ValidationError("Perfil indisponivel.")
++        return normalized
++
++    def update(self, instance, validated_data):
++        instance.kind = validated_data.get("kind", instance.kind)
++        instance.status = UserProfile.Status.ACTIVE
++        instance.policy_version = PROFILE_POLICY_VERSION
++        instance.save(update_fields=["kind", "status", "policy_version", "updated_at"])
++        return instance
++
++
++class ProtectedSubjectSerializer(serializers.ModelSerializer):
++    class Meta:
++        model = ProtectedSubject
++        fields = ["id", "display_label", "status", "policy_version", "created_at", "updated_at"]
++        read_only_fields = ["id", "policy_version", "created_at", "updated_at"]
++
++    def validate_display_label(self, value):
++        label = value.strip()
++        if not label:
++            raise serializers.ValidationError("Informe um apelido operacional do protegido.")
++        return label
++
++    def create(self, validated_data):
++        return ProtectedSubject.objects.create(guardian=self.context["request"].user, **validated_data)
++
++
++class ResponsibleLinkSerializer(serializers.ModelSerializer):
++    class Meta:
++        model = ResponsibleLink
++        fields = ["id", "protected_subject", "status", "policy_version", "created_at", "updated_at", "revoked_at"]
++        read_only_fields = ["id", "policy_version", "created_at", "updated_at", "revoked_at"]
++
++    def validate_protected_subject(self, value):
++        if value.guardian != self.context["request"].user:
++            raise serializers.ValidationError("Protegido indisponivel para esta conta.")
++        return value
++
++    def create(self, validated_data):
++        return ResponsibleLink.objects.create(responsible=self.context["request"].user, **validated_data)
++
++
++class ProfileAuthorizationSerializer(serializers.ModelSerializer):
++    class Meta:
++        model = ProfileAuthorization
++        fields = [
++            "id",
++            "responsible_link",
++            "scope",
++            "status",
++            "version",
++            "evidence",
++            "expires_at",
++            "created_at",
++            "updated_at",
++            "revoked_at",
++        ]
++        read_only_fields = ["id", "version", "created_at", "updated_at", "revoked_at"]
++
++    def validate_responsible_link(self, value):
++        if value.responsible != self.context["request"].user:
++            raise serializers.ValidationError("Vinculo indisponivel para esta conta.")
++        return value
++
++    def validate_evidence(self, value):
++        return validate_minimized_evidence(value)
++
++    def validate(self, attrs):
++        expires_at = attrs.get("expires_at")
++        if expires_at and expires_at <= timezone.now():
++            raise serializers.ValidationError("Autorizacao nao pode nascer expirada.")
++        return attrs
+diff -ruN --exclude=.venv --exclude=__pycache__ --exclude=.pytest_cache --exclude=db.sqlite3 --exclude=staticfiles --exclude=media /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/profiles/views.py services/api/profiles/views.py
+--- /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/profiles/views.py	1969-12-31 21:00:00
++++ services/api/profiles/views.py	2026-05-13 17:14:15
+@@ -0,0 +1,67 @@
++from rest_framework import generics, response, viewsets
++
++from audit.models import AuditEvent
++from audit.services import record_audit_event
++
++from .models import ProfileAuthorization, ProtectedSubject, ResponsibleLink
++from .policies import get_or_create_user_profile
++from .serializers import (
++    ProfileAuthorizationSerializer,
++    ProtectedSubjectSerializer,
++    ResponsibleLinkSerializer,
++    UserProfileSerializer,
++)
++
++
++class CurrentUserProfileView(generics.GenericAPIView):
++    serializer_class = UserProfileSerializer
++
++    def get(self, request):
++        profile = get_or_create_user_profile(request.user)
++        return response.Response(self.get_serializer(profile).data)
++
++    def patch(self, request):
++        profile = get_or_create_user_profile(request.user)
++        serializer = self.get_serializer(profile, data=request.data, partial=True)
++        serializer.is_valid(raise_exception=True)
++        profile = serializer.save()
++        record_audit_event(
++            request=request,
++            category=AuditEvent.Category.CONSENT,
++            action="profile_update",
++            object_type="profiles.UserProfile",
++            object_id=profile.id,
++            metadata={"kind": profile.kind, "policy_version": profile.policy_version},
++        )
++        return response.Response(serializer.data)
++
++
++class ProtectedSubjectViewSet(viewsets.ModelViewSet):
++    queryset = ProtectedSubject.objects.none()
++    serializer_class = ProtectedSubjectSerializer
++    http_method_names = ["get", "post", "patch", "head", "options"]
++    filterset_fields = ["status"]
++    search_fields = ["display_label"]
++
++    def get_queryset(self):
++        return ProtectedSubject.objects.filter(guardian=self.request.user).order_by("display_label")
++
++
++class ResponsibleLinkViewSet(viewsets.ModelViewSet):
++    queryset = ResponsibleLink.objects.none()
++    serializer_class = ResponsibleLinkSerializer
++    http_method_names = ["get", "post", "patch", "head", "options"]
++    filterset_fields = ["status"]
++
++    def get_queryset(self):
++        return ResponsibleLink.objects.filter(responsible=self.request.user).order_by("-created_at")
++
++
++class ProfileAuthorizationViewSet(viewsets.ModelViewSet):
++    queryset = ProfileAuthorization.objects.none()
++    serializer_class = ProfileAuthorizationSerializer
++    http_method_names = ["get", "post", "patch", "head", "options"]
++    filterset_fields = ["scope", "status"]
++
++    def get_queryset(self):
++        return ProfileAuthorization.objects.filter(responsible_link__responsible=self.request.user).order_by("-created_at")
+diff -ruN --exclude=.venv --exclude=__pycache__ --exclude=.pytest_cache --exclude=db.sqlite3 --exclude=staticfiles --exclude=media /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/sinalseguro_api/api_urls.py services/api/sinalseguro_api/api_urls.py
+--- /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/sinalseguro_api/api_urls.py	2026-05-06 16:37:05
++++ services/api/sinalseguro_api/api_urls.py	2026-05-13 17:09:10
+@@ -7,11 +7,15 @@
+ from consents.views import ConsentRecordViewSet
+ from devices.views import DeviceViewSet
+ from emergency.views import EmergencySessionViewSet, KeyEnvelopeViewSet, P2PSignalViewSet
++from profiles.views import CurrentUserProfileView, ProfileAuthorizationViewSet, ProtectedSubjectViewSet, ResponsibleLinkViewSet
+ from trusted_contacts.views import AcceptInvitationView, InvitationViewSet, TrustedContactViewSet
+ 
+ 
+ router = DefaultRouter()
+ router.register("devices", DeviceViewSet, basename="device")
++router.register("protected-subjects", ProtectedSubjectViewSet, basename="protected-subject")
++router.register("responsible-links", ResponsibleLinkViewSet, basename="responsible-link")
++router.register("profile-authorizations", ProfileAuthorizationViewSet, basename="profile-authorization")
+ router.register("trusted-contacts", TrustedContactViewSet, basename="trusted-contact")
+ router.register("invitations", InvitationViewSet, basename="invitation")
+ router.register("consents", ConsentRecordViewSet, basename="consent")
+@@ -28,6 +32,7 @@
+     path("auth/refresh", AuditedTokenRefreshView.as_view(), name="token-refresh"),
+     path("auth/logout", LogoutView.as_view(), name="auth-logout"),
+     path("auth/me", MeView.as_view(), name="auth-me"),
++    path("profiles/me", CurrentUserProfileView.as_view(), name="profile-me"),
+     path("invitations/accept", AcceptInvitationView.as_view(), name="invitation-accept"),
+     path("schema", SpectacularAPIView.as_view(), name="schema"),
+     path("", include(router.urls)),
+diff -ruN --exclude=.venv --exclude=__pycache__ --exclude=.pytest_cache --exclude=db.sqlite3 --exclude=staticfiles --exclude=media /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/sinalseguro_api/settings.py services/api/sinalseguro_api/settings.py
+--- /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/sinalseguro_api/settings.py	2026-05-09 08:42:27
++++ services/api/sinalseguro_api/settings.py	2026-05-13 17:09:10
+@@ -46,6 +46,7 @@
+     "drf_spectacular",
+     "accounts",
+     "devices",
++    "profiles",
+     "trusted_contacts",
+     "consents",
+     "emergency",
+diff -ruN --exclude=.venv --exclude=__pycache__ --exclude=.pytest_cache --exclude=db.sqlite3 --exclude=staticfiles --exclude=media /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/sinalseguro_api/tests/test_platform_base.py services/api/sinalseguro_api/tests/test_platform_base.py
+--- /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/sinalseguro_api/tests/test_platform_base.py	2026-05-09 08:42:28
++++ services/api/sinalseguro_api/tests/test_platform_base.py	2026-05-13 17:12:51
+@@ -18,6 +18,7 @@
+ from consents.models import ConsentRecord
+ from devices.models import Device
+ from emergency.models import EmergencySession, KeyEnvelope
++from profiles.models import ProfileAuthorization, ProtectedSubject, ResponsibleLink, UserProfile
+ from trusted_contacts.models import Invitation, TrustedContact, hash_invitation_token
+ 
+ 
+@@ -71,6 +72,11 @@
+     }
+ 
+ 
++def set_user_profile(user, kind):
++    profile, _created = UserProfile.objects.update_or_create(user=user, defaults={"kind": kind})
++    return profile
++
++
+ class PlatformBaseTests(TestCase):
+     def test_custom_user_uses_email_login(self):
+         user = get_user_model().objects.create_user(email="admin@sinalseguro.test", password="teste-local")
+@@ -640,6 +646,7 @@
+ 
+     def test_invitation_accept_flow_uses_clear_token_only_once(self):
+         owner = get_user_model().objects.create_user(email="dona@sinalseguro.test", password="senha-local-segura")
++        set_user_profile(owner, UserProfile.Kind.ADULT_SELF)
+         trusted = TrustedContact.objects.create(owner=owner, display_label="Anjo API")
+         api = APIClient()
+         api.force_authenticate(owner)
+@@ -653,6 +660,7 @@
+         self.assertIn("token", invitation_response.data)
+ 
+         invitee = get_user_model().objects.create_user(email="anjo-api@sinalseguro.test", password="senha-local-segura")
++        set_user_profile(invitee, UserProfile.Kind.ADULT_SELF)
+         Device.objects.create(
+             owner=invitee,
+             platform=Device.Platform.ANDROID,
+@@ -673,6 +681,8 @@
+     def test_invitation_accept_requires_device_with_public_key(self):
+         owner = get_user_model().objects.create_user(email="dona-device@sinalseguro.test")
+         invitee = get_user_model().objects.create_user(email="anjo-device@sinalseguro.test")
++        set_user_profile(owner, UserProfile.Kind.ADULT_SELF)
++        set_user_profile(invitee, UserProfile.Kind.ADULT_SELF)
+         trusted = TrustedContact.objects.create(owner=owner, display_label="Anjo Device")
+         invitation = Invitation.objects.create(
+             owner=owner,
+@@ -699,6 +709,176 @@
+         self.assertEqual(accepted_response.status_code, 200)
+         invitation.refresh_from_db()
+         self.assertEqual(invitation.status, Invitation.Status.ACCEPTED)
++
++    def test_profile_endpoint_accepts_mobile_kinds_without_sensitive_data(self):
++        user = get_user_model().objects.create_user(email="profile-api@sinalseguro.test")
++        api = APIClient()
++        api.force_authenticate(user)
++
++        missing_response = api.get("/api/profiles/me")
++        update_response = api.patch("/api/profiles/me", {"kind": "adult_self_managed"}, format="json")
++
++        self.assertEqual(missing_response.status_code, 200)
++        self.assertEqual(missing_response.data["kind"], UserProfile.Kind.UNKNOWN)
++        self.assertEqual(update_response.status_code, 200)
++        self.assertEqual(update_response.data["kind"], UserProfile.Kind.ADULT_SELF)
++        self.assertNotIn("cpf", update_response.data)
++        self.assertNotIn("birth_date", update_response.data)
++
++    def test_trusted_contact_requires_profile_and_blocks_sensitive_scopes(self):
++        user = get_user_model().objects.create_user(email="profile-block@sinalseguro.test")
++        api = APIClient()
++        api.force_authenticate(user)
++
++        missing_profile_response = api.post(
++            "/api/trusted-contacts/",
++            {"display_label": "Anjo sem perfil"},
++            format="json",
++        )
++        set_user_profile(user, UserProfile.Kind.MINOR_PROTECTED)
++        minor_response = api.post(
++            "/api/trusted-contacts/",
++            {"display_label": "Anjo menor"},
++            format="json",
++        )
++        set_user_profile(user, UserProfile.Kind.ADULT_SELF)
++        location_response = api.post(
++            "/api/trusted-contacts/",
++            {"display_label": "Anjo location", "can_receive_location": True},
++            format="json",
++        )
++        media_response = api.post(
++            "/api/trusted-contacts/",
++            {"display_label": "Anjo media", "can_receive_media": True},
++            format="json",
++        )
++        allowed_response = api.post(
++            "/api/trusted-contacts/",
++            {"display_label": "Anjo permitido"},
++            format="json",
++        )
++
++        self.assertEqual(missing_profile_response.status_code, 400)
++        self.assertEqual(minor_response.status_code, 400)
++        self.assertEqual(location_response.status_code, 400)
++        self.assertEqual(media_response.status_code, 400)
++        self.assertEqual(allowed_response.status_code, 201)
++        self.assertFalse(allowed_response.data["can_receive_location"])
++
++    def test_guardian_invitation_requires_subject_link_and_authorization(self):
++        guardian = get_user_model().objects.create_user(email="guardian@sinalseguro.test")
++        set_user_profile(guardian, UserProfile.Kind.GUARDIAN)
++        api = APIClient()
++        api.force_authenticate(guardian)
++
++        blocked_contact = api.post("/api/trusted-contacts/", {"display_label": "Anjo menor"}, format="json")
++        subject = ProtectedSubject.objects.create(
++            guardian=guardian,
++            display_label="Protegido",
++            status=ProtectedSubject.Status.ACTIVE,
++        )
++        link = ResponsibleLink.objects.create(
++            responsible=guardian,
++            protected_subject=subject,
++            status=ResponsibleLink.Status.ACTIVE,
++        )
++        ProfileAuthorization.objects.create(
++            responsible_link=link,
++            scope=ProfileAuthorization.Scope.TRUSTED_CONTACT_NETWORK,
++            status=ProfileAuthorization.Status.ACTIVE,
++        )
++        allowed_contact = api.post(
++            "/api/trusted-contacts/",
++            {"display_label": "Anjo menor autorizado", "protected_subject": str(subject.id)},
++            format="json",
++        )
++
++        self.assertEqual(blocked_contact.status_code, 400)
++        self.assertEqual(allowed_contact.status_code, 201)
++        self.assertEqual(str(allowed_contact.data["protected_subject"]), str(subject.id))
++
++    def test_minor_profile_cannot_accept_invitation_as_angel(self):
++        owner = get_user_model().objects.create_user(email="dona-minor@sinalseguro.test")
++        minor = get_user_model().objects.create_user(email="menor-anjo@sinalseguro.test")
++        set_user_profile(owner, UserProfile.Kind.ADULT_SELF)
++        set_user_profile(minor, UserProfile.Kind.MINOR_PROTECTED)
++        trusted = TrustedContact.objects.create(owner=owner, display_label="Anjo Menor")
++        Invitation.objects.create(
++            owner=owner,
++            trusted_contact=trusted,
++            display_label="Anjo Menor",
++            token_hash=hash_invitation_token("token-menor"),
++            expires_at=timezone.now() + timedelta(days=1),
++        )
++        Device.objects.create(owner=minor, platform=Device.Platform.ANDROID, public_key_sha256="d" * 64)
++        api = APIClient()
++        api.force_authenticate(minor)
++
++        response = api.post("/api/invitations/accept", {"token": "token-menor"}, format="json")
++
++        self.assertEqual(response.status_code, 400)
++        trusted.refresh_from_db()
++        self.assertEqual(trusted.status, TrustedContact.Status.INVITED)
++
++    def test_consent_evidence_rejects_sensitive_keys(self):
++        owner = get_user_model().objects.create_user(email="sensitive-consent@sinalseguro.test")
++        api = APIClient()
++        api.force_authenticate(owner)
++
++        response = api.post(
++            "/api/consents/",
++            {
++                "scope": ConsentRecord.Scope.TERMS,
++                "version": "mvp-controlado-2026-05-13",
++                "accepted": True,
++                "evidence": {"cpf": "000.000.000-00"},
++            },
++            format="json",
++        )
++
++        self.assertEqual(response.status_code, 400)
++
++    def test_key_envelope_and_p2p_api_are_blocked_in_profile_front(self):
++        owner = get_user_model().objects.create_user(email="owner-front13@sinalseguro.test")
++        recipient = get_user_model().objects.create_user(email="recipient-front13@sinalseguro.test")
++        device = Device.objects.create(owner=recipient, platform=Device.Platform.ANDROID, public_key_sha256="e" * 64)
++        session = EmergencySession.objects.create(
++            owner=owner,
++            client_alert_id="33333333-3333-4333-8333-333333333333",
++            idempotency_key="idem-front13-333333",
++            kind=EmergencySession.Kind.TEST,
++            started_at=timezone.now(),
++        )
++        api = APIClient()
++        api.force_authenticate(owner)
++
++        key_response = api.post(
++            "/api/key-envelopes/",
++            {
++                "emergency_session": str(session.id),
++                "recipient": str(recipient.id),
++                "recipient_device": str(device.id),
++                "scope": KeyEnvelope.Scope.MEDIA_ASSET,
++                "key_id": "blocked-front13",
++                "public_key_sha256": device.public_key_sha256,
++                "encrypted_key": "sealed",
++            },
++            format="json",
++        )
++        p2p_response = api.post(
++            "/api/p2p-signals/",
++            {
++                "emergency_session": str(session.id),
++                "recipient": str(recipient.id),
++                "signal_type": "offer",
++                "payload": {"sdp": "blocked"},
++                "expires_at": (timezone.now() + timedelta(minutes=5)).isoformat(),
++            },
++            format="json",
++        )
++
++        self.assertEqual(key_response.status_code, 400)
++        self.assertEqual(p2p_response.status_code, 400)
+ 
+     def test_device_list_is_isolated_by_owner(self):
+         owner = get_user_model().objects.create_user(email="owner-device@sinalseguro.test")
+diff -ruN --exclude=.venv --exclude=__pycache__ --exclude=.pytest_cache --exclude=db.sqlite3 --exclude=staticfiles --exclude=media /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/trusted_contacts/admin.py services/api/trusted_contacts/admin.py
+--- /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/trusted_contacts/admin.py	2026-05-05 17:17:32
++++ services/api/trusted_contacts/admin.py	2026-05-13 17:09:10
+@@ -5,7 +5,7 @@
+ 
+ @admin.register(TrustedContact)
+ class TrustedContactAdmin(admin.ModelAdmin):
+-    list_display = ("display_label", "owner", "contact_user", "status", "can_receive_alerts", "can_receive_location", "can_receive_media")
++    list_display = ("display_label", "owner", "protected_subject", "contact_user", "status", "can_receive_alerts", "can_receive_location", "can_receive_media")
+     list_filter = ("status", "can_receive_alerts", "can_receive_location", "can_receive_media")
+     readonly_fields = ("id", "accepted_at", "revoked_at", "created_at", "updated_at")
+     search_fields = ("display_label", "owner__email", "contact_user__email")
+@@ -13,8 +13,7 @@
+ 
+ @admin.register(Invitation)
+ class InvitationAdmin(admin.ModelAdmin):
+-    list_display = ("display_label", "owner", "status", "expires_at", "accepted_by", "accepted_at")
++    list_display = ("display_label", "owner", "protected_subject", "status", "expires_at", "accepted_by", "accepted_at")
+     list_filter = ("status",)
+     readonly_fields = ("id", "token_hash", "accepted_at", "created_at", "updated_at")
+     search_fields = ("display_label", "owner__email", "accepted_by__email")
+-
+diff -ruN --exclude=.venv --exclude=__pycache__ --exclude=.pytest_cache --exclude=db.sqlite3 --exclude=staticfiles --exclude=media /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/trusted_contacts/migrations/0002_profile_subject_and_location_default.py services/api/trusted_contacts/migrations/0002_profile_subject_and_location_default.py
+--- /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/trusted_contacts/migrations/0002_profile_subject_and_location_default.py	1969-12-31 21:00:00
++++ services/api/trusted_contacts/migrations/0002_profile_subject_and_location_default.py	2026-05-13 17:08:18
+@@ -0,0 +1,41 @@
++# Generated for SinalSeguro Frente 1.3 profile gates.
++
++import django.db.models.deletion
++from django.db import migrations, models
++
++
++class Migration(migrations.Migration):
++    dependencies = [
++        ("profiles", "0001_initial"),
++        ("trusted_contacts", "0001_initial"),
++    ]
++
++    operations = [
++        migrations.AddField(
++            model_name="trustedcontact",
++            name="protected_subject",
++            field=models.ForeignKey(
++                blank=True,
++                null=True,
++                on_delete=django.db.models.deletion.SET_NULL,
++                related_name="trusted_contacts",
++                to="profiles.protectedsubject",
++            ),
++        ),
++        migrations.AddField(
++            model_name="invitation",
++            name="protected_subject",
++            field=models.ForeignKey(
++                blank=True,
++                null=True,
++                on_delete=django.db.models.deletion.SET_NULL,
++                related_name="invitations",
++                to="profiles.protectedsubject",
++            ),
++        ),
++        migrations.AlterField(
++            model_name="trustedcontact",
++            name="can_receive_location",
++            field=models.BooleanField(default=False),
++        ),
++    ]
+diff -ruN --exclude=.venv --exclude=__pycache__ --exclude=.pytest_cache --exclude=db.sqlite3 --exclude=staticfiles --exclude=media /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/trusted_contacts/models.py services/api/trusted_contacts/models.py
+--- /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/trusted_contacts/models.py	2026-05-05 17:16:28
++++ services/api/trusted_contacts/models.py	2026-05-13 17:09:10
+@@ -31,11 +31,18 @@
+         blank=True,
+         related_name="trusted_by",
+     )
++    protected_subject = models.ForeignKey(
++        "profiles.ProtectedSubject",
++        on_delete=models.SET_NULL,
++        null=True,
++        blank=True,
++        related_name="trusted_contacts",
++    )
+     display_label = models.CharField(max_length=160)
+     status = models.CharField(max_length=16, choices=Status.choices, default=Status.INVITED)
+     can_receive_alerts = models.BooleanField(default=True)
+     can_receive_media = models.BooleanField(default=False)
+-    can_receive_location = models.BooleanField(default=True)
++    can_receive_location = models.BooleanField(default=False)
+     accepted_at = models.DateTimeField(null=True, blank=True)
+     revoked_at = models.DateTimeField(null=True, blank=True)
+     created_at = models.DateTimeField(auto_now_add=True)
+@@ -62,6 +69,13 @@
+     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="invitations")
+     trusted_contact = models.ForeignKey(TrustedContact, on_delete=models.CASCADE, related_name="invitations")
++    protected_subject = models.ForeignKey(
++        "profiles.ProtectedSubject",
++        on_delete=models.SET_NULL,
++        null=True,
++        blank=True,
++        related_name="invitations",
++    )
+     token_hash = models.CharField(max_length=64, unique=True)
+     display_label = models.CharField(max_length=160)
+     status = models.CharField(max_length=16, choices=Status.choices, default=Status.PENDING)
+@@ -93,4 +107,3 @@
+ 
+     def __str__(self) -> str:
+         return f"Convite para {self.display_label}"
+-
+diff -ruN --exclude=.venv --exclude=__pycache__ --exclude=.pytest_cache --exclude=db.sqlite3 --exclude=staticfiles --exclude=media /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/trusted_contacts/serializers.py services/api/trusted_contacts/serializers.py
+--- /Users/roberto/SinalSeguro-api-checkpoint-20260513-170529/trusted_contacts/serializers.py	2026-05-05 23:33:15
++++ services/api/trusted_contacts/serializers.py	2026-05-13 17:09:10
+@@ -3,14 +3,23 @@
+ from rest_framework import serializers
+ 
+ from devices.models import Device
++from profiles.models import ProtectedSubject
++from profiles.policies import can_accept_angel_invitation, can_create_trusted_contact
+ from .models import Invitation, TrustedContact, hash_invitation_token
+ 
+ 
+ class TrustedContactSerializer(serializers.ModelSerializer):
++    protected_subject = serializers.PrimaryKeyRelatedField(
++        queryset=ProtectedSubject.objects.all(),
++        required=False,
++        allow_null=True,
++    )
++
+     class Meta:
+         model = TrustedContact
+         fields = [
+             "id",
++            "protected_subject",
+             "display_label",
+             "status",
+             "can_receive_alerts",
+@@ -23,6 +32,26 @@
+         ]
+         read_only_fields = ["id", "status", "accepted_at", "revoked_at", "created_at", "updated_at"]
+ 
++    def validate_protected_subject(self, value):
++        if value and value.guardian != self.context["request"].user:
++            raise serializers.ValidationError("Protegido indisponivel para esta conta.")
++        return value
++
++    def validate(self, attrs):
++        request = self.context["request"]
++        protected_subject = attrs.get("protected_subject", getattr(self.instance, "protected_subject", None))
++        wants_media = attrs.get("can_receive_media", getattr(self.instance, "can_receive_media", False))
++        wants_location = attrs.get("can_receive_location", getattr(self.instance, "can_receive_location", False))
++        if wants_media:
++            raise serializers.ValidationError("Midia para anjos continua bloqueada nesta frente.")
++        if wants_location:
++            raise serializers.ValidationError("Localizacao para anjos continua bloqueada nesta frente.")
++        if self.instance is None:
++            decision = can_create_trusted_contact(request.user, protected_subject)
++            if not decision.allowed:
++                raise serializers.ValidationError(decision.message)
++        return attrs
++
+     def create(self, validated_data):
+         return TrustedContact.objects.create(owner=self.context["request"].user, **validated_data)
+ 
+@@ -32,18 +61,37 @@
+ 
+     class Meta:
+         model = Invitation
+-        fields = ["id", "trusted_contact", "display_label", "status", "expires_at", "accepted_at", "created_at", "token"]
+-        read_only_fields = ["id", "status", "accepted_at", "created_at", "token"]
++        fields = [
++            "id",
++            "trusted_contact",
++            "protected_subject",
++            "display_label",
++            "status",
++            "expires_at",
++            "accepted_at",
++            "created_at",
++            "token",
++        ]
++        read_only_fields = ["id", "protected_subject", "status", "accepted_at", "created_at", "token"]
+ 
+     def validate_trusted_contact(self, value):
+         if value.owner != self.context["request"].user:
+             raise serializers.ValidationError("Anjo indisponivel para esta conta.")
+         return value
+ 
++    def validate(self, attrs):
++        trusted_contact = attrs.get("trusted_contact")
++        decision = can_create_trusted_contact(self.context["request"].user, trusted_contact.protected_subject)
++        if not decision.allowed:
++            raise serializers.ValidationError(decision.message)
++        return attrs
++
+     def create(self, validated_data):
+         token = Invitation.create_token()
++        trusted_contact = validated_data["trusted_contact"]
+         invitation = Invitation.objects.create(
+             owner=self.context["request"].user,
++            protected_subject=trusted_contact.protected_subject,
+             token_hash=hash_invitation_token(token),
+             **validated_data,
+         )
+@@ -77,6 +125,9 @@
+     def validate(self, attrs):
+         request = self.context["request"]
+         invitation = self.context["invitation"]
++        decision = can_accept_angel_invitation(request.user)
++        if not decision.allowed:
++            raise serializers.ValidationError(decision.message)
+         if invitation.owner_id == request.user.id:
+             raise serializers.ValidationError("Convite de anjo precisa ser aceito por outra conta.")
+         if not Device.objects.filter(

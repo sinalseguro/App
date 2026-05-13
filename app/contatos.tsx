@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { router } from "expo-router";
-import { Pressable, Share, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from "react-native";
 import { Clock3, RefreshCw, ShieldCheck, UserPlus, UserRound, Users, WifiOff, XCircle } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AppTopBar } from "@/components/AppTopBar";
@@ -375,7 +375,7 @@ export default function ContactsScreen() {
           </>
         ) : null}
 
-        <View style={styles.content}>
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} style={styles.contentScroll}>
           <View style={styles.resourceGrid}>
             <ResourceTile
               icon={<UserRound size={24} color={theme.colors.primary} />}
@@ -426,7 +426,7 @@ export default function ContactsScreen() {
               onPress={refreshAngels}
             />
           </View>
-        </View>
+        </ScrollView>
 
         <Text style={styles.statusText}>{status}</Text>
 
@@ -641,10 +641,11 @@ export default function ContactsScreen() {
 
 const styles = StyleSheet.create({
   content: {
-    flex: 1,
     gap: theme.spacing.md,
-    justifyContent: "center",
     padding: theme.spacing.lg
+  },
+  contentScroll: {
+    flex: 1
   },
   dialogStack: {
     gap: theme.spacing.md

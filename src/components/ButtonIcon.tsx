@@ -24,7 +24,9 @@ export function ButtonIcon({ icon, label, style, accessibilityState, ...props }:
       {...props}
     >
       <View style={styles.icon}>{icon}</View>
-      <Text style={styles.label}>{label}</Text>
+      <Text adjustsFontSizeToFit numberOfLines={1} style={styles.label}>
+        {label}
+      </Text>
     </Pressable>
   );
 }
@@ -53,7 +55,9 @@ const styles = StyleSheet.create({
   },
   label: {
     color: theme.colors.text,
+    flexShrink: 1,
     fontSize: theme.typography.button,
-    fontWeight: "700"
+    fontWeight: "700",
+    minWidth: 0
   }
 });

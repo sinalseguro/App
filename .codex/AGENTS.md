@@ -60,4 +60,6 @@ Estado:
 - Proximo arquivo de retomada: `docs/37_HANDOFF_FRENTE_1_3_PERFIS_PAPEIS_2026-05-13.md`.
 - Checkpoint de abertura da Frente 1.3: `docs/38_CHECKPOINT_ABERTURA_FRENTE_1_3_PERFIS_PAPEIS_2026-05-13.md`.
 - Primeira fatia implementada no app: politica local de perfis em `src/features/profiles/profilePolicy.ts`, storage cifrado em `profileStore.ts`, tela `app/perfis.tsx`, gates em `app/contatos.tsx` e `app/convite.tsx`, e teste `scripts/profile-policy.test.ts`.
-- Estado atual da 1.3: controle local/mobile aprovado por testes rapidos; backend server-side de perfis, vinculo responsavel-protegido e autorizacao por escopo ainda pendente antes da Frente 2.
+- Estado atual da 1.3: backend server-side de perfis, vinculo responsavel-protegido e autorizacao por escopo implementado e publicado na EC2; mobile sincroniza perfil com `/api/profiles/me` antes de criar convite backend.
+- Checkpoint backend da Frente 1.3: `docs/39_CHECKPOINT_FRENTE_1_3_BACKEND_PERFIS_AUTORIZACOES_2026-05-13.md`.
+- Proxima validacao: build/install Android privado atualizado e teste manual/visual de `Perfis`, `Anjos`, modal de convite e `Convite recebido` contra a EC2 real.

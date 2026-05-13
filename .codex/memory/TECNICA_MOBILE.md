@@ -82,6 +82,17 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Gates aprovados: `test:profiles`, `typecheck`, `lint`, `smoke-test`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
 - Esta fatia nao altera SOS, Cofre, Player, motor nativo, API real, P2P, upload, localizacao ao vivo ou iOS.
 
+## Atualizacao tecnica - 2026-05-13 - Frente 1.3 backend publicado
+
+- Backend `profiles` implementado em `services/api` com `UserProfile`, `ProtectedSubject`, `ResponsibleLink` e `ProfileAuthorization`.
+- Rotas publicadas na EC2: `/api/profiles/me`, `/api/protected-subjects/`, `/api/responsible-links/`, `/api/profile-authorizations/`.
+- `trusted_contacts` agora tem `protected_subject` nullable em contato/convite e `can_receive_location=False` por default.
+- `apiClient.ts` sincroniza perfil com `/profiles/me`; `profileStore.ts` mapeia perfil local para o contrato da API; `invitationService.ts` sincroniza antes de criar convite backend.
+- `responsible_with_minor` no mobile fica pendente para convite ate existir protegido, vinculo e autorizacao ativos na API.
+- Deploy EC2 via `infra/aws/deploy-api.sh` aplicou `profiles.0001_initial` e `trusted_contacts.0002_profile_subject_and_location_default`.
+- Backup EC2 pre-deploy: `/opt/sinalseguro-api/backups/sinalseguro_prod_before_front13_20260513-201501.dump`.
+- Validacoes aprovadas: backend `check`, `test`, `spectacular`, `makemigrations --check`; mobile `typecheck`, `lint`, `smoke-test`, `npm test`, `private:android:readiness`, `git diff --check`.
+
 ## Atualizacao tecnica - 2026-05-04
 
 - `EmergencySettingsDrawer` recebe navegacao por painel: `Cofre` envia `/arquivos?painel=cofre` e `Player` envia `/arquivos?painel=player`.

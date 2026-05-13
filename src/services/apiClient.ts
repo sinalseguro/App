@@ -49,6 +49,15 @@ const ApiSessionSchema = z.object({
   user: ApiUserSchema.nullable().optional()
 });
 
+const ProtectionProfileSchema = z.object({
+  id: z.string(),
+  kind: z.enum(["unknown", "adult_self", "guardian", "minor_protected", "guardian_without_minor"]),
+  status: z.string(),
+  policy_version: z.string(),
+  configured_at: z.string(),
+  updated_at: z.string()
+});
+
 const DeviceSchema = z.object({
   id: z.string(),
   platform: z.string(),
@@ -90,6 +99,7 @@ const ConsentRecordSchema = z.object({
 
 const TrustedContactSchema = z.object({
   id: z.string(),
+  protected_subject: z.string().nullable().optional(),
   display_label: z.string(),
   status: z.string(),
   can_receive_alerts: z.boolean(),
@@ -106,6 +116,7 @@ const TrustedContactListSchema = z.array(TrustedContactSchema);
 const InvitationSchema = z.object({
   id: z.string(),
   trusted_contact: z.string(),
+  protected_subject: z.string().nullable().optional(),
   display_label: z.string(),
   status: z.string(),
   expires_at: z.string(),
@@ -160,6 +171,7 @@ const P2PSignalSchema = z.object({
 
 export type ApiUser = z.infer<typeof ApiUserSchema>;
 export type ApiSession = z.infer<typeof ApiSessionSchema>;
+export type ApiProtectionProfile = z.infer<typeof ProtectionProfileSchema>;
 export type ApiDevice = z.infer<typeof DeviceSchema>;
 export type ApiConsentScope = z.infer<typeof ConsentScopeSchema>;
 export type ApiConsentRecord = z.infer<typeof ConsentRecordSchema>;
@@ -216,6 +228,11 @@ export type CreateTrustedContactInput = {
   canReceiveLocation?: boolean;
   canReceiveMedia?: boolean;
   displayLabel: string;
+  protectedSubjectId?: string | null;
+};
+
+export type UpdateProtectionProfileInput = {
+  kind: ApiProtectionProfile["kind"];
 };
 
 export type CreateInvitationInput = {
@@ -500,14 +517,31 @@ export class SinalSeguroApiClient {
     });
   }
 
+  async getProtectionProfile() {
+    return this.request("/profiles/me", ProtectionProfileSchema, {
+      authenticated: true
+    });
+  }
+
+  async updateProtectionProfile(input: UpdateProtectionProfileInput) {
+    return this.request("/profiles/me", ProtectionProfileSchema, {
+      authenticated: true,
+      body: {
+        kind: input.kind
+      },
+      method: "PATCH"
+    });
+  }
+
   async createTrustedContact(input: CreateTrustedContactInput) {
     return this.request("/trusted-contacts/", TrustedContactSchema, {
       authenticated: true,
       body: {
         can_receive_alerts: input.canReceiveAlerts ?? true,
-        can_receive_location: input.canReceiveLocation ?? true,
+        can_receive_location: input.canReceiveLocation ?? false,
         can_receive_media: input.canReceiveMedia ?? false,
-        display_label: input.displayLabel
+        display_label: input.displayLabel,
+        protected_subject: input.protectedSubjectId ?? null
       },
       method: "POST"
     });

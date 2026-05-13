@@ -2312,3 +2312,36 @@ Limite:
 Checkpoint:
 
 - `docs/38_CHECKPOINT_ABERTURA_FRENTE_1_3_PERFIS_PAPEIS_2026-05-13.md`.
+
+## 2026-05-13 - Frente 1.3 backend publicado: perfis e autorizacoes
+
+Status: fatia backend publicada na EC2 do SinalSeguro e app Android sincronizado com o novo contrato.
+
+Executado:
+
+- criado dominio backend `profiles` com perfil da conta, protegido, vinculo responsavel-protegido e autorizacao por escopo;
+- adicionados endpoints `/api/profiles/me`, `/api/protected-subjects/`, `/api/responsible-links/` e `/api/profile-authorizations/`;
+- `trusted_contacts` ganhou FKs nullable para protegido e default `can_receive_location=False`;
+- convites agora exigem perfil permitido no backend;
+- menor protegido e perfil ausente ficam bloqueados server-side;
+- responsavel por menor so passa quando houver protegido ativo, vinculo ativo e autorizacao ativa;
+- `can_receive_media`, `can_receive_location`, `key-envelopes` e `p2p-signals` continuam bloqueados nesta frente;
+- app Android sincroniza perfil local com `/api/profiles/me` antes de criar convite backend;
+- ajustes UX aplicados em `Anjos`, `ButtonIcon` e microcopy de `Perfis`.
+
+EC2:
+
+- backup antes do deploy: `/opt/sinalseguro-api/backups/sinalseguro_prod_before_front13_20260513-201501.dump`;
+- deploy via `infra/aws/deploy-api.sh`;
+- migrations aplicadas: `profiles.0001_initial` e `trusted_contacts.0002_profile_subject_and_location_default`;
+- health/readiness publicos aprovados com `database=ok`;
+- `cereusia.conf` preservado com hash `05a73c767a68612a5deb4e6a12a5ce23709c97f47f6bb3bfa652dc4408607c6c`.
+
+Validacoes:
+
+- backend: `manage.py check`, `manage.py test sinalseguro_api.tests`, `spectacular --validate`, `makemigrations --check --dry-run`;
+- mobile: `test:profiles`, `typecheck`, `lint`, `smoke-test`, `npm test`, `private:android:readiness`, `git diff --check`.
+
+Checkpoint:
+
+- `docs/39_CHECKPOINT_FRENTE_1_3_BACKEND_PERFIS_AUTORIZACOES_2026-05-13.md`.

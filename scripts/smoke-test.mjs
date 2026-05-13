@@ -307,7 +307,7 @@ if (
 
 if (
   !profileSurface.includes("Sou adulto usando para mim") ||
-  !profileSurface.includes("Sou responsavel por menor") ||
+  (!profileSurface.includes("Sou responsavel por menor") && !profileSurface.includes("Sou responsável por menor")) ||
   !profileSurface.includes("Sou menor protegido") ||
   profilesScreen.includes("Data de nascimento")
 ) {

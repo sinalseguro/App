@@ -30,7 +30,7 @@ export default function ProfilesScreen() {
   async function loadProfile() {
     const nextProfile = await getActiveProtectionProfile();
     setProfile(nextProfile);
-    setStatus(nextProfile ? "Perfil local carregado." : "Perfil ainda nao configurado.");
+    setStatus(nextProfile ? "Perfil local carregado." : "Perfil ainda não configurado.");
   }
 
   useEffect(() => {
@@ -45,9 +45,9 @@ export default function ProfilesScreen() {
 
   return (
     <SafeScreen
-      title="Perfis e papeis"
+      title="Perfis e papéis"
       subtitle="Defina quem usa este aparelho antes de preparar rede de apoio."
-      footer="Esta etapa nao coleta documento, data de nascimento completa, endereco, agenda ou relato sensivel."
+      footer="Esta etapa não coleta documento, data de nascimento completa, endereço, agenda ou relato sensível."
     >
       <StatusBanner tone={summary.tone} title={summary.title} text={summary.text} />
 
@@ -81,7 +81,7 @@ export default function ProfilesScreen() {
       <StatusBanner
         tone="warning"
         title="Limites da Frente 1.3"
-        text="Menor nao cria anjo nem atua como anjo. Chamada, P2P, localizacao ao vivo, upload e conveniados continuam fora desta frente."
+        text="Menor não cria anjo nem atua como anjo. Chamada, P2P, localização ao vivo, upload e conveniados continuam fora desta frente."
       />
 
       <Pressable

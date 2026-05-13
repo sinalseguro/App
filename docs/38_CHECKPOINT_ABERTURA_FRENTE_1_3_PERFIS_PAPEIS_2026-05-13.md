@@ -53,7 +53,7 @@ Perfis locais iniciais:
 
 - perfil ausente nao cria convite de anjo;
 - adulto protegido pode preparar a propria rede;
-- responsavel por menor pode preparar rede autorizada do menor;
+- responsavel por menor fica pendente ate existir protegido, vinculo e autorizacao ativos na API;
 - menor protegido nao cria convite;
 - menor protegido nao aceita atuar como anjo;
 - responsavel sem menor vinculado fica em estado conservador para convite;
@@ -96,21 +96,23 @@ Nesta primeira fatia nao foram coletados:
 - `npm run private:android:readiness`: aprovado como build privado condicionado, com pendencia ambiental conhecida de Node local `20.16.0` para release publico;
 - `git diff --check`: aprovado.
 
+Fatia backend posterior ja registrada:
+
+- `docs/39_CHECKPOINT_FRENTE_1_3_BACKEND_PERFIS_AUTORIZACOES_2026-05-13.md`.
+
 Gates ainda pendentes para fechamento da Frente 1.3:
 
-- testes backend/Django quando a API receber modelo server-side de perfis/familia;
 - validacao visual Android apos UX final da frente;
 - aceite manual de Roberto.
 
 ## Proximo passo tecnico
 
-Implementar a contraparte server-side da politica:
+Validar a contraparte server-side da politica no Android fisico:
 
-- modelo API para perfil protegido/responsavel;
-- vinculo responsavel-protegido;
-- autorizacao por escopo;
-- bloqueio server-side de convite criado por menor;
-- bloqueio de menor atuando como anjo;
-- extensao de OpenAPI e testes Django.
+- perfil sincronizado com `/api/profiles/me`;
+- adulto criando convite backend;
+- perfil ausente e menor protegido bloqueando convite/aceite;
+- responsavel por menor permanecendo pendente enquanto nao houver vinculo/autorizacao ativos;
+- verificacao visual de overflow em telas pequenas/fonte grande.
 
-Ate esse backend existir, o bloqueio mobile reduz risco de UX/fluxo, mas nao deve ser tratado como controle unico para producao real.
+O backend server-side ja existe e foi publicado na EC2; o fechamento da frente agora depende de validacao fisica/manual e aceite de Roberto.

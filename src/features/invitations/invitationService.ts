@@ -2,6 +2,7 @@ import * as Crypto from "expo-crypto";
 import { deleteSecureRecord, listSecureRecords, saveSecureRecord } from "@/storage/secureJsonStore";
 import { ApiTrustedContact, apiClient } from "@/services/apiClient";
 import { deviceBindingService } from "@/services/deviceBinding";
+import { syncActiveProtectionProfileToApi } from "@/features/profiles/profileStore";
 import { LocalInvitation } from "./types";
 
 const INVITATION_NAMESPACE = "sinalseguro.invitations.v1";
@@ -42,7 +43,12 @@ async function createBackendInvitation(displayLabel: string): Promise<LocalInvit
   if (!currentSession) return null;
 
   await deviceBindingService.registerAuthenticatedDevice();
-  const trustedContact = await apiClient.createTrustedContact({ displayLabel });
+  await syncActiveProtectionProfileToApi();
+  const trustedContact = await apiClient.createTrustedContact({
+    canReceiveLocation: false,
+    canReceiveMedia: false,
+    displayLabel
+  });
   const invitation = await apiClient.createInvitation({
     displayLabel,
     trustedContactId: trustedContact.id
