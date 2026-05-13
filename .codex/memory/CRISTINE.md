@@ -39,7 +39,7 @@ Quando a sessao for retomada apos limite de uso, troca de agente, interrupcao de
 - P2P: futuro/best-effort.
 - Midia: homologacao controlada.
 - Rede social: fase futura.
-- Distribuicao: QR codes apontam para `/baixar/android` e `/baixar/ios`.
+- Distribuicao: QR code e release privado ativo apontam apenas para Android; `/baixar/ios` informa que iPhone sera disponibilizado posteriormente.
 - GitHub Releases: canal tecnico previsto para APK Android assinado.
 - iOS: TestFlight/App Store, sem IPA publico nesta fase.
 - Gate privado vigente: `npm run private:android:readiness`.
@@ -47,14 +47,14 @@ Quando a sessao for retomada apos limite de uso, troca de agente, interrupcao de
 
 ## Proximo checkpoint
 
-Etapa ativa: salvar e publicar o fechamento da Frente 1.2 Android para abrir a Frente 1.3. A Frente 1.2 Android foi aprovada por Roberto em 2026-05-13; iPhone/iOS fica pos-MVP e nao deve ser reaberto nesta rodada.
+Etapa ativa: Frente 1.3 Android validada fisicamente e release privado Android publicado no portal. A Frente 1.2 Android foi aprovada por Roberto em 2026-05-13; iPhone/iOS fica pos-MVP e nao deve ser reaberto nesta rodada.
 
 Retomada recomendada:
 
-1. Comecar por `docs/37_HANDOFF_FRENTE_1_3_PERFIS_PAPEIS_2026-05-13.md`.
-2. Preservar os contratos de midia da Frente 1.2 e nao refazer SOS/cofre/player sem evidencia de regressao.
-3. Implementar primeiro papeis, familia, maioridade, consentimentos e autorizacoes.
-4. So depois liberar Frente 2 de anjos/convites e Frente 4 de chamada audio/video.
+1. Comecar por `docs/40_CHECKPOINT_FRENTE_1_3_ANDROID_RELEASE_PORTAL_2026-05-13.md`.
+2. Confirmar o teste manual de Roberto no APK Android publicado.
+3. Fechar ou ajustar a Frente 1.3 antes de abrir anjos/P2P real.
+4. Preservar iPhone/iOS como pos-MVP, sem release ativo no portal publico.
 
 Atualizacao de continuidade em 2026-05-11 - retomada CLI apos emergencia operacional:
 
@@ -76,6 +76,15 @@ Atualizacao de continuidade em 2026-05-11 - Frente 1.2 Android validado:
 - Inventario final saneado do sandbox: 399 arquivos, 0 midias claras persistentes, 17 `.nseg` e 375 `.sseg`.
 - Gates finais aprovados: `typecheck`, `lint`, `test`, `private:android:readiness` com pendencia ambiental conhecida de Node 20.16.0, e `git diff --check`.
 - Proxima retomada: limpar regeneraveis antes de nova build, repetir matriz em iPhone fisico e nao avancar P2P/anjo/upload/localizacao/conveniados.
+
+Atualizacao de continuidade em 2026-05-13 - Frente 1.3 Android e portal:
+
+- APK Android privado novo instalado no device `5686add7` / `23129RA5FL`, SHA-256 `19ad59c4b9c4c47c8316f3a24d354626ee11a3442be910841fcd1e73283cd08b`.
+- Validacao visual fisica cobriu `Perfis`, `Anjos de confianca` e `Convite recebido`; perfil nao definido bloqueia convite e a tela de convite sem token orienta configurar perfil adulto.
+- Log saneado do recorte nao mostrou `FATAL EXCEPTION`, `AndroidRuntime`, `ReactNativeJS Error`, ANR ou crash do processo SinalSeguro.
+- Portal publico atualizado e publicado na EC2 em `/var/www/sinalseguro/releases/20260513T212800Z`.
+- Manifesto publico contem apenas Android; iPhone nao tem release ativo e `/baixar/ios` informa disponibilidade posterior em linguagem publica.
+- Checkpoint detalhado: `docs/40_CHECKPOINT_FRENTE_1_3_ANDROID_RELEASE_PORTAL_2026-05-13.md`.
 
 Estado ativo em 2026-05-07:
 

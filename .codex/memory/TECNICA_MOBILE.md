@@ -93,6 +93,16 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Backup EC2 pre-deploy: `/opt/sinalseguro-api/backups/sinalseguro_prod_before_front13_20260513-201501.dump`.
 - Validacoes aprovadas: backend `check`, `test`, `spectacular`, `makemigrations --check`; mobile `typecheck`, `lint`, `smoke-test`, `npm test`, `private:android:readiness`, `git diff --check`.
 
+## Atualizacao tecnica - 2026-05-13 - Frente 1.3 Android validada e release portal
+
+- APK Android privado instalado no device fisico `5686add7` / `23129RA5FL`: `distribution/android/out/sinalseguro-android.apk`, SHA-256 `19ad59c4b9c4c47c8316f3a24d354626ee11a3442be910841fcd1e73283cd08b`.
+- O build completo multi-ABI falhou por falta de espaco em `:app:mergeDebugNativeLibs`; apos limpeza de regeneraveis/cache, foi gerado APK `arm64-v8a` para o device fisico conectado com `assembleDebug -PsinalBundleDebugJs=true -PreactNativeArchitectures=arm64-v8a`.
+- Validacao ADB por deep links confirmou `/perfis`, `/contatos` e `/convite` com bloqueios esperados para perfil nao definido e convite ausente.
+- Evidencias saneadas em `docs/evidencias/android/2026-05-13-frente-1-3-release-portal/`.
+- Portal publico publicado com Android ativo em `https://www.sinalseguro.com.br/downloads/private/android/SinalSeguro-privado-0.1.0-20260513.apk`, QR `https://www.sinalseguro.com.br/assets/app/sinalseguro-android-qr-20260513.svg` e manifesto apenas Android.
+- iPhone/iOS segue pos-MVP, sem release ativo no portal publico.
+- Checkpoint: `docs/40_CHECKPOINT_FRENTE_1_3_ANDROID_RELEASE_PORTAL_2026-05-13.md`.
+
 ## Atualizacao tecnica - 2026-05-04
 
 - `EmergencySettingsDrawer` recebe navegacao por painel: `Cofre` envia `/arquivos?painel=cofre` e `Player` envia `/arquivos?painel=player`.

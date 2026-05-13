@@ -62,4 +62,8 @@ Estado:
 - Primeira fatia implementada no app: politica local de perfis em `src/features/profiles/profilePolicy.ts`, storage cifrado em `profileStore.ts`, tela `app/perfis.tsx`, gates em `app/contatos.tsx` e `app/convite.tsx`, e teste `scripts/profile-policy.test.ts`.
 - Estado atual da 1.3: backend server-side de perfis, vinculo responsavel-protegido e autorizacao por escopo implementado e publicado na EC2; mobile sincroniza perfil com `/api/profiles/me` antes de criar convite backend.
 - Checkpoint backend da Frente 1.3: `docs/39_CHECKPOINT_FRENTE_1_3_BACKEND_PERFIS_AUTORIZACOES_2026-05-13.md`.
-- Proxima validacao: build/install Android privado atualizado e teste manual/visual de `Perfis`, `Anjos`, modal de convite e `Convite recebido` contra a EC2 real.
+- Validacao Android fisica da Frente 1.3 executada em `5686add7` / `23129RA5FL`: APK SHA-256 `19ad59c4b9c4c47c8316f3a24d354626ee11a3442be910841fcd1e73283cd08b` instalado com sucesso, telas `Perfis`, `Anjos` e `Convite recebido` capturadas por ADB, sem crash fatal no recorte de log saneado.
+- Release privado Android publicado no portal publico: `https://www.sinalseguro.com.br/downloads/private/android/SinalSeguro-privado-0.1.0-20260513.apk`, QR `https://www.sinalseguro.com.br/assets/app/sinalseguro-android-qr-20260513.svg`, release EC2 `/var/www/sinalseguro/releases/20260513T212800Z`.
+- iPhone/iOS foi retirado como release ativo do portal publico; `/baixar/ios` informa disponibilidade posterior sem termos tecnicos.
+- Checkpoint atual: `docs/40_CHECKPOINT_FRENTE_1_3_ANDROID_RELEASE_PORTAL_2026-05-13.md`.
+- Proxima validacao: teste manual de Roberto no Android publicado; depois fechar ou ajustar a Frente 1.3 antes de abrir anjos/P2P real.

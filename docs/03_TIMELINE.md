@@ -3,6 +3,44 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-13 - Frente 1.3: Android validado e release privado publicado no portal
+
+Status: Android fisico validado para a fatia de perfis/anjos/convite da Frente 1.3; release privado Android publicado no portal publico. iPhone/iOS permanece pos-MVP e sem release ativo no portal.
+
+Especialistas acionados:
+
+- Katia/Eliane: build, instalacao ADB, validação visual Android e leitura de logs.
+- Demi/Tereza: pacote de download, QR, manifesto e deploy EC2 dos portais.
+- Tarcila/Lina/Doneda: microcopy publica para Android disponivel e iPhone posteriormente.
+- Cristine: checkpoint, memoria mobile e continuidade.
+
+Validacao Android fisica:
+
+- Device: `5686add7` / `23129RA5FL`.
+- APK instalado: `distribution/android/out/sinalseguro-android.apk`.
+- SHA-256: `19ad59c4b9c4c47c8316f3a24d354626ee11a3442be910841fcd1e73283cd08b`.
+- Telas validadas por ADB/screenshot/UI dump: `Perfis e papeis`, `Anjos de confianca` e `Convite recebido`.
+- Perfil nao definido bloqueou convite; convite sem token mostrou orientacao para configurar perfil adulto.
+- Log saneado do recorte nao mostrou `FATAL EXCEPTION`, `AndroidRuntime`, `ReactNativeJS Error`, ANR ou crash do processo SinalSeguro.
+
+Publicacao portal:
+
+- Release EC2: `/var/www/sinalseguro/releases/20260513T212800Z`.
+- Android: `https://www.sinalseguro.com.br/downloads/private/android/SinalSeguro-privado-0.1.0-20260513.apk`.
+- QR Android: `https://www.sinalseguro.com.br/assets/app/sinalseguro-android-qr-20260513.svg`.
+- Manifesto: `https://www.sinalseguro.com.br/downloads/installers.json`, contendo apenas Android.
+- `/baixar/ios` informa em linguagem publica que a versao para iPhone sera disponibilizada posteriormente.
+- Release iPhone antigo retorna `404`; a URL versionada antiga de QR pode permanecer em cache externo, mas nao e referenciada pelo portal atual.
+
+Gates:
+
+- Mobile: `typecheck`, `lint`, `npm test`, build Android privado para device, instalacao ADB e validação visual/logs.
+- Portal: `npm run validate`, `infra/aws/deploy-portais.sh`, curls pos-deploy, `nginx -t`, `cereusia-crm=active`, `sinalseguro-api=active`, API health/ready ok.
+
+Checkpoint detalhado:
+
+- `docs/40_CHECKPOINT_FRENTE_1_3_ANDROID_RELEASE_PORTAL_2026-05-13.md`
+
 ## 2026-05-11 - Frente 1.2: retomada CLI e checkpoint iOS parcial
 
 Status: acesso pelo CLI normal; problema de enumeracao da raiz ficou associado ao Codex GUI. Frente 1.2 segue aberta, sem permissao para avancar frentes dependentes.

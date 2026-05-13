@@ -68,6 +68,16 @@ Papel: seguranca, LGPD e QA.
 - Gate QA restante da Frente 1.2 Android foi fechado; nao declarar suporte iOS aprovado.
 - Proxima frente deve comecar por papeis, familia, maioridade, consentimento e autorizacao antes de qualquer anjo/P2P real.
 
+## QA/Security - 2026-05-13 - Frente 1.3 Android e portal privado
+
+- APK Android privado validado no device `23129RA5FL`, SHA-256 `19ad59c4b9c4c47c8316f3a24d354626ee11a3442be910841fcd1e73283cd08b`, instalado por USB com `Success`.
+- Screenshots e UI dumps versionaveis foram limitados a `Perfis`, `Anjos de confianca` e `Convite recebido`; capturas do cofre local, tela inicial do aparelho e logs brutos foram removidos antes do Git.
+- Log saneado do recorte nao mostrou `FATAL EXCEPTION`, `AndroidRuntime`, `ReactNativeJS Error`, ANR ou crash do processo SinalSeguro.
+- Portal publico validado sem strings ativas de `downloads/private/ios`, `IPA`, `TestFlight`, `Baixar IPA` ou QR iPhone nas paginas atuais.
+- Manifesto publico contem apenas Android; release iPhone antigo retorna `404`.
+- Observacao: URL versionada antiga de QR iPhone pode permanecer em cache externo ate expirar, mas nao e referenciada pelo portal atual e nao aponta para release iPhone disponivel.
+- EC2 pos-deploy: `nginx -t` aprovado, `cereusia-crm=active`, `sinalseguro-api=active`, API health/ready ok.
+
 ## QA/Security - 2026-05-11 - Frente 1.2 Android validado
 
 - Android fisico `23129RA5FL` passou na matriz desta rodada com APK SHA-256 `b4c8eb4aad7fb7c886bf5f726f179be633e03751a5eb9ae9b79c3ee061ada0f3`.
