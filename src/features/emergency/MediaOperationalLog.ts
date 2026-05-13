@@ -4,7 +4,7 @@ import * as FileSystem from "expo-file-system/legacy";
 type MediaOperationalLogValue = boolean | number | string | null | undefined;
 type MediaOperationalLogFields = Record<string, MediaOperationalLogValue>;
 
-const debugDirectoryUri = `${FileSystem.documentDirectory ?? ""}sinalseguro-debug/`;
+const debugDirectoryUri = `${FileSystem.cacheDirectory ?? FileSystem.documentDirectory ?? ""}sinalseguro-debug/`;
 export const mediaOperationalLogFileUri = `${debugDirectoryUri}media-operational-log.jsonl`;
 const maxLogBytes = 180 * 1024;
 const forbiddenFieldPattern = /(uri|url|path|key|token|nonce|tag|sha|latitude|longitude|payload|email|ip|capability)/i;
@@ -13,7 +13,7 @@ const forbiddenValuePattern = /(file:\/\/|https?:\/\/|\/data\/|\/var\/|\/Users\/
 let appendQueue = Promise.resolve();
 
 export function shouldPersistMediaOperationalLog() {
-  return Platform.OS === "ios" && Boolean(FileSystem.documentDirectory);
+  return Platform.OS === "ios" && Boolean(FileSystem.cacheDirectory ?? FileSystem.documentDirectory);
 }
 
 export function appendMediaOperationalLog(event: string, fields: MediaOperationalLogFields = {}, error?: unknown) {
@@ -64,11 +64,16 @@ function sanitizeLogToken(value: string) {
 }
 
 function classifyError(error: unknown) {
-  if (!(error instanceof Error)) return "unknown_error";
-  if (/cancel/i.test(`${error.name} ${error.message}`)) return "cancelled";
-  if (/permission|authori[sz]|denied/i.test(`${error.name} ${error.message}`)) return "permission_error";
-  if (/ready|output/i.test(`${error.name} ${error.message}`)) return "camera_output_not_ready";
-  if (/camera_no_file_returned/i.test(error.message)) return "camera_no_file_returned";
+  const errorRecord = typeof error === "object" && error !== null ? error as Record<string, unknown> : {};
+  const errorText = error instanceof Error
+    ? `${error.name} ${error.message}`
+    : `${String(errorRecord.name ?? "")} ${String(errorRecord.code ?? "")} ${String(errorRecord.message ?? error ?? "")}`;
+  const nativeCode = errorText.match(/\b(native_[a-z0-9_]+|camera_[a-z0-9_]+)\b/i)?.[1];
+  if (nativeCode) return sanitizeLogToken(nativeCode);
+  if (/cancel/i.test(errorText)) return "cancelled";
+  if (/permission|authori[sz]|denied/i.test(errorText)) return "permission_error";
+  if (/ready|output/i.test(errorText)) return "camera_output_not_ready";
+  if (/camera_no_file_returned/i.test(errorText)) return "camera_no_file_returned";
   return "media_error";
 }
 

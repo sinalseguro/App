@@ -47,7 +47,25 @@ Quando a sessao for retomada apos limite de uso, troca de agente, interrupcao de
 
 ## Proximo checkpoint
 
-Etapa ativa: Frente 1.2 em homologacao privada; Android fisico validado nesta rodada, iPhone fisico ainda pendente antes de fechar a frente.
+Etapa ativa: salvar e publicar o fechamento da Frente 1.2 Android para abrir a Frente 1.3. A Frente 1.2 Android foi aprovada por Roberto em 2026-05-13; iPhone/iOS fica pos-MVP e nao deve ser reaberto nesta rodada.
+
+Retomada recomendada:
+
+1. Comecar por `docs/37_HANDOFF_FRENTE_1_3_PERFIS_PAPEIS_2026-05-13.md`.
+2. Preservar os contratos de midia da Frente 1.2 e nao refazer SOS/cofre/player sem evidencia de regressao.
+3. Implementar primeiro papeis, familia, maioridade, consentimentos e autorizacoes.
+4. So depois liberar Frente 2 de anjos/convites e Frente 4 de chamada audio/video.
+
+Atualizacao de continuidade em 2026-05-11 - retomada CLI apos emergencia operacional:
+
+- Acesso validado no CLI com `pwd`, `ls ./`, `AGENTS.md`, `apps/mobile/package.json` e `git -C apps/mobile status --short --branch`; o erro `Operation not permitted` ficou associado ao Codex GUI, nao confirmado no CLI.
+- Backup de resgate fora do iCloud: `/Users/roberto/SinalSeguro-resgate-20260511-132114`, com patch/status/untracked/evidencias do `apps/mobile`.
+- Nao implementar codigo novo nesta retomada; preservar alteracoes existentes, untracked e evidencias, sem `git reset`, `git checkout --`, limpeza destrutiva, build pesado, commit ou push.
+- Decisao tecnica vigente: `SinalSeguroMediaEngine`/`native_segmented_v1` como caminho principal; JS/Base64/loopback apenas fallback legado/homologacao.
+- Android build/debug passou e APK foi preservado em `docs/evidencias/android/2026-05-11-frente-1-2-native/app-debug-85f52968.apk`, SHA-256 `85f52968ac464aca4b4b0fc868abf6bc81a1cfa015a26e62f5f19200262bf599`; Android fisico desta rodada segue pendente por falta de device ADB conectado.
+- iPhone fisico teve dois ciclos curtos com preservacao nativa `native_segmented_v1`, origem apagada, pacote com asset anexado, residuos claros limpos e camera/microfone frios apos os ciclos.
+- Evidencia iOS e parcial: os ciclos curtos terminaram por limite de segmento antes do toque final; encerramento antecipado durante gravacao, Cofre visual pos-toque, Player e midia longa iOS seguem pendentes.
+- Frente 1.2 nao esta fechada e nao libera Frente 2/3/4/5, P2P/anjo, upload, localizacao ou conveniados.
 
 Atualizacao de continuidade em 2026-05-11 - Frente 1.2 Android validado:
 
@@ -791,3 +809,30 @@ Proximas acoes atualizadas:
 - APK Android final desta rodada: `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `5e664df9a9982569a0ce05e737af01fcc105057d892438e10ffbe07ac1f28afd`.
 - Evidencia versionavel ficou apenas em `docs/evidencias/android/2026-05-10-frente-1-2-native/inventario-saneado.txt`; capturas PNG/XML e logcat detalhado foram removidos por conterem contexto pessoal ou risco de exposicao.
 - Proxima retomada: nao reimplementar o que ja passou; repetir Android 60s/3min/5min, iPhone fisico, logs saneados, residuos claros, tempo ate primeiro frame e liberacao de camera/microfone antes de fechar a Frente 1.2.
+
+## Memoria viva - 2026-05-13 - Android MVP validado para aceite manual
+
+- A decisao vigente e Android primeiro; iPhone/iOS fica pos-MVP e nao deve bloquear o aceite Android.
+- Especialistas acionados nesta retomada: Katia/mobile, Eliane+Lina/QA-UX e Cristine/security; conclusao conjunta foi validar Android fisico antes de liberar teste manual de Roberto.
+- Ajuste de seguranca aplicado: `SinalSeguroMediaEngineModule.kt` Android aceita origem apenas em `filesDir`, `cacheDir` e `noBackupFilesDir`; `externalCacheDir` e `getExternalFilesDir` foram bloqueados tambem pelo smoke test.
+- APK Android privado instalado e validado no `23129RA5FL`: SHA-256 `50fe4c831174899e5728579709ec906470c6c55d4aad1f205c162da1be0444db`.
+- Validacoes: `typecheck`, `lint`, `test`, `private:android:readiness`, `build:android:private`, `git diff --check`.
+- Ciclo fisico principal: SOS -> chamado ativo -> encerramento -> `Video protegido` -> cofre como `1 video` -> player unificado reproduzindo ate pelo menos `0:23 / 1:46`.
+- Ciclos fisicos curtos pos-rebuild confirmaram reentrada da camera/microfone, nova finalizacao protegida, `Continuar` retornando para Home, cofre com `Video 31s`/`1 video` e player final iniciando reproducao.
+- Inventario saneado pos-rebuild: 418 arquivos, 375 `.sseg`, 22 `.nseg`, 0 midias claras persistentes `.mp4/.mov/.m4v/.3gp/.avi/.webm`.
+- Evidencias locais: `docs/evidencias/android/2026-05-13-frente-1-2-validacao-fisica/`.
+- Proxima acao: Roberto testar manualmente no Android instalado; se aprovado, fechar Frente 1.2 como base Android do MVP e seguir para a proxima frente Android.
+
+## Memoria viva - 2026-05-13 - pausa operacional e reciclaveis Android
+
+- Roberto pausou esta frente para demanda paralela de portal web governo/business; nao executar nada de portal neste contexto.
+- Higienizacao Android executada por script versionado com escopo reciclavel: `.expo`, `android/.gradle`, `android/app/.cxx`, `android/app/build`, `android/build`.
+- Resultado: 5 itens removidos, 0 falhas, 2.5 GiB de variacao real; script reportou 6.6 GiB livres e conferencia final posterior indicou 6.3 GiB livres.
+- Checkpoint versionavel em `docs/35_CHECKPOINT_PAUSA_FRENTE_1_2_HIGIENIZACAO_ANDROID_2026-05-13.md`.
+- APK local removido como regeneravel; app instalado no Android fisico permanece. Rebuild privado sera necessario apenas se houver reinstalacao.
+
+## Memoria viva - 2026-05-13 - aceite manual da Frente 1.2 Android
+
+- Roberto validou e aprovou manualmente a Frente 1.2 no Android.
+- Frente 1.2 fica encerrada no escopo Android do MVP; iOS permanece pos-MVP.
+- A proxima frente segura e Frente 1.3, porque P2P/anjos/conveniados dependem de papeis, responsaveis, maioridade, consentimentos e autorizacoes.

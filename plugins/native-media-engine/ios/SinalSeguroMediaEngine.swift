@@ -1,3 +1,4 @@
+import AVFoundation
 import CryptoKit
 import Foundation
 import React
@@ -84,73 +85,72 @@ class SinalSeguroMediaEngine: NSObject {
     rejecter reject: RCTPromiseRejectBlock
   ) {
     do {
-      let sourceUri = try requiredString(input, "sourceUri")
       let assetId = try requiredString(input, "assetId")
-      let keyBase64 = try requiredString(input, "keyBase64")
-      let nonceBase64 = try requiredString(input, "nonceBase64")
-      let aad = optionalString(input, "aad") ?? ""
-      let encryptedURL = try privateFileURL(from: sourceUri)
-      guard fileManager.fileExists(atPath: encryptedURL.path) else {
-        throw MediaEngineError("native_playback_source_unavailable")
+      let playableURL = try writeDecryptedAssetForPlayback(input, fileStem: assetId)
+      resolvePlaybackHandle(playableURL, resolve: resolve, segmentCount: 1)
+    } catch {
+      reject("native_open_playback_failed", "Native playback open failed.", error)
+    }
+  }
+
+  @objc(openEncryptedAssets:resolver:rejecter:)
+  func openEncryptedAssets(
+    _ input: NSDictionary,
+    resolver resolve: @escaping RCTPromiseResolveBlock,
+    rejecter reject: @escaping RCTPromiseRejectBlock
+  ) {
+    do {
+      guard let assets = input["assets"] as? [NSDictionary], !assets.isEmpty else {
+        throw MediaEngineError("native_playback_assets_required")
       }
 
-      let sealedBytes = try Data(contentsOf: encryptedURL)
-      if let expectedCiphertextSha256 = optionalString(input, "ciphertextSha256"),
-         !expectedCiphertextSha256.isEmpty,
-         sha256Hex(sealedBytes) != expectedCiphertextSha256 {
-        throw MediaEngineError("native_playback_source_integrity_failed")
+      let assetSetId = optionalString(input, "assetSetId")
+        ?? optionalString(input, "packageId")
+        ?? UUID().uuidString
+
+      if assets.count == 1 {
+        let singleAssetId = optionalString(assets[0], "assetId") ?? assetSetId
+        let playableURL = try writeDecryptedAssetForPlayback(assets[0], fileStem: singleAssetId)
+        resolvePlaybackHandle(playableURL, resolve: resolve, segmentCount: 1)
+        return
       }
 
-      guard let keyData = Data(base64Encoded: keyBase64), keyData.count == 32,
-            let nonceData = Data(base64Encoded: nonceBase64), nonceData.count == 12,
-            sealedBytes.count >= 16 else {
-        throw MediaEngineError("native_playback_crypto_material_invalid")
-      }
+      let playbackDirectory = try nativePlaybackDirectory()
+      let playableURL = playbackDirectory.appendingPathComponent("\(shortPlaybackFileStem(assetSetId, prefix: "package"))-\(UUID().uuidString).mp4")
+      var temporarySegmentURLs: [URL] = []
 
-      let ciphertext = Data(sealedBytes.dropLast(16))
-      let tag = Data(sealedBytes.suffix(16))
-      if let tagBase64 = optionalString(input, "tagBase64"),
-         !tagBase64.isEmpty,
-         tag.base64EncodedString() != tagBase64 {
-        throw MediaEngineError("native_playback_tag_mismatch")
-      }
-      let sealedBox = try AES.GCM.SealedBox(
-        nonce: AES.GCM.Nonce(data: nonceData),
-        ciphertext: ciphertext,
-        tag: tag
-      )
-      let plaintext = try AES.GCM.open(
-        sealedBox,
-        using: SymmetricKey(data: keyData),
-        authenticating: Data(aad.utf8)
-      )
-
-      let playbackDirectory = cacheDirectory()
-        .appendingPathComponent("sinalseguro-native-media", isDirectory: true)
-        .appendingPathComponent("playback", isDirectory: true)
-      try prepareSecureDirectory(playbackDirectory)
-      let playableURL = playbackDirectory.appendingPathComponent("\(safeFileStem(assetId))-\(UUID().uuidString).mp4")
       do {
-        try plaintext.write(to: playableURL, options: [.atomic])
-        try protectMediaFile(playableURL)
+        for (index, assetInput) in assets.enumerated() {
+          let assetId = optionalString(assetInput, "assetId") ?? "segment-\(index)"
+          let segmentStem = shortPlaybackFileStem("\(assetSetId):\(index):\(assetId)", prefix: "segment-\(index)")
+          temporarySegmentURLs.append(try writeDecryptedAssetForPlayback(assetInput, fileStem: segmentStem))
+        }
+
+        try exportMergedPlaybackSegments(temporarySegmentURLs, to: playableURL) { [weak self] result in
+          guard let self = self else { return }
+          temporarySegmentURLs.forEach { try? self.fileManager.removeItem(at: $0) }
+
+          switch result {
+            case .success:
+              do {
+                try self.protectMediaFile(playableURL)
+                self.resolvePlaybackHandle(playableURL, resolve: resolve, segmentCount: assets.count)
+              } catch {
+                try? self.fileManager.removeItem(at: playableURL)
+                reject("native_open_package_playback_failed", "Native package playback open failed.", error)
+              }
+            case .failure(let error):
+              try? self.fileManager.removeItem(at: playableURL)
+              reject("native_open_package_playback_failed", "Native package playback open failed.", error)
+          }
+        }
       } catch {
+        temporarySegmentURLs.forEach { try? fileManager.removeItem(at: $0) }
         try? fileManager.removeItem(at: playableURL)
         throw error
       }
-
-      let handleId = UUID().uuidString
-      playbackHandles[handleId] = playableURL
-      resolve([
-        "schemaVersion": "sinalseguro.native-playback-handle.v1",
-        "status": "opened",
-        "engine": "SinalSeguroMediaEngine",
-        "adapter": "native_encrypted_source",
-        "handleId": handleId,
-        "playableUri": playableURL.absoluteString,
-        "openedAt": isoTimestamp()
-      ])
     } catch {
-      reject("native_open_playback_failed", "Native playback open failed.", error)
+      reject("native_open_package_playback_failed", "Native package playback open failed.", error)
     }
   }
 
@@ -173,18 +173,236 @@ class SinalSeguroMediaEngine: NSObject {
   ) {
     do {
       let root = cacheDirectory().appendingPathComponent("sinalseguro-native-media", isDirectory: true)
-      let summary = try cleanupDirectory(root)
+      let nativeSummary = try cleanupDirectory(root)
       resolve([
         "schemaVersion": "sinalseguro.native-media-cleanup.v1",
         "status": "ok",
         "engine": "SinalSeguroMediaEngine",
-        "deletedFiles": summary.deletedFiles,
-        "deletedBytes": summary.deletedBytes,
+        "deletedFiles": nativeSummary.deletedFiles,
+        "deletedBytes": nativeSummary.deletedBytes,
         "completedAt": isoTimestamp()
       ])
     } catch {
       reject("native_cleanup_failed", "Native residue cleanup failed.", error)
     }
+  }
+
+  private func decryptEncryptedAssetInput(_ input: NSDictionary) throws -> Data {
+    let sourceUri = try requiredString(input, "sourceUri")
+    let keyBase64 = try requiredString(input, "keyBase64")
+    let nonceBase64 = try requiredString(input, "nonceBase64")
+    let aad = optionalString(input, "aad") ?? ""
+    let encryptedURL = try privateFileURL(from: sourceUri)
+    guard fileManager.fileExists(atPath: encryptedURL.path) else {
+      throw MediaEngineError("native_playback_source_unavailable")
+    }
+
+    let sealedBytes = try Data(contentsOf: encryptedURL)
+    if let expectedCiphertextSha256 = optionalString(input, "ciphertextSha256"),
+       !expectedCiphertextSha256.isEmpty,
+       sha256Hex(sealedBytes) != expectedCiphertextSha256 {
+      throw MediaEngineError("native_playback_source_integrity_failed")
+    }
+
+    guard let keyData = Data(base64Encoded: keyBase64), keyData.count == 32,
+          let nonceData = Data(base64Encoded: nonceBase64), nonceData.count == 12,
+          sealedBytes.count >= 16 else {
+      throw MediaEngineError("native_playback_crypto_material_invalid")
+    }
+
+    let ciphertext = Data(sealedBytes.dropLast(16))
+    let tag = Data(sealedBytes.suffix(16))
+    if let tagBase64 = optionalString(input, "tagBase64"),
+       !tagBase64.isEmpty,
+       tag.base64EncodedString() != tagBase64 {
+      throw MediaEngineError("native_playback_tag_mismatch")
+    }
+    let sealedBox = try AES.GCM.SealedBox(
+      nonce: AES.GCM.Nonce(data: nonceData),
+      ciphertext: ciphertext,
+      tag: tag
+    )
+    return try AES.GCM.open(
+      sealedBox,
+      using: SymmetricKey(data: keyData),
+      authenticating: Data(aad.utf8)
+    )
+  }
+
+  private func writeDecryptedAssetForPlayback(_ input: NSDictionary, fileStem: String) throws -> URL {
+    let playbackDirectory = try nativePlaybackDirectory()
+    let playableURL = playbackDirectory.appendingPathComponent("\(safeFileStem(fileStem))-\(UUID().uuidString).mp4")
+    let plaintext = try decryptEncryptedAssetInput(input)
+
+    do {
+      try plaintext.write(to: playableURL, options: [.atomic])
+      try protectMediaFile(playableURL)
+      return playableURL
+    } catch {
+      try? fileManager.removeItem(at: playableURL)
+      throw error
+    }
+  }
+
+  private func nativePlaybackDirectory() throws -> URL {
+    let playbackDirectory = cacheDirectory()
+      .appendingPathComponent("sinalseguro-native-media", isDirectory: true)
+      .appendingPathComponent("playback", isDirectory: true)
+    try prepareSecureDirectory(playbackDirectory)
+    return playbackDirectory
+  }
+
+  private func resolvePlaybackHandle(
+    _ playableURL: URL,
+    resolve: RCTPromiseResolveBlock,
+    segmentCount: Int
+  ) {
+    let handleId = UUID().uuidString
+    playbackHandles[handleId] = playableURL
+    resolve([
+      "schemaVersion": "sinalseguro.native-playback-handle.v1",
+      "status": "opened",
+      "engine": "SinalSeguroMediaEngine",
+      "adapter": "native_encrypted_source",
+      "handleId": handleId,
+      "playableUri": playableURL.absoluteString,
+      "segmentCount": segmentCount,
+      "openedAt": isoTimestamp()
+    ])
+  }
+
+  private func exportMergedPlaybackSegments(
+    _ segmentURLs: [URL],
+    to outputURL: URL,
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) throws {
+    let composition = AVMutableComposition()
+    var cursor = CMTime.zero
+    var didInsertTrack = false
+    var videoCompositionTrack: AVMutableCompositionTrack?
+    var audioCompositionTrack: AVMutableCompositionTrack?
+    var videoInstructions: [AVMutableVideoCompositionInstruction] = []
+    var renderSize: CGSize?
+    var frameDuration = CMTime(value: 1, timescale: 30)
+
+    for segmentURL in segmentURLs {
+      let asset = AVURLAsset(url: segmentURL)
+      let duration = asset.duration
+      guard duration.isValid && duration.seconds > 0 else {
+        throw MediaEngineError("native_playback_segment_duration_invalid")
+      }
+      let timeRange = CMTimeRange(start: .zero, duration: duration)
+
+      if let sourceVideoTrack = asset.tracks(withMediaType: .video).first {
+        if videoCompositionTrack == nil {
+          videoCompositionTrack = composition.addMutableTrack(
+            withMediaType: .video,
+            preferredTrackID: kCMPersistentTrackID_Invalid
+          )
+          videoCompositionTrack?.preferredTransform = sourceVideoTrack.preferredTransform
+          renderSize = normalizedRenderGeometry(for: sourceVideoTrack).size
+          if sourceVideoTrack.minFrameDuration.isValid && sourceVideoTrack.minFrameDuration.seconds > 0 {
+            frameDuration = sourceVideoTrack.minFrameDuration
+          }
+        }
+        guard let videoCompositionTrack = videoCompositionTrack else {
+          throw MediaEngineError("native_playback_segment_tracks_unavailable")
+        }
+        try videoCompositionTrack.insertTimeRange(timeRange, of: sourceVideoTrack, at: cursor)
+        let videoInstruction = AVMutableVideoCompositionInstruction()
+        videoInstruction.timeRange = CMTimeRange(start: cursor, duration: duration)
+        let layerInstruction = AVMutableVideoCompositionLayerInstruction(assetTrack: videoCompositionTrack)
+        layerInstruction.setTransform(normalizedRenderGeometry(for: sourceVideoTrack).transform, at: cursor)
+        videoInstruction.layerInstructions = [layerInstruction]
+        videoInstructions.append(videoInstruction)
+        didInsertTrack = true
+      }
+
+      if let sourceAudioTrack = asset.tracks(withMediaType: .audio).first {
+        if audioCompositionTrack == nil {
+          audioCompositionTrack = composition.addMutableTrack(
+            withMediaType: .audio,
+            preferredTrackID: kCMPersistentTrackID_Invalid
+          )
+        }
+        try audioCompositionTrack?.insertTimeRange(timeRange, of: sourceAudioTrack, at: cursor)
+      }
+
+      cursor = CMTimeAdd(cursor, duration)
+    }
+
+    guard didInsertTrack else {
+      throw MediaEngineError("native_playback_segment_tracks_unavailable")
+    }
+    guard let exportSession = makeMergedPlaybackExportSession(for: composition),
+          exportSession.supportedFileTypes.contains(.mp4) else {
+      throw MediaEngineError("native_playback_export_unavailable")
+    }
+
+    let stagingURL = outputURL
+      .deletingLastPathComponent()
+      .appendingPathComponent("\(outputURL.deletingPathExtension().lastPathComponent)-staging-\(UUID().uuidString).mp4")
+    try? fileManager.removeItem(at: outputURL)
+    try? fileManager.removeItem(at: stagingURL)
+
+    if let renderSize = renderSize, !videoInstructions.isEmpty {
+      let videoComposition = AVMutableVideoComposition()
+      videoComposition.instructions = videoInstructions
+      videoComposition.frameDuration = frameDuration
+      videoComposition.renderSize = renderSize
+      exportSession.videoComposition = videoComposition
+    }
+
+    exportSession.outputURL = stagingURL
+    exportSession.outputFileType = .mp4
+    exportSession.shouldOptimizeForNetworkUse = false
+    exportSession.exportAsynchronously { [weak self] in
+      guard let self = self else { return }
+      switch exportSession.status {
+        case .completed:
+          do {
+            try self.fileManager.moveItem(at: stagingURL, to: outputURL)
+            completion(.success(()))
+          } catch {
+            try? self.fileManager.removeItem(at: stagingURL)
+            try? self.fileManager.removeItem(at: outputURL)
+            completion(.failure(error))
+          }
+        case .failed, .cancelled:
+          try? self.fileManager.removeItem(at: stagingURL)
+          completion(.failure(exportSession.error ?? MediaEngineError("native_playback_export_failed")))
+        default:
+          try? self.fileManager.removeItem(at: stagingURL)
+          completion(.failure(MediaEngineError("native_playback_export_incomplete")))
+      }
+    }
+  }
+
+  private func makeMergedPlaybackExportSession(for composition: AVAsset) -> AVAssetExportSession? {
+    let presets = [
+      AVAssetExportPresetMediumQuality,
+      AVAssetExportPresetHighestQuality,
+      AVAssetExportPresetPassthrough
+    ]
+
+    return presets.compactMap { preset in
+      AVAssetExportSession(asset: composition, presetName: preset)
+    }.first { exportSession in
+      exportSession.supportedFileTypes.contains(.mp4)
+    }
+  }
+
+  private func normalizedRenderGeometry(for track: AVAssetTrack) -> (size: CGSize, transform: CGAffineTransform) {
+    let naturalRect = CGRect(origin: .zero, size: track.naturalSize)
+    let transformedRect = naturalRect.applying(track.preferredTransform)
+    let normalizedTransform = track.preferredTransform.translatedBy(
+      x: -transformedRect.origin.x,
+      y: -transformedRect.origin.y
+    )
+    let width = max(1, abs(transformedRect.width))
+    let height = max(1, abs(transformedRect.height))
+
+    return (CGSize(width: width, height: height), normalizedTransform)
   }
 
   private func requiredString(_ input: NSDictionary, _ key: String) throws -> String {
@@ -275,7 +493,7 @@ class SinalSeguroMediaEngine: NSObject {
     }
     var deletedFiles = 0
     var deletedBytes: Int64 = 0
-    let keys: Set<URLResourceKey> = [.isDirectoryKey, .fileSizeKey]
+    let keys: Set<URLResourceKey> = [.isDirectoryKey, .fileSizeKey, .contentModificationDateKey]
     let urls = fileManager.enumerator(at: root, includingPropertiesForKeys: Array(keys))?.allObjects as? [URL] ?? []
 
     for url in urls.reversed() {
@@ -311,6 +529,11 @@ class SinalSeguroMediaEngine: NSObject {
     let scalars = value.unicodeScalars.map { allowed.contains($0) ? Character($0) : "_" }
     let result = String(scalars)
     return result.isEmpty ? UUID().uuidString : result
+  }
+
+  private func shortPlaybackFileStem(_ value: String, prefix: String) -> String {
+    let digest = sha256Hex(Data(value.utf8)).prefix(20)
+    return "\(safeFileStem(prefix))-\(digest)"
   }
 
   private func isoTimestamp() -> String {

@@ -238,7 +238,7 @@ class MemoryCaptureResidueFileSystem implements CaptureResidueFileSystemAdapter 
 
   async getInfo(uri: string) {
     const entry = this.entries.get(uri);
-    return entry ? { exists: true, modificationTime: entry.modificationTime } : { exists: false };
+    return entry ? { exists: true, modificationTime: entry.modificationTime, size: entry.size } : { exists: false };
   }
 
   async readDirectory(uri: string) {
@@ -532,21 +532,63 @@ async function run() {
   assert.equal(pendingThumbnail.status, "pending_secure_derivation");
 
   const residueFileSystem = new MemoryCaptureResidueFileSystem();
-  residueFileSystem.entries.set("cache://Camera/preserved.mp4", { modificationTime: 1000, size: 10 });
+  residueFileSystem.entries.set("cache://Camera/preserved.mov", { modificationTime: 1_800_000, size: 10 });
   residueFileSystem.entries.set("cache://Camera/stale.mp4", { modificationTime: 1000, size: 11 });
-  residueFileSystem.entries.set("cache://Camera/fresh.mp4", { modificationTime: 1_800_000, size: 12 });
+  residueFileSystem.entries.set("cache://Camera/stale.mov", { modificationTime: 1000, size: 12 });
+  residueFileSystem.entries.set("cache://Camera/fresh.mp4", { modificationTime: 1_800_000, size: 13 });
+  residueFileSystem.entries.set("cache://Camera/fresh.mov", { modificationTime: 1_800_000, size: 14 });
+  residueFileSystem.entries.set("cache://Camera/nested/path.mp4", { modificationTime: 1000, size: 15 });
+  residueFileSystem.entries.set("cache://Camera/../escape.mp4", { modificationTime: 1000, size: 16 });
   residueFileSystem.entries.set("cache://Camera/thumbnail.jpg", { modificationTime: 1000, size: 13 });
   residueFileSystem.entries.set("cache://Other/other.mp4", { modificationTime: 1000, size: 14 });
   const residueCleaner = new CameraCaptureResidueCleaner(residueFileSystem);
   const residueResult = await residueCleaner.cleanupAfterSuccessfulPreservation({
     nowMs: 2_000_000,
-    sourceUri: "cache://Camera/preserved.mp4",
+    sourceUri: "cache://Camera/preserved.mov",
     staleBeforeMs: 1_500_000
   });
-  assert.deepEqual(residueResult.deletedUris.sort(), ["cache://Camera/preserved.mp4", "cache://Camera/stale.mp4"]);
+  assert.deepEqual(residueResult.deletedUris.sort(), [
+    "cache://Camera/preserved.mov",
+    "cache://Camera/stale.mov",
+    "cache://Camera/stale.mp4"
+  ]);
   assert.equal(residueFileSystem.entries.has("cache://Camera/fresh.mp4"), true);
+  assert.equal(residueFileSystem.entries.has("cache://Camera/fresh.mov"), true);
+  assert.equal(residueFileSystem.entries.has("cache://Camera/nested/path.mp4"), true);
+  assert.equal(residueFileSystem.entries.has("cache://Camera/../escape.mp4"), true);
   assert.equal(residueFileSystem.entries.has("cache://Camera/thumbnail.jpg"), true);
   assert.equal(residueFileSystem.entries.has("cache://Other/other.mp4"), true);
+
+  const sourceOnlyResidueFileSystem = new MemoryCaptureResidueFileSystem();
+  sourceOnlyResidueFileSystem.entries.set("cache://Camera/source.mp4", { modificationTime: 1000, size: 10 });
+  sourceOnlyResidueFileSystem.entries.set("cache://Camera/other-stale.mp4", { modificationTime: 1000, size: 11 });
+  const sourceOnlyResidueResult = await new CameraCaptureResidueCleaner(sourceOnlyResidueFileSystem).cleanupAfterSuccessfulPreservation({
+    sourceOnly: true,
+    sourceUri: "cache://Camera/source.mp4",
+    staleBeforeMs: 1_500_000
+  });
+  assert.deepEqual(sourceOnlyResidueResult.deletedUris, ["cache://Camera/source.mp4"]);
+  assert.equal(sourceOnlyResidueFileSystem.entries.has("cache://Camera/other-stale.mp4"), true);
+
+  const recoverableResidueFileSystem = new MemoryCaptureResidueFileSystem();
+  recoverableResidueFileSystem.entries.set("cache://Camera/before.mp4", { modificationTime: 1_000, size: 10 });
+  recoverableResidueFileSystem.entries.set("cache://Camera/recovered-old.mov", { modificationTime: 1_600, size: 20 });
+  recoverableResidueFileSystem.entries.set("cache://Camera/recovered-new.mp4", { modificationTime: 1_900, size: 30 });
+  recoverableResidueFileSystem.entries.set("cache://Camera/recovered-new-larger.m4v", { modificationTime: 1_900, size: 40 });
+  recoverableResidueFileSystem.entries.set("cache://Camera/zero.mp4", { modificationTime: 1_900, size: 0 });
+  recoverableResidueFileSystem.entries.set("cache://Camera/thumb.jpg", { modificationTime: 1_900, size: 50 });
+  recoverableResidueFileSystem.entries.set("cache://Camera/nested/path.mp4", { modificationTime: 1_900, size: 60 });
+  recoverableResidueFileSystem.entries.set("cache://Camera/../escape.mp4", { modificationTime: 1_900, size: 70 });
+  recoverableResidueFileSystem.entries.set("cache://Other/recovered.mp4", { modificationTime: 1_900, size: 80 });
+  const recoverableResidues = await new CameraCaptureResidueCleaner(recoverableResidueFileSystem).findRecoverableCameraVideos({
+    maxCandidates: 2,
+    maxTotalSizeBytes: 100,
+    modifiedAfterMs: 1_500_000
+  });
+  assert.deepEqual(
+    recoverableResidues.map((item) => item.uri),
+    ["cache://Camera/recovered-new-larger.m4v", "cache://Camera/recovered-new.mp4"]
+  );
 
   const legacyPlaintextFileSystem = new MemoryCaptureResidueFileSystem();
   legacyPlaintextFileSystem.entries.set("doc://sinalseguro-media/referenced.mp4", { modificationTime: 1000, size: 10 });

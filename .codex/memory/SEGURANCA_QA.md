@@ -30,6 +30,44 @@ Papel: seguranca, LGPD e QA.
 - Android fisico passou na matriz da Frente 1.2 em 2026-05-11.
 - Gate QA bloqueante atual: repetir iPhone fisico antes de declarar a Frente 1.2 concluida.
 
+## QA/Security - 2026-05-13 - decisao Android primeiro
+
+- Roberto redefiniu o gate de continuidade do MVP: iPhone/iOS fica pos-MVP e nao deve mais bloquear as proximas frentes Android.
+- A Frente 1.2 nao deve ser declarada como suporte iOS concluido; deve ser documentada como MVP Android.
+- Evidencia iOS preservada: cofre unificou o pacote de 1min38 em `1 video`, mas o player nativo unificado falhou com `playback_prepare_error` para 8 segmentos.
+- Risco aceito para esta fase: sem suporte iOS homologado no MVP inicial.
+- Risco nao aceito: deixar Android avancar sem nova rodada fisica proporcional apos as ultimas alteracoes e limpeza de regeneraveis.
+- Gate QA da Frente 1.2 Android para liberar proximas frentes do MVP: fechado apos rebuild privado, instalacao fisica, SOS/cofre/player validados, camera/microfone liberados, inventario saneado sem midia clara persistente e aprovacao manual de Roberto.
+- Logs e evidencias continuam proibidos de conter URI, caminho sensivel, token, chave, nonce/tag/hash bruto, email, IP, coordenada, payload ou midia.
+
+## QA/Security - 2026-05-13 - Android aprovado para teste manual
+
+- APK validado: `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `50fe4c831174899e5728579709ec906470c6c55d4aad1f205c162da1be0444db`.
+- Instalação fisica no Android `23129RA5FL`: `Success`.
+- Gates locais aprovados: `typecheck`, `lint`, `test`, `private:android:readiness`, `build:android:private` e `git diff --check`.
+- Primeiro ciclo fisico: `Video protegido` 100%, cofre com `Video 1min 48s`, `1 video`, player seguro reproduzindo arquivo unificado.
+- Ciclos curtos pos-rebuild: camera/microfone reutilizados, novo `Video protegido` 100%, `Continuar` fechando o modal para Home, cofre com `Video 31s`/`1 video` e player final iniciando reproducao.
+- Logcat analisado sem FATAL EXCEPTION, ANR ou crash nativo SinalSeguro no recorte; log bruto ficou fora do Git.
+- `dumpsys media.camera` final: sem cliente ativo de camera.
+- Inventario saneado pos-rebuild: 418 arquivos, 375 `.sseg`, 22 `.nseg`, 0 midias claras persistentes `.mp4/.mov/.m4v/.3gp/.avi/.webm`.
+- UX/IX: fluxo esta legivel para teste manual, com acao longa clara, modal de progresso compreensivel, cofre em `1 video` e player unificado sem fragmentar a experiencia do usuario leigo.
+- Gate manual: fechado por Roberto em 2026-05-13; a Frente 1.2 Android pode liberar a proxima frente do MVP.
+
+## QA/Security - 2026-05-13 - pausa com limpeza de reciclaveis Android
+
+- Pausa solicitada por Roberto para demanda paralela de portal web governo/business; esta frente nao deve executar alteracao de portal.
+- Limpeza aplicada somente em reciclaveis Android via script versionado; 5 itens removidos, 0 falhas, variacao real de 2.5 GiB.
+- Itens removidos: `.expo`, `android/.gradle`, `android/app/.cxx`, `android/app/build`, `android/build`.
+- Pos-limpeza: dry-run sem reciclaveis Android; script reportou 6.6 GiB livres e conferencia final posterior indicou 6.3 GiB livres.
+- Risco controlado: APK local removido como build regeneravel; checksum, evidencias e estado instalado no Android foram preservados em documentacao.
+- Retomada segura: teste manual no Android ja instalado ou rebuild privado se for necessario reinstalar.
+
+## QA/Security - 2026-05-13 - aceite manual Roberto
+
+- Roberto aprovou manualmente a Frente 1.2 no Android.
+- Gate QA restante da Frente 1.2 Android foi fechado; nao declarar suporte iOS aprovado.
+- Proxima frente deve comecar por papeis, familia, maioridade, consentimento e autorizacao antes de qualquer anjo/P2P real.
+
 ## QA/Security - 2026-05-11 - Frente 1.2 Android validado
 
 - Android fisico `23129RA5FL` passou na matriz desta rodada com APK SHA-256 `b4c8eb4aad7fb7c886bf5f726f179be633e03751a5eb9ae9b79c3ee061ada0f3`.

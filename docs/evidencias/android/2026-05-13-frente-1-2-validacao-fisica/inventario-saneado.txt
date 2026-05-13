@@ -1,0 +1,27 @@
+Frente 1.2 - inventario saneado Android - 2026-05-13
+
+Device: 23129RA5FL
+Android: 15 / SDK 35
+Pacote: br.com.sinalseguro.app
+
+Resumo:
+- Total de arquivos no sandbox do app: 418
+- Arquivos .sseg: 375
+- Arquivos .nseg: 22
+- Midias claras persistentes .mp4/.mov/.m4v/.3gp/.avi/.webm: 0
+
+Camera:
+- Primeiro ciclo SinalSeguro: CONNECT camera 1 em 11:30:47, DISCONNECT em 11:32:34.
+- Segundo ciclo SinalSeguro: CONNECT camera 1 em 11:38:02, DISCONNECT em 11:39:11.
+- Ciclo pos-rebuild SinalSeguro: CONNECT camera 1 em 12:03:01, DISCONNECT em 12:03:19.
+- Ciclo final APK SinalSeguro: CONNECT camera 1 em 12:13:57, DISCONNECT em 12:14:27.
+- Dump final: todos os devices de camera estavam fechados, sem cliente ativo.
+
+Logcat saneado:
+- Sem FATAL EXCEPTION do processo SinalSeguro no recorte analisado.
+- Sem ANR do pacote SinalSeguro no recorte analisado.
+- Sem crash nativo SIGSEGV/SIGABRT do pacote SinalSeguro no recorte analisado.
+
+Observacao:
+- Logcat bruto nao foi versionado.
+- Capturas visuais locais devem ser revisadas antes de qualquer publicacao.

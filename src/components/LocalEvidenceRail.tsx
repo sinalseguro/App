@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Pressable, ScrollView, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
+import { ActivityIndicator, Pressable, ScrollView, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
 import { Archive, ChevronDown, ChevronUp, Eye, FileLock2, MapPin, Share2, Square, Trash2 } from "lucide-react-native";
 import { theme } from "@/design/theme";
 import {
@@ -18,6 +18,7 @@ import { EmergencyPackage } from "@/features/emergency/types";
 
 type LocalEvidenceRailProps = {
   packages: EmergencyPackage[];
+  loading?: boolean;
   selectedPackageId?: string;
   expandedPackageId?: string;
   onSelectPackage: (packageRecord: EmergencyPackage) => void;
@@ -63,6 +64,7 @@ function ActionButton({ label, danger = false, disabled = false, icon, onPress, 
 
 export function LocalEvidenceRail({
   packages,
+  loading = false,
   selectedPackageId,
   expandedPackageId,
   onSelectPackage,
@@ -73,6 +75,16 @@ export function LocalEvidenceRail({
   onDeletePackage,
   onFinishPackage
 }: LocalEvidenceRailProps) {
+  if (loading && !packages.length) {
+    return (
+      <View style={styles.emptyBox}>
+        <ActivityIndicator color={theme.colors.primary} size="small" />
+        <Text style={styles.emptyTitle}>Atualizando cofre local</Text>
+        <Text style={styles.emptyText}>Conferindo arquivos protegidos deste aparelho.</Text>
+      </View>
+    );
+  }
+
   if (!packages.length) {
     return (
       <View style={styles.emptyBox}>

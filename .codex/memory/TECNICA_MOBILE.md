@@ -34,6 +34,43 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Android fisico validou SOS 60s, 3min e ciclo longo; inventario final saneado teve 0 midias claras persistentes, 17 `.nseg` e 375 `.sseg`.
 - iOS segue pendente: nao aprovar midia longa nem fechar Frente 1.2 ate repetir a matriz no iPhone fisico.
 
+## Atualizacao tecnica - 2026-05-13 - MVP Android primeiro
+
+- Roberto decidiu que iPhone/iOS nao deve mais bloquear a conclusao do MVP.
+- Foco tecnico imediato: Android 100% funcional para liberar as proximas frentes.
+- iOS fica pos-MVP, com os achados preservados e sem novas tentativas de build/debug/validacao fisica nesta etapa.
+- Entrave iOS atual: cofre ja apresenta o pacote de 1min38 como `1 video`, mas o player nativo unificado falha no preparo com `assetCount: 8` e `playback_prepare_error`.
+- Hipotese tecnica iOS preservada: merge de multiplos MP4 curtos via AVFoundation precisa frente propria de export normalizado/validacao de segmentos.
+- Android deve ser regenerado/rebuildado quando necessario; `android/` foi removido como regeneravel para liberar espaco.
+- Acao posterior executada: rebuild Android privado, instalacao fisica e ciclos SOS/cofre/player/inventario saneado foram validados antes da aprovacao de Roberto.
+
+## Atualizacao tecnica - 2026-05-13 - Android validado para aceite manual
+
+- APK Android privado final: `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `50fe4c831174899e5728579709ec906470c6c55d4aad1f205c162da1be0444db`.
+- Device fisico validado: `23129RA5FL`, Android 15 / SDK 35.
+- Hardening aplicado no motor nativo Android: entrada aceita somente em `filesDir`, `cacheDir` e `noBackupFilesDir`; nao reabrir `externalCacheDir` nem `getExternalFilesDir` sem nova decisao de seguranca.
+- `npm run typecheck`, `npm run lint`, `npm test`, `npm run private:android:readiness`, `npm run build:android:private` e `git diff --check` passaram.
+- Primeiro ciclo fisico: SOS, midia frontal leve, encerramento, cofre com `Video 1min 48s`, `1 video`, player unificado reproduzindo `0:23 / 1:46`.
+- Ciclos curtos pos-rebuild confirmaram reuso de camera/microfone, finalizacao `Video protegido` 100%, fechamento correto do modal por `Continuar`, cofre com `Video 31s`/`1 video` e player final iniciando reproducao `0:01 / 0:29`.
+- Inventario final saneado pos-rebuild: 418 arquivos, 375 `.sseg`, 22 `.nseg`, 0 midias claras persistentes `.mp4/.mov/.m4v/.3gp/.avi/.webm`.
+- Estado posterior: Roberto executou e aprovou o teste manual; Frente 1.2 Android fechada para o MVP.
+
+## Atualizacao tecnica - 2026-05-13 - pausa e higienizacao Android
+
+- Roberto pausou a continuidade Android para atuar em demanda paralela do portal web governo/business. Nao executar nada de portal nesta frente.
+- Higienizacao Android aplicada via `../../scripts/higienizar-reciclaveis-android.sh --select all --apply`.
+- Removidos apenas reciclaveis Android listados pelo script: `.expo`, `android/.gradle`, `android/app/.cxx`, `android/app/build` e `android/build`.
+- Espaco: 4.1 GiB livres antes, 6.6 GiB depois no relatorio do script, variacao real de 2.5 GiB; conferencia final posterior indicou 6.3 GiB livres e dry-run posterior nao encontrou reciclaveis Android.
+- O APK local validado foi removido junto com `android/app/build`; o app instalado no Android fisico permanece como base para teste manual. Se precisar reinstalar, rebuild Android privado sera necessario.
+- Checkpoint detalhado: `docs/35_CHECKPOINT_PAUSA_FRENTE_1_2_HIGIENIZACAO_ANDROID_2026-05-13.md`.
+
+## Atualizacao tecnica - 2026-05-13 - Frente 1.2 Android aprovada por Roberto
+
+- Roberto validou fisicamente as atualizacoes da Frente 1.2 no app e aprovou.
+- Estado: Frente 1.2 fechada para escopo Android do MVP; iOS segue pos-MVP.
+- Fechamento documentado em `docs/36_FECHAMENTO_FRENTE_1_2_ANDROID_2026-05-13.md`.
+- Proxima frente recomendada: Frente 1.3 - perfis, familia, maioridade e papeis, antes de anjos/P2P/conveniados.
+
 ## Atualizacao tecnica - 2026-05-04
 
 - `EmergencySettingsDrawer` recebe navegacao por painel: `Cofre` envia `/arquivos?painel=cofre` e `Player` envia `/arquivos?painel=player`.

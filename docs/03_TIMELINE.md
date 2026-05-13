@@ -3,6 +3,43 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-11 - Frente 1.2: retomada CLI e checkpoint iOS parcial
+
+Status: acesso pelo CLI normal; problema de enumeracao da raiz ficou associado ao Codex GUI. Frente 1.2 segue aberta, sem permissao para avancar frentes dependentes.
+
+Contexto operacional:
+
+- `pwd`, `ls ./`, `AGENTS.md`, `apps/mobile/package.json` e `git -C apps/mobile status --short --branch` foram validados no CLI.
+- O erro anterior `Operation not permitted` ocorreu no Codex GUI ao enumerar a raiz iCloud; nao foi reproduzido nesta retomada CLI.
+- Backup de resgate criado fora do iCloud: `/Users/roberto/SinalSeguro-resgate-20260511-132114`, com patch/status/untracked/evidencias do `apps/mobile`.
+- A rodada atual e apenas de memoria/documentacao; sem codigo novo, build pesado, commit, push, limpeza destrutiva ou avanco de P2P/anjo/upload/localizacao/conveniados.
+
+Checkpoint tecnico preservado:
+
+- Decisao vigente mantida: `SinalSeguroMediaEngine` e `native_segmented_v1` sao o caminho principal; JS/Base64/loopback ficam como fallback legado/homologacao.
+- Android build/debug desta rodada passou e APK foi preservado em `docs/evidencias/android/2026-05-11-frente-1-2-native/app-debug-85f52968.apk`, SHA-256 `85f52968ac464aca4b4b0fc868abf6bc81a1cfa015a26e62f5f19200262bf599`.
+- Android fisico desta rodada ainda esta pendente porque nao havia device ADB conectado no momento da emergencia operacional.
+- iPhone fisico teve dois ciclos curtos registrados com H.264 480p/650 kbps, preservacao nativa `native_segmented_v1`, sucesso de preservacao, origem apagada e pacote final com um asset anexado.
+- Inventario iOS de residuos claros ficou limpo: sem `.mp4`, `.mov`, `.m4v`, `.3gp`, `.caf`, `.aac` ou `.wav` em locais inspecionados.
+- Syslog iOS confirmou camera/microfone passando para estado frio apos os ciclos curtos.
+- Evidencia visual iOS registrou modal final `Video protegido` com 100% e barra verde.
+
+Limites que impedem fechamento:
+
+- Os ciclos curtos iOS terminaram por limite de segmento antes do toque final; portanto ainda nao provam totalmente o encerramento antecipado enquanto a camera esta gravando.
+- A tentativa de teste de encerramento antecipado foi abortada pela emergencia operacional de acesso local e fica como evidencia parcial.
+- A captura visual apos `Abrir cofre` permaneceu no modal final; cofre visual pos-toque e Player seguem pendentes.
+- iOS segue com `capture_ios_segment_limit_reached` e `maxSegments: 1`; midia longa iOS nao esta aprovada.
+- Frente 1.2 nao pode ser declarada concluida nem liberar Frente 2/3/4/5.
+
+Pendencias imediatas:
+
+1. Resolver permissao/estado do Codex GUI ou seguir operacionalmente pelo CLI.
+2. Repetir no iPhone o teste de encerramento antecipado durante gravacao.
+3. Capturar Cofre visual pos-toque e Player.
+4. Reconectar Android ADB e rodar validacao fisica.
+5. So depois considerar gates longos de 60s, 3min e 5min.
+
 ## 2026-05-11 - Frente 1.2: Android fisico validado com player e encerramento corrigidos
 
 Status: Android fisico aprovado para a matriz desta rodada; Frente 1.2 ainda nao esta concluida porque falta repetir o gate em iPhone fisico.
@@ -2115,3 +2152,130 @@ Limites:
 - Android 60s/3min/5min e iPhone fisico ainda sao obrigatorios;
 - iOS nativo ainda nao esta aprovado para midia longa enquanto depender de leitura integral;
 - chamada P2P/anjo, upload, localizacao e conveniados continuam fora desta frente.
+
+## 2026-05-11 - Frente 1.2: checkpoint GUI, player unificado e proxima correcao de recuperacao
+
+Status: em execucao. A frente permanece aberta.
+
+Registrado nesta retomada:
+
+- iOS Release compilou com sucesso, mas nao deve ser instalado como final porque ajustes de UX foram aplicados depois do inicio do build.
+- Android ADB nao apresentou aparelho conectado; a validacao fisica Android fica aguardando reconexao.
+- O player/cofre foram ajustados para tratar segmentos nativos da mesma camera como um unico video protegido na apresentacao.
+- Ada/Myers apontaram lacuna: pacote `recording_local` interrompido sai do estado ativo, mas ainda precisa tentar recuperar residuo claro privado de camera antes de gravar causa saneada `sem midia`.
+
+Proxima acao: implementar recuperacao restrita ao cache privado de camera, sem logar URI/caminho e sem reativar camera/microfone.
+
+## 2026-05-13 - Decisao de escopo: MVP Android primeiro, iOS pos-MVP
+
+Status: decisao operacional aprovada por Roberto. A conclusao do MVP passa a focar Android; iPhone/iOS deixa de bloquear a Frente 1.2 e vai para etapa pos-MVP.
+
+Motivo:
+
+- as tentativas de destravar iPhone/iOS passaram a consumir ciclos demais e bloquear o andamento do projeto;
+- Android ja possui evidencia fisica forte da Frente 1.2, com SOS, cofre, player, criptografia nativa e inventario saneado;
+- a prioridade de produto agora e entregar o MVP 100% funcional no Android e viabilizar as proximas frentes.
+
+Entraves iOS documentados:
+
+- `devicectl`/CoreDevice listou o iPhone como indisponivel e falhou com usage assertion;
+- `idevicedebug` relancou o app, mas nao entregou deep link de navegacao;
+- validacao visual dependeu de screenshot via cabo e acao manual no aparelho;
+- Xcode 26.5 mostrou SDK `iphoneos26.5`, mas marcou o destino iOS como inelegivel dizendo que iOS 26.5 nao estava instalado;
+- tentativa de `xcodebuild -downloadPlatform iOS` ficou silenciosa por varios minutos e foi interrompida para nao travar tempo/espaco;
+- cofre passou a mostrar o pacote de 1min38 como `1 video`, mas o player nativo unificado falhou com `playback_prepare_error` para `assetCount: 8`;
+- hipotese preservada: fragilidade do merge iOS com `AVMutableComposition`/`AVAssetExportSession` em multiplos MP4 curtos e possivel impacto de nomes temporarios longos;
+- patch iOS experimental de export normalizado foi iniciado, mas nao validado e nao conta como gate aprovado.
+
+Nova regra:
+
+- nao rodar novas tentativas de build, instalacao, debug ou validacao fisica iPhone durante a conclusao do MVP Android;
+- preservar evidencias iOS em `docs/evidencias/ios/2026-05-13-frente-1-2-unified-player/`;
+- usar `docs/34_DECISAO_MVP_ANDROID_IOS_POS_MVP_2026-05-13.md` como handoff da decisao;
+- finalizar Frente 1.2 pelo caminho Android, com nova rodada fisica Android proporcional antes de liberar as proximas frentes do MVP.
+
+## 2026-05-13 - Frente 1.2: Android rebuildado, instalado e validado fisicamente
+
+Status: Android aprovado por Zé/QA para teste manual supervisionado de Roberto. A frente continua aberta ate Roberto aprovar o fluxo manual.
+
+Executado:
+
+- `android/` foi regenerado por build privado, preservando iPhone/iOS fora do escopo do MVP imediato;
+- motor nativo Android foi endurecido para aceitar origem apenas em `filesDir`, `cacheDir` e `noBackupFilesDir`, removendo `externalCacheDir` e `getExternalFilesDir` da lista aceita;
+- smoke test passou a bloquear regressao que reabra raizes externas para entrada de midia;
+- APK final instalado no Android fisico `23129RA5FL` por USB.
+
+Validacoes locais:
+
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `npm test`: aprovado;
+- `npm run private:android:readiness`: aprovado com pendencia ambiental conhecida de Node local para release publico;
+- `git diff --check`: aprovado;
+- `npm run build:android:private`: aprovado;
+- APK: `android/app/build/outputs/apk/debug/app-debug.apk`;
+- SHA-256: `50fe4c831174899e5728579709ec906470c6c55d4aad1f205c162da1be0444db`.
+
+Android fisico:
+
+- instalacao `adb install -r`: `Success`;
+- primeiro ciclo SOS gravou `Video 1min 48s`, finalizou em `Video protegido` 100%, abriu cofre como `1 video` e player reproduziu o arquivo unificado ate pelo menos `0:23 / 1:46`;
+- ciclos curtos pos-rebuild confirmaram reentrada da camera/microfone, nova finalizacao `Video protegido` 100%, `Continuar` fechando o modal para Home, cofre com `Video 31s`/`1 video` e player final reproduzindo `0:01 / 0:29`;
+- `dumpsys media.camera` confirmou conexao/desconexao do pacote SinalSeguro e dump final sem cliente ativo de camera;
+- inventario saneado final pos-rebuild confirmou 418 arquivos, 375 `.sseg`, 22 `.nseg` e 0 midias claras persistentes `.mp4/.mov/.m4v/.3gp/.avi/.webm`.
+
+Evidencias:
+
+- resumo versionavel em `docs/evidencias/android/2026-05-13-frente-1-2-validacao-fisica/RELATORIO_VALIDACAO_ANDROID.md`;
+- inventario saneado em `docs/evidencias/android/2026-05-13-frente-1-2-validacao-fisica/inventario-saneado.txt`;
+- capturas PNG locais preservadas no mesmo diretorio, sem publicacao automatica.
+
+Limites:
+
+- logcat bruto ficou apenas em `/tmp` e nao deve ser versionado;
+- iPhone/iOS permanece pos-MVP;
+- nao fechar a Frente 1.2 sem teste manual e aceite explicito de Roberto.
+
+## 2026-05-13 - Pausa da Frente 1.2 e higienizacao de reciclaveis Android
+
+Status: pausa controlada aguardando Roberto concluir demanda paralela do portal web governo/business. Nenhuma acao de portal foi executada nesta frente.
+
+Executado:
+
+- dry-run de `./scripts/higienizar-reciclaveis-android.sh --select all` identificou 3.1 GiB de reciclaveis Android;
+- aplicacao com `./scripts/higienizar-reciclaveis-android.sh --select all --apply`;
+- removidos 5 itens: `apps/mobile/.expo`, `apps/mobile/android/.gradle`, `apps/mobile/android/app/.cxx`, `apps/mobile/android/app/build`, `apps/mobile/android/build`;
+- relatorio do script: 0 falhas, 4.1 GiB livres antes, 6.6 GiB livres depois, variacao real de 2.5 GiB; conferencia final posterior indicou 6.3 GiB livres;
+- dry-run posterior confirmou `nenhum reciclavel encontrado`.
+
+Impacto:
+
+- APK local validado foi removido junto com `android/app/build`, como artefato regeneravel;
+- app validado segue instalado no Android fisico;
+- checksum, evidencias e estado de aprovacao tecnica permanecem preservados na documentacao;
+- para teste manual, usar o app instalado; para reinstalar, rebuild Android privado sera necessario.
+
+Checkpoint detalhado:
+
+- `docs/35_CHECKPOINT_PAUSA_FRENTE_1_2_HIGIENIZACAO_ANDROID_2026-05-13.md`.
+
+## 2026-05-13 - Frente 1.2 Android aprovada por Roberto
+
+Status: Frente 1.2 encerrada para o escopo Android do MVP.
+
+Roberto validou fisicamente as atualizacoes feitas no app e aprovou a Frente 1.2.
+
+Decisoes:
+
+- Android fica aprovado como base de midia critica do MVP;
+- iPhone/iOS permanece pos-MVP e nao deve bloquear as proximas frentes Android;
+- nao ha liberacao automatica de P2P/anjos/conveniados sem frente propria;
+- fechamento detalhado em `docs/36_FECHAMENTO_FRENTE_1_2_ANDROID_2026-05-13.md`.
+
+Proxima frente recomendada:
+
+- Frente 1.3 - perfis, familia, maioridade e papeis.
+
+Justificativa:
+
+- a chamada com anjos/responsaveis e qualquer fluxo P2P dependem primeiro de papeis, relacoes autorizadas, maioridade, consentimentos e limites de menores.

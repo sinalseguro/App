@@ -288,3 +288,174 @@ Retomada obrigatoria a partir daqui:
 2. Antes de nova build, limpar regeneraveis: `/` ficou abaixo do gate de 10 GiB apos o build Android.
 3. Repetir matriz no iPhone fisico: 30s, 60s, 3min e 5min, com screenshots, log saneado, inventario de residuos claros, tempo de encerramento, player e camera/microfone liberados.
 4. Nao declarar a Frente 1.2 concluida nem iniciar Frente 2/3/4/5 ate o iPhone fisico passar.
+
+## Checkpoint CLI apos emergencia operacional - Frente 1.2 em 2026-05-11
+
+Status: acesso pelo CLI normal; problema de leitura da raiz iCloud ficou restrito ao Codex GUI nesta ocorrencia. Este checkpoint e somente de preservacao documental.
+
+Validacao de acesso executada:
+
+- `pwd` resolveu para `/Users/roberto/Desenvolvimento/SinalSeguro`, caminho real/symlink do projeto solicitado.
+- `ls ./` enumerou a raiz com `AGENTS.md`, `apps`, `docs`, `repos`, `services`, `infra` e demais diretorios esperados.
+- `AGENTS.md`, `apps/mobile/package.json` e este handoff estavam acessiveis.
+- `git -C apps/mobile status --short --branch` confirmou `main...origin/main` com alteracoes e untracked ja existentes; nada foi revertido.
+
+Preservacao obrigatoria:
+
+- Backup de resgate fora do iCloud: `/Users/roberto/SinalSeguro-resgate-20260511-132114`.
+- Preservar os untracked citados no handoff, inclusive `docs/29_PROXIMA_ETAPA_API_ANJOS 2.md`, evidencias Android/iOS, `metro.config.js` e `scripts/expo-no-workspace-root.cjs`.
+- Nao usar `git reset`, `git checkout --`, limpeza destrutiva ou remocao de untracked.
+- Nao gravar segredos, UDID, token, caminho sensivel de container, chave, nonce, tag, hash bruto, IP, e-mail, coordenada ou payload em memoria.
+
+Estado tecnico preservado:
+
+- `SinalSeguroMediaEngine` continua como rota principal de preservacao nativa; JS/Base64/loopback ficam como fallback legado/homologacao.
+- Android build/debug OK, APK preservado em `docs/evidencias/android/2026-05-11-frente-1-2-native/app-debug-85f52968.apk`, SHA-256 `85f52968ac464aca4b4b0fc868abf6bc81a1cfa015a26e62f5f19200262bf599`.
+- Android fisico desta rodada ainda nao foi validado porque nao havia device ADB conectado na emergencia operacional.
+- iPhone fisico validou dois ciclos curtos com H.264 480p/650 kbps, preservacao `native_segmented_v1`, sucesso de preservacao nativa, origem apagada e asset anexado.
+- Inventario iOS de residuos claros ficou limpo e syslog indicou camera/microfone frios apos os ciclos.
+- Modal final iOS mostrou `Video protegido` em 100%, mas a captura apos `Abrir cofre` permaneceu no modal final.
+
+Pendencias de retomada:
+
+1. Resolver permissao/estado do Codex GUI ou operar pelo CLI.
+2. Repetir teste iPhone de encerramento antecipado enquanto a camera ainda grava.
+3. Capturar Cofre visual pos-toque e validar Player.
+4. Reconectar Android ADB e rodar validacao fisica.
+5. Depois disso, considerar gates longos 60s, 3min e 5min.
+
+Regra de bloqueio:
+
+- A Frente 1.2 nao esta concluida; nao avancar P2P/anjo, upload, localizacao, conveniados nem Frente 2/3/4/5.
+
+## Checkpoint GUI - Frente 1.2 em 2026-05-11 18:44 -03
+
+Status: execucao retomada no Codex GUI; continuar sem declarar fechamento da frente.
+
+O que ja foi validado nesta retomada:
+
+- `npm run typecheck`, `npm run lint`, `npm test`, `npm run private:android:readiness` e `git diff --check` passaram antes do ajuste final de UX.
+- Android Kotlin `:app:compileDebugKotlin` e `:app:assembleDebug` passaram; APK foi preservado em `/private/tmp`, mas ficou desatualizado depois dos ajustes seguintes.
+- iOS Release passou com `BUILD SUCCEEDED`; o bundle gerado tambem ficou desatualizado porque os textos do player/cofre foram corrigidos apos o inicio do build.
+- Android ADB nao listou aparelho conectado nesta retomada; instalacao fisica Android segue bloqueada ate o device aparecer no `adb`.
+- iPhone `R1_iPh` segue visivel para instalacao e validacao fisica depois de rebuild iOS.
+
+Ajustes aplicados apos o ultimo build:
+
+- Player/cofre passaram a apresentar pacotes nativos segmentados da mesma camera como `1 video protegido` e `Arquivo protegido unificado`, evitando comunicar ao usuario que o playback ocorre em blocos.
+- O fluxo nativo continua preparando uma unica fonte MP4 temporaria para playback unificado; `.nseg` nao e enviado diretamente ao player.
+
+Proximo bloco imediato:
+
+1. Implementar recuperacao de residuo de camera no cold start antes de registrar pacote interrompido como `sem midia`.
+2. Nao apagar residuo recuperavel no `RootLayout` antes da Home tentar adotar e cifrar esse arquivo.
+3. Rodar validacoes locais novamente.
+4. Rebuild Android/iOS porque os artefatos atuais ficaram obsoletos.
+5. Instalar e validar primeiro no iPhone conectado; Android fica pendente ate ADB voltar a listar o aparelho.
+
+## Decisao de retomada - 2026-05-13 - MVP Android primeiro
+
+Status: Roberto interrompeu a tentativa de destravar iPhone/iOS nesta etapa. O iOS nao deve mais bloquear a conclusao do MVP.
+
+Novo foco:
+
+- finalizar a Frente 1.2 e o MVP com base no Android;
+- mover iPhone/iOS para uma frente pos-MVP propria;
+- nao gastar novas janelas de execucao com CoreDevice, `devicectl`, Appium/WDA, build iOS, instalacao iOS ou validacao fisica iPhone ate a entrega Android estar encaminhada.
+
+Evidencia do entrave:
+
+- cofre no iPhone passou a mostrar o arquivo de 1min38 como `1 video`, sem fragmentar para o usuario;
+- player unificado abriu o pacote como item unico, mas falhou com `Video indisponivel`;
+- log operacional saneado registrou `native_playback_source_uri_rebased` e `playback_prepare_error` com `assetCount: 8`;
+- Xcode 26.5 continuou marcando destinos iOS como inelegiveis por plataforma 26.5 mesmo com SDK listado;
+- tentativa de baixar plataforma iOS foi interrompida por custo operacional/tempo/espaco.
+
+Proxima retomada obrigatoria:
+
+1. Tratar Android como caminho de aceite do MVP.
+2. Regenerar `android/` quando necessario, porque a pasta e ignorada e foi limpa como regeneravel.
+3. Rebuildar APK privado Android.
+4. Instalar no Android fisico.
+5. Rodar smoke fisico Android de SOS, encerramento, cofre, player, camera/microfone liberados e inventario saneado.
+6. Se passar, documentar a Frente 1.2 como suficiente para liberar as proximas frentes do MVP Android.
+7. Manter iOS apenas como backlog pos-MVP registrado em `docs/34_DECISAO_MVP_ANDROID_IOS_POS_MVP_2026-05-13.md`.
+
+## Checkpoint Android - 2026-05-13 - Frente 1.2 pronta para teste manual de Roberto
+
+Status: Android privado passou na validacao fisica proporcional desta rodada. Nao repetir Antigravity/rebuild desde zero sem evidencia nova de regressao.
+
+Estado tecnico atual:
+
+- caminho principal de midia nova: `SinalSeguroMediaEngine` + `native_segmented_v1`;
+- Android cifra e preserva por AES-256-GCM em blocos, com `.nseg` no sandbox privado;
+- JS/Base64/loopback continuam apenas como fallback legado/homologacao;
+- player seguro prepara fonte unica para o usuario e nao mostra fragmentos como varios videos;
+- origem nativa Android agora esta restrita a `filesDir`, `cacheDir` e `noBackupFilesDir`;
+- `externalCacheDir` e `getExternalFilesDir` nao devem voltar como origem aceita.
+
+Artefato validado:
+
+- `android/app/build/outputs/apk/debug/app-debug.apk`;
+- SHA-256 `50fe4c831174899e5728579709ec906470c6c55d4aad1f205c162da1be0444db`;
+- device `23129RA5FL`, Android 15 / SDK 35;
+- instalacao por USB retornou `Success`.
+
+Gates aprovados nesta retomada:
+
+- `npm run typecheck`;
+- `npm run lint`;
+- `npm test`;
+- `npm run private:android:readiness`;
+- `npm run build:android:private`;
+- `git diff --check`;
+- SOS fisico Android com cofre/player/inventario saneado.
+
+Evidencia fisica:
+
+- primeiro ciclo: `Video 1min 48s`, `1 video`, player unificado reproduzindo ate pelo menos `0:23 / 1:46`;
+- ciclos curtos pos-rebuild: reentrada de camera/microfone, novo `Video protegido` 100%, `Continuar` retornando para Home, cofre com `Video 31s`/`1 video` e player final reproduzindo `0:01 / 0:29`;
+- `dumpsys media.camera`: camera conectou/desconectou no pacote SinalSeguro e o dump final ficou sem cliente ativo;
+- inventario saneado final pos-rebuild: 418 arquivos, 375 `.sseg`, 22 `.nseg`, 0 midias claras persistentes `.mp4/.mov/.m4v/.3gp/.avi/.webm`.
+
+Proxima acao:
+
+1. Roberto executar teste manual supervisionado no Android instalado.
+2. Se Roberto aprovar, fechar a Frente 1.2 como base Android do MVP.
+3. Abrir a proxima frente Android do MVP sem reabrir iOS.
+
+## Pausa operacional - 2026-05-13 - limpeza Android antes de demanda paralela de portal
+
+Roberto solicitou pausa antes de continuar o Android para atuar em demanda paralela do portal web no segmento governo/business. Esta demanda de portal esta fora do escopo deste checkpoint e nao foi executada aqui.
+
+Higienizacao aplicada:
+
+- comando: `./scripts/higienizar-reciclaveis-android.sh --select all --apply`;
+- removidos: `.expo`, `android/.gradle`, `android/app/.cxx`, `android/app/build`, `android/build`;
+- relatorio: 5 itens removidos, 0 falhas, 3.1 GiB estimados, 2.5 GiB reais de variacao livre;
+- SSD interno: 4.1 GiB livres antes, 6.6 GiB livres depois no relatorio do script, 6.3 GiB na conferencia final posterior;
+- dry-run posterior: nenhum reciclavel Android encontrado.
+
+Estado de retomada:
+
+- Android permanece aprovado tecnicamente para teste manual de Roberto;
+- app validado segue instalado no Android fisico;
+- APK local foi removido como build regeneravel;
+- se a retomada exigir reinstalacao, executar novo build privado Android;
+- iPhone/iOS segue pos-MVP.
+
+## Fechamento - 2026-05-13 - Roberto aprovou Frente 1.2 Android
+
+Roberto validou as atualizacoes da Frente 1.2 no app Android e aprovou a frente.
+
+Estado:
+
+- Frente 1.2 fechada no escopo Android do MVP;
+- iPhone/iOS segue pos-MVP;
+- nao pular direto para P2P/anjos/conveniados sem fechar papeis e autorizacoes.
+
+Proximo passo recomendado:
+
+1. Abrir Frente 1.3 - perfis, familia, maioridade e papeis.
+2. Depois abrir Frente 2 - rede de anjos e convites.
+3. Depois evoluir emergencia remota, chamada audio/video, localizacao ao vivo e conveniados.

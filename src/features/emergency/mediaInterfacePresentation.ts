@@ -24,6 +24,29 @@ export function isEncryptedVideoAsset(asset?: LocalMediaAsset) {
   );
 }
 
+function isNativePlaybackSegment(asset?: LocalMediaAsset) {
+  return (
+    asset?.encryptedVideo?.storageEngine === "native_segmented_v1" &&
+    asset.encryptedVideo.playbackAdapter === "native_encrypted_source" &&
+    asset.encryptedVideo.nativePlayback?.engine === "SinalSeguroMediaEngine" &&
+    Boolean(asset.encryptedVideo.nativePlayback.sourceUri)
+  );
+}
+
+export function isUnifiedNativePackageVideo(packageRecord?: EmergencyPackage) {
+  if (!packageRecord || packageRecord.media.status !== "recorded_local") return false;
+  const assets = packageRecord.media.assets;
+  if (assets.length <= 1) return false;
+
+  const cameraMode = assets[0]?.cameraMode;
+  return assets.every(
+    (asset) =>
+      asset.cameraMode === cameraMode &&
+      asset.encryptedVideo?.packageId === packageRecord.id &&
+      isNativePlaybackSegment(asset)
+  );
+}
+
 export function getAssetProtectionLabel(asset?: LocalMediaAsset) {
   if (!asset) return "Sem midia";
   return isEncryptedVideoAsset(asset) ? "Protegido" : "Local";
@@ -40,9 +63,9 @@ export function getAssetStorageLabel(asset?: LocalMediaAsset) {
   if (isEncryptedVideoAsset(asset)) {
     const chunks = asset.encryptedVideo?.chunkCount ?? 0;
     if (asset.encryptedVideo?.storageEngine === "native_segmented_v1") {
-      return chunks > 0 ? `${chunks} segmentos protegidos` : "Segmentos protegidos";
+      return chunks > 0 ? "Arquivo protegido" : "Protegido";
     }
-    return chunks > 0 ? `${chunks} partes protegidas` : "Protegido por partes";
+    return "Arquivo protegido";
   }
   return "Arquivo local";
 }
@@ -100,6 +123,7 @@ export function getPackageMediaDiagnosticLabel(packageRecord?: EmergencyPackage)
 export function getPackageMediaCountLabel(packageRecord?: EmergencyPackage) {
   if (isPackageMediaStillProcessing(packageRecord)) return "Processando";
   if (!packageRecord || packageRecord.media.status !== "recorded_local") return "Sem video";
+  if (isUnifiedNativePackageVideo(packageRecord)) return "1 video";
   const count = packageRecord.media.assets.length;
   if (count === 1) return "1 video";
   return `${count} videos`;

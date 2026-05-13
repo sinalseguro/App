@@ -248,9 +248,16 @@ export function PanicButton({ active = false, label, holdMs, onTrigger }: PanicB
   return (
     <View style={styles.wrapper} testID="panic-button-area">
       <Pressable
+        accessibilityActions={[{ label: active ? "Encerrar chamado" : "Acionar SOS", name: "activate" }]}
+        accessibilityHint={active ? "Encerra o chamado seguro." : "Aciona o chamado seguro."}
         accessibilityRole="button"
         accessibilityLabel={label}
         delayLongPress={holdMs}
+        onAccessibilityAction={(event) => {
+          if (event.nativeEvent.actionName === "activate") {
+            fireTrigger();
+          }
+        }}
         onLongPress={fireTrigger}
         onPressIn={startHold}
         onPressOut={clearHold}

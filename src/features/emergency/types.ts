@@ -196,7 +196,11 @@ export type MediaCaptureManifest =
       policy: string;
     };
 
-export type EmergencyFinishReason = "manual_finish" | "recording_duration_elapsed" | "immediate_package";
+export type EmergencyFinishReason =
+  | "manual_finish"
+  | "recording_duration_elapsed"
+  | "immediate_package"
+  | "interrupted_on_launch";
 
 export type EmergencyRemoteSharingPlan = {
   coordinator: {

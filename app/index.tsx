@@ -16,6 +16,7 @@ import { EmergencyHomePanel, EmergencyHomeRoute } from "@/features/emergency-hom
 import { CameraCaptureResidueCleaner } from "@/features/emergency/CameraCaptureResidueCleaner";
 import { countPendingEmergencyPackages } from "@/features/emergency/emergencyOutbox";
 import { EmergencyMediaRecorder, MediaStopRequestResult } from "@/features/emergency/EmergencyMediaRecorder";
+import { preserveLocalVideoAsset } from "@/features/emergency/mediaCapture";
 import {
   attachLocalMediaDiagnostics,
   finishEmergencyPackage,
@@ -64,6 +65,8 @@ type FinishProgressState = {
 };
 
 const mediaStopWaitTimeoutMs = 30000;
+const activePackageResidueGraceMs = 10 * 60 * 1000;
+const interruptedRecoveryClockSkewMs = 30 * 1000;
 const idleFinishProgressState: FinishProgressState = {
   detail: "",
   progress: 0,
@@ -180,6 +183,7 @@ export default function HomeScreen() {
   const [finishError, setFinishError] = useState("");
   const [finishInProgress, setFinishInProgress] = useState(false);
   const [finishProgress, setFinishProgress] = useState<FinishProgressState>(idleFinishProgressState);
+  const [captureStopLocked, setCaptureStopLocked] = useState(false);
   const [mediaStopPending, setMediaStopPending] = useState(false);
   const [startInProgress, setStartInProgress] = useState(false);
   const [stopRecordingRequestSerial, setStopRecordingRequestSerial] = useState(0);
@@ -191,12 +195,25 @@ export default function HomeScreen() {
   const pendingMediaStopRequestRef = useRef<PendingMediaStopRequest | null>(null);
   const finishInProgressRef = useRef(false);
   const mediaStopPendingRef = useRef(false);
+  const startupRecoveryCompletedRef = useRef(false);
   const stopRecordingRequestSerialRef = useRef(0);
 
   async function refreshOutboxCount() {
     const activePackage = await getActiveEmergencyPackage();
-    if (!activePackage && Platform.OS !== "web") {
-      await new CameraCaptureResidueCleaner().cleanupAfterSuccessfulPreservation().catch(() => undefined);
+    if (Platform.OS !== "web") {
+      const nowMs = Date.now();
+      const cleanupResult = await new CameraCaptureResidueCleaner()
+        .cleanupAfterSuccessfulPreservation(
+          activePackage ? { nowMs, staleBeforeMs: nowMs - activePackageResidueGraceMs } : { nowMs }
+        )
+        .catch(() => null);
+      if (cleanupResult) {
+        appendMediaOperationalLog("camera_residue_maintenance", {
+          activePackagePresent: Boolean(activePackage),
+          deletedFiles: cleanupResult.deletedUris.length,
+          inspectedDirectory: Boolean(cleanupResult.inspectedDirectoryUri)
+        });
+      }
     }
     setActivePackageId(activePackage?.id ?? null);
     if (activePackage) {
@@ -205,6 +222,127 @@ export default function HomeScreen() {
       setMediaRecorderPackageId(null);
     }
     setOutboxCount(await countPendingEmergencyPackages());
+  }
+
+  async function recoverInterruptedActiveRecordingOnLaunch(currentPreferences = preferences) {
+    if (startupRecoveryCompletedRef.current) return;
+    startupRecoveryCompletedRef.current = true;
+
+    const interruptedPackage = await getActiveEmergencyPackage();
+    if (!interruptedPackage) return;
+
+    appendMediaOperationalLog("emergency_interrupted_active_detected", {
+      mediaRecorded: interruptedPackage.media.status === "recorded_local",
+      platform: Platform.OS
+    });
+
+    const recoveredAssetCount = await recoverInterruptedCameraResidue(
+      interruptedPackage.id,
+      interruptedPackage.capture.startedAt,
+      currentPreferences
+    );
+    const result = await finishEmergencyPackage(interruptedPackage.id, "interrupted_on_launch");
+    const attachedAssetCount =
+      result?.packageRecord.media.status === "recorded_local" ? result.packageRecord.media.assets.length : 0;
+
+    if (attachedAssetCount === 0 && recoveredAssetCount === 0) {
+      await persistFinishNoMediaDiagnostic(interruptedPackage.id, "camera_recording_error");
+    }
+
+    appendMediaOperationalLog("emergency_interrupted_active_recovered", {
+      attachedAssetCount,
+      recoveredAssetCount,
+      platform: Platform.OS
+    });
+
+    setActivePackageId(null);
+    setMediaRecorderPackageId(null);
+    setCaptureStopLocked(false);
+    setMediaStopPendingState(false);
+    setRecordingStatus(
+      attachedAssetCount > 0
+        ? "Chamado anterior recuperado. Video preservado no cofre local."
+        : "Chamado anterior recuperado sem video preservado. Revise a causa saneada no cofre."
+    );
+    showFinishProgress({
+      detail:
+        attachedAssetCount > 0
+          ? "O app recuperou um chamado interrompido sem reabrir a camera."
+          : "O app encontrou um chamado interrompido e salvou a causa tecnica sem reativar camera ou microfone.",
+      progress: 100,
+      status: attachedAssetCount > 0 ? "done" : "warning",
+      title: attachedAssetCount > 0 ? "Chamado recuperado" : "Chamado recuperado sem video"
+    });
+  }
+
+  async function recoverInterruptedCameraResidue(
+    packageId: string,
+    captureStartedAt: string,
+    currentPreferences: EmergencyPreferences
+  ) {
+    if (Platform.OS === "web") return 0;
+
+    const captureStartedAtMs = Date.parse(captureStartedAt);
+    const modifiedAfterMs = Number.isFinite(captureStartedAtMs)
+      ? Math.max(0, captureStartedAtMs - interruptedRecoveryClockSkewMs)
+      : 0;
+    const recoverableResidues = await new CameraCaptureResidueCleaner()
+      .findRecoverableCameraVideos({
+        maxCandidates: 4,
+        maxTotalSizeBytes: 512 * 1024 * 1024,
+        modifiedAfterMs
+      })
+      .catch(() => []);
+    if (!recoverableResidues.length) return 0;
+
+    const requestedCameraMode = currentPreferences.localVideoCapture.cameraMode;
+    const cameraMode = requestedCameraMode === "back" ? "back" : "front";
+    appendMediaOperationalLog("emergency_interrupted_media_recovery_start", {
+      candidateCount: recoverableResidues.length,
+      platform: Platform.OS,
+      totalSizeKb: Math.ceil(
+        recoverableResidues.reduce((total, residue) => total + (residue.sizeBytes ?? 0), 0) / 1024
+      )
+    });
+    showFinishProgress({
+      detail: "Arquivo temporario privado encontrado. Criptografando antes de atualizar o cofre.",
+      progress: 36,
+      status: "running",
+      title: "Recuperando video"
+    });
+
+    let recoveredAssetCount = 0;
+    let segmentStartedAt = captureStartedAt;
+    for (const recoverableResidue of [...recoverableResidues].reverse()) {
+      const completedAt = recoverableResidue.modificationTimeMs
+        ? new Date(recoverableResidue.modificationTimeMs).toISOString()
+        : new Date().toISOString();
+      try {
+        await preserveLocalVideoAsset({
+          packageId,
+          sourceUri: recoverableResidue.uri,
+          cameraMode,
+          cleanupResidueSourceOnly: true,
+          requestedCameraMode,
+          startedAt: segmentStartedAt,
+          completedAt,
+          verificationMode: Platform.OS === "ios" ? "bounded" : "full"
+        });
+        recoveredAssetCount += 1;
+        segmentStartedAt = completedAt;
+      } catch (error) {
+        appendMediaOperationalLog("emergency_interrupted_media_recovery_error", {
+          platform: Platform.OS,
+          recoveredAssetCount
+        }, error);
+      }
+    }
+
+    appendMediaOperationalLog("emergency_interrupted_media_recovery_success", {
+      platform: Platform.OS,
+      recoveredAssetCount
+    });
+    return recoveredAssetCount;
   }
 
   function navigateRoute(route: EmergencyHomeRoute, panel?: EmergencyHomePanel) {
@@ -217,7 +355,9 @@ export default function HomeScreen() {
   }
 
   function closeFinishProgress() {
-    setFinishProgress((current) => (current.status === "running" ? current : { ...current, visible: false }));
+    setFinishProgress((current) =>
+      current.status === "running" && current.progress < 100 ? current : idleFinishProgressState
+    );
   }
 
   function openVaultFromFinishProgress() {
@@ -367,6 +507,11 @@ export default function HomeScreen() {
       async function prepareScreen() {
         const nextPreferences = await getEmergencyPreferences();
         setPreferences(nextPreferences);
+        await recoverInterruptedActiveRecordingOnLaunch(nextPreferences).catch((error) => {
+          appendMediaOperationalLog("emergency_interrupted_active_recovery_error", {
+            platform: Platform.OS
+          }, error);
+        });
         await cleanupNativeMediaResidues().catch(() => undefined);
         await refreshOutboxCount();
       }
@@ -509,7 +654,9 @@ export default function HomeScreen() {
 
     try {
       const stopSerial = signalMediaRecorderStop();
+      let stopResult: MediaStopRequestResult | null = null;
       if (stopSerial) {
+        setCaptureStopLocked(true);
         setMediaStopPendingState(true);
         setActivePackageId(null);
         setMediaRecorderPackageId(packageId);
@@ -519,7 +666,22 @@ export default function HomeScreen() {
           status: "running",
           title: "Encerrando gravacao"
         });
-        trackMediaStopAfterFinish(stopSerial, packageId);
+        stopResult = await waitForMediaRecorderStop(stopSerial);
+        setMediaStopPendingState(false);
+        appendMediaOperationalLog("emergency_media_stop_progress_result", {
+          attachedAssets: stopResult.attachedAssets,
+          platform: Platform.OS,
+          status: stopResult.status
+        });
+        showFinishProgress({
+          detail:
+            stopResult.status === "attached"
+              ? "Midia criptografada. Finalizando o pacote local."
+              : "Camera liberada. Confirmando se o pacote ja recebeu midia preservada.",
+          progress: stopResult.status === "attached" ? 72 : 48,
+          status: "running",
+          title: stopResult.status === "attached" ? "Midia protegida" : "Conferindo cofre"
+        });
       }
 
       const result = await finishEmergencyPackage(packageId, "manual_finish");
@@ -549,27 +711,32 @@ export default function HomeScreen() {
         setRecordingStatus("Chamado encerrado. Video preservado no cofre local.");
         showFinishProgress({
           detail: stopSerial
-            ? "Video ja consta no cofre. Confirmando finalizacao da camera local."
+            ? "Video protegido, camera liberada e pacote local finalizado."
             : "Video protegido e anexado ao cofre local.",
-          progress: stopSerial ? 82 : 100,
-          status: stopSerial ? "running" : "done",
-          title: stopSerial ? "Confirmando protecao" : "Video protegido"
+          progress: 100,
+          status: "done",
+          title: "Video protegido"
         });
-      } else if (stopSerial) {
-        setRecordingStatus("Chamado encerrado. Video local em protecao no cofre.");
+      } else if (stopSerial && stopResult?.status === "attached") {
+        setRecordingStatus("Chamado encerrado. Video local preservado, mas ainda sem reflexo final no cofre.");
         showFinishProgress({
-          detail: "Chamado ja saiu do modo ativo. Criptografando e anexando a midia no cofre local.",
-          progress: 58,
-          status: "background",
-          title: "Criptografando video"
+          detail: "A midia foi protegida pela camera, mas o cofre ainda nao refletiu o anexo. Revise o item local.",
+          progress: 100,
+          status: "warning",
+          title: "Verificacao pendente"
         });
       } else {
         setRecordingStatus("Chamado encerrado. Pacote local salvo sem gravacao de video.");
+        if (stopSerial) {
+          await persistFinishNoMediaDiagnostic(packageId, "camera_no_file_returned");
+        }
         showFinishProgress({
-          detail: "Pacote encerrado e preservado no cofre local.",
+          detail: stopSerial
+            ? "A camera foi liberada, mas nao devolveu arquivo de video para este pacote."
+            : "Pacote encerrado e preservado no cofre local.",
           progress: 100,
-          status: "done",
-          title: "Chamado encerrado"
+          status: stopSerial ? "warning" : "done",
+          title: stopSerial ? "Chamado salvo sem video" : "Chamado encerrado"
         });
       }
       setFinishConfirmationOpen(false);
@@ -587,62 +754,11 @@ export default function HomeScreen() {
         title: "Falha no encerramento"
       });
     } finally {
+      setCaptureStopLocked(false);
+      setMediaStopPendingState(false);
       finishInProgressRef.current = false;
       setFinishInProgress(false);
     }
-  }
-
-  function trackMediaStopAfterFinish(serial: number, packageId: string) {
-    void waitForMediaRecorderStop(serial)
-      .then(async (result) => {
-        setMediaStopPendingState(false);
-        appendMediaOperationalLog("emergency_media_stop_progress_result", {
-          attachedAssets: result.attachedAssets,
-          platform: Platform.OS,
-          status: result.status
-        });
-
-        if (result.status === "attached" && result.attachedAssets > 0) {
-          await refreshOutboxCount();
-          setRecordingStatus("Video finalizado e preservado no cofre local.");
-          showFinishProgress({
-            detail: "Criptografia concluida e midia anexada ao cofre local.",
-            progress: 100,
-            status: "done",
-            title: "Video protegido"
-          });
-          return;
-        }
-
-        const diagnosticReason: MediaCaptureFailureReason =
-          result.status === "error" ? "camera_recording_error" : "camera_no_file_returned";
-        await persistFinishNoMediaDiagnostic(packageId, diagnosticReason);
-        await refreshOutboxCount();
-
-        const detail =
-          result.status === "error"
-            ? "O cofre foi atualizado com causa tecnica saneada. Se a midia chegar depois, ela sera anexada automaticamente."
-            : "A camera encerrou sem devolver arquivo de video. O cofre mostra a causa tecnica saneada.";
-        setRecordingStatus(result.status === "error" ? "Chamado salvo. Midia local sem confirmacao final." : "Chamado salvo sem video local.");
-        showFinishProgress({
-          detail,
-          progress: 100,
-          status: "warning",
-          title: result.status === "error" ? "Chamado salvo" : "Chamado salvo sem video"
-        });
-      })
-      .catch((error) => {
-        setMediaStopPendingState(false);
-        appendMediaOperationalLog("emergency_media_stop_progress_error", {
-          platform: Platform.OS
-        }, error);
-        showFinishProgress({
-          detail: "O chamado foi encerrado, mas a verificacao final da midia falhou. Revise o cofre.",
-          progress: 100,
-          status: "error",
-          title: "Verificacao incompleta"
-        });
-      });
   }
 
   function handleMediaStopRequestSettled(serial: number, result: MediaStopRequestResult) {
@@ -782,6 +898,7 @@ export default function HomeScreen() {
           <BrandBackground active={Boolean(activePackageId || startInProgress)} />
           <EmergencyMediaRecorder
             activePackageId={mediaRecorderPackageId}
+            captureStopLocked={captureStopLocked}
             preferences={preferences}
             onMediaAttached={refreshOutboxCount}
             onMediaProcessingStateChange={handleMediaProcessingStateChange}

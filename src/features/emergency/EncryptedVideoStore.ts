@@ -50,6 +50,7 @@ export type PreserveEncryptedVideoInput = {
   chunkSizeBytes?: number;
   captureProfile?: MediaCaptureCompatibilityProfile;
   cleanupPlaintextSource?: boolean;
+  cleanupResidueSourceOnly?: boolean;
   diagnosticRunId?: string;
   verificationMode?: "full" | "bounded";
 };
@@ -125,6 +126,7 @@ export class EncryptedVideoStore {
     chunkSizeBytes = encryptedVideoDefaultChunkSizeBytes,
     captureProfile,
     cleanupPlaintextSource = true,
+    cleanupResidueSourceOnly = false,
     diagnosticRunId = createMediaDiagnosticRun("preserve"),
     verificationMode = "full"
   }: PreserveEncryptedVideoInput): Promise<LocalMediaAsset> {
@@ -358,7 +360,7 @@ export class EncryptedVideoStore {
       }
       const cleanupTimer = startMediaDiagnosticEvent(diagnosticRunId, "preserve_cleanup");
       const plaintextCleanup = cleanupPlaintextSource
-        ? await this.deletePlaintextAfterVerifiedPreservation(sourceUri)
+        ? await this.deletePlaintextAfterVerifiedPreservation(sourceUri, cleanupResidueSourceOnly)
             .then((result) => {
               cleanupTimer.finish("ok", {
                 sourceDeleted: result.status === "deleted",
@@ -589,7 +591,7 @@ export class EncryptedVideoStore {
     }
   }
 
-  async deletePlaintextAfterVerifiedPreservation(sourceUri: string) {
+  async deletePlaintextAfterVerifiedPreservation(sourceUri: string, cleanupResidueSourceOnly = false) {
     const attemptedAt = new Date().toISOString();
     let sourceDeleted = false;
 
@@ -600,7 +602,9 @@ export class EncryptedVideoStore {
       sourceDeleted = false;
     }
 
-    await this.captureResidueCleaner.cleanupAfterSuccessfulPreservation({ sourceUri }).catch(() => undefined);
+    await this.captureResidueCleaner
+      .cleanupAfterSuccessfulPreservation({ sourceOnly: cleanupResidueSourceOnly, sourceUri })
+      .catch(() => undefined);
 
     if (!sourceDeleted) {
       const sourceInfo = await this.fileSystem.getInfo(sourceUri).catch(() => ({ exists: true }));

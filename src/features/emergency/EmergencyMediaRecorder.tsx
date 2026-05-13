@@ -26,6 +26,7 @@ export type MediaStopRequestResult = {
 
 type EmergencyMediaRecorderProps = {
   activePackageId: string | null;
+  captureStopLocked?: boolean;
   preferences: EmergencyPreferences;
   onMediaAttached?: () => void;
   onMediaProcessingStateChange?: (state: MediaProcessingState) => void;
@@ -36,7 +37,6 @@ type EmergencyMediaRecorderProps = {
 
 const emptyCameraReadyState: CameraReadyByMode = { back: false, front: false };
 const mobileSegmentDurationSeconds = 12;
-const iosHomologationMaxSegmentsPerCall = 1;
 const iosRecordStartWarmupMs = 850;
 const iosRecordRetryDelayMs = 700;
 const iosRecordRetryMaxAttempts = 2;
@@ -176,7 +176,7 @@ function shouldContinueSegmentedRecording({
   segmentIndex: number;
 }) {
   if (activeCaptureController.stopRequested || ignoreStatusUpdates) return false;
-  if (Platform.OS === "ios") return segmentIndex < iosHomologationMaxSegmentsPerCall;
+  if (Platform.OS === "ios") return true;
   return Platform.OS === "android";
 }
 
@@ -218,6 +218,7 @@ async function persistCaptureDiagnostic(
 
 export function EmergencyMediaRecorder({
   activePackageId,
+  captureStopLocked = false,
   preferences,
   onMediaAttached,
   onMediaProcessingStateChange,
@@ -240,7 +241,7 @@ export function EmergencyMediaRecorder({
   const [forcedSingleCameraMode, setForcedSingleCameraMode] = useState<ActualCameraMode | null>(null);
   const [mediaPermissionStatus, setMediaPermissionStatus] = useState<MediaPermissionStatus>("idle");
 
-  const mediaEnabled = Boolean(activePackageId && preferences.localVideoCapture.requestOnSos);
+  const mediaEnabled = Boolean(activePackageId && preferences.localVideoCapture.requestOnSos && !captureStopLocked);
   const requestedCameraMode = preferences.localVideoCapture.cameraMode;
   const runtimeCameraMode = getRuntimeCameraMode(requestedCameraMode);
   const activeCameraModes = useMemo<ActualCameraMode[]>(
@@ -285,9 +286,6 @@ export function EmergencyMediaRecorder({
     }
     void frontCameraRef.current?.stopRecording();
     void backCameraRef.current?.stopRecording();
-    if (Platform.OS === "ios" && activeCaptureController && activeCaptureController.attachedAssetCount > 0) {
-      settleStopRequest({ attachedAssets: activeCaptureController.attachedAssetCount, status: "attached" });
-    }
     return true;
   }
 
@@ -579,7 +577,7 @@ export function EmergencyMediaRecorder({
                 compatibilityTier: captureProfile.compatibilityTier,
                 fallbackUsed: requestedCameraMode !== mode,
                 iosSegmentedRecording: Platform.OS === "ios",
-                iosSegmentLimit: Platform.OS === "ios" ? iosHomologationMaxSegmentsPerCall : null,
+                iosSegmentMode: Platform.OS === "ios" ? "continuous_until_stop" : null,
                 pictureSizeCount: captureProfile.pictureSizeCount,
                 plannedDurationSeconds: preferences.defaultDurationSeconds,
                 requestedCameraMode,
@@ -716,7 +714,7 @@ export function EmergencyMediaRecorder({
               if (Platform.OS === "ios" || Platform.OS === "android") {
                 if (!ignoreStatusUpdates) {
                   onStatusChangeRef.current?.(
-                    `Video local ${cameraModeLabel(mode)} preservado em segmento seguro ${activeCaptureController.attachedAssetCount}.`
+                    `Video local ${cameraModeLabel(mode)} protegido ate aqui.`
                   );
                 }
                 if (activeCaptureController.stopRequested) {
@@ -730,17 +728,17 @@ export function EmergencyMediaRecorder({
               segmentIndex += 1;
               if (
                 Platform.OS === "ios" &&
-                segmentIndex >= iosHomologationMaxSegmentsPerCall &&
                 !activeCaptureController.stopRequested &&
                 !ignoreStatusUpdates
               ) {
-                appendMediaOperationalLog("capture_ios_segment_limit_reached", {
+                appendMediaOperationalLog("capture_segment_cycle_continue", {
                   attachedAssetCount: activeCaptureController.attachedAssetCount,
-                  maxSegments: iosHomologationMaxSegmentsPerCall,
-                  platform: Platform.OS
+                  nextSegmentIndex: segmentIndex,
+                  platform: Platform.OS,
+                  segmentDurationSeconds: mobileSegmentDurationSeconds
                 });
                 onStatusChangeRef.current?.(
-                  "Video local iOS preservado em segmento seguro. O chamado segue ativo sem manter a camera em ciclo pesado."
+                  "Midia protegida ate aqui. A gravacao continua."
                 );
               }
             } while (
@@ -776,7 +774,7 @@ export function EmergencyMediaRecorder({
             : runtimeCameraMode === "both" && attachedAssets.length < 2
               ? `Captura dupla limitada pelo aparelho; video ${cameraSummary} preservado no cofre.`
               : Platform.OS === "ios" && attachedAssets.length > 1
-                ? `Video local ${cameraSummary} preservado em ${attachedAssets.length} segmentos seguros. Abra o player para revisar.`
+                ? `Video local ${cameraSummary} protegido no cofre. Abra o player para revisar em arquivo unico.`
                 : `Video local ${cameraSummary} preservado no cofre. Abra o player para revisar.`;
           if (!ignoreStatusUpdates) {
             onStatusChangeRef.current?.(statusMessage);

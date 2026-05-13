@@ -1,4 +1,5 @@
 import { EmergencyPackage } from "./types";
+import { isUnifiedNativePackageVideo } from "./mediaInterfacePresentation";
 
 function safeDate(dateValue: string) {
   const date = new Date(dateValue);
@@ -61,12 +62,18 @@ export function formatElapsedDuration(milliseconds: number) {
 export function getPackageVideoDurationMs(packageRecord: EmergencyPackage) {
   if (packageRecord.media.status !== "recorded_local") return null;
 
-  const durations = packageRecord.media.assets
-    .map((asset) => durationMsBetween(asset.recordedAt, asset.completedAt))
-    .filter((duration): duration is number => typeof duration === "number");
+  const durationsByCamera = packageRecord.media.assets.reduce<Record<string, number>>((accumulator, asset) => {
+    const duration = durationMsBetween(asset.recordedAt, asset.completedAt);
+    if (typeof duration !== "number") return accumulator;
 
-  if (!durations.length) return null;
-  return Math.max(...durations);
+    const cameraKey = asset.cameraMode ?? "unknown";
+    accumulator[cameraKey] = (accumulator[cameraKey] ?? 0) + duration;
+    return accumulator;
+  }, {});
+
+  const trackDurations = Object.values(durationsByCamera);
+  if (!trackDurations.length) return null;
+  return Math.max(...trackDurations);
 }
 
 export function getPackageEventDurationMs(packageRecord: EmergencyPackage) {
@@ -106,6 +113,7 @@ export function formatPackageDate(packageRecord: EmergencyPackage) {
 
 export function formatPackageSubtitle(packageRecord: EmergencyPackage) {
   if (packageRecord.status === "recording_local") return "Gravando agora";
+  if (isUnifiedNativePackageVideo(packageRecord)) return "Video local";
   const assets = packageRecord.media.status === "recorded_local" ? packageRecord.media.assets.length : 0;
   if (assets > 1) return `${assets} videos locais`;
   if (assets === 1) return "Video local";

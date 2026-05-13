@@ -19,7 +19,7 @@ import {
   EmergencyPreferences,
   getEmergencyPreferences
 } from "@/features/emergency/emergencyPreferences";
-import { finishEmergencyPackage } from "@/features/emergency/emergencyRecorder";
+import { finishEmergencyPackage, getActiveEmergencyPackage } from "@/features/emergency/emergencyRecorder";
 import { runPlaintextMediaStorageMaintenance } from "@/features/emergency/PlaintextMediaResidueCleaner";
 import { cleanupNativeMediaResidues } from "@/features/emergency/SinalSeguroMediaEngine";
 import { EmergencyPackage } from "@/features/emergency/types";
@@ -39,6 +39,7 @@ type LocalDialog = {
 export default function LocalFilesScreen() {
   const params = useLocalSearchParams<{ painel?: EmergencyHomePanel }>();
   const [packages, setPackages] = useState<EmergencyPackage[]>([]);
+  const [packagesRefreshing, setPackagesRefreshing] = useState(false);
   const [selectedPackageId, setSelectedPackageId] = useState<string | undefined>();
   const [expandedPackageId, setExpandedPackageId] = useState<string | undefined>();
   const [activeDialog, setActiveDialog] = useState<VaultDialog>(null);
@@ -55,18 +56,23 @@ export default function LocalFilesScreen() {
   const [accessGateVisible, setAccessGateVisible] = useState(false);
 
   async function refreshPackages(nextStatus?: string) {
-    const records = await listEmergencyPackages();
-    setPackages(records);
-    setSelectedPackageId((currentSelectedId) => {
-      if (!records.length) return undefined;
-      if (currentSelectedId && records.some((record) => record.id === currentSelectedId)) return currentSelectedId;
-      return records[0].id;
-    });
-    setExpandedPackageId((currentExpandedId) => {
-      if (currentExpandedId && records.some((record) => record.id === currentExpandedId)) return currentExpandedId;
-      return undefined;
-    });
-    setStatus(nextStatus ?? (records.length ? "Arquivos carregados." : "Nenhum arquivo local neste dispositivo."));
+    setPackagesRefreshing(true);
+    try {
+      const records = await listEmergencyPackages();
+      setPackages(records);
+      setSelectedPackageId((currentSelectedId) => {
+        if (!records.length) return undefined;
+        if (currentSelectedId && records.some((record) => record.id === currentSelectedId)) return currentSelectedId;
+        return records[0].id;
+      });
+      setExpandedPackageId((currentExpandedId) => {
+        if (currentExpandedId && records.some((record) => record.id === currentExpandedId)) return currentExpandedId;
+        return undefined;
+      });
+      setStatus(nextStatus ?? (records.length ? "Arquivos carregados." : "Nenhum arquivo local neste dispositivo."));
+    } finally {
+      setPackagesRefreshing(false);
+    }
   }
 
   useEffect(() => {
@@ -79,16 +85,22 @@ export default function LocalFilesScreen() {
       }
 
       setAccessReady(true);
-      setStatus("Verificando residuos de midia local...");
-      await cleanupNativeMediaResidues().catch(() => undefined);
-      const maintenance = await runPlaintextMediaStorageMaintenance().catch(() => null);
+      const activePackage = await getActiveEmergencyPackage();
+      setStatus(activePackage ? "Chamado ativo detectado. Volte ao SOS para finalizar a recuperacao." : "Verificando residuos de midia local...");
+      const maintenance = activePackage
+        ? null
+        : await cleanupNativeMediaResidues()
+            .then(() => runPlaintextMediaStorageMaintenance())
+            .catch(() => null);
       const maintenanceStatus = maintenance
         ? maintenance.migrationBlockedCount > 0 || maintenance.blockedReferencedCount > 0
           ? "Arquivos carregados. Ha midia clara legada referenciada que exige nova tentativa de migracao."
           : maintenance.migratedReferencedCount > 0 || maintenance.deletedCount > 0
             ? "Arquivos carregados. Midia legada foi protegida ou removida."
             : undefined
-        : "Arquivos carregados. Nao foi possivel concluir a verificacao de residuos.";
+        : activePackage
+          ? "Volte ao SOS para recuperar o chamado ativo antes da limpeza."
+          : "Arquivos carregados. Nao foi possivel concluir a verificacao de residuos.";
       await refreshPackages(maintenanceStatus);
     }
 
@@ -408,6 +420,7 @@ export default function LocalFilesScreen() {
         >
           <LocalEvidenceRail
             expandedPackageId={expandedPackageId}
+            loading={packagesRefreshing}
             onDeletePackage={confirmDeleteLocalPackage}
             onFinishPackage={requestFinishPackage}
             onOpenMapPackage={openPackageMap}

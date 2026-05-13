@@ -1,6 +1,7 @@
 import * as Crypto from "expo-crypto";
 import * as FileSystem from "expo-file-system/legacy";
 import { deleteSecret, saveSecret } from "@/security/secureStorage";
+import { CameraCaptureResidueCleaner } from "./CameraCaptureResidueCleaner";
 import { LocalVideoCameraMode } from "./emergencyPreferences";
 import { EncryptedVideoStore, encryptedVideoKeyRef } from "./EncryptedVideoStore";
 import {
@@ -27,6 +28,7 @@ type PreserveLocalVideoInput = {
   startedAt: string;
   completedAt?: string;
   chunkSizeBytes?: number;
+  cleanupResidueSourceOnly?: boolean;
   captureProfile?: MediaCaptureCompatibilityProfile;
   diagnosticRunId?: string;
   verificationMode?: "full" | "bounded";
@@ -47,6 +49,7 @@ async function preserveWithNativeEngine({
   requestedCameraMode,
   startedAt,
   completedAt = new Date().toISOString(),
+  cleanupResidueSourceOnly = false,
   captureProfile,
   diagnosticRunId = createMediaDiagnosticRun("native-preserve")
 }: PreserveLocalVideoInput): Promise<LocalMediaAsset> {
@@ -75,22 +78,31 @@ async function preserveWithNativeEngine({
       packageId,
       emergencySessionId: null
     });
+    const captureResidueCleanup = await new CameraCaptureResidueCleaner()
+      .cleanupAfterSuccessfulPreservation({ sourceOnly: cleanupResidueSourceOnly, sourceUri })
+      .catch(() => ({ deletedUris: [], inspectedDirectoryUri: null }));
+    const normalizedSourceUri = normalizeMediaUri(sourceUri);
+    const sourceDeletedByResidueCleanup = captureResidueCleanup.deletedUris.some(
+      (deletedUri) => normalizeMediaUri(deletedUri) === normalizedSourceUri
+    );
+    const sourceDeleted = segmentSummary.sourceDeleted || sourceDeletedByResidueCleanup;
     encryptTimer.finish("ok", {
       encryptedSizeBytes: segmentSummary.encryptedSizeBytes,
       plaintextSizeBytes: segmentSummary.plaintextSizeBytes,
-      sourceDeleted: segmentSummary.sourceDeleted
+      sourceDeleted
     });
     totalTimer.finish("ok", {
       encryptedSizeBytes: segmentSummary.encryptedSizeBytes,
       plaintextSizeBytes: segmentSummary.plaintextSizeBytes,
-      sourceDeleted: segmentSummary.sourceDeleted
+      sourceDeleted
     });
     appendMediaOperationalLog("native_engine_preserve_success", {
       actualCameraMode: cameraMode,
+      captureResidueDeletedFiles: captureResidueCleanup.deletedUris.length,
       encryptedSizeBytes: segmentSummary.encryptedSizeBytes,
       plaintextSizeBytes: segmentSummary.plaintextSizeBytes,
-      processingState: segmentSummary.sourceDeleted ? "cleanup" : "error",
-      sourceDeleted: segmentSummary.sourceDeleted
+      processingState: sourceDeleted ? "cleanup" : "error",
+      sourceDeleted
     });
 
     return {
@@ -131,7 +143,7 @@ async function preserveWithNativeEngine({
         durationMs: null,
         plaintextCleanup: {
           attemptedAt: segmentSummary.completedAt,
-          status: segmentSummary.sourceDeleted ? "deleted" : "cleanup_pending"
+          status: sourceDeleted ? "deleted" : "cleanup_pending"
         },
         captureProfile,
         diagnostics: summarizeMediaDiagnostics(diagnosticRunId),
@@ -165,6 +177,7 @@ async function preserveWithJsStore({
   startedAt,
   completedAt = new Date().toISOString(),
   chunkSizeBytes,
+  cleanupResidueSourceOnly = false,
   captureProfile,
   verificationMode,
   diagnosticRunId
@@ -178,6 +191,7 @@ async function preserveWithJsStore({
     startedAt,
     completedAt,
     chunkSizeBytes,
+    cleanupResidueSourceOnly,
     captureProfile,
     verificationMode,
     diagnosticRunId
@@ -239,4 +253,8 @@ export async function preserveLocalVideoAsset(input: PreserveLocalVideoInput) {
 export async function deleteLocalMediaAssets(assets: LocalMediaAsset[]) {
   const encryptedStore = new EncryptedVideoStore();
   await Promise.all(assets.map((asset) => encryptedStore.deleteEncryptedAsset(asset)));
+}
+
+function normalizeMediaUri(value: string) {
+  return value.replace(/\/+$/, "");
 }

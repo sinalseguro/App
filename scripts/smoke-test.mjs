@@ -141,6 +141,8 @@ if (!launchScreen.includes("Carregando SinalSeguro") || launchScreen.includes("g
 const localEvidenceRail = await readFile("src/components/LocalEvidenceRail.tsx", "utf8");
 const evidencePlayerCard = await readFile("src/components/EvidencePlayerCard.tsx", "utf8");
 const mediaInterfacePresentation = await readFile("src/features/emergency/mediaInterfacePresentation.ts", "utf8");
+const appLayout = await readFile("app/_layout.tsx", "utf8");
+const homeScreen = await readFile("app/index.tsx", "utf8");
 const localFilesScreen = await readFile("app/arquivos.tsx", "utf8");
 const settingsScreen = await readFile("app/configuracoes.tsx", "utf8");
 const deviceBinding = await readFile("src/services/deviceBinding.ts", "utf8");
@@ -158,6 +160,38 @@ if (
 
 if (!localEvidenceRail.includes("onDeletePackage") || !localEvidenceRail.includes("Compartilhar")) {
   throw new Error("Cofre local precisa expor acoes de visualizar, compartilhar pelo app e excluir local.");
+}
+
+if (
+  !homeScreen.includes("recoverInterruptedActiveRecordingOnLaunch") ||
+  !homeScreen.includes("recoverInterruptedCameraResidue") ||
+  !homeScreen.includes("findRecoverableCameraVideos") ||
+  !homeScreen.includes("emergency_interrupted_media_recovery_success") ||
+  !homeScreen.includes("interrupted_on_launch") ||
+  !homeScreen.includes("emergency_interrupted_active_recovered") ||
+  !homeScreen.includes("sem reativar camera ou microfone")
+) {
+  throw new Error("Tela SOS precisa recuperar chamado interrompido no startup sem remontar camera automaticamente.");
+}
+
+const interruptedRecoveryIndex = homeScreen.indexOf("await recoverInterruptedCameraResidue(");
+const interruptedFinishIndex = homeScreen.indexOf("await finishEmergencyPackage(interruptedPackage.id, \"interrupted_on_launch\")");
+if (interruptedRecoveryIndex < 0 || interruptedFinishIndex < 0 || interruptedRecoveryIndex > interruptedFinishIndex) {
+  throw new Error("Tela SOS precisa recuperar residuos de Camera antes de finalizar pacote interrompido.");
+}
+
+const startupRecoveryCallIndex = homeScreen.indexOf("await recoverInterruptedActiveRecordingOnLaunch(nextPreferences)");
+const startupNativeCleanupIndex = homeScreen.indexOf("await cleanupNativeMediaResidues()");
+if (startupRecoveryCallIndex < 0 || startupNativeCleanupIndex < 0 || startupRecoveryCallIndex > startupNativeCleanupIndex) {
+  throw new Error("Tela SOS precisa tentar recuperacao interrompida antes da limpeza nativa de residuos.");
+}
+
+if (!homeScreen.includes("cleanupResidueSourceOnly: true")) {
+  throw new Error("Recuperacao interrompida precisa apagar somente o video temporario ja preservado.");
+}
+
+if (appLayout.includes("CameraCaptureResidueCleaner") || appLayout.includes("cleanupAfterSuccessfulPreservation")) {
+  throw new Error("Root layout nao pode limpar residuos de camera antes da Home tentar recuperar chamado interrompido.");
 }
 
 if (
@@ -198,8 +232,8 @@ if (
 if (
   !mediaInterfacePresentation.includes("Player seguro pendente") ||
   !mediaInterfacePresentation.includes("Player seguro nativo") ||
-  !mediaInterfacePresentation.includes("partes protegidas") ||
-  !mediaInterfacePresentation.includes("segmentos protegidos") ||
+  !mediaInterfacePresentation.includes("Arquivo protegido") ||
+  !mediaInterfacePresentation.includes("isUnifiedNativePackageVideo") ||
   !mediaInterfacePresentation.includes("getPackageMediaProtectionLabel")
 ) {
   throw new Error("Apresentacao de midia precisa centralizar rotulos de protecao, armazenamento e playback.");
@@ -259,8 +293,6 @@ if (
 ) {
   throw new Error("Botao SOS precisa usar progresso circular horario para acionar e anti-horario para encerrar.");
 }
-
-const homeScreen = await readFile("app/index.tsx", "utf8");
 
 if (homeScreen.includes("<SafeScreen") || homeScreen.includes("Rede de apoio discreta")) {
   throw new Error("Home de emergencia nao pode usar tela rolavel nem manter titulo/subtitulo duplicados.");
@@ -373,6 +405,7 @@ if (
 if (
   !packagePresentation.includes("formatPackageDurationLabel") ||
   !packagePresentation.includes("getPackageVideoDurationMs") ||
+  !packagePresentation.includes("durationsByCamera") ||
   !packagePresentation.includes("geo:")
 ) {
   throw new Error("Apresentacao do pacote precisa expor duracao e links de mapa multiplataforma.");
@@ -475,10 +508,10 @@ if (
   !emergencyMediaRecorder.includes("iosRecordStartWarmupMs") ||
   !emergencyMediaRecorder.includes("capture_record_async_retry") ||
   !emergencyMediaRecorder.includes("shouldRetryIosRecordAsync") ||
-  !emergencyMediaRecorder.includes("iosHomologationMaxSegmentsPerCall") ||
   !emergencyMediaRecorder.includes('if (Platform.OS === "android") return undefined') ||
   !emergencyMediaRecorder.includes("ERROR_DURATION_LIMIT_REACHED") ||
-  !emergencyMediaRecorder.includes("capture_ios_segment_limit_reached") ||
+  !emergencyMediaRecorder.includes("continuous_until_stop") ||
+  !emergencyMediaRecorder.includes("capture_segment_cycle_continue") ||
   !emergencyMediaRecorder.includes('const iosRecordingVideoCodec: VideoCodec = "avc1"') ||
   !emergencyMediaRecorder.includes('const recordingVideoQuality: VideoQuality = "480p"') ||
   !emergencyMediaRecorder.includes("const mobileSegmentDurationSeconds = 12") ||
@@ -522,9 +555,15 @@ if (
   !mediaEnginePlugin.includes("syncSinalSeguroMediaEngine") ||
   !mediaEnginePlugin.includes("withDangerousMod") ||
   !mediaEnginePlugin.includes("SinalSeguroMediaEnginePackage") ||
+  !mediaEnginePlugin.includes("SinalSeguroNativeMediaResidueCleaner") ||
+  !mediaEnginePlugin.includes("ios_startup_playback_residue_cleanup") ||
   !mediaEnginePlugin.includes("project.pbxproj")
 ) {
   throw new Error("Config plugin do motor nativo precisa sincronizar Android/iOS e poder ser chamado pelos scripts locais.");
+}
+
+if (mediaEnginePlugin.includes("cleanupPlaintextCameraResidues") || mediaEnginePlugin.includes('appendingPathComponent("Camera"')) {
+  throw new Error("Config plugin iOS nao pode gerar limpeza nativa de Camera antes da recuperacao JS.");
 }
 
 if (
@@ -549,11 +588,15 @@ if (
 if (
   !sinalSeguroMediaEngine.includes("encryptSegmentWithNativeMediaEngine") ||
   !sinalSeguroMediaEngine.includes("openNativeEncryptedAsset") ||
+  !sinalSeguroMediaEngine.includes("openNativeEncryptedAssets") ||
   !sinalSeguroMediaEngine.includes("cleanupNativeMediaResidues") ||
   !sinalSeguroMediaEngine.includes("keyBase64") ||
   !sinalSeguroMediaEngine.includes("ciphertextSha256") ||
   !sinalSeguroMediaEngine.includes("native_segmented_v1") ||
-  !sinalSeguroMediaEngine.includes("native_encrypted_source")
+  !sinalSeguroMediaEngine.includes("native_encrypted_source") ||
+  !sinalSeguroMediaEngine.includes("inputPackageIds") ||
+  !sinalSeguroMediaEngine.includes("resolveNativeSegmentSourceUri") ||
+  !sinalSeguroMediaEngine.includes("native_playback_source_uri_rebased")
 ) {
   throw new Error("Ponte JS do motor nativo precisa expor cifragem, playback e limpeza com fallback seguro.");
 }
@@ -569,9 +612,16 @@ if (
   !androidMediaEngine.includes("file_outside_app_private_storage") ||
   !androidMediaEngine.includes("cleanupMediaResidues") ||
   !androidMediaEngine.includes("openEncryptedAsset") ||
+  !androidMediaEngine.includes("openEncryptedAssets") ||
+  !androidMediaEngine.includes("MediaMuxer") ||
+  !androidMediaEngine.includes("writeTrackSamples") ||
+  !androidMediaEngine.includes("SinalSeguroNativeMediaResidueCleaner") ||
+  !androidMediaEngine.includes("validateMuxSegmentCompatibility") ||
+  androidMediaEngine.includes("externalCacheDir") ||
+  androidMediaEngine.includes("getExternalFilesDir") ||
   androidMediaEngine.includes("val plaintext = sourceFile.readBytes()")
 ) {
-  throw new Error("Motor nativo Android precisa cifrar em blocos, restringir storage privado e abrir handles saneados.");
+  throw new Error("Motor nativo Android precisa cifrar em blocos, restringir storage privado e abrir handles saneados/unificados.");
 }
 
 if (
@@ -582,13 +632,28 @@ if (
   !iosMediaEngine.includes("privateFileURL") ||
   !iosMediaEngine.includes("file_outside_app_private_storage") ||
   !iosMediaEngine.includes("cleanupMediaResidues") ||
-  !iosMediaEngine.includes("openEncryptedAsset")
+  !iosMediaEngine.includes("openEncryptedAsset") ||
+  !iosMediaEngine.includes("openEncryptedAssets") ||
+  !iosMediaEngine.includes("AVMutableComposition") ||
+  !iosMediaEngine.includes("shortPlaybackFileStem") ||
+  !iosMediaEngine.includes("makeMergedPlaybackExportSession") ||
+  !iosMediaEngine.includes("AVAssetExportPresetMediumQuality") ||
+  !iosMediaEngine.includes("normalizedRenderGeometry") ||
+  !iosMediaEngine.includes("stagingURL")
 ) {
-  throw new Error("Motor nativo iOS precisa cifrar segmento, restringir storage privado e abrir handles saneados.");
+  throw new Error("Motor nativo iOS precisa cifrar segmento, restringir storage privado e abrir handles saneados/unificados sem nomes longos ou export passthrough fragil.");
+}
+
+if (iosMediaEngine.includes("cleanupPlaintextCameraResidues") || androidMediaEngine.includes("cleanupPlaintextCameraResidues")) {
+  throw new Error("Cleanup nativo generico nao pode apagar residuos de Camera; recuperacao de chamados interrompidos decide isso antes.");
 }
 
 if (
   !cameraCaptureResidueCleaner.includes("CameraCaptureResidueCleaner") ||
+  !cameraCaptureResidueCleaner.includes("findRecoverableCameraVideos") ||
+  !cameraCaptureResidueCleaner.includes("isSafeCameraEntryName") ||
+  !cameraCaptureResidueCleaner.includes("maxTotalSizeBytes") ||
+  !cameraCaptureResidueCleaner.includes("sourceOnly") ||
   !cameraCaptureResidueCleaner.includes("cacheDirectory") ||
   !cameraCaptureResidueCleaner.includes('cameraCacheDirectoryName = "Camera"') ||
   !cameraCaptureResidueCleaner.includes(".mp4") ||
@@ -653,9 +718,24 @@ if (
   !evidencePlayerCard.includes("preparePlayableUri(") ||
   !evidencePlayerCard.includes("temporary_playback_cache") ||
   !evidencePlayerCard.includes("player_loopback_skipped") ||
-  !evidencePlayerCard.includes("native_engine_playback_prepare")
+  !evidencePlayerCard.includes("native_engine_playback_prepare") ||
+  !evidencePlayerCard.includes("canUseUnifiedPackagePlayback") ||
+  !evidencePlayerCard.includes("openNativeEncryptedAssets") ||
+  !evidencePlayerCard.includes("isNativeEncryptedPlaybackAsset") ||
+  !evidencePlayerCard.includes("playback_prepare_error") ||
+  !evidencePlayerCard.includes("persistPlaybackDiagnosticsForAssets") ||
+  !evidencePlayerCard.includes("getTemporaryPlaybackTtlMs") ||
+  !evidencePlayerCard.includes("1 video protegido") ||
+  !evidencePlayerCard.includes("Arquivo protegido unificado")
 ) {
-  throw new Error("EvidencePlayerCard precisa preparar fonte tocavel com progresso antes do play e manter loopback so como fallback.");
+  throw new Error("EvidencePlayerCard precisa preparar fonte tocavel unificada com progresso antes do play e manter loopback so como fallback.");
+}
+
+if (
+  evidencePlayerCard.includes("iosUnifiedPackagePlaybackMaxSegments") ||
+  evidencePlayerCard.includes("canUseUnifiedNativePackagePlayback")
+) {
+  throw new Error("Player seguro nao pode voltar a expor segmentos nativos por limite artificial no iOS.");
 }
 
 if (

@@ -94,11 +94,20 @@ function patchBuildGradle() {
       '    bundleCommand = "export:embed"\n\n' +
         "    // Validacao fisica embute JS no APK debug e nao depende do Metro.\n" +
         "    if (sinalBundleDebugJs) {\n" +
+        '        nodeExecutableAndArgs = ["node", "--require", file("../../scripts/expo-no-workspace-root.cjs").absolutePath]\n' +
         "        debuggableVariants = []\n" +
         "    }\n",
       "configurar debuggableVariants"
     );
   } else {
+    if (!contents.includes("expo-no-workspace-root.cjs")) {
+      contents = replaceOnce(
+        contents,
+        "if (sinalBundleDebugJs) {\n        debuggableVariants = []\n    }",
+        "if (sinalBundleDebugJs) {\n        nodeExecutableAndArgs = [\"node\", \"--require\", file(\"../../scripts/expo-no-workspace-root.cjs\").absolutePath]\n        debuggableVariants = []\n    }",
+        "configurar nodeExecutableAndArgs no bundle Android"
+      );
+    }
     contents = contents.replace(
       /if \(\(findProperty\("sinalBundleDebugJs"\) \?: "false"\)\.toBoolean\(\)\) \{\n\s+debuggableVariants = \[\]\n\s+\}/,
       "if (sinalBundleDebugJs) {\n        debuggableVariants = []\n    }"
