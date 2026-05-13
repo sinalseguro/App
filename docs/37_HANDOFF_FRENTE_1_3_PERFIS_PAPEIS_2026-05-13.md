@@ -1,6 +1,6 @@
 # Handoff - Frente 1.3 - Perfis, familia, maioridade e papeis - 2026-05-13
 
-Status: pronta para iniciar apos fechamento e publicacao da Frente 1.2 Android.
+Status: iniciada em 2026-05-13. Primeira fatia local implementada no app Android/MVP; backend server-side de perfis/familia ainda pendente.
 
 ## Contexto
 
@@ -94,3 +94,34 @@ sed -n '1,220p' docs/37_HANDOFF_FRENTE_1_3_PERFIS_PAPEIS_2026-05-13.md
 ```
 
 Se a Frente 1.3 comecar em outro chat, levar este documento como ponto de partida e manter o escopo restrito a papeis, familia, maioridade, consentimentos e autorizacoes.
+
+## Checkpoint de abertura - 2026-05-13
+
+Zé acionou especialistas e confirmou convergencia tecnica:
+
+- Silvio + Lucena: comecar por contrato de papeis e bloqueios, nao pela UI final nem por rede social de anjos.
+- Kátia + Fábio: app/API ja tem usuario, device, consentimento, convites e anjos, mas nao tem perfil protegido/responsavel/menor.
+- Doneda + Cristine: bloquear menor convidando/atuando como anjo e evitar coleta documental ou dado sensivel nesta frente.
+- Lina + Eliane: UX minima precisa mostrar perfil ativo e bloquear convite de forma clara para usuario leigo.
+
+Primeira fatia implementada no app:
+
+- `src/features/profiles/profilePolicy.ts`;
+- `src/features/profiles/profileStore.ts`;
+- `app/perfis.tsx`;
+- bloqueio em `app/contatos.tsx` antes de criar convite;
+- bloqueio em `app/convite.tsx` antes de aceitar como anjo;
+- `scripts/profile-policy.test.ts`;
+- smoke test protegendo os novos gates.
+
+Validacoes rapidas desta abertura:
+
+- `npm run test:profiles`: aprovado;
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `node scripts/smoke-test.mjs`: aprovado;
+- `npm test`: aprovado;
+- `npm run private:android:readiness`: aprovado como build privado condicionado, com pendencia ambiental conhecida de Node local para release publico;
+- `git diff --check`: aprovado.
+
+Checkpoint detalhado: `docs/38_CHECKPOINT_ABERTURA_FRENTE_1_3_PERFIS_PAPEIS_2026-05-13.md`.

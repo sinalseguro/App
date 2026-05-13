@@ -1,11 +1,13 @@
-import { useState } from "react";
-import { useLocalSearchParams } from "expo-router";
-import { UserCheck } from "lucide-react-native";
+import { useCallback, useState } from "react";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { UserCheck, UserRound } from "lucide-react-native";
 import { ButtonIcon } from "@/components/ButtonIcon";
 import { SafeScreen } from "@/components/SafeScreen";
 import { StatusBanner } from "@/components/StatusBanner";
 import { theme } from "@/design/theme";
 import { acceptBackendInvitation } from "@/features/invitations/invitationService";
+import { canAcceptAngelInvitation, ProtectionProfile } from "@/features/profiles/profilePolicy";
+import { getActiveProtectionProfile } from "@/features/profiles/profileStore";
 
 function normalizeInvitationToken(value?: string | string[]) {
   if (Array.isArray(value)) return value[0] ?? "";
@@ -20,11 +22,29 @@ export default function InvitationScreen() {
       ? "Convite identificado. Aceite somente se reconhecer a pessoa que enviou."
       : "Abra um link de convite valido enviado por uma pessoa de confianca."
   );
+  const [activeProfile, setActiveProfile] = useState<ProtectionProfile | null>(null);
   const [busy, setBusy] = useState(false);
+  const acceptGate = canAcceptAngelInvitation(activeProfile);
+
+  useFocusEffect(
+    useCallback(() => {
+      let mounted = true;
+      void getActiveProtectionProfile().then((profile) => {
+        if (mounted) setActiveProfile(profile);
+      });
+      return () => {
+        mounted = false;
+      };
+    }, [])
+  );
 
   async function handleAcceptInvitation() {
     if (!invitationCode) {
       setStatus("Convite ausente ou invalido.");
+      return;
+    }
+    if (!acceptGate.allowed) {
+      setStatus(acceptGate.message);
       return;
     }
 
@@ -55,8 +75,17 @@ export default function InvitationScreen() {
         title="Limite de seguranca"
         text="Este app nao permite entrar como outra pessoa. O vinculo so sera criado com sua conta, seu aceite e autorizacao da pessoa que convidou."
       />
+      <StatusBanner tone={acceptGate.tone} title={acceptGate.title} text={acceptGate.message} />
+      {!acceptGate.allowed ? (
+        <ButtonIcon
+          disabled={busy}
+          icon={<UserRound size={20} color={theme.colors.primary} />}
+          label="Configurar perfil"
+          onPress={() => router.push("/perfis")}
+        />
+      ) : null}
       <ButtonIcon
-        disabled={busy || !invitationCode}
+        disabled={busy || !invitationCode || !acceptGate.allowed}
         icon={<UserCheck size={20} color={theme.colors.primary} />}
         label={busy ? "Validando convite..." : "Aceitar como anjo"}
         onPress={handleAcceptInvitation}

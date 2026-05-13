@@ -152,3 +152,13 @@ Papel: seguranca, LGPD e QA.
 - Risco aberto: template iOS ainda usa leitura integral e precisa validacao fisica/memoria antes de aprovar midia longa.
 - Risco aberto antes de release: revisar ATS/iOS gerado se `NSAllowsArbitraryLoads=true` aparecer no `Info.plist`.
 - Gates aprovados nesta rodada: `typecheck`, `lint`, `test`, `test:crypto`, `test:device-keys`, `private:android:readiness`, `build:android:private` e `git diff --check`.
+
+## QA/Security - 2026-05-13 - Frente 1.3 abertura
+
+- Novo gate local: menor protegido nao cria convite e nao aceita atuar como anjo.
+- Perfil ausente bloqueia criacao/aceite ate a usuaria configurar o papel local.
+- Responsavel sem menor vinculado fica em estado conservador para convite.
+- A primeira fatia nao coleta documento, data de nascimento completa, endereco, agenda, telefone de terceiros, relato sensivel, localizacao continua ou midia enviada.
+- Compartilhamento real, P2P, upload, localizacao ao vivo e conveniados continuam bloqueados.
+- Gates aprovados na abertura: `npm run test:profiles`, `npm run typecheck`, `npm run lint`, `node scripts/smoke-test.mjs`, `npm test`, `npm run private:android:readiness` condicionado e `git diff --check`.
+- Para fechar a frente ainda faltam backend server-side de papeis/autorizacoes, validacao visual/manual e aceite de Roberto.

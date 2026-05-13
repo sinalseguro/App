@@ -71,6 +71,17 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Fechamento documentado em `docs/36_FECHAMENTO_FRENTE_1_2_ANDROID_2026-05-13.md`.
 - Proxima frente recomendada: Frente 1.3 - perfis, familia, maioridade e papeis, antes de anjos/P2P/conveniados.
 
+## Atualizacao tecnica - 2026-05-13 - Frente 1.3 iniciada
+
+- Criado modulo puro `src/features/profiles/profilePolicy.ts` com regras testaveis para adulto, menor protegido, responsavel com menor e responsavel sem menor.
+- Criado `src/features/profiles/profileStore.ts` usando `secureJsonStore` para persistir o perfil ativo local sem dados sensiveis.
+- Criada tela `app/perfis.tsx` e rota `/perfis`; menu da Home passou a expor `Perfis`.
+- `app/contatos.tsx` agora consulta `canCreateTrustedContactInvitation` antes de criar convite.
+- `app/convite.tsx` agora consulta `canAcceptAngelInvitation` antes de aceitar convite como anjo.
+- `scripts/profile-policy.test.ts` entrou no `npm test`; `scripts/smoke-test.mjs` passou a proteger esses gates.
+- Gates aprovados: `test:profiles`, `typecheck`, `lint`, `smoke-test`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
+- Esta fatia nao altera SOS, Cofre, Player, motor nativo, API real, P2P, upload, localizacao ao vivo ou iOS.
+
 ## Atualizacao tecnica - 2026-05-04
 
 - `EmergencySettingsDrawer` recebe navegacao por painel: `Cofre` envia `/arquivos?painel=cofre` e `Player` envia `/arquivos?painel=player`.

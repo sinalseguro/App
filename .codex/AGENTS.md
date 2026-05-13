@@ -33,7 +33,7 @@ Cristine é a gerente AI mobile. Ela mantém compatibilidade de memória com Zé
 
 ## Checkpoint atual
 
-Fase vigente: checkpoint de fechamento da Frente 1.2 Android e preparacao da Frente 1.3. Roberto aprovou manualmente a Frente 1.2 no Android em 2026-05-13; iPhone/iOS permanece pos-MVP e nao deve bloquear o MVP Android.
+Fase vigente: Frente 1.3 iniciada - perfis, familia, maioridade e papeis. Roberto aprovou manualmente a Frente 1.2 no Android em 2026-05-13; iPhone/iOS permanece pos-MVP e nao deve bloquear o MVP Android.
 
 Estado:
 - `SinalSeguroMediaEngine` e a rota `native_segmented_v1` sao o caminho principal para ativos novos; JS/Base64/loopback ficam como fallback legado/homologacao para `js_chunked_v1`.
@@ -58,3 +58,6 @@ Estado:
 - Proxima frente recomendada: Frente 1.3 - perfis, familia, maioridade e papeis. Nao pular direto para P2P/anjos antes de fechar papeis, responsaveis, menores, consentimentos e autorizacoes.
 - Nao iniciar UI final de chamada P2P/anjo, upload, localizacao, conveniados ou compartilhamento real nesta frente; manter apenas compatibilidade de captura/envelope/camera/microfone para as frentes seguintes.
 - Proximo arquivo de retomada: `docs/37_HANDOFF_FRENTE_1_3_PERFIS_PAPEIS_2026-05-13.md`.
+- Checkpoint de abertura da Frente 1.3: `docs/38_CHECKPOINT_ABERTURA_FRENTE_1_3_PERFIS_PAPEIS_2026-05-13.md`.
+- Primeira fatia implementada no app: politica local de perfis em `src/features/profiles/profilePolicy.ts`, storage cifrado em `profileStore.ts`, tela `app/perfis.tsx`, gates em `app/contatos.tsx` e `app/convite.tsx`, e teste `scripts/profile-policy.test.ts`.
+- Estado atual da 1.3: controle local/mobile aprovado por testes rapidos; backend server-side de perfis, vinculo responsavel-protegido e autorizacao por escopo ainda pendente antes da Frente 2.

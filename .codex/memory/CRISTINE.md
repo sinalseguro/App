@@ -836,3 +836,14 @@ Proximas acoes atualizadas:
 - Roberto validou e aprovou manualmente a Frente 1.2 no Android.
 - Frente 1.2 fica encerrada no escopo Android do MVP; iOS permanece pos-MVP.
 - A proxima frente segura e Frente 1.3, porque P2P/anjos/conveniados dependem de papeis, responsaveis, maioridade, consentimentos e autorizacoes.
+
+## Memoria viva - 2026-05-13 - abertura da Frente 1.3
+
+- Frente 1.3 iniciada com especialistas de produto/rastreabilidade, mobile/API, LGPD/seguranca e UX/QA.
+- Decisao consolidada: comecar por politica de dominio e bloqueios de papel, nao por P2P, chamada, upload, localizacao ao vivo ou conveniados.
+- Primeira fatia mobile implementada: `profilePolicy`, `profileStore`, tela `Perfis`, gate em `Anjos` antes de criar convite e gate em `Convite recebido` antes de aceitar como anjo.
+- Menor protegido fica bloqueado para criar convite e para atuar como anjo; perfil ausente tambem bloqueia.
+- Dados minimizados: sem documento, data de nascimento completa, endereco, agenda, telefone de terceiros, relato sensivel, localizacao continua ou midia enviada.
+- Gates aprovados: `test:profiles`, `typecheck`, `lint`, `smoke-test`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
+- Checkpoint: `docs/38_CHECKPOINT_ABERTURA_FRENTE_1_3_PERFIS_PAPEIS_2026-05-13.md`.
+- Proximo passo: backend server-side para perfis, responsavel-protegido, autorizacoes por escopo e bloqueios de menoridade.

@@ -2279,3 +2279,36 @@ Proxima frente recomendada:
 Justificativa:
 
 - a chamada com anjos/responsaveis e qualquer fluxo P2P dependem primeiro de papeis, relacoes autorizadas, maioridade, consentimentos e limites de menores.
+
+## 2026-05-13 - Frente 1.3 iniciada: perfis, familia, maioridade e papeis
+
+Status: abertura tecnica implementada no app Android/MVP.
+
+Executado:
+
+- especialistas acionados para produto/rastreabilidade, mobile/API, LGPD/seguranca e UX/QA;
+- criada politica local testavel de perfis e papeis;
+- criada tela `Perfis e papeis`;
+- tela `Anjos` passou a exigir perfil permitido antes de criar convite;
+- tela `Convite recebido` passou a bloquear menor ou perfil ausente antes de aceitar como anjo;
+- menu da Home ganhou atalho para Perfis;
+- teste `profile-policy.test.ts` entrou no `npm test`;
+- smoke test passou a bloquear regressao de menor convidar ou atuar como anjo.
+
+Validacoes rapidas:
+
+- `npm run test:profiles`: aprovado;
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `node scripts/smoke-test.mjs`: aprovado;
+- `npm test`: aprovado;
+- `npm run private:android:readiness`: aprovado como build privado condicionado, com pendencia ambiental conhecida de Node local para release publico;
+- `git diff --check`: aprovado.
+
+Limite:
+
+- este checkpoint ainda e controle local/mobile; o backend server-side de perfis, vinculo responsavel-protegido e autorizacao por escopo ainda precisa ser implementado antes de liberar Frente 2 de anjos.
+
+Checkpoint:
+
+- `docs/38_CHECKPOINT_ABERTURA_FRENTE_1_3_PERFIS_PAPEIS_2026-05-13.md`.

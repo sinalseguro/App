@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { router } from "expo-router";
 import { Pressable, Share, StyleSheet, Text, TextInput, View } from "react-native";
-import { Clock3, RefreshCw, ShieldCheck, UserPlus, Users, WifiOff, XCircle } from "lucide-react-native";
+import { Clock3, RefreshCw, ShieldCheck, UserPlus, UserRound, Users, WifiOff, XCircle } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AppTopBar } from "@/components/AppTopBar";
 import { BrandedDialog } from "@/components/BrandedDialog";
@@ -19,6 +19,12 @@ import {
   revokeLocalInvitation
 } from "@/features/invitations/invitationService";
 import { LocalInvitation } from "@/features/invitations/types";
+import {
+  canCreateTrustedContactInvitation,
+  getProfileSummary,
+  ProtectionProfile
+} from "@/features/profiles/profilePolicy";
+import { getActiveProtectionProfile } from "@/features/profiles/profileStore";
 import { ApiInvitation, ApiSession, ApiTrustedContact, apiClient, apiConfig } from "@/services/apiClient";
 import { deviceBindingService } from "@/services/deviceBinding";
 
@@ -33,6 +39,9 @@ type AngelsDialog =
   | {
       contact: ApiTrustedContact;
       kind: "revoke_contact";
+    }
+  | {
+      kind: "profile_block";
     }
   | null;
 
@@ -181,6 +190,7 @@ export default function ContactsScreen() {
   const [invitations, setInvitations] = useState<LocalInvitation[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [panel, setPanel] = useState<AngelsPanel>(null);
+  const [activeProfile, setActiveProfile] = useState<ProtectionProfile | null>(null);
   const [status, setStatus] = useState("Carregando anjos de confiança...");
   const [trustedContacts, setTrustedContacts] = useState<ApiTrustedContact[]>([]);
 
@@ -224,18 +234,22 @@ export default function ContactsScreen() {
     invitations: mergedInvitations,
     trustedContacts
   });
+  const profileSummary = getProfileSummary(activeProfile);
+  const invitationGate = canCreateTrustedContactInvitation(activeProfile);
 
   async function refreshAngels() {
     setBusy(true);
     try {
-      const [nextInvitations, currentSession, registeredDeviceId] = await Promise.all([
+      const [nextInvitations, currentSession, registeredDeviceId, nextProfile] = await Promise.all([
         listLocalInvitations(),
         apiClient.getStoredSession(),
-        deviceBindingService.getRegisteredApiDeviceId()
+        deviceBindingService.getRegisteredApiDeviceId(),
+        getActiveProtectionProfile()
       ]);
       setInvitations(nextInvitations);
       setApiSession(currentSession);
       setDeviceReady(Boolean(registeredDeviceId));
+      setActiveProfile(nextProfile);
 
       if (currentSession) {
         const [contacts, remoteInvitations] = await Promise.all([
@@ -261,6 +275,13 @@ export default function ContactsScreen() {
   }, []);
 
   async function shareInvitation() {
+    const currentGate = canCreateTrustedContactInvitation(activeProfile);
+    if (!currentGate.allowed) {
+      setStatus(currentGate.message);
+      setDialog({ kind: "profile_block" });
+      return;
+    }
+
     const label = inviteLabel.trim() || "Anjo de confiança";
     setBusy(true);
     setStatus("Gerando convite seguro...");
@@ -357,16 +378,30 @@ export default function ContactsScreen() {
         <View style={styles.content}>
           <View style={styles.resourceGrid}>
             <ResourceTile
+              icon={<UserRound size={24} color={theme.colors.primary} />}
+              label="Perfil"
+              description={profileSummary.title}
+              onPress={() => router.push("/perfis")}
+            />
+            <ResourceTile
               icon={<ShieldCheck size={24} color={theme.colors.primary} />}
               label="Estado"
               description={notice.title}
               onPress={() => setPanel("estado")}
             />
+          </View>
+          <View style={styles.resourceGrid}>
             <ResourceTile
               icon={<UserPlus size={24} color={theme.colors.primary} />}
               label="Criar convite"
-              description={apiSession ? "API" : "Local"}
-              onPress={() => setDialog({ kind: "invite" })}
+              description={invitationGate.allowed ? (apiSession ? "API" : "Local") : "Bloqueado"}
+              onPress={() => setDialog(invitationGate.allowed ? { kind: "invite" } : { kind: "profile_block" })}
+            />
+            <ResourceTile
+              icon={<ShieldCheck size={24} color={theme.colors.primary} />}
+              label="Prontidão"
+              description={deviceReady ? "Dispositivo" : "Pendente"}
+              onPress={() => setPanel("prontidao")}
             />
           </View>
           <View style={styles.resourceGrid}>
@@ -384,12 +419,6 @@ export default function ContactsScreen() {
             />
           </View>
           <View style={styles.resourceGrid}>
-            <ResourceTile
-              icon={<ShieldCheck size={24} color={theme.colors.primary} />}
-              label="Prontidão"
-              description={deviceReady ? "Dispositivo" : "Pendente"}
-              onPress={() => setPanel("prontidao")}
-            />
             <ResourceTile
               icon={<RefreshCw size={24} color={theme.colors.primary} />}
               label="Atualizar"
@@ -429,6 +458,21 @@ export default function ContactsScreen() {
           />
         </View>
       </BrandedDialog>
+
+      <BrandedDialog
+        actions={[
+          { label: "Fechar", tone: "muted" },
+          {
+            label: "Configurar perfil",
+            onPress: () => router.push("/perfis")
+          }
+        ]}
+        icon={<UserRound size={18} color={theme.colors.warning} />}
+        message={invitationGate.message}
+        onClose={() => setDialog(null)}
+        title={invitationGate.title}
+        visible={dialog?.kind === "profile_block"}
+      />
 
       <BrandedDialog
         actions={[

@@ -20,6 +20,7 @@ const requiredFiles = [
   "app/arquivos.tsx",
   "app/configuracoes.tsx",
   "app/convite.tsx",
+  "app/perfis.tsx",
   "app/funcionamento.tsx",
   "src/components/AppTopBar.tsx",
   "src/components/AppLaunchScreen.tsx",
@@ -35,6 +36,8 @@ const requiredFiles = [
   "src/features/emergency-home/EmergencySettingsDrawer.tsx",
   "src/features/emergency-home/EmergencyTopBar.tsx",
   "src/features/invitations/invitationService.ts",
+  "src/features/profiles/profilePolicy.ts",
+  "src/features/profiles/profileStore.ts",
   "src/features/evidence/evidencePolicy.ts",
   "src/features/emergency/packagePresentation.ts",
   "src/features/emergency/mediaInterfacePresentation.ts",
@@ -62,6 +65,7 @@ const requiredFiles = [
   "src/services/googleOidc.ts",
   "scripts/encrypted-video-store.test.ts",
   "scripts/device-key-proof.test.ts",
+  "scripts/profile-policy.test.ts",
   "src/storage/secureJsonStore.ts",
   "scripts/android-private-media-readiness.mjs"
 ];
@@ -145,8 +149,13 @@ const appLayout = await readFile("app/_layout.tsx", "utf8");
 const homeScreen = await readFile("app/index.tsx", "utf8");
 const localFilesScreen = await readFile("app/arquivos.tsx", "utf8");
 const settingsScreen = await readFile("app/configuracoes.tsx", "utf8");
+const contactsScreen = await readFile("app/contatos.tsx", "utf8");
+const invitationScreen = await readFile("app/convite.tsx", "utf8");
+const profilesScreen = await readFile("app/perfis.tsx", "utf8");
 const deviceBinding = await readFile("src/services/deviceBinding.ts", "utf8");
 const deviceKeyProof = await readFile("src/services/deviceKeyProof.ts", "utf8");
+const profilePolicy = await readFile("src/features/profiles/profilePolicy.ts", "utf8");
+const profileSurface = `${profilesScreen}\n${profilePolicy}`;
 
 if (
   !deviceKeyProof.includes("ed25519-v1") ||
@@ -266,6 +275,43 @@ if (
 
 if (!settingsScreen.includes("Atalho de anjo desativado") || !settingsScreen.includes("Anjo 190 bloqueado ate aceite")) {
   throw new Error("Atalho de anjo precisa permanecer desativado ate gestao, aceite e contrato futuros.");
+}
+
+if (
+  !profilePolicy.includes("minor_cannot_invite") ||
+  !profilePolicy.includes("minor_cannot_act_as_angel") ||
+  !profilePolicy.includes("responsible_minor_allowed") ||
+  !profilePolicy.includes("canReceiveFutureEmergencyDelivery") ||
+  !profilePolicy.includes("authorizationStatus === \"authorized\"") ||
+  !profilePolicy.includes("contactStatus === \"accepted\"")
+) {
+  throw new Error("Politica de perfis precisa bloquear menor como anjo/convite e exigir autorizacao vigente.");
+}
+
+if (
+  !contactsScreen.includes("canCreateTrustedContactInvitation") ||
+  !contactsScreen.includes("getActiveProtectionProfile") ||
+  !contactsScreen.includes("profile_block") ||
+  !contactsScreen.includes("router.push(\"/perfis\")")
+) {
+  throw new Error("Tela de anjos precisa passar pelo gate de perfil antes de criar convite.");
+}
+
+if (
+  !invitationScreen.includes("canAcceptAngelInvitation") ||
+  !invitationScreen.includes("getActiveProtectionProfile") ||
+  !invitationScreen.includes("Configurar perfil")
+) {
+  throw new Error("Aceite de convite precisa bloquear menor e perfil ausente antes de atuar como anjo.");
+}
+
+if (
+  !profileSurface.includes("Sou adulto usando para mim") ||
+  !profileSurface.includes("Sou responsavel por menor") ||
+  !profileSurface.includes("Sou menor protegido") ||
+  profilesScreen.includes("Data de nascimento")
+) {
+  throw new Error("Tela de perfis precisa configurar papeis minimos sem coletar dado sensivel de idade.");
 }
 
 const panicButton = await readFile("src/components/PanicButton.tsx", "utf8");

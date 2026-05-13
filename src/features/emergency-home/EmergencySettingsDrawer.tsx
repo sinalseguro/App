@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { Archive, CirclePlay, Settings, Users } from "lucide-react-native";
+import { Archive, CirclePlay, Settings, UserRound, Users } from "lucide-react-native";
 import { theme } from "@/design/theme";
 import { EmergencyHomePanel, EmergencyHomeRoute } from "./routes";
 
@@ -38,6 +38,11 @@ export function EmergencySettingsDrawer({
           icon={<Users size={18} color={theme.colors.primary} />}
           label="Anjos"
           onPress={() => onNavigate("/contatos")}
+        />
+        <MenuAction
+          icon={<UserRound size={18} color={theme.colors.primary} />}
+          label="Perfis"
+          onPress={() => onNavigate("/perfis")}
         />
         <MenuAction
           icon={<CirclePlay size={18} color={theme.colors.primary} />}
