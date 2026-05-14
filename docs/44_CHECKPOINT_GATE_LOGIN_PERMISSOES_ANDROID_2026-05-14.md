@@ -58,30 +58,44 @@ O build desta rodada confirmou carregamento de `.env.local` pelo Expo, sem expor
 - `:app:assembleDebug -PsinalBundleDebugJs=true -PreactNativeArchitectures=arm64-v8a`
 - `git diff --check` nos arquivos alterados
 
-## Bloqueio de validacao fisica
+## Validacao fisica
 
-O APK ainda nao foi instalado nesta rodada porque o dispositivo nao ficou disponivel para ADB:
+A primeira tentativa ficou bloqueada porque o dispositivo nao apareceu por USB e o endpoint Wi-Fi recusou conexao. Depois da reativacao de USB/Wi-Fi por Roberto, a validacao foi concluida por ADB Wi-Fi.
 
-- `adb devices -l`: sem aparelho listado;
-- `system_profiler SPUSBDataType`: sem Android/ADB/MTP visivel no USB;
-- `adb mdns services`: encontrou endpoint Wi-Fi `192.168.0.5:42471`;
-- `adb connect 192.168.0.5:42471`: `Connection refused`.
+Resultado:
 
-## Decisao de publicacao
+- instalacao do APK: `Success`;
+- gate inicial exibido antes da Home;
+- consentimentos e permissoes ja estavam concedidos no aparelho;
+- login Google real acionado pela conta do aparelho;
+- apos login, Home liberada;
+- relaunch do app manteve acesso a Home;
+- navegacao por `Anjos`, `Convite recebido` e `Perfis e papeis` funcionou;
+- crash scan saneado sem padroes fatais do processo SinalSeguro.
 
-Nao publicar este APK novo no portal como release validado enquanto faltar o teste fisico real.
+Evidencias saneadas:
 
-Antes de publicar, executar no Android fisico:
+- `docs/evidencias/android/2026-05-14-gate-login-permissoes-final/`
 
-1. instalar o APK novo;
-2. abrir o app e confirmar que a Home fica bloqueada;
-3. entrar com Google usando a conta do aparelho;
-4. aceitar termos, privacidade e uso emergencial;
-5. conceder camera, microfone, localizacao e notificacoes;
-6. confirmar abertura da Home apos concluir o gate;
-7. acessar Anjos, Convite e Perfis;
-8. verificar logcat saneado sem crash fatal do processo SinalSeguro.
+## Publicacao no portal
+
+Publicacao concluida no portal publico com linguagem de usuario final e nome estavel de arquivo:
+
+- URL Android: `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk`
+- Pagina estavel: `https://www.sinalseguro.com.br/baixar/android`
+- QR estavel: `https://www.sinalseguro.com.br/assets/app/sinalseguro-android-qr.svg`
+- Manifesto: `https://www.sinalseguro.com.br/downloads/installers.json`
+- Checksums: `https://www.sinalseguro.com.br/downloads/private/checksums.txt`
+- Release EC2: `/var/www/sinalseguro/releases/20260514T185240Z`
+
+Validacoes pos-deploy:
+
+- `/baixar`, `/baixar/android`, `/baixar/ios`, `/versoes`, manifesto, QR, checksum e APK retornaram `200`;
+- APK remoto tem SHA-256 `3f2d4b9ca6ba764979d4515d00712191fbda94dd0b164765e9d4ad9d70635897`;
+- `sudo nginx -t`: aprovado;
+- `cereusia-crm`: ativo;
+- `sinalseguro-api`: ativo.
 
 ## Proximo passo
 
-Reconectar o Android por USB com transferencia de dados/depuracao autorizada ou reativar Depuracao sem fio com novo endpoint pareado. Depois repetir instalacao, login real e validacao visual/logs antes de publicar no portal.
+Roberto pode instalar o APK pelo portal em outro Android fisico e testar o fluxo completo entre dois aparelhos: login Google, convite de anjo, aceite do convite e comportamento de cada papel.

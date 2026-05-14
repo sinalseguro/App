@@ -1,0 +1,7 @@
+Starting: Intent { cmp=br.com.sinalseguro.app/.MainActivity }
+Status: ok
+LaunchState: COLD
+Activity: br.com.sinalseguro.app/.MainActivity
+TotalTime: 3772
+WaitTime: 3784
+Complete

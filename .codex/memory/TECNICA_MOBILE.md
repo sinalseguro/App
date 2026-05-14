@@ -155,8 +155,10 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Login Android usa Google Sign-In nativo e conta Google do aparelho quando `EXPO_PUBLIC_GOOGLE_OIDC_WEB_CLIENT_ID` esta carregado; o build confirmou carregamento de `.env.local`.
 - Build privado debug bundled aprovado: APK `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `3f2d4b9ca6ba764979d4515d00712191fbda94dd0b164765e9d4ad9d70635897`, tamanho aproximado `81M`.
 - Gates aprovados: `typecheck`, `lint`, `npm test`, `private:android:readiness`, build Android debug bundled e `git diff --check` dos arquivos alterados.
-- Bloqueio fisico atual: ADB nao lista aparelho por USB; macOS nao mostra Android/ADB/MTP no USB; mDNS encontra `192.168.0.5:42471`, mas `adb connect` retorna `Connection refused`.
-- Nao publicar este APK novo no portal como release validado ate reinstalar no Android fisico, fazer login Google real, conceder permissoes e capturar evidencias/logs saneados.
+- Validacao fisica posterior concluida via ADB Wi-Fi: instalacao `Success`, gate bloqueou a Home sem login, login Google real liberou o app, relaunch manteve sessao e navegacao por Home, Anjos, Convite e Perfis funcionou.
+- Evidencias saneadas: `docs/evidencias/android/2026-05-14-gate-login-permissoes-final/`.
+- Crash scan saneado sem `FATAL EXCEPTION`, `Fatal signal`, `ReactNativeJS Error`, `ANR in br.com.sinalseguro.app` ou `Process: br.com.sinalseguro.app`.
+- Portal publicado com APK Android privado atualizado em `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk`; QR estavel mantido em `/baixar/android`; release EC2 `/var/www/sinalseguro/releases/20260514T185240Z`.
 
 ## Atualizacao tecnica - 2026-05-04
 

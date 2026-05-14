@@ -1,0 +1,1 @@
+Sem padroes fatais do processo SinalSeguro apos login, permissoes e navegacao.

@@ -2499,7 +2499,7 @@ Checkpoint:
 
 ## 2026-05-14 - Gate de login, consentimentos e permissoes
 
-Status: ajuste de codigo aplicado e build Android aprovado; instalacao/teste fisico pendentes porque o aparelho nao apareceu no ADB por USB e o endpoint Wi-Fi recusou conexao.
+Status: ajuste de codigo aplicado, build Android aprovado, validacao fisica concluida e APK privado publicado no portal.
 
 Executado:
 
@@ -2515,14 +2515,17 @@ Validacoes:
 - `PATH=/opt/homebrew/opt/node@22/bin:$PATH npm test`: aprovado;
 - `PATH=/opt/homebrew/opt/node@22/bin:$PATH npm run private:android:readiness`: aprovado;
 - build Android debug bundled `arm64-v8a`: aprovado;
-- `git diff --check` dos arquivos alterados: aprovado.
+- `git diff --check` dos arquivos alterados: aprovado;
+- instalacao fisica Android via ADB Wi-Fi: aprovado;
+- login Google real no aparelho: aprovado;
+- relaunch apos login mantendo acesso a Home: aprovado;
+- navegacao pos-login por Home, Anjos, Convite e Perfis: aprovado;
+- crash scan saneado pos-login/navegacao: sem padroes fatais.
 
-Bloqueio:
+Publicacao:
 
-- `adb devices -l` sem aparelho;
-- `system_profiler SPUSBDataType` sem Android/ADB/MTP;
-- `adb mdns services` mostrou `192.168.0.5:42471`, mas `adb connect` retornou `Connection refused`.
-
-Decisao:
-
-- nao publicar este APK novo no portal como release validado ate reinstalar no Android fisico e validar login Google, consentimentos, permissoes e abertura do app.
+- APK Android privado publicado no portal com nome estavel `sinalseguro_android.apk`;
+- QR Android mantido estavel em `/baixar/android`;
+- manifesto publico atualizado em `https://www.sinalseguro.com.br/downloads/installers.json`;
+- checksum publicado: `3f2d4b9ca6ba764979d4515d00712191fbda94dd0b164765e9d4ad9d70635897`;
+- release EC2: `/var/www/sinalseguro/releases/20260514T185240Z`.
