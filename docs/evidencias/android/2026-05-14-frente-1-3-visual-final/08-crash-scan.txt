@@ -1,0 +1,1 @@
+Sem padroes fatais do processo SinalSeguro no recorte saneado: FATAL EXCEPTION, Fatal signal, ReactNativeJS Error, ANR in br.com.sinalseguro.app ou Process: br.com.sinalseguro.app.

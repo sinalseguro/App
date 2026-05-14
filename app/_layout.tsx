@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LogBox, Platform, View } from "react-native";
 import { AppLaunchScreen } from "@/components/AppLaunchScreen";
 import { theme } from "@/design/theme";
+import { AccessGate } from "@/features/access/AccessGate";
 
 const queryClient = new QueryClient();
 
@@ -56,22 +57,25 @@ export default function RootLayout() {
     <View style={{ flex: 1 }} onLayout={hideNativeSplash}>
       <QueryClientProvider client={queryClient}>
         <StatusBar style="light" backgroundColor={theme.colors.backgroundStrong} />
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            contentStyle: { backgroundColor: theme.colors.background }
-          }}
-        >
-          <Stack.Screen name="index" />
-          <Stack.Screen name="onboarding" />
-          <Stack.Screen name="alerta" />
-          <Stack.Screen name="arquivos" />
-          <Stack.Screen name="contatos" />
-          <Stack.Screen name="convite" />
-          <Stack.Screen name="configuracoes" />
-          <Stack.Screen name="funcionamento" />
-          <Stack.Screen name="oauthredirect" />
-        </Stack>
+        <AccessGate>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              contentStyle: { backgroundColor: theme.colors.background }
+            }}
+          >
+            <Stack.Screen name="index" />
+            <Stack.Screen name="onboarding" />
+            <Stack.Screen name="alerta" />
+            <Stack.Screen name="arquivos" />
+            <Stack.Screen name="contatos" />
+            <Stack.Screen name="convite" />
+            <Stack.Screen name="configuracoes" />
+            <Stack.Screen name="funcionamento" />
+            <Stack.Screen name="oauthredirect" />
+            <Stack.Screen name="perfis" />
+          </Stack>
+        </AccessGate>
       </QueryClientProvider>
     </View>
   );

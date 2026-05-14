@@ -85,3 +85,41 @@ Checklist pendente quando o Android voltar a aparecer como `device`:
 - restaurar fonte `1.0`;
 - capturar screenshots/UI dumps saneados e crash scan sem `FATAL EXCEPTION`, `AndroidRuntime`, `ReactNativeJS Error` ou ANR;
 - registrar a aprovacao visual final antes de fechar a Frente 1.3 sem ressalvas.
+
+## Retomada com Android conectado - validacao visual final para aceite manual
+
+Data/hora: 2026-05-14 15:05 -03
+
+Resultado:
+
+- Android voltou no ADB por USB e Wi-Fi; a instalacao por USB ficou presa, mas o transporte Wi-Fi estabilizou.
+- APK final reinstalado com `adb install --no-streaming -r -d`.
+- APK final: `android/app/build/outputs/apk/debug/app-debug.apk`.
+- SHA-256 final: `abaf6fc9331e01b121789452dd0bce5f660ae417c85247d10acecac2ad7f41d9`.
+- Tamanho final: `84594580 bytes`.
+- Fonte do sistema restaurada para `1.0` apos os testes.
+- Evidencias saneadas: `docs/evidencias/android/2026-05-14-frente-1-3-visual-final/`.
+
+Ajuste adicional aplicado durante a validacao:
+
+- A tela `Perfis e papeis` ainda exibia termos internos/técnicos para usuario final: `Limites da Frente 1.3` e `P2P`.
+- Microcopy corrigida para linguagem publica: `Limites de proteção`, sem `Frente` e sem `P2P`.
+- Arquivo alterado: `app/perfis.tsx`.
+
+Validacao visual:
+
+- `Perfis e papeis` em fonte `1.0` e `1.3`: cards principais sem corte; texto de limites sem termos internos; parte inferior acessivel por scroll longo.
+- `Anjos de confianca` em fonte `1.0` e `1.3`: tiles, status inferior e botao de configuracao visiveis, sem overflow aparente.
+- `Convite recebido` em fonte `1.0` e `1.3`: banners e botao desabilitado legiveis, sem corte aparente.
+- Scan saneado de crash: sem `FATAL EXCEPTION`, `Fatal signal`, `ReactNativeJS Error`, `ANR in br.com.sinalseguro.app` ou `Process: br.com.sinalseguro.app`.
+
+Performance observada:
+
+- Fluxo focado `Anjos de confianca` com fonte `1.3` em build debug teve cold start por deep link de `8.3s` e `gfxinfo` com jank alto.
+- A medicao ocorreu em APK debug, com deep link frio, fonte ampliada e automacao ADB; nao foi tratada como bloqueio funcional da Frente 1.3.
+- Registrar para hardening posterior de performance/startup antes de release publica mais ampla.
+
+Estado:
+
+- A validacao tecnica de Ze para a Frente 1.3 Android esta pronta para teste manual do Roberto.
+- A frente ainda depende do aceite manual do Roberto antes de ser declarada fechada sem ressalvas.

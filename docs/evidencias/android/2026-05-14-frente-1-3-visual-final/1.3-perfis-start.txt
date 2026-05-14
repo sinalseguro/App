@@ -1,0 +1,6 @@
+Starting: Intent { act=android.intent.action.VIEW dat=sinalseguro://perfis/... pkg=br.com.sinalseguro.app }
+Status: timeout
+LaunchState: UNKNOWN (-1)
+Activity: br.com.sinalseguro.app/.MainActivity
+WaitTime: 10578
+Complete

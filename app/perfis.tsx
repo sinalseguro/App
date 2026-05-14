@@ -80,8 +80,8 @@ export default function ProfilesScreen() {
 
       <StatusBanner
         tone="warning"
-        title="Limites da Frente 1.3"
-        text="Menor não cria anjo nem atua como anjo. Chamada, P2P, localização ao vivo, upload e conveniados continuam fora desta frente."
+        title="Limites de proteção"
+        text="Menor não cria anjo nem atua como anjo. Chamada, localização ao vivo, envio externo e instituições conveniadas ainda não estão disponíveis."
       />
 
       <Pressable

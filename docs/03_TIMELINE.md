@@ -78,6 +78,29 @@ Proximo passo:
 
 - Assim que o Android voltar como `device`, instalar o APK acima, validar fonte `1.0` e `1.3`, restaurar fonte `1.0`, registrar screenshots/UI dumps saneados e crash scan antes de fechar a Frente 1.3 sem ressalvas.
 
+### Atualizacao posterior - Android conectado e validado por Ze
+
+Status: validacao tecnica de Ze concluida e pronta para teste manual do Roberto; fechamento definitivo ainda depende do aceite manual do Roberto.
+
+Resultado:
+
+- Android voltou por ADB; instalacao final ocorreu por Wi-Fi com `adb install --no-streaming -r -d`.
+- Microcopy publica corrigida em `app/perfis.tsx`, removendo `Frente 1.3` e `P2P` da tela `Perfis e papeis`.
+- APK final: `android/app/build/outputs/apk/debug/app-debug.apk`.
+- SHA-256 final: `abaf6fc9331e01b121789452dd0bce5f660ae417c85247d10acecac2ad7f41d9`.
+- Evidencias: `docs/evidencias/android/2026-05-14-frente-1-3-visual-final/`.
+- Fonte `1.0` e `1.3` validadas em `Perfis e papeis`, `Anjos de confianca` e `Convite recebido`; fonte restaurada para `1.0`.
+- Crash scan saneado sem padroes fatais do processo SinalSeguro.
+- Performance debug registrada: cold start por deep link em `Anjos de confianca` com fonte `1.3` mediu `8.3s` e jank alto; item mantido para hardening posterior de startup/performance.
+
+Gates:
+
+- `npm run typecheck`: aprovado.
+- `npm run lint`: aprovado.
+- `npm run test:profiles`: aprovado.
+- `:app:assembleDebug -PsinalBundleDebugJs=true -PreactNativeArchitectures=arm64-v8a`: aprovado.
+- Instalacao fisica Android: aprovada via Wi-Fi ADB.
+
 ## 2026-05-11 - Frente 1.2: retomada CLI e checkpoint iOS parcial
 
 Status: acesso pelo CLI normal; problema de enumeracao da raiz ficou associado ao Codex GUI. Frente 1.2 segue aberta, sem permissao para avancar frentes dependentes.
@@ -2473,3 +2496,33 @@ Limite:
 Checkpoint:
 
 - `docs/42_REFINAMENTO_UX_FRENTE_1_3_FONTE_2026-05-14.md`.
+
+## 2026-05-14 - Gate de login, consentimentos e permissoes
+
+Status: ajuste de codigo aplicado e build Android aprovado; instalacao/teste fisico pendentes porque o aparelho nao apareceu no ADB por USB e o endpoint Wi-Fi recusou conexao.
+
+Executado:
+
+- criado gate de acesso no layout raiz do app;
+- o app agora bloqueia a Home e demais telas ate concluir login Google/SinalSeguro, aceite legal e permissoes essenciais;
+- o build confirmou carregamento de `.env.local` com configuracoes publicas de API/Google;
+- APK privado debug bundled gerado com SHA-256 `3f2d4b9ca6ba764979d4515d00712191fbda94dd0b164765e9d4ad9d70635897`.
+
+Validacoes:
+
+- `PATH=/opt/homebrew/opt/node@22/bin:$PATH npm run typecheck`: aprovado;
+- `PATH=/opt/homebrew/opt/node@22/bin:$PATH npm run lint`: aprovado;
+- `PATH=/opt/homebrew/opt/node@22/bin:$PATH npm test`: aprovado;
+- `PATH=/opt/homebrew/opt/node@22/bin:$PATH npm run private:android:readiness`: aprovado;
+- build Android debug bundled `arm64-v8a`: aprovado;
+- `git diff --check` dos arquivos alterados: aprovado.
+
+Bloqueio:
+
+- `adb devices -l` sem aparelho;
+- `system_profiler SPUSBDataType` sem Android/ADB/MTP;
+- `adb mdns services` mostrou `192.168.0.5:42471`, mas `adb connect` retornou `Connection refused`.
+
+Decisao:
+
+- nao publicar este APK novo no portal como release validado ate reinstalar no Android fisico e validar login Google, consentimentos, permissoes e abertura do app.

@@ -1,0 +1,7 @@
+Starting: Intent { act=android.intent.action.VIEW dat=sinalseguro://contatos/... pkg=br.com.sinalseguro.app }
+Status: ok
+LaunchState: COLD
+Activity: br.com.sinalseguro.app/.MainActivity
+TotalTime: 8322
+WaitTime: 8356
+Complete

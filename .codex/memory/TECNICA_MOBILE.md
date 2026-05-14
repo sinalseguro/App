@@ -135,6 +135,29 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Bloqueio atual: ADB sem aparelho listado; macOS tambem nao mostrou Android/ADB/MTP no USB, e mDNS nao encontrou `_adb-tls-connect._tcp`.
 - Nao fechar a Frente 1.3 sem ressalvas ate instalar esse APK no Android fisico e repetir a validacao visual das telas `Perfis e papeis`, `Anjos de confianca` e `Convite recebido` em fonte `1.0` e `1.3`.
 
+## Atualizacao tecnica - 2026-05-14 - Frente 1.3 validada por Ze para teste manual
+
+- Android fisico voltou por ADB; instalacao por USB ficou presa, mas instalacao via Wi-Fi com `adb install --no-streaming -r -d` funcionou.
+- Durante a validacao visual, foi removida microcopy interna da UI publica em `app/perfis.tsx`: `Limites da Frente 1.3`/`P2P` virou `Limites de proteção` com linguagem de usuario final.
+- Gates apos a microcopy: `typecheck`, `lint`, `test:profiles`, build Android debug bundled incremental e instalacao fisica.
+- APK final validado: `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `abaf6fc9331e01b121789452dd0bce5f660ae417c85247d10acecac2ad7f41d9`, tamanho `84594580 bytes`.
+- Evidencias saneadas: `docs/evidencias/android/2026-05-14-frente-1-3-visual-final/`.
+- Fonte `1.0` e `1.3` validadas em `Perfis e papeis`, `Anjos de confianca` e `Convite recebido`; fonte restaurada para `1.0`.
+- Crash scan saneado sem `FATAL EXCEPTION`, `Fatal signal`, `ReactNativeJS Error`, `ANR in br.com.sinalseguro.app` ou `Process: br.com.sinalseguro.app`.
+- Performance: cold start debug por deep link em `Anjos de confianca`/fonte `1.3` mediu `8.3s` e jank alto; registrar como hardening posterior, nao como bloqueio funcional desta fatia.
+- Estado: Ze aprovou tecnicamente a Frente 1.3 Android para teste manual do Roberto; nao declarar fechamento definitivo sem aceite manual do Roberto.
+
+## Atualizacao tecnica - 2026-05-14 - gate de acesso por login e permissoes
+
+- Roberto solicitou que o app so permita acesso apos login, consentimentos e permissoes concedidas conforme LGPD.
+- Implementado `AccessGate` no layout raiz (`app/_layout.tsx` + `src/features/access/AccessGate.tsx`).
+- O Stack principal do app fica bloqueado ate existir sessao SinalSeguro com usuario, aceite de termos/privacidade/uso emergencial e permissoes de camera, microfone, localizacao em primeiro plano e notificacoes.
+- Login Android usa Google Sign-In nativo e conta Google do aparelho quando `EXPO_PUBLIC_GOOGLE_OIDC_WEB_CLIENT_ID` esta carregado; o build confirmou carregamento de `.env.local`.
+- Build privado debug bundled aprovado: APK `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `3f2d4b9ca6ba764979d4515d00712191fbda94dd0b164765e9d4ad9d70635897`, tamanho aproximado `81M`.
+- Gates aprovados: `typecheck`, `lint`, `npm test`, `private:android:readiness`, build Android debug bundled e `git diff --check` dos arquivos alterados.
+- Bloqueio fisico atual: ADB nao lista aparelho por USB; macOS nao mostra Android/ADB/MTP no USB; mDNS encontra `192.168.0.5:42471`, mas `adb connect` retorna `Connection refused`.
+- Nao publicar este APK novo no portal como release validado ate reinstalar no Android fisico, fazer login Google real, conceder permissoes e capturar evidencias/logs saneados.
+
 ## Atualizacao tecnica - 2026-05-04
 
 - `EmergencySettingsDrawer` recebe navegacao por painel: `Cofre` envia `/arquivos?painel=cofre` e `Player` envia `/arquivos?painel=player`.

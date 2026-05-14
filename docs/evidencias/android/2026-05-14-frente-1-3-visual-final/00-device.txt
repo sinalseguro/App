@@ -1,0 +1,8 @@
+device_model=23129RA5FL
+android_release=15
+android_sdk=35
+serial=redigido
+transport=wifi_adb
+apk=android/app/build/outputs/apk/debug/app-debug.apk
+apk_sha256=abaf6fc9331e01b121789452dd0bce5f660ae417c85247d10acecac2ad7f41d9
+apk_size_bytes=84594580
