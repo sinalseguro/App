@@ -125,6 +125,16 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `adb devices -l` nao listou aparelho no momento; validacao visual fisica com fonte `1.3` fica pendente antes de fechar a Frente 1.3 sem ressalvas.
 - Checkpoint versionado: `docs/42_REFINAMENTO_UX_FRENTE_1_3_FONTE_2026-05-14.md`.
 
+## Atualizacao tecnica - 2026-05-14 - APK novo da Frente 1.3 pronto para validacao fisica
+
+- Retomada com especialistas Katia/Tereza, Tarcila/Lina/Eliane e Cristine/Lucena focou no gargalo de build Android e no checkpoint de continuidade.
+- Limpeza controlada de reciclaveis Android pelo script versionado removeu somente `android/app/.cxx`, `android/app/build` e `android/build`.
+- Build debug bundled Android aprovado com Node 22, `--max-workers=1`, sem paralelo e `arm64-v8a`: `BUILD SUCCESSFUL in 8m 49s`.
+- APK atual: `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `9497463b801c1fb6dacb5ed978391b07fa473abfdb7b56e895e4b3a75ffe3146`, tamanho `80610429 bytes`.
+- `npm run private:android:readiness` aprovado com `0 pendencia(s)`.
+- Bloqueio atual: ADB sem aparelho listado; macOS tambem nao mostrou Android/ADB/MTP no USB, e mDNS nao encontrou `_adb-tls-connect._tcp`.
+- Nao fechar a Frente 1.3 sem ressalvas ate instalar esse APK no Android fisico e repetir a validacao visual das telas `Perfis e papeis`, `Anjos de confianca` e `Convite recebido` em fonte `1.0` e `1.3`.
+
 ## Atualizacao tecnica - 2026-05-04
 
 - `EmergencySettingsDrawer` recebe navegacao por painel: `Cofre` envia `/arquivos?painel=cofre` e `Player` envia `/arquivos?painel=player`.

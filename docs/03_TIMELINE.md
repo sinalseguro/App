@@ -50,6 +50,34 @@ Checkpoint detalhado:
 
 - `docs/40_CHECKPOINT_FRENTE_1_3_ANDROID_RELEASE_PORTAL_2026-05-13.md`
 
+## 2026-05-14 - Frente 1.3: refinamento UX fonte ampliada e APK novo pronto
+
+Status: correcao de UX para fonte ampliada implementada e APK Android novo gerado; validacao visual fisica final segue pendente porque o Android nao apareceu no ADB/USB no momento da retomada.
+
+Especialistas acionados:
+
+- Katia/Tereza: diagnostico de build Android, limpeza de reciclaveis e comando de menor pressao.
+- Tarcila/Lina/Eliane: criterios de aceite visual para fonte `1.3` em `Perfis`, `Anjos de confianca` e `Convite recebido`.
+- Cristine/Lucena: checkpoint, limites de escopo, evidencias saneadas e continuidade.
+
+Resultado:
+
+- Build aprovado: `:app:assembleDebug`, `BUILD SUCCESSFUL in 8m 49s`.
+- APK gerado: `android/app/build/outputs/apk/debug/app-debug.apk`.
+- SHA-256: `9497463b801c1fb6dacb5ed978391b07fa473abfdb7b56e895e4b3a75ffe3146`.
+- Tamanho: `80610429 bytes`.
+- `private:android:readiness`: aprovado com `0 pendencia(s)`.
+
+Bloqueio:
+
+- `adb devices -l` nao listou aparelho.
+- `adb mdns services` nao descobriu Android sem fio.
+- macOS nao indicou Android/ADB/MTP visivel no USB.
+
+Proximo passo:
+
+- Assim que o Android voltar como `device`, instalar o APK acima, validar fonte `1.0` e `1.3`, restaurar fonte `1.0`, registrar screenshots/UI dumps saneados e crash scan antes de fechar a Frente 1.3 sem ressalvas.
+
 ## 2026-05-11 - Frente 1.2: retomada CLI e checkpoint iOS parcial
 
 Status: acesso pelo CLI normal; problema de enumeracao da raiz ficou associado ao Codex GUI. Frente 1.2 segue aberta, sem permissao para avancar frentes dependentes.
