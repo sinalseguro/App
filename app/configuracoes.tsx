@@ -14,12 +14,12 @@ import {
   Mic,
   PhoneCall,
   RefreshCw,
+  Smartphone,
   Settings as SettingsIcon,
   ShieldCheck,
   SwitchCamera,
   UserCircle2,
-  Video,
-  Volume2
+  Video
 } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AppTopBar } from "@/components/AppTopBar";
@@ -52,6 +52,13 @@ import {
   validateSecurityCodePair
 } from "@/security/protectedAccess";
 import { ApiRequestError, ApiSession, apiClient, apiConfig } from "@/services/apiClient";
+import {
+  AppUpdateState,
+  checkForAppUpdate,
+  getStoredAppUpdateState,
+  isAppUpdateStateForCurrentApp,
+  openAppUpdateDownload
+} from "@/services/appUpdate";
 import { AppleIdentityCancelledError, appleIdentityService } from "@/services/appleIdentity";
 import { DeviceBootstrapResult, deviceBindingService } from "@/services/deviceBinding";
 import { beginGoogleOidcAuthorizationAsync, consumeGoogleOidcLoginStatus, getGoogleOidcReadiness } from "@/services/googleOidc";
@@ -64,7 +71,16 @@ import {
 } from "@/services/googleSignIn";
 
 type PermissionStatusText = "pendente" | "permitido" | "negado" | "bloqueado";
-type SettingsPanel = "duracao" | "encerramento" | "localizacao" | "compartilhamento" | "video" | "atalhos" | "termos" | "login" | null;
+type SettingsPanel =
+  | "duracao"
+  | "encerramento"
+  | "localizacao"
+  | "compartilhamento"
+  | "video"
+  | "atualizacao"
+  | "termos"
+  | "login"
+  | null;
 
 type InfoDialog = {
   title: string;
@@ -178,6 +194,8 @@ export default function SettingsScreen() {
   const [loginBusy, setLoginBusy] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [loginNotice, setLoginNotice] = useState("");
+  const [updateState, setUpdateState] = useState<AppUpdateState | null>(null);
+  const [updateBusy, setUpdateBusy] = useState(false);
   const [appleLoginAvailable, setAppleLoginAvailable] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [, setStatusText] = useState("Carregando preferencias de emergencia...");
@@ -211,6 +229,12 @@ export default function SettingsScreen() {
     setPreferences(nextPreferences);
     setApiSession(await apiClient.getStoredSession());
     setRegisteredDeviceId(await deviceBindingService.getRegisteredApiDeviceId());
+    const storedUpdateState = await getStoredAppUpdateState();
+    setUpdateState(
+      storedUpdateState && isAppUpdateStateForCurrentApp(storedUpdateState)
+        ? storedUpdateState
+        : await checkForAppUpdate({ force: true })
+    );
     const googleLoginStatus = await consumeGoogleOidcLoginStatus();
     if (googleLoginStatus) {
       setActivePanel("login");
@@ -461,6 +485,20 @@ export default function SettingsScreen() {
     }
   }
 
+  async function verifyAppUpdate() {
+    setUpdateBusy(true);
+    try {
+      const state = await checkForAppUpdate({ force: true });
+      setUpdateState(state);
+    } finally {
+      setUpdateBusy(false);
+    }
+  }
+
+  async function downloadAppUpdate() {
+    await openAppUpdateDownload(updateState);
+  }
+
   async function saveNewSecurityCode() {
     if (!preferences) return;
 
@@ -685,8 +723,6 @@ export default function SettingsScreen() {
 
   function showPanelHelp(panel: Exclude<SettingsPanel, null>) {
     const helpByPanel = {
-      atalhos:
-        "Atalhos fisicos exigem autorizacao do sistema e validacao no aparelho. O SOS do app continua sendo o acionamento principal.",
       compartilhamento:
         "Os anjos recebem dados somente quando houver convite aceito, autorizacao da usuaria e contrato de privacidade. A opcao de ligar 190 junto com o SOS vem desativada por padrao.",
       duracao:
@@ -697,6 +733,8 @@ export default function SettingsScreen() {
         "Autorizar localizacao antes da emergencia reduz etapas no momento do acionamento. A permissao pode ser revogada no sistema.",
       login:
         "Use sua conta para proteger convites, anjos e acesso aos arquivos autorizados.",
+      atualizacao:
+        "A verificacao usa o canal oficial de download do SinalSeguro e informa quando houver uma versao Android mais recente.",
       termos:
         "Termos e privacidade registram consentimento para uso emergencial, anjos autorizados e preservacao dos arquivos.",
       video:
@@ -712,12 +750,12 @@ export default function SettingsScreen() {
   }
 
   const panelTitle = {
-    atalhos: "Atalhos",
     compartilhamento: "Compartilhamento",
     duracao: "Tempo de gravacao",
     encerramento: "Codigo de seguranca",
     localizacao: "Localizacao",
     login: "Login",
+    atualizacao: "Atualizacao",
     termos: "Termos e privacidade",
     video: "Video local"
   } satisfies Record<Exclude<SettingsPanel, null>, string>;
@@ -809,10 +847,10 @@ export default function SettingsScreen() {
               onPress={() => setActivePanel("compartilhamento")}
             />
             <ResourceTile
-              icon={<Volume2 size={24} color={theme.colors.primary} />}
-              label="Atalhos"
-              description="Opcional"
-              onPress={() => setActivePanel("atalhos")}
+              icon={<Smartphone size={24} color={theme.colors.primary} />}
+              label="Atualizacao"
+              description={updateState?.status === "available" ? "Disponivel" : "Verificar"}
+              onPress={() => setActivePanel("atualizacao")}
             />
           </View>
         </View>
@@ -1157,14 +1195,46 @@ export default function SettingsScreen() {
             </View>
           ) : null}
 
-          {activePanel === "atalhos" ? (
+          {activePanel === "atualizacao" ? (
             <View style={styles.dialogStack}>
-              <PermissionGate
-                title="Atalho por botao de volume"
-                text="Ainda nao disponivel neste aparelho."
-                status="bloqueado"
+              <View style={[styles.statusPill, updateState?.status === "current" && styles.statusPillActive]}>
+                <Smartphone
+                  size={18}
+                  color={updateState?.status === "current" ? theme.colors.textOnDark : theme.colors.primary}
+                />
+                <Text style={[styles.statusPillText, updateState?.status === "current" && styles.statusPillTextActive]}>
+                  {updateState?.status === "available" && updateState.latestVersion
+                    ? `Versao ${updateState.latestVersion}`
+                    : `Versao ${updateState?.currentVersion ?? "0.1.1"}`}
+                </Text>
+              </View>
+              <View style={styles.inlineInfo}>
+                <ShieldCheck
+                  size={18}
+                  color={updateState?.status === "available" ? theme.colors.secure : theme.colors.textMuted}
+                />
+                <Text style={styles.inlineInfoText}>
+                  {updateState?.message ?? "Toque em verificar para consultar a versao Android disponivel."}
+                </Text>
+              </View>
+              {updateState?.checkedAt ? (
+                <Text style={styles.noticeText}>
+                  Ultima verificacao: {new Date(updateState.checkedAt).toLocaleDateString("pt-BR")}
+                </Text>
+              ) : null}
+              <ButtonIcon
+                disabled={updateBusy}
+                icon={<RefreshCw size={18} color={theme.colors.primary} />}
+                label={updateBusy ? "Verificando..." : "Verificar atualizacao"}
+                onPress={verifyAppUpdate}
               />
-              <ButtonIcon icon={<RefreshCw size={18} color={theme.colors.primary} />} label="Atualizar permissoes" onPress={loadSettings} />
+              <ButtonIcon
+                disabled={!updateState?.downloadUrl}
+                icon={<Smartphone size={18} color={theme.colors.primary} />}
+                label="Baixar versao Android"
+                onPress={downloadAppUpdate}
+                style={updateState?.status === "available" ? styles.selectedOption : undefined}
+              />
             </View>
           ) : null}
         </BrandedDialog>

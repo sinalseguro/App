@@ -2529,3 +2529,35 @@ Publicacao:
 - manifesto publico atualizado em `https://www.sinalseguro.com.br/downloads/installers.json`;
 - checksum publicado: `3f2d4b9ca6ba764979d4515d00712191fbda94dd0b164765e9d4ad9d70635897`;
 - release EC2: `/var/www/sinalseguro/releases/20260514T185240Z`.
+
+## 2026-05-14 - Atualizacao Android com checagem via API e download estavel
+
+Status: codigo aplicado, APK novo gerado, portal e API de producao sincronizados; instalacao USB/ADB e validacao visual fisica desta versao final ficaram pendentes porque o Android nao apareceu em `adb devices -l` nesta retomada.
+
+Executado:
+
+- criado `src/services/appUpdate.ts` para consultar `GET /api/app-releases/current` com sessao autenticada e reaproveitar o estado de verificação por 24 horas;
+- `app/_layout.tsx` passou a disparar checagem automática ao abrir o app;
+- `app/configuracoes.tsx` ganhou o painel `Atualizacao` com `Verificar atualizacao` e `Baixar versao Android`;
+- `app.json`, `package.json`, `package-lock.json` e `android/app/build.gradle` foram sincronizados para `0.1.1` e `versionCode 3`;
+- `services/api/app_releases` adicionou a release Android atual com endpoint autenticado, auditoria e migration inicial;
+- portal público atualizado para manter o arquivo fixo `sinalseguro_android.apk`, com checksum e versão alinhados.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `npm test`: aprovado;
+- `npm run build:android:private`: aprovado;
+- `aapt dump badging`: aprovado com `versionCode='3'` e `versionName='0.1.1'`;
+- `manage.py check` com venv temporaria em `/tmp`: aprovado;
+- `manage.py makemigrations --check --dry-run` com venv temporaria em `/tmp`: aprovado;
+- testes focados do endpoint `app-releases/current`: aprovados;
+- `adb devices -l`: nenhum aparelho listado nesta retomada; instalacao fisica final pendente;
+- captura visual real do painel `Atualizacao`: pendente da reconexao ADB/manual;
+- abertura do download no navegador do aparelho com o caminho público estável: pendente da reconexao ADB/manual.
+
+Checkpoint:
+
+- `apps/mobile/docs/45_CHECKPOINT_ATUALIZACAO_ANDROID_2026-05-14.md`.
+- APK SHA-256 final: `8cab34dc0838637f7713999b56c8ba28d36fb071f02735a7836beb5cfbb91cc1`.

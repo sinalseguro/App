@@ -169,6 +169,42 @@ const P2PSignalSchema = z.object({
   created_at: z.string()
 });
 
+const ApiAppReleaseSchema = z
+  .object({
+    id: z.string(),
+    platform: z.enum(["android", "ios"]),
+    channel: z.string(),
+    version: z.string(),
+    version_code: z.number().int().positive(),
+    minimum_version: z.string().optional(),
+    minimum_version_code: z.number().int().positive().nullable().optional(),
+    download_url: z.string().url(),
+    portal_url: z.string().url(),
+    checksum_url: z.string().optional(),
+    sha256: z.string(),
+    status: z.string(),
+    required_update: z.boolean().optional(),
+    published_at: z.string().optional(),
+    updated_at: z.string().optional()
+  })
+  .transform((release) => ({
+    channel: release.channel,
+    checksumUrl: release.checksum_url || undefined,
+    downloadUrl: release.download_url,
+    id: release.id,
+    latestVersion: release.version,
+    minimumVersion: release.minimum_version || undefined,
+    minimumVersionCode: release.minimum_version_code ?? undefined,
+    platform: release.platform,
+    portalUrl: release.portal_url,
+    publishedAt: release.published_at,
+    requiredUpdate: release.required_update ?? false,
+    sha256: release.sha256,
+    status: release.status,
+    updatedAt: release.updated_at,
+    versionCode: release.version_code
+  }));
+
 export type ApiUser = z.infer<typeof ApiUserSchema>;
 export type ApiSession = z.infer<typeof ApiSessionSchema>;
 export type ApiProtectionProfile = z.infer<typeof ProtectionProfileSchema>;
@@ -180,6 +216,7 @@ export type ApiInvitation = z.infer<typeof InvitationSchema>;
 export type ApiEmergencySession = z.infer<typeof EmergencySessionSchema>;
 export type ApiKeyEnvelope = z.infer<typeof KeyEnvelopeSchema>;
 export type ApiP2PSignal = z.infer<typeof P2PSignalSchema>;
+export type ApiAppRelease = z.infer<typeof ApiAppReleaseSchema>;
 
 export type RegisterDeviceInput = {
   appVersion: string;
@@ -272,6 +309,12 @@ export type SendP2PSignalInput = {
   signalType: "offer" | "answer" | "candidate" | "control";
   payload: Record<string, unknown>;
   expiresAt: string;
+};
+
+export type GetCurrentAppReleaseInput = {
+  platform?: "android" | "ios";
+  version?: string;
+  versionCode?: number;
 };
 
 type ApiRequestOptions = {
@@ -647,6 +690,17 @@ export class SinalSeguroApiClient {
         signal_type: input.signalType
       },
       method: "POST"
+    });
+  }
+
+  async getCurrentAppRelease(input: GetCurrentAppReleaseInput = {}) {
+    const query = new URLSearchParams();
+    query.set("platform", input.platform ?? (currentPlatform() === "ios" ? "ios" : "android"));
+    if (input.version) query.set("version", input.version);
+    if (typeof input.versionCode === "number") query.set("version_code", String(input.versionCode));
+
+    return this.request(`/app-releases/current?${query.toString()}`, ApiAppReleaseSchema, {
+      authenticated: true
     });
   }
 

@@ -8,6 +8,7 @@ import { LogBox, Platform, View } from "react-native";
 import { AppLaunchScreen } from "@/components/AppLaunchScreen";
 import { theme } from "@/design/theme";
 import { AccessGate } from "@/features/access/AccessGate";
+import { checkForAppUpdate } from "@/services/appUpdate";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ export default function RootLayout() {
     // Fallback defensivo: evita que a splash nativa fique presa se o onLayout atrasar no aparelho.
     const nativeTimer = setTimeout(hideNativeSplashOnce, 350);
     const timer = setTimeout(() => setBooting(false), 950);
+    void checkForAppUpdate().catch(() => undefined);
     return () => {
       clearTimeout(nativeTimer);
       clearTimeout(timer);

@@ -6,6 +6,7 @@ import path from "node:path";
 const require = createRequire(import.meta.url);
 const { syncSinalSeguroMediaEngine } = require("../plugins/with-sinalseguro-media-engine");
 const androidRoot = path.join(process.cwd(), "android");
+const appJsonPath = path.join(process.cwd(), "app.json");
 const buildGradlePath = path.join(androidRoot, "app", "build.gradle");
 const localPropertiesPath = path.join(androidRoot, "local.properties");
 const mainApplicationPath = path.join(
@@ -71,8 +72,31 @@ function replaceOnce(contents, search, replacement, description) {
   return contents.replace(search, replacement);
 }
 
+function getExpoAndroidVersionConfig() {
+  const appJson = JSON.parse(readFileSync(appJsonPath, "utf8"));
+  const version = appJson.expo?.version;
+  const versionCode = appJson.expo?.android?.versionCode;
+
+  if (typeof version !== "string" || !version.trim()) {
+    throw new Error("app.json sem expo.version valido para sincronizar Android.");
+  }
+  if (!Number.isInteger(versionCode) || versionCode < 1) {
+    throw new Error("app.json sem expo.android.versionCode valido para sincronizar Android.");
+  }
+
+  return { version, versionCode };
+}
+
 function patchBuildGradle() {
   let contents = readFileSync(buildGradlePath, "utf8");
+  const { version, versionCode } = getExpoAndroidVersionConfig();
+
+  if (!/versionCode\s+\d+/.test(contents) || !/versionName\s+"[^"]+"/.test(contents)) {
+    throw new Error("Nao foi possivel sincronizar versionCode/versionName do Android.");
+  }
+
+  contents = contents.replace(/versionCode\s+\d+/, `versionCode ${versionCode}`);
+  contents = contents.replace(/versionName\s+"[^"]+"/, `versionName "${version}"`);
 
   if (!contents.includes("def sinalBundleDebugJs =")) {
     const signingAnchor = 'def releaseKeyPassword = System.getenv("SINAL_APP_ANDROID_KEY_PASSWORD")\n';

@@ -16,6 +16,17 @@ Revisao juridica/LGPD: Doneda
 - iOS segue pendente de TestFlight/App Store e Apple Developer Program/capability para distribuicao publica; a validacao fisica privada de login ja foi concluida.
 - Gates locais desta atualizacao documental: `npm run typecheck`, `npm run lint` e `npm test` aprovados.
 
+## Atualizacao real em 2026-05-14
+
+- APK privado Android novo gerado em `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `8cab34dc0838637f7713999b56c8ba28d36fb071f02735a7836beb5cfbb91cc1`.
+- O app passou a consultar `GET /api/app-releases/current` com JWT da conta SinalSeguro e usa a pagina estavel `https://www.sinalseguro.com.br/baixar/android` como ponto publico de download.
+- O nome público continua fixo em `sinalseguro_android.apk`.
+- O link direto pode incluir `?v=0.1.1-20260514` para forcar atualização de cache mantendo o mesmo arquivo e o mesmo QR do portal.
+- A versão publicada foi sincronizada para `0.1.1` com `versionCode 3`.
+- A instalacao via USB/ADB desta versao final ficou pendente porque nenhum Android foi listado em `adb devices -l` nesta retomada.
+- O botao `Baixar versao Android` abre a pagina publica estavel pelo codigo validado; a confirmacao visual no aparelho fica para a reconexao ADB/manual.
+- iPhone/iOS permanece pos-MVP e nao faz parte deste fluxo.
+
 Atualizacao privada iOS em 2026-05-07:
 
 - OAuth iOS privado foi configurado fora do Git para `br.com.sinalseguro.app`; Client ID e URL scheme reais permanecem somente em ambiente seguro local/EC2.
@@ -54,10 +65,10 @@ Artefato Android atual:
 
 - tag publicada: `android-v0.1.0-internal.2`;
 - GitHub Release: `https://github.com/sinalseguro/App/releases/tag/android-v0.1.0-internal.2`;
-- arquivo: `sinalseguro-android.apk`;
-- SHA-256: `dbad294407038cac954fd3154bac6c4ea9dbb30b4e79164f58807e83f0d358cb`;
-- notas versionadas: `distribution/android/release-notes-0.1.0-internal.2.md`;
-- checksum versionado: `distribution/android/checksums-0.1.0-internal.2.txt`.
+- arquivo: `sinalseguro_android.apk`;
+- SHA-256: `8cab34dc0838637f7713999b56c8ba28d36fb071f02735a7836beb5cfbb91cc1`;
+- notas versionadas: manter alinhado com o checkpoint atual do portal;
+- checksum versionado: `public/downloads/private/checksums.txt`.
 
 Historico:
 
