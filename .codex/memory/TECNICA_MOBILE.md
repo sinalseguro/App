@@ -116,6 +116,15 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - O app deve preservar contratos auditaveis, minimizacao, consentimentos versionados, logs saneados e feature flags desligadas por padrao para qualquer integracao publica futura.
 - Checkpoint versionado: `docs/41_CRONOGRAMA_APP_INTEGRACAO_GOVERNO_2026-05-14.md`.
 
+## Atualizacao tecnica - 2026-05-14 - refinamento UX fonte ampliada Frente 1.3
+
+- Corrigida a causa provavel dos cortes com fonte `1.3`: line-height apertado e tiles reduzindo texto demais.
+- Arquivos alterados: `src/components/StatusBanner.tsx`, `src/components/SafeScreen.tsx`, `src/components/ResourceTile.tsx` e `app/perfis.tsx`.
+- Ajuste preserva contratos de backend, API, SOS, cofre, player, midia, localizacao, P2P, conveniados e iOS.
+- Validacoes locais aprovadas com Node 22 apos restaurar `node_modules`: `typecheck`, `lint`, `test:profiles`, `npm test` e `git diff --check` dos arquivos alterados.
+- `adb devices -l` nao listou aparelho no momento; validacao visual fisica com fonte `1.3` fica pendente antes de fechar a Frente 1.3 sem ressalvas.
+- Checkpoint versionado: `docs/42_REFINAMENTO_UX_FRENTE_1_3_FONTE_2026-05-14.md`.
+
 ## Atualizacao tecnica - 2026-05-04
 
 - `EmergencySettingsDrawer` recebe navegacao por painel: `Cofre` envia `/arquivos?painel=cofre` e `Player` envia `/arquivos?painel=player`.

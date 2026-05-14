@@ -35,11 +35,12 @@ const styles = StyleSheet.create({
   title: {
     color: theme.colors.text,
     fontSize: 17,
-    fontWeight: "800"
+    fontWeight: "800",
+    lineHeight: 24
   },
   text: {
     color: theme.colors.textMuted,
     fontSize: theme.typography.body,
-    lineHeight: 21
+    lineHeight: 24
   }
 });

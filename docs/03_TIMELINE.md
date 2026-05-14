@@ -2417,3 +2417,31 @@ Cronograma versionado:
 Proxima acao tecnica:
 
 - continuar a Frente 1.3 Android preservando perfis, papeis, autorizacoes, bloqueios server-side e refinamento UX de fonte ampliada antes de fechar sem ressalvas.
+
+## 2026-05-14 - Frente 1.3: refinamento UX de fonte ampliada
+
+Status: correcao de codigo aplicada e validacoes locais aprovadas; validacao visual fisica pendente porque `adb devices -l` nao listou aparelho conectado.
+
+Executado:
+
+- `StatusBanner` recebeu line-height maior para titulo e texto;
+- `SafeScreen` recebeu line-height maior em titulo, subtitulo e rodape;
+- `ResourceTile` passou a permitir ate duas linhas para titulo/descricao, com menor reducao automatica e altura minima maior;
+- `app/perfis.tsx` recebeu altura minima e line-height maiores nos cards de perfil.
+
+Validacoes:
+
+- `npm ci --ignore-scripts` restaurou dependencias locais removidas na limpeza de regeneraveis;
+- `PATH=/opt/homebrew/opt/node@22/bin:$PATH npm run typecheck`: aprovado;
+- `PATH=/opt/homebrew/opt/node@22/bin:$PATH npm run lint`: aprovado;
+- `PATH=/opt/homebrew/opt/node@22/bin:$PATH npm run test:profiles`: aprovado;
+- `PATH=/opt/homebrew/opt/node@22/bin:$PATH npm test`: aprovado;
+- `git diff --check` limitado aos arquivos alterados: aprovado.
+
+Limite:
+
+- nao fechar a ressalva visual Tarcila/Lina/Eliane sem nova captura em Android fisico com fonte `1.3`.
+
+Checkpoint:
+
+- `docs/42_REFINAMENTO_UX_FRENTE_1_3_FONTE_2026-05-14.md`.

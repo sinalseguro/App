@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     fontSize: theme.typography.button,
     fontWeight: "900",
+    lineHeight: 23,
     textAlign: "center"
   },
   option: {
@@ -126,7 +127,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     flexDirection: "row",
     gap: theme.spacing.md,
-    minHeight: 84,
+    minHeight: 104,
     padding: theme.spacing.md
   },
   optionIcon: {
@@ -160,18 +161,18 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     fontSize: 16,
     fontWeight: "900",
-    lineHeight: 21
+    lineHeight: 24
   },
   optionDescription: {
     color: theme.colors.textMuted,
     fontSize: theme.typography.small,
-    lineHeight: 18
+    lineHeight: 22
   },
   statusText: {
     color: theme.colors.textMuted,
     fontSize: theme.typography.small,
     fontWeight: "700",
-    lineHeight: 18,
+    lineHeight: 22,
     textAlign: "center"
   }
 });

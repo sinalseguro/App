@@ -45,12 +45,13 @@ const styles = StyleSheet.create({
   title: {
     color: theme.colors.text,
     fontSize: theme.typography.title,
-    fontWeight: "800"
+    fontWeight: "800",
+    lineHeight: 36
   },
   subtitle: {
     color: theme.colors.textMuted,
     fontSize: theme.typography.subtitle,
-    lineHeight: 22
+    lineHeight: 26
   },
   stack: {
     gap: theme.spacing.lg
@@ -58,6 +59,6 @@ const styles = StyleSheet.create({
   footer: {
     color: theme.colors.textMuted,
     fontSize: theme.typography.small,
-    lineHeight: 18
+    lineHeight: 22
   }
 });

@@ -19,9 +19,9 @@ export function ResourceTile({ icon, label, description, onPress }: ResourceTile
       <View style={styles.iconSlot}>{icon}</View>
       <Text
         adjustsFontSizeToFit
-        maxFontSizeMultiplier={1.1}
-        minimumFontScale={0.72}
-        numberOfLines={1}
+        maxFontSizeMultiplier={1.2}
+        minimumFontScale={0.82}
+        numberOfLines={2}
         style={styles.label}
       >
         {label}
@@ -29,9 +29,9 @@ export function ResourceTile({ icon, label, description, onPress }: ResourceTile
       {description ? (
         <Text
           adjustsFontSizeToFit
-          maxFontSizeMultiplier={1.1}
-          minimumFontScale={0.72}
-          numberOfLines={1}
+          maxFontSizeMultiplier={1.2}
+          minimumFontScale={0.84}
+          numberOfLines={2}
           style={styles.description}
         >
           {description}
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   description: {
     color: theme.colors.textMuted,
     fontSize: 12,
-    lineHeight: 16,
+    lineHeight: 18,
     textAlign: "center"
   },
   iconSlot: {
@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     fontSize: 14,
     fontWeight: "900",
+    lineHeight: 19,
     textAlign: "center"
   },
   tile: {
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: theme.spacing.xs,
     justifyContent: "center",
-    minHeight: 92,
+    minHeight: 112,
     minWidth: 100,
     padding: theme.spacing.sm
   },
