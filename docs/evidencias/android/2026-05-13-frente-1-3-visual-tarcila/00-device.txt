@@ -1,0 +1,9 @@
+device=Android fisico USB com identificador redigido
+
+model=23129RA5FL
+
+android=15
+
+package=br.com.sinalseguro.app instalado
+
+font_scale_before=1.0

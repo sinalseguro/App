@@ -10,7 +10,7 @@ Retomar a Frente 1.3 com Android fisico conectado, validar visualmente os fluxos
 
 ## Android fisico
 
-- Device ADB: `5686add7`
+- Device ADB: identificador redigido
 - Modelo: `23129RA5FL`
 - Package: `br.com.sinalseguro.app`
 - APK publicado/instalado: `distribution/android/out/sinalseguro-android.apk`
@@ -31,7 +31,7 @@ cd android
 Instalacao fisica:
 
 ```bash
-adb -s 5686add7 install -r distribution/android/out/sinalseguro-android.apk
+adb -s <device> install -r distribution/android/out/sinalseguro-android.apk
 ```
 
 Resultado: `Success`.
@@ -60,11 +60,12 @@ Repositorio: `repos/portais`
 
 Publicacao realizada:
 
-- APK no portal: `https://www.sinalseguro.com.br/downloads/private/android/SinalSeguro-privado-0.1.0-20260513.apk`
+- APK no portal: `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk`
+- Versao/data exibida no portal: `0.1.0` em `13/05/2026`
 - Checksums: `https://www.sinalseguro.com.br/downloads/private/checksums.txt`
 - Manifesto: `https://www.sinalseguro.com.br/downloads/installers.json`
-- QR Android: `https://www.sinalseguro.com.br/assets/app/sinalseguro-android-qr-20260513.svg`
-- Release EC2: `/var/www/sinalseguro/releases/20260513T212800Z`
+- QR Android: `https://www.sinalseguro.com.br/assets/app/sinalseguro-android-qr.svg`
+- Release EC2: `/var/www/sinalseguro/releases/20260513T215810Z`
 
 Mudanca publica:
 
@@ -91,3 +92,40 @@ Mudanca publica:
 - A Frente 1.3 segue Android-first para o MVP.
 - iPhone/iOS permanece pos-MVP e nao deve bloquear as proximas frentes.
 - A proxima etapa deve partir da Frente 1.3 validada no Android e usar a EC2 real para qualquer interacao backend.
+
+## Correcao de politica de artefato
+
+Depois do primeiro push, o GitHub alertou que o APK privado Android tinha tamanho superior ao recomendado para Git. A politica consolidada para as proximas publicacoes fica:
+
+- APK/AAB/IPA privados nao devem ser versionados no Git;
+- o portal versiona apenas codigo, conteudo, QR, manifesto, checksums, documentacao e scripts;
+- o APK privado Android deve existir localmente antes do deploy ou ser fornecido por `SINALSEGURO_ANDROID_PRIVATE_APK_SOURCE`;
+- a URL publica do artefato Android passa a usar nome estavel `sinalseguro_android.apk`;
+- `infra/aws/deploy-portais.sh` valida existencia e SHA-256 antes de publicar a release na EC2;
+- a publicacao publica continua somente no portal SinalSeguro.
+- as telas publicas de download usam linguagem para usuario final, sem termos internos, com fluxo em ate tres interacoes e QR Android estavel para `/baixar/android`.
+
+O HEAD do portal remove o APK versionado anterior do rastreamento Git e publica o artefato ativo como `public/downloads/private/android/sinalseguro_android.apk` apenas no portal/EC2.
+
+## Validacao visual complementar - Tarcila/Lina/Eliane
+
+Evidencias saneadas complementares:
+
+- `docs/evidencias/android/2026-05-13-frente-1-3-visual-tarcila/`
+
+Cobertura:
+
+- `Perfis e papeis`, `Anjos de confianca` e `Convite recebido`;
+- fonte normal e fonte ampliada `1.3`;
+- screenshots e sumarios de UI preservados;
+- logs brutos, intents e XMLs completos removidos antes do Git para reduzir risco de exposicao;
+- fonte do aparelho restaurada para `1.0`;
+- crash scan sem padroes fatais;
+- fonte `1.3` com ressalva de UX por cortes/overflow em textos longos, pendente de refinamento visual.
+
+Leitura UX/IX:
+
+- botoes principais permanecem legiveis e tocaveis;
+- modais/avisos usam linguagem clara e conservadora;
+- convite segue bloqueado quando o perfil nao esta configurado;
+- nao houve exposicao de email, CPF, telefone, token real, localizacao, midia, relato ou chave nas evidencias preservadas.

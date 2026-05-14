@@ -1,0 +1,1 @@
+Sem padroes fatais no recorte saneado. Logs brutos foram removidos antes do Git; este arquivo preserva apenas o resultado da verificacao.

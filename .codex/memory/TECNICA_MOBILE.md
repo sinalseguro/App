@@ -95,13 +95,26 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 
 ## Atualizacao tecnica - 2026-05-13 - Frente 1.3 Android validada e release portal
 
-- APK Android privado instalado no device fisico `5686add7` / `23129RA5FL`: `distribution/android/out/sinalseguro-android.apk`, SHA-256 `19ad59c4b9c4c47c8316f3a24d354626ee11a3442be910841fcd1e73283cd08b`.
+- APK Android privado instalado no device fisico modelo `23129RA5FL` com identificador redigido: `distribution/android/out/sinalseguro-android.apk`, SHA-256 `19ad59c4b9c4c47c8316f3a24d354626ee11a3442be910841fcd1e73283cd08b`.
 - O build completo multi-ABI falhou por falta de espaco em `:app:mergeDebugNativeLibs`; apos limpeza de regeneraveis/cache, foi gerado APK `arm64-v8a` para o device fisico conectado com `assembleDebug -PsinalBundleDebugJs=true -PreactNativeArchitectures=arm64-v8a`.
 - Validacao ADB por deep links confirmou `/perfis`, `/contatos` e `/convite` com bloqueios esperados para perfil nao definido e convite ausente.
 - Evidencias saneadas em `docs/evidencias/android/2026-05-13-frente-1-3-release-portal/`.
-- Portal publico publicado com Android ativo em `https://www.sinalseguro.com.br/downloads/private/android/SinalSeguro-privado-0.1.0-20260513.apk`, QR `https://www.sinalseguro.com.br/assets/app/sinalseguro-android-qr-20260513.svg` e manifesto apenas Android.
+- Portal publico publicado com Android ativo em `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk`, QR estavel `https://www.sinalseguro.com.br/assets/app/sinalseguro-android-qr.svg`, versao `0.1.0` atualizada em `13/05/2026` e manifesto apenas Android.
 - iPhone/iOS segue pos-MVP, sem release ativo no portal publico.
 - Checkpoint: `docs/40_CHECKPOINT_FRENTE_1_3_ANDROID_RELEASE_PORTAL_2026-05-13.md`.
+- Correcao posterior: APK/AAB/IPA privados nao devem ser versionados no Git; o APK Android fica como artefato local de deploy e publicacao EC2/portal com nome estavel `sinalseguro_android.apk`, enquanto QR estavel, manifesto, checksums, README e scripts permanecem versionados.
+- Deploy do portal passa a validar existencia e SHA-256 do APK local antes de publicar a release.
+- As telas publicas de download devem esconder termos internos, manter fluxo em ate tres interacoes e preservar QR Android/nome `sinalseguro_android.apk` estaveis entre atualizacoes.
+
+## Atualizacao tecnica - 2026-05-14 - Governo/Business no cronograma do app
+
+- As atualizacoes dos portais Governo/Business e do pacote Governo/PB nao bloqueiam a continuidade da Frente 1.3 Android.
+- Android continua como foco do MVP; iPhone/iOS permanece pos-MVP.
+- A proxima frente viavel apos a Frente 1.3 continua sendo anjos/convites, porque depende de perfis, vinculos, autorizacoes e consentimentos.
+- Integracao com conveniados, orgaos publicos, smart cities e tornozeleira/proximidade fica em frente futura condicionada, nunca no MVP imediato.
+- Gate Governo futuro: mesa tecnica, ACT/convênio/contrato, acordo de dados, RIPD/DPIA, homologacao, ePING/OpenAPI, RBAC/MFA, auditoria, protocolo humano de resposta, suporte, observabilidade e orgao competente.
+- O app deve preservar contratos auditaveis, minimizacao, consentimentos versionados, logs saneados e feature flags desligadas por padrao para qualquer integracao publica futura.
+- Checkpoint versionado: `docs/41_CRONOGRAMA_APP_INTEGRACAO_GOVERNO_2026-05-14.md`.
 
 ## Atualizacao tecnica - 2026-05-04
 

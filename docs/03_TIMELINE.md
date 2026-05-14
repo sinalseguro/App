@@ -16,7 +16,7 @@ Especialistas acionados:
 
 Validacao Android fisica:
 
-- Device: `5686add7` / `23129RA5FL`.
+- Device: modelo `23129RA5FL` com identificador redigido.
 - APK instalado: `distribution/android/out/sinalseguro-android.apk`.
 - SHA-256: `19ad59c4b9c4c47c8316f3a24d354626ee11a3442be910841fcd1e73283cd08b`.
 - Telas validadas por ADB/screenshot/UI dump: `Perfis e papeis`, `Anjos de confianca` e `Convite recebido`.
@@ -25,9 +25,10 @@ Validacao Android fisica:
 
 Publicacao portal:
 
-- Release EC2: `/var/www/sinalseguro/releases/20260513T212800Z`.
-- Android: `https://www.sinalseguro.com.br/downloads/private/android/SinalSeguro-privado-0.1.0-20260513.apk`.
-- QR Android: `https://www.sinalseguro.com.br/assets/app/sinalseguro-android-qr-20260513.svg`.
+- Release EC2: `/var/www/sinalseguro/releases/20260513T215810Z`.
+- Android: `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk`.
+- QR Android: `https://www.sinalseguro.com.br/assets/app/sinalseguro-android-qr.svg`.
+- Versao/data exibida no portal: `0.1.0` em `13/05/2026`.
 - Manifesto: `https://www.sinalseguro.com.br/downloads/installers.json`, contendo apenas Android.
 - `/baixar/ios` informa em linguagem publica que a versao para iPhone sera disponibilizada posteriormente.
 - Release iPhone antigo retorna `404`; a URL versionada antiga de QR pode permanecer em cache externo, mas nao e referenciada pelo portal atual.
@@ -36,6 +37,14 @@ Gates:
 
 - Mobile: `typecheck`, `lint`, `npm test`, build Android privado para device, instalacao ADB e validação visual/logs.
 - Portal: `npm run validate`, `infra/aws/deploy-portais.sh`, curls pos-deploy, `nginx -t`, `cereusia-crm=active`, `sinalseguro-api=active`, API health/ready ok.
+
+Atualizacao de politica e UX:
+
+- APK/AAB/IPA privados nao ficam mais rastreados no Git; o portal publica o APK a partir de arquivo local validado por checksum com nome estavel `sinalseguro_android.apk`.
+- `infra/aws/deploy-portais.sh` passa a falhar se o APK local nao existir ou se o SHA-256 divergir do checksum versionado.
+- README do app e README do portal foram atualizados com URL, SHA-256, manifesto e regra de publicacao somente no portal.
+- Download publico ajustado para linguagem de usuario final, sem termos internos, com fluxo em ate tres interacoes e QR Android estavel para `/baixar/android`.
+- Validacao visual complementar Tarcila/Lina/Eliane cobriu `Perfis`, `Anjos de confianca` e `Convite recebido` com fonte normal e fonte 1.3; fonte restaurada para 1.0 e crash scan sem padroes fatais. A fonte 1.3 ficou com ressalva de UX por cortes/overflow em textos longos.
 
 Checkpoint detalhado:
 
@@ -147,7 +156,7 @@ Implementado:
 
 Evidencia Android obtida antes da ultima correcao:
 
-- APK instalado no Android fisico `5686add7` / `23129RA5FL`.
+- APK instalado no Android fisico modelo `23129RA5FL` com identificador redigido.
 - O modal apareceu, mas ficou em `Encerrando gravacao` 24% e o topo ainda mostrava `CHAMADO ATIVO`.
 - Logcat confirmou fechamento tardio da camera/CameraX e evento `Recorder: stop() called on a recording that is no longer active`.
 - A partir disso, foi aplicada correcao adicional: segmentacao Android curta e saida visual imediata do estado ativo.
@@ -2383,3 +2392,28 @@ Validacoes:
 Checkpoint:
 
 - `docs/39_CHECKPOINT_FRENTE_1_3_BACKEND_PERFIS_AUTORIZACOES_2026-05-13.md`.
+
+## 2026-05-14 - Cronograma app ajustado apos Governo/Business
+
+Status: sem entrave para continuar a Frente 1.3 Android.
+
+Contexto:
+
+- os portais Governo/Business e o pacote Governo/PB consolidaram a rota de sustentabilidade por piloto, operacao assistida, convenios/contratos, suporte e manutencao institucional;
+- essa evolucao nao altera o foco imediato do MVP Android, mas adiciona gates obrigatorios para integracao governamental futura.
+
+Decisoes aplicadas:
+
+- Android continua como foco do MVP;
+- iPhone/iOS permanece pos-MVP;
+- a proxima frente viavel apos a Frente 1.3 segue sendo anjos/convites;
+- conveniados, orgaos publicos, smart cities e modulo de tornozeleira/proximidade ficam em frente futura condicionada;
+- qualquer integracao governamental real depende de mesa tecnica, ACT/convênio/contrato, acordo de dados, RIPD/DPIA, homologacao, ePING/OpenAPI, RBAC/MFA, auditoria, protocolo humano de resposta e orgao competente.
+
+Cronograma versionado:
+
+- `docs/41_CRONOGRAMA_APP_INTEGRACAO_GOVERNO_2026-05-14.md`.
+
+Proxima acao tecnica:
+
+- continuar a Frente 1.3 Android preservando perfis, papeis, autorizacoes, bloqueios server-side e refinamento UX de fonte ampliada antes de fechar sem ressalvas.

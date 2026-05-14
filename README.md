@@ -4,7 +4,7 @@
 
 App mobile Android e iOS do SinalSeguro.
 
-Status: MVP tecnico controlado com Home SOS, Cofre, Player, midia local criptografada em chunks, cliente API real, sessao segura, login Google/Apple preparado, anjos/convites API-backed e APK privado Android validado ate bloqueio externo do Google OAuth.
+Status: MVP tecnico controlado Android-first com Home SOS, Cofre, Player, midia local criptografada em chunks, cliente API real, sessao segura, login Google/Apple preparado, perfis/papeis da Frente 1.3, anjos/convites API-backed e release privado Android publicado no portal. iPhone/iOS fica pos-MVP.
 Coordenacao geral: Ze.  
 Gerente AI mobile: Cristine.
 
@@ -69,21 +69,24 @@ npm run build:android:production
 
 ## Instalacao e QR codes
 
-Os QR codes apontam para paginas publicas estaveis. Elas serao atualizadas para GitHub Releases, TestFlight ou lojas oficiais quando os instaladores forem aprovados.
+Os QR codes apontam para paginas publicas estaveis. O release privado Android atual e publicado no portal SinalSeguro/EC2; lojas oficiais entram em etapa posterior.
 
 | Plataforma | QR | URL |
 |---|---|---|
 | Android | ![QR Android](assets/qr/sinalseguro-android.svg) | `https://www.sinalseguro.com.br/baixar/android` |
-| iOS | ![QR iOS](assets/qr/sinalseguro-ios.svg) | `https://www.sinalseguro.com.br/baixar/ios` |
+| iPhone | pagina sem QR ativo | `https://www.sinalseguro.com.br/baixar/ios` |
 
 Status atual:
 
-- Android: APK interno 2 assinado publicado em GitHub Releases continua sendo o release publico tecnico atual.
-- Android privado local: APK debug com bundle JS embutido foi recompilado apos correcao do redirect OAuth; nao e release publico nem artefato de loja.
-- iOS: TestFlight/App Store pendente.
-- GitHub Releases: canal tecnico ativo para artefatos Android.
+- Android privado: publicado no portal em `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk`.
+- Versao/data exibida no portal: `0.1.0` em `13/05/2026`.
+- SHA-256 Android privado: `19ad59c4b9c4c47c8316f3a24d354626ee11a3442be910841fcd1e73283cd08b`.
+- Manifesto publico: `https://www.sinalseguro.com.br/downloads/installers.json`.
+- iPhone: sem release ativo; sera disponibilizado posteriormente.
+- GitHub: nao versionar APK/AAB/IPA privados. O APK privado deve ser publicado somente no portal/EC2, com checksum, QR e manifesto versionados.
+- UX publica do portal: telas de download sem termos internos como frentes, release, EC2, manifesto ou checksum; fluxo em ate tres interacoes; QR Android e nome `sinalseguro_android.apk` permanecem estaveis nas proximas atualizacoes.
 
-Release Android atual:
+Release Android legado em GitHub Releases:
 
 - Tag: `android-v0.1.0-internal.2`.
 - APK: `https://github.com/sinalseguro/App/releases/latest/download/sinalseguro-android.apk`.
@@ -111,12 +114,13 @@ Checkpoint tecnico atual:
 - Area `Cofre local` para acessar pacotes e videos preservados neste dispositivo e verificar o que permanece bloqueado ate backend, contrato, chaves e auditoria.
 - Build privado de midia local habilita `CAMERA` e `RECORD_AUDIO` para homologacao controlada; transmissao, compartilhamento externo, P2P critico e envio remoto de midia continuam bloqueados.
 
-APK privado atual com midia local para validacao:
+APK privado Android atual com midia local para validacao e portal:
 
-- Caminho: `android/app/build/outputs/apk/debug/app-debug.apk`.
-- SHA-256 atual apos correcao do redirect OAuth Android: `e975046c54c756af14feba64fe40b83877252bb96bca0d97f2d334624218801b`.
-- Build local: `npm run build:android:private`.
-- Observacao: este hash representa o APK privado local mais recente registrado na documentacao, nao o release publico `android-v0.1.0-internal.2`.
+- Caminho local estavel: `distribution/android/out/sinalseguro-android.apk`.
+- URL publicada: `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk`.
+- SHA-256: `19ad59c4b9c4c47c8316f3a24d354626ee11a3442be910841fcd1e73283cd08b`.
+- Build local para o device fisico conectado: `./gradlew assembleDebug -PsinalBundleDebugJs=true -PreactNativeArchitectures=arm64-v8a`.
+- Observacao: este APK privado e artefato de homologacao Android, nao release de loja e nao deve ser versionado no Git.
 - O APK debug atual embute o bundle JS e desliga o suporte nativo de desenvolvedor apenas neste modo de validacao, abrindo sem Metro, sem `adb reverse` e sem depender de `localhost:8081`.
 - O gate publico `npm run release:android:readiness` fica bloqueado enquanto este workspace contiver a instrumentacao privada de midia (`expo-camera`/`expo-video`). Para loja/publico, usar perfil ou branch sem midia local ate a liberacao juridica.
 - Validacao Android mais recente confirmou que `br.com.sinalseguro.app:/oauthredirect`, `sinalseguro:/oauthredirect` e `sinalseguro://configuracoes` resolvem para o app.

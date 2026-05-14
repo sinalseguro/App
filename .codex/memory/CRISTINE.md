@@ -79,10 +79,10 @@ Atualizacao de continuidade em 2026-05-11 - Frente 1.2 Android validado:
 
 Atualizacao de continuidade em 2026-05-13 - Frente 1.3 Android e portal:
 
-- APK Android privado novo instalado no device `5686add7` / `23129RA5FL`, SHA-256 `19ad59c4b9c4c47c8316f3a24d354626ee11a3442be910841fcd1e73283cd08b`.
+- APK Android privado novo instalado no device modelo `23129RA5FL` com identificador redigido, SHA-256 `19ad59c4b9c4c47c8316f3a24d354626ee11a3442be910841fcd1e73283cd08b`.
 - Validacao visual fisica cobriu `Perfis`, `Anjos de confianca` e `Convite recebido`; perfil nao definido bloqueia convite e a tela de convite sem token orienta configurar perfil adulto.
 - Log saneado do recorte nao mostrou `FATAL EXCEPTION`, `AndroidRuntime`, `ReactNativeJS Error`, ANR ou crash do processo SinalSeguro.
-- Portal publico atualizado e publicado na EC2 em `/var/www/sinalseguro/releases/20260513T212800Z`.
+- Portal publico atualizado e publicado na EC2 em `/var/www/sinalseguro/releases/20260513T215810Z`.
 - Manifesto publico contem apenas Android; iPhone nao tem release ativo e `/baixar/ios` informa disponibilidade posterior em linguagem publica.
 - Checkpoint detalhado: `docs/40_CHECKPOINT_FRENTE_1_3_ANDROID_RELEASE_PORTAL_2026-05-13.md`.
 

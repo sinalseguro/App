@@ -183,3 +183,12 @@ Papel: seguranca, LGPD e QA.
 - `KeyEnvelopeSerializer` e `P2PSignalSerializer` bloqueiam criacao ate frente propria de autorizacao/midia/P2P.
 - Backup logico criado antes do deploy na EC2 e migrations aplicadas com readiness publico `database=ok`.
 - Testes Django cobrem perfil ausente, menor criando/aceitando, responsavel sem autorizacao, autorizacao ativa, consentimento sensivel, key envelope e P2P bloqueados.
+
+## QA/Security - 2026-05-13 - Frente 1.3 release portal e UX
+
+- Politica corrigida: APK/AAB/IPA privados nao devem ser rastreados no Git; publicacao fica no portal/EC2 com nome estavel `sinalseguro_android.apk`, QR estavel, manifesto e checksums versionados.
+- UX publica: telas de download sem termos internos, sem detalhes tecnicos de deploy, com ate tres interacoes principais e linguagem para usuario final.
+- O deploy do portal deve falhar se o APK local nao existir ou se o SHA-256 divergir de `public/downloads/private/checksums.txt`.
+- Evidencias complementares Tarcila/Lina/Eliane em `docs/evidencias/android/2026-05-13-frente-1-3-visual-tarcila/` cobrem `Perfis`, `Anjos de confianca` e `Convite recebido` em fonte normal e fonte 1.3.
+- Preservar somente screenshots, sumarios de UI, device saneado e crash scan; logs brutos, intents e XMLs completos devem ficar fora do Git quando nao forem necessarios.
+- Fonte do aparelho foi restaurada para `1.0`; crash scan sem padroes fatais. Tarcila/Lina registraram ressalva de UX em fonte `1.3` por cortes/overflow em textos longos, pendente para refinamento visual.
