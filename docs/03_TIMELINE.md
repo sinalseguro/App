@@ -2658,3 +2658,37 @@ Proximo passo:
 
 - Roberto precisa confirmar/reencaminhar o SMS manualmente no aparelho ou reconectar o segundo Android em ADB; depois disso, validar aceite, rejeicao de replay e mudanca de status para anjo aceito.
 - Especialistas registraram que o app cria o convite seguro via API e usa o compartilhamento nativo do Android; a falha atual e operacional no Google Messages/operadora, nao evidencia falha de criacao do convite. O proximo gate deve ser fisico, em dois Androids, com evidencias saneadas e sem telefone/token/link completo.
+
+## 2026-05-15 - SOS offline e vinculos de anjos visiveis
+
+Status: codigo aplicado, gates locais e build Android aprovados; instalacao fisica bloqueada por ADB `offline`.
+
+Executado:
+
+- `AccessGate` preserva sessao local ja autenticada quando a falha e rede/indisponibilidade, limpando sessao somente em `401`;
+- `apiClient` converte falha de rede em erro saneado `status=0`;
+- relacionamentos de anjo/protegido passam a ter cache local criptografado em `trustedRelationshipStore`;
+- aceite de convite salva imediatamente o vinculo aceito no aparelho do anjo;
+- `Anjos de confianca` usa cache local e chamadas independentes para nao ocultar vinculos aceitos quando convites/contatos falharem;
+- SOS inclui anjos aceitos no plano local de entrega e enfileira sincronizacao remota da ocorrencia para a EC2 quando a rede voltar;
+- smoke test passou a proteger acesso offline, cache de vinculos e fila de sincronizacao.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `npm test`: aprovado;
+- `npm run private:android:readiness`: aprovado;
+- build Android debug bundled `arm64-v8a`: aprovado;
+- APK local: `android/app/build/outputs/apk/debug/app-debug.apk`;
+- SHA-256: `b941cc4839639a38fb0df22a20ab6ed11e4662dac85a184ef09ccf393b926def`.
+
+Bloqueio:
+
+- `adb install --no-streaming` e `adb install` ficaram presos no Android `23129RA5FL`;
+- apos `adb kill-server/start-server`, o aparelho passou para `offline`;
+- nao publicar o APK no portal antes de reinstalar e validar fisicamente o fluxo.
+
+Checkpoint:
+
+- `docs/46_CHECKPOINT_OFFLINE_ANJOS_SOS_2026-05-15.md`.

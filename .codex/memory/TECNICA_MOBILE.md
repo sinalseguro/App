@@ -209,3 +209,13 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `acceptBackendInvitation()` retorna o relacionamento aceito; apos sucesso, `app/convite.tsx` limpa o convite pendente e mostra `Voce e anjo`.
 - A API nao deve devolver token claro, telefone, e-mail bruto, evidencia, localizacao ou midia nesse contrato.
 - O teste fisico real ainda precisa de dois Androids ou do link recebido aberto no aparelho anjo; a ultima consulta em producao mostrou convites pendentes, sem `contact_user`.
+
+# Atualizacao - 2026-05-15 - SOS offline e cache de vinculos
+
+- `apiClient` transforma falha de rede em `ApiRequestError` com `status=0`; `AccessGate` preserva sessao local ja autenticada e so limpa sessao em `401`.
+- Relacionamentos aceitos usam cache local criptografado em `src/features/invitations/trustedRelationshipStore.ts`.
+- `app/convite.tsx` salva o relacionamento aceito assim que a API confirma o aceite; `app/contatos.tsx` mostra cache local quando a rede falha e busca contatos/convites/relacionamentos com `Promise.allSettled`.
+- `app/index.tsx` inclui anjos aceitos no pacote SOS local via `listAcceptedOwnerRelationshipsForDelivery()`.
+- `src/features/emergency/emergencySyncQueue.ts` enfileira pacote SOS finalizado e tenta sincronizar a sessao de emergencia com a EC2 quando o app volta ao foco.
+- Build Android debug bundled `arm64-v8a` aprovado com APK SHA-256 `b941cc4839639a38fb0df22a20ab6ed11e4662dac85a184ef09ccf393b926def`.
+- Instalacao fisica ficou bloqueada: `adb install` travou e, apos reinicio do servidor ADB, o Android `23129RA5FL` ficou `offline`; nao publicar no portal ate reinstalar e validar.

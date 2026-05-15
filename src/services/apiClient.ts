@@ -757,14 +757,23 @@ export class SinalSeguroApiClient {
       throw new ApiRequestError("Login SinalSeguro necessario para acessar a API.", 401);
     }
 
-    const response = await fetch(`${this.baseUrl}${path}`, {
-      body: options.body === undefined ? undefined : JSON.stringify(options.body),
-      headers: {
-        ...(authenticated && session?.access ? { Authorization: `Bearer ${session.access}` } : {}),
-        ...(options.body === undefined ? {} : { "Content-Type": "application/json" })
-      },
-      method: options.method ?? (options.body === undefined ? "GET" : "POST")
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${this.baseUrl}${path}`, {
+        body: options.body === undefined ? undefined : JSON.stringify(options.body),
+        headers: {
+          ...(authenticated && session?.access ? { Authorization: `Bearer ${session.access}` } : {}),
+          ...(options.body === undefined ? {} : { "Content-Type": "application/json" })
+        },
+        method: options.method ?? (options.body === undefined ? "GET" : "POST")
+      });
+    } catch (error) {
+      throw new ApiRequestError(
+        "Sem conexao com a internet. Os recursos locais continuam disponiveis neste aparelho.",
+        0,
+        error instanceof Error ? error.message : null
+      );
+    }
     const responseBody = await parseResponseBody(response);
 
     if (response.status === 401 && authenticated && retryOnUnauthorized && session?.refresh) {

@@ -36,6 +36,7 @@ const requiredFiles = [
   "src/features/emergency-home/EmergencySettingsDrawer.tsx",
   "src/features/emergency-home/EmergencyTopBar.tsx",
   "src/features/invitations/invitationService.ts",
+  "src/features/invitations/trustedRelationshipStore.ts",
   "src/features/profiles/profilePolicy.ts",
   "src/features/profiles/profileStore.ts",
   "src/features/evidence/evidencePolicy.ts",
@@ -45,6 +46,7 @@ const requiredFiles = [
   "src/features/emergency/emergencyRecorder.ts",
   "src/features/emergency/RemoteSharingPlan.ts",
   "src/features/emergency/emergencyOutbox.ts",
+  "src/features/emergency/emergencySyncQueue.ts",
   "src/features/emergency/EmergencyMediaRecorder.tsx",
   "src/features/emergency/mediaCapture.ts",
   "src/features/emergency/VideoCryptoService.ts",
@@ -151,6 +153,7 @@ const localFilesScreen = await readFile("app/arquivos.tsx", "utf8");
 const settingsScreen = await readFile("app/configuracoes.tsx", "utf8");
 const contactsScreen = await readFile("app/contatos.tsx", "utf8");
 const invitationScreen = await readFile("app/convite.tsx", "utf8");
+const accessGate = await readFile("src/features/access/AccessGate.tsx", "utf8");
 const profilesScreen = await readFile("app/perfis.tsx", "utf8");
 const deviceBinding = await readFile("src/services/deviceBinding.ts", "utf8");
 const deviceKeyProof = await readFile("src/services/deviceKeyProof.ts", "utf8");
@@ -464,6 +467,8 @@ if (/const DEFAULT_FINISH_CODE_HASH = "e41d64/.test(emergencyPreferences)) {
 const secureStorage = await readFile("src/security/secureStorage.ts", "utf8");
 const apiClient = await readFile("src/services/apiClient.ts", "utf8");
 const invitationService = await readFile("src/features/invitations/invitationService.ts", "utf8");
+const trustedRelationshipStore = await readFile("src/features/invitations/trustedRelationshipStore.ts", "utf8");
+const emergencySyncQueue = await readFile("src/features/emergency/emergencySyncQueue.ts", "utf8");
 
 if (secureStorage.includes("sessionStorage") || !secureStorage.includes("Platform.OS !== \"web\"")) {
   throw new Error("SecureStore web precisa ser simulador volatil em memoria, sem sessionStorage/localStorage.");
@@ -479,9 +484,45 @@ if (
   !apiClient.includes("createConsentRecord") ||
   !apiClient.includes("createTrustedContact") ||
   !apiClient.includes("acceptInvitation") ||
-  !apiClient.includes("\"login\"")
+  !apiClient.includes("\"login\"") ||
+  !apiClient.includes("Sem conexao com a internet")
 ) {
   throw new Error("Cliente API POO precisa cobrir Google real, consentimentos, anjos e aceite de convite.");
+}
+
+if (
+  !accessGate.includes("validationError instanceof ApiRequestError && validationError.status === 401") ||
+  !accessGate.includes("Sessao local preservada") ||
+  !accessGate.includes("Depois do primeiro login")
+) {
+  throw new Error("Gate de acesso precisa preservar sessao local valida quando a internet falhar.");
+}
+
+if (
+  !contactsScreen.includes("Promise.allSettled") ||
+  !contactsScreen.includes("listCachedTrustedContactRelationships") ||
+  !contactsScreen.includes("cacheTrustedContactRelationships") ||
+  !invitationScreen.includes("cacheTrustedContactRelationship")
+) {
+  throw new Error("Vinculos de anjos precisam usar cache local e nao depender de uma unica chamada remota.");
+}
+
+if (
+  !trustedRelationshipStore.includes("sinalseguro.trusted-contact-relationships.v1") ||
+  !trustedRelationshipStore.includes("listAcceptedOwnerRelationshipsForDelivery") ||
+  !trustedRelationshipStore.includes("refreshTrustedContactRelationshipsFromApi")
+) {
+  throw new Error("Relacionamentos aceitos precisam ficar disponiveis localmente para UI e SOS offline.");
+}
+
+if (
+  !homeScreen.includes("listAcceptedOwnerRelationshipsForDelivery") ||
+  !homeScreen.includes("queueEmergencyPackageForRemoteSync") ||
+  !homeScreen.includes("syncPendingEmergencyPackagesWithApi") ||
+  !emergencySyncQueue.includes("sent_to_ec2") ||
+  !emergencySyncQueue.includes("blocked_login")
+) {
+  throw new Error("SOS offline precisa enfileirar sincronizacao remota e carregar anjos aceitos no pacote local.");
 }
 
 if (

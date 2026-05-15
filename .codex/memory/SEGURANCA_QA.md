@@ -192,3 +192,12 @@ Papel: seguranca, LGPD e QA.
 - Evidencias complementares Tarcila/Lina/Eliane em `docs/evidencias/android/2026-05-13-frente-1-3-visual-tarcila/` cobrem `Perfis`, `Anjos de confianca` e `Convite recebido` em fonte normal e fonte 1.3.
 - Preservar somente screenshots, sumarios de UI, device saneado e crash scan; logs brutos, intents e XMLs completos devem ficar fora do Git quando nao forem necessarios.
 - Fonte do aparelho foi restaurada para `1.0`; crash scan sem padroes fatais. Tarcila/Lina registraram ressalva de UX em fonte `1.3` por cortes/overflow em textos longos, pendente para refinamento visual.
+
+## QA/Security - 2026-05-15 - SOS offline e vinculos de anjos
+
+- Acesso offline pos-login fica permitido somente com sessao local previamente autenticada, consentimentos locais e permissoes ja concedidas.
+- Falha de rede nao limpa sessao; somente resposta `401` invalida sessao local.
+- Cache local de relacionamentos aceitos fica cifrado via `secureJsonStore`; nao gravar token claro, telefone, e-mail bruto, link completo, localizacao, midia ou evidencia.
+- Pacote SOS local pode carregar IDs de contatos aceitos e fila de sincronizacao remota, mas midia/localizacao para anjos e conveniados continuam bloqueadas ate frente propria de envelopes, autorizacao, transporte e auditoria.
+- Gates aprovados: `typecheck`, `lint`, `npm test`, `private:android:readiness` e build Android debug bundled `arm64-v8a`.
+- Gate fisico pendente: instalar APK SHA-256 `b941cc4839639a38fb0df22a20ab6ed11e4662dac85a184ef09ccf393b926def` no Android e validar o fluxo em aparelho real; ADB ficou `offline` nesta rodada.

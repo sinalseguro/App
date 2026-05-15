@@ -18,6 +18,11 @@ import {
   markInvitationShared,
   revokeLocalInvitation
 } from "@/features/invitations/invitationService";
+import {
+  cacheTrustedContactRelationships,
+  listCachedTrustedContactRelationships,
+  removeCachedTrustedContactRelationship
+} from "@/features/invitations/trustedRelationshipStore";
 import { LocalInvitation } from "@/features/invitations/types";
 import {
   canCreateTrustedContactInvitation,
@@ -248,9 +253,18 @@ export default function ContactsScreen() {
   const mergedInvitations = useMemo(() => {
     const localByBackendId = new Set(invitations.map((invitation) => invitation.backendInvitationId).filter(Boolean));
     const acceptedOrRevokedContactIds = new Set(
-      trustedContacts
-        .filter((contact) => contact.status === "accepted" || contact.status === "revoked")
-        .map((contact) => contact.id)
+      [
+        ...trustedContacts
+          .filter((contact) => contact.status === "accepted" || contact.status === "revoked")
+          .map((contact) => contact.id),
+        ...trustedRelationships
+          .filter(
+            (relationship) =>
+              relationship.relationship_role === "owner" &&
+              (relationship.status === "accepted" || relationship.status === "revoked")
+          )
+          .map((relationship) => relationship.id)
+      ]
     );
     const remoteOnly = backendInvitations
       .filter(
@@ -262,7 +276,7 @@ export default function ContactsScreen() {
     return [...invitations, ...remoteOnly].sort(
       (left, right) => new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime()
     );
-  }, [backendInvitations, invitations, trustedContacts]);
+  }, [backendInvitations, invitations, trustedContacts, trustedRelationships]);
 
   const linkedContacts = useMemo(
     () =>
@@ -305,32 +319,51 @@ export default function ContactsScreen() {
   async function refreshAngels() {
     setBusy(true);
     try {
-      const [nextInvitations, currentSession, registeredDeviceId, nextProfile] = await Promise.all([
+      const [nextInvitations, currentSession, registeredDeviceId, nextProfile, cachedRelationships] = await Promise.all([
         listLocalInvitations(),
         apiClient.getStoredSession(),
         deviceBindingService.getRegisteredApiDeviceId(),
-        getActiveProtectionProfile()
+        getActiveProtectionProfile(),
+        listCachedTrustedContactRelationships()
       ]);
       setInvitations(nextInvitations);
       setApiSession(currentSession);
       setDeviceReady(Boolean(registeredDeviceId));
       setActiveProfile(nextProfile);
+      setTrustedRelationships(cachedRelationships);
 
       if (currentSession) {
-        const [contacts, remoteInvitations, relationships] = await Promise.all([
+        const [contactsResult, remoteInvitationsResult, relationshipsResult] = await Promise.allSettled([
           apiClient.listTrustedContacts(),
           apiClient.listInvitations(),
           apiClient.listTrustedContactRelationships()
         ]);
-        setTrustedContacts(contacts);
-        setBackendInvitations(remoteInvitations);
-        setTrustedRelationships(relationships);
+
+        if (contactsResult.status === "fulfilled") {
+          setTrustedContacts(contactsResult.value);
+        }
+        if (remoteInvitationsResult.status === "fulfilled") {
+          setBackendInvitations(remoteInvitationsResult.value);
+        }
+        if (relationshipsResult.status === "fulfilled") {
+          setTrustedRelationships(relationshipsResult.value);
+          await cacheTrustedContactRelationships(relationshipsResult.value);
+          setStatus("Anjos atualizados.");
+        } else if (cachedRelationships.length > 0) {
+          setStatus("Sem internet agora. Mostrando vínculos salvos neste aparelho.");
+        } else {
+          setStatus(
+            relationshipsResult.reason instanceof Error
+              ? relationshipsResult.reason.message
+              : "Nao foi possivel atualizar vinculos agora."
+          );
+        }
       } else {
         setTrustedContacts([]);
         setBackendInvitations([]);
         setTrustedRelationships([]);
+        setStatus("Entre com sua conta para sincronizar anjos.");
       }
-      setStatus("Anjos atualizados.");
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Não foi possível atualizar anjos agora.");
     } finally {
@@ -399,6 +432,7 @@ export default function ContactsScreen() {
 
     try {
       await apiClient.revokeTrustedContact(contact.id);
+      await removeCachedTrustedContactRelationship(contact.id);
       await refreshAngels();
       setStatus("Vínculo revogado.");
       setDialog(null);

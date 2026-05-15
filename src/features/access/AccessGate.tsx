@@ -20,7 +20,7 @@ import {
   normalizeInvitationTokenValue,
   savePendingInvitationToken
 } from "@/features/invitations/pendingInvitationStore";
-import { ApiSession, apiClient } from "@/services/apiClient";
+import { ApiRequestError, ApiSession, apiClient } from "@/services/apiClient";
 import { deviceBindingService } from "@/services/deviceBinding";
 import {
   beginNativeGoogleSignInAsync,
@@ -265,9 +265,22 @@ export function AccessGate({ children }: AccessGateProps) {
       setNotice("Sessao validada com o SinalSeguro.");
       await refreshGateState();
     } catch (validationError) {
-      await apiClient.clearSession();
-      setSession(null);
-      setError(validationError instanceof Error ? validationError.message : "Sessao expirada. Entre novamente.");
+      if (validationError instanceof ApiRequestError && validationError.status === 401) {
+        await apiClient.clearSession();
+        setSession(null);
+        setError("Sessao expirada. Entre novamente.");
+        return;
+      }
+
+      const currentSession = await apiClient.getStoredSession();
+      if (currentSession?.user) {
+        setSession(currentSession);
+        setNotice("Sem internet agora. Sessao local preservada para SOS, cofre e convites salvos.");
+        await refreshGateState();
+        return;
+      }
+
+      setError(validationError instanceof Error ? validationError.message : "Nao foi possivel validar a sessao agora.");
     } finally {
       setBusy(false);
     }
@@ -289,7 +302,7 @@ export function AccessGate({ children }: AccessGateProps) {
             <View style={styles.headerText}>
               <Text style={styles.title}>Preparar acesso</Text>
               <Text style={styles.subtitle}>
-                O SinalSeguro libera o app somente depois de login, consentimentos e permissoes do aparelho.
+                Depois do primeiro login, o SinalSeguro mantem o acesso local para SOS mesmo sem internet.
               </Text>
             </View>
           </View>

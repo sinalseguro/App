@@ -14,6 +14,7 @@ import {
   normalizeInvitationTokenValue,
   savePendingInvitationToken
 } from "@/features/invitations/pendingInvitationStore";
+import { cacheTrustedContactRelationship } from "@/features/invitations/trustedRelationshipStore";
 import { canAcceptAngelInvitation, ProtectionProfile } from "@/features/profiles/profilePolicy";
 import { getActiveProtectionProfile } from "@/features/profiles/profileStore";
 
@@ -68,10 +69,11 @@ export default function InvitationScreen() {
     try {
       const acceptedRelationship = await acceptBackendInvitation(invitationCode);
       const ownerName = acceptedRelationship.owner_display_name || "a pessoa que enviou o convite";
+      await cacheTrustedContactRelationship(acceptedRelationship, "acceptance");
       await clearPendingInvitationToken();
       setPendingInvitationCode("");
       setAcceptedOwnerName(ownerName);
-      setStatus(`Convite aceito. Você agora é anjo de ${ownerName}.`);
+      setStatus(`Aceite confirmado no servidor. Você agora é anjo de ${ownerName}.`);
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Nao foi possivel aceitar o convite agora.");
     } finally {

@@ -26,6 +26,10 @@ import {
 import { createMediaDiagnosticRun, summarizeMediaDiagnostics } from "@/features/emergency/MediaDiagnostics";
 import { appendMediaOperationalLog } from "@/features/emergency/MediaOperationalLog";
 import { cleanupNativeMediaResidues } from "@/features/emergency/SinalSeguroMediaEngine";
+import {
+  queueEmergencyPackageForRemoteSync,
+  syncPendingEmergencyPackagesWithApi
+} from "@/features/emergency/emergencySyncQueue";
 import type { MediaCaptureFailureReason, MediaProcessingState } from "@/features/emergency/types";
 import {
   defaultEmergencyPreferences,
@@ -33,6 +37,7 @@ import {
   formatDuration,
   getEmergencyPreferences
 } from "@/features/emergency/emergencyPreferences";
+import { listAcceptedOwnerRelationshipsForDelivery } from "@/features/invitations/trustedRelationshipStore";
 import { isProtectedAccessUnlocked, unlockProtectedAccess, verifySecurityCodeStatus } from "@/security/protectedAccess";
 
 type HomeDialog = {
@@ -513,6 +518,7 @@ export default function HomeScreen() {
           }, error);
         });
         await cleanupNativeMediaResidues().catch(() => undefined);
+        await syncPendingEmergencyPackagesWithApi().catch(() => undefined);
         await refreshOutboxCount();
       }
 
@@ -576,7 +582,7 @@ export default function HomeScreen() {
     try {
       const result = await startEmergencyPackage({
         kind: "test",
-        trustedContactIds: [],
+        trustedContactIds: (await listAcceptedOwnerRelationshipsForDelivery()).map((relationship) => relationship.id),
         captureLocation: Platform.OS !== "web",
         defaultDurationSeconds: preferences.defaultDurationSeconds,
         locationConsentMode:
@@ -699,6 +705,9 @@ export default function HomeScreen() {
         }
         return;
       }
+
+      await queueEmergencyPackageForRemoteSync(result.packageRecord);
+      void syncPendingEmergencyPackagesWithApi().catch(() => undefined);
 
       const attachedAssetsAfterFinish =
         result.packageRecord.media.status === "recorded_local" ? result.packageRecord.media.assets.length : 0;
