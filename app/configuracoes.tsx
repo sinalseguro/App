@@ -1205,7 +1205,7 @@ export default function SettingsScreen() {
                 <Text style={[styles.statusPillText, updateState?.status === "current" && styles.statusPillTextActive]}>
                   {updateState?.status === "available" && updateState.latestVersion
                     ? `Versao ${updateState.latestVersion}`
-                    : `Versao ${updateState?.currentVersion ?? "0.1.1"}`}
+                    : `Versao ${updateState?.currentVersion ?? "0.1.2"}`}
                 </Text>
               </View>
               <View style={styles.inlineInfo}>

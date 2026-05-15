@@ -201,3 +201,12 @@ Papel: seguranca, LGPD e QA.
 - Pacote SOS local pode carregar IDs de contatos aceitos e fila de sincronizacao remota, mas midia/localizacao para anjos e conveniados continuam bloqueadas ate frente propria de envelopes, autorizacao, transporte e auditoria.
 - Gates aprovados: `typecheck`, `lint`, `npm test`, `private:android:readiness` e build Android debug bundled `arm64-v8a`.
 - Gate fisico pendente: instalar APK SHA-256 `b941cc4839639a38fb0df22a20ab6ed11e4662dac85a184ef09ccf393b926def` no Android e validar o fluxo em aparelho real; ADB ficou `offline` nesta rodada.
+
+## QA/Security - 2026-05-15 - Android 0.1.2 update
+
+- Gates locais aprovados antes da publicacao: `typecheck`, `lint`, `npm test`, `private:android:readiness` e build Android debug bundled `arm64-v8a`.
+- APK `0.1.2`/`versionCode 4` SHA-256 `1ee74e9dd3675a150f3a1264abf99437c494f268d0f63cde9a9bd6b1fb182539`.
+- O canal publico preserva nome/QR estaveis e atualiza somente versao, data, checksum e query de cache.
+- API e portal publicados; registro de release em producao ficou em `0.1.2`/`versionCode 4`.
+- ADB fisico confirmou aparelho ainda em `0.1.1`/`versionCode 3`, mas travou em `install`, `push`, TCP ADB e envio em partes; nao registrar como validacao visual fisica concluida.
+- Como a instalacao local ficou bloqueada por transporte, o aceite manual deve instalar pelo portal e confirmar a atualizacao no app.

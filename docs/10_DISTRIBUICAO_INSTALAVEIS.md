@@ -30,9 +30,12 @@ Revisao juridica/LGPD: Doneda
 
 ## Atualizacao real em 2026-05-15
 
-- APK privado Android novo copiado para `distribution/android/out/sinalseguro-android.apk`, SHA-256 `dbfe42edce5f8ad9197aa105ea45bd9113b74bfb6f2f5e2a14dd9586946f8fff`.
-- Portal publico atualizado com o mesmo arquivo fixo `sinalseguro_android.apk` e link direto `?v=0.1.1-20260515` para evitar cache sem mudar QR ou nome do arquivo.
-- API de producao atualizada com a release Android `0.1.1`, `versionCode 3`, URL direta e checksum acima.
+- APK privado Android `0.1.2` gerado em `android/app/build/outputs/apk/debug/app-debug.apk`, `versionCode 4`, SHA-256 `1ee74e9dd3675a150f3a1264abf99437c494f268d0f63cde9a9bd6b1fb182539`.
+- O link direto publicado usa `?v=0.1.2-20260515` para atualizar cache mantendo o arquivo e QR estaveis.
+- A validacao automatizada no Android fisico ficou bloqueada por travamento do transporte ADB em transferencias grandes; o aparelho ainda estava em `0.1.1`/`versionCode 3`.
+- Checkpoint anterior `0.1.1` publicou SHA-256 `dbfe42edce5f8ad9197aa105ea45bd9113b74bfb6f2f5e2a14dd9586946f8fff`.
+- Portal publico preserva o mesmo arquivo fixo `sinalseguro_android.apk`; novas atualizacoes mudam versao, data e checksum sem trocar QR.
+- API de producao deve apontar para a maior `versionCode` disponivel para que o app identifique a atualizacao.
 - Fluxo de convite atualizado para `https://www.sinalseguro.com.br/convite#convite=<codigo>`, com pagina publica dedicada, status publico via POST e App Links Android.
 - O app armazena convite pendente cifrado durante login, aceite legal e permissoes, limpando o dado local depois do aceite.
 - Validacoes automatizadas aprovadas: `npm run typecheck`, `npm run lint`, `npm test`, `npm run build:android:private`, `py_compile` dos arquivos Django alterados, `manage.py check`, `migrate`, `collectstatic`, `npm run validate` dos portais via build em `/tmp`, `git diff --check` dos repos envolvidos antes da documentacao final.
@@ -76,8 +79,8 @@ Quando houver permissao de escrita e build assinado, os artefatos devem ser publ
 Artefato Android atual publicado no portal:
 
 - arquivo: `sinalseguro_android.apk`;
-- URL: `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk?v=0.1.1-20260515`;
-- SHA-256: `dbfe42edce5f8ad9197aa105ea45bd9113b74bfb6f2f5e2a14dd9586946f8fff`;
+- URL: `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk?v=0.1.2-20260515`;
+- SHA-256: `1ee74e9dd3675a150f3a1264abf99437c494f268d0f63cde9a9bd6b1fb182539`;
 - notas versionadas: manter alinhado com o checkpoint atual do portal;
 - checksum versionado: `public/downloads/private/checksums.txt`.
 

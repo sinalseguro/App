@@ -3,6 +3,45 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-15 - Android 0.1.2 preparado para update no app e portal
+
+Status: codigo, build, backend e portal publicados; instalacao automatizada no Android fisico ficou bloqueada por transporte ADB instavel.
+
+Resultado:
+
+- app Android sincronizado para `versionName=0.1.2` e `versionCode=4`;
+- painel `Atualizacao` continua consultando `GET /api/app-releases/current` com JWT SinalSeguro e compara `versionCode`, permitindo que aparelhos em `0.1.1` vejam a atualizacao;
+- APK privado debug bundled gerado com bundle JS embutido, sem depender de Metro;
+- artefato copiado para `distribution/android/out/sinalseguro-android.apk` e para o portal com nome publico estavel `sinalseguro_android.apk`;
+- portal, manifesto e backend de release foram alinhados para `0.1.2` mantendo QR e URL publica estaveis.
+
+Artefato:
+
+- APK local: `android/app/build/outputs/apk/debug/app-debug.apk`;
+- APK portal: `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk?v=0.1.2-20260515`;
+- SHA-256: `1ee74e9dd3675a150f3a1264abf99437c494f268d0f63cde9a9bd6b1fb182539`;
+- `aapt dump badging`: `versionCode='4'`, `versionName='0.1.2'`, `targetSdkVersion='36'`.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `npm test`: aprovado;
+- `npm run private:android:readiness`: aprovado;
+- build Android debug bundled `arm64-v8a`: aprovado.
+- backend local: `manage.py check`, 35 testes e `makemigrations --check --dry-run` aprovados;
+- portal local: `npm run validate` aprovado;
+- API EC2: migration `app_releases.0003_update_android_release_20260515_v012`, health/ready ok, `sinalseguro-api=active`, `cereusia-crm=active`;
+- portal EC2: release `/var/www/sinalseguro/releases/20260515T220003Z`;
+- producao: `/baixar/android`, manifesto, checksum e APK `0.1.2` com SHA-256 esperado.
+
+Limite fisico:
+
+- o Android `23129RA5FL` voltou como `device` e respondeu comandos curtos;
+- o aparelho instalado ainda estava em `versionName=0.1.1`, `versionCode=3`;
+- `adb install`, `adb push` do APK inteiro, tentativa de TCP ADB e envio em partes travaram o transporte USB;
+- a validacao visual local no aparelho fica pendente, mas a atualizacao pelo portal fica liberada para teste manual pelo download oficial.
+
 ## 2026-05-15 - Interface de vinculo anjo/protegido no Android
 
 Status: contrato app/API implementado, publicado na EC2 e instalado no Android fisico visivel; aceite fisico real permanece pendente porque o convite no backend ainda esta `pending` e o segundo Android nao apareceu de forma confiavel no ADB.

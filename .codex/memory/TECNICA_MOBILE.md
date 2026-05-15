@@ -218,4 +218,12 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `app/index.tsx` inclui anjos aceitos no pacote SOS local via `listAcceptedOwnerRelationshipsForDelivery()`.
 - `src/features/emergency/emergencySyncQueue.ts` enfileira pacote SOS finalizado e tenta sincronizar a sessao de emergencia com a EC2 quando o app volta ao foco.
 - Build Android debug bundled `arm64-v8a` aprovado com APK SHA-256 `b941cc4839639a38fb0df22a20ab6ed11e4662dac85a184ef09ccf393b926def`.
+
+# Atualizacao - 2026-05-15 - Android 0.1.2
+
+- Android elevado para `versionName=0.1.2` e `versionCode=4` para permitir update no app a partir da versao `0.1.1`.
+- APK debug bundled `arm64-v8a`: `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `1ee74e9dd3675a150f3a1264abf99437c494f268d0f63cde9a9bd6b1fb182539`.
+- `aapt dump badging` confirmou `versionCode='4'`, `versionName='0.1.2'` e `targetSdkVersion='36'`.
+- Artefato copiado para `distribution/android/out/sinalseguro-android.apk` e publicado no portal como `sinalseguro_android.apk`.
+- ADB no Android fisico respondeu comandos curtos, mas travou em transferencias grandes; instalacao automatizada da `0.1.2` fica pendente.
 - Instalacao fisica ficou bloqueada: `adb install` travou e, apos reinicio do servidor ADB, o Android `23129RA5FL` ficou `offline`; nao publicar no portal ate reinstalar e validar.

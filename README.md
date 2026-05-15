@@ -79,8 +79,8 @@ Os QR codes apontam para paginas publicas estaveis. O release privado Android at
 Status atual:
 
 - Android privado: publicado no portal em `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk`.
-- Versao/data exibida no portal: `0.1.1` em `15/05/2026`.
-- SHA-256 Android privado: `dbfe42edce5f8ad9197aa105ea45bd9113b74bfb6f2f5e2a14dd9586946f8fff`.
+- Versao/data exibida no portal: `0.1.2` em `15/05/2026`.
+- SHA-256 Android privado: `1ee74e9dd3675a150f3a1264abf99437c494f268d0f63cde9a9bd6b1fb182539`.
 - Manifesto publico: `https://www.sinalseguro.com.br/downloads/installers.json`.
 - iPhone: sem release ativo; sera disponibilizado posteriormente.
 - GitHub: nao versionar APK/AAB/IPA privados. O APK privado deve ser publicado somente no portal/EC2, com checksum, QR e manifesto versionados.
@@ -118,7 +118,7 @@ APK privado Android atual com midia local para validacao e portal:
 
 - Caminho local estavel: `distribution/android/out/sinalseguro-android.apk`.
 - URL publicada: `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk`.
-- SHA-256: `dbfe42edce5f8ad9197aa105ea45bd9113b74bfb6f2f5e2a14dd9586946f8fff`.
+- SHA-256: `1ee74e9dd3675a150f3a1264abf99437c494f268d0f63cde9a9bd6b1fb182539`.
 - Build local para o device fisico conectado: `./gradlew assembleDebug -PsinalBundleDebugJs=true -PreactNativeArchitectures=arm64-v8a`.
 - Observacao: este APK privado e artefato de homologacao Android, nao release de loja e nao deve ser versionado no Git.
 - O APK debug atual embute o bundle JS e desliga o suporte nativo de desenvolvedor apenas neste modo de validacao, abrindo sem Metro, sem `adb reverse` e sem depender de `localhost:8081`.
