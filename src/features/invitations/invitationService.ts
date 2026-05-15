@@ -1,12 +1,12 @@
 import * as Crypto from "expo-crypto";
 import { deleteSecureRecord, listSecureRecords, saveSecureRecord } from "@/storage/secureJsonStore";
-import { ApiTrustedContact, apiClient } from "@/services/apiClient";
+import { ApiTrustedContactRelationship, apiClient } from "@/services/apiClient";
 import { deviceBindingService } from "@/services/deviceBinding";
 import { syncActiveProtectionProfileToApi } from "@/features/profiles/profileStore";
 import { LocalInvitation } from "./types";
 
 const INVITATION_NAMESPACE = "sinalseguro.invitations.v1";
-const PUBLIC_INVITE_URL = "https://www.sinalseguro.com.br/baixar";
+const PUBLIC_INVITE_URL = "https://www.sinalseguro.com.br/convite";
 
 function addDays(date: Date, days: number) {
   const nextDate = new Date(date);
@@ -34,7 +34,7 @@ function buildInvitationUrls(token: string, inviteUrl?: string) {
   const encodedInvitationCode = encodeURIComponent(token);
   return {
     deepLinkUrl: `sinalseguro://convite?convite=${encodedInvitationCode}`,
-    inviteUrl: inviteUrl ?? `${PUBLIC_INVITE_URL}?convite=${encodedInvitationCode}`
+    inviteUrl: inviteUrl ?? `${PUBLIC_INVITE_URL}#convite=${encodedInvitationCode}`
   };
 }
 
@@ -101,7 +101,10 @@ export async function createLocalInvitation(displayLabel = "Anjo de confianca") 
   return invitation;
 }
 
-export async function acceptBackendInvitation(token: string, displayLabel?: string): Promise<ApiTrustedContact> {
+export async function acceptBackendInvitation(
+  token: string,
+  displayLabel?: string
+): Promise<ApiTrustedContactRelationship> {
   const currentSession = await apiClient.getStoredSession();
   if (!currentSession) {
     throw new Error("Entre com sua propria conta SinalSeguro antes de aceitar o convite.");

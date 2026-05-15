@@ -3,6 +3,70 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-15 - Interface de vinculo anjo/protegido no Android
+
+Status: contrato app/API implementado, publicado na EC2 e instalado no Android fisico visivel; aceite fisico real permanece pendente porque o convite no backend ainda esta `pending` e o segundo Android nao apareceu de forma confiavel no ADB.
+
+Resultado:
+
+- backend passou a devolver o relacionamento aceito por papel em `GET /api/trusted-contacts/relationships`;
+- aceite de convite em `POST /api/invitations/accept` agora retorna o mesmo contrato de relacionamento, com `relationship_role`, `owner_display_name` e `contact_display_name`;
+- app Android passou a separar a tela `Anjos de confianca` em `Anjos` e `Sou anjo`;
+- quando o usuario e protegido/originador, `Anjos` lista quem aceitou ser anjo;
+- quando o usuario e recebedor, `Sou anjo` mostra de quem ele e anjo;
+- a tela `Convite recebido` mostra `Voce e anjo de ...` apos aceite e oferece `Ver meus vinculos`;
+- dados sensiveis, midia e localizacao continuam fora do convite e fora da tela de relacao.
+
+Validacoes:
+
+- API local: `manage.py test sinalseguro_api.tests`, `manage.py check`, `makemigrations --check --dry-run` e `spectacular --validate` aprovados;
+- mobile: `npm run typecheck`, `npm run lint`, `npm test` e `git diff --check` aprovados;
+- EC2: deploy da API concluido, `sinalseguro-api=active`, `cereusia-crm=active`, `nginx -t` aprovado, health/ready ok e hash de `cereusia.conf` preservado;
+- Android fisico: APK debug `arm64-v8a` instalado no aparelho `23129RA5FL`, com `versionName=0.1.1` e `versionCode=3`;
+- evidencia visual confirmou o tile `Sou anjo` na tela `Anjos de confianca` e modal de `Convites` ainda com convite pendente.
+
+Limite fisico atual:
+
+- o Android disponivel pelo ADB ficou instavel e depois saiu da depuracao;
+- a EC2 confirmou que os contatos/convites recentes ainda nao tinham `contact_user` nem `accepted_at`;
+- como o token claro nao e armazenado no backend e nao foi encontrado em SMS/notificacao acessivel pelo ADB, o aceite real precisa ser retomado abrindo o link recebido no aparelho anjo ou reconectando os dois Androids.
+
+Evidencias saneadas:
+
+- `docs/evidencias/android/2026-05-15-convite-anjo-relacionamento/01-contatos-sou-anjo-tile.png`
+- `docs/evidencias/android/2026-05-15-convite-anjo-relacionamento/02-convites-pendente.png`
+
+## 2026-05-15 - Convite web/app publicado e release Android sincronizada
+
+Status: fluxo tecnico de convite web/app publicado em producao; teste fisico final depende de o Android voltar a aparecer como `device` no ADB.
+
+Resultado:
+
+- backend passou a expor status publico minimo de convite por `POST /api/invitations/status`;
+- convites novos usam `https://www.sinalseguro.com.br/convite#convite=<codigo>`;
+- revogacao de contato invalida convites pendentes relacionados;
+- app Android preserva convite pendente em armazenamento cifrado durante login, consentimentos e permissoes;
+- App Links Android adicionados para `www.sinalseguro.com.br/convite`;
+- portal publicou `/convite`, `/.well-known/assetlinks.json`, redirecionamento legado `/convite/<codigo>` e APK Android `0.1.1`.
+
+Artefato:
+
+- APK local: `distribution/android/out/sinalseguro-android.apk`;
+- APK portal: `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk?v=0.1.1-20260515`;
+- SHA-256: `dbfe42edce5f8ad9197aa105ea45bd9113b74bfb6f2f5e2a14dd9586946f8fff`;
+- release EC2 final: `/var/www/sinalseguro/releases/20260515T124519Z`.
+
+Validacoes:
+
+- `npm run typecheck`, `npm run lint`, `npm test` e build Android privado aprovados;
+- API de producao: `manage.py check`, `migrate`, `collectstatic`, readiness e status publico de convite aprovados;
+- portal: build/validate aprovado em `/tmp`, `/convite` HTTP 200, `/convite/teste-saneado` HTTP 302 para fragmento, manifest/checksum/assetlinks/APK publicados;
+- `nginx -t` aprovado e `cereusia.conf` preservado.
+
+Limite:
+
+- Android nao apareceu em `adb devices -l`; a descoberta Wi-Fi anunciou uma porta ADB, mas a conexao foi recusada. O envio real por WhatsApp/SMS e o aceite entre dois aparelhos ficam para a retomada com ADB ativo.
+
 ## 2026-05-13 - Frente 1.3: Android validado e release privado publicado no portal
 
 Status: Android fisico validado para a fatia de perfis/anjos/convite da Frente 1.3; release privado Android publicado no portal publico. iPhone/iOS permanece pos-MVP e sem release ativo no portal.
@@ -100,6 +164,22 @@ Gates:
 - `npm run test:profiles`: aprovado.
 - `:app:assembleDebug -PsinalBundleDebugJs=true -PreactNativeArchitectures=arm64-v8a`: aprovado.
 - Instalacao fisica Android: aprovada via Wi-Fi ADB.
+
+### Atualizacao posterior - validacao de convites e atualizacao no Android conectado
+
+Status: Roberto aprovou manualmente a rodada anterior; Ze retomou com USB/Wi-Fi conectados e registrou evidencia complementar no aparelho visivel por ADB.
+
+Resultado:
+
+- ADB listou apenas um Android `23129RA5FL`; a validacao entre dois aparelhos fisicos ainda depende do segundo dispositivo aparecer como `device`.
+- App instalado no aparelho: `versionName=0.1.1`, `versionCode=3`.
+- API publica e readiness responderam `ok`, com `database=ok`.
+- Tela `Anjos de confianca` validada com perfil `Adulto protegido`, estado `Aguardando aceite`, `Criar convite` permitido, `Convites` com 2 itens e `Atualizar` concluindo em `Anjos atualizados.`
+- Modal `Convites` mostrou 1 convite validado pela API e 1 pre-convite local, ambos `COMPARTILHADO`, mantendo o texto publico sem expor evidencia, localizacao ou dado sensivel.
+- Deep link direto para `sinalseguro://contatos` sem sessao visivel permaneceu no gate `Preparar acesso`, respeitando login, consentimentos e permissoes.
+- Login Google no Android fisico concluiu com a conta do dispositivo; apos retorno ao app, `Criar convite` passou para modo `API`.
+- Logcat saneado do acionamento `Atualizar` nao mostrou crash, `AndroidRuntime`, `ReactNativeJS Error` ou ANR.
+- Evidencias complementares: `docs/evidencias/android/2026-05-14-dois-dispositivos-convites/`.
 
 ## 2026-05-11 - Frente 1.2: retomada CLI e checkpoint iOS parcial
 
@@ -2532,7 +2612,7 @@ Publicacao:
 
 ## 2026-05-14 - Atualizacao Android com checagem via API e download estavel
 
-Status: codigo aplicado, APK novo gerado, portal e API de producao sincronizados; instalacao USB/ADB e validacao visual fisica desta versao final ficaram pendentes porque o Android nao apareceu em `adb devices -l` nesta retomada.
+Status: codigo aplicado, APK novo gerado, portal e API de producao sincronizados; instalacao USB/ADB e validacao visual fisica desta versao final foram aprovadas manualmente no Android.
 
 Executado:
 
@@ -2553,11 +2633,28 @@ Validacoes:
 - `manage.py check` com venv temporaria em `/tmp`: aprovado;
 - `manage.py makemigrations --check --dry-run` com venv temporaria em `/tmp`: aprovado;
 - testes focados do endpoint `app-releases/current`: aprovados;
-- `adb devices -l`: nenhum aparelho listado nesta retomada; instalacao fisica final pendente;
-- captura visual real do painel `Atualizacao`: pendente da reconexao ADB/manual;
-- abertura do download no navegador do aparelho com o caminho público estável: pendente da reconexao ADB/manual.
+- `adb devices -l`: validacao manual concluida com aparelho Android reconectado;
+- captura visual real do painel `Atualizacao`: aprovada manualmente;
+- abertura do download no navegador do aparelho com o caminho público estável: aprovada manualmente.
 
 Checkpoint:
 
 - `apps/mobile/docs/45_CHECKPOINT_ATUALIZACAO_ANDROID_2026-05-14.md`.
 - APK SHA-256 final: `8cab34dc0838637f7713999b56c8ba28d36fb071f02735a7836beb5cfbb91cc1`.
+
+## 2026-05-15 - Retomada de convite entre aparelhos
+
+Status: validacao parcial; bloqueio operacional permanece no segundo Android e no envio SMS.
+
+Executado:
+
+- API de producao validada com `health/ready` e banco `ok`.
+- EC2 consultada com ambiente real do servico `sinalseguro-api`, sem expor dados pessoais: convites recentes estavam `pending`, contatos recentes tinham midia/localizacao bloqueadas, e auditoria de convite registrava `ip_hash` e `user_agent_hash`.
+- ADB seguiu listando apenas o Android `23129RA5FL`; o segundo aparelho ainda nao apareceu como `device`.
+- Google Messages abriu o rascunho do convite SMS, mas retornou falha de envio; temporarios com telefone/token foram removidos.
+- Teste local Django focado em convites voltou a travar sem saida util no venv do repositorio e foi encerrado.
+
+Proximo passo:
+
+- Roberto precisa confirmar/reencaminhar o SMS manualmente no aparelho ou reconectar o segundo Android em ADB; depois disso, validar aceite, rejeicao de replay e mudanca de status para anjo aceito.
+- Especialistas registraram que o app cria o convite seguro via API e usa o compartilhamento nativo do Android; a falha atual e operacional no Google Messages/operadora, nao evidencia falha de criacao do convite. O proximo gate deve ser fisico, em dois Androids, com evidencias saneadas e sem telefone/token/link completo.

@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { router } from "expo-router";
 import { Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from "react-native";
-import { Clock3, RefreshCw, ShieldCheck, UserPlus, UserRound, Users, WifiOff, XCircle } from "lucide-react-native";
+import { Clock3, RefreshCw, ShieldCheck, UserCheck, UserPlus, UserRound, Users, WifiOff, XCircle } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AppTopBar } from "@/components/AppTopBar";
 import { BrandedDialog } from "@/components/BrandedDialog";
@@ -25,7 +25,14 @@ import {
   ProtectionProfile
 } from "@/features/profiles/profilePolicy";
 import { getActiveProtectionProfile } from "@/features/profiles/profileStore";
-import { ApiInvitation, ApiSession, ApiTrustedContact, apiClient, apiConfig } from "@/services/apiClient";
+import {
+  ApiInvitation,
+  ApiSession,
+  ApiTrustedContact,
+  ApiTrustedContactRelationship,
+  apiClient,
+  apiConfig
+} from "@/services/apiClient";
 import { deviceBindingService } from "@/services/deviceBinding";
 
 type AngelsDialog =
@@ -51,7 +58,7 @@ type ScreenNotice = {
   tone: "secure" | "warning" | "danger";
 };
 
-type AngelsPanel = "estado" | "prontidao" | "anjos" | "convites" | null;
+type AngelsPanel = "estado" | "prontidao" | "anjos" | "sou_anjo" | "convites" | null;
 
 function formatShortDate(value: string) {
   return new Date(value).toLocaleDateString("pt-BR", {
@@ -84,14 +91,46 @@ function contactStatus(contact: ApiTrustedContact): "aceito" | "pendente" | "rev
   return "pendente";
 }
 
-function contactDescription(contact: ApiTrustedContact) {
-  if (contact.status === "accepted") {
-    return "Anjo autorizado. Entregas futuras dependem de emergência ativa, chaves e consentimentos.";
+function trustedRelationshipName(relationship: ApiTrustedContactRelationship) {
+  if (relationship.relationship_role === "angel") {
+    return relationship.owner_display_name || "Pessoa protegida";
   }
-  if (contact.status === "revoked") {
-    return "Vínculo revogado. Esta pessoa não recebe novas entregas.";
+  return relationship.contact_display_name || relationship.display_label || "Anjo autorizado";
+}
+
+function trustedRelationshipDetail(relationship: ApiTrustedContactRelationship) {
+  const dateLabel = relationship.accepted_at
+    ? `Aceito em ${formatShortDate(relationship.accepted_at)}`
+    : "Conta própria exigida";
+  if (relationship.relationship_role === "angel") {
+    return `Sou anjo · ${dateLabel}`;
   }
-  return "Aguardando aceite. Nenhuma evidência, localização ou mídia foi enviada.";
+  return `Meu anjo · ${dateLabel}`;
+}
+
+function trustedRelationshipDescription(relationship: ApiTrustedContactRelationship) {
+  const name = trustedRelationshipName(relationship);
+  if (relationship.status === "revoked") {
+    return relationship.relationship_role === "angel"
+      ? `Vínculo com ${name} revogado.`
+      : `Vínculo com ${name} revogado. Esta pessoa não recebe novas entregas.`;
+  }
+  if (relationship.relationship_role === "angel") {
+    return `Você aceitou ser anjo de ${name}. Você só verá alertas autorizados pelo SinalSeguro.`;
+  }
+  return `${name} aceitou ser seu anjo de confiança. Nada é enviado fora de um alerta autorizado.`;
+}
+
+function acceptedOwnerSummary(count: number) {
+  if (count === 0) return "Nenhum";
+  if (count === 1) return "1 aceitou";
+  return `${count} aceitaram`;
+}
+
+function acceptedAngelSummary(count: number) {
+  if (count === 0) return "Nenhum";
+  if (count === 1) return "1 pessoa";
+  return `${count} pessoas`;
 }
 
 function invitationFromApi(invitation: ApiInvitation): LocalInvitation {
@@ -120,14 +159,16 @@ function invitationFromApi(invitation: ApiInvitation): LocalInvitation {
 
 function buildNotice({
   apiSession,
+  angelLinks,
   busy,
   invitations,
-  trustedContacts
+  ownerLinks
 }: {
   apiSession: ApiSession | null;
+  angelLinks: ApiTrustedContactRelationship[];
   busy: boolean;
   invitations: LocalInvitation[];
-  trustedContacts: ApiTrustedContact[];
+  ownerLinks: ApiTrustedContactRelationship[];
 }): ScreenNotice {
   if (busy) {
     return {
@@ -137,11 +178,20 @@ function buildNotice({
     };
   }
 
-  const acceptedCount = trustedContacts.filter((contact) => contact.status === "accepted").length;
-  if (acceptedCount > 0) {
+  const acceptedOwnerCount = ownerLinks.filter((contact) => contact.status === "accepted").length;
+  const acceptedAngelCount = angelLinks.filter((contact) => contact.status === "accepted").length;
+  if (acceptedOwnerCount > 0 || acceptedAngelCount > 0) {
+    const ownerText =
+      acceptedOwnerCount > 0
+        ? `${acceptedOwnerCount} anjo${acceptedOwnerCount > 1 ? "s" : ""} autorizado${acceptedOwnerCount > 1 ? "s" : ""}`
+        : "";
+    const angelText =
+      acceptedAngelCount > 0
+        ? `você é anjo de ${acceptedAngelCount} pessoa${acceptedAngelCount > 1 ? "s" : ""}`
+        : "";
     return {
-      text: `${acceptedCount} anjo${acceptedCount > 1 ? "s" : ""} autorizado${acceptedCount > 1 ? "s" : ""}. Compartilhamento real continua limitado às próximas fases homologadas.`,
-      title: "Anjos autorizados",
+      text: `${[ownerText, angelText].filter(Boolean).join(" e ")}. Nada é enviado fora de um alerta autorizado.`,
+      title: acceptedAngelCount > 0 && acceptedOwnerCount === 0 ? "Você é anjo" : "Anjos autorizados",
       tone: "secure"
     };
   }
@@ -193,6 +243,7 @@ export default function ContactsScreen() {
   const [activeProfile, setActiveProfile] = useState<ProtectionProfile | null>(null);
   const [status, setStatus] = useState("Carregando anjos de confiança...");
   const [trustedContacts, setTrustedContacts] = useState<ApiTrustedContact[]>([]);
+  const [trustedRelationships, setTrustedRelationships] = useState<ApiTrustedContactRelationship[]>([]);
 
   const mergedInvitations = useMemo(() => {
     const localByBackendId = new Set(invitations.map((invitation) => invitation.backendInvitationId).filter(Boolean));
@@ -214,8 +265,21 @@ export default function ContactsScreen() {
   }, [backendInvitations, invitations, trustedContacts]);
 
   const linkedContacts = useMemo(
-    () => trustedContacts.filter((contact) => contact.status === "accepted" || contact.status === "revoked"),
-    [trustedContacts]
+    () =>
+      trustedRelationships.filter(
+        (contact) =>
+          contact.relationship_role === "owner" && (contact.status === "accepted" || contact.status === "revoked")
+      ),
+    [trustedRelationships]
+  );
+
+  const angelLinks = useMemo(
+    () =>
+      trustedRelationships.filter(
+        (contact) =>
+          contact.relationship_role === "angel" && (contact.status === "accepted" || contact.status === "revoked")
+      ),
+    [trustedRelationships]
   );
 
   const backendValidatedInvitations = useMemo(
@@ -230,9 +294,10 @@ export default function ContactsScreen() {
 
   const notice = buildNotice({
     apiSession,
+    angelLinks,
     busy,
     invitations: mergedInvitations,
-    trustedContacts
+    ownerLinks: linkedContacts
   });
   const profileSummary = getProfileSummary(activeProfile);
   const invitationGate = canCreateTrustedContactInvitation(activeProfile);
@@ -252,15 +317,18 @@ export default function ContactsScreen() {
       setActiveProfile(nextProfile);
 
       if (currentSession) {
-        const [contacts, remoteInvitations] = await Promise.all([
+        const [contacts, remoteInvitations, relationships] = await Promise.all([
           apiClient.listTrustedContacts(),
-          apiClient.listInvitations()
+          apiClient.listInvitations(),
+          apiClient.listTrustedContactRelationships()
         ]);
         setTrustedContacts(contacts);
         setBackendInvitations(remoteInvitations);
+        setTrustedRelationships(relationships);
       } else {
         setTrustedContacts([]);
         setBackendInvitations([]);
+        setTrustedRelationships([]);
       }
       setStatus("Anjos atualizados.");
     } catch (error) {
@@ -408,17 +476,23 @@ export default function ContactsScreen() {
             <ResourceTile
               icon={<Users size={24} color={theme.colors.primary} />}
               label="Anjos"
-              description={linkedContacts.length ? `${linkedContacts.length} vinculo` : "Nenhum"}
+              description={acceptedOwnerSummary(linkedContacts.filter((contact) => contact.status === "accepted").length)}
               onPress={() => setPanel("anjos")}
             />
+            <ResourceTile
+              icon={<UserCheck size={24} color={theme.colors.primary} />}
+              label="Sou anjo"
+              description={acceptedAngelSummary(angelLinks.filter((contact) => contact.status === "accepted").length)}
+              onPress={() => setPanel("sou_anjo")}
+            />
+          </View>
+          <View style={styles.resourceGrid}>
             <ResourceTile
               icon={<Clock3 size={24} color={theme.colors.primary} />}
               label="Convites"
               description={invitationCount ? `${invitationCount} item` : "Nenhum"}
               onPress={() => setPanel("convites")}
             />
-          </View>
-          <View style={styles.resourceGrid}>
             <ResourceTile
               icon={<RefreshCw size={24} color={theme.colors.primary} />}
               label="Atualizar"
@@ -562,11 +636,11 @@ export default function ContactsScreen() {
               linkedContacts.map((contact) => (
                 <InviteCard
                   key={contact.id}
-                  detail={contact.accepted_at ? `Aceito em ${formatShortDate(contact.accepted_at)}` : "Conta própria exigida"}
-                  name={contact.display_label}
+                  detail={trustedRelationshipDetail(contact)}
+                  name={trustedRelationshipName(contact)}
                   onPress={contact.status === "accepted" ? () => setDialog({ contact, kind: "revoke_contact" }) : undefined}
                   status={contactStatus(contact)}
-                  description={contactDescription(contact)}
+                  description={trustedRelationshipDescription(contact)}
                 />
               ))
             ) : (
@@ -574,6 +648,34 @@ export default function ContactsScreen() {
                 <Users size={26} color={theme.colors.primary} />
                 <Text style={styles.emptyTitle}>Nenhum anjo ativo ainda</Text>
                 <Text style={styles.emptyText}>O vínculo só nasce após aceite com conta própria.</Text>
+              </View>
+            )}
+          </View>
+        </BrandedDialog>
+
+        <BrandedDialog
+          actions={[{ label: "Fechar", tone: "muted" }]}
+          icon={<UserCheck size={18} color={theme.colors.primary} />}
+          onClose={() => setPanel(null)}
+          title="Sou anjo de"
+          visible={panel === "sou_anjo"}
+        >
+          <View style={styles.dialogStack}>
+            {angelLinks.length > 0 ? (
+              angelLinks.map((contact) => (
+                <InviteCard
+                  key={contact.id}
+                  detail={trustedRelationshipDetail(contact)}
+                  name={trustedRelationshipName(contact)}
+                  status={contactStatus(contact)}
+                  description={trustedRelationshipDescription(contact)}
+                />
+              ))
+            ) : (
+              <View style={styles.emptyState}>
+                <UserCheck size={26} color={theme.colors.primary} />
+                <Text style={styles.emptyTitle}>Você ainda não é anjo</Text>
+                <Text style={styles.emptyText}>Quando aceitar um convite, o nome de quem convidou aparecerá aqui.</Text>
               </View>
             )}
           </View>

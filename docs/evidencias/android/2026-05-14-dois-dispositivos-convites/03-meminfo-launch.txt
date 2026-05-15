@@ -1,0 +1,62 @@
+Applications Memory Usage (in Kilobytes):
+Uptime: 625414118 Realtime: 696449727
+
+** MEMINFO in pid 20427 [br.com.sinalseguro.app] **
+                   Pss  Private  Private  SwapPss      Rss     Heap     Heap     Heap
+                 Total    Dirty    Clean    Dirty    Total     Size    Alloc     Free
+                ------   ------   ------   ------   ------   ------   ------   ------
+  Native Heap    25832    25772       24      100    26964    41728    31493     6469
+  Dalvik Heap    32512    32480        0      100    33520    38323     9581    28742
+ Dalvik Other    15770     6892        4        2    24880
+        Stack     1480     1480        0        0     1484
+       Ashmem       23        0        0        0      760
+      Gfx dev     2936     2936        0        0     2940
+    Other dev      299       16      184        0     2432
+     .so mmap     6079      252     2200        6    51248
+    .jar mmap     3765        0      924        0    53076
+    .apk mmap    31960      784    30820        0    35552
+    .ttf mmap      751        0      520        0     1212
+    .dex mmap    44823    44808        0        0    45588
+    .oat mmap       38        0        0        0     1928
+    .art mmap    11154     8508     1976      112    23524
+   Other mmap       52        4       16        0     1280
+   EGL mtrack    41104    41104        0        0    41104
+    GL mtrack     2492     2492        0        0     2492
+      Unknown    16548    16412      104        2    17032
+        TOTAL   237940   183940    36772      322   367016    80051    41074    35211
+
+ App Summary
+                       Pss(KB)                        Rss(KB)
+                        ------                         ------
+           Java Heap:    42964                          57044
+         Native Heap:    25772                          26964
+                Code:    80516                         206564
+               Stack:     1480                           1484
+            Graphics:    46532                          46536
+       Private Other:    23448
+              System:    17228
+             Unknown:                                   28424
+
+           TOTAL PSS:   237940            TOTAL RSS:   367016       TOTAL SWAP PSS:      322
+
+ Objects
+               Views:       86         ViewRootImpl:        1
+         AppContexts:        5           Activities:        1
+              Assets:       57        AssetManagers:        0
+       Local Binders:       29        Proxy Binders:       66
+       Parcel memory:       11         Parcel count:       46
+    Death Recipients:        3             WebViews:        0
+
+ SQL
+         MEMORY_USED:      566
+  PAGECACHE_OVERFLOW:      443          MALLOC_SIZE:       74
+
+ DATABASES
+      pgsz     dbsz   Lookaside(b) cache hits cache misses cache size  Dbname
+PER CONNECTION STATS
+         4       80             51    12    22     5  /data/user/0/br.com.sinalseguro.app/databases/exoplayer_internal.db
+         4      396             27   159    21     2  /data/user/0/br.com.sinalseguro.app/databases/RKStorage
+POOL STATS
+     cache hits  cache misses    cache size  Dbname
+             12            23            35  /data/user/0/br.com.sinalseguro.app/databases/exoplayer_internal.db
+            159            22           181  /data/user/0/br.com.sinalseguro.app/databases/RKStorage

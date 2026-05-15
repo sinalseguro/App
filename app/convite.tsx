@@ -1,41 +1,56 @@
 import { useCallback, useState } from "react";
+import * as Linking from "expo-linking";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
-import { UserCheck, UserRound } from "lucide-react-native";
+import { UserCheck, UserRound, Users } from "lucide-react-native";
 import { ButtonIcon } from "@/components/ButtonIcon";
 import { SafeScreen } from "@/components/SafeScreen";
 import { StatusBanner } from "@/components/StatusBanner";
 import { theme } from "@/design/theme";
 import { acceptBackendInvitation } from "@/features/invitations/invitationService";
+import {
+  clearPendingInvitationToken,
+  extractInvitationTokenFromUrl,
+  getPendingInvitationToken,
+  normalizeInvitationTokenValue,
+  savePendingInvitationToken
+} from "@/features/invitations/pendingInvitationStore";
 import { canAcceptAngelInvitation, ProtectionProfile } from "@/features/profiles/profilePolicy";
 import { getActiveProtectionProfile } from "@/features/profiles/profileStore";
 
-function normalizeInvitationToken(value?: string | string[]) {
-  if (Array.isArray(value)) return value[0] ?? "";
-  return value ?? "";
-}
-
 export default function InvitationScreen() {
   const { convite } = useLocalSearchParams<{ convite?: string }>();
-  const invitationCode = normalizeInvitationToken(convite);
+  const currentUrl = Linking.useURL();
+  const routeInvitationCode = normalizeInvitationTokenValue(convite) || extractInvitationTokenFromUrl(currentUrl);
+  const [pendingInvitationCode, setPendingInvitationCode] = useState("");
+  const invitationCode = routeInvitationCode || pendingInvitationCode;
   const [status, setStatus] = useState(
-    invitationCode
+    routeInvitationCode
       ? "Convite identificado. Aceite somente se reconhecer a pessoa que enviou."
-      : "Abra um link de convite valido enviado por uma pessoa de confianca."
+      : "Abra um link de convite válido enviado por uma pessoa de confiança."
   );
   const [activeProfile, setActiveProfile] = useState<ProtectionProfile | null>(null);
+  const [acceptedOwnerName, setAcceptedOwnerName] = useState("");
   const [busy, setBusy] = useState(false);
   const acceptGate = canAcceptAngelInvitation(activeProfile);
 
   useFocusEffect(
     useCallback(() => {
       let mounted = true;
-      void getActiveProtectionProfile().then((profile) => {
-        if (mounted) setActiveProfile(profile);
+      void Promise.all([getActiveProtectionProfile(), getPendingInvitationToken()]).then(([profile, pendingToken]) => {
+        if (!mounted) return;
+        setActiveProfile(profile);
+        setPendingInvitationCode(pendingToken);
+        if (routeInvitationCode) {
+          void savePendingInvitationToken(routeInvitationCode, "deeplink");
+          setStatus("Convite identificado. Aceite somente se reconhecer a pessoa que enviou.");
+        } else if (pendingToken) {
+          setStatus("Convite retomado com seguranca. Aceite somente se reconhecer a pessoa que enviou.");
+        }
       });
       return () => {
         mounted = false;
       };
-    }, [])
+    }, [routeInvitationCode])
   );
 
   async function handleAcceptInvitation() {
@@ -51,8 +66,12 @@ export default function InvitationScreen() {
     setBusy(true);
     setStatus("Validando convite com sua conta e dispositivo...");
     try {
-      await acceptBackendInvitation(invitationCode);
-      setStatus("Convite aceito. Seu dispositivo foi registrado antes do vinculo de anjo.");
+      const acceptedRelationship = await acceptBackendInvitation(invitationCode);
+      const ownerName = acceptedRelationship.owner_display_name || "a pessoa que enviou o convite";
+      await clearPendingInvitationToken();
+      setPendingInvitationCode("");
+      setAcceptedOwnerName(ownerName);
+      setStatus(`Convite aceito. Você agora é anjo de ${ownerName}.`);
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Nao foi possivel aceitar o convite agora.");
     } finally {
@@ -63,7 +82,7 @@ export default function InvitationScreen() {
   return (
     <SafeScreen
       title="Convite recebido"
-      subtitle="Entre com sua propria conta para aceitar um convite de anjo."
+      subtitle="Entre com sua própria conta para aceitar um convite de anjo."
     >
       <StatusBanner
         tone={invitationCode ? "secure" : "warning"}
@@ -73,8 +92,15 @@ export default function InvitationScreen() {
       <StatusBanner
         tone="warning"
         title="Limite de seguranca"
-        text="Este app nao permite entrar como outra pessoa. O vinculo so sera criado com sua conta, seu aceite e autorizacao da pessoa que convidou."
+        text="Este app não permite entrar como outra pessoa. O vínculo só será criado com sua conta, seu aceite e autorização da pessoa que convidou."
       />
+      {acceptedOwnerName ? (
+        <StatusBanner
+          tone="secure"
+          title="Você é anjo"
+          text={`Seu aparelho está vinculado como anjo de ${acceptedOwnerName}. Você só verá alertas autorizados pelo SinalSeguro.`}
+        />
+      ) : null}
       <StatusBanner tone={acceptGate.tone} title={acceptGate.title} text={acceptGate.message} />
       {!acceptGate.allowed ? (
         <ButtonIcon
@@ -85,11 +111,19 @@ export default function InvitationScreen() {
         />
       ) : null}
       <ButtonIcon
-        disabled={busy || !invitationCode || !acceptGate.allowed}
+        disabled={busy || !invitationCode || !acceptGate.allowed || Boolean(acceptedOwnerName)}
         icon={<UserCheck size={20} color={theme.colors.primary} />}
-        label={busy ? "Validando convite..." : "Aceitar como anjo"}
+        label={acceptedOwnerName ? "Convite aceito" : busy ? "Validando convite..." : "Aceitar como anjo"}
         onPress={handleAcceptInvitation}
       />
+      {acceptedOwnerName ? (
+        <ButtonIcon
+          disabled={busy}
+          icon={<Users size={20} color={theme.colors.primary} />}
+          label="Ver meus vínculos"
+          onPress={() => router.push("/contatos")}
+        />
+      ) : null}
     </SafeScreen>
   );
 }

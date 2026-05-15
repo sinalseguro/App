@@ -1,0 +1,302 @@
+--------- beginning of main
+05-14 16:10:25.233  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651886, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.234  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.241  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651894, oldVsyncId=361651886, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.241  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651894, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.241  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651894, oldVsyncId=361651894, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.241  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651894, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.242  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.250  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651902, oldVsyncId=361651894, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.250  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651902, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.250  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651902, oldVsyncId=361651902, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.250  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651902, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.251  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.258  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651910, oldVsyncId=361651902, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.258  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651910, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.258  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651910, oldVsyncId=361651910, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.258  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651910, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.260  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.266  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651918, oldVsyncId=361651910, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.266  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651918, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.266  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651918, oldVsyncId=361651918, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.267  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651918, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.267  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.275  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651926, oldVsyncId=361651918, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.275  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651926, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.275  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651926, oldVsyncId=361651926, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.275  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651926, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.276  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.283  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651934, oldVsyncId=361651926, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.283  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651934, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.283  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651934, oldVsyncId=361651934, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.283  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651934, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.284  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.292  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651942, oldVsyncId=361651934, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.292  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651942, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.292  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651942, oldVsyncId=361651942, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.292  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651942, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.294  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.300  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651950, oldVsyncId=361651942, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.300  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651950, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.300  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651950, oldVsyncId=361651950, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.300  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651950, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.301  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.308  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651958, oldVsyncId=361651950, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.308  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651958, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.308  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651958, oldVsyncId=361651958, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.308  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651958, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.309  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.316  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651966, oldVsyncId=361651958, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.317  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651966, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.317  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651966, oldVsyncId=361651966, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.317  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651966, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.318  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.319  3224  3484 W bluetooth: packages/modules/MiuiBluetooth/system/bta/jv/bta_jv_act.cc:2184 bta_jv_idle_timeout_handler: : true
+05-14 16:10:25.325  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651974, oldVsyncId=361651966, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.325  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651974, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.325  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651974, oldVsyncId=361651974, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.325  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651974, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.326  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.333  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651982, oldVsyncId=361651974, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.333  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651982, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.333  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651982, oldVsyncId=361651982, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.334  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651982, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.335  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.336 19316 19316 D MemoryOptimizationService: wifiDisplayOnSetting: true wifiP2pEnabled: false
+05-14 16:10:25.336 19316 19316 D MemoryOptimizationService: wifiDisplayOnSetting or wifiP2pEnabled return
+05-14 16:10:25.341  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651990, oldVsyncId=361651982, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.342  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651990, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.342  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651990, oldVsyncId=361651990, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.342  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651990, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.343  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.350  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651998, oldVsyncId=361651990, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.350  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651998, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.350  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651998, oldVsyncId=361651998, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.350  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361651998, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.351  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.358  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652006, oldVsyncId=361651998, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.358  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652006, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.358  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652006, oldVsyncId=361652006, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.358  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652006, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.360  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.367  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652014, oldVsyncId=361652006, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.367  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652014, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.367  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652014, oldVsyncId=361652014, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.367  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652014, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.368  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.375  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652022, oldVsyncId=361652014, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.375  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652022, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.376  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652022, oldVsyncId=361652022, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.376  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652022, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.377  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.384  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652030, oldVsyncId=361652022, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.384  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652030, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.384  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652030, oldVsyncId=361652030, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.384  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652030, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.385  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.392  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652038, oldVsyncId=361652030, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.392  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652038, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.392  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652038, oldVsyncId=361652038, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.392  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652038, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.394  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.400  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652046, oldVsyncId=361652038, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.400  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652046, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.400  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652046, oldVsyncId=361652046, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.400  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652046, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.402  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.409  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652054, oldVsyncId=361652046, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.409  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652054, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.409  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652054, oldVsyncId=361652054, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.409  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652054, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.410  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.417  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652062, oldVsyncId=361652054, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.417  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652062, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.417  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652062, oldVsyncId=361652062, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.417  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652062, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.418  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.425  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652070, oldVsyncId=361652062, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.425  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652070, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.426  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652070, oldVsyncId=361652070, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.426  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652070, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.427  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.433  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652078, oldVsyncId=361652070, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.434  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652078, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.434  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652078, oldVsyncId=361652078, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.434  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652078, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.435  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.442  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652086, oldVsyncId=361652078, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.442  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652086, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.442  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652086, oldVsyncId=361652086, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.442  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652086, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.443  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.450  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652094, oldVsyncId=361652086, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.450  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652094, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.450  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652094, oldVsyncId=361652094, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.450  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652094, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.452  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.459  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652102, oldVsyncId=361652094, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.459  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652102, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.459  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652102, oldVsyncId=361652102, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.459  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652102, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.460  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.467  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652110, oldVsyncId=361652102, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.467  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652110, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.467  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652110, oldVsyncId=361652110, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.467  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652110, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.469  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.475  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652118, oldVsyncId=361652110, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.476  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652118, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.476  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652118, oldVsyncId=361652118, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.476  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652118, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.477  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.484  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652126, oldVsyncId=361652118, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.484  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652126, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.484  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652126, oldVsyncId=361652126, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.484  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652126, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.485  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.492  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652134, oldVsyncId=361652126, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.492  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652134, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.492  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652134, oldVsyncId=361652134, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.492  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652134, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.494  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.500  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652142, oldVsyncId=361652134, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.500  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652142, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.500  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652142, oldVsyncId=361652142, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.501  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652142, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.502  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.509  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652150, oldVsyncId=361652142, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.509  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652150, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.509  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652150, oldVsyncId=361652150, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.509  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652150, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.510  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.517  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652158, oldVsyncId=361652150, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.517  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652158, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.517  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652158, oldVsyncId=361652158, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.517  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652158, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.519  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.525  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652166, oldVsyncId=361652158, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.525  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652166, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.526  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652166, oldVsyncId=361652166, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.526  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652166, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.527  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.534  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652174, oldVsyncId=361652166, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.534  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652174, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.534  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652174, oldVsyncId=361652174, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.534  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652174, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.535  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.542  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652182, oldVsyncId=361652174, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.542  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652182, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.542  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652182, oldVsyncId=361652182, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.542  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652182, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.543  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.550  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652190, oldVsyncId=361652182, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.551  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652190, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.551  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652190, oldVsyncId=361652190, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.551  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652190, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.552  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.559  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652198, oldVsyncId=361652190, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.559  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652198, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.559  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652198, oldVsyncId=361652198, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.559  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652198, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.560  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.567  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652206, oldVsyncId=361652198, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.567  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652206, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.567  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652206, oldVsyncId=361652206, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.567  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652206, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.569  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.575  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652214, oldVsyncId=361652206, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.576  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652214, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.576  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652214, oldVsyncId=361652214, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.576  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652214, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.577  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.584  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652222, oldVsyncId=361652214, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.584  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652222, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.584  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652222, oldVsyncId=361652222, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.584  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652222, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.585  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.592  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652230, oldVsyncId=361652222, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.592  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652230, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.592  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652230, oldVsyncId=361652230, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.592  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652230, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.594  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+--------- beginning of system
+05-14 16:10:25.599  2431  3572 D Aurogon :  packageName = com.google.android.gms isAllowWakeUpList
+05-14 16:10:25.601  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652238, oldVsyncId=361652230, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.601  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652238, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.601  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652238, oldVsyncId=361652238, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.601  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652238, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.602  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.608  2431  3572 D Aurogon :  packageName = com.google.android.gms isAllowWakeUpList
+05-14 16:10:25.609  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652246, oldVsyncId=361652238, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.609  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652246, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.610  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.626  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652254, oldVsyncId=361652246, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.626  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652254, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.626  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652254, oldVsyncId=361652254, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.626  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652254, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.627  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.631 20427 20442 I sinalseguro.app: Explicit concurrent mark compact GC freed 24MB AllocSpace bytes, 1(20KB) LOS objects, 75% free, 9580KB/37MB, paused 533us,4.187ms total 76.512ms
+05-14 16:10:25.634  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652269, oldVsyncId=361652254, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.634  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652269, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.634  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652269, oldVsyncId=361652269, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.634  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652269, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.636  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.642  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652277, oldVsyncId=361652269, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.642  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652277, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.643  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652277, oldVsyncId=361652277, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.643  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652277, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.644  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.651  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652278, oldVsyncId=361652277, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.651  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652278, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.653  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.684  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652279, oldVsyncId=361652278, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.685  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652279, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.686  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.693  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652294, oldVsyncId=361652279, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.693  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652294, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.695  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.701  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652302, oldVsyncId=361652294, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.701  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652302, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.703  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.709  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652310, oldVsyncId=361652302, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.709  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652310, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.711  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.718  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652318, oldVsyncId=361652310, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.718  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652318, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.719  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.726  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652326, oldVsyncId=361652318, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.726  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652326, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.727  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.734  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652334, oldVsyncId=361652326, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.734  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652334, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.736  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.751  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652342, oldVsyncId=361652334, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.751  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652342, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.752  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652342, oldVsyncId=361652342, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.752  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652342, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.754  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.760  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652357, oldVsyncId=361652342, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.760  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652357, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.760  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652357, oldVsyncId=361652357, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.760  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652357, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.762  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.768  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652365, oldVsyncId=361652357, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.768  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652365, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.769  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652365, oldVsyncId=361652365, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.769  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652365, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.770  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.776  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652373, oldVsyncId=361652365, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.776  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652373, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.776  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652373, oldVsyncId=361652373, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.776  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652373, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.777  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.784  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652381, oldVsyncId=361652373, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.784  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652381, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.785  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652381, oldVsyncId=361652381, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.785  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652381, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.786  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-14 16:10:25.793  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652389, oldVsyncId=361652381, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.793  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652389, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.793  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652389, oldVsyncId=361652389, layerName=br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#61337
+05-14 16:10:25.793  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=361652389, mIsContainTask1=0, mIsContainTaskOther=0
+05-14 16:10:25.794  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene

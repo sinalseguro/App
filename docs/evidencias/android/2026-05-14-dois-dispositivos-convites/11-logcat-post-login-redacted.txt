@@ -1,0 +1,77 @@
+--------- beginning of system
+05-14 22:00:24.079 I/ActivityThread( 7880): HardwareRenderer preload  done
+05-14 22:00:24.242 I/ForceDarkHelperStubImpl( 7880): setViewRootImplForceDark: false for br.com.sinalseguro.app.MainActivity@8905b63, reason: AppDarkModeEnable
+05-14 22:00:24.265 D/UserSceneDetector( 7880): invoke error.
+05-14 22:00:24.327 D/ActivityThread( 7880): Fail to check app heapsize due to java.lang.NoSuchMethodException: dalvik.system.VMRuntime.getBlockingGcCountForAlloc []
+05-14 22:00:26.267 D/UserSceneDetector( 7880): invoke error.
+05-14 22:00:26.743 D/UserSceneDetector( 7880): invoke error.
+05-14 22:00:27.118 D/UserSceneDetector( 7880): invoke error.
+05-14 22:00:46.577 D/UserSceneDetector( 7880): invoke error.
+05-14 22:00:46.747 D/UserSceneDetector( 7880): invoke error.
+--------- beginning of main
+05-14 22:00:47.840 W/RenderInspector( 7880): QueueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=1, avg=19 ms, max=19 ms.
+05-14 22:00:56.251 W/RenderInspector( 7880): QueueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=1, avg=28 ms, max=28 ms.
+05-14 22:01:00.149 I/sinalseguro.app( 7880): Background concurrent mark compact GC freed 37MB AllocSpace bytes, 0(0B) LOS objects, 75% free, 12MB/50MB, paused 1.108ms,13.260ms total 567.142ms
+05-14 22:01:04.564 W/RenderInspector( 7880): QueueBuffer time out on br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity, count=1, avg=17 ms, max=17 ms.
+05-14 22:01:15.829 I/sinalseguro.app( 7880): Background young concurrent mark compact GC freed 37MB AllocSpace bytes, 0(0B) LOS objects, 75% free, 12MB/50MB, paused 333us,5.384ms total 60.955ms
+05-14 22:01:29.804 I/sinalseguro.app( 7880): Background concurrent mark compact GC freed 39MB AllocSpace bytes, 0(0B) LOS objects, 75% free, 11MB/44MB, paused 636us,6.013ms total 94.447ms
+05-14 22:01:29.868 W/unknown:BridgelessReact( 7880): ReactHost{0}.onHostPause(activity)
+05-14 22:01:29.869 W/unknown:BridgelessReact( 7880): ReactContext.onHostPause()
+05-14 22:01:29.874 D/SecurityManager( 7880): checkAccessControl flag1
+05-14 22:01:29.875 W/unknown:BridgelessReact( 7880): ReactHost{0}.onHostResume(activity)
+05-14 22:01:29.875 W/unknown:BridgelessReact( 7880): ReactContext.onHostResume()
+05-14 22:01:30.041 W/unknown:ReactNative( 7880): StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+05-14 22:01:30.041 W/unknown:ReactNative( 7880): StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+05-14 22:01:42.026 I/sinalseguro.app( 7880): Background young concurrent mark compact GC freed 33MB AllocSpace bytes, 0(0B) LOS objects, 75% free, 11MB/44MB, paused 469us,5.599ms total 46.242ms
+05-14 22:01:54.149 I/sinalseguro.app( 7880): Background young concurrent mark compact GC freed 33MB AllocSpace bytes, 0(0B) LOS objects, 75% free, 11MB/44MB, paused 429us,5.537ms total 47.375ms
+05-14 22:02:07.019 I/sinalseguro.app( 7880): Background young concurrent mark compact GC freed 33MB AllocSpace bytes, 0(0B) LOS objects, 75% free, 11MB/44MB, paused 327us,6.059ms total 52.830ms
+05-14 22:02:19.195 I/sinalseguro.app( 7880): Background young concurrent mark compact GC freed 33MB AllocSpace bytes, 0(0B) LOS objects, 74% free, 11MB/44MB, paused 367us,5.401ms total 47.599ms
+05-14 22:02:31.348 I/sinalseguro.app( 7880): Background young concurrent mark compact GC freed 33MB AllocSpace bytes, 0(0B) LOS objects, 75% free, 11MB/44MB, paused 1.079ms,8.647ms total 73.490ms
+05-14 22:02:43.454 I/sinalseguro.app( 7880): Background concurrent mark compact GC freed 33MB AllocSpace bytes, 0(0B) LOS objects, 75% free, 10MB/43MB, paused 2.867ms,7.431ms total 92.390ms
+05-14 22:02:52.693 I/MIUIInput( 7880): [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=645780937, downTime=645780937, phoneEventTime=22:02:52.678 } moveCount:0
+05-14 22:02:52.786 I/MIUIInput( 7880): [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=645781043, downTime=645780937, phoneEventTime=22:02:52.783 } moveCount:0
+05-14 22:02:53.400 I/MIUIInput( 7880): [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=645781657, downTime=645781657, phoneEventTime=22:02:53.397 } moveCount:0
+05-14 22:02:53.541 I/MIUIInput( 7880): [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=645781798, downTime=645781657, phoneEventTime=22:02:53.539 } moveCount:0
+05-14 22:02:53.676 I/MIUIInput( 7880): [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=645781932, downTime=645781932, phoneEventTime=22:02:53.672 } moveCount:0
+05-14 22:02:53.806 I/MIUIInput( 7880): [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=645782063, downTime=645781932, phoneEventTime=22:02:53.803 } moveCount:0
+05-14 22:02:54.190 I/MIUIInput( 7880): [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=645782446, downTime=645782446, phoneEventTime=22:02:54.186 } moveCount:0
+05-14 22:02:54.300 I/MIUIInput( 7880): [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=645782557, downTime=645782446, phoneEventTime=22:02:54.298 } moveCount:0
+05-14 22:02:54.390 I/MIUIInput( 7880): [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=645782646, downTime=645782646, phoneEventTime=22:02:54.386 } moveCount:0
+05-14 22:02:54.437 I/MIUIInput( 7880): [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_CANCEL, id[0]=0, pointerCount=1, eventTime=645782694, downTime=645782646, phoneEventTime=22:02:54.434 } moveCount:0
+05-14 22:02:54.440 I/MIUIInput( 7880): [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=645782694, downTime=645782694, phoneEventTime=22:02:54.434 } moveCount:0
+05-14 22:02:54.452 I/MIUIInput( 7880): [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=645782694, downTime=645782694, phoneEventTime=22:02:54.434 } moveCount:0
+05-14 22:02:54.714 W/unknown:BridgelessReact( 7880): ReactHost{0}.onUserLeaveHint(activity)
+05-14 22:02:54.716 W/unknown:BridgelessReact( 7880): ReactHost{0}.onHostPause(activity)
+05-14 22:02:54.716 W/unknown:BridgelessReact( 7880): ReactContext.onHostPause()
+05-14 22:02:54.766 I/ActivityThread( 7880): HardwareRenderer preload  done
+05-14 22:02:54.846 D/SecurityManager( 7880): checkAccessControl flag1
+05-14 22:02:54.855 I/ForceDarkHelperStubImpl( 7880): setViewRootImplForceDark: false for com.google.android.gms.auth.api.signin.internal.SignInHubActivity@995075f, reason: AppDarkModeEnable
+05-14 22:02:54.913 W/libc    ( 7880): Access denied finding property "vendor.display.enable_optimal_refresh_rate"
+05-14 22:02:54.913 W/libc    ( 7880): Access denied finding property "vendor.gpp.create_frc_extension"
+05-14 22:02:54.909 W/sinalseguro.app( 7880): type=1400 audit(0.0:6401574): avc:  denied  { read } for  name="u:object_r:vendor_display_prop:s0" dev="tmpfs" ino=457 scontext=u:r:untrusted_app:s0:c136,c258,c512,c768 tcontext=u:object_r:vendor_display_prop:s0 tclass=file permissive=0
+05-14 22:02:54.921 D/VRI[SignInHubActivity]( 7880): vri.reportNextDraw android.view.ViewRootImpl.performTraversals:4923 android.view.ViewRootImpl.doTraversal:3553 android.view.ViewRootImpl$TraversalRunnable.run:11520 android.view.Choreographer$CallbackRecord.run:1730 android.view.Choreographer$CallbackRecord.run:1739
+05-14 22:02:54.921 D/VRI[SignInHubActivity]( 7880): vri.Setup new sync=wmsSync-VRI[SignInHubActivity]#10
+05-14 22:02:54.945 D/VRI[SignInHubActivity]( 7880): vri.reportDrawFinished
+05-14 22:02:56.969 D/ActivityThread( 7880): handleBoundsCompatInfoChanged remove: name=br.com.sinalseguro.app
+05-14 22:02:57.018 D/SecurityManager( 7880): checkAccessControl flag1
+05-14 22:02:57.037 I/HandWritingStubImpl( 7880): refreshLastKeyboardType: 1
+05-14 22:02:57.039 I/HandWritingStubImpl( 7880): getCurrentKeyboardType: 1
+05-14 22:02:57.076 D/ActivityThread( 7880): handleBoundsCompatInfoChanged remove: name=br.com.sinalseguro.app
+05-14 22:02:57.096 D/SecurityManager( 7880): checkAccessControl flag1
+05-14 22:02:57.098 W/unknown:BridgelessReact( 7880): ReactHost{0}.onHostResume(activity)
+05-14 22:02:57.098 W/unknown:BridgelessReact( 7880): ReactContext.onHostResume()
+05-14 22:02:57.150 D/VRI[SignInHubActivity]( 7880): visibilityChanged oldVisibility=true newVisibility=false
+05-14 22:02:57.153 I/HandWritingStubImpl( 7880): refreshLastKeyboardType: 1
+05-14 22:02:57.153 I/HandWritingStubImpl( 7880): getCurrentKeyboardType: 1
+05-14 22:02:57.195 W/WindowOnBackDispatcher( 7880): sendCancelIfRunning: isInProgress=false callback=android.view.ViewRootImpl$$ExternalSyntheticLambda12@8c28357
+05-14 22:02:57.221 D/ActivityThread( 7880): Fail to check app heapsize due to java.lang.NoSuchMethodException: dalvik.system.VMRuntime.getBlockingGcCountForAlloc []
+05-14 22:02:57.580 W/sinalseguro.app( 7880): Cleared Reference was only reachable from finalizer (only reported once)
+05-14 22:02:57.619 I/sinalseguro.app( 7880): Background young concurrent mark compact GC freed 32MB AllocSpace bytes, 8(288KB) LOS objects, 74% free, 11MB/43MB, paused 443us,5.576ms total 50.049ms
+05-14 22:03:03.882 D/ScrollerOptimizationManager( 7880): registerConfigChangedListener
+05-14 22:03:03.894 W/[RNScreens]( 7880): backTitleVisible prop is not available on Android
+05-14 22:03:03.894 W/[RNScreens]( 7880): backTitleFontFamily prop is not available on Android
+05-14 22:03:03.894 W/[RNScreens]( 7880): disableBackButtonMenu prop is not available on Android
+05-14 22:03:03.894 W/[RNScreens]( 7880): largeTitleFontFamily prop is not available on Android
+05-14 22:03:03.894 W/[RNScreens]( 7880): largeTitleFontWeight prop is not available on Android
+05-14 22:03:03.894 W/[RNScreens]( 7880): largeTitleHideShadow prop is not available on Android
+05-14 22:03:04.046 D/UserSceneDetector( 7880): invoke error.

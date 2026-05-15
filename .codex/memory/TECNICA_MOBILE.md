@@ -202,3 +202,10 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `scripts/smoke-test.mjs` foi atualizado para bloquear regressao do caminho nativo, do cache de playback e da regra de loopback como fallback.
 - Build Android privado final aprovado e instalado: `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `5e664df9a9982569a0ce05e737af01fcc105057d892438e10ffbe07ac1f28afd`.
 - Limite tecnico aberto: iOS nativo ainda precisa trocar leitura integral por fluxo segmentado antes de ser aprovado para videos longos.
+# Atualizacao - 2026-05-15 - relacionamento anjo/protegido
+
+- A tela `Anjos de confianca` agora depende de `apiClient.listTrustedContactRelationships()` para mostrar os dois lados do vinculo.
+- Contrato esperado: `relationship_role` vale `owner` para o originador/protegido e `angel` para o recebedor que aceitou; `owner_display_name` e `contact_display_name` sao nomes publicos.
+- `acceptBackendInvitation()` retorna o relacionamento aceito; apos sucesso, `app/convite.tsx` limpa o convite pendente e mostra `Voce e anjo`.
+- A API nao deve devolver token claro, telefone, e-mail bruto, evidencia, localizacao ou midia nesse contrato.
+- O teste fisico real ainda precisa de dois Androids ou do link recebido aberto no aparelho anjo; a ultima consulta em producao mostrou convites pendentes, sem `contact_user`.

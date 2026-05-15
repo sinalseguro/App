@@ -1,0 +1,15 @@
+Perfil, Adulto protegido
+Perfil
+Estado, Aguardando aceite
+Estado
+Criar convite, Local
+Criar convite
+Prontidão, Dispositivo
+Prontidão
+Anjos, Nenhum
+Anjos
+Convites, 2 item
+Convites
+Atualizar, Sincronizar
+Atualizar
+Anjos atualizados.

@@ -113,6 +113,14 @@ const TrustedContactSchema = z.object({
 
 const TrustedContactListSchema = z.array(TrustedContactSchema);
 
+const TrustedContactRelationshipSchema = TrustedContactSchema.extend({
+  contact_display_name: z.string().optional(),
+  owner_display_name: z.string(),
+  relationship_role: z.enum(["owner", "angel"])
+});
+
+const TrustedContactRelationshipListSchema = z.array(TrustedContactRelationshipSchema);
+
 const InvitationSchema = z.object({
   id: z.string(),
   trusted_contact: z.string(),
@@ -212,6 +220,7 @@ export type ApiDevice = z.infer<typeof DeviceSchema>;
 export type ApiConsentScope = z.infer<typeof ConsentScopeSchema>;
 export type ApiConsentRecord = z.infer<typeof ConsentRecordSchema>;
 export type ApiTrustedContact = z.infer<typeof TrustedContactSchema>;
+export type ApiTrustedContactRelationship = z.infer<typeof TrustedContactRelationshipSchema>;
 export type ApiInvitation = z.infer<typeof InvitationSchema>;
 export type ApiEmergencySession = z.infer<typeof EmergencySessionSchema>;
 export type ApiKeyEnvelope = z.infer<typeof KeyEnvelopeSchema>;
@@ -596,6 +605,12 @@ export class SinalSeguroApiClient {
     });
   }
 
+  async listTrustedContactRelationships() {
+    return this.request("/trusted-contacts/relationships", TrustedContactRelationshipListSchema, {
+      authenticated: true
+    });
+  }
+
   async revokeTrustedContact(trustedContactId: string) {
     return this.request(`/trusted-contacts/${trustedContactId}/revoke/`, TrustedContactSchema, {
       authenticated: true,
@@ -628,7 +643,7 @@ export class SinalSeguroApiClient {
   }
 
   async acceptInvitation(input: AcceptInvitationInput) {
-    return this.request("/invitations/accept", TrustedContactSchema, {
+    return this.request("/invitations/accept", TrustedContactRelationshipSchema, {
       authenticated: true,
       body: {
         display_label: input.displayLabel,

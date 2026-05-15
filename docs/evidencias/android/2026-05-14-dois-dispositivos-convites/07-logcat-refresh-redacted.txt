@@ -1,0 +1,3 @@
+--------- beginning of main
+05-14 21:53:00.654 I/MIUIInput( 7880): [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_DOWN, id[0]=0, pointerCount=1, eventTime=645188911, downTime=645188911, phoneEventTime=21:53:00.651 } moveCount:0
+05-14 21:53:00.668 I/MIUIInput( 7880): [MotionEvent] ViewRootImpl windowName 'br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity', { action=ACTION_UP, id[0]=0, pointerCount=1, eventTime=645188911, downTime=645188911, phoneEventTime=21:53:00.651 } moveCount:0

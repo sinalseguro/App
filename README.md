@@ -4,7 +4,7 @@
 
 App mobile Android e iOS do SinalSeguro.
 
-Status: MVP tecnico controlado Android-first com Home SOS, Cofre, Player, midia local criptografada em chunks, cliente API real, sessao segura, login Google/Apple preparado, perfis/papeis da Frente 1.3, anjos/convites API-backed e release privado Android publicado no portal. iPhone/iOS fica pos-MVP.
+Status: MVP tecnico controlado Android-first com Home SOS, Cofre, Player, midia local criptografada em chunks, cliente API real, sessao segura, login Google/Apple preparado, perfis/papeis, anjos/convites API-backed com vinculo visivel para originador e anjo, e release privado Android publicado no portal. iPhone/iOS fica pos-MVP.
 Coordenacao geral: Ze.  
 Gerente AI mobile: Cristine.
 
@@ -79,8 +79,8 @@ Os QR codes apontam para paginas publicas estaveis. O release privado Android at
 Status atual:
 
 - Android privado: publicado no portal em `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk`.
-- Versao/data exibida no portal: `0.1.0` em `13/05/2026`.
-- SHA-256 Android privado: `19ad59c4b9c4c47c8316f3a24d354626ee11a3442be910841fcd1e73283cd08b`.
+- Versao/data exibida no portal: `0.1.1` em `15/05/2026`.
+- SHA-256 Android privado: `dbfe42edce5f8ad9197aa105ea45bd9113b74bfb6f2f5e2a14dd9586946f8fff`.
 - Manifesto publico: `https://www.sinalseguro.com.br/downloads/installers.json`.
 - iPhone: sem release ativo; sera disponibilizado posteriormente.
 - GitHub: nao versionar APK/AAB/IPA privados. O APK privado deve ser publicado somente no portal/EC2, com checksum, QR e manifesto versionados.
@@ -118,13 +118,15 @@ APK privado Android atual com midia local para validacao e portal:
 
 - Caminho local estavel: `distribution/android/out/sinalseguro-android.apk`.
 - URL publicada: `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk`.
-- SHA-256: `19ad59c4b9c4c47c8316f3a24d354626ee11a3442be910841fcd1e73283cd08b`.
+- SHA-256: `dbfe42edce5f8ad9197aa105ea45bd9113b74bfb6f2f5e2a14dd9586946f8fff`.
 - Build local para o device fisico conectado: `./gradlew assembleDebug -PsinalBundleDebugJs=true -PreactNativeArchitectures=arm64-v8a`.
 - Observacao: este APK privado e artefato de homologacao Android, nao release de loja e nao deve ser versionado no Git.
 - O APK debug atual embute o bundle JS e desliga o suporte nativo de desenvolvedor apenas neste modo de validacao, abrindo sem Metro, sem `adb reverse` e sem depender de `localhost:8081`.
 - O gate publico `npm run release:android:readiness` fica bloqueado enquanto este workspace contiver a instrumentacao privada de midia (`expo-camera`/`expo-video`). Para loja/publico, usar perfil ou branch sem midia local ate a liberacao juridica.
 - Validacao Android mais recente confirmou que `br.com.sinalseguro.app:/oauthredirect`, `sinalseguro:/oauthredirect` e `sinalseguro://configuracoes` resolvem para o app.
 - Login Google real ainda depende de habilitar `Custom URI scheme` no OAuth Android privado do Google Cloud.
+- Convites por link publico usam `https://www.sinalseguro.com.br/convite#convite=<codigo>`; o app preserva convite pendente de forma cifrada durante login, consentimentos e permissoes antes do aceite.
+- A tela `Anjos de confianca` mostra `Anjos` para quem o usuario autorizou e `Sou anjo` para quem convidou o usuario; o aceite deve exibir `Voce e anjo de ...` sem expor token, telefone, e-mail bruto, midia ou localizacao.
 
 ## OIDC Google
 

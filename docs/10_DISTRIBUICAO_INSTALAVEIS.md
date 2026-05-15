@@ -23,9 +23,21 @@ Revisao juridica/LGPD: Doneda
 - O nome público continua fixo em `sinalseguro_android.apk`.
 - O link direto pode incluir `?v=0.1.1-20260514` para forcar atualização de cache mantendo o mesmo arquivo e o mesmo QR do portal.
 - A versão publicada foi sincronizada para `0.1.1` com `versionCode 3`.
-- A instalacao via USB/ADB desta versao final ficou pendente porque nenhum Android foi listado em `adb devices -l` nesta retomada.
-- O botao `Baixar versao Android` abre a pagina publica estavel pelo codigo validado; a confirmacao visual no aparelho fica para a reconexao ADB/manual.
+- A instalacao via USB/ADB desta versao final foi aprovada manualmente no Android.
+- O botao `Baixar versao Android` abre a pagina publica estavel pelo codigo validado; a confirmacao visual no aparelho foi aprovada manualmente.
+- Retomada fisica em 2026-05-14 confirmou no Android `23129RA5FL` o pacote instalado `versionName=0.1.1`, `versionCode=3`, a API publica com `health=ok` e readiness `database=ok`, o gate de login bloqueando deep link direto sem sessao visivel, login Google concluido e o fluxo `Anjos de confianca` em modo API sem crash no logcat saneado.
 - iPhone/iOS permanece pos-MVP e nao faz parte deste fluxo.
+
+## Atualizacao real em 2026-05-15
+
+- APK privado Android novo copiado para `distribution/android/out/sinalseguro-android.apk`, SHA-256 `dbfe42edce5f8ad9197aa105ea45bd9113b74bfb6f2f5e2a14dd9586946f8fff`.
+- Portal publico atualizado com o mesmo arquivo fixo `sinalseguro_android.apk` e link direto `?v=0.1.1-20260515` para evitar cache sem mudar QR ou nome do arquivo.
+- API de producao atualizada com a release Android `0.1.1`, `versionCode 3`, URL direta e checksum acima.
+- Fluxo de convite atualizado para `https://www.sinalseguro.com.br/convite#convite=<codigo>`, com pagina publica dedicada, status publico via POST e App Links Android.
+- O app armazena convite pendente cifrado durante login, aceite legal e permissoes, limpando o dado local depois do aceite.
+- Validacoes automatizadas aprovadas: `npm run typecheck`, `npm run lint`, `npm test`, `npm run build:android:private`, `py_compile` dos arquivos Django alterados, `manage.py check`, `migrate`, `collectstatic`, `npm run validate` dos portais via build em `/tmp`, `git diff --check` dos repos envolvidos antes da documentacao final.
+- Validacoes de producao aprovadas: `/convite` HTTP 200, `/convite/<codigo>` HTTP 302 para fragmento, `installers.json`, `checksums.txt`, `assetlinks.json`, APK HTTP 200 com `content-length=267167830`, API publica de status de convite com resposta minima e `cereusia.conf` preservado.
+- Validacao fisica desta retomada ficou bloqueada: o Android nao apareceu em `adb devices -l`; a descoberta Wi-Fi anunciou `192.168.0.5:37391`, mas a conexao foi recusada. O teste em aparelho deve ser retomado quando ADB voltar como `device`.
 
 Atualizacao privada iOS em 2026-05-07:
 
@@ -47,7 +59,7 @@ Workflow local obrigatorio por pouco espaco:
 
 | Plataforma | URL publica | QR code | Status |
 |---|---|---|---|
-| Android | `https://www.sinalseguro.com.br/baixar/android` | `assets/qr/sinalseguro-android.svg` | APK publicado para homologacao controlada |
+| Android | `https://www.sinalseguro.com.br/baixar/android` | `assets/qr/sinalseguro-android.svg` | APK publicado e validado manualmente |
 | iOS | `https://www.sinalseguro.com.br/baixar/ios` | `assets/qr/sinalseguro-ios.svg` | Pendente de TestFlight/App Store |
 
 ## GitHub
@@ -61,12 +73,11 @@ Quando houver permissao de escrita e build assinado, os artefatos devem ser publ
 - `checksums.txt`: hashes SHA-256 dos artefatos;
 - `release-notes.md`: notas de release sem dados sensiveis.
 
-Artefato Android atual:
+Artefato Android atual publicado no portal:
 
-- tag publicada: `android-v0.1.0-internal.2`;
-- GitHub Release: `https://github.com/sinalseguro/App/releases/tag/android-v0.1.0-internal.2`;
 - arquivo: `sinalseguro_android.apk`;
-- SHA-256: `8cab34dc0838637f7713999b56c8ba28d36fb071f02735a7836beb5cfbb91cc1`;
+- URL: `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk?v=0.1.1-20260515`;
+- SHA-256: `dbfe42edce5f8ad9197aa105ea45bd9113b74bfb6f2f5e2a14dd9586946f8fff`;
 - notas versionadas: manter alinhado com o checkpoint atual do portal;
 - checksum versionado: `public/downloads/private/checksums.txt`.
 

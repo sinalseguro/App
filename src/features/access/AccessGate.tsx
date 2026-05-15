@@ -1,8 +1,9 @@
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { Camera } from "expo-camera";
+import * as Linking from "expo-linking";
 import * as Location from "expo-location";
 import * as Notifications from "expo-notifications";
-import { usePathname } from "expo-router";
+import { useLocalSearchParams, usePathname } from "expo-router";
 import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import { Camera as CameraIcon, CheckCircle2, KeyRound, MapPin, ShieldCheck } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -14,6 +15,11 @@ import {
   getEmergencyPreferences,
   saveEmergencyPreferences
 } from "@/features/emergency/emergencyPreferences";
+import {
+  extractInvitationTokenFromUrl,
+  normalizeInvitationTokenValue,
+  savePendingInvitationToken
+} from "@/features/invitations/pendingInvitationStore";
 import { ApiSession, apiClient } from "@/services/apiClient";
 import { deviceBindingService } from "@/services/deviceBinding";
 import {
@@ -71,6 +77,8 @@ async function getPermissionSnapshot(): Promise<PermissionSnapshot> {
 
 export function AccessGate({ children }: AccessGateProps) {
   const pathname = usePathname();
+  const currentUrl = Linking.useURL();
+  const { convite } = useLocalSearchParams<{ convite?: string }>();
   const [bootstrapping, setBootstrapping] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -87,6 +95,8 @@ export function AccessGate({ children }: AccessGateProps) {
   const googleReadiness = getNativeGoogleSignInReadiness();
   const accessReady = Boolean(session?.user) && legalConsentComplete(preferences) && allPermissionsGranted(permissions);
   const canUseNativeGoogle = Platform.OS === "android" && googleReadiness.currentPlatformConfigured;
+  const incomingInvitationCode =
+    normalizeInvitationTokenValue(convite) || extractInvitationTokenFromUrl(currentUrl);
 
   const refreshGateState = useCallback(async () => {
     const [storedSession, storedPreferences, permissionSnapshot] = await Promise.all([
@@ -120,6 +130,11 @@ export function AccessGate({ children }: AccessGateProps) {
       mounted = false;
     };
   }, [refreshGateState]);
+
+  useEffect(() => {
+    if (pathname !== "/convite" || !incomingInvitationCode) return;
+    void savePendingInvitationToken(incomingInvitationCode, "deeplink");
+  }, [incomingInvitationCode, pathname]);
 
   const steps = useMemo<GateStep[]>(
     () => [

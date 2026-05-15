@@ -3,6 +3,14 @@
 Data: 2026-05-03  
 Papel: guardia de identidade visual SinalSeguro para mobile.
 
+## Decisao UX/IX - 2026-05-15 - vinculo anjo visivel
+
+- A tela `Anjos de confianca` deve manter linguagem publica e direta: `Anjos` para quem o usuario autorizou e `Sou anjo` para quando o usuario aceitou proteger outra pessoa.
+- O recebedor precisa enxergar `Voce e anjo de <nome publico>` apos aceitar convite e conseguir chegar a `Ver meus vinculos`.
+- O originador precisa enxergar em `Anjos autorizados` quem aceitou o convite.
+- A interface nao deve exibir token, telefone, e-mail bruto, dados de localizacao, midia, hashes, termos internos de frente/release ou detalhes de backend.
+- Cartoes e modais seguem a identidade atual: topo com logo, fundo claro, cards rosa claro, icones roxos e acoes em modal branded.
+
 ## Decisoes vigentes
 
 - O topo do app deve usar logo real, nao texto isolado.
