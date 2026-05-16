@@ -50,8 +50,8 @@ export class EmergencyRemoteSharingPlanner {
   buildDeliveryPlan({ trustedContactIds }: BuildEmergencyDeliveryPlanInput): EmergencyDeliveryPlan {
     return {
       api: {
-        status: "waiting_backend",
-        endpoint: "/alerts"
+        status: trustedContactIds.length > 0 ? "queued_local" : "waiting_backend",
+        endpoint: "/emergency-sessions/"
       },
       p2p: {
         status: "waiting_adapter",
@@ -59,7 +59,7 @@ export class EmergencyRemoteSharingPlanner {
       },
       trustedContacts: trustedContactIds.map((contactId) => ({
         contactId,
-        status: "local_reference_pending_contract" as const
+        status: "authorized_for_alert" as const
       })),
       remoteSharing: this.buildRemoteSharingPlan()
     };
@@ -73,7 +73,7 @@ export class EmergencyRemoteSharingPlanner {
       p2p: packageDeliveryPlan.p2p,
       trustedContacts: packageDeliveryPlan.trustedContacts.map((contact) => ({
         contactId: contact.contactId,
-        status: "local_reference_pending_contract"
+        status: contact.status === "authorized_for_alert" ? "authorized_for_alert" : "local_reference_pending_contract"
       })),
       remoteSharing: "remoteSharing" in packageDeliveryPlan ? packageDeliveryPlan.remoteSharing : this.buildRemoteSharingPlan()
     };

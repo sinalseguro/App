@@ -4,7 +4,7 @@
 
 App mobile Android e iOS do SinalSeguro.
 
-Status: MVP tecnico controlado Android-first com Home SOS, Cofre, Player, midia local criptografada em chunks, cliente API real, sessao segura, login Google/Apple preparado, perfis/papeis, anjos/convites API-backed com vinculo visivel para originador e anjo, e release privado Android publicado no portal. iPhone/iOS fica pos-MVP.
+Status: MVP tecnico controlado Android-first com Home SOS, Cofre, Player, midia local criptografada em chunks, cliente API real, sessao segura, login Google/Apple preparado, perfis/papeis, anjos/convites API-backed com vinculo visivel para originador e anjo, primeira fatia de SOS roteado para anjos pela EC2, e release privado Android publicado no portal. iPhone/iOS fica pos-MVP.
 Coordenacao geral: Ze.  
 Gerente AI mobile: Cristine.
 
@@ -79,8 +79,8 @@ Os QR codes apontam para paginas publicas estaveis. O release privado Android at
 Status atual:
 
 - Android privado: publicado no portal em `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk`.
-- Versao/data exibida no portal: `0.1.5` em `16/05/2026`.
-- SHA-256 Android privado: `4518789cbcc844f5f8ff87dcd13009f00f7ffbc252d5cea01e2ec50855b239a2`.
+- Versao/data exibida no portal: `0.1.6` em `16/05/2026`.
+- SHA-256 Android privado: `0b2fad382ae3f7054c0d1092ec2b2ed9414b4dc0f2c95c75d05f21761241ddf3`.
 - Manifesto publico: `https://www.sinalseguro.com.br/downloads/installers.json`.
 - iPhone: sem release ativo; sera disponibilizado posteriormente.
 - GitHub: nao versionar APK/AAB/IPA privados. O APK privado deve ser publicado somente no portal/EC2, com checksum, QR e manifesto versionados.
@@ -128,7 +128,9 @@ APK privado Android atual com midia local para validacao e portal:
 - Convites por link publico usam `https://www.sinalseguro.com.br/convite#convite=<codigo>`; o app preserva convite pendente de forma cifrada durante login, consentimentos e permissoes antes do aceite.
 - A tela `Anjos de confianca` mostra `Anjos` para quem o usuario autorizou e `Sou anjo` para quem convidou o usuario; o aceite deve exibir `Voce e anjo de ...` sem expor token, telefone, e-mail bruto, midia ou localizacao.
 - A versao `0.1.5` bloqueia convites locais/antigos: se o link nao existir no backend, a tela mostra `Convite indisponivel`, `Aceite bloqueado` e desativa `Aceitar como anjo`.
-- Testes fisicos manuais da `0.1.5` aprovados por Roberto em 2026-05-16; fluxo liberado para continuidade do MVP Android.
+- Testes fisicos manuais da `0.1.5` aprovados por Roberto em 2026-05-16; a `0.1.6` publica a primeira tela Android de alertas recebidos para teste manual pelo portal.
+- Frente 3 iniciada: ocorrencia SOS sincroniza com `/api/emergency-sessions/`, backend roteia apenas para anjos aceitos com dispositivo ativo/chave publica, e o anjo visualiza pedidos em `Alertas recebidos`.
+- P2P, midia para anjos, localizacao ao vivo e conveniados continuam bloqueados ate frentes proprias e revisao juridica/seguranca.
 
 ## OIDC Google
 

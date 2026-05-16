@@ -90,7 +90,7 @@ export async function syncPendingEmergencyPackagesWithApi() {
             attempts,
             lastAttemptAt: attemptedAt,
             reason: undefined,
-            recipientCount: recipientCount(packageRecord),
+            recipientCount: result.remoteSession.recipient_count ?? recipientCount(packageRecord),
             remoteSessionId: result.remoteSession.id,
             status: "sent_to_ec2",
             syncedAt: new Date().toISOString()

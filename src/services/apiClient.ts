@@ -143,20 +143,47 @@ const InvitationPublicStatusSchema = z.object({
   status: z.enum(["available", "unavailable"])
 });
 
+const EmergencyRecipientSchema = z.object({
+  id: z.string(),
+  emergency_session: z.string(),
+  trusted_contact: z.string(),
+  recipient: z.string(),
+  relationship_role: z.string(),
+  owner_display_name: z.string().optional(),
+  recipient_display_name: z.string().optional(),
+  status: z.string(),
+  can_receive_alerts_snapshot: z.boolean(),
+  can_receive_media_snapshot: z.boolean(),
+  can_receive_location_snapshot: z.boolean(),
+  routed_at: z.string(),
+  first_seen_at: z.string().nullable().optional(),
+  accepted_at: z.string().nullable().optional(),
+  ended_at: z.string().nullable().optional(),
+  created_at: z.string(),
+  updated_at: z.string()
+});
+
 const EmergencySessionSchema = z.object({
   id: z.string(),
   device: z.string().nullable().optional(),
+  protected_subject: z.string().nullable().optional(),
+  owner_display_name: z.string().optional(),
   client_alert_id: z.string(),
   idempotency_key: z.string(),
   kind: z.string(),
   status: z.string(),
+  phase: z.string().optional(),
   location_status: z.string(),
   location_accuracy_meters: z.string().nullable().optional(),
+  recipient_count: z.number().int().nonnegative().optional(),
+  recipients: z.array(EmergencyRecipientSchema).optional(),
   started_at: z.string(),
   finished_at: z.string().nullable().optional(),
   created_at: z.string(),
   updated_at: z.string()
 });
+
+const EmergencySessionListSchema = z.array(EmergencySessionSchema);
 
 const KeyEnvelopeSchema = z.object({
   id: z.string(),
@@ -230,6 +257,7 @@ export type ApiTrustedContact = z.infer<typeof TrustedContactSchema>;
 export type ApiTrustedContactRelationship = z.infer<typeof TrustedContactRelationshipSchema>;
 export type ApiInvitation = z.infer<typeof InvitationSchema>;
 export type ApiInvitationPublicStatus = z.infer<typeof InvitationPublicStatusSchema>;
+export type ApiEmergencyRecipient = z.infer<typeof EmergencyRecipientSchema>;
 export type ApiEmergencySession = z.infer<typeof EmergencySessionSchema>;
 export type ApiKeyEnvelope = z.infer<typeof KeyEnvelopeSchema>;
 export type ApiP2PSignal = z.infer<typeof P2PSignalSchema>;
@@ -306,8 +334,11 @@ export type CreateEmergencySessionInput = {
   locationStatus: string;
   deviceId?: string | null;
   locationAccuracyMeters?: number | null;
+  protectedSubjectId?: string | null;
   startedAt?: string;
 };
+
+export type EmergencySessionResponseAction = "accept" | "decline" | "end" | "seen";
 
 export type CreateKeyEnvelopeInput = {
   emergencySessionId: string;
@@ -700,8 +731,23 @@ export class SinalSeguroApiClient {
         location_accuracy_meters:
           typeof input.locationAccuracyMeters === "number" ? String(input.locationAccuracyMeters) : null,
         location_status: input.locationStatus,
+        protected_subject: input.protectedSubjectId ?? null,
         started_at: toApiDateTime(input.startedAt)
       },
+      method: "POST"
+    });
+  }
+
+  async listReceivedEmergencySessions() {
+    return this.request("/emergency-sessions/received/", EmergencySessionListSchema, {
+      authenticated: true
+    });
+  }
+
+  async respondToEmergencySession(remoteSessionId: string, action: EmergencySessionResponseAction) {
+    return this.request(`/emergency-sessions/${remoteSessionId}/respond/`, EmergencySessionSchema, {
+      authenticated: true,
+      body: { action },
       method: "POST"
     });
   }

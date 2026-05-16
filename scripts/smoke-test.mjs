@@ -17,6 +17,7 @@ const requiredFiles = [
   "plugins/native-media-engine/ios/SinalSeguroMediaEngine.m",
   "app/_layout.tsx",
   "app/index.tsx",
+  "app/alerta.tsx",
   "app/arquivos.tsx",
   "app/configuracoes.tsx",
   "app/convite.tsx",
@@ -149,6 +150,7 @@ const evidencePlayerCard = await readFile("src/components/EvidencePlayerCard.tsx
 const mediaInterfacePresentation = await readFile("src/features/emergency/mediaInterfacePresentation.ts", "utf8");
 const appLayout = await readFile("app/_layout.tsx", "utf8");
 const homeScreen = await readFile("app/index.tsx", "utf8");
+const alertScreen = await readFile("app/alerta.tsx", "utf8");
 const localFilesScreen = await readFile("app/arquivos.tsx", "utf8");
 const settingsScreen = await readFile("app/configuracoes.tsx", "utf8");
 const contactsScreen = await readFile("app/contatos.tsx", "utf8");
@@ -184,6 +186,15 @@ if (
   !homeScreen.includes("sem reativar camera ou microfone")
 ) {
   throw new Error("Tela SOS precisa recuperar chamado interrompido no startup sem remontar camera automaticamente.");
+}
+
+if (
+  !alertScreen.includes("listReceivedEmergencySessions") ||
+  !alertScreen.includes("respondToEmergencySession") ||
+  !alertScreen.includes("Pedido de") ||
+  !alertScreen.includes("Acompanhar")
+) {
+  throw new Error("Tela de alertas recebidos precisa listar pedidos roteados e permitir resposta do anjo.");
 }
 
 const interruptedRecoveryIndex = homeScreen.indexOf("await recoverInterruptedCameraResidue(");

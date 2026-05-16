@@ -28,6 +28,14 @@ Revisao juridica/LGPD: Doneda
 - Retomada fisica em 2026-05-14 confirmou no Android `23129RA5FL` o pacote instalado `versionName=0.1.1`, `versionCode=3`, a API publica com `health=ok` e readiness `database=ok`, o gate de login bloqueando deep link direto sem sessao visivel, login Google concluido e o fluxo `Anjos de confianca` em modo API sem crash no logcat saneado.
 - iPhone/iOS permanece pos-MVP e nao faz parte deste fluxo.
 
+## Atualizacao real em 2026-05-16 - Android 0.1.6
+
+- APK privado Android `0.1.6` gerado em `android/app/build/outputs/apk/debug/app-debug.apk`, `versionCode 8`, SHA-256 `0b2fad382ae3f7054c0d1092ec2b2ed9414b4dc0f2c95c75d05f21761241ddf3`.
+- O link direto publicado usa `?v=0.1.6-20260516` para atualizar cache mantendo arquivo e QR estaveis.
+- A versao habilita teste manual pelo portal da tela Android `Alertas recebidos` e do roteamento de ocorrencias SOS para anjos aceitos.
+- API e portal publicados: release EC2 `/var/www/sinalseguro/releases/20260516T120523Z`, manifesto `0.1.6`, endpoint de update `versionCode 8`, APK no servidor com SHA-256 correto e health/ready aprovados.
+- O deploy inicial do portal foi bloqueado por falta de espaco na EC2; a correcao removeu apenas release parcial e releases antigas nao ativas, preservando rollback.
+
 ## Atualizacao real em 2026-05-16 - Android 0.1.5
 
 - APK privado Android `0.1.5` gerado em `android/app/build/outputs/apk/debug/app-debug.apk`, `versionCode 7`, SHA-256 `4518789cbcc844f5f8ff87dcd13009f00f7ffbc252d5cea01e2ec50855b239a2`.

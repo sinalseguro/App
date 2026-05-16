@@ -15,10 +15,11 @@ export type EmergencySyncResult =
 export function buildCreateAlertDraft(packageRecord: EmergencyPackage) {
   return {
     clientAlertId: packageRecord.clientAlertId,
-    endpoint: "/emergency-sessions/",
+    endpoint: packageRecord.deliveryPlan.api.endpoint,
     idempotencyKey: packageRecord.idempotencyKey,
     kind: packageRecord.kind,
     locationStatus: packageRecord.location.status,
+    trustedContactCount: packageRecord.deliveryPlan.trustedContacts.length,
     triggeredAt: packageRecord.createdAt
   };
 }
@@ -44,7 +45,9 @@ export function getEmergencyDeliveryReadiness(packageRecord: EmergencyPackage) {
       packageRecord.media.status === "blocked_public_build"
         ? "Pacote preservado no cofre local; arquivos permanecem somente neste aparelho."
         : apiReady
-          ? "EC2 configurada; envio remoto depende de login, chaves dos anjos e canais P2P autorizados."
+          ? packageRecord.deliveryPlan.trustedContacts.length > 0
+            ? "EC2 configurada; ocorrencia sera registrada e roteada aos anjos aceitos quando houver conexao."
+            : "EC2 configurada; ocorrencia sera registrada, mas ainda nao ha anjo aceito para avisar."
           : "Pacote preservado; envio protegido depende de login, chaves, sinalizacao, P2P e autorizacoes."
   };
 }
@@ -77,6 +80,7 @@ export async function syncEmergencySessionWithApi(
       kind: packageRecord.kind,
       locationAccuracyMeters: packageAccuracyMeters(packageRecord),
       locationStatus: packageRecord.location.status,
+      protectedSubjectId: null,
       startedAt: packageRecord.capture.startedAt
     });
 

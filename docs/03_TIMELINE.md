@@ -3,6 +3,20 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-16 - Android 0.1.6 publicado para teste manual de alertas
+
+Status: APK novo publicado no portal oficial e API de update sincronizada.
+
+- app Android sincronizado para `versionName=0.1.6` e `versionCode=8`;
+- APK privado gerado em `android/app/build/outputs/apk/debug/app-debug.apk` e promovido para `distribution/android/out/sinalseguro-android.apk`;
+- SHA-256: `0b2fad382ae3f7054c0d1092ec2b2ed9414b4dc0f2c95c75d05f21761241ddf3`;
+- conteúdo da release: primeira tela Android `Alertas recebidos`, atalho `Alertas` na Home e contrato mobile/API para ocorrencias SOS roteadas a anjos aceitos;
+- validacoes locais: `npm run typecheck`, `npm run lint`, `npm test`, `npm run build:android:private`, Django `check`, testes focados de `app-releases/current` e `aapt dump badging` com `versionCode 8`;
+- API publicada com `app_releases.0007_update_android_release_20260516_v016`;
+- portal publicado em `/var/www/sinalseguro/releases/20260516T120523Z`, mantendo `/baixar/android`, QR estavel e arquivo `sinalseguro_android.apk`;
+- deploy inicial do portal falhou por falta de espaco na EC2; foram removidas somente releases antigas/parcial nao ativas, preservando a release ativa e uma anterior para rollback;
+- validacao pos-deploy: manifesto publico `0.1.6`, API de update `versionCode 8`, APK no servidor com hash esperado, `/baixar/android` HTTP 200, API health/ready ok, `nginx -t` aprovado, `sinalseguro-api` e `cereusia-crm` ativos, `cereusia.conf` preservado.
+
 ## 2026-05-16 - Android 0.1.5, convite somente com validacao no backend
 
 - causa do erro anexado: link recebido apontava para token que nao existia como convite disponivel no backend de producao;
@@ -2788,3 +2802,33 @@ Bloqueio:
 Checkpoint:
 
 - `docs/46_CHECKPOINT_OFFLINE_ANJOS_SOS_2026-05-15.md`.
+
+## 2026-05-16 - Frente 3 SOS e roteamento para anjos
+
+Status: primeira fatia implementada, API publicada na EC2 e APK debug instalado em um Android fisico; aceite completo em dois aparelhos ainda pendente.
+
+Executado:
+
+- API `emergency` ganhou fase canonica de ocorrencia e destinatarios `EmergencyRecipient`;
+- `/api/emergency-sessions/` continua idempotente e agora roteia para anjos aceitos com alerta permitido, conta propria e dispositivo ativo com chave publica;
+- `/api/emergency-sessions/received/` lista pedidos recebidos pelo anjo autenticado;
+- `/api/emergency-sessions/{id}/respond/` permite visto, aceite, recusa e encerramento;
+- aceite de uma nova ocorrencia pelo mesmo anjo encerra a anterior, preservando uma ocorrencia ativa por anjo;
+- app Android ganhou tela `Alertas recebidos`, atalho no menu da Home e contrato mobile para `phase`, `recipient_count` e `recipients`;
+- API publicada por `infra/aws/deploy-api.sh` com backup pre-migracao em `/opt/sinalseguro-api/backups/sinalseguro_prod_before_front3_20260516T043702Z.dump`.
+
+Validacoes:
+
+- `manage.py check`: aprovado;
+- `manage.py test sinalseguro_api.tests.test_platform_base`: aprovado, 39 testes;
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `npm test`: aprovado;
+- `npm run build:android:debug:bundled`: aprovado;
+- pos-deploy: `health`, `ready`, `sinalseguro-api`, `cereusia-crm`, `nginx -t` e hash de `cereusia.conf` aprovados;
+- Android `0123456789ABCDEF`: instalacao aprovada, app abriu sem crash e gate de login/legal bloqueou corretamente acesso a `/alerta` sem sessao autenticada;
+- Android `5686add7`: `adb install` e `adb install --no-streaming` ficaram presos e foram encerrados.
+
+Checkpoint:
+
+- `docs/51_CHECKPOINT_FRENTE_3_SOS_ROTEAMENTO_2026-05-16.md`.

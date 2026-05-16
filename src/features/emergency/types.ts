@@ -244,8 +244,8 @@ export type EmergencyRemoteSharingPlan = {
 
 export type EmergencyDeliveryPlan = {
   api: {
-    status: "waiting_backend";
-    endpoint: "/alerts";
+    status: "queued_local" | "synced_to_ec2" | "waiting_backend";
+    endpoint: "/emergency-sessions/";
   };
   p2p: {
     status: "waiting_adapter";
@@ -253,7 +253,7 @@ export type EmergencyDeliveryPlan = {
   };
   trustedContacts: Array<{
     contactId: string;
-    status: "local_reference_pending_contract";
+    status: "authorized_for_alert" | "local_reference_pending_contract";
   }>;
   remoteSharing: EmergencyRemoteSharingPlan;
 };
