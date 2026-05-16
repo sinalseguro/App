@@ -246,10 +246,10 @@ export function EmergencyMediaRecorder({
   const runtimeCameraMode = getRuntimeCameraMode(requestedCameraMode);
   const activeCameraModes = useMemo<ActualCameraMode[]>(
     () =>
-      runtimeCameraMode === "both"
-        ? forcedSingleCameraMode
-          ? [forcedSingleCameraMode]
-          : ["front", "back"]
+      forcedSingleCameraMode
+        ? [forcedSingleCameraMode]
+        : runtimeCameraMode === "both"
+        ? ["front", "back"]
         : [runtimeCameraMode === "back" ? "back" : "front"],
     [forcedSingleCameraMode, runtimeCameraMode]
   );
@@ -384,6 +384,36 @@ export function EmergencyMediaRecorder({
     return () => clearTimeout(timeout);
   }, [
     cameraReadyByMode.front,
+    forcedSingleCameraMode,
+    mediaEnabled,
+    mediaPermissionStatus,
+    runtimeCameraMode
+  ]);
+
+  useEffect(() => {
+    if (
+      !mediaEnabled ||
+      runtimeCameraMode === "both" ||
+      forcedSingleCameraMode ||
+      mediaPermissionStatus !== "granted" ||
+      allRequestedCamerasReady
+    ) {
+      return;
+    }
+
+    const requestedSingleMode: ActualCameraMode = runtimeCameraMode === "back" ? "back" : "front";
+    const fallbackMode: ActualCameraMode = requestedSingleMode === "front" ? "back" : "front";
+    const timeout = setTimeout(() => {
+      if (cameraReadyByMode[requestedSingleMode]) return;
+
+      setCameraReadyByMode(emptyCameraReadyState);
+      setForcedSingleCameraMode(fallbackMode);
+      onStatusChangeRef.current?.(`Camera ${cameraModeLabel(requestedSingleMode)} nao ficou pronta; tentando camera ${cameraModeLabel(fallbackMode)}.`);
+    }, 2200);
+    return () => clearTimeout(timeout);
+  }, [
+    allRequestedCamerasReady,
+    cameraReadyByMode,
     forcedSingleCameraMode,
     mediaEnabled,
     mediaPermissionStatus,

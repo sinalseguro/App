@@ -1,0 +1,719 @@
+--------- beginning of main
+05-17 01:01:01.602   257  2570 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=2.56 dur=1560.32 max=797.39 min=25.08
+05-17 01:01:01.678   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.774349,dur:1004.63,max:21.00,min:20.17
+05-17 01:01:01.727   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:01.727   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:01.773   257   601 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.88 dur=1002.42 max=27.75 min=14.85
+05-17 01:01:02.193  5411  5411 W app_process: Could not reserve sentinel fault page
+05-17 01:01:02.542  5411  5411 I app_process: The ClassLoaderContext is a special shared library.
+05-17 01:01:02.650  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2646994, downTime=2646994, deviceId=1, source=0x1002 }
+05-17 01:01:02.652   602   794 I PowerWrap: PowerHal_TouchBoost
+05-17 01:01:02.652   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:15, data:10000
+05-17 01:01:02.653   253   267 I libPerfService: 15: legacy set freq: 1105000 -1
+05-17 01:01:02.653   253   267 I libPerfService: 15: legacy set: 3 -1
+05-17 01:01:02.683   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.761814,dur:1004.88,max:21.07,min:20.02
+05-17 01:01:02.706  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2646994, downTime=2646994, deviceId=1, source=0x1002 }
+05-17 01:01:02.726   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:02.726   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:02.749  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2647101, downTime=2647101, deviceId=1, source=0x1002 }
+05-17 01:01:02.775   257   601 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=44.90 dur=1002.29 max=62.74 min=9.88
+05-17 01:01:02.793  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2647145, downTime=2647145, deviceId=1, source=0x1002 }
+05-17 01:01:02.829  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2647181, downTime=2647181, deviceId=1, source=0x1002 }
+05-17 01:01:02.948  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2647300, downTime=2647300, deviceId=1, source=0x1002 }
+05-17 01:01:03.001  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2647353, downTime=2647353, deviceId=1, source=0x1002 }
+05-17 01:01:03.061  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2647412, downTime=2647412, deviceId=1, source=0x1002 }
+05-17 01:01:03.121  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2647473, downTime=2647473, deviceId=1, source=0x1002 }
+05-17 01:01:03.178  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2647530, downTime=2647530, deviceId=1, source=0x1002 }
+05-17 01:01:03.239  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2647591, downTime=2647591, deviceId=1, source=0x1002 }
+05-17 01:01:03.299  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2647651, downTime=2647651, deviceId=1, source=0x1002 }
+05-17 01:01:03.364  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2647716, downTime=2647716, deviceId=1, source=0x1002 }
+05-17 01:01:03.422  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2647774, downTime=2647774, deviceId=1, source=0x1002 }
+05-17 01:01:03.432  5173  5184 I zygote  : NativeAlloc concurrent copying GC freed 103424(3MB) AllocSpace objects, 0(0B) LOS objects, 47% free, 6MB/12MB, paused 139us total 125.247ms
+05-17 01:01:03.479  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2647831, downTime=2647831, deviceId=1, source=0x1002 }
+05-17 01:01:03.539  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2647891, downTime=2647891, deviceId=1, source=0x1002 }
+05-17 01:01:03.598  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2647950, downTime=2647950, deviceId=1, source=0x1002 }
+05-17 01:01:03.656  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2648008, downTime=2648008, deviceId=1, source=0x1002 }
+05-17 01:01:03.709   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:15.597574,dur:1025.80,max:164.03,min:40.64
+05-17 01:01:03.718  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2648070, downTime=2648070, deviceId=1, source=0x1002 }
+05-17 01:01:03.726   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:03.726   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:03.775  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2648127, downTime=2648127, deviceId=1, source=0x1002 }
+05-17 01:01:03.805   257   601 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=15.53 dur=1030.12 max=165.96 min=36.52
+05-17 01:01:03.832  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2648183, downTime=2648183, deviceId=1, source=0x1002 }
+05-17 01:01:03.895  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2648247, downTime=2648247, deviceId=1, source=0x1002 }
+05-17 01:01:03.954  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2648306, downTime=2648306, deviceId=1, source=0x1002 }
+05-17 01:01:03.978  5173  5184 I zygote  : NativeAlloc concurrent copying GC freed 12128(447KB) AllocSpace objects, 0(0B) LOS objects, 47% free, 6MB/12MB, paused 140us total 131.186ms
+05-17 01:01:04.009  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2648361, downTime=2648361, deviceId=1, source=0x1002 }
+05-17 01:01:04.068  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2648420, downTime=2648420, deviceId=1, source=0x1002 }
+05-17 01:01:04.125  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2648477, downTime=2648477, deviceId=1, source=0x1002 }
+05-17 01:01:04.183  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2648535, downTime=2648535, deviceId=1, source=0x1002 }
+05-17 01:01:04.240  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2648592, downTime=2648592, deviceId=1, source=0x1002 }
+05-17 01:01:04.297  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2648649, downTime=2648649, deviceId=1, source=0x1002 }
+05-17 01:01:04.355  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2648707, downTime=2648707, deviceId=1, source=0x1002 }
+05-17 01:01:04.413  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2648764, downTime=2648764, deviceId=1, source=0x1002 }
+05-17 01:01:04.474  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2648826, downTime=2648826, deviceId=1, source=0x1002 }
+05-17 01:01:04.532  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2648884, downTime=2648884, deviceId=1, source=0x1002 }
+05-17 01:01:04.559  5173  5184 I zygote  : NativeAlloc concurrent copying GC freed 13405(482KB) AllocSpace objects, 0(0B) LOS objects, 47% free, 6MB/12MB, paused 138us total 130.830ms
+05-17 01:01:04.588  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2648940, downTime=2648940, deviceId=1, source=0x1002 }
+05-17 01:01:04.634  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2648985, downTime=2648985, deviceId=1, source=0x1002 }
+05-17 01:01:04.692  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2649044, downTime=2649044, deviceId=1, source=0x1002 }
+05-17 01:01:04.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:04.725   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:04.734   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:17.556005,dur:1025.29,max:61.96,min:40.98
+05-17 01:01:04.739  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2649091, downTime=2649091, deviceId=1, source=0x1002 }
+05-17 01:01:04.784  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2649136, downTime=2649136, deviceId=1, source=0x1002 }
+05-17 01:01:04.816   257   601 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=17.81 dur=1010.67 max=60.24 min=44.76
+05-17 01:01:04.829  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2649181, downTime=2649181, deviceId=1, source=0x1002 }
+05-17 01:01:04.876  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2649228, downTime=2649228, deviceId=1, source=0x1002 }
+05-17 01:01:04.919  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2649271, downTime=2649271, deviceId=1, source=0x1002 }
+05-17 01:01:04.967  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2649319, downTime=2649319, deviceId=1, source=0x1002 }
+05-17 01:01:05.041  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2649392, downTime=2649392, deviceId=1, source=0x1002 }
+05-17 01:01:05.086  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2649438, downTime=2649438, deviceId=1, source=0x1002 }
+05-17 01:01:05.132  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2649484, downTime=2649484, deviceId=1, source=0x1002 }
+05-17 01:01:05.200  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2649552, downTime=2649552, deviceId=1, source=0x1002 }
+05-17 01:01:05.428  5411  5411 I Input   : injectMotionEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2649779, downTime=2649779, deviceId=1, source=0x1002 }
+05-17 01:01:05.430   602   794 I PowerWrap: PowerHal_TouchBoost
+05-17 01:01:05.431   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:15, data:0
+05-17 01:01:05.432   253   267 I libPerfService: 15: legacy set: -1 -1
+05-17 01:01:05.432   253   267 I libPerfService: 15: legacy set freq: -1 -1
+05-17 01:01:05.597   257  2570 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.25 dur=3994.98 max=3994.98 min=3994.98
+05-17 01:01:05.654   257   601 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:01:05.674   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:01:05.695   257  2570 I chatty  : uid=1000(system) Binder:257_5 identical 1 line
+05-17 01:01:05.713   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:01:05.732   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:05.732   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:05.739   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:19.895031,dur:1005.28,max:245.47,min:19.95
+05-17 01:01:05.757   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:01:05.776   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:01:05.824   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=22.82 dur=1007.75 max=237.03 min=12.19
+05-17 01:01:05.858   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:01:06.083   257  2570 I chatty  : uid=1000(system) Binder:257_5 identical 11 lines
+05-17 01:01:06.127   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:01:06.146   602   794 I WifiService: getWifiEnabledState uid=10012
+--------- beginning of system
+05-17 01:01:06.158   602   794 E UserRestrictionsUtils: Unknown restriction: no_config_location
+05-17 01:01:06.170   602   794 I ActivityManager: START u0 {act=com.google.android.gms.location.settings.CHECK_SETTINGS pkg=com.google.android.gms cmp=com.google.android.gms/com.google.android.location.settings.LocationSettingsCheckerActivity (has extras)} from uid 10012
+05-17 01:01:06.173   602   794 W ResourceType: For resource 0x7f1615dc, entry index(5596) is beyond type entryCount(508)
+05-17 01:01:06.173   602   794 W ResourceType: For resource 0x7f160b98, entry index(2968) is beyond type entryCount(508)
+05-17 01:01:06.176   253  3336 I vendor.mediatek.hardware.power@1.1-impl: PowerHint hint:8, data:1
+05-17 01:01:06.176   253   267 I libPerfService: 8: legacy set freq: 1300000 -1
+05-17 01:01:06.176   253   267 I libPerfService: 8: legacy set: 4 -1
+05-17 01:01:06.179   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:2000
+05-17 01:01:06.193  5173  5173 W unknown:BridgelessReact: ReactHost{0}.onUserLeaveHint(activity)
+05-17 01:01:06.203  5173  5173 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+05-17 01:01:06.204  5173  5173 W unknown:BridgelessReact: ReactContext.onHostPause()
+05-17 01:01:06.209   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:2000
+05-17 01:01:06.218   602   655 I WindowManager: Focus moving from Window{4c4ca24 u0 br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity} to null
+05-17 01:01:06.219   253  3336 I vendor.mediatek.hardware.power@1.1-impl: notifyAppState pack:com.google.android.gms, act:com.google.android.location.settings.LocationSettingsCheckerActivity, pid:4473, state:1
+05-17 01:01:06.219   253   267 I libPerfService: [perfNotifyAppState] foreground:com.google.android.gms, pid:4473
+05-17 01:01:06.219   253   267 E libPerfService: Could not open '/proc/driver/thermal/ta_fg_pid'
+05-17 01:01:06.219   253   267 E libPerfService: error : 2, No such file or directory
+05-17 01:01:06.220   253   267 E libPerfService: Could not open '/sys/module/ged/parameters/gx_top_app_pid'
+05-17 01:01:06.220   253   267 E libPerfService: error : 2, No such file or directory
+05-17 01:01:06.220   253   267 I libPerfService: perfUserGetCapability - cmd:7, id:0, val:-1
+05-17 01:01:06.224  4473  4473 W ResourceType: ResTable_typeSpec entry count inconsistent: given 112, previously 115
+05-17 01:01:06.224  4473  4473 W ResourceType: ResTable_typeSpec entry count inconsistent: given 112, previously 115
+05-17 01:01:06.225  4473  4473 W ResourceType: ResTable_typeSpec entry count inconsistent: given 4810, previously 5454
+05-17 01:01:06.225  4473  4473 W ResourceType: ResTable_typeSpec entry count inconsistent: given 3589, previously 3610
+05-17 01:01:06.225  4473  4473 W ResourceType: ResTable_typeSpec entry count inconsistent: given 235, previously 240
+05-17 01:01:06.225  4473  4473 W ResourceType: ResTable_typeSpec entry count inconsistent: given 508, previously 5852
+05-17 01:01:06.242  4473  4473 W ResourceType: For resource 0x7f1615dc, entry index(5596) is beyond type entryCount(508)
+05-17 01:01:06.242  4473  4473 W ResourceType: For resource 0x7f160b98, entry index(2968) is beyond type entryCount(508)
+05-17 01:01:06.242  4473  4473 W ResourceType: For resource 0x7f1605ac, entry index(1452) is beyond type entryCount(508)
+05-17 01:01:06.242  4473  4473 W ResourceType: For resource 0x7f1605bb, entry index(1467) is beyond type entryCount(508)
+05-17 01:01:06.285   602  1272 E UserRestrictionsUtils: Unknown restriction: no_config_location
+05-17 01:01:06.313  4473  4473 I LocationSettings: (REDACTED) Read NLP consent from settings: %b
+05-17 01:01:06.316   602  1272 I WifiService: getWifiEnabledState uid=10012
+05-17 01:01:06.324  4473  4473 I LocationSettings: (REDACTED) Read NLP consent from settings: %b
+05-17 01:01:06.330  4473  4473 W ResourceType: For resource 0x7f160da7, entry index(3495) is beyond type entryCount(508)
+05-17 01:01:06.333  4473  4473 W ResourceType: For resource 0x7f161140, entry index(4416) is beyond type entryCount(508)
+05-17 01:01:06.333  4473  4473 W ResourceType: For resource 0x7f16021b, entry index(539) is beyond type entryCount(508)
+05-17 01:01:06.358  4473  4473 W Resources: Drawable com.google.android.gms:drawable/gs_location_on_vd_theme_24 has unresolved theme attributes! Consider using Resources.getDrawable(int, Theme) or Context.getDrawable(int).
+05-17 01:01:06.358  4473  4473 W Resources: java.lang.RuntimeException
+05-17 01:01:06.358  4473  4473 W Resources: 	at android.content.res.Resources.getDrawable(Resources.java:798)
+05-17 01:01:06.358  4473  4473 W Resources: 	at fcyh.run(:com.google.android.gms@261833000@26.18.33 (040300-913931251):558)
+05-17 01:01:06.358  4473  4473 W Resources: 	at android.app.Activity.runOnUiThread(Activity.java:6198)
+05-17 01:01:06.358  4473  4473 W Resources: 	at xve.platform_runOnUiThread(:com.google.android.gms@261833000@26.18.33 (040300-913931251):1)
+05-17 01:01:06.358  4473  4473 W Resources: 	at xvd.runOnUiThread(:com.google.android.gms@261833000@26.18.33 (040300-913931251):3)
+05-17 01:01:06.358  4473  4473 W Resources: 	at com.google.android.chimera.android.Activity.runOnUiThread(:com.google.android.gms@261833000@26.18.33 (040300-913931251):1)
+05-17 01:01:06.358  4473  4473 W Resources: 	at com.google.android.location.settings.LocationSettingsCheckerChimeraActivity.onCreate(:com.google.android.gms@261833000@26.18.33 (040300-913931251):164)
+05-17 01:01:06.358  4473  4473 W Resources: 	at xvd.public_onCreate(:com.google.android.gms@261833000@26.18.33 (040300-913931251):1)
+05-17 01:01:06.358  4473  4473 W Resources: 	at azuc.onCreate(:com.google.android.gms@261833000@26.18.33 (040300-913931251):56)
+05-17 01:01:06.358  4473  4473 W Resources: 	at android.app.Activity.performCreate(Activity.java:7023)
+05-17 01:01:06.358  4473  4473 W Resources: 	at android.app.Activity.performCreate(Activity.java:7014)
+05-17 01:01:06.358  4473  4473 W Resources: 	at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1214)
+05-17 01:01:06.358  4473  4473 W Resources: 	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2772)
+05-17 01:01:06.358  4473  4473 W Resources: 	at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2897)
+05-17 01:01:06.358  4473  4473 W Resources: 	at android.app.ActivityThread.-wrap11(Unknown Source:0)
+05-17 01:01:06.358  4473  4473 W Resources: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1623)
+05-17 01:01:06.358  4473  4473 W Resources: 	at android.os.Handler.dispatchMessage(Handler.java:106)
+05-17 01:01:06.358  4473  4473 W Resources: 	at android.os.Looper.loop(Looper.java:164)
+05-17 01:01:06.358  4473  4473 W Resources: 	at android.app.ActivityThread.main(ActivityThread.java:6548)
+05-17 01:01:06.358  4473  4473 W Resources: 	at java.lang.reflect.Method.invoke(Native Method)
+05-17 01:01:06.358  4473  4473 W Resources: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:438)
+05-17 01:01:06.358  4473  4473 W Resources: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:857)
+05-17 01:01:06.366  4473  4473 W Resources: Drawable com.google.android.gms:drawable/gs_my_location_vd_theme_24 has unresolved theme attributes! Consider using Resources.getDrawable(int, Theme) or Context.getDrawable(int).
+05-17 01:01:06.366  4473  4473 W Resources: java.lang.RuntimeException
+05-17 01:01:06.366  4473  4473 W Resources: 	at android.content.res.Resources.getDrawable(Resources.java:798)
+05-17 01:01:06.366  4473  4473 W Resources: 	at fcyh.run(:com.google.android.gms@261833000@26.18.33 (040300-913931251):558)
+05-17 01:01:06.366  4473  4473 W Resources: 	at android.app.Activity.runOnUiThread(Activity.java:6198)
+05-17 01:01:06.366  4473  4473 W Resources: 	at xve.platform_runOnUiThread(:com.google.android.gms@261833000@26.18.33 (040300-913931251):1)
+05-17 01:01:06.366  4473  4473 W Resources: 	at xvd.runOnUiThread(:com.google.android.gms@261833000@26.18.33 (040300-913931251):3)
+05-17 01:01:06.366  4473  4473 W Resources: 	at com.google.android.chimera.android.Activity.runOnUiThread(:com.google.android.gms@261833000@26.18.33 (040300-913931251):1)
+05-17 01:01:06.366  4473  4473 W Resources: 	at com.google.android.location.settings.LocationSettingsCheckerChimeraActivity.onCreate(:com.google.android.gms@261833000@26.18.33 (040300-913931251):164)
+05-17 01:01:06.366  4473  4473 W Resources: 	at xvd.public_onCreate(:com.google.android.gms@261833000@26.18.33 (040300-913931251):1)
+05-17 01:01:06.366  4473  4473 W Resources: 	at azuc.onCreate(:com.google.android.gms@261833000@26.18.33 (040300-913931251):56)
+05-17 01:01:06.366  4473  4473 W Resources: 	at android.app.Activity.performCreate(Activity.java:7023)
+05-17 01:01:06.366  4473  4473 W Resources: 	at android.app.Activity.performCreate(Activity.java:7014)
+05-17 01:01:06.366  4473  4473 W Resources: 	at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1214)
+05-17 01:01:06.366  4473  4473 W Resources: 	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:2772)
+05-17 01:01:06.366  4473  4473 W Resources: 	at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:2897)
+05-17 01:01:06.366  4473  4473 W Resources: 	at android.app.ActivityThread.-wrap11(Unknown Source:0)
+05-17 01:01:06.366  4473  4473 W Resources: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1623)
+05-17 01:01:06.366  4473  4473 W Resources: 	at android.os.Handler.dispatchMessage(Handler.java:106)
+05-17 01:01:06.366  4473  4473 W Resources: 	at android.os.Looper.loop(Looper.java:164)
+05-17 01:01:06.366  4473  4473 W Resources: 	at android.app.ActivityThread.main(ActivityThread.java:6548)
+05-17 01:01:06.366  4473  4473 W Resources: 	at java.lang.reflect.Method.invoke(Native Method)
+05-17 01:01:06.366  4473  4473 W Resources: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:438)
+05-17 01:01:06.366  4473  4473 W Resources: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:857)
+05-17 01:01:06.376  4473  4473 W ResourceType: For resource 0x7f160da7, entry index(3495) is beyond type entryCount(508)
+05-17 01:01:06.377  4473  4473 W ResourceType: For resource 0x7f1605b5, entry index(1461) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f161116, entry index(4374) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f16111a, entry index(4378) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f161118, entry index(4376) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f161128, entry index(4392) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f1610ff, entry index(4351) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f161101, entry index(4353) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f161126, entry index(4390) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f161102, entry index(4354) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f160da7, entry index(3495) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f161103, entry index(4355) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f161105, entry index(4357) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 I chatty  : uid=10012 com.google.android.gms.ui identical 2 lines
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f16110a, entry index(4362) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f160da6, entry index(3494) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f16112c, entry index(4396) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f161111, entry index(4369) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f161112, entry index(4370) is beyond type entryCount(508)
+05-17 01:01:06.383  4473  4473 W ResourceType: For resource 0x7f161129, entry index(4393) is beyond type entryCount(508)
+05-17 01:01:06.384  4473  4473 W ResourceType: For resource 0x7f16112a, entry index(4394) is beyond type entryCount(508)
+05-17 01:01:06.384  4473  4473 W ResourceType: For resource 0x7f160b89, entry index(2953) is beyond type entryCount(508)
+05-17 01:01:06.384  4473  4473 W ResourceType: For resource 0x7f161125, entry index(4389) is beyond type entryCount(508)
+05-17 01:01:06.384  4473  4473 W ResourceType: For resource 0x7f161127, entry index(4391) is beyond type entryCount(508)
+05-17 01:01:06.384  4473  4473 W ResourceType: For resource 0x7f161139, entry index(4409) is beyond type entryCount(508)
+05-17 01:01:06.384  4473  4473 W ResourceType: For resource 0x7f161110, entry index(4368) is beyond type entryCount(508)
+05-17 01:01:06.384  4473  4473 W ResourceType: For resource 0x7f16110e, entry index(4366) is beyond type entryCount(508)
+05-17 01:01:06.384  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.384  4473  4473 W ResourceType: For resource 0x7f160973, entry index(2419) is beyond type entryCount(508)
+05-17 01:01:06.384  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.384  4473  4473 W ResourceType: For resource 0x7f16099d, entry index(2461) is beyond type entryCount(508)
+05-17 01:01:06.384  4473  4473 W ResourceType: For resource 0x7f160986, entry index(2438) is beyond type entryCount(508)
+05-17 01:01:06.384  4473  4473 W ResourceType: For resource 0x7f160987, entry index(2439) is beyond type entryCount(508)
+05-17 01:01:06.384  4473  4473 W ResourceType: For resource 0x7f161143, entry index(4419) is beyond type entryCount(508)
+05-17 01:01:06.384  4473  4473 W ResourceType: For resource 0x7f161142, entry index(4418) is beyond type entryCount(508)
+05-17 01:01:06.389  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.389  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.389  4473  4473 W ResourceType: For resource 0x7f161116, entry index(4374) is beyond type entryCount(508)
+05-17 01:01:06.389  4473  4473 W ResourceType: For resource 0x7f16111a, entry index(4378) is beyond type entryCount(508)
+05-17 01:01:06.389  4473  4473 W ResourceType: For resource 0x7f161118, entry index(4376) is beyond type entryCount(508)
+05-17 01:01:06.389  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.389  4473  4473 W ResourceType: For resource 0x7f161128, entry index(4392) is beyond type entryCount(508)
+05-17 01:01:06.389  4473  4473 W ResourceType: For resource 0x7f1610ff, entry index(4351) is beyond type entryCount(508)
+05-17 01:01:06.389  4473  4473 W ResourceType: For resource 0x7f161101, entry index(4353) is beyond type entryCount(508)
+05-17 01:01:06.389  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.389  4473  4473 W ResourceType: For resource 0x7f161126, entry index(4390) is beyond type entryCount(508)
+05-17 01:01:06.389  4473  4473 W ResourceType: For resource 0x7f161102, entry index(4354) is beyond type entryCount(508)
+05-17 01:01:06.389  4473  4473 W ResourceType: For resource 0x7f160da7, entry index(3495) is beyond type entryCount(508)
+05-17 01:01:06.389  4473  4473 W ResourceType: For resource 0x7f161103, entry index(4355) is beyond type entryCount(508)
+05-17 01:01:06.389  4473  4473 W ResourceType: For resource 0x7f161105, entry index(4357) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 I chatty  : uid=10012 com.google.android.gms.ui identical 2 lines
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f16110a, entry index(4362) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f160da6, entry index(3494) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f16112c, entry index(4396) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f161111, entry index(4369) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f161112, entry index(4370) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f161129, entry index(4393) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f16112a, entry index(4394) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f160b89, entry index(2953) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f161125, entry index(4389) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f161127, entry index(4391) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f161139, entry index(4409) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f161110, entry index(4368) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f16110e, entry index(4366) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f160973, entry index(2419) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f16099d, entry index(2461) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f160986, entry index(2438) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f160987, entry index(2439) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f161143, entry index(4419) is beyond type entryCount(508)
+05-17 01:01:06.390  4473  4473 W ResourceType: For resource 0x7f161142, entry index(4418) is beyond type entryCount(508)
+05-17 01:01:06.395  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.395  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.395  4473  4473 W ResourceType: For resource 0x7f161116, entry index(4374) is beyond type entryCount(508)
+05-17 01:01:06.395  4473  4473 W ResourceType: For resource 0x7f16111a, entry index(4378) is beyond type entryCount(508)
+05-17 01:01:06.395  4473  4473 W ResourceType: For resource 0x7f161118, entry index(4376) is beyond type entryCount(508)
+05-17 01:01:06.395  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.395  4473  4473 W ResourceType: For resource 0x7f161128, entry index(4392) is beyond type entryCount(508)
+05-17 01:01:06.395  4473  4473 W ResourceType: For resource 0x7f1610ff, entry index(4351) is beyond type entryCount(508)
+05-17 01:01:06.395  4473  4473 W ResourceType: For resource 0x7f161101, entry index(4353) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f161126, entry index(4390) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f161102, entry index(4354) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f160da7, entry index(3495) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f161103, entry index(4355) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f161105, entry index(4357) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 I chatty  : uid=10012 com.google.android.gms.ui identical 2 lines
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f16110a, entry index(4362) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f160da6, entry index(3494) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f16112c, entry index(4396) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f161111, entry index(4369) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f161112, entry index(4370) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f161129, entry index(4393) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f16112a, entry index(4394) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f160b89, entry index(2953) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f161125, entry index(4389) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f161127, entry index(4391) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f161139, entry index(4409) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f161110, entry index(4368) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f16110e, entry index(4366) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f160973, entry index(2419) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f16099d, entry index(2461) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f160986, entry index(2438) is beyond type entryCount(508)
+05-17 01:01:06.396  4473  4473 W ResourceType: For resource 0x7f160987, entry index(2439) is beyond type entryCount(508)
+05-17 01:01:06.397  4473  4473 W ResourceType: For resource 0x7f161143, entry index(4419) is beyond type entryCount(508)
+05-17 01:01:06.397  4473  4473 W ResourceType: For resource 0x7f161142, entry index(4418) is beyond type entryCount(508)
+05-17 01:01:06.410  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.410  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.410  4473  4473 W ResourceType: For resource 0x7f161116, entry index(4374) is beyond type entryCount(508)
+05-17 01:01:06.410  4473  4473 W ResourceType: For resource 0x7f16111a, entry index(4378) is beyond type entryCount(508)
+05-17 01:01:06.410  4473  4473 W ResourceType: For resource 0x7f161118, entry index(4376) is beyond type entryCount(508)
+05-17 01:01:06.410  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.410  4473  4473 W ResourceType: For resource 0x7f161128, entry index(4392) is beyond type entryCount(508)
+05-17 01:01:06.410  4473  4473 W ResourceType: For resource 0x7f1610ff, entry index(4351) is beyond type entryCount(508)
+05-17 01:01:06.410  4473  4473 W ResourceType: For resource 0x7f161101, entry index(4353) is beyond type entryCount(508)
+05-17 01:01:06.410  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.410  4473  4473 W ResourceType: For resource 0x7f161126, entry index(4390) is beyond type entryCount(508)
+05-17 01:01:06.410  4473  4473 W ResourceType: For resource 0x7f161102, entry index(4354) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f160da7, entry index(3495) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f161103, entry index(4355) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f161105, entry index(4357) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 I chatty  : uid=10012 com.google.android.gms.ui identical 2 lines
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f16110a, entry index(4362) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f160da6, entry index(3494) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f16112c, entry index(4396) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f161111, entry index(4369) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f161112, entry index(4370) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f161129, entry index(4393) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f16112a, entry index(4394) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f160b89, entry index(2953) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f161125, entry index(4389) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f161127, entry index(4391) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f161139, entry index(4409) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f161110, entry index(4368) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f16110e, entry index(4366) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f160973, entry index(2419) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f16099d, entry index(2461) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f160986, entry index(2438) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f160987, entry index(2439) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f161143, entry index(4419) is beyond type entryCount(508)
+05-17 01:01:06.411  4473  4473 W ResourceType: For resource 0x7f161142, entry index(4418) is beyond type entryCount(508)
+05-17 01:01:06.412  4473  4473 W ResourceType: For resource 0x7f16064e, entry index(1614) is beyond type entryCount(508)
+05-17 01:01:06.427  4473  4473 W ResourceType: For resource 0x7f16098c, entry index(2444) is beyond type entryCount(508)
+05-17 01:01:06.427  4473  4473 I chatty  : uid=10012 com.google.android.gms.ui identical 1 line
+05-17 01:01:06.429  4473  4473 W ResourceType: For resource 0x7f16098c, entry index(2444) is beyond type entryCount(508)
+05-17 01:01:06.430  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.430  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.430  4473  4473 W ResourceType: For resource 0x7f161116, entry index(4374) is beyond type entryCount(508)
+05-17 01:01:06.430  4473  4473 W ResourceType: For resource 0x7f16111a, entry index(4378) is beyond type entryCount(508)
+05-17 01:01:06.430  4473  4473 W ResourceType: For resource 0x7f161118, entry index(4376) is beyond type entryCount(508)
+05-17 01:01:06.430  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.430  4473  4473 W ResourceType: For resource 0x7f161128, entry index(4392) is beyond type entryCount(508)
+05-17 01:01:06.430  4473  4473 W ResourceType: For resource 0x7f1610ff, entry index(4351) is beyond type entryCount(508)
+05-17 01:01:06.430  4473  4473 W ResourceType: For resource 0x7f161101, entry index(4353) is beyond type entryCount(508)
+05-17 01:01:06.430  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.430  4473  4473 W ResourceType: For resource 0x7f161126, entry index(4390) is beyond type entryCount(508)
+05-17 01:01:06.430  4473  4473 W ResourceType: For resource 0x7f161102, entry index(4354) is beyond type entryCount(508)
+05-17 01:01:06.430  4473  4473 W ResourceType: For resource 0x7f160da7, entry index(3495) is beyond type entryCount(508)
+05-17 01:01:06.430  4473  4473 W ResourceType: For resource 0x7f161103, entry index(4355) is beyond type entryCount(508)
+05-17 01:01:06.430  4473  4473 W ResourceType: For resource 0x7f161105, entry index(4357) is beyond type entryCount(508)
+05-17 01:01:06.430  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.430  4473  4473 I chatty  : uid=10012 com.google.android.gms.ui identical 2 lines
+05-17 01:01:06.430  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.430  4473  4473 W ResourceType: For resource 0x7f16110a, entry index(4362) is beyond type entryCount(508)
+05-17 01:01:06.431  4473  4473 W ResourceType: For resource 0x7f160da6, entry index(3494) is beyond type entryCount(508)
+05-17 01:01:06.431  4473  4473 W ResourceType: For resource 0x7f16112c, entry index(4396) is beyond type entryCount(508)
+05-17 01:01:06.431  4473  4473 W ResourceType: For resource 0x7f161111, entry index(4369) is beyond type entryCount(508)
+05-17 01:01:06.431  4473  4473 W ResourceType: For resource 0x7f161112, entry index(4370) is beyond type entryCount(508)
+05-17 01:01:06.431  4473  4473 W ResourceType: For resource 0x7f161129, entry index(4393) is beyond type entryCount(508)
+05-17 01:01:06.431  4473  4473 W ResourceType: For resource 0x7f16112a, entry index(4394) is beyond type entryCount(508)
+05-17 01:01:06.431  4473  4473 W ResourceType: For resource 0x7f160b89, entry index(2953) is beyond type entryCount(508)
+05-17 01:01:06.431  4473  4473 W ResourceType: For resource 0x7f161125, entry index(4389) is beyond type entryCount(508)
+05-17 01:01:06.431  4473  4473 W ResourceType: For resource 0x7f161127, entry index(4391) is beyond type entryCount(508)
+05-17 01:01:06.431  4473  4473 W ResourceType: For resource 0x7f161139, entry index(4409) is beyond type entryCount(508)
+05-17 01:01:06.431  4473  4473 W ResourceType: For resource 0x7f161110, entry index(4368) is beyond type entryCount(508)
+05-17 01:01:06.431  4473  4473 W ResourceType: For resource 0x7f16110e, entry index(4366) is beyond type entryCount(508)
+05-17 01:01:06.431  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.431  4473  4473 W ResourceType: For resource 0x7f160973, entry index(2419) is beyond type entryCount(508)
+05-17 01:01:06.431  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.431  4473  4473 W ResourceType: For resource 0x7f16099d, entry index(2461) is beyond type entryCount(508)
+05-17 01:01:06.431  4473  4473 W ResourceType: For resource 0x7f160986, entry index(2438) is beyond type entryCount(508)
+05-17 01:01:06.431  4473  4473 W ResourceType: For resource 0x7f160987, entry index(2439) is beyond type entryCount(508)
+05-17 01:01:06.431  4473  4473 W ResourceType: For resource 0x7f161143, entry index(4419) is beyond type entryCount(508)
+05-17 01:01:06.431  4473  4473 W ResourceType: For resource 0x7f161142, entry index(4418) is beyond type entryCount(508)
+05-17 01:01:06.432  4473  4473 W ResourceType: For resource 0x7f16098c, entry index(2444) is beyond type entryCount(508)
+05-17 01:01:06.432  4473  4473 I chatty  : uid=10012 com.google.android.gms.ui identical 2 lines
+05-17 01:01:06.432  4473  4473 W ResourceType: For resource 0x7f16098c, entry index(2444) is beyond type entryCount(508)
+05-17 01:01:06.436  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f161116, entry index(4374) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f16111a, entry index(4378) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f161118, entry index(4376) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f161128, entry index(4392) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f1610ff, entry index(4351) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f161101, entry index(4353) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f161126, entry index(4390) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f161102, entry index(4354) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f160da7, entry index(3495) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f161103, entry index(4355) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f161105, entry index(4357) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 I chatty  : uid=10012 com.google.android.gms.ui identical 2 lines
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f16110a, entry index(4362) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f160da6, entry index(3494) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f16112c, entry index(4396) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f161111, entry index(4369) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f161112, entry index(4370) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f161129, entry index(4393) is beyond type entryCount(508)
+05-17 01:01:06.437  4473  4473 W ResourceType: For resource 0x7f16112a, entry index(4394) is beyond type entryCount(508)
+05-17 01:01:06.438  4473  4473 W ResourceType: For resource 0x7f160b89, entry index(2953) is beyond type entryCount(508)
+05-17 01:01:06.438  4473  4473 W ResourceType: For resource 0x7f161125, entry index(4389) is beyond type entryCount(508)
+05-17 01:01:06.438  4473  4473 W ResourceType: For resource 0x7f161127, entry index(4391) is beyond type entryCount(508)
+05-17 01:01:06.438  4473  4473 W ResourceType: For resource 0x7f161139, entry index(4409) is beyond type entryCount(508)
+05-17 01:01:06.438  4473  4473 W ResourceType: For resource 0x7f161110, entry index(4368) is beyond type entryCount(508)
+05-17 01:01:06.438  4473  4473 W ResourceType: For resource 0x7f16110e, entry index(4366) is beyond type entryCount(508)
+05-17 01:01:06.438  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.438  4473  4473 W ResourceType: For resource 0x7f160973, entry index(2419) is beyond type entryCount(508)
+05-17 01:01:06.438  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.438  4473  4473 W ResourceType: For resource 0x7f16099d, entry index(2461) is beyond type entryCount(508)
+05-17 01:01:06.438  4473  4473 W ResourceType: For resource 0x7f160986, entry index(2438) is beyond type entryCount(508)
+05-17 01:01:06.438  4473  4473 W ResourceType: For resource 0x7f160987, entry index(2439) is beyond type entryCount(508)
+05-17 01:01:06.438  4473  4473 W ResourceType: For resource 0x7f161143, entry index(4419) is beyond type entryCount(508)
+05-17 01:01:06.438  4473  4473 W ResourceType: For resource 0x7f161142, entry index(4418) is beyond type entryCount(508)
+05-17 01:01:06.443  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.445  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.445  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.445  4473  4473 W ResourceType: For resource 0x7f161116, entry index(4374) is beyond type entryCount(508)
+05-17 01:01:06.445  4473  4473 W ResourceType: For resource 0x7f16111a, entry index(4378) is beyond type entryCount(508)
+05-17 01:01:06.445  4473  4473 W ResourceType: For resource 0x7f161118, entry index(4376) is beyond type entryCount(508)
+05-17 01:01:06.445  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.445  4473  4473 W ResourceType: For resource 0x7f161128, entry index(4392) is beyond type entryCount(508)
+05-17 01:01:06.445  4473  4473 W ResourceType: For resource 0x7f1610ff, entry index(4351) is beyond type entryCount(508)
+05-17 01:01:06.445  4473  4473 W ResourceType: For resource 0x7f161101, entry index(4353) is beyond type entryCount(508)
+05-17 01:01:06.445  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.445  4473  4473 W ResourceType: For resource 0x7f161126, entry index(4390) is beyond type entryCount(508)
+05-17 01:01:06.445  4473  4473 W ResourceType: For resource 0x7f161102, entry index(4354) is beyond type entryCount(508)
+05-17 01:01:06.445  4473  4473 W ResourceType: For resource 0x7f160da7, entry index(3495) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f161103, entry index(4355) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f161105, entry index(4357) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 I chatty  : uid=10012 com.google.android.gms.ui identical 2 lines
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f16110a, entry index(4362) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f160da6, entry index(3494) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f16112c, entry index(4396) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f161111, entry index(4369) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f161112, entry index(4370) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f161129, entry index(4393) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f16112a, entry index(4394) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f160b89, entry index(2953) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f161125, entry index(4389) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f161127, entry index(4391) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f161139, entry index(4409) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f161110, entry index(4368) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f16110e, entry index(4366) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f160973, entry index(2419) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f16099d, entry index(2461) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f160986, entry index(2438) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f160987, entry index(2439) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f161143, entry index(4419) is beyond type entryCount(508)
+05-17 01:01:06.446  4473  4473 W ResourceType: For resource 0x7f161142, entry index(4418) is beyond type entryCount(508)
+05-17 01:01:06.449  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.449  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.449  4473  4473 W ResourceType: For resource 0x7f161116, entry index(4374) is beyond type entryCount(508)
+05-17 01:01:06.449  4473  4473 W ResourceType: For resource 0x7f16111a, entry index(4378) is beyond type entryCount(508)
+05-17 01:01:06.449  4473  4473 W ResourceType: For resource 0x7f161118, entry index(4376) is beyond type entryCount(508)
+05-17 01:01:06.449  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.449  4473  4473 W ResourceType: For resource 0x7f161128, entry index(4392) is beyond type entryCount(508)
+05-17 01:01:06.449  4473  4473 W ResourceType: For resource 0x7f1610ff, entry index(4351) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f161101, entry index(4353) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f161126, entry index(4390) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f161102, entry index(4354) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f160da7, entry index(3495) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f161103, entry index(4355) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f161105, entry index(4357) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 I chatty  : uid=10012 com.google.android.gms.ui identical 2 lines
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f16110a, entry index(4362) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f160da6, entry index(3494) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f16112c, entry index(4396) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f161111, entry index(4369) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f161112, entry index(4370) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f161129, entry index(4393) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f16112a, entry index(4394) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f160b89, entry index(2953) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f161125, entry index(4389) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f161127, entry index(4391) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f161139, entry index(4409) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f161110, entry index(4368) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f16110e, entry index(4366) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f160973, entry index(2419) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.450  4473  4473 W ResourceType: For resource 0x7f16099d, entry index(2461) is beyond type entryCount(508)
+05-17 01:01:06.451  4473  4473 W ResourceType: For resource 0x7f160986, entry index(2438) is beyond type entryCount(508)
+05-17 01:01:06.451  4473  4473 W ResourceType: For resource 0x7f160987, entry index(2439) is beyond type entryCount(508)
+05-17 01:01:06.451  4473  4473 W ResourceType: For resource 0x7f161143, entry index(4419) is beyond type entryCount(508)
+05-17 01:01:06.451  4473  4473 W ResourceType: For resource 0x7f161142, entry index(4418) is beyond type entryCount(508)
+05-17 01:01:06.454  4473  4473 W ResourceType: For resource 0x7f16110a, entry index(4362) is beyond type entryCount(508)
+05-17 01:01:06.457  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.458  4473  4473 W ResourceType: For resource 0x7f161106, entry index(4358) is beyond type entryCount(508)
+05-17 01:01:06.460  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.460  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.460  4473  4473 W ResourceType: For resource 0x7f161116, entry index(4374) is beyond type entryCount(508)
+05-17 01:01:06.460  4473  4473 W ResourceType: For resource 0x7f16111a, entry index(4378) is beyond type entryCount(508)
+05-17 01:01:06.460  4473  4473 W ResourceType: For resource 0x7f161118, entry index(4376) is beyond type entryCount(508)
+05-17 01:01:06.460  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.460  4473  4473 W ResourceType: For resource 0x7f161128, entry index(4392) is beyond type entryCount(508)
+05-17 01:01:06.460  4473  4473 W ResourceType: For resource 0x7f1610ff, entry index(4351) is beyond type entryCount(508)
+05-17 01:01:06.460  4473  4473 W ResourceType: For resource 0x7f161101, entry index(4353) is beyond type entryCount(508)
+05-17 01:01:06.460  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.460  4473  4473 W ResourceType: For resource 0x7f161126, entry index(4390) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f161102, entry index(4354) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f160da7, entry index(3495) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f161103, entry index(4355) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f161105, entry index(4357) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 I chatty  : uid=10012 com.google.android.gms.ui identical 2 lines
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f16110a, entry index(4362) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f160da6, entry index(3494) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f16112c, entry index(4396) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f161111, entry index(4369) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f161112, entry index(4370) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f161129, entry index(4393) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f16112a, entry index(4394) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f160b89, entry index(2953) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f161125, entry index(4389) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f161127, entry index(4391) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f161139, entry index(4409) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f161110, entry index(4368) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f16110e, entry index(4366) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f160973, entry index(2419) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f16099d, entry index(2461) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f160986, entry index(2438) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f160987, entry index(2439) is beyond type entryCount(508)
+05-17 01:01:06.461  4473  4473 W ResourceType: For resource 0x7f161143, entry index(4419) is beyond type entryCount(508)
+05-17 01:01:06.462  4473  4473 W ResourceType: For resource 0x7f161142, entry index(4418) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f161116, entry index(4374) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f16111a, entry index(4378) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f161118, entry index(4376) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f161128, entry index(4392) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f1610ff, entry index(4351) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f161101, entry index(4353) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f161126, entry index(4390) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f161102, entry index(4354) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f160da7, entry index(3495) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f161103, entry index(4355) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f161105, entry index(4357) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 I chatty  : uid=10012 com.google.android.gms.ui identical 2 lines
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f16110a, entry index(4362) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f160da6, entry index(3494) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f16112c, entry index(4396) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f161111, entry index(4369) is beyond type entryCount(508)
+05-17 01:01:06.465  4473  4473 W ResourceType: For resource 0x7f161112, entry index(4370) is beyond type entryCount(508)
+05-17 01:01:06.466  4473  4473 W ResourceType: For resource 0x7f161129, entry index(4393) is beyond type entryCount(508)
+05-17 01:01:06.466  4473  4473 W ResourceType: For resource 0x7f16112a, entry index(4394) is beyond type entryCount(508)
+05-17 01:01:06.466  4473  4473 W ResourceType: For resource 0x7f160b89, entry index(2953) is beyond type entryCount(508)
+05-17 01:01:06.466  4473  4473 W ResourceType: For resource 0x7f161125, entry index(4389) is beyond type entryCount(508)
+05-17 01:01:06.466  4473  4473 W ResourceType: For resource 0x7f161127, entry index(4391) is beyond type entryCount(508)
+05-17 01:01:06.466  4473  4473 W ResourceType: For resource 0x7f161139, entry index(4409) is beyond type entryCount(508)
+05-17 01:01:06.466  4473  4473 W ResourceType: For resource 0x7f161110, entry index(4368) is beyond type entryCount(508)
+05-17 01:01:06.466  4473  4473 W ResourceType: For resource 0x7f16110e, entry index(4366) is beyond type entryCount(508)
+05-17 01:01:06.466  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.466  4473  4473 W ResourceType: For resource 0x7f160973, entry index(2419) is beyond type entryCount(508)
+05-17 01:01:06.466  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.466  4473  4473 W ResourceType: For resource 0x7f16099d, entry index(2461) is beyond type entryCount(508)
+05-17 01:01:06.466  4473  4473 W ResourceType: For resource 0x7f160986, entry index(2438) is beyond type entryCount(508)
+05-17 01:01:06.466  4473  4473 W ResourceType: For resource 0x7f160987, entry index(2439) is beyond type entryCount(508)
+05-17 01:01:06.466  4473  4473 W ResourceType: For resource 0x7f161143, entry index(4419) is beyond type entryCount(508)
+05-17 01:01:06.466  4473  4473 W ResourceType: For resource 0x7f161142, entry index(4418) is beyond type entryCount(508)
+05-17 01:01:06.468  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.468  4473  4473 W ResourceType: For resource 0x7f161114, entry index(4372) is beyond type entryCount(508)
+05-17 01:01:06.468  4473  4473 W ResourceType: For resource 0x7f161116, entry index(4374) is beyond type entryCount(508)
+05-17 01:01:06.468  4473  4473 W ResourceType: For resource 0x7f16111a, entry index(4378) is beyond type entryCount(508)
+05-17 01:01:06.468  4473  4473 W ResourceType: For resource 0x7f161118, entry index(4376) is beyond type entryCount(508)
+05-17 01:01:06.468  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.468  4473  4473 W ResourceType: For resource 0x7f161128, entry index(4392) is beyond type entryCount(508)
+05-17 01:01:06.468  4473  4473 W ResourceType: For resource 0x7f1610ff, entry index(4351) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f161101, entry index(4353) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f161126, entry index(4390) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f161102, entry index(4354) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f160da7, entry index(3495) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f161103, entry index(4355) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f161105, entry index(4357) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 I chatty  : uid=10012 com.google.android.gms.ui identical 2 lines
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f16110a, entry index(4362) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f160da6, entry index(3494) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f16112c, entry index(4396) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f161111, entry index(4369) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f161112, entry index(4370) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f161129, entry index(4393) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f16112a, entry index(4394) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f160b89, entry index(2953) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f161125, entry index(4389) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f161127, entry index(4391) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f161139, entry index(4409) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f161110, entry index(4368) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f16110e, entry index(4366) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f160973, entry index(2419) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f16099d, entry index(2461) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f160986, entry index(2438) is beyond type entryCount(508)
+05-17 01:01:06.469  4473  4473 W ResourceType: For resource 0x7f160987, entry index(2439) is beyond type entryCount(508)
+05-17 01:01:06.470  4473  4473 W ResourceType: For resource 0x7f161143, entry index(4419) is beyond type entryCount(508)
+05-17 01:01:06.470  4473  4473 W ResourceType: For resource 0x7f161142, entry index(4418) is beyond type entryCount(508)
+05-17 01:01:06.479   602   655 I WindowManager: Focus moving from null to Window{f2ac7f8 u0 com.google.android.gms/com.google.android.location.settings.LocationSettingsCheckerActivity}
+05-17 01:01:06.556   257   257 I BufferQueue: [unnamed-257-132](this:0xb247c000,id:132,api:0,p:-1,c:-1) BufferQueue core=(257:/system/bin/surfaceflinger)
+05-17 01:01:06.556   257   257 E DumpTunnel: finding regDump() failed
+05-17 01:01:06.556   257   257 I BufferQueueConsumer: [unnamed-257-132](this:0xb247c000,id:132,api:0,p:-1,c:257) connect(C): consumer=(257:/system/bin/surfaceflinger) controlledByApp=false
+05-17 01:01:06.556   257   257 I BufferQueueConsumer: [unnamed-257-132](this:0xb247c000,id:132,api:0,p:-1,c:257) setConsumerName: unnamed-257-132
+05-17 01:01:06.557   257   257 I BufferQueueConsumer: [com.google.android.gms/com.google.android.location.settings.LocationSettingsCheckerActivity#0](this:0xb247c000,id:132,api:0,p:-1,c:257) setConsumerName: com.google.android.gms/com.google.android.location.settings.LocationSettingsCheckerActivity#0
+05-17 01:01:06.557   257   257 I BufferQueueProducer: [](this:0xb247c000,id:132,api:0,p:-1,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 2
+05-17 01:01:06.557   257   257 I BufferQueueConsumer: [com.google.android.gms/com.google.android.location.settings.LocationSettingsCheckerActivity#0](this:0xb247c000,id:132,api:0,p:-1,c:257) setDefaultBufferSize: width=812 height=1264
+05-17 01:01:06.564   253  3336 I [Gralloc]: usage1: 0x900, format: 1 stride: 816 vertical_stride: 1264 size: 4125696
+05-17 01:01:06.564   257  1005 I BufferQueueProducer: [com.google.android.gms/com.google.android.location.settings.LocationSettingsCheckerActivity#0](this:0xb247c000,id:132,api:1,p:4473,c:257) connect(P): api=1 producer=(4473:com.google.android.gms.ui) producerControlledByApp=true
+05-17 01:01:06.565   253   336 I [Gralloc]: usage1: 0x900, format: 1 stride: 816 vertical_stride: 1264 size: 4125696
+05-17 01:01:06.566   253   336 I [Gralloc]: usage1: 0x900, format: 1 stride: 816 vertical_stride: 1264 size: 4125696
+05-17 01:01:06.567   257   601 I BufferQueueProducer: [com.google.android.gms/com.google.android.location.settings.LocationSettingsCheckerActivity#0](this:0xb247c000,id:132,api:1,p:4473,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 3
+05-17 01:01:06.580   602   794 I WindowManager: Relayout Window{3a34b36 u0 com.google.android.gms/com.google.android.location.settings.LocationSettingsCheckerActivity}: oldVis=4 newVis=0 focusMayChange = true
+05-17 01:01:06.583   257   257 I BufferQueue: [unnamed-257-133](this:0xafa30000,id:133,api:0,p:-1,c:-1) BufferQueue core=(257:/system/bin/surfaceflinger)
+05-17 01:01:06.583   257   257 E DumpTunnel: finding regDump() failed
+05-17 01:01:06.583   257   257 I BufferQueueConsumer: [unnamed-257-133](this:0xafa30000,id:133,api:0,p:-1,c:257) connect(C): consumer=(257:/system/bin/surfaceflinger) controlledByApp=false
+05-17 01:01:06.583   257   257 I BufferQueueConsumer: [unnamed-257-133](this:0xafa30000,id:133,api:0,p:-1,c:257) setConsumerName: unnamed-257-133
+05-17 01:01:06.583   257   257 I BufferQueueConsumer: [com.google.android.gms/com.google.android.location.settings.LocationSettingsCheckerActivity#1](this:0xafa30000,id:133,api:0,p:-1,c:257) setConsumerName: com.google.android.gms/com.google.android.location.settings.LocationSettingsCheckerActivity#1
+05-17 01:01:06.583   257   257 I BufferQueueProducer: [](this:0xafa30000,id:133,api:0,p:-1,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 2
+05-17 01:01:06.583   257   257 I BufferQueueConsumer: [com.google.android.gms/com.google.android.location.settings.LocationSettingsCheckerActivity#1](this:0xafa30000,id:133,api:0,p:-1,c:257) setDefaultBufferSize: width=129 height=129
+05-17 01:01:06.599   257   257 I BufferQueueConsumer: [com.google.android.gms/com.google.android.location.settings.LocationSettingsCheckerActivity#1](this:0xafa30000,id:133,api:0,p:-1,c:257) setDefaultBufferSize: width=192 height=192
+05-17 01:01:06.603   257   348 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.99 dur=1005.63 max=1005.63 min=1005.63
+05-17 01:01:06.607   253   336 I [Gralloc]: usage1: 0x900, format: 1 stride: 192 vertical_stride: 192 size: 147456
+05-17 01:01:06.607   257  2570 I BufferQueueProducer: [com.google.android.gms/com.google.android.location.settings.LocationSettingsCheckerActivity#1](this:0xafa30000,id:133,api:1,p:4473,c:257) connect(P): api=1 producer=(4473:com.google.android.gms.ui) producerControlledByApp=true
+05-17 01:01:06.608   253   336 I chatty  : uid=1000(system) HwBinder:253_1 expire 1 line
+05-17 01:01:06.608   253   336 I [Gralloc]: usage1: 0x900, format: 1 stride: 192 vertical_stride: 192 size: 147456
+05-17 01:01:06.609   257  2570 I BufferQueueProducer: [com.google.android.gms/com.google.android.location.settings.LocationSettingsCheckerActivity#1](this:0xafa30000,id:133,api:1,p:4473,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 3
+05-17 01:01:06.616   257  2570 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 01:01:06.617   253   336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 816 vertical_stride: 1264 size: 4125696
+05-17 01:01:06.621  4473  4473 I RenderThread: type=1400 audit(0.0:182): avc: denied { search } for name="clients" dev="debugfs" ino=7420 scontext=u:r:priv_app:s0:c512,c768 tcontext=u:object_r:debugfs_ion:s0 tclass=dir permissive=1
+05-17 01:01:06.684   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 01:01:06.688   257  2570 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 01:01:06.688   253   336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 192 vertical_stride: 192 size: 147456
+05-17 01:01:06.694   257  2570 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 01:01:06.694   253   336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 816 vertical_stride: 1264 size: 4125696
+05-17 01:01:06.709   602   655 I ActivityManager: Displayed com.google.android.gms/com.google.android.location.settings.LocationSettingsCheckerActivity: +491ms
+05-17 01:01:06.712   253   336 I vendor.mediatek.hardware.power@1.1-impl: PowerHint hint:8, data:0
+05-17 01:01:06.717   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:0
+05-17 01:01:06.717   253   267 I libPerfService: 11: legacy set: -1 -1
+05-17 01:01:06.717   253   267 I libPerfService: 11: legacy set freq: -1 -1
+05-17 01:01:06.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:06.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:06.747   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=0.25 dur=101874.94 max=101382.78 min=19.46
+05-17 01:01:06.747   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:34.727226,dur:1007.85,max:307.96,min:19.21
+05-17 01:01:06.766   257  2570 I BufferQueueProducer: [NavigationBar#0](this:0xb246c000,id:4,api:1,p:752,c:257) queueBuffer: fps=0.22 dur=101931.96 max=101358.05 min=9.80
+05-17 01:01:07.746   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:07.747   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:08.120   257  1005 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 01:01:08.120   253   336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 816 vertical_stride: 1264 size: 4125696
+05-17 01:01:08.131   257  2570 I BufferQueueProducer: [com.google.android.gms/com.google.android.location.settings.LocationSettingsCheckerActivity#0](this:0xb247c000,id:132,api:1,p:4473,c:257) queueBuffer: fps=1.38 dur=1445.85 max=1430.80 min=15.05
+05-17 01:01:08.139   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=7.18 dur=1392.21 max=1209.30 min=19.53
+05-17 01:01:08.139   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:7.184241,dur:1391.94,max:1209.29,min:19.66
+05-17 01:01:08.748   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:08.748   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:09.749   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:09.749   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:09.986   257  2570 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.30 dur=3383.61 max=3383.61 min=3383.61
+05-17 01:01:10.006   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=7.50 dur=1867.18 max=1598.21 min=19.18
+05-17 01:01:10.006   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:7.497976,dur:1867.17,max:1597.73,min:10.52
+05-17 01:01:10.746   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:10.746   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:11.609   257  2570 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.62 dur=1622.77 max=1622.77 min=1622.77
+05-17 01:01:11.628   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=0.62 dur=1621.78 max=1621.78 min=1621.78
+05-17 01:01:11.628   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:0.616575,dur:1621.86,max:1621.86,min:1621.86
+05-17 01:01:11.747   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:11.747   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:12.613   257  2570 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=1.00 dur=1003.94 max=1003.94 min=1003.94
+05-17 01:01:12.634   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=0.99 dur=1005.84 max=1005.84 min=1005.84
+05-17 01:01:12.634   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:0.994053,dur:1005.98,max:1005.98,min:1005.98
+05-17 01:01:12.748   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:12.748   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:13.748   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:13.748   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:14.748   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:14.748   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:15.686   257  2570 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.65 dur=3072.99 max=2685.18 min=387.80
+05-17 01:01:15.697   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=0.65 dur=3063.10 max=2675.77 min=387.33
+05-17 01:01:15.697   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:0.652981,dur:3062.88,max:2675.90,min:386.98
+05-17 01:01:15.750   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:15.750   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:16.110  5434  5434 I BufferQueue: [unnamed-5434-0](this:0xaaa3f000,id:0,api:0,p:-1,c:-1) BufferQueue core=(5434:screencap)
+05-17 01:01:16.120  5434  5434 E DumpTunnel: open libgui_ext failed
+05-17 01:01:16.120  5434  5434 E DumpTunnel: finding regDump() failed
+05-17 01:01:16.120  5434  5434 I BufferQueueConsumer: [unnamed-5434-0](this:0xaaa3f000,id:0,api:0,p:-1,c:5434) connect(C): consumer=(5434:screencap) controlledByApp=false
+05-17 01:01:16.121  5434  5434 I BufferQueueConsumer: [unnamed-5434-0](this:0xaaa3f000,id:0,api:0,p:-1,c:5434) setConsumerName: unnamed-5434-0
+05-17 01:01:16.121  5434  5434 I BufferQueueConsumer: [ScreenshotClient](this:0xaaa3f000,id:0,api:0,p:-1,c:5434) setConsumerName: ScreenshotClient
+05-17 01:01:16.121  5434  5434 I BufferQueueProducer: [ScreenshotClient](this:0xaaa3f000,id:0,api:1,p:257,c:5434) connect(P): api=1 producer=(257:/system/bin/surfaceflinger) producerControlledByApp=false
+05-17 01:01:16.155   253   336 I [Gralloc]: usage1: 0x333, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 01:01:16.161   257   257 I SurfaceFlinger: screenshot (br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0)
+05-17 01:01:16.162   257   257 I SurfaceFlinger: screenshot (com.google.android.gms/com.google.android.location.settings.LocationSettingsCheckerActivity#1)
+05-17 01:01:16.162   257   257 I SurfaceFlinger: screenshot (DimLayerController/Stack=0#0)
+05-17 01:01:16.162   257   257 I SurfaceFlinger: screenshot (com.google.android.gms/com.google.android.location.settings.LocationSettingsCheckerActivity#0)
+05-17 01:01:16.162   257   257 I SurfaceFlinger: screenshot (StatusBar#0)
+05-17 01:01:16.162   257   257 I SurfaceFlinger: screenshot (NavigationBar#0)
+05-17 01:01:16.171  5434  5434 I BufferQueueProducer: [ScreenshotClient](this:0xaaa3f000,id:0,api:1,p:257,c:5434) disconnect(P): api 1
+05-17 01:01:16.171  5434  5434 I BufferQueueConsumer: [ScreenshotClient](this:0xaaa3f000,id:0,api:1,p:-1,c:5434) getReleasedBuffers: returning mask 0xffffffffffffffff
+05-17 01:01:16.699   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127

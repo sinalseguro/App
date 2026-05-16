@@ -1,4 +1,4 @@
-import { ApiRequestError, apiConfig } from "@/services/apiClient";
+import { ApiRequestError, apiClient, apiConfig } from "@/services/apiClient";
 import { listSecureRecords, saveSecureRecord } from "@/storage/secureJsonStore";
 import { syncEmergencySessionWithApi } from "@/services/emergencyDelivery";
 import { getEmergencyPackage, listEmergencyPackages } from "./emergencyOutbox";
@@ -12,6 +12,9 @@ export type EmergencyRemoteSyncState = {
   lastAttemptAt?: string;
   packageId: string;
   reason?: string;
+  remoteFinishedAt?: string;
+  remoteFinishReason?: string;
+  remoteFinishStatus?: "failed" | "finished" | "pending";
   recipientCount: number;
   remoteSessionId?: string;
   status: "blocked_login" | "failed" | "pending" | "sent_to_ec2";
@@ -28,7 +31,17 @@ export async function queueEmergencyPackageForRemoteSync(packageRecord: Emergenc
     (state) => state.packageId === packageRecord.id
   );
 
-  if (existing?.status === "sent_to_ec2") return existing;
+  if (existing?.status === "sent_to_ec2") {
+    if (packageRecord.status !== "recorded_local" || existing.remoteFinishedAt) return existing;
+
+    const nextState: EmergencyRemoteSyncState = {
+      ...existing,
+      remoteFinishStatus: "pending",
+      updatedAt: new Date().toISOString()
+    };
+    await saveSecureRecord(EMERGENCY_SYNC_NAMESPACE, nextState);
+    return nextState;
+  }
 
   const state: EmergencyRemoteSyncState = {
     id: packageRecord.id,
@@ -64,6 +77,81 @@ async function markSyncState(
   return nextState;
 }
 
+function syncFailureReason(error: unknown) {
+  return error instanceof ApiRequestError
+    ? error.message
+    : error instanceof Error
+      ? error.message
+      : "Falha ao sincronizar ocorrencia.";
+}
+
+async function finishRemoteSessionIfNeeded(state: EmergencyRemoteSyncState, packageRecord: EmergencyPackage) {
+  if (packageRecord.status !== "recorded_local" || !state.remoteSessionId || state.remoteFinishedAt) {
+    return state;
+  }
+
+  try {
+    await apiClient.finishEmergencySession(state.remoteSessionId);
+    return markSyncState(state, {
+      remoteFinishedAt: new Date().toISOString(),
+      remoteFinishReason: undefined,
+      remoteFinishStatus: "finished"
+    });
+  } catch (error) {
+    return markSyncState(state, {
+      remoteFinishReason: syncFailureReason(error),
+      remoteFinishStatus: "failed"
+    });
+  }
+}
+
+async function syncQueuedPackageState(candidate: EmergencyRemoteSyncState, packageRecord: EmergencyPackage) {
+  if (candidate.status === "sent_to_ec2") {
+    return finishRemoteSessionIfNeeded(candidate, packageRecord);
+  }
+
+  const attemptedAt = new Date().toISOString();
+  const attempts = candidate.attempts + 1;
+
+  try {
+    const result = await syncEmergencySessionWithApi(packageRecord);
+    if (result.status === "sent_to_ec2") {
+      const syncedState = await markSyncState(candidate, {
+        attempts,
+        lastAttemptAt: attemptedAt,
+        reason: undefined,
+        recipientCount: result.remoteSession.recipient_count ?? recipientCount(packageRecord),
+        remoteFinishStatus: packageRecord.status === "recorded_local" ? "pending" : candidate.remoteFinishStatus,
+        remoteSessionId: result.remoteSession.id,
+        status: "sent_to_ec2",
+        syncedAt: new Date().toISOString()
+      });
+      return finishRemoteSessionIfNeeded(syncedState, packageRecord);
+    }
+
+    return markSyncState(candidate, {
+      attempts,
+      lastAttemptAt: attemptedAt,
+      reason: result.reason,
+      recipientCount: recipientCount(packageRecord),
+      status: result.status === "login_required" ? "blocked_login" : "failed"
+    });
+  } catch (error) {
+    return markSyncState(candidate, {
+      attempts,
+      lastAttemptAt: attemptedAt,
+      reason: syncFailureReason(error),
+      recipientCount: recipientCount(packageRecord),
+      status: "failed"
+    });
+  }
+}
+
+export async function syncEmergencyPackageWithApi(packageRecord: EmergencyPackage) {
+  const state = await queueEmergencyPackageForRemoteSync(packageRecord);
+  return syncQueuedPackageState(state, packageRecord);
+}
+
 export async function syncPendingEmergencyPackagesWithApi() {
   if (!apiConfig.apiEnabled || !apiConfig.apiBaseUrl) return [];
 
@@ -71,59 +159,18 @@ export async function syncPendingEmergencyPackagesWithApi() {
   const packages = await listEmergencyPackages();
   const knownPackageIds = new Set(packages.map((packageRecord) => packageRecord.id));
   const candidates = states.filter(
-    (state) => state.status !== "sent_to_ec2" && knownPackageIds.has(state.packageId)
+    (state) =>
+      knownPackageIds.has(state.packageId) &&
+      (state.status !== "sent_to_ec2" ||
+        state.remoteFinishStatus === "pending" ||
+        state.remoteFinishStatus === "failed")
   );
   const results: EmergencyRemoteSyncState[] = [];
 
   for (const candidate of candidates) {
     const packageRecord = await getEmergencyPackage(candidate.packageId);
-    if (!packageRecord || packageRecord.status !== "recorded_local") continue;
-
-    const attemptedAt = new Date().toISOString();
-    const attempts = candidate.attempts + 1;
-
-    try {
-      const result = await syncEmergencySessionWithApi(packageRecord);
-      if (result.status === "sent_to_ec2") {
-        results.push(
-          await markSyncState(candidate, {
-            attempts,
-            lastAttemptAt: attemptedAt,
-            reason: undefined,
-            recipientCount: result.remoteSession.recipient_count ?? recipientCount(packageRecord),
-            remoteSessionId: result.remoteSession.id,
-            status: "sent_to_ec2",
-            syncedAt: new Date().toISOString()
-          })
-        );
-        continue;
-      }
-
-      results.push(
-        await markSyncState(candidate, {
-          attempts,
-          lastAttemptAt: attemptedAt,
-          reason: result.reason,
-          recipientCount: recipientCount(packageRecord),
-          status: result.status === "login_required" ? "blocked_login" : "failed"
-        })
-      );
-    } catch (error) {
-      results.push(
-        await markSyncState(candidate, {
-          attempts,
-          lastAttemptAt: attemptedAt,
-          reason:
-            error instanceof ApiRequestError
-              ? error.message
-              : error instanceof Error
-                ? error.message
-                : "Falha ao sincronizar ocorrencia.",
-          recipientCount: recipientCount(packageRecord),
-          status: "failed"
-        })
-      );
-    }
+    if (!packageRecord) continue;
+    results.push(await syncQueuedPackageState(candidate, packageRecord));
   }
 
   return results;

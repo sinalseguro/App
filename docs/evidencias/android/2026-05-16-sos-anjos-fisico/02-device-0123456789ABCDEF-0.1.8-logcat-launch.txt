@@ -1,0 +1,243 @@
+--------- beginning of system
+05-17 00:57:50.249   602  3179 I ActivityManager: START u0 {flg=0x10000000 cmp=br.com.sinalseguro.app/.MainActivity} from uid 2000
+--------- beginning of main
+05-17 00:57:50.266   253  3336 I vendor.mediatek.hardware.power@1.1-impl: PowerHint hint:8, data:1
+05-17 00:57:50.267   253   267 I libPerfService: 8: legacy set freq: 1300000 -1
+05-17 00:57:50.268   253   267 I libPerfService: 8: legacy set: 4 -1
+05-17 00:57:50.271   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:12, data:2000
+05-17 00:57:50.273   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:10, data:2000
+05-17 00:57:50.292   602  3179 I ActivityManager: Start proc 5173:br.com.sinalseguro.app/u0a72 for activity br.com.sinalseguro.app/.MainActivity
+05-17 00:57:50.294   253  3336 I vendor.mediatek.hardware.power@1.1-impl: PowerHint hint:8, data:0
+05-17 00:57:50.298  5173  5173 I zygote  : Late-enabling -Xcheck:jni
+05-17 00:57:50.398   602   710 I InputReader: Reconfiguring input devices.  changes=0x00000004
+05-17 00:57:50.412   253  3336 I vendor.mediatek.hardware.power@1.1-impl: notifyAppState pack:br.com.sinalseguro.app, act:br.com.sinalseguro.app.MainActivity, pid:5173, state:1
+05-17 00:57:50.418   253   267 I libPerfService: perfUserGetCapability - cmd:7, id:0, val:-1
+05-17 00:57:50.731   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:57:50.731   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:57:50.912   602   642 W ActivityManager: Activity pause timeout for ActivityRecord{edb558c u0 br.com.sinalseguro.app/.MainActivity t49}
+05-17 00:57:50.963  5173  5173 W FirebaseApp: Default FirebaseApp failed to initialize because no default options were found. This usually means that com.google.gms:google-services was not applied to your gradle project.
+05-17 00:57:50.963  5173  5173 I FirebaseInitProvider: FirebaseApp initialization unsuccessful
+05-17 00:57:51.051   257  2570 I SurfaceFlinger: EventThread Client Pid (5173) created
+05-17 00:57:51.052   257  2570 I SurfaceFlinger: EventThread Client Pid (5173) created
+05-17 00:57:51.087  5173  5173 W SoLoader: Initializing SoLoader: 0
+05-17 00:57:51.089  5173  5173 W SoLoader: Recording new base apk path: /data/app/br.com.sinalseguro.app-lJqV4ZgEJEb_aK9_ihws7Q==/base.apk
+05-17 00:57:51.089  5173  5173 W SoLoader: Previously recorded 0 base apk paths.
+05-17 00:57:51.094  5173  5173 I SoLoader: Preparing SO source: DirectorySoSource[root = /system/lib flags = 2]
+05-17 00:57:51.095  5173  5173 I SoLoader: Preparing SO source: DirectorySoSource[root = /vendor/lib flags = 2]
+05-17 00:57:51.096  5173  5173 I SoLoader: Preparing SO source: DirectApkSoSource[root = [/data/app/br.com.sinalseguro.app-lJqV4ZgEJEb_aK9_ihws7Q==/base.apk!/lib/armeabi-v7a]]
+05-17 00:57:51.175  5173  5178 I zygote  : Do partial code cache collection, code=30KB, data=22KB
+05-17 00:57:51.177  5173  5178 I zygote  : After code cache collection, code=30KB, data=22KB
+05-17 00:57:51.177  5173  5178 I zygote  : Increasing code cache capacity to 128KB
+05-17 00:57:51.442  5173  5173 I SoLoader: Preparing SO source: ApplicationSoSource[DirectorySoSource[root = /data/app/br.com.sinalseguro.app-lJqV4ZgEJEb_aK9_ihws7Q==/lib/arm flags = 0]]
+05-17 00:57:51.442  5173  5173 I SoLoader: init finish: 4 SO sources prepared
+05-17 00:57:51.443  5173  5173 W SoLoader: SoLoader initialized: 8
+05-17 00:57:51.728   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:57:51.728   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:57:51.885  5173  5178 I zygote  : Do partial code cache collection, code=62KB, data=48KB
+05-17 00:57:51.886  5173  5178 I zygote  : After code cache collection, code=62KB, data=48KB
+05-17 00:57:51.886  5173  5178 I zygote  : Increasing code cache capacity to 256KB
+05-17 00:57:52.075  5173  5173 E ResourceType: Style contains key with bad entry: 0x01010586
+05-17 00:57:52.075  5173  5173 E ResourceType: Style contains key with bad entry: 0x01010668
+05-17 00:57:52.109   602   642 I ActivityManager: Waited long enough for: ServiceRecord{4aefe07 u0 com.google.android.gms/.statementservice.OperationService}
+05-17 00:57:52.271   253   267 I libPerfService: 12: legacy set: -1 -1
+05-17 00:57:52.271   253   267 I libPerfService: 12: legacy set freq: -1 -1
+05-17 00:57:52.367  5173  5173 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+05-17 00:57:52.368  5173  5173 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+05-17 00:57:52.371  5173  5192 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+05-17 00:57:52.371  5173  5192 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Start
+05-17 00:57:52.372  5173  5192 W unknown:BridgelessReact: ReactHost{0}.getJSBundleLoader()
+05-17 00:57:52.376  5173  5192 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactContext(): Creating BridgelessReactContext
+05-17 00:57:52.379  5173  5192 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Creating ReactInstance
+05-17 00:57:52.416  5173  5173 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+05-17 00:57:52.416  5173  5173 W unknown:BridgelessReact: ReactContext.onHostResume()
+05-17 00:57:52.447   257  2570 I SurfaceFlinger: EventThread Client Pid (5173) created
+05-17 00:57:52.458   257  2570 I SurfaceFlinger: [SF client] NEW(0xb2437a90) for (602:system_server)
+05-17 00:57:52.471  5173  5173 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+05-17 00:57:52.472  5173  5173 W unknown:BridgelessReact: ReactContext.onHostPause()
+05-17 00:57:52.491  5173  5173 I Choreographer: Skipped 69 frames!  The application may be doing too much work on its main thread.
+05-17 00:57:52.562   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:12, data:0
+05-17 00:57:52.564   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:10, data:0
+05-17 00:57:52.694  4067  4067 I Finsky  : [2] SCH: job service start with id 9732.
+05-17 00:57:52.719  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 1-1337, CT: 1778919456723, Constraints: [{ L: 43195236, D: 86395236, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.719  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 12-1, CT: 1778950657854, Constraints: [{ L: 15000, D: 86400000, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.720  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 34-10, CT: 1778919460954, Constraints: [{ L: 604800000, D: 2570958255, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.720  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 34-13, CT: 1778919460974, Constraints: [{ L: 58157074, D: 1354157074, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.728  4067  4101 I Finsky  : [321] SCH: Scheduling 1 system job(s)
+05-17 00:57:52.729  4067  4101 I Finsky  : [321] SCH: Scheduling system job Id: 9737, L: 0, D: 55179231, C: false, I: false, N: 1
+05-17 00:57:52.732   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:57:52.732   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:57:52.735  4067  4067 I Finsky  : [2] SCH: job service start with id 9737.
+05-17 00:57:52.745  4067  5201 I Finsky  : [397] SCH: job service finished with id 9732.
+05-17 00:57:52.762  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 1-1337, CT: 1778919456723, Constraints: [{ L: 43195236, D: 86395236, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.762  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 12-1, CT: 1778950657854, Constraints: [{ L: 15000, D: 86400000, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.763  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 34-10, CT: 1778919460954, Constraints: [{ L: 604800000, D: 2570958255, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.763  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 34-13, CT: 1778919460974, Constraints: [{ L: 58157074, D: 1354157074, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.769  4067  4105 I Finsky  : [325] SCH: Scheduling 1 system job(s)
+05-17 00:57:52.769  4067  4105 I Finsky  : [325] SCH: Scheduling system job Id: 9741, L: 0, D: 55179190, C: false, I: false, N: 1
+05-17 00:57:52.773  4067  4067 I Finsky  : [2] SCH: job service start with id 9741.
+05-17 00:57:52.780  4067  5201 I Finsky  : [397] SCH: job service finished with id 9737.
+05-17 00:57:52.789  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 1-1337, CT: 1778919456723, Constraints: [{ L: 43195236, D: 86395236, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.790  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 12-1, CT: 1778950657854, Constraints: [{ L: 15000, D: 86400000, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.790  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 34-10, CT: 1778919460954, Constraints: [{ L: 604800000, D: 2570958255, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.790  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 34-13, CT: 1778919460974, Constraints: [{ L: 58157074, D: 1354157074, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.796  4067  4105 I Finsky  : [325] SCH: Scheduling 1 system job(s)
+05-17 00:57:52.797  4067  4105 I Finsky  : [325] SCH: Scheduling system job Id: 9745, L: 0, D: 55179162, C: false, I: false, N: 1
+05-17 00:57:52.801  4067  4067 I Finsky  : [2] SCH: job service start with id 9745.
+05-17 00:57:52.809  4067  5201 I Finsky  : [397] SCH: job service finished with id 9741.
+05-17 00:57:52.823  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 1-1337, CT: 1778919456723, Constraints: [{ L: 43195236, D: 86395236, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.823  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 12-1, CT: 1778950657854, Constraints: [{ L: 15000, D: 86400000, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.823  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 34-10, CT: 1778919460954, Constraints: [{ L: 604800000, D: 2570958255, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.824  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 34-13, CT: 1778919460974, Constraints: [{ L: 58157074, D: 1354157074, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.830  4067  4105 I Finsky  : [325] SCH: Scheduling 1 system job(s)
+05-17 00:57:52.830  4067  4105 I Finsky  : [325] SCH: Scheduling system job Id: 9749, L: 0, D: 55179129, C: false, I: false, N: 1
+05-17 00:57:52.834  4067  4067 I Finsky  : [2] SCH: job service start with id 9749.
+05-17 00:57:52.841  4067  5201 I Finsky  : [397] SCH: job service finished with id 9745.
+05-17 00:57:52.851  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 1-1337, CT: 1778919456723, Constraints: [{ L: 43195236, D: 86395236, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.852  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 12-1, CT: 1778950657854, Constraints: [{ L: 15000, D: 86400000, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.852  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 34-10, CT: 1778919460954, Constraints: [{ L: 604800000, D: 2570958255, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.852  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 34-13, CT: 1778919460974, Constraints: [{ L: 58157074, D: 1354157074, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.858  4067  4104 I Finsky  : [324] SCH: Scheduling 1 system job(s)
+05-17 00:57:52.859  4067  4104 I Finsky  : [324] SCH: Scheduling system job Id: 9753, L: 0, D: 55179100, C: false, I: false, N: 1
+05-17 00:57:52.863  4067  4067 I Finsky  : [2] SCH: job service start with id 9753.
+05-17 00:57:52.870  4067  5201 I Finsky  : [397] SCH: job service finished with id 9749.
+05-17 00:57:52.875  4067  5102 I Finsky  : [393] SCH: Satisfied jobs for 9753 are: 12-1
+05-17 00:57:52.876  4067  5201 I Finsky  : [397] SCH: Job 12-1 starting
+05-17 00:57:52.878  4067  4067 I Finsky  : [2] WM::SCH: Logging work start for 12-1
+05-17 00:57:52.878  4067  4067 I Finsky  : [2] [ContentSync] job started
+05-17 00:57:52.957  1116  2418 I FontLog : (REDACTED) Received query %s, URI %s
+05-17 00:57:52.958  1116  2418 I FontLog : (REDACTED) Query [%s] resolved to %s
+05-17 00:57:52.963  1116  2418 I FontLog : (REDACTED) Fetch %s end status %s
+05-17 00:57:52.980  1116  2418 I FontLog : (REDACTED) Pulling font file for id = %d, cache size = %d
+05-17 00:57:53.001  1116  2418 I FontLog : (REDACTED) Pulling font file for id = %d, cache size = %d
+05-17 00:57:53.190  5173  5192 I ExpoModulesCore: ✅ AppContext was initialized
+05-17 00:57:53.399  4067  4072 I zygote  : Do partial code cache collection, code=9KB, data=31KB
+05-17 00:57:53.401  4067  4072 I zygote  : After code cache collection, code=9KB, data=31KB
+05-17 00:57:53.402  4067  4072 I zygote  : Increasing code cache capacity to 128KB
+05-17 00:57:53.730   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:57:53.731   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:57:53.753  5173  5192 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Loading JS Bundle
+05-17 00:57:53.756  5173  5192 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Calling DevSupportManagerBase.onNewReactContextCreated(reactContext)
+05-17 00:57:53.759  5173  5173 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Executing ReactInstanceEventListeners
+05-17 00:57:53.760  5173  5192 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+05-17 00:57:54.225  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.th3rdwave.safeareacontext.SafeAreaProviderManager
+05-17 00:57:54.323  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.uimanager.LayoutShadowNode
+05-17 00:57:54.390  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.SearchBarManager
+05-17 00:57:54.423  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class expo.modules.kotlin.views.GroupViewManagerWrapper
+05-17 00:57:54.453  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenFooterManager
+05-17 00:57:54.465  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.gamma.tabs.TabScreenViewManager
+05-17 00:57:54.487  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenContainerViewManager
+05-17 00:57:54.498  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.gamma.tabs.TabsHostViewManager
+05-17 00:57:54.527  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ModalScreenViewManager
+05-17 00:57:54.585  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenStackHeaderConfigViewManager
+05-17 00:57:54.609  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenContentWrapperManager
+05-17 00:57:54.616  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.th3rdwave.safeareacontext.SafeAreaViewManager
+05-17 00:57:54.655  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.th3rdwave.safeareacontext.SafeAreaViewShadowNode
+05-17 00:57:54.670  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenViewManager
+05-17 00:57:54.702  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.reactnativegooglesignin.RNGoogleSigninButtonViewManager
+05-17 00:57:54.710  4067  4067 I Finsky  : [2] App states replicator found 3 unowned apps
+05-17 00:57:54.723  4067  4104 I Finsky  : [324] Completed 0 account content syncs with 0 successful.
+05-17 00:57:54.723  4067  4067 I Finsky  : [2] [ContentSync] Installation state replication succeeded.
+05-17 00:57:54.724  4067  4067 I Finsky  : [2] SCH: jobFinished: 12-1. TimeElapsed: 1847ms.
+05-17 00:57:54.724  4067  4067 I Finsky  : [2] WM::SCH: Logging work end for 12-1
+05-17 00:57:54.729   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:57:54.729   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:57:54.737  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenStackHeaderSubviewManager
+05-17 00:57:54.745  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 1-1337, CT: 1778919456723, Constraints: [{ L: 43195236, D: 86395236, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:54.746  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 34-10, CT: 1778919460954, Constraints: [{ L: 604800000, D: 2570958255, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:54.746  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 34-13, CT: 1778919460974, Constraints: [{ L: 58157074, D: 1354157074, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:54.752  4067  4105 I Finsky  : [325] SCH: Scheduling 1 system job(s)
+05-17 00:57:54.752  4067  4105 I Finsky  : [325] SCH: Scheduling system job Id: 9757, L: 11977207, D: 55177207, C: false, I: false, N: 1
+05-17 00:57:54.760  4067  5201 I Finsky  : [397] SCH: job service finished with id 9753.
+05-17 00:57:54.762  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenStackViewManager
+05-17 00:57:55.406  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$DefsViewManager
+05-17 00:57:55.427  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.VirtualViewManager$RenderableShadowNode
+05-17 00:57:55.472  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeMergeManager
+05-17 00:57:55.513  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.safeareaview.ReactSafeAreaViewManager
+05-17 00:57:55.516  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.safeareaview.ReactSafeAreaViewShadowNode
+05-17 00:57:55.546  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$LinearGradientManager
+05-17 00:57:55.595  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeGaussianBlurManager
+05-17 00:57:55.638  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.progressbar.ReactProgressBarViewManager
+05-17 00:57:55.645  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.progressbar.ProgressBarShadowNode
+05-17 00:57:55.686  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.scroll.ReactHorizontalScrollViewManager
+05-17 00:57:55.730   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:57:55.730   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:57:55.756  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactTextViewManager
+05-17 00:57:55.772  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactTextShadowNode
+05-17 00:57:55.822  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeColorMatrixManager
+05-17 00:57:55.860  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.scroll.ReactHorizontalScrollContainerViewManager
+05-17 00:57:55.899  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$ClipPathViewManager
+05-17 00:57:55.957  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$SymbolManager
+05-17 00:57:56.014  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$PatternManager
+05-17 00:57:56.077  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeBlendManager
+05-17 00:57:56.111  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.view.ReactViewManager
+05-17 00:57:56.151  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.SvgViewManager
+05-17 00:57:56.211  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.switchview.ReactSwitchManager
+05-17 00:57:56.221  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.switchview.ReactSwitchShadowNode
+05-17 00:57:56.260  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$UseViewManager
+05-17 00:57:56.317  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$CircleViewManager
+05-17 00:57:56.351   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 00:57:56.355  5173  5178 I zygote  : Do full code cache collection, code=125KB, data=92KB
+05-17 00:57:56.357  5173  5178 I zygote  : After code cache collection, code=115KB, data=73KB
+05-17 00:57:56.370  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$TSpanViewManager
+05-17 00:57:56.426  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FilterManager
+05-17 00:57:56.463  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$MarkerManager
+05-17 00:57:56.522  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.gesturehandler.react.RNGestureHandlerButtonViewManager
+05-17 00:57:56.565  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.modal.ReactModalHostManager
+05-17 00:57:56.603  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$ForeignObjectManager
+05-17 00:57:56.651  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$EllipseViewManager
+05-17 00:57:56.698  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$LineViewManager
+05-17 00:57:56.727   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:57:56.727   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:57:56.749  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.frescosupport.FrescoBasedReactTextInlineImageViewManager
+05-17 00:57:56.750  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.frescosupport.FrescoBasedReactTextInlineImageShadowNode
+05-17 00:57:56.781  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeFloodManager
+05-17 00:57:56.816  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$GroupViewManager
+05-17 00:57:56.862  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$TextViewManager
+05-17 00:57:56.912  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$ImageViewManager
+05-17 00:57:56.960  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeCompositeManager
+05-17 00:57:57.004  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.image.ReactImageManager
+05-17 00:57:57.047  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$RadialGradientManager
+05-17 00:57:57.090  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$MaskManager
+05-17 00:57:57.142  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.unimplementedview.ReactUnimplementedViewManager
+05-17 00:57:57.172  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$RectViewManager
+05-17 00:57:57.223  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$TextPathViewManager
+05-17 00:57:57.285  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.scroll.ReactScrollViewManager
+05-17 00:57:57.336  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeOffsetManager
+05-17 00:57:57.371  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$PathViewManager
+05-17 00:57:57.423  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.drawer.ReactDrawerLayoutManager
+05-17 00:57:57.458  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactVirtualTextViewManager
+05-17 00:57:57.459  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactVirtualTextShadowNode
+05-17 00:57:57.503  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.swiperefresh.SwipeRefreshLayoutManager
+05-17 00:57:57.534  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactRawTextManager
+05-17 00:57:57.535  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactRawTextShadowNode
+05-17 00:57:57.569  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.textinput.ReactTextInputManager
+05-17 00:57:57.597  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.textinput.ReactTextInputShadowNode
+05-17 00:57:57.639  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.gesturehandler.react.RNGestureHandlerRootViewManager
+05-17 00:57:57.694  5173  5193 W BridgelessReactContext: [WARNING] Bridgeless doesn't support CatalystInstance. Accessing an API that's not part of the new architecture is not encouraged usage.
+05-17 00:57:57.731  5173  5193 I ExpoModulesCore: ✅ JSI interop was installed
+05-17 00:57:57.750   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:57:57.750   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:57:57.815  5173  5193 I ExpoModulesCore: ✅ Constants were exported
+05-17 00:57:58.202  5173  5193 I ReactNativeJS: Running "main"
+05-17 00:57:58.579  5173  5178 I zygote  : Do partial code cache collection, code=119KB, data=79KB
+05-17 00:57:58.580  5173  5178 I zygote  : After code cache collection, code=119KB, data=79KB
+05-17 00:57:58.580  5173  5178 I zygote  : Increasing code cache capacity to 512KB
+05-17 00:57:58.727   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:57:58.727   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:57:59.324  5173  5184 I zygote  : Background concurrent copying GC freed 51845(2MB) AllocSpace objects, 4(80KB) LOS objects, 50% free, 4MB/8MB, paused 144us total 114.296ms
+05-17 00:57:59.569   602  3179 W ActivityManager: stopServiceToken startId 14 is last, but have 2 remaining args
+05-17 00:57:59.728   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:57:59.728   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:00.727   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:00.727   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:00.772  5173  5193 W ReactNativeJS: Linking found multiple possible URI schemes in your Expo config.
+05-17 00:58:00.772  5173  5193 W ReactNativeJS: Using 'sinalseguro'. Ignoring: br.com.sinalseguro.app, br.com.sinalseguro.app.
+05-17 00:58:00.772  5173  5193 W ReactNativeJS: Provide the preferred URI scheme to the Linking API.
+05-17 00:58:01.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:01.725   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:02.739   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:02.739   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:03.743   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:03.743   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:04.743   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:04.743   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255

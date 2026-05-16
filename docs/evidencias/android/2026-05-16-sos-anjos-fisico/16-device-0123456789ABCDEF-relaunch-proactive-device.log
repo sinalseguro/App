@@ -1,0 +1,251 @@
+--------- beginning of system
+05-17 01:18:55.832   602  3196 I ActivityManager: START u0 {flg=0x10000000 cmp=br.com.sinalseguro.app/.MainActivity} from uid 2000
+--------- beginning of main
+05-17 01:18:55.850   253  3336 I vendor.mediatek.hardware.power@1.1-impl: PowerHint hint:8, data:1
+05-17 01:18:55.851   253   267 I libPerfService: 8: legacy set freq: 1300000 -1
+05-17 01:18:55.851   253   267 I libPerfService: 8: legacy set: 4 -1
+05-17 01:18:55.855   602   693 E ResourceType: Style contains key with bad entry: 0x01010586
+05-17 01:18:55.855   602   693 E ResourceType: Style contains key with bad entry: 0x01010668
+05-17 01:18:55.856   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:2000
+05-17 01:18:55.864   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:2000
+05-17 01:18:55.865   602   693 E ResourceType: Style contains key with bad entry: 0x01010586
+05-17 01:18:55.865   602   693 E ResourceType: Style contains key with bad entry: 0x01010668
+05-17 01:18:55.870   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:0.158230,dur:12639.83,max:11648.17,min:991.66
+05-17 01:18:55.875   602   655 I WindowManager: Focus moving from Window{882afad u0 com.android.launcher3/com.android.launcher3.Launcher} to null
+05-17 01:18:55.876   253   253 I merged_hal_serv: type=1400 audit(0.0:219): avc: denied { search } for name="thermal" dev="proc" ino=4026533566 scontext=u:r:merged_hal_service:s0 tcontext=u:object_r:proc_thermal:s0 tclass=dir permissive=1
+05-17 01:18:55.877   253  3336 I vendor.mediatek.hardware.power@1.1-impl: notifyAppState pack:br.com.sinalseguro.app, act:br.com.sinalseguro.app.MainActivity, pid:6356, state:1
+05-17 01:18:55.878   253   267 I libPerfService: [perfNotifyAppState] foreground:br.com.sinalseguro.app, pid:6356
+05-17 01:18:55.879   253   267 E libPerfService: Could not open '/proc/driver/thermal/ta_fg_pid'
+05-17 01:18:55.879   253   267 E libPerfService: error : 2, No such file or directory
+05-17 01:18:55.879   253   267 E libPerfService: Could not open '/sys/module/ged/parameters/gx_top_app_pid'
+05-17 01:18:55.879   253   267 E libPerfService: error : 2, No such file or directory
+05-17 01:18:55.879   253   267 I libPerfService: perfUserGetCapability - cmd:7, id:0, val:-1
+05-17 01:18:55.917   257   257 I BufferQueue: [unnamed-257-142](this:0xafa1f000,id:142,api:0,p:-1,c:-1) BufferQueue core=(257:/system/bin/surfaceflinger)
+05-17 01:18:55.917   257   257 E DumpTunnel: finding regDump() failed
+05-17 01:18:55.917   257   257 I BufferQueueConsumer: [unnamed-257-142](this:0xafa1f000,id:142,api:0,p:-1,c:257) connect(C): consumer=(257:/system/bin/surfaceflinger) controlledByApp=false
+05-17 01:18:55.918   257   257 I BufferQueueConsumer: [unnamed-257-142](this:0xafa1f000,id:142,api:0,p:-1,c:257) setConsumerName: unnamed-257-142
+05-17 01:18:55.918   257   257 I BufferQueueConsumer: [Splash Screen br.com.sinalseguro.app#0](this:0xafa1f000,id:142,api:0,p:-1,c:257) setConsumerName: Splash Screen br.com.sinalseguro.app#0
+05-17 01:18:55.918   257   257 I BufferQueueProducer: [](this:0xafa1f000,id:142,api:0,p:-1,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 2
+05-17 01:18:55.918   257   257 I BufferQueueConsumer: [Splash Screen br.com.sinalseguro.app#0](this:0xafa1f000,id:142,api:0,p:-1,c:257) setDefaultBufferSize: width=720 height=1280
+05-17 01:18:55.933   257   601 I BufferQueueProducer: [Splash Screen br.com.sinalseguro.app#0](this:0xafa1f000,id:142,api:2,p:602,c:257) connect(P): api=2 producer=(602:system_server) producerControlledByApp=false
+05-17 01:18:55.934   253  3336 I [Gralloc]: usage1: 0x933, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 01:18:55.976  1295  1428 E [EGL-ERROR]: __egl_platform_cancel_buffers:644: surface->num_buffers(4)
+05-17 01:18:55.979   257   601 I BufferQueueProducer: [com.android.launcher3/com.android.launcher3.Launcher#0](this:0xafa25000,id:141,api:1,p:1295,c:257) disconnect(P): api 1
+05-17 01:18:55.979   257   601 I BufferQueueConsumer: [com.android.launcher3/com.android.launcher3.Launcher#0](this:0xafa25000,id:141,api:1,p:-1,c:257) getReleasedBuffers: returning mask 0xffffffffffffffff
+05-17 01:18:55.991   276  6227 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:18:55.991   276  6227 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:18:56.146  6356  6367 I zygote  : Do partial code cache collection, code=31KB, data=25KB
+05-17 01:18:56.147  6356  6367 I zygote  : After code cache collection, code=31KB, data=25KB
+05-17 01:18:56.148  6356  6367 I zygote  : Increasing code cache capacity to 128KB
+05-17 01:18:56.176  6356  6356 E ResourceType: Style contains key with bad entry: 0x01010586
+05-17 01:18:56.177  6356  6356 E ResourceType: Style contains key with bad entry: 0x01010668
+05-17 01:18:56.285   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=0.09 dur=115554.96 max=115371.92 min=19.75
+05-17 01:18:56.416   257   349 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.08 dur=12198.68 max=12198.68 min=12198.68
+05-17 01:18:56.440  6356  6356 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+05-17 01:18:56.440  6356  6356 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+05-17 01:18:56.442  6356  6417 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+05-17 01:18:56.443  6356  6417 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Start
+05-17 01:18:56.443  6356  6417 W unknown:BridgelessReact: ReactHost{0}.getJSBundleLoader()
+05-17 01:18:56.450  6356  6417 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactContext(): Creating BridgelessReactContext
+05-17 01:18:56.452  6356  6417 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Creating ReactInstance
+05-17 01:18:56.482  6356  6356 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+05-17 01:18:56.482  6356  6356 W unknown:BridgelessReact: ReactContext.onHostResume()
+05-17 01:18:56.508   257   349 I SurfaceFlinger: EventThread Client Pid (6356) created
+05-17 01:18:56.517   257   349 I SurfaceFlinger: [SF client] NEW(0xb2438490) for (602:system_server)
+05-17 01:18:56.579   602  2370 I WindowManager: Relayout Window{eb3eeaf u0 br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity}: oldVis=4 newVis=0 focusMayChange = true
+05-17 01:18:56.583   257   257 I BufferQueue: [unnamed-257-143](this:0xafa3d000,id:143,api:0,p:-1,c:-1) BufferQueue core=(257:/system/bin/surfaceflinger)
+05-17 01:18:56.584   257   257 E DumpTunnel: finding regDump() failed
+05-17 01:18:56.584   257   257 I BufferQueueConsumer: [unnamed-257-143](this:0xafa3d000,id:143,api:0,p:-1,c:257) connect(C): consumer=(257:/system/bin/surfaceflinger) controlledByApp=false
+05-17 01:18:56.584   257   257 I BufferQueueConsumer: [unnamed-257-143](this:0xafa3d000,id:143,api:0,p:-1,c:257) setConsumerName: unnamed-257-143
+05-17 01:18:56.584   257   257 I BufferQueueConsumer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa3d000,id:143,api:0,p:-1,c:257) setConsumerName: br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0
+05-17 01:18:56.584   257   257 I BufferQueueProducer: [](this:0xafa3d000,id:143,api:0,p:-1,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 2
+05-17 01:18:56.584   257   257 I BufferQueueConsumer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa3d000,id:143,api:0,p:-1,c:257) setDefaultBufferSize: width=720 height=1280
+05-17 01:18:56.594   602   655 I WindowManager: Focus moving from null to Window{eb3eeaf u0 br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity}
+05-17 01:18:56.602   253  3336 I [Gralloc]: usage1: 0x900, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 01:18:56.604   253  3336 I chatty  : uid=1000(system) HwBinder:253_4 identical 1 line
+05-17 01:18:56.605   253  3336 I [Gralloc]: usage1: 0x900, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 01:18:56.607  6356  6420 E         : appName=br.com.sinalseguro.app, acAppName=/system/bin/surfaceflinger
+05-17 01:18:56.607  6356  6420 E         : 0
+05-17 01:18:56.615  6356  6420 I br.com.sinalseguro.app: android::hardware::configstore::V1_0::ISurfaceFlingerConfigs::hasWideColorDisplay retrieved: 0
+05-17 01:18:56.615  6356  6420 I OpenGLRenderer: Initialized EGL, version 1.4
+05-17 01:18:56.617  6356  6420 E         : appName=br.com.sinalseguro.app, acAppName=com.instagram.android
+05-17 01:18:56.617  6356  6420 E         : 0
+05-17 01:18:56.626  6356  6420 I HWUIExtension: Get disable program binary service property (0)
+05-17 01:18:56.627  6356  6420 I HWUIExtension: Initializing program atlas...
+05-17 01:18:56.627  6356  6420 I ProgramBinary/Service: ProgramBinaryService client side disable debugging.
+05-17 01:18:56.627  6356  6420 I ProgramBinary/Service: ProgramBinaryService client side disable binary content debugging.
+05-17 01:18:56.629  6356  6420 I HWUIExtension: Program binary detail: Binary length is 78196, program map length is 104.
+05-17 01:18:56.629  6356  6420 I HWUIExtension: Succeeded to mmap program binaries. File descriptor is 55, and path is /dev/ashmem.
+05-17 01:18:56.629  6356  6420 I HWUIExtension: No need to use file discriptor anymore, close fd(55).
+05-17 01:18:56.634   257   349 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa3d000,id:143,api:1,p:6356,c:257) connect(P): api=1 producer=(6356:br.com.sinalseguro.app) producerControlledByApp=true
+05-17 01:18:56.636   257   349 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa3d000,id:143,api:1,p:6356,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 3
+05-17 01:18:56.968   276  6227 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:18:56.968   276  6227 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:18:57.030  1116  4953 I FontLog : (REDACTED) Received query %s, URI %s
+05-17 01:18:57.031  1116  4953 I FontLog : (REDACTED) Query [%s] resolved to %s
+05-17 01:18:57.035  1116  4953 I FontLog : (REDACTED) Fetch %s end status %s
+05-17 01:18:57.051  1116  4953 I FontLog : (REDACTED) Pulling font file for id = %d, cache size = %d
+05-17 01:18:57.063  1116  4953 I FontLog : (REDACTED) Pulling font file for id = %d, cache size = %d
+05-17 01:18:57.145  6356  6417 I ExpoModulesCore: ✅ AppContext was initialized
+05-17 01:18:57.546  6356  6417 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Loading JS Bundle
+05-17 01:18:57.548  6356  6417 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Calling DevSupportManagerBase.onNewReactContextCreated(reactContext)
+05-17 01:18:57.551  6356  6417 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+05-17 01:18:57.555  6356  6356 W unknown:BridgelessReact: ReactContext.onHostResume()
+05-17 01:18:57.556  6356  6356 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Executing ReactInstanceEventListeners
+05-17 01:18:57.889  6356  6367 I zygote  : Do partial code cache collection, code=61KB, data=58KB
+05-17 01:18:57.890  6356  6367 I zygote  : After code cache collection, code=61KB, data=58KB
+05-17 01:18:57.890  6356  6367 I zygote  : Increasing code cache capacity to 256KB
+05-17 01:18:57.906  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.th3rdwave.safeareacontext.SafeAreaProviderManager
+05-17 01:18:57.969   276  6227 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:18:57.969   276  6227 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:18:58.002  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.uimanager.LayoutShadowNode
+05-17 01:18:58.055  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.SearchBarManager
+05-17 01:18:58.082  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class expo.modules.kotlin.views.GroupViewManagerWrapper
+05-17 01:18:58.111  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenFooterManager
+05-17 01:18:58.123  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.gamma.tabs.TabScreenViewManager
+05-17 01:18:58.144  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenContainerViewManager
+05-17 01:18:58.156  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.gamma.tabs.TabsHostViewManager
+05-17 01:18:58.183  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ModalScreenViewManager
+05-17 01:18:58.242  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenStackHeaderConfigViewManager
+05-17 01:18:58.269  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenContentWrapperManager
+05-17 01:18:58.280  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.th3rdwave.safeareacontext.SafeAreaViewManager
+05-17 01:18:58.293  6356  6367 I zygote  : Compiler allocated 4MB to compile void android.view.ViewRootImpl.performTraversals()
+05-17 01:18:58.325  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.th3rdwave.safeareacontext.SafeAreaViewShadowNode
+05-17 01:18:58.341  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenViewManager
+05-17 01:18:58.365   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 01:18:58.376  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.reactnativegooglesignin.RNGoogleSigninButtonViewManager
+05-17 01:18:58.410  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenStackHeaderSubviewManager
+05-17 01:18:58.433  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenStackViewManager
+05-17 01:18:58.968  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$DefsViewManager
+05-17 01:18:58.969   276  6227 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:18:58.969   276  6227 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:18:58.987  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.VirtualViewManager$RenderableShadowNode
+05-17 01:18:59.023  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeMergeManager
+05-17 01:18:59.059  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.safeareaview.ReactSafeAreaViewManager
+05-17 01:18:59.061  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.safeareaview.ReactSafeAreaViewShadowNode
+05-17 01:18:59.085  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$LinearGradientManager
+05-17 01:18:59.125  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeGaussianBlurManager
+05-17 01:18:59.162  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.progressbar.ReactProgressBarViewManager
+05-17 01:18:59.167  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.progressbar.ProgressBarShadowNode
+05-17 01:18:59.201  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.scroll.ReactHorizontalScrollViewManager
+05-17 01:18:59.259  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactTextViewManager
+05-17 01:18:59.272  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactTextShadowNode
+05-17 01:18:59.313  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeColorMatrixManager
+05-17 01:18:59.345  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.scroll.ReactHorizontalScrollContainerViewManager
+05-17 01:18:59.377  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$ClipPathViewManager
+05-17 01:18:59.426  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$SymbolManager
+05-17 01:18:59.474  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$PatternManager
+05-17 01:18:59.527  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeBlendManager
+05-17 01:18:59.557  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.view.ReactViewManager
+05-17 01:18:59.591  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.SvgViewManager
+05-17 01:18:59.634  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.switchview.ReactSwitchManager
+05-17 01:18:59.640  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.switchview.ReactSwitchShadowNode
+05-17 01:18:59.666  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$UseViewManager
+05-17 01:18:59.706  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$CircleViewManager
+05-17 01:18:59.717  6356  6367 I zygote  : Do full code cache collection, code=125KB, data=101KB
+05-17 01:18:59.719  6356  6367 I zygote  : After code cache collection, code=82KB, data=58KB
+05-17 01:18:59.748  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$TSpanViewManager
+05-17 01:18:59.793  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FilterManager
+05-17 01:18:59.823  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$MarkerManager
+05-17 01:18:59.873  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.gesturehandler.react.RNGestureHandlerButtonViewManager
+05-17 01:18:59.908  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.modal.ReactModalHostManager
+05-17 01:18:59.940  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$ForeignObjectManager
+05-17 01:18:59.968   276  6227 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:18:59.968   276  6227 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:18:59.983  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$EllipseViewManager
+05-17 01:19:00.027  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$LineViewManager
+05-17 01:19:00.041   257   349 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.28 dur=3624.93 max=3624.93 min=3624.93
+05-17 01:19:00.071  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.frescosupport.FrescoBasedReactTextInlineImageViewManager
+05-17 01:19:00.072  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.frescosupport.FrescoBasedReactTextInlineImageShadowNode
+05-17 01:19:00.075   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:9.513920,dur:4204.37,max:3361.23,min:16.88
+05-17 01:19:00.100  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeFloodManager
+05-17 01:19:00.128  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$GroupViewManager
+05-17 01:19:00.174  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$TextViewManager
+05-17 01:19:00.225  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$ImageViewManager
+05-17 01:19:00.266  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeCompositeManager
+05-17 01:19:00.303  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.image.ReactImageManager
+05-17 01:19:00.344  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$RadialGradientManager
+05-17 01:19:00.380  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$MaskManager
+05-17 01:19:00.428  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.unimplementedview.ReactUnimplementedViewManager
+05-17 01:19:00.454  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$RectViewManager
+05-17 01:19:00.496  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$TextPathViewManager
+05-17 01:19:00.555  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.scroll.ReactScrollViewManager
+05-17 01:19:00.586   602   611 I zygote  : Background concurrent copying GC freed 111093(4MB) AllocSpace objects, 22(824KB) LOS objects, 35% free, 11MB/17MB, paused 225us total 191.619ms
+05-17 01:19:00.601  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeOffsetManager
+05-17 01:19:00.632  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$PathViewManager
+05-17 01:19:00.676  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.drawer.ReactDrawerLayoutManager
+05-17 01:19:00.706  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactVirtualTextViewManager
+05-17 01:19:00.708  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactVirtualTextShadowNode
+05-17 01:19:00.740  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.swiperefresh.SwipeRefreshLayoutManager
+05-17 01:19:00.767  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactRawTextManager
+05-17 01:19:00.769  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactRawTextShadowNode
+05-17 01:19:00.798  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.textinput.ReactTextInputManager
+05-17 01:19:00.823  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.textinput.ReactTextInputShadowNode
+05-17 01:19:00.857  6356  6418 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.gesturehandler.react.RNGestureHandlerRootViewManager
+05-17 01:19:00.902  6356  6418 W BridgelessReactContext: [WARNING] Bridgeless doesn't support CatalystInstance. Accessing an API that's not part of the new architecture is not encouraged usage.
+05-17 01:19:00.935  6356  6418 I ExpoModulesCore: ✅ JSI interop was installed
+05-17 01:19:00.969   276  6227 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:19:00.969   276  6227 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:19:01.009  6356  6418 I ExpoModulesCore: ✅ Constants were exported
+05-17 01:19:01.316  6356  6418 I ReactNativeJS: Running "main"
+05-17 01:19:01.968   276  6227 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:19:01.968   276  6227 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:19:02.609  6356  6367 I zygote  : Do partial code cache collection, code=123KB, data=98KB
+05-17 01:19:02.610  6356  6367 I zygote  : After code cache collection, code=123KB, data=98KB
+05-17 01:19:02.610  6356  6367 I zygote  : Increasing code cache capacity to 512KB
+05-17 01:19:02.851  6356  6373 I zygote  : Background concurrent copying GC freed 46515(2MB) AllocSpace objects, 4(80KB) LOS objects, 49% free, 4MB/9MB, paused 129us total 104.046ms
+05-17 01:19:02.969   276  6227 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:19:02.969   276  6227 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:19:03.492  6356  6418 W ReactNativeJS: Linking found multiple possible URI schemes in your Expo config.
+05-17 01:19:03.492  6356  6418 W ReactNativeJS: Using 'sinalseguro'. Ignoring: br.com.sinalseguro.app, br.com.sinalseguro.app.
+05-17 01:19:03.492  6356  6418 W ReactNativeJS: Provide the preferred URI scheme to the Linking API.
+05-17 01:19:03.715  6356  6438 E WebViewFactory: No such method for getDefinedWebViewPackageName: java.lang.NoSuchMethodException: getDefinedWebViewPackageName []
+05-17 01:19:03.772  6356  6438 I WebViewFactory: Loading com.android.webview version 66.0.3359.158 (code 336015805)
+05-17 01:19:03.846   257   349 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 01:19:03.847   253  3336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 01:19:03.848  6356  6438 I cr_LibraryLoader: Time to load native libraries: 8 ms (timestamps 8188-8196)
+05-17 01:19:03.859  6356  6356 I RenderThread: type=1400 audit(0.0:220): avc: denied { search } for name="clients" dev="debugfs" ino=7420 scontext=u:r:untrusted_app:s0:c512,c768 tcontext=u:object_r:debugfs_ion:s0 tclass=dir permissive=1
+05-17 01:19:03.868  6356  6438 I chromium: [INFO:library_loader_hooks.cc(36)] Chromium logging enabled: level = 0, default verbosity = 0
+05-17 01:19:03.870  6356  6438 I cr_LibraryLoader: Expected native library version number "66.0.3359.158", actual native library version number "66.0.3359.158"
+05-17 01:19:03.895   602   655 I ActivityManager: Displayed br.com.sinalseguro.app/.MainActivity: +8s25ms
+05-17 01:19:03.906   257  2570 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 01:19:03.906   253  3336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 01:19:03.911   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:0.521343,dur:3836.24,max:3832.57,min:3.68
+05-17 01:19:03.937   257   601 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 01:19:03.938   253  3336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 01:19:03.957   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=0.91 dur=7671.37 max=7546.67 min=19.72
+05-17 01:19:03.969   276  6227 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:19:03.969   276  6227 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:19:04.026   253  3336 I vendor.mediatek.hardware.power@1.1-impl: PowerHint hint:8, data:0
+05-17 01:19:04.027   253   267 I libPerfService: 8: legacy set: -1 -1
+05-17 01:19:04.028   253   267 I libPerfService: 8: legacy set freq: -1 -1
+05-17 01:19:04.031   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:0
+05-17 01:19:04.056   257   257 I BufferQueueConsumer: [com.android.launcher3/com.android.launcher3.Launcher#0](this:0xafa25000,id:141,api:1,p:-1,c:-1) disconnect(C)
+05-17 01:19:04.073   257   601 I BufferQueue: [com.android.launcher3/com.android.launcher3.Launcher#0](this:0xafa25000,id:141,api:1,p:-1,c:-1) ~BufferQueueCore
+05-17 01:19:04.098   257   601 I BufferQueueProducer: [Splash Screen br.com.sinalseguro.app#0](this:0xafa1f000,id:142,api:2,p:602,c:257) disconnect(P): api 2
+05-17 01:19:04.099   257   601 I BufferQueueConsumer: [Splash Screen br.com.sinalseguro.app#0](this:0xafa1f000,id:142,api:2,p:-1,c:257) getReleasedBuffers: returning mask 0xffffffffffffffff
+05-17 01:19:04.117   257   257 I BufferQueueConsumer: [Splash Screen br.com.sinalseguro.app#0](this:0xafa1f000,id:142,api:2,p:-1,c:-1) disconnect(C)
+05-17 01:19:04.117   257   257 I BufferQueue: [Splash Screen br.com.sinalseguro.app#0](this:0xafa1f000,id:142,api:2,p:-1,c:-1) ~BufferQueueCore
+05-17 01:19:04.128   257   349 I BufferQueueProducer: [NavigationBar#0](this:0xb246c000,id:4,api:1,p:752,c:257) queueBuffer: fps=0.21 dur=123613.76 max=123113.02 min=11.62
+05-17 01:19:04.459  6356  6438 I System.out: port:443
+05-17 01:19:04.657  6452  6452 I BufferQueue: [unnamed-6452-0](this:0xa9fbf000,id:0,api:0,p:-1,c:-1) BufferQueue core=(6452:screencap)
+05-17 01:19:04.671  6452  6452 E DumpTunnel: open libgui_ext failed
+05-17 01:19:04.672  6452  6452 E DumpTunnel: finding regDump() failed
+05-17 01:19:04.672  6452  6452 I BufferQueueConsumer: [unnamed-6452-0](this:0xa9fbf000,id:0,api:0,p:-1,c:6452) connect(C): consumer=(6452:screencap) controlledByApp=false
+05-17 01:19:04.672  6452  6452 I BufferQueueConsumer: [unnamed-6452-0](this:0xa9fbf000,id:0,api:0,p:-1,c:6452) setConsumerName: unnamed-6452-0
+05-17 01:19:04.673  6452  6452 I BufferQueueConsumer: [ScreenshotClient](this:0xa9fbf000,id:0,api:0,p:-1,c:6452) setConsumerName: ScreenshotClient
+05-17 01:19:04.674  6452  6452 I BufferQueueProducer: [ScreenshotClient](this:0xa9fbf000,id:0,api:1,p:257,c:6452) connect(P): api=1 producer=(257:/system/bin/surfaceflinger) producerControlledByApp=false
+05-17 01:19:04.690  6356  6419 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+05-17 01:19:04.691  6356  6419 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+05-17 01:19:04.732   253  3336 I [Gralloc]: usage1: 0x333, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 01:19:04.733  6452  6452 I screencap: type=1400 audit(0.0:221): avc: denied { search } for name="clients" dev="debugfs" ino=7420 scontext=u:r:shell:s0 tcontext=u:object_r:debugfs_ion:s0 tclass=dir permissive=1
+05-17 01:19:04.741   257   257 I SurfaceFlinger: screenshot (br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0)
+05-17 01:19:04.741   257   257 I SurfaceFlinger: screenshot (StatusBar#0)
+05-17 01:19:04.741   257   257 I SurfaceFlinger: screenshot (NavigationBar#0)
+05-17 01:19:04.748  6452  6452 I BufferQueueProducer: [ScreenshotClient](this:0xa9fbf000,id:0,api:1,p:257,c:6452) disconnect(P): api 1
+05-17 01:19:04.748  6452  6452 I BufferQueueConsumer: [ScreenshotClient](this:0xa9fbf000,id:0,api:1,p:-1,c:6452) getReleasedBuffers: returning mask 0xffffffffffffffff
+05-17 01:19:04.894   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa3d000,id:143,api:1,p:6356,c:257) queueBuffer: fps=36.52 dur=1013.16 max=217.59 min=2.83
+05-17 01:19:04.919   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:39.700474,dur:1007.54,max:204.84,min:5.68
+05-17 01:19:04.985   276  6227 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:19:04.985   276  6227 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:19:05.259   257  2570 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.38 dur=5217.88 max=5198.18 min=19.70

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { BellRing, CheckCircle2, RefreshCw, ShieldAlert, XCircle } from "lucide-react-native";
 import { BrandedDialog, BrandedDialogAction } from "@/components/BrandedDialog";
@@ -44,8 +44,10 @@ export default function AlertScreen() {
 
   const sortedAlerts = useMemo(() => sortAlerts(alerts), [alerts]);
 
-  async function refreshAlerts(nextStatus?: string) {
-    setRefreshing(true);
+  const refreshAlerts = useCallback(async (nextStatus?: string, options?: { silent?: boolean }) => {
+    if (!options?.silent) {
+      setRefreshing(true);
+    }
     try {
       const receivedAlerts = await apiClient.listReceivedEmergencySessions();
       setAlerts(receivedAlerts);
@@ -53,9 +55,11 @@ export default function AlertScreen() {
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Não foi possível atualizar os pedidos.");
     } finally {
-      setRefreshing(false);
+      if (!options?.silent) {
+        setRefreshing(false);
+      }
     }
-  }
+  }, []);
 
   async function respondToAlert(session: ApiEmergencySession, action: "accept" | "decline" | "seen") {
     const actionLabel = action === "accept" ? "aceito" : action === "decline" ? "recusado" : "visualizado";
@@ -76,7 +80,11 @@ export default function AlertScreen() {
 
   useEffect(() => {
     void refreshAlerts();
-  }, []);
+    const refreshTimer = setInterval(() => {
+      void refreshAlerts(undefined, { silent: true });
+    }, 8000);
+    return () => clearInterval(refreshTimer);
+  }, [refreshAlerts]);
 
   return (
     <SafeScreen

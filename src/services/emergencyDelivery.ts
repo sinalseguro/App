@@ -29,6 +29,41 @@ function packageAccuracyMeters(packageRecord: EmergencyPackage) {
   return packageRecord.location.accuracyMeters;
 }
 
+function isDeviceReferenceError(error: ApiRequestError) {
+  const details = JSON.stringify(error.details ?? "").toLowerCase();
+  const message = error.message.toLowerCase();
+  return (
+    error.status === 400 &&
+    (details.includes('"device"') ||
+      message.includes("dispositivo indisponivel") ||
+      message.includes("invalid pk"))
+  );
+}
+
+async function createRemoteEmergencySession(packageRecord: EmergencyPackage, deviceId?: string | null) {
+  return apiClient.createEmergencySession({
+    clientAlertId: packageRecord.clientAlertId,
+    deviceId,
+    idempotencyKey: packageRecord.idempotencyKey,
+    kind: packageRecord.kind,
+    locationAccuracyMeters: packageAccuracyMeters(packageRecord),
+    locationStatus: packageRecord.location.status,
+    protectedSubjectId: null,
+    startedAt: packageRecord.capture.startedAt
+  });
+}
+
+async function resolveEmergencyDeviceId(deviceId?: string | null) {
+  if (deviceId !== undefined) return deviceId;
+
+  try {
+    const refreshedDevice = await deviceBindingService.registerAuthenticatedDevice();
+    return refreshedDevice.device.id;
+  } catch {
+    return deviceBindingService.getRegisteredApiDeviceId();
+  }
+}
+
 export function getEmergencyDeliveryReadiness(packageRecord: EmergencyPackage) {
   const apiReady = apiConfig.apiEnabled && Boolean(apiConfig.apiBaseUrl);
 
@@ -72,17 +107,20 @@ export async function syncEmergencySessionWithApi(
   }
 
   try {
-    const registeredDeviceId = deviceId ?? (await deviceBindingService.getRegisteredApiDeviceId());
-    const remoteSession = await apiClient.createEmergencySession({
-      clientAlertId: packageRecord.clientAlertId,
-      deviceId: registeredDeviceId,
-      idempotencyKey: packageRecord.idempotencyKey,
-      kind: packageRecord.kind,
-      locationAccuracyMeters: packageAccuracyMeters(packageRecord),
-      locationStatus: packageRecord.location.status,
-      protectedSubjectId: null,
-      startedAt: packageRecord.capture.startedAt
-    });
+    const registeredDeviceId = await resolveEmergencyDeviceId(deviceId);
+    let remoteSession: ApiEmergencySession;
+
+    try {
+      remoteSession = await createRemoteEmergencySession(packageRecord, registeredDeviceId);
+    } catch (error) {
+      if (!(error instanceof ApiRequestError) || !registeredDeviceId || !isDeviceReferenceError(error)) {
+        throw error;
+      }
+
+      await deviceBindingService.clearRegisteredDeviceSession();
+      const refreshedDevice = await deviceBindingService.registerAuthenticatedDevice();
+      remoteSession = await createRemoteEmergencySession(packageRecord, refreshedDevice.device.id);
+    }
 
     return {
       remoteSession,

@@ -28,6 +28,7 @@ import { appendMediaOperationalLog } from "@/features/emergency/MediaOperational
 import { cleanupNativeMediaResidues } from "@/features/emergency/SinalSeguroMediaEngine";
 import {
   queueEmergencyPackageForRemoteSync,
+  syncEmergencyPackageWithApi,
   syncPendingEmergencyPackagesWithApi
 } from "@/features/emergency/emergencySyncQueue";
 import type { MediaCaptureFailureReason, MediaProcessingState } from "@/features/emergency/types";
@@ -605,6 +606,29 @@ export default function HomeScreen() {
         locationCaptured: result.packageRecord.location.status === "captured",
         platform: Platform.OS
       });
+      void syncEmergencyPackageWithApi(result.packageRecord)
+        .then((syncState) => {
+          appendMediaOperationalLog("emergency_remote_sync_start_result", {
+            platform: Platform.OS,
+            recipientCount: syncState.recipientCount,
+            remoteSessionCreated: Boolean(syncState.remoteSessionId),
+            status: syncState.status
+          });
+          if (syncState.status === "sent_to_ec2" && syncState.recipientCount > 0) {
+            setRecordingStatus(
+              `Chamado ativo. ${locationText} Pedido enviado para ${syncState.recipientCount} anjo${
+                syncState.recipientCount === 1 ? "" : "s"
+              }.`
+            );
+          } else if (syncState.status === "sent_to_ec2") {
+            setRecordingStatus(`Chamado ativo. ${locationText} Sem anjo aceito para avisar agora.`);
+          }
+        })
+        .catch((error) => {
+          appendMediaOperationalLog("emergency_remote_sync_start_error", {
+            platform: Platform.OS
+          }, error);
+        });
 
       setRecordingStatus(
         `Chamado ativo. Gravacao ${formatDuration(preferences.defaultDurationSeconds)}. ${locationText} Arquivo no cofre local.`
@@ -707,7 +731,11 @@ export default function HomeScreen() {
       }
 
       await queueEmergencyPackageForRemoteSync(result.packageRecord);
-      void syncPendingEmergencyPackagesWithApi().catch(() => undefined);
+      void syncPendingEmergencyPackagesWithApi().catch((error) => {
+        appendMediaOperationalLog("emergency_remote_finish_sync_error", {
+          platform: Platform.OS
+        }, error);
+      });
 
       const attachedAssetsAfterFinish =
         result.packageRecord.media.status === "recorded_local" ? result.packageRecord.media.assets.length : 0;

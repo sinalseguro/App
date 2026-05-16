@@ -1,0 +1,558 @@
+--------- beginning of main
+05-17 00:59:22.182   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.719288,dur:1005.76,max:21.31,min:19.99
+05-17 00:59:22.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:22.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:23.096   257   349 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=49.36 dur=1012.90 max=28.00 min=8.32
+05-17 00:59:23.187   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.769169,dur:1004.73,max:20.92,min:20.13
+05-17 00:59:23.232  5350  5350 W app_process: Could not reserve sentinel fault page
+05-17 00:59:23.561  5350  5350 I app_process: The ClassLoaderContext is a special shared library.
+05-17 00:59:23.665  5350  5350 I Input   : injectMotionEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=360.0, y[0]=952.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2548008, downTime=2548008, deviceId=1, source=0x1002 }
+05-17 00:59:23.667   602  3179 I PowerWrap: PowerHal_TouchBoost
+05-17 00:59:23.667   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:15, data:10000
+05-17 00:59:23.668   253   267 I libPerfService: 15: legacy set freq: 1105000 -1
+05-17 00:59:23.668   253   267 I libPerfService: 15: legacy set: 3 -1
+05-17 00:59:23.716  5350  5350 I Input   : injectMotionEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=360.0, y[0]=952.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2548008, downTime=2548008, deviceId=1, source=0x1002 }
+05-17 00:59:23.717   602   794 I PowerWrap: PowerHal_TouchBoost
+05-17 00:59:23.718   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:15, data:0
+05-17 00:59:23.719   253   267 I libPerfService: 15: legacy set: -1 -1
+05-17 00:59:23.719   253   267 I libPerfService: 15: legacy set freq: -1 -1
+05-17 00:59:23.735   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:23.735   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:23.785   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkCusPowerHint hint:0, data:268435455
+05-17 00:59:23.788   253   267 I powerd  : [powerd_req] POWER_MSG_MTK_CUS_HINT: hint:0, hdl:36, data:268435455
+05-17 00:59:23.788   253   267 I libPerfService: perfCusUserScnEnable - handle:36
+05-17 00:59:23.788   253   267 I libPerfService: 36: legacy set: 2 -1
+05-17 00:59:24.018   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkCusPowerHint hint:0, data:0
+05-17 00:59:24.019   253   267 I powerd  : [powerd_req] POWER_MSG_MTK_CUS_HINT: hint:0, hdl:36, data:0
+05-17 00:59:24.019   253   267 I libPerfService: 36: legacy set: -1 -1
+05-17 00:59:24.101   257   349 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=43.76 dur=1005.48 max=61.45 min=9.56
+05-17 00:59:24.192   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:42.771667,dur:1005.34,max:61.53,min:19.88
+05-17 00:59:24.228   253   253 I HwBinder:253_1: type=1400 audit(0.0:178): avc: denied { read } for name="1295-0" dev="debugfs" ino=27757 scontext=u:r:merged_hal_service:s0 tcontext=u:object_r:debugfs:s0 tclass=file permissive=1
+05-17 00:59:24.228   253   253 I HwBinder:253_1: type=1400 audit(0.0:179): avc: denied { open } for path="/sys/kernel/debug/ion/clients/1295-0" dev="debugfs" ino=27757 scontext=u:r:merged_hal_service:s0 tcontext=u:object_r:debugfs:s0 tclass=file permissive=1
+05-17 00:59:24.228   253   253 I HwBinder:253_1: type=1400 audit(0.0:180): avc: denied { getattr } for path="/sys/kernel/debug/ion/clients/1295-0" dev="debugfs" ino=27757 scontext=u:r:merged_hal_service:s0 tcontext=u:object_r:debugfs:s0 tclass=file permissive=1
+05-17 00:59:24.319  1376  2786 W Auth.Api.SignIn: [Service,SignInChimeraService] **************************** WARNING ***************************
+05-17 00:59:24.319  1376  2786 W Auth.Api.SignIn: You are using the deprecated legacy Google Sign-In APIs from
+05-17 00:59:24.319  1376  2786 W Auth.Api.SignIn: play-services-auth SDK. Please migrate to the Credential Manager
+05-17 00:59:24.319  1376  2786 W Auth.Api.SignIn: APIs, see https://goo.gle/gsi-migration.
+05-17 00:59:24.319  1376  2786 W Auth.Api.SignIn: ****************************************************************
+--------- beginning of system
+05-17 00:59:24.442   602   790 I ActivityManager: START u0 {act=com.google.android.gms.auth.GOOGLE_SIGN_IN pkg=br.com.sinalseguro.app cmp=br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity (has extras)} from uid 10072
+05-17 00:59:24.445   253   336 I vendor.mediatek.hardware.power@1.1-impl: PowerHint hint:8, data:1
+05-17 00:59:24.446   253   267 I libPerfService: 8: legacy set freq: 1300000 -1
+05-17 00:59:24.446   253   267 I libPerfService: 8: legacy set: 4 -1
+05-17 00:59:24.449   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:12, data:2000
+05-17 00:59:24.469  5173  5173 W unknown:BridgelessReact: ReactHost{0}.onUserLeaveHint(activity)
+05-17 00:59:24.475  5173  5173 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+05-17 00:59:24.475  5173  5173 W unknown:BridgelessReact: ReactContext.onHostPause()
+05-17 00:59:24.481   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:12, data:2000
+05-17 00:59:24.487   602   655 I WindowManager: Focus moving from Window{4c4ca24 u0 br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity} to null
+05-17 00:59:24.489   253   336 I vendor.mediatek.hardware.power@1.1-impl: notifyAppState pack:br.com.sinalseguro.app, act:com.google.android.gms.auth.api.signin.internal.SignInHubActivity, pid:5173, state:1
+05-17 00:59:24.489   253   267 I libPerfService: perfUserGetCapability - cmd:7, id:0, val:-1
+05-17 00:59:24.538   602   790 I ActivityManager: START u0 {act=com.google.android.gms.auth.GOOGLE_SIGN_IN pkg=com.google.android.gms cmp=com.google.android.gms/.auth.api.signin.ui.SignInActivity (has extras)} from uid 10072
+05-17 00:59:24.550   602   790 W ResourceType: ResTable_typeSpec entry count inconsistent: given 112, previously 115
+05-17 00:59:24.551   602   790 W ResourceType: ResTable_typeSpec entry count inconsistent: given 112, previously 115
+05-17 00:59:24.552   602   790 W ResourceType: ResTable_typeSpec entry count inconsistent: given 4810, previously 5454
+05-17 00:59:24.552   602   790 W ResourceType: ResTable_typeSpec entry count inconsistent: given 3589, previously 3610
+05-17 00:59:24.552   602   790 W ResourceType: ResTable_typeSpec entry count inconsistent: given 235, previously 240
+05-17 00:59:24.552   602   790 W ResourceType: ResTable_typeSpec entry count inconsistent: given 508, previously 5852
+05-17 00:59:24.557   602   790 W ResourceType: For resource 0x7f160bab, entry index(2987) is beyond type entryCount(508)
+05-17 00:59:24.557   602   790 W ResourceType: For resource 0x7f1615c7, entry index(5575) is beyond type entryCount(508)
+05-17 00:59:24.557   602   790 W ResourceType: For resource 0x7f160b96, entry index(2966) is beyond type entryCount(508)
+05-17 00:59:24.557   602   790 W ResourceType: For resource 0x7f1605ac, entry index(1452) is beyond type entryCount(508)
+05-17 00:59:24.557   602   790 W ResourceType: For resource 0x7f1605bb, entry index(1467) is beyond type entryCount(508)
+05-17 00:59:24.560   253   336 I vendor.mediatek.hardware.power@1.1-impl: PowerHint hint:8, data:1
+05-17 00:59:24.563   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:2000
+05-17 00:59:24.640   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:2000
+05-17 00:59:24.647   253   336 I vendor.mediatek.hardware.power@1.1-impl: notifyAppState pack:com.google.android.gms, act:com.google.android.gms.auth.api.signin.ui.SignInActivity, pid:4473, state:1
+05-17 00:59:24.648   253   267 I libPerfService: [perfNotifyAppState] foreground:com.google.android.gms, pid:4473
+05-17 00:59:24.648   253   267 E libPerfService: Could not open '/proc/driver/thermal/ta_fg_pid'
+05-17 00:59:24.648   253   267 E libPerfService: error : 2, No such file or directory
+05-17 00:59:24.648   253   267 E libPerfService: Could not open '/sys/module/ged/parameters/gx_top_app_pid'
+05-17 00:59:24.648   253   267 E libPerfService: error : 2, No such file or directory
+05-17 00:59:24.648   253   267 I libPerfService: perfUserGetCapability - cmd:7, id:0, val:-1
+05-17 00:59:24.656  4473  4473 W ResourceType: ResTable_typeSpec entry count inconsistent: given 112, previously 115
+05-17 00:59:24.656  4473  4473 W ResourceType: ResTable_typeSpec entry count inconsistent: given 112, previously 115
+05-17 00:59:24.656  4473  4473 W ResourceType: ResTable_typeSpec entry count inconsistent: given 4810, previously 5454
+05-17 00:59:24.656  4473  4473 W ResourceType: ResTable_typeSpec entry count inconsistent: given 3589, previously 3610
+05-17 00:59:24.656  4473  4473 W ResourceType: ResTable_typeSpec entry count inconsistent: given 235, previously 240
+05-17 00:59:24.656  4473  4473 W ResourceType: ResTable_typeSpec entry count inconsistent: given 508, previously 5852
+05-17 00:59:24.668   602  3179 I WindowManager: Relayout Window{a21f8fe u0 br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity}: oldVis=4 newVis=0 focusMayChange = true
+05-17 00:59:24.669  4473  4473 W ResourceType: For resource 0x7f160bab, entry index(2987) is beyond type entryCount(508)
+05-17 00:59:24.670  4473  4473 W ResourceType: For resource 0x7f160bab, entry index(2987) is beyond type entryCount(508)
+05-17 00:59:24.670  4473  4473 W ResourceType: For resource 0x7f1615c7, entry index(5575) is beyond type entryCount(508)
+05-17 00:59:24.670  4473  4473 W ResourceType: For resource 0x7f160b96, entry index(2966) is beyond type entryCount(508)
+05-17 00:59:24.670  4473  4473 W ResourceType: For resource 0x7f1605ac, entry index(1452) is beyond type entryCount(508)
+05-17 00:59:24.670  4473  4473 W ResourceType: For resource 0x7f1605bb, entry index(1467) is beyond type entryCount(508)
+05-17 00:59:24.675   257   257 I BufferQueue: [unnamed-257-130](this:0xb247c000,id:130,api:0,p:-1,c:-1) BufferQueue core=(257:/system/bin/surfaceflinger)
+05-17 00:59:24.675   257   257 E DumpTunnel: finding regDump() failed
+05-17 00:59:24.675   257   257 I BufferQueueConsumer: [unnamed-257-130](this:0xb247c000,id:130,api:0,p:-1,c:257) connect(C): consumer=(257:/system/bin/surfaceflinger) controlledByApp=false
+05-17 00:59:24.675   257   257 I BufferQueueConsumer: [unnamed-257-130](this:0xb247c000,id:130,api:0,p:-1,c:257) setConsumerName: unnamed-257-130
+05-17 00:59:24.675   257   257 I BufferQueueConsumer: [br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity#0](this:0xb247c000,id:130,api:0,p:-1,c:257) setConsumerName: br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity#0
+05-17 00:59:24.675   257   257 I BufferQueueProducer: [](this:0xb247c000,id:130,api:0,p:-1,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 2
+05-17 00:59:24.675   257   257 I BufferQueueConsumer: [br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity#0](this:0xb247c000,id:130,api:0,p:-1,c:257) setDefaultBufferSize: width=720 height=1184
+05-17 00:59:24.688  4473  4473 W ResourceType: For resource 0x7f160429, entry index(1065) is beyond type entryCount(508)
+05-17 00:59:24.688  4473  4473 W ResourceType: For resource 0x7f16042b, entry index(1067) is beyond type entryCount(508)
+05-17 00:59:24.688  4473  4473 W ResourceType: For resource 0x7f160b9d, entry index(2973) is beyond type entryCount(508)
+05-17 00:59:24.688  4473  4473 W ResourceType: For resource 0x7f160b88, entry index(2952) is beyond type entryCount(508)
+05-17 00:59:24.688  4473  4473 W ResourceType: For resource 0x7f1605ab, entry index(1451) is beyond type entryCount(508)
+05-17 00:59:24.688  4473  4473 W ResourceType: For resource 0x7f1605ba, entry index(1466) is beyond type entryCount(508)
+05-17 00:59:24.690   253   336 I [Gralloc]: usage1: 0x900, format: 1 stride: 720 vertical_stride: 1184 size: 3409920
+05-17 00:59:24.692   253   336 I chatty  : uid=1000(system) HwBinder:253_1 identical 1 line
+05-17 00:59:24.694   253   336 I [Gralloc]: usage1: 0x900, format: 1 stride: 720 vertical_stride: 1184 size: 3409920
+05-17 00:59:24.694   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity#0](this:0xb247c000,id:130,api:1,p:5173,c:257) connect(P): api=1 producer=(5173:br.com.sinalseguro.app) producerControlledByApp=true
+05-17 00:59:24.697  4473  4473 W GmsActivityProxy: Error binding root VE. SignInActivity is missing a @GmsCoreVeId annotation. [CONTEXT service_id=264 ]
+05-17 00:59:24.697   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity#0](this:0xb247c000,id:130,api:1,p:5173,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 3
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f1610fa, entry index(4346) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f1610fa, entry index(4346) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f1610fb, entry index(4347) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f1610fd, entry index(4349) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f1610fc, entry index(4348) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f16113e, entry index(4414) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f1610ff, entry index(4351) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f161101, entry index(4353) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f16112f, entry index(4399) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f161102, entry index(4354) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f160da7, entry index(3495) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f161103, entry index(4355) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 I chatty  : uid=10012 com.google.android.gms.ui identical 2 lines
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f16110a, entry index(4362) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f160da6, entry index(3494) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f16112c, entry index(4396) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f161111, entry index(4369) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f161112, entry index(4370) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f161129, entry index(4393) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f16112a, entry index(4394) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f160b89, entry index(2953) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f16112e, entry index(4398) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f161137, entry index(4407) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f161139, entry index(4409) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f161110, entry index(4368) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f16110e, entry index(4366) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f160973, entry index(2419) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f16099d, entry index(2461) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f160986, entry index(2438) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f160987, entry index(2439) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f161143, entry index(4419) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f161142, entry index(4418) is beyond type entryCount(508)
+05-17 00:59:24.715  4473  4473 W ResourceType: For resource 0x7f1610fa, entry index(4346) is beyond type entryCount(508)
+05-17 00:59:24.715  4473  4473 W ResourceType: For resource 0x7f1610fa, entry index(4346) is beyond type entryCount(508)
+05-17 00:59:24.715  4473  4473 W ResourceType: For resource 0x7f1610fb, entry index(4347) is beyond type entryCount(508)
+05-17 00:59:24.715  4473  4473 W ResourceType: For resource 0x7f1610fd, entry index(4349) is beyond type entryCount(508)
+05-17 00:59:24.715  4473  4473 W ResourceType: For resource 0x7f1610fc, entry index(4348) is beyond type entryCount(508)
+05-17 00:59:24.715  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 00:59:24.715  4473  4473 W ResourceType: For resource 0x7f16113e, entry index(4414) is beyond type entryCount(508)
+05-17 00:59:24.715  4473  4473 W ResourceType: For resource 0x7f1610ff, entry index(4351) is beyond type entryCount(508)
+05-17 00:59:24.715  4473  4473 W ResourceType: For resource 0x7f161101, entry index(4353) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f16112f, entry index(4399) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f161102, entry index(4354) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f160da7, entry index(3495) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f161103, entry index(4355) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 I chatty  : uid=10012 com.google.android.gms.ui identical 2 lines
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f16110a, entry index(4362) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f160da6, entry index(3494) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f16112c, entry index(4396) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f161111, entry index(4369) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f161112, entry index(4370) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f161129, entry index(4393) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f16112a, entry index(4394) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f160b89, entry index(2953) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f16112e, entry index(4398) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f161137, entry index(4407) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f161139, entry index(4409) is beyond type entryCount(508)
+05-17 00:59:24.717  4473  4473 W ResourceType: For resource 0x7f161110, entry index(4368) is beyond type entryCount(508)
+05-17 00:59:24.717  4473  4473 W ResourceType: For resource 0x7f16110e, entry index(4366) is beyond type entryCount(508)
+05-17 00:59:24.717  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 00:59:24.717  4473  4473 W ResourceType: For resource 0x7f160973, entry index(2419) is beyond type entryCount(508)
+05-17 00:59:24.717  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 00:59:24.717  4473  4473 W ResourceType: For resource 0x7f16099d, entry index(2461) is beyond type entryCount(508)
+05-17 00:59:24.717  4473  4473 W ResourceType: For resource 0x7f160986, entry index(2438) is beyond type entryCount(508)
+05-17 00:59:24.717  4473  4473 W ResourceType: For resource 0x7f160987, entry index(2439) is beyond type entryCount(508)
+05-17 00:59:24.717  4473  4473 W ResourceType: For resource 0x7f161143, entry index(4419) is beyond type entryCount(508)
+05-17 00:59:24.717  4473  4473 W ResourceType: For resource 0x7f161142, entry index(4418) is beyond type entryCount(508)
+05-17 00:59:24.718   257   349 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 00:59:24.718   253   336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 1184 size: 3409920
+05-17 00:59:24.726   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:24.726   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f1610fa, entry index(4346) is beyond type entryCount(508)
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f1610fa, entry index(4346) is beyond type entryCount(508)
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f1610fb, entry index(4347) is beyond type entryCount(508)
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f1610fd, entry index(4349) is beyond type entryCount(508)
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f1610fc, entry index(4348) is beyond type entryCount(508)
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f16113e, entry index(4414) is beyond type entryCount(508)
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f1610ff, entry index(4351) is beyond type entryCount(508)
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f161101, entry index(4353) is beyond type entryCount(508)
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f16112f, entry index(4399) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f161102, entry index(4354) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f160da7, entry index(3495) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f161103, entry index(4355) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 I chatty  : uid=10012 com.google.android.gms.ui identical 2 lines
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f16110a, entry index(4362) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f160da6, entry index(3494) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f16112c, entry index(4396) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f161111, entry index(4369) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f161112, entry index(4370) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f161129, entry index(4393) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f16112a, entry index(4394) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f160b89, entry index(2953) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f16112e, entry index(4398) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f161137, entry index(4407) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f161139, entry index(4409) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f161110, entry index(4368) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f16110e, entry index(4366) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f160973, entry index(2419) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f16099d, entry index(2461) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f160986, entry index(2438) is beyond type entryCount(508)
+05-17 00:59:24.730  4473  4473 W ResourceType: For resource 0x7f160987, entry index(2439) is beyond type entryCount(508)
+05-17 00:59:24.730  4473  4473 W ResourceType: For resource 0x7f161143, entry index(4419) is beyond type entryCount(508)
+05-17 00:59:24.730  4473  4473 W ResourceType: For resource 0x7f161142, entry index(4418) is beyond type entryCount(508)
+05-17 00:59:24.735   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:0
+05-17 00:59:24.736   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:12, data:0
+05-17 00:59:24.754   602  3179 I WindowManager: Relayout Window{8aa29d6 u0 com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity}: oldVis=4 newVis=0 focusMayChange = true
+05-17 00:59:24.760   257   257 I BufferQueue: [unnamed-257-131](this:0xafa27000,id:131,api:0,p:-1,c:-1) BufferQueue core=(257:/system/bin/surfaceflinger)
+05-17 00:59:24.760   257   257 E DumpTunnel: finding regDump() failed
+05-17 00:59:24.761   257   257 I BufferQueueConsumer: [unnamed-257-131](this:0xafa27000,id:131,api:0,p:-1,c:257) connect(C): consumer=(257:/system/bin/surfaceflinger) controlledByApp=false
+05-17 00:59:24.761   257   257 I BufferQueueConsumer: [unnamed-257-131](this:0xafa27000,id:131,api:0,p:-1,c:257) setConsumerName: unnamed-257-131
+05-17 00:59:24.761   257   257 I BufferQueueConsumer: [com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity#0](this:0xafa27000,id:131,api:0,p:-1,c:257) setConsumerName: com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity#0
+05-17 00:59:24.761   257   257 I BufferQueueProducer: [](this:0xafa27000,id:131,api:0,p:-1,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 2
+05-17 00:59:24.761   257   257 I BufferQueueConsumer: [com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity#0](this:0xafa27000,id:131,api:0,p:-1,c:257) setDefaultBufferSize: width=1 height=1
+05-17 00:59:24.772   253   336 I [Gralloc]: usage1: 0x900, format: 1 stride: 16 vertical_stride: 1 size: 64
+05-17 00:59:24.772   257  1005 I BufferQueueProducer: [com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity#0](this:0xafa27000,id:131,api:1,p:4473,c:257) connect(P): api=1 producer=(4473:com.google.android.gms.ui) producerControlledByApp=true
+05-17 00:59:24.772   602   655 I WindowManager: Focus moving from null to Window{8aa29d6 u0 com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity}
+05-17 00:59:24.773   253   336 I [Gralloc]: usage1: 0x900, format: 1 stride: 16 vertical_stride: 1 size: 64
+05-17 00:59:24.774   253   336 I [Gralloc]: usage1: 0x900, format: 1 stride: 16 vertical_stride: 1 size: 64
+05-17 00:59:24.776   257   349 I BufferQueueProducer: [com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity#0](this:0xafa27000,id:131,api:1,p:4473,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 3
+05-17 00:59:24.801   253   336 I vendor.mediatek.hardware.power@1.1-impl: PowerHint hint:8, data:0
+05-17 00:59:24.802   253   267 I libPerfService: 8: legacy set: -1 -1
+05-17 00:59:24.803   253   267 I libPerfService: 8: legacy set freq: -1 -1
+05-17 00:59:24.814   602   655 I ActivityManager: Displayed com.google.android.gms/.auth.api.signin.ui.SignInActivity: +162ms (total +320ms)
+05-17 00:59:24.834   257   349 I BufferQueueProducer: [NavigationBar#0](this:0xb246c000,id:4,api:1,p:752,c:257) queueBuffer: fps=0.13 dur=54394.52 max=54272.89 min=17.98
+05-17 00:59:24.856  4473  4483 I zygote  : Background concurrent copying GC freed 9458(578KB) AllocSpace objects, 4(80KB) LOS objects, 50% free, 2MB/4MB, paused 224us total 145.348ms
+05-17 00:59:24.872   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=0.13 dur=54127.59 max=54003.21 min=17.93
+05-17 00:59:24.945   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:2000
+05-17 00:59:24.945   253   267 I libPerfService: 11: legacy set freq: 1300000 -1
+05-17 00:59:24.946   253   267 I libPerfService: 11: legacy set: 4 -1
+05-17 00:59:24.955   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:2000
+05-17 00:59:24.960   253   336 I vendor.mediatek.hardware.power@1.1-impl: notifyAppState pack:br.com.sinalseguro.app, act:com.google.android.gms.auth.api.signin.internal.SignInHubActivity, pid:5173, state:1
+05-17 00:59:24.961   253   267 I libPerfService: [perfNotifyAppState] foreground:br.com.sinalseguro.app, pid:5173
+05-17 00:59:24.961   253   267 E libPerfService: Could not open '/proc/driver/thermal/ta_fg_pid'
+05-17 00:59:24.961   253   267 E libPerfService: error : 2, No such file or directory
+05-17 00:59:24.961   253   267 E libPerfService: Could not open '/sys/module/ged/parameters/gx_top_app_pid'
+05-17 00:59:24.961   253   267 E libPerfService: error : 2, No such file or directory
+05-17 00:59:24.961   253   267 I libPerfService: perfUserGetCapability - cmd:7, id:0, val:-1
+05-17 00:59:24.964   602   655 I WindowManager: Focus moving from Window{8aa29d6 u0 com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity} to Window{a21f8fe u0 br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity}
+05-17 00:59:25.032  4473  4508 E [EGL-ERROR]: __egl_platform_cancel_buffers:644: surface->num_buffers(4)
+05-17 00:59:25.032   257   349 I BufferQueueProducer: [com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity#0](this:0xafa27000,id:131,api:1,p:4473,c:257) disconnect(P): api 1
+05-17 00:59:25.033   257   349 I BufferQueueConsumer: [com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity#0](this:0xafa27000,id:131,api:1,p:-1,c:257) getReleasedBuffers: returning mask 0xffffffffffffffff
+05-17 00:59:25.087   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:12, data:2000
+05-17 00:59:25.096   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:12, data:2000
+05-17 00:59:25.102   253   336 I vendor.mediatek.hardware.power@1.1-impl: notifyAppState pack:br.com.sinalseguro.app, act:br.com.sinalseguro.app.MainActivity, pid:5173, state:1
+05-17 00:59:25.102   257   601 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=40.96 dur=1001.02 max=121.17 min=11.59
+05-17 00:59:25.103   253   267 I libPerfService: perfUserGetCapability - cmd:7, id:0, val:-1
+05-17 00:59:25.107   602   655 I WindowManager: Focus moving from Window{a21f8fe u0 br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity} to Window{4c4ca24 u0 br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity}
+05-17 00:59:25.137  5173  5173 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+05-17 00:59:25.138  5173  5173 W unknown:BridgelessReact: ReactContext.onHostResume()
+05-17 00:59:25.173  5173  5195 E [EGL-ERROR]: __egl_platform_cancel_buffers:644: surface->num_buffers(4)
+05-17 00:59:25.174   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity#0](this:0xb247c000,id:130,api:1,p:5173,c:257) disconnect(P): api 1
+05-17 00:59:25.175   257  1005 I BufferQueueConsumer: [br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity#0](this:0xb247c000,id:130,api:1,p:-1,c:257) getReleasedBuffers: returning mask 0xffffffffffffffff
+05-17 00:59:25.200   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:42.689217,dur:1007.28,max:122.95,min:18.47
+05-17 00:59:25.213   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:0
+05-17 00:59:25.214   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:12, data:0
+05-17 00:59:25.215   253   267 I libPerfService: 12: legacy set: -1 -1
+05-17 00:59:25.216   253   267 I libPerfService: 12: legacy set freq: -1 -1
+05-17 00:59:25.236   257   257 I BufferQueueConsumer: [com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity#0](this:0xafa27000,id:131,api:1,p:-1,c:-1) disconnect(C)
+05-17 00:59:25.236   257   257 I BufferQueue: [com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity#0](this:0xafa27000,id:131,api:1,p:-1,c:-1) ~BufferQueueCore
+05-17 00:59:25.380   257   257 I BufferQueueConsumer: [br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity#0](this:0xb247c000,id:130,api:1,p:-1,c:-1) disconnect(C)
+05-17 00:59:25.383   257   257 I BufferQueue: [br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity#0](this:0xb247c000,id:130,api:1,p:-1,c:-1) ~BufferQueueCore
+05-17 00:59:25.581  5173  5184 I zygote  : Background concurrent copying GC freed 187525(5MB) AllocSpace objects, 2(40KB) LOS objects, 48% free, 6MB/12MB, paused 550us total 174.801ms
+05-17 00:59:25.642   602   611 I zygote  : Background concurrent copying GC freed 138630(5MB) AllocSpace objects, 7(204KB) LOS objects, 34% free, 11MB/17MB, paused 321us total 289.867ms
+05-17 00:59:25.723   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:25.723   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:26.109   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.66 dur=1006.94 max=31.10 min=9.79
+05-17 00:59:26.202   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.910141,dur:1001.84,max:21.31,min:17.52
+05-17 00:59:26.522   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 00:59:26.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:26.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:27.114   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.76 dur=1005.00 max=25.06 min=16.60
+05-17 00:59:27.206   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.760632,dur:1004.91,max:21.00,min:19.89
+05-17 00:59:27.725   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:27.725   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:28.119   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.74 dur=1005.25 max=23.16 min=17.11
+05-17 00:59:28.211   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.759098,dur:1004.94,max:21.02,min:20.10
+05-17 00:59:28.737   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:28.737   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:29.120   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.94 dur=1001.17 max=23.96 min=18.10
+05-17 00:59:29.217   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.747711,dur:1005.18,max:21.02,min:20.12
+05-17 00:59:29.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:29.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:30.125   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.75 dur=1005.11 max=22.59 min=18.05
+05-17 00:59:30.221   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.768570,dur:1004.75,max:20.77,min:20.17
+05-17 00:59:30.726   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:30.726   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:31.130   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.80 dur=1004.17 max=25.51 min=15.49
+05-17 00:59:31.226   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.770050,dur:1004.71,max:21.00,min:20.04
+05-17 00:59:31.728   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:31.728   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:32.135   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.76 dur=1004.97 max=24.81 min=16.61
+05-17 00:59:32.232   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.708038,dur:1005.99,max:20.97,min:20.23
+05-17 00:59:32.733   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:32.734   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:33.144   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.54 dur=1009.50 max=25.32 min=15.27
+05-17 00:59:33.237   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.775513,dur:1004.60,max:21.66,min:19.71
+05-17 00:59:33.391   257   348 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.11 dur=17697.03 max=17683.06 min=13.97
+05-17 00:59:33.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:33.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:34.154   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.50 dur=1010.27 max=24.35 min=14.56
+05-17 00:59:34.242   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.740627,dur:1005.32,max:21.11,min:19.98
+05-17 00:59:34.315  5173  5184 I zygote  : Background concurrent copying GC freed 167563(5MB) AllocSpace objects, 12(624KB) LOS objects, 47% free, 6MB/12MB, paused 423us total 192.212ms
+05-17 00:59:34.723   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:34.723   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:35.155   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.98 dur=1000.40 max=28.41 min=12.51
+05-17 00:59:35.247   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.772987,dur:1004.65,max:21.28,min:19.30
+05-17 00:59:35.504  5173  5173 W [RNScreens]: disableBackButtonMenu prop is not available on Android
+05-17 00:59:35.505  5173  5173 W [RNScreens]: backTitleVisible prop is not available on Android
+05-17 00:59:35.505  5173  5173 W [RNScreens]: largeTitleFontFamily prop is not available on Android
+05-17 00:59:35.505  5173  5173 W [RNScreens]: backTitleFontFamily prop is not available on Android
+05-17 00:59:35.506  5173  5173 W [RNScreens]: largeTitleFontWeight prop is not available on Android
+05-17 00:59:35.506  5173  5173 W [RNScreens]: largeTitleHideShadow prop is not available on Android
+05-17 00:59:35.733   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:35.733   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:35.797   257   348 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.42 dur=2405.00 max=2405.00 min=2405.00
+05-17 00:59:36.063  5173  5178 I zygote  : Do partial code cache collection, code=503KB, data=360KB
+05-17 00:59:36.065  5173  5178 I zygote  : After code cache collection, code=502KB, data=360KB
+05-17 00:59:36.065  5173  5178 I zygote  : Increasing code cache capacity to 2MB
+05-17 00:59:36.155   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=49.00 dur=1000.02 max=22.64 min=16.04
+05-17 00:59:36.252   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.753830,dur:1005.05,max:20.93,min:20.05
+05-17 00:59:36.358  5173  5173 I Choreographer: Skipped 40 frames!  The application may be doing too much work on its main thread.
+05-17 00:59:36.536   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 00:59:36.729   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:36.729   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:37.172   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=40.33 dur=1016.68 max=91.58 min=8.67
+05-17 00:59:37.257   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:41.786793,dur:1005.10,max:61.86,min:20.04
+05-17 00:59:37.725   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:37.725   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:38.173   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=45.93 dur=1001.44 max=39.55 min=14.43
+05-17 00:59:38.262   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:46.735302,dur:1005.66,max:41.02,min:20.10
+05-17 00:59:38.390   257  2570 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=1.16 dur=2593.40 max=2010.77 min=9.39
+05-17 00:59:38.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:38.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:39.181   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=46.65 dur=1007.52 max=41.67 min=8.72
+05-17 00:59:39.267   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:46.783642,dur:1004.62,max:41.59,min:19.85
+05-17 00:59:39.414   257   348 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.98 dur=1023.64 max=1023.64 min=1023.64
+05-17 00:59:39.736   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:39.742   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:39.825  5173  5184 I zygote  : Background concurrent copying GC freed 189644(5MB) AllocSpace objects, 0(0B) LOS objects, 46% free, 6MB/12MB, paused 271us total 188.153ms
+05-17 00:59:40.185   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.76 dur=1004.96 max=29.38 min=9.07
+05-17 00:59:40.273   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:47.732166,dur:1005.61,max:40.01,min:20.09
+05-17 00:59:40.730   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:40.730   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:41.195   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.55 dur=1009.28 max=24.89 min=14.60
+05-17 00:59:41.277   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.780594,dur:1004.50,max:21.04,min:20.04
+05-17 00:59:41.725   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:41.725   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:41.782  5386  5386 I BufferQueue: [unnamed-5386-0](this:0xa9bbf000,id:0,api:0,p:-1,c:-1) BufferQueue core=(5386:screencap)
+05-17 00:59:41.798  5386  5386 E DumpTunnel: open libgui_ext failed
+05-17 00:59:41.798  5386  5386 E DumpTunnel: finding regDump() failed
+05-17 00:59:41.798  5386  5386 I BufferQueueConsumer: [unnamed-5386-0](this:0xa9bbf000,id:0,api:0,p:-1,c:5386) connect(C): consumer=(5386:screencap) controlledByApp=false
+05-17 00:59:41.798  5386  5386 I BufferQueueConsumer: [unnamed-5386-0](this:0xa9bbf000,id:0,api:0,p:-1,c:5386) setConsumerName: unnamed-5386-0
+05-17 00:59:41.799  5386  5386 I BufferQueueConsumer: [ScreenshotClient](this:0xa9bbf000,id:0,api:0,p:-1,c:5386) setConsumerName: ScreenshotClient
+05-17 00:59:41.800  5386  5386 I BufferQueueProducer: [ScreenshotClient](this:0xa9bbf000,id:0,api:1,p:257,c:5386) connect(P): api=1 producer=(257:/system/bin/surfaceflinger) producerControlledByApp=false
+05-17 00:59:41.845  5386  5386 I screencap: type=1400 audit(0.0:181): avc: denied { search } for name="clients" dev="debugfs" ino=7420 scontext=u:r:shell:s0 tcontext=u:object_r:debugfs_ion:s0 tclass=dir permissive=1
+05-17 00:59:41.845   253   336 I [Gralloc]: usage1: 0x333, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:59:41.857   257   257 I SurfaceFlinger: screenshot (br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0)
+05-17 00:59:41.858   257   257 I SurfaceFlinger: screenshot (StatusBar#0)
+05-17 00:59:41.858   257   257 I SurfaceFlinger: screenshot (NavigationBar#0)
+05-17 00:59:41.864  5386  5386 I BufferQueueProducer: [ScreenshotClient](this:0xa9bbf000,id:0,api:1,p:257,c:5386) disconnect(P): api 1
+05-17 00:59:41.864  5386  5386 I BufferQueueConsumer: [ScreenshotClient](this:0xa9bbf000,id:0,api:1,p:-1,c:5386) getReleasedBuffers: returning mask 0xffffffffffffffff
+05-17 00:59:42.214   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=49.05 dur=1019.45 max=24.63 min=16.92
+05-17 00:59:42.282   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.771282,dur:1004.69,max:20.91,min:20.20
+05-17 00:59:42.731   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:42.739   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:43.219   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.79 dur=1004.39 max=24.44 min=17.13
+05-17 00:59:43.287   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.750435,dur:1005.12,max:21.26,min:19.83
+05-17 00:59:43.638  5173  5184 I zygote  : Background concurrent copying GC freed 214275(6MB) AllocSpace objects, 0(0B) LOS objects, 47% free, 6MB/12MB, paused 176us total 159.932ms
+05-17 00:59:43.727   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:43.727   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:43.968  5391  5391 W app_process: Could not reserve sentinel fault page
+05-17 00:59:44.223   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.79 dur=1004.38 max=33.67 min=9.89
+05-17 00:59:44.281  5391  5391 I app_process: The ClassLoaderContext is a special shared library.
+05-17 00:59:44.284  5391  5391 I app_process: The ClassLoaderContext is a special shared library.
+05-17 00:59:44.292   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.749756,dur:1005.13,max:21.03,min:20.06
+05-17 00:59:44.439   257   348 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.20 dur=5025.02 max=5025.02 min=5025.02
+05-17 00:59:44.726   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:44.726   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:45.246   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=47.87 dur=1023.58 max=34.83 min=9.53
+05-17 00:59:45.297   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.771015,dur:1004.70,max:21.34,min:20.05
+05-17 00:59:45.733   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:45.733   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:46.256   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=49.54 dur=1009.31 max=28.56 min=9.31
+05-17 00:59:46.302   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.722889,dur:1005.69,max:20.91,min:19.71
+05-17 00:59:46.551   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 00:59:46.727   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:46.727   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:47.260   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.81 dur=1003.86 max=24.27 min=16.68
+05-17 00:59:47.307   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.762264,dur:1004.88,max:20.94,min:20.08
+05-17 00:59:47.727   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:47.727   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:48.280   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.02 dur=1020.41 max=34.44 min=9.86
+05-17 00:59:48.313   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.744926,dur:1005.23,max:21.34,min:20.02
+05-17 00:59:48.716  5173  5184 I zygote  : Background concurrent copying GC freed 208898(6MB) AllocSpace objects, 0(0B) LOS objects, 47% free, 6MB/12MB, paused 343us total 157.520ms
+05-17 00:59:48.728   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:48.728   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:49.292   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=49.42 dur=1011.83 max=31.89 min=10.78
+05-17 00:59:49.318   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.745426,dur:1005.22,max:21.20,min:19.75
+05-17 00:59:49.728   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:49.729   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:50.294   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.90 dur=1002.10 max=33.48 min=8.66
+05-17 00:59:50.322   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.785442,dur:1004.40,max:20.87,min:19.98
+05-17 00:59:50.725   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:50.726   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:51.299   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.76 dur=1004.92 max=32.11 min=9.14
+05-17 00:59:51.327   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.773979,dur:1004.63,max:20.83,min:20.11
+05-17 00:59:51.728   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:51.728   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:52.308   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.58 dur=1008.71 max=25.02 min=16.30
+05-17 00:59:52.333   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.719181,dur:1005.76,max:21.03,min:20.09
+05-17 00:59:52.440   257   348 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.25 dur=8001.37 max=7036.28 min=965.10
+05-17 00:59:52.731   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:52.731   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:52.904  5173  5184 I zygote  : Background concurrent copying GC freed 205994(6MB) AllocSpace objects, 0(0B) LOS objects, 47% free, 6MB/12MB, paused 162us total 154.701ms
+05-17 00:59:53.309   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.92 dur=1001.64 max=31.23 min=10.52
+05-17 00:59:53.337   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.792038,dur:1004.26,max:21.09,min:19.99
+05-17 00:59:53.726   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:53.727   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:54.318   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.58 dur=1008.73 max=33.24 min=9.11
+05-17 00:59:54.342   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.725712,dur:1005.63,max:21.03,min:20.04
+05-17 00:59:54.458   602  3179 W WindowManager: removeWindowToken: Attempted to remove non-existing token: android.os.Binder@697e147
+05-17 00:59:54.634   257   348 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.91 dur=2194.02 max=1211.03 min=982.99
+05-17 00:59:54.723   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:54.723   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:55.324   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.70 dur=1006.12 max=27.11 min=15.70
+05-17 00:59:55.348   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.736111,dur:1005.41,max:21.48,min:19.65
+05-17 00:59:55.727   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:55.727   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:56.342   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=49.11 dur=1018.22 max=25.57 min=9.50
+05-17 00:59:56.352   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.801414,dur:1004.07,max:20.90,min:19.62
+05-17 00:59:56.569   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 00:59:56.728   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:56.728   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:57.351   257   601 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.60 dur=1008.27 max=35.65 min=9.80
+05-17 00:59:57.357   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.753071,dur:1005.06,max:21.35,min:19.78
+05-17 00:59:57.389  5173  5184 I zygote  : Background concurrent copying GC freed 204142(6MB) AllocSpace objects, 0(0B) LOS objects, 47% free, 6MB/12MB, paused 181us total 151.378ms
+05-17 00:59:57.728   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:57.729   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:58.357   257   601 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.71 dur=1005.96 max=34.74 min=12.47
+05-17 00:59:58.362   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.736633,dur:1005.40,max:21.24,min:19.87
+05-17 00:59:58.726   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:58.726   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:59.367   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.753422,dur:1005.06,max:21.15,min:19.87
+05-17 00:59:59.368   257   601 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.43 dur=1011.82 max=32.79 min=10.30
+05-17 00:59:59.730   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:59.730   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:00:00.051   257   601 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.18 dur=5416.91 max=5416.91 min=5416.91
+05-17 01:00:00.373   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.738525,dur:1005.36,max:21.46,min:19.67
+05-17 01:00:00.390   257   601 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.97 dur=1021.13 max=30.38 min=10.51
+05-17 01:00:00.728   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:00:00.728   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:00:01.377   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.786114,dur:1004.38,max:21.26,min:19.91
+05-17 01:00:01.391   257   601 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.93 dur=1001.36 max=32.64 min=10.08
+05-17 01:00:01.730   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:00:01.730   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:00:02.037  5173  5184 I zygote  : Background concurrent copying GC freed 205945(6MB) AllocSpace objects, 0(0B) LOS objects, 47% free, 6MB/12MB, paused 407us total 165.594ms
+05-17 01:00:02.383   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.736530,dur:1005.41,max:21.22,min:20.12
+05-17 01:00:02.399   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.63 dur=1007.65 max=31.96 min=9.46
+05-17 01:00:02.725   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:00:02.725   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:00:03.387   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.773987,dur:1004.63,max:21.57,min:19.88
+05-17 01:00:03.412   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.33 dur=1013.82 max=35.30 min=10.56
+05-17 01:00:03.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:00:03.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:00:04.393   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.734692,dur:1005.44,max:20.91,min:20.01
+05-17 01:00:04.429   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=49.17 dur=1016.90 max=30.32 min=10.69
+05-17 01:00:04.729   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:00:04.729   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:00:05.398   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.750984,dur:1005.11,max:20.84,min:20.07
+05-17 01:00:05.433   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.81 dur=1003.95 max=25.64 min=12.79
+05-17 01:00:05.732   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:00:05.733   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:00:06.354  5173  5184 I zygote  : Background concurrent copying GC freed 205897(6MB) AllocSpace objects, 0(0B) LOS objects, 47% free, 6MB/12MB, paused 197us total 153.116ms
+05-17 01:00:06.402   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.786804,dur:1004.37,max:20.90,min:19.68
+05-17 01:00:06.434   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.95 dur=1001.00 max=34.00 min=11.79
+05-17 01:00:06.582   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 01:00:06.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:00:06.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:00:07.408   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.703697,dur:1006.08,max:21.02,min:19.94
+05-17 01:00:07.447   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.38 dur=1012.78 max=36.53 min=11.97
+05-17 01:00:07.726   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:00:07.726   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:00:08.413   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.781120,dur:1004.49,max:21.07,min:19.67
+05-17 01:00:08.448   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.97 dur=1000.71 max=29.48 min=11.90
+05-17 01:00:08.731   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:00:08.731   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:00:09.417   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.780460,dur:1004.50,max:21.04,min:20.14
+05-17 01:00:09.451   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.85 dur=1002.98 max=36.00 min=10.11
+05-17 01:00:09.732   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:00:09.732   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:00:10.423   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.739414,dur:1005.35,max:21.11,min:19.87
+05-17 01:00:10.458   257   601 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.66 dur=1007.00 max=30.76 min=14.84
+05-17 01:00:10.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:00:10.725   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:00:11.061  5173  5184 I zygote  : Background concurrent copying GC freed 205742(6MB) AllocSpace objects, 0(0B) LOS objects, 47% free, 6MB/12MB, paused 232us total 140.840ms
+05-17 01:00:11.428   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.742409,dur:1005.28,max:21.01,min:19.97
+05-17 01:00:11.465   257   601 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.67 dur=1006.87 max=32.62 min=8.95
+05-17 01:00:11.726   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:00:11.726   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:00:12.433   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.771927,dur:1004.68,max:20.98,min:20.08
+05-17 01:00:12.473   257   601 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.62 dur=1007.77 max=30.27 min=11.08
+05-17 01:00:12.729   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:00:12.729   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:00:13.437   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.762691,dur:1004.87,max:21.02,min:20.01
+05-17 01:00:13.492   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=49.03 dur=1019.72 max=25.05 min=15.05
+05-17 01:00:13.732   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:00:13.733   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:00:14.443   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.734764,dur:1005.44,max:20.82,min:20.14
+05-17 01:00:14.499   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.65 dur=1007.29 max=25.06 min=14.00
+05-17 01:00:14.725   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:00:14.725   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:00:15.260  5173  5184 I zygote  : Background concurrent copying GC freed 205547(6MB) AllocSpace objects, 0(0B) LOS objects, 47% free, 6MB/12MB, paused 152us total 137.256ms
+05-17 01:00:15.448   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.758015,dur:1004.96,max:21.12,min:19.98
+05-17 01:00:15.503   257   601 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.84 dur=1003.35 max=32.98 min=9.89
+05-17 01:00:15.691   257  2570 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.26 dur=15639.90 max=15026.09 min=13.57
+05-17 01:00:15.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:00:15.725   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:00:16.453   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.758339,dur:1004.96,max:21.13,min:19.83
+05-17 01:00:16.504   257   601 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.95 dur=1000.94 max=35.59 min=13.12
+05-17 01:00:16.600   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 01:00:16.728   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:00:16.728   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:00:17.458   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.753952,dur:1005.05,max:21.14,min:19.64
+05-17 01:00:17.514   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.52 dur=1009.87 max=30.63 min=8.87
+05-17 01:00:17.731   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:00:17.731   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:00:18.462   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.776234,dur:1004.59,max:21.26,min:19.66
+05-17 01:00:18.516   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.89 dur=1002.35 max=37.85 min=9.55
+05-17 01:00:18.723   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:00:18.723   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:00:19.468   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.725037,dur:1005.64,max:21.40,min:19.82
+05-17 01:00:19.529   257   601 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.38 dur=1012.92 max=32.87 min=11.15
+05-17 01:00:19.726   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:00:19.726   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:00:20.109  5173  5184 I zygote  : Background concurrent copying GC freed 203876(6MB) AllocSpace objects, 0(0B) LOS objects, 47% free, 6MB/12MB, paused 178us total 144.164ms
+05-17 01:00:20.473   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.757622,dur:1004.97,max:20.84,min:20.01
+05-17 01:00:20.530   257   601 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.94 dur=1001.20 max=22.87 min=17.35
+05-17 01:00:20.728   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:00:20.728   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255

@@ -1,0 +1,419 @@
+--------- beginning of main
+05-17 01:13:35.042   257  1005 I chatty  : uid=1000(system) Binder:257_4 expire 10 lines
+05-17 01:13:35.064   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) RunningBehind, queued size:2
+05-17 01:13:35.069   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.774040,dur:1004.63,max:21.07,min:19.41
+05-17 01:13:35.084   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) RunningBehind, queued size:2
+05-17 01:13:35.084   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) queueBuffer: fps=48.82 dur=1003.69 max=26.07 min=15.15
+05-17 01:13:35.105   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) RunningBehind, queued size:2
+05-17 01:13:35.329   257  1005 I chatty  : uid=1000(system) Binder:257_4 identical 11 lines
+05-17 01:13:35.350   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) RunningBehind, queued size:2
+05-17 01:13:35.361   257  1005 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=1.00 dur=1002.55 max=1002.55 min=1002.55
+05-17 01:13:35.371   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) RunningBehind, queued size:2
+05-17 01:13:35.761   257  1005 I chatty  : uid=1000(system) Binder:257_4 identical 19 lines
+05-17 01:13:35.781   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) RunningBehind, queued size:2
+05-17 01:13:35.787   276  5814 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:13:35.790   276  5814 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:13:35.824   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) RunningBehind, queued size:2
+05-17 01:13:35.842   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) RunningBehind, queued size:2
+05-17 01:13:35.884   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) RunningBehind, queued size:2
+05-17 01:13:36.050   257  2570 I chatty  : uid=1000(system) Binder:257_5 identical 8 lines
+05-17 01:13:36.071   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) RunningBehind, queued size:2
+05-17 01:13:36.074   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.737679,dur:1005.38,max:21.04,min:20.09
+05-17 01:13:36.090  6026  6026 W app_process: Could not reserve sentinel fault page
+05-17 01:13:36.090   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) RunningBehind, queued size:2
+05-17 01:13:36.090   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) queueBuffer: fps=48.70 dur=1006.08 max=31.91 min=10.27
+05-17 01:13:36.112   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) RunningBehind, queued size:2
+05-17 01:13:36.139  5750  5780 I zygote  : Background concurrent copying GC freed 201226(6MB) AllocSpace objects, 0(0B) LOS objects, 48% free, 6MB/12MB, paused 229us total 142.555ms
+05-17 01:13:36.152   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) RunningBehind, queued size:2
+05-17 01:13:36.334   257  2570 I chatty  : uid=1000(system) Binder:257_5 identical 9 lines
+05-17 01:13:36.356   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) RunningBehind, queued size:2
+05-17 01:13:36.364   257  2570 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=1.00 dur=1001.07 max=1001.07 min=1001.07
+05-17 01:13:36.377   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) RunningBehind, queued size:2
+05-17 01:13:36.397   257  2570 I chatty  : uid=1000(system) Binder:257_5 identical 1 line
+05-17 01:13:36.419   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) RunningBehind, queued size:2
+05-17 01:13:36.428  6026  6026 I app_process: The ClassLoaderContext is a special shared library.
+05-17 01:13:36.439   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) RunningBehind, queued size:2
+05-17 01:13:36.498   257  2570 I chatty  : uid=1000(system) Binder:257_5 identical 3 lines
+05-17 01:13:36.520   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) RunningBehind, queued size:2
+05-17 01:13:36.531  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3400874, downTime=3400874, deviceId=1, source=0x1002 }
+05-17 01:13:36.532   602   612 I PowerWrap: PowerHal_TouchBoost
+05-17 01:13:36.533   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:15, data:10000
+05-17 01:13:36.534   253   267 I libPerfService: 15: legacy set freq: 1105000 -1
+05-17 01:13:36.534   253   267 I libPerfService: 15: legacy set: 3 -1
+05-17 01:13:36.541   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) RunningBehind, queued size:2
+05-17 01:13:36.575  5750  5769 I zygote  : Do full code cache collection, code=506KB, data=361KB
+05-17 01:13:36.578  5750  5769 I zygote  : After code cache collection, code=490KB, data=312KB
+05-17 01:13:36.599  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3400874, downTime=3400874, deviceId=1, source=0x1002 }
+05-17 01:13:36.634  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3400986, downTime=3400986, deviceId=1, source=0x1002 }
+05-17 01:13:36.680  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3401031, downTime=3401031, deviceId=1, source=0x1002 }
+05-17 01:13:36.718  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3401070, downTime=3401070, deviceId=1, source=0x1002 }
+05-17 01:13:36.725  5750  5769 I zygote  : Do partial code cache collection, code=495KB, data=322KB
+05-17 01:13:36.727  5750  5769 I zygote  : After code cache collection, code=495KB, data=322KB
+05-17 01:13:36.727  5750  5769 I zygote  : Increasing code cache capacity to 2MB
+05-17 01:13:36.782   276  5814 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:13:36.782   276  5814 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:13:36.845  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3401197, downTime=3401197, deviceId=1, source=0x1002 }
+05-17 01:13:36.896  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3401247, downTime=3401247, deviceId=1, source=0x1002 }
+05-17 01:13:36.957  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3401309, downTime=3401309, deviceId=1, source=0x1002 }
+05-17 01:13:37.006  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3401358, downTime=3401358, deviceId=1, source=0x1002 }
+05-17 01:13:37.062  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3401414, downTime=3401414, deviceId=1, source=0x1002 }
+05-17 01:13:37.099   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:32.189075,dur:1025.19,max:184.44,min:20.05
+05-17 01:13:37.109  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3401460, downTime=3401460, deviceId=1, source=0x1002 }
+05-17 01:13:37.134   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) queueBuffer: fps=29.70 dur=1043.93 max=172.41 min=17.47
+05-17 01:13:37.174  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3401526, downTime=3401526, deviceId=1, source=0x1002 }
+05-17 01:13:37.220  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3401572, downTime=3401572, deviceId=1, source=0x1002 }
+05-17 01:13:37.245  5750  5780 I zygote  : NativeAlloc concurrent copying GC freed 44595(1431KB) AllocSpace objects, 0(0B) LOS objects, 48% free, 6MB/12MB, paused 190us total 126.405ms
+05-17 01:13:37.276  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3401628, downTime=3401628, deviceId=1, source=0x1002 }
+05-17 01:13:37.319  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3401671, downTime=3401671, deviceId=1, source=0x1002 }
+05-17 01:13:37.380  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3401732, downTime=3401732, deviceId=1, source=0x1002 }
+05-17 01:13:37.445  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3401797, downTime=3401797, deviceId=1, source=0x1002 }
+05-17 01:13:37.504  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3401856, downTime=3401856, deviceId=1, source=0x1002 }
+05-17 01:13:37.562  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3401914, downTime=3401914, deviceId=1, source=0x1002 }
+05-17 01:13:37.620  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3401972, downTime=3401972, deviceId=1, source=0x1002 }
+05-17 01:13:37.677  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3402029, downTime=3402029, deviceId=1, source=0x1002 }
+05-17 01:13:37.733  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3402085, downTime=3402085, deviceId=1, source=0x1002 }
+05-17 01:13:37.787   276  5814 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:13:37.787   276  5814 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:13:37.797  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3402149, downTime=3402149, deviceId=1, source=0x1002 }
+05-17 01:13:37.854  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3402206, downTime=3402206, deviceId=1, source=0x1002 }
+05-17 01:13:37.859   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 01:13:37.881  5750  5780 I zygote  : NativeAlloc concurrent copying GC freed 13397(488KB) AllocSpace objects, 0(0B) LOS objects, 48% free, 6MB/12MB, paused 145us total 140.150ms
+05-17 01:13:37.910  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3402262, downTime=3402262, deviceId=1, source=0x1002 }
+05-17 01:13:37.966  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3402317, downTime=3402317, deviceId=1, source=0x1002 }
+05-17 01:13:38.021  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3402373, downTime=3402373, deviceId=1, source=0x1002 }
+05-17 01:13:38.078  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3402430, downTime=3402430, deviceId=1, source=0x1002 }
+05-17 01:13:38.125   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:17.557608,dur:1025.20,max:61.88,min:40.58
+05-17 01:13:38.139  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3402491, downTime=3402491, deviceId=1, source=0x1002 }
+05-17 01:13:38.170   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) queueBuffer: fps=17.37 dur=1036.42 max=66.09 min=45.88
+05-17 01:13:38.196  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3402548, downTime=3402548, deviceId=1, source=0x1002 }
+05-17 01:13:38.254  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3402605, downTime=3402605, deviceId=1, source=0x1002 }
+05-17 01:13:38.309  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3402661, downTime=3402661, deviceId=1, source=0x1002 }
+05-17 01:13:38.369  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3402721, downTime=3402721, deviceId=1, source=0x1002 }
+05-17 01:13:38.428  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3402780, downTime=3402780, deviceId=1, source=0x1002 }
+05-17 01:13:38.449  5750  5780 I zygote  : NativeAlloc concurrent copying GC freed 12295(451KB) AllocSpace objects, 0(0B) LOS objects, 48% free, 6MB/12MB, paused 139us total 128.040ms
+05-17 01:13:38.486  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3402838, downTime=3402838, deviceId=1, source=0x1002 }
+05-17 01:13:38.548  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3402899, downTime=3402899, deviceId=1, source=0x1002 }
+05-17 01:13:38.592  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3402944, downTime=3402944, deviceId=1, source=0x1002 }
+05-17 01:13:38.637  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3402989, downTime=3402989, deviceId=1, source=0x1002 }
+05-17 01:13:38.681  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3403032, downTime=3403032, deviceId=1, source=0x1002 }
+05-17 01:13:38.726  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3403078, downTime=3403078, deviceId=1, source=0x1002 }
+05-17 01:13:38.770  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3403122, downTime=3403122, deviceId=1, source=0x1002 }
+05-17 01:13:38.786   276  5814 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:13:38.786   276  5814 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:13:38.810  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3403162, downTime=3403162, deviceId=1, source=0x1002 }
+05-17 01:13:38.856  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3403208, downTime=3403208, deviceId=1, source=0x1002 }
+05-17 01:13:38.926  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3403277, downTime=3403277, deviceId=1, source=0x1002 }
+05-17 01:13:38.972  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3403323, downTime=3403323, deviceId=1, source=0x1002 }
+05-17 01:13:39.016  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3403367, downTime=3403367, deviceId=1, source=0x1002 }
+05-17 01:13:39.078  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3403430, downTime=3403430, deviceId=1, source=0x1002 }
+05-17 01:13:39.130   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:18.899483,dur:1005.32,max:62.05,min:40.93
+05-17 01:13:39.301  6026  6026 I Input   : injectMotionEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=3403653, downTime=3403653, deviceId=1, source=0x1002 }
+05-17 01:13:39.303   602   612 I PowerWrap: PowerHal_TouchBoost
+05-17 01:13:39.304   253  1432 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:15, data:0
+05-17 01:13:39.304   253   267 I libPerfService: 15: legacy set: -1 -1
+05-17 01:13:39.305   253   267 I libPerfService: 15: legacy set freq: -1 -1
+05-17 01:13:39.335   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) queueBuffer: fps=16.31 dur=1164.97 max=220.37 min=42.90
+05-17 01:13:39.359   257  2570 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.33 dur=2996.81 max=2996.81 min=2996.81
+05-17 01:13:39.783   276  5814 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:13:39.784   276  5814 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:13:40.123   602   787 I GnssLocationProvider: WakeLock acquired by sendMessage(SET_REQUEST, 0, com.android.server.location.GnssLocationProvider$GpsRequest@54e533)
+05-17 01:13:40.124   602   641 I GnssLocationProvider: WakeLock released by handleMessage(SET_REQUEST, 0, com.android.server.location.GnssLocationProvider$GpsRequest@54e533)
+05-17 01:13:40.135   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:35.824913,dur:1004.89,max:225.33,min:19.64
+05-17 01:13:40.192   602   787 I WifiService: getWifiEnabledState uid=10012
+05-17 01:13:40.192  1116  2387 W Settings: Setting airplane_mode_on has moved from android.provider.Settings.System to android.provider.Settings.Global, returning read-only value.
+05-17 01:13:40.355   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) queueBuffer: fps=44.14 dur=1019.53 max=78.08 min=9.33
+05-17 01:13:40.782   276  5814 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:13:40.782   276  5814 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:13:41.140   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.754601,dur:1005.03,max:21.06,min:19.87
+05-17 01:13:41.361   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) queueBuffer: fps=48.70 dur=1006.25 max=33.15 min=9.24
+05-17 01:13:41.369   257  1005 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.50 dur=2009.92 max=2009.92 min=2009.92
+05-17 01:13:41.500  1116  5506 I FrewleTileCacheManagerV: (REDACTED) Fetched %d AP models from cache
+05-17 01:13:41.597   602  4702 I LocationManagerService: remove 836e4a2
+05-17 01:13:41.599   602  4702 I GnssLocationProvider: WakeLock acquired by sendMessage(SET_REQUEST, 0, com.android.server.location.GnssLocationProvider$GpsRequest@2eea18f)
+05-17 01:13:41.600   602   641 I GnssLocationProvider: WakeLock released by handleMessage(SET_REQUEST, 0, com.android.server.location.GnssLocationProvider$GpsRequest@2eea18f)
+05-17 01:13:41.781   276  5814 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:13:41.782   276  5814 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:13:42.145   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:27.854689,dur:1005.22,max:450.99,min:19.98
+05-17 01:13:42.359  5750  5780 I zygote  : Background concurrent copying GC freed 180096(5MB) AllocSpace objects, 0(0B) LOS objects, 44% free, 7MB/13MB, paused 358us total 272.874ms
+05-17 01:13:42.377   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) queueBuffer: fps=27.55 dur=1016.41 max=442.17 min=9.54
+05-17 01:13:42.470   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) RunningBehind, queued size:2
+05-17 01:13:42.676   257  2570 I chatty  : uid=1000(system) Binder:257_5 identical 7 lines
+05-17 01:13:42.695   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) RunningBehind, queued size:2
+05-17 01:13:42.787   276  5814 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:13:42.787   276  5814 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:13:43.150   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:46.777054,dur:1004.77,max:41.56,min:20.07
+05-17 01:13:43.391   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) queueBuffer: fps=43.43 dur=1013.17 max=56.48 min=9.58
+05-17 01:13:43.673  5750  5750 W OrientationEventListener: Cannot detect sensors. Not enabled
+05-17 01:13:43.784   276  5814 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:13:43.785   276  5814 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:13:43.953  5750  6040 I CameraManagerGlobal: Connecting to camera service
+05-17 01:13:44.155   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:29.852137,dur:1004.95,max:246.48,min:19.95
+05-17 01:13:44.183  5750  6040 I Camera2CameraInfo: Device Level: INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY
+05-17 01:13:44.234  5750  6040 I CameraPresencePrvdr: Starting CameraPresenceProvider monitoring.
+05-17 01:13:44.235  5750  6040 I CameraPresenceSrc: First observer added. Starting monitoring.
+05-17 01:13:44.235  5750  6040 I Camera2PresenceSrc: Starting system availability monitoring.
+05-17 01:13:44.263  5750  6040 W CameraValidator: Camera LENS_FACING_FRONT verification failed
+05-17 01:13:44.263  5750  6040 W CameraValidator: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@7645f86} LensFilter:0
+05-17 01:13:44.263  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:13:44.263  5750  6040 W CameraValidator: 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:13:44.263  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:13:44.263  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:13:44.263  5750  6040 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:13:44.263  5750  6040 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:13:44.263  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:13:44.263  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:13:44.263  5750  6040 W CameraValidator: 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:13:44.270  5750  6040 E CameraValidator: Camera LensFacing verification failed, existing cameras: [Camera@fb82d29[id=0]]
+05-17 01:13:44.271  5750  6040 I CameraPresencePrvdr: Shutting down CameraPresenceProvider monitoring.
+05-17 01:13:44.271  5750  6040 I CameraPresenceSrc: Last observer removed. Stopping monitoring.
+05-17 01:13:44.272  5750  6040 I Camera2PresenceSrc: Stopping system availability monitoring.
+05-17 01:13:44.282  5750  6040 W CameraX : Retry init. Start time 3408285 current time 3408624
+05-17 01:13:44.282  5750  6040 W CameraX : androidx.camera.core.impl.CameraValidator$CameraIdListIncorrectException: Expected camera missing from device.
+05-17 01:13:44.282  5750  6040 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:137)
+05-17 01:13:44.282  5750  6040 W CameraX : 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:13:44.282  5750  6040 W CameraX : 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:13:44.282  5750  6040 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:13:44.282  5750  6040 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:13:44.282  5750  6040 W CameraX : 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:13:44.282  5750  6040 W CameraX : 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:13:44.282  5750  6040 W CameraX : 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:13:44.282  5750  6040 W CameraX : Caused by: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@7645f86} LensFilter:0
+05-17 01:13:44.282  5750  6040 W CameraX : 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:13:44.282  5750  6040 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:13:44.282  5750  6040 W CameraX : 	... 7 more
+05-17 01:13:44.407   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) queueBuffer: fps=31.47 dur=1016.75 max=261.47 min=13.47
+05-17 01:13:44.818   276  5814 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:13:44.818   276  5814 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:13:44.951  5750  5780 I zygote  : Background concurrent copying GC freed 198183(6MB) AllocSpace objects, 0(0B) LOS objects, 43% free, 7MB/13MB, paused 352us total 325.270ms
+05-17 01:13:44.960  5750  6040 I Camera2CameraInfo: Device Level: INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY
+05-17 01:13:44.968  5750  6040 I CameraPresencePrvdr: Starting CameraPresenceProvider monitoring.
+05-17 01:13:44.969  5750  6040 I CameraPresenceSrc: First observer added. Starting monitoring.
+05-17 01:13:44.969  5750  6040 I Camera2PresenceSrc: Starting system availability monitoring.
+05-17 01:13:44.988  5750  6040 W CameraValidator: Camera LENS_FACING_FRONT verification failed
+05-17 01:13:44.988  5750  6040 W CameraValidator: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@7645f86} LensFilter:0
+05-17 01:13:44.988  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:13:44.988  5750  6040 W CameraValidator: 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:13:44.988  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:13:44.988  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:13:44.988  5750  6040 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:13:44.988  5750  6040 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:13:44.988  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:13:44.988  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:13:44.988  5750  6040 W CameraValidator: 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:13:44.994  5750  6040 E CameraValidator: Camera LensFacing verification failed, existing cameras: [Camera@90247c5[id=0]]
+05-17 01:13:44.995  5750  6040 I CameraPresencePrvdr: Shutting down CameraPresenceProvider monitoring.
+05-17 01:13:44.995  5750  6040 I CameraPresenceSrc: Last observer removed. Stopping monitoring.
+05-17 01:13:44.995  5750  6040 I Camera2PresenceSrc: Stopping system availability monitoring.
+05-17 01:13:45.000  5750  6040 W CameraX : Retry init. Start time 3408285 current time 3409348
+05-17 01:13:45.000  5750  6040 W CameraX : androidx.camera.core.impl.CameraValidator$CameraIdListIncorrectException: Expected camera missing from device.
+05-17 01:13:45.000  5750  6040 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:137)
+05-17 01:13:45.000  5750  6040 W CameraX : 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:13:45.000  5750  6040 W CameraX : 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:13:45.000  5750  6040 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:13:45.000  5750  6040 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:13:45.000  5750  6040 W CameraX : 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:13:45.000  5750  6040 W CameraX : 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:13:45.000  5750  6040 W CameraX : 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:13:45.000  5750  6040 W CameraX : Caused by: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@7645f86} LensFilter:0
+05-17 01:13:45.000  5750  6040 W CameraX : 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:13:45.000  5750  6040 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:13:45.000  5750  6040 W CameraX : 	... 7 more
+05-17 01:13:45.159   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:40.816181,dur:1004.50,max:81.94,min:19.98
+05-17 01:13:45.368   257  1005 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.25 dur=3998.43 max=3998.43 min=3998.43
+05-17 01:13:45.428   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) queueBuffer: fps=43.12 dur=1020.39 max=106.44 min=14.55
+05-17 01:13:45.644  5750  6040 I Camera2CameraInfo: Device Level: INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY
+05-17 01:13:45.651  5750  6040 I CameraPresencePrvdr: Starting CameraPresenceProvider monitoring.
+05-17 01:13:45.652  5750  6040 I CameraPresenceSrc: First observer added. Starting monitoring.
+05-17 01:13:45.652  5750  6040 I Camera2PresenceSrc: Starting system availability monitoring.
+05-17 01:13:45.666  5750  6040 W CameraValidator: Camera LENS_FACING_FRONT verification failed
+05-17 01:13:45.666  5750  6040 W CameraValidator: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@7645f86} LensFilter:0
+05-17 01:13:45.666  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:13:45.666  5750  6040 W CameraValidator: 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:13:45.666  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:13:45.666  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:13:45.666  5750  6040 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:13:45.666  5750  6040 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:13:45.666  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:13:45.666  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:13:45.666  5750  6040 W CameraValidator: 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:13:45.676  5750  6040 E CameraValidator: Camera LensFacing verification failed, existing cameras: [Camera@28f5a0f[id=0]]
+05-17 01:13:45.677  5750  6040 I CameraPresencePrvdr: Shutting down CameraPresenceProvider monitoring.
+05-17 01:13:45.677  5750  6040 I CameraPresenceSrc: Last observer removed. Stopping monitoring.
+05-17 01:13:45.677  5750  6040 I Camera2PresenceSrc: Stopping system availability monitoring.
+05-17 01:13:45.680  5750  6040 W CameraX : Retry init. Start time 3408285 current time 3410030
+05-17 01:13:45.680  5750  6040 W CameraX : androidx.camera.core.impl.CameraValidator$CameraIdListIncorrectException: Expected camera missing from device.
+05-17 01:13:45.680  5750  6040 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:137)
+05-17 01:13:45.680  5750  6040 W CameraX : 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:13:45.680  5750  6040 W CameraX : 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:13:45.680  5750  6040 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:13:45.680  5750  6040 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:13:45.680  5750  6040 W CameraX : 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:13:45.680  5750  6040 W CameraX : 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:13:45.680  5750  6040 W CameraX : 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:13:45.680  5750  6040 W CameraX : Caused by: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@7645f86} LensFilter:0
+05-17 01:13:45.680  5750  6040 W CameraX : 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:13:45.680  5750  6040 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:13:45.680  5750  6040 W CameraX : 	... 7 more
+05-17 01:13:45.783   276  5814 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:13:45.783   276  5814 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:13:46.071  5750  5750 W OrientationEventListener: Cannot detect sensors. Not enabled
+05-17 01:13:46.165   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.735909,dur:1005.42,max:21.46,min:19.44
+05-17 01:13:46.361  5750  6040 I Camera2CameraInfo: Device Level: INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY
+05-17 01:13:46.368  5750  6040 I CameraPresencePrvdr: Starting CameraPresenceProvider monitoring.
+05-17 01:13:46.369  5750  6040 I CameraPresenceSrc: First observer added. Starting monitoring.
+05-17 01:13:46.369  5750  6040 I Camera2PresenceSrc: Starting system availability monitoring.
+05-17 01:13:46.382  5750  6040 W CameraValidator: Camera LENS_FACING_FRONT verification failed
+05-17 01:13:46.382  5750  6040 W CameraValidator: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@7645f86} LensFilter:0
+05-17 01:13:46.382  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:13:46.382  5750  6040 W CameraValidator: 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:13:46.382  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:13:46.382  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:13:46.382  5750  6040 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:13:46.382  5750  6040 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:13:46.382  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:13:46.382  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:13:46.382  5750  6040 W CameraValidator: 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:13:46.388  5750  6040 E CameraValidator: Camera LensFacing verification failed, existing cameras: [Camera@7f48191[id=0]]
+05-17 01:13:46.388  5750  6040 I CameraPresencePrvdr: Shutting down CameraPresenceProvider monitoring.
+05-17 01:13:46.389  5750  6040 I CameraPresenceSrc: Last observer removed. Stopping monitoring.
+05-17 01:13:46.389  5750  6040 I Camera2PresenceSrc: Stopping system availability monitoring.
+05-17 01:13:46.392  5750  6040 W CameraX : Retry init. Start time 3408285 current time 3410741
+05-17 01:13:46.392  5750  6040 W CameraX : androidx.camera.core.impl.CameraValidator$CameraIdListIncorrectException: Expected camera missing from device.
+05-17 01:13:46.392  5750  6040 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:137)
+05-17 01:13:46.392  5750  6040 W CameraX : 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:13:46.392  5750  6040 W CameraX : 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:13:46.392  5750  6040 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:13:46.392  5750  6040 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:13:46.392  5750  6040 W CameraX : 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:13:46.392  5750  6040 W CameraX : 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:13:46.392  5750  6040 W CameraX : 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:13:46.392  5750  6040 W CameraX : Caused by: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@7645f86} LensFilter:0
+05-17 01:13:46.392  5750  6040 W CameraX : 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:13:46.392  5750  6040 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:13:46.392  5750  6040 W CameraX : 	... 7 more
+05-17 01:13:46.437   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) queueBuffer: fps=45.57 dur=1009.48 max=56.21 min=11.85
+05-17 01:13:46.790   276  5814 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:13:46.792   276  5814 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:13:46.896  5750  5750 W OrientationEventListener: Cannot detect sensors. Invalid disable
+05-17 01:13:47.052  5750  6040 I Camera2CameraInfo: Device Level: INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY
+05-17 01:13:47.058  5750  6040 I CameraPresencePrvdr: Starting CameraPresenceProvider monitoring.
+05-17 01:13:47.059  5750  6040 I CameraPresenceSrc: First observer added. Starting monitoring.
+05-17 01:13:47.059  5750  6040 I Camera2PresenceSrc: Starting system availability monitoring.
+05-17 01:13:47.073  5750  6040 W CameraValidator: Camera LENS_FACING_FRONT verification failed
+05-17 01:13:47.073  5750  6040 W CameraValidator: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@7645f86} LensFilter:0
+05-17 01:13:47.073  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:13:47.073  5750  6040 W CameraValidator: 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:13:47.073  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:13:47.073  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:13:47.073  5750  6040 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:13:47.073  5750  6040 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:13:47.073  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:13:47.073  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:13:47.073  5750  6040 W CameraValidator: 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:13:47.080  5750  6040 E CameraValidator: Camera LensFacing verification failed, existing cameras: [Camera@a3515f5[id=0]]
+05-17 01:13:47.080  5750  6040 I CameraPresencePrvdr: Shutting down CameraPresenceProvider monitoring.
+05-17 01:13:47.080  5750  6040 I CameraPresenceSrc: Last observer removed. Stopping monitoring.
+05-17 01:13:47.081  5750  6040 I Camera2PresenceSrc: Stopping system availability monitoring.
+05-17 01:13:47.084  5750  6040 W CameraX : Retry init. Start time 3408285 current time 3411434
+05-17 01:13:47.084  5750  6040 W CameraX : androidx.camera.core.impl.CameraValidator$CameraIdListIncorrectException: Expected camera missing from device.
+05-17 01:13:47.084  5750  6040 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:137)
+05-17 01:13:47.084  5750  6040 W CameraX : 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:13:47.084  5750  6040 W CameraX : 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:13:47.084  5750  6040 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:13:47.084  5750  6040 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:13:47.084  5750  6040 W CameraX : 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:13:47.084  5750  6040 W CameraX : 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:13:47.084  5750  6040 W CameraX : 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:13:47.084  5750  6040 W CameraX : Caused by: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@7645f86} LensFilter:0
+05-17 01:13:47.084  5750  6040 W CameraX : 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:13:47.084  5750  6040 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:13:47.084  5750  6040 W CameraX : 	... 7 more
+05-17 01:13:47.169   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:38.818989,dur:1004.66,max:102.96,min:19.90
+05-17 01:13:47.170  6043  6043 I BufferQueue: [unnamed-6043-0](this:0xaa5bf000,id:0,api:0,p:-1,c:-1) BufferQueue core=(6043:screencap)
+05-17 01:13:47.184  6043  6043 E DumpTunnel: open libgui_ext failed
+05-17 01:13:47.184  6043  6043 E DumpTunnel: finding regDump() failed
+05-17 01:13:47.185  6043  6043 I BufferQueueConsumer: [unnamed-6043-0](this:0xaa5bf000,id:0,api:0,p:-1,c:6043) connect(C): consumer=(6043:screencap) controlledByApp=false
+05-17 01:13:47.185  6043  6043 I BufferQueueConsumer: [unnamed-6043-0](this:0xaa5bf000,id:0,api:0,p:-1,c:6043) setConsumerName: unnamed-6043-0
+05-17 01:13:47.185  6043  6043 I BufferQueueConsumer: [ScreenshotClient](this:0xaa5bf000,id:0,api:0,p:-1,c:6043) setConsumerName: ScreenshotClient
+05-17 01:13:47.186  6043  6043 I BufferQueueProducer: [ScreenshotClient](this:0xaa5bf000,id:0,api:1,p:257,c:6043) connect(P): api=1 producer=(257:/system/bin/surfaceflinger) producerControlledByApp=false
+05-17 01:13:47.235  6043  6043 I screencap: type=1400 audit(0.0:203): avc: denied { search } for name="clients" dev="debugfs" ino=7420 scontext=u:r:shell:s0 tcontext=u:object_r:debugfs_ion:s0 tclass=dir permissive=1
+05-17 01:13:47.235   253   336 I [Gralloc]: usage1: 0x333, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 01:13:47.243   257   257 I SurfaceFlinger: screenshot (br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0)
+05-17 01:13:47.243   257   257 I SurfaceFlinger: screenshot (StatusBar#0)
+05-17 01:13:47.244   257   257 I SurfaceFlinger: screenshot (NavigationBar#0)
+05-17 01:13:47.249  6043  6043 I BufferQueueProducer: [ScreenshotClient](this:0xaa5bf000,id:0,api:1,p:257,c:6043) disconnect(P): api 1
+05-17 01:13:47.250  6043  6043 I BufferQueueConsumer: [ScreenshotClient](this:0xaa5bf000,id:0,api:1,p:-1,c:6043) getReleasedBuffers: returning mask 0xffffffffffffffff
+05-17 01:13:47.378   257  1005 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.50 dur=2010.81 max=2010.81 min=2010.81
+05-17 01:13:47.441   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) queueBuffer: fps=41.83 dur=1004.03 max=116.75 min=11.31
+05-17 01:13:47.549  5750  5780 I zygote  : Background concurrent copying GC freed 206154(6MB) AllocSpace objects, 0(0B) LOS objects, 44% free, 7MB/13MB, paused 145us total 183.237ms
+05-17 01:13:47.723  5750  6040 I Camera2CameraInfo: Device Level: INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY
+05-17 01:13:47.732  5750  6040 I CameraPresencePrvdr: Starting CameraPresenceProvider monitoring.
+05-17 01:13:47.733  5750  6040 I CameraPresenceSrc: First observer added. Starting monitoring.
+05-17 01:13:47.733  5750  6040 I Camera2PresenceSrc: Starting system availability monitoring.
+05-17 01:13:47.750  5750  6040 W CameraValidator: Camera LENS_FACING_FRONT verification failed
+05-17 01:13:47.750  5750  6040 W CameraValidator: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@7645f86} LensFilter:0
+05-17 01:13:47.750  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:13:47.750  5750  6040 W CameraValidator: 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:13:47.750  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:13:47.750  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:13:47.750  5750  6040 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:13:47.750  5750  6040 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:13:47.750  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:13:47.750  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:13:47.750  5750  6040 W CameraValidator: 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:13:47.757  5750  6040 E CameraValidator: Camera LensFacing verification failed, existing cameras: [Camera@8ce03e1[id=0]]
+05-17 01:13:47.757  5750  6040 I CameraPresencePrvdr: Shutting down CameraPresenceProvider monitoring.
+05-17 01:13:47.757  5750  6040 I CameraPresenceSrc: Last observer removed. Stopping monitoring.
+05-17 01:13:47.757  5750  6040 I Camera2PresenceSrc: Stopping system availability monitoring.
+05-17 01:13:47.760  5750  6040 W CameraX : Retry init. Start time 3408285 current time 3412110
+05-17 01:13:47.760  5750  6040 W CameraX : androidx.camera.core.impl.CameraValidator$CameraIdListIncorrectException: Expected camera missing from device.
+05-17 01:13:47.760  5750  6040 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:137)
+05-17 01:13:47.760  5750  6040 W CameraX : 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:13:47.760  5750  6040 W CameraX : 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:13:47.760  5750  6040 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:13:47.760  5750  6040 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:13:47.760  5750  6040 W CameraX : 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:13:47.760  5750  6040 W CameraX : 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:13:47.760  5750  6040 W CameraX : 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:13:47.760  5750  6040 W CameraX : Caused by: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@7645f86} LensFilter:0
+05-17 01:13:47.760  5750  6040 W CameraX : 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:13:47.760  5750  6040 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:13:47.760  5750  6040 W CameraX : 	... 7 more
+05-17 01:13:47.793   276  5814 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:13:47.796   276  5814 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:13:47.876   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 01:13:48.175   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.748600,dur:1005.16,max:21.32,min:19.83
+05-17 01:13:48.392  5750  6040 I Camera2CameraInfo: Device Level: INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY
+05-17 01:13:48.401  5750  6040 I CameraPresencePrvdr: Starting CameraPresenceProvider monitoring.
+05-17 01:13:48.405  5750  6040 I CameraPresenceSrc: First observer added. Starting monitoring.
+05-17 01:13:48.405  5750  6040 I Camera2PresenceSrc: Starting system availability monitoring.
+05-17 01:13:48.417  5750  6040 W CameraValidator: Camera LENS_FACING_FRONT verification failed
+05-17 01:13:48.417  5750  6040 W CameraValidator: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@7645f86} LensFilter:0
+05-17 01:13:48.417  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:13:48.417  5750  6040 W CameraValidator: 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:13:48.417  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:13:48.417  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:13:48.417  5750  6040 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:13:48.417  5750  6040 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:13:48.417  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:13:48.417  5750  6040 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:13:48.417  5750  6040 W CameraValidator: 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:13:48.427  5750  6040 E CameraValidator: Camera LensFacing verification failed, existing cameras: [Camera@80770b7[id=0]]
+05-17 01:13:48.428  5750  6040 I CameraPresencePrvdr: Shutting down CameraPresenceProvider monitoring.
+05-17 01:13:48.428  5750  6040 I CameraPresenceSrc: Last observer removed. Stopping monitoring.
+05-17 01:13:48.428  5750  6040 I Camera2PresenceSrc: Stopping system availability monitoring.
+05-17 01:13:48.432  5750  6040 W CameraX : Retry init. Start time 3408285 current time 3412781
+05-17 01:13:48.432  5750  6040 W CameraX : androidx.camera.core.impl.CameraValidator$CameraIdListIncorrectException: Expected camera missing from device.
+05-17 01:13:48.432  5750  6040 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:137)
+05-17 01:13:48.432  5750  6040 W CameraX : 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:13:48.432  5750  6040 W CameraX : 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:13:48.432  5750  6040 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:13:48.432  5750  6040 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:13:48.432  5750  6040 W CameraX : 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:13:48.432  5750  6040 W CameraX : 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:13:48.432  5750  6040 W CameraX : 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:13:48.432  5750  6040 W CameraX : Caused by: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@7645f86} LensFilter:0
+05-17 01:13:48.432  5750  6040 W CameraX : 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:13:48.432  5750  6040 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:13:48.432  5750  6040 W CameraX : 	... 7 more
+05-17 01:13:48.449   257   349 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xafa2f000,id:139,api:1,p:5750,c:257) queueBuffer: fps=48.65 dur=1007.17 max=30.61 min=13.06

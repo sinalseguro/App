@@ -1,0 +1,309 @@
+--------- beginning of main
+05-17 00:59:22.182   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.719288,dur:1005.76,max:21.31,min:19.99
+05-17 00:59:22.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:22.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:23.096   257   349 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=49.36 dur=1012.90 max=28.00 min=8.32
+05-17 00:59:23.187   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.769169,dur:1004.73,max:20.92,min:20.13
+05-17 00:59:23.232  5350  5350 W app_process: Could not reserve sentinel fault page
+05-17 00:59:23.561  5350  5350 I app_process: The ClassLoaderContext is a special shared library.
+05-17 00:59:23.665  5350  5350 I Input   : injectMotionEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=360.0, y[0]=952.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2548008, downTime=2548008, deviceId=1, source=0x1002 }
+05-17 00:59:23.667   602  3179 I PowerWrap: PowerHal_TouchBoost
+05-17 00:59:23.667   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:15, data:10000
+05-17 00:59:23.668   253   267 I libPerfService: 15: legacy set freq: 1105000 -1
+05-17 00:59:23.668   253   267 I libPerfService: 15: legacy set: 3 -1
+05-17 00:59:23.716  5350  5350 I Input   : injectMotionEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=360.0, y[0]=952.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2548008, downTime=2548008, deviceId=1, source=0x1002 }
+05-17 00:59:23.717   602   794 I PowerWrap: PowerHal_TouchBoost
+05-17 00:59:23.718   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:15, data:0
+05-17 00:59:23.719   253   267 I libPerfService: 15: legacy set: -1 -1
+05-17 00:59:23.719   253   267 I libPerfService: 15: legacy set freq: -1 -1
+05-17 00:59:23.735   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:23.735   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:23.785   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkCusPowerHint hint:0, data:268435455
+05-17 00:59:23.788   253   267 I powerd  : [powerd_req] POWER_MSG_MTK_CUS_HINT: hint:0, hdl:36, data:268435455
+05-17 00:59:23.788   253   267 I libPerfService: perfCusUserScnEnable - handle:36
+05-17 00:59:23.788   253   267 I libPerfService: 36: legacy set: 2 -1
+05-17 00:59:24.018   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkCusPowerHint hint:0, data:0
+05-17 00:59:24.019   253   267 I powerd  : [powerd_req] POWER_MSG_MTK_CUS_HINT: hint:0, hdl:36, data:0
+05-17 00:59:24.019   253   267 I libPerfService: 36: legacy set: -1 -1
+05-17 00:59:24.101   257   349 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=43.76 dur=1005.48 max=61.45 min=9.56
+05-17 00:59:24.192   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:42.771667,dur:1005.34,max:61.53,min:19.88
+05-17 00:59:24.228   253   253 I HwBinder:253_1: type=1400 audit(0.0:178): avc: denied { read } for name="1295-0" dev="debugfs" ino=27757 scontext=u:r:merged_hal_service:s0 tcontext=u:object_r:debugfs:s0 tclass=file permissive=1
+05-17 00:59:24.228   253   253 I HwBinder:253_1: type=1400 audit(0.0:179): avc: denied { open } for path="/sys/kernel/debug/ion/clients/1295-0" dev="debugfs" ino=27757 scontext=u:r:merged_hal_service:s0 tcontext=u:object_r:debugfs:s0 tclass=file permissive=1
+05-17 00:59:24.228   253   253 I HwBinder:253_1: type=1400 audit(0.0:180): avc: denied { getattr } for path="/sys/kernel/debug/ion/clients/1295-0" dev="debugfs" ino=27757 scontext=u:r:merged_hal_service:s0 tcontext=u:object_r:debugfs:s0 tclass=file permissive=1
+05-17 00:59:24.319  1376  2786 W Auth.Api.SignIn: [Service,SignInChimeraService] **************************** WARNING ***************************
+05-17 00:59:24.319  1376  2786 W Auth.Api.SignIn: You are using the deprecated legacy Google Sign-In APIs from
+05-17 00:59:24.319  1376  2786 W Auth.Api.SignIn: play-services-auth SDK. Please migrate to the Credential Manager
+05-17 00:59:24.319  1376  2786 W Auth.Api.SignIn: APIs, see https://goo.gle/gsi-migration.
+05-17 00:59:24.319  1376  2786 W Auth.Api.SignIn: ****************************************************************
+--------- beginning of system
+05-17 00:59:24.442   602   790 I ActivityManager: START u0 {act=com.google.android.gms.auth.GOOGLE_SIGN_IN pkg=br.com.sinalseguro.app cmp=br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity (has extras)} from uid 10072
+05-17 00:59:24.445   253   336 I vendor.mediatek.hardware.power@1.1-impl: PowerHint hint:8, data:1
+05-17 00:59:24.446   253   267 I libPerfService: 8: legacy set freq: 1300000 -1
+05-17 00:59:24.446   253   267 I libPerfService: 8: legacy set: 4 -1
+05-17 00:59:24.449   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:12, data:2000
+05-17 00:59:24.469  5173  5173 W unknown:BridgelessReact: ReactHost{0}.onUserLeaveHint(activity)
+05-17 00:59:24.475  5173  5173 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+05-17 00:59:24.475  5173  5173 W unknown:BridgelessReact: ReactContext.onHostPause()
+05-17 00:59:24.481   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:12, data:2000
+05-17 00:59:24.487   602   655 I WindowManager: Focus moving from Window{4c4ca24 u0 br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity} to null
+05-17 00:59:24.489   253   336 I vendor.mediatek.hardware.power@1.1-impl: notifyAppState pack:br.com.sinalseguro.app, act:com.google.android.gms.auth.api.signin.internal.SignInHubActivity, pid:5173, state:1
+05-17 00:59:24.489   253   267 I libPerfService: perfUserGetCapability - cmd:7, id:0, val:-1
+05-17 00:59:24.538   602   790 I ActivityManager: START u0 {act=com.google.android.gms.auth.GOOGLE_SIGN_IN pkg=com.google.android.gms cmp=com.google.android.gms/.auth.api.signin.ui.SignInActivity (has extras)} from uid 10072
+05-17 00:59:24.550   602   790 W ResourceType: ResTable_typeSpec entry count inconsistent: given 112, previously 115
+05-17 00:59:24.551   602   790 W ResourceType: ResTable_typeSpec entry count inconsistent: given 112, previously 115
+05-17 00:59:24.552   602   790 W ResourceType: ResTable_typeSpec entry count inconsistent: given 4810, previously 5454
+05-17 00:59:24.552   602   790 W ResourceType: ResTable_typeSpec entry count inconsistent: given 3589, previously 3610
+05-17 00:59:24.552   602   790 W ResourceType: ResTable_typeSpec entry count inconsistent: given 235, previously 240
+05-17 00:59:24.552   602   790 W ResourceType: ResTable_typeSpec entry count inconsistent: given 508, previously 5852
+05-17 00:59:24.557   602   790 W ResourceType: For resource 0x7f160bab, entry index(2987) is beyond type entryCount(508)
+05-17 00:59:24.557   602   790 W ResourceType: For resource 0x7f1615c7, entry index(5575) is beyond type entryCount(508)
+05-17 00:59:24.557   602   790 W ResourceType: For resource 0x7f160b96, entry index(2966) is beyond type entryCount(508)
+05-17 00:59:24.557   602   790 W ResourceType: For resource 0x7f1605ac, entry index(1452) is beyond type entryCount(508)
+05-17 00:59:24.557   602   790 W ResourceType: For resource 0x7f1605bb, entry index(1467) is beyond type entryCount(508)
+05-17 00:59:24.560   253   336 I vendor.mediatek.hardware.power@1.1-impl: PowerHint hint:8, data:1
+05-17 00:59:24.563   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:2000
+05-17 00:59:24.640   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:2000
+05-17 00:59:24.647   253   336 I vendor.mediatek.hardware.power@1.1-impl: notifyAppState pack:com.google.android.gms, act:com.google.android.gms.auth.api.signin.ui.SignInActivity, pid:4473, state:1
+05-17 00:59:24.648   253   267 I libPerfService: [perfNotifyAppState] foreground:com.google.android.gms, pid:4473
+05-17 00:59:24.648   253   267 E libPerfService: Could not open '/proc/driver/thermal/ta_fg_pid'
+05-17 00:59:24.648   253   267 E libPerfService: error : 2, No such file or directory
+05-17 00:59:24.648   253   267 E libPerfService: Could not open '/sys/module/ged/parameters/gx_top_app_pid'
+05-17 00:59:24.648   253   267 E libPerfService: error : 2, No such file or directory
+05-17 00:59:24.648   253   267 I libPerfService: perfUserGetCapability - cmd:7, id:0, val:-1
+05-17 00:59:24.656  4473  4473 W ResourceType: ResTable_typeSpec entry count inconsistent: given 112, previously 115
+05-17 00:59:24.656  4473  4473 W ResourceType: ResTable_typeSpec entry count inconsistent: given 112, previously 115
+05-17 00:59:24.656  4473  4473 W ResourceType: ResTable_typeSpec entry count inconsistent: given 4810, previously 5454
+05-17 00:59:24.656  4473  4473 W ResourceType: ResTable_typeSpec entry count inconsistent: given 3589, previously 3610
+05-17 00:59:24.656  4473  4473 W ResourceType: ResTable_typeSpec entry count inconsistent: given 235, previously 240
+05-17 00:59:24.656  4473  4473 W ResourceType: ResTable_typeSpec entry count inconsistent: given 508, previously 5852
+05-17 00:59:24.668   602  3179 I WindowManager: Relayout Window{a21f8fe u0 br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity}: oldVis=4 newVis=0 focusMayChange = true
+05-17 00:59:24.669  4473  4473 W ResourceType: For resource 0x7f160bab, entry index(2987) is beyond type entryCount(508)
+05-17 00:59:24.670  4473  4473 W ResourceType: For resource 0x7f160bab, entry index(2987) is beyond type entryCount(508)
+05-17 00:59:24.670  4473  4473 W ResourceType: For resource 0x7f1615c7, entry index(5575) is beyond type entryCount(508)
+05-17 00:59:24.670  4473  4473 W ResourceType: For resource 0x7f160b96, entry index(2966) is beyond type entryCount(508)
+05-17 00:59:24.670  4473  4473 W ResourceType: For resource 0x7f1605ac, entry index(1452) is beyond type entryCount(508)
+05-17 00:59:24.670  4473  4473 W ResourceType: For resource 0x7f1605bb, entry index(1467) is beyond type entryCount(508)
+05-17 00:59:24.675   257   257 I BufferQueue: [unnamed-257-130](this:0xb247c000,id:130,api:0,p:-1,c:-1) BufferQueue core=(257:/system/bin/surfaceflinger)
+05-17 00:59:24.675   257   257 E DumpTunnel: finding regDump() failed
+05-17 00:59:24.675   257   257 I BufferQueueConsumer: [unnamed-257-130](this:0xb247c000,id:130,api:0,p:-1,c:257) connect(C): consumer=(257:/system/bin/surfaceflinger) controlledByApp=false
+05-17 00:59:24.675   257   257 I BufferQueueConsumer: [unnamed-257-130](this:0xb247c000,id:130,api:0,p:-1,c:257) setConsumerName: unnamed-257-130
+05-17 00:59:24.675   257   257 I BufferQueueConsumer: [br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity#0](this:0xb247c000,id:130,api:0,p:-1,c:257) setConsumerName: br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity#0
+05-17 00:59:24.675   257   257 I BufferQueueProducer: [](this:0xb247c000,id:130,api:0,p:-1,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 2
+05-17 00:59:24.675   257   257 I BufferQueueConsumer: [br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity#0](this:0xb247c000,id:130,api:0,p:-1,c:257) setDefaultBufferSize: width=720 height=1184
+05-17 00:59:24.688  4473  4473 W ResourceType: For resource 0x7f160429, entry index(1065) is beyond type entryCount(508)
+05-17 00:59:24.688  4473  4473 W ResourceType: For resource 0x7f16042b, entry index(1067) is beyond type entryCount(508)
+05-17 00:59:24.688  4473  4473 W ResourceType: For resource 0x7f160b9d, entry index(2973) is beyond type entryCount(508)
+05-17 00:59:24.688  4473  4473 W ResourceType: For resource 0x7f160b88, entry index(2952) is beyond type entryCount(508)
+05-17 00:59:24.688  4473  4473 W ResourceType: For resource 0x7f1605ab, entry index(1451) is beyond type entryCount(508)
+05-17 00:59:24.688  4473  4473 W ResourceType: For resource 0x7f1605ba, entry index(1466) is beyond type entryCount(508)
+05-17 00:59:24.690   253   336 I [Gralloc]: usage1: 0x900, format: 1 stride: 720 vertical_stride: 1184 size: 3409920
+05-17 00:59:24.692   253   336 I chatty  : uid=1000(system) HwBinder:253_1 identical 1 line
+05-17 00:59:24.694   253   336 I [Gralloc]: usage1: 0x900, format: 1 stride: 720 vertical_stride: 1184 size: 3409920
+05-17 00:59:24.694   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity#0](this:0xb247c000,id:130,api:1,p:5173,c:257) connect(P): api=1 producer=(5173:br.com.sinalseguro.app) producerControlledByApp=true
+05-17 00:59:24.697  4473  4473 W GmsActivityProxy: Error binding root VE. SignInActivity is missing a @GmsCoreVeId annotation. [CONTEXT service_id=264 ]
+05-17 00:59:24.697   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity#0](this:0xb247c000,id:130,api:1,p:5173,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 3
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f1610fa, entry index(4346) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f1610fa, entry index(4346) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f1610fb, entry index(4347) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f1610fd, entry index(4349) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f1610fc, entry index(4348) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f16113e, entry index(4414) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f1610ff, entry index(4351) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f161101, entry index(4353) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f16112f, entry index(4399) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f161102, entry index(4354) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f160da7, entry index(3495) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f161103, entry index(4355) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 I chatty  : uid=10012 com.google.android.gms.ui identical 2 lines
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 00:59:24.704  4473  4473 W ResourceType: For resource 0x7f16110a, entry index(4362) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f160da6, entry index(3494) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f16112c, entry index(4396) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f161111, entry index(4369) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f161112, entry index(4370) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f161129, entry index(4393) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f16112a, entry index(4394) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f160b89, entry index(2953) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f16112e, entry index(4398) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f161137, entry index(4407) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f161139, entry index(4409) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f161110, entry index(4368) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f16110e, entry index(4366) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f160973, entry index(2419) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f16099d, entry index(2461) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f160986, entry index(2438) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f160987, entry index(2439) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f161143, entry index(4419) is beyond type entryCount(508)
+05-17 00:59:24.705  4473  4473 W ResourceType: For resource 0x7f161142, entry index(4418) is beyond type entryCount(508)
+05-17 00:59:24.715  4473  4473 W ResourceType: For resource 0x7f1610fa, entry index(4346) is beyond type entryCount(508)
+05-17 00:59:24.715  4473  4473 W ResourceType: For resource 0x7f1610fa, entry index(4346) is beyond type entryCount(508)
+05-17 00:59:24.715  4473  4473 W ResourceType: For resource 0x7f1610fb, entry index(4347) is beyond type entryCount(508)
+05-17 00:59:24.715  4473  4473 W ResourceType: For resource 0x7f1610fd, entry index(4349) is beyond type entryCount(508)
+05-17 00:59:24.715  4473  4473 W ResourceType: For resource 0x7f1610fc, entry index(4348) is beyond type entryCount(508)
+05-17 00:59:24.715  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 00:59:24.715  4473  4473 W ResourceType: For resource 0x7f16113e, entry index(4414) is beyond type entryCount(508)
+05-17 00:59:24.715  4473  4473 W ResourceType: For resource 0x7f1610ff, entry index(4351) is beyond type entryCount(508)
+05-17 00:59:24.715  4473  4473 W ResourceType: For resource 0x7f161101, entry index(4353) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f16112f, entry index(4399) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f161102, entry index(4354) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f160da7, entry index(3495) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f161103, entry index(4355) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 I chatty  : uid=10012 com.google.android.gms.ui identical 2 lines
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f16110a, entry index(4362) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f160da6, entry index(3494) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f16112c, entry index(4396) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f161111, entry index(4369) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f161112, entry index(4370) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f161129, entry index(4393) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f16112a, entry index(4394) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f160b89, entry index(2953) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f16112e, entry index(4398) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f161137, entry index(4407) is beyond type entryCount(508)
+05-17 00:59:24.716  4473  4473 W ResourceType: For resource 0x7f161139, entry index(4409) is beyond type entryCount(508)
+05-17 00:59:24.717  4473  4473 W ResourceType: For resource 0x7f161110, entry index(4368) is beyond type entryCount(508)
+05-17 00:59:24.717  4473  4473 W ResourceType: For resource 0x7f16110e, entry index(4366) is beyond type entryCount(508)
+05-17 00:59:24.717  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 00:59:24.717  4473  4473 W ResourceType: For resource 0x7f160973, entry index(2419) is beyond type entryCount(508)
+05-17 00:59:24.717  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 00:59:24.717  4473  4473 W ResourceType: For resource 0x7f16099d, entry index(2461) is beyond type entryCount(508)
+05-17 00:59:24.717  4473  4473 W ResourceType: For resource 0x7f160986, entry index(2438) is beyond type entryCount(508)
+05-17 00:59:24.717  4473  4473 W ResourceType: For resource 0x7f160987, entry index(2439) is beyond type entryCount(508)
+05-17 00:59:24.717  4473  4473 W ResourceType: For resource 0x7f161143, entry index(4419) is beyond type entryCount(508)
+05-17 00:59:24.717  4473  4473 W ResourceType: For resource 0x7f161142, entry index(4418) is beyond type entryCount(508)
+05-17 00:59:24.718   257   349 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 00:59:24.718   253   336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 1184 size: 3409920
+05-17 00:59:24.726   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:24.726   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f1610fa, entry index(4346) is beyond type entryCount(508)
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f1610fa, entry index(4346) is beyond type entryCount(508)
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f1610fb, entry index(4347) is beyond type entryCount(508)
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f1610fd, entry index(4349) is beyond type entryCount(508)
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f1610fc, entry index(4348) is beyond type entryCount(508)
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f16113e, entry index(4414) is beyond type entryCount(508)
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f1610ff, entry index(4351) is beyond type entryCount(508)
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f161101, entry index(4353) is beyond type entryCount(508)
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f160da1, entry index(3489) is beyond type entryCount(508)
+05-17 00:59:24.728  4473  4473 W ResourceType: For resource 0x7f16112f, entry index(4399) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f161102, entry index(4354) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f160da7, entry index(3495) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f161103, entry index(4355) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 I chatty  : uid=10012 com.google.android.gms.ui identical 2 lines
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f161107, entry index(4359) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f16110a, entry index(4362) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f160da6, entry index(3494) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f16112c, entry index(4396) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f161111, entry index(4369) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f161112, entry index(4370) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f161129, entry index(4393) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f16112a, entry index(4394) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f160b89, entry index(2953) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f16112e, entry index(4398) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f161137, entry index(4407) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f161139, entry index(4409) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f161110, entry index(4368) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f16110e, entry index(4366) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f160973, entry index(2419) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f16098a, entry index(2442) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f16099d, entry index(2461) is beyond type entryCount(508)
+05-17 00:59:24.729  4473  4473 W ResourceType: For resource 0x7f160986, entry index(2438) is beyond type entryCount(508)
+05-17 00:59:24.730  4473  4473 W ResourceType: For resource 0x7f160987, entry index(2439) is beyond type entryCount(508)
+05-17 00:59:24.730  4473  4473 W ResourceType: For resource 0x7f161143, entry index(4419) is beyond type entryCount(508)
+05-17 00:59:24.730  4473  4473 W ResourceType: For resource 0x7f161142, entry index(4418) is beyond type entryCount(508)
+05-17 00:59:24.735   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:0
+05-17 00:59:24.736   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:12, data:0
+05-17 00:59:24.754   602  3179 I WindowManager: Relayout Window{8aa29d6 u0 com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity}: oldVis=4 newVis=0 focusMayChange = true
+05-17 00:59:24.760   257   257 I BufferQueue: [unnamed-257-131](this:0xafa27000,id:131,api:0,p:-1,c:-1) BufferQueue core=(257:/system/bin/surfaceflinger)
+05-17 00:59:24.760   257   257 E DumpTunnel: finding regDump() failed
+05-17 00:59:24.761   257   257 I BufferQueueConsumer: [unnamed-257-131](this:0xafa27000,id:131,api:0,p:-1,c:257) connect(C): consumer=(257:/system/bin/surfaceflinger) controlledByApp=false
+05-17 00:59:24.761   257   257 I BufferQueueConsumer: [unnamed-257-131](this:0xafa27000,id:131,api:0,p:-1,c:257) setConsumerName: unnamed-257-131
+05-17 00:59:24.761   257   257 I BufferQueueConsumer: [com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity#0](this:0xafa27000,id:131,api:0,p:-1,c:257) setConsumerName: com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity#0
+05-17 00:59:24.761   257   257 I BufferQueueProducer: [](this:0xafa27000,id:131,api:0,p:-1,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 2
+05-17 00:59:24.761   257   257 I BufferQueueConsumer: [com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity#0](this:0xafa27000,id:131,api:0,p:-1,c:257) setDefaultBufferSize: width=1 height=1
+05-17 00:59:24.772   253   336 I [Gralloc]: usage1: 0x900, format: 1 stride: 16 vertical_stride: 1 size: 64
+05-17 00:59:24.772   257  1005 I BufferQueueProducer: [com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity#0](this:0xafa27000,id:131,api:1,p:4473,c:257) connect(P): api=1 producer=(4473:com.google.android.gms.ui) producerControlledByApp=true
+05-17 00:59:24.772   602   655 I WindowManager: Focus moving from null to Window{8aa29d6 u0 com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity}
+05-17 00:59:24.773   253   336 I [Gralloc]: usage1: 0x900, format: 1 stride: 16 vertical_stride: 1 size: 64
+05-17 00:59:24.774   253   336 I [Gralloc]: usage1: 0x900, format: 1 stride: 16 vertical_stride: 1 size: 64
+05-17 00:59:24.776   257   349 I BufferQueueProducer: [com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity#0](this:0xafa27000,id:131,api:1,p:4473,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 3
+05-17 00:59:24.801   253   336 I vendor.mediatek.hardware.power@1.1-impl: PowerHint hint:8, data:0
+05-17 00:59:24.802   253   267 I libPerfService: 8: legacy set: -1 -1
+05-17 00:59:24.803   253   267 I libPerfService: 8: legacy set freq: -1 -1
+05-17 00:59:24.814   602   655 I ActivityManager: Displayed com.google.android.gms/.auth.api.signin.ui.SignInActivity: +162ms (total +320ms)
+05-17 00:59:24.834   257   349 I BufferQueueProducer: [NavigationBar#0](this:0xb246c000,id:4,api:1,p:752,c:257) queueBuffer: fps=0.13 dur=54394.52 max=54272.89 min=17.98
+05-17 00:59:24.856  4473  4483 I zygote  : Background concurrent copying GC freed 9458(578KB) AllocSpace objects, 4(80KB) LOS objects, 50% free, 2MB/4MB, paused 224us total 145.348ms
+05-17 00:59:24.872   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=0.13 dur=54127.59 max=54003.21 min=17.93
+05-17 00:59:24.945   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:2000
+05-17 00:59:24.945   253   267 I libPerfService: 11: legacy set freq: 1300000 -1
+05-17 00:59:24.946   253   267 I libPerfService: 11: legacy set: 4 -1
+05-17 00:59:24.955   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:2000
+05-17 00:59:24.960   253   336 I vendor.mediatek.hardware.power@1.1-impl: notifyAppState pack:br.com.sinalseguro.app, act:com.google.android.gms.auth.api.signin.internal.SignInHubActivity, pid:5173, state:1
+05-17 00:59:24.961   253   267 I libPerfService: [perfNotifyAppState] foreground:br.com.sinalseguro.app, pid:5173
+05-17 00:59:24.961   253   267 E libPerfService: Could not open '/proc/driver/thermal/ta_fg_pid'
+05-17 00:59:24.961   253   267 E libPerfService: error : 2, No such file or directory
+05-17 00:59:24.961   253   267 E libPerfService: Could not open '/sys/module/ged/parameters/gx_top_app_pid'
+05-17 00:59:24.961   253   267 E libPerfService: error : 2, No such file or directory
+05-17 00:59:24.961   253   267 I libPerfService: perfUserGetCapability - cmd:7, id:0, val:-1
+05-17 00:59:24.964   602   655 I WindowManager: Focus moving from Window{8aa29d6 u0 com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity} to Window{a21f8fe u0 br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity}
+05-17 00:59:25.032  4473  4508 E [EGL-ERROR]: __egl_platform_cancel_buffers:644: surface->num_buffers(4)
+05-17 00:59:25.032   257   349 I BufferQueueProducer: [com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity#0](this:0xafa27000,id:131,api:1,p:4473,c:257) disconnect(P): api 1
+05-17 00:59:25.033   257   349 I BufferQueueConsumer: [com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity#0](this:0xafa27000,id:131,api:1,p:-1,c:257) getReleasedBuffers: returning mask 0xffffffffffffffff
+05-17 00:59:25.087   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:12, data:2000
+05-17 00:59:25.096   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:12, data:2000
+05-17 00:59:25.102   253   336 I vendor.mediatek.hardware.power@1.1-impl: notifyAppState pack:br.com.sinalseguro.app, act:br.com.sinalseguro.app.MainActivity, pid:5173, state:1
+05-17 00:59:25.102   257   601 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=40.96 dur=1001.02 max=121.17 min=11.59
+05-17 00:59:25.103   253   267 I libPerfService: perfUserGetCapability - cmd:7, id:0, val:-1
+05-17 00:59:25.107   602   655 I WindowManager: Focus moving from Window{a21f8fe u0 br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity} to Window{4c4ca24 u0 br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity}
+05-17 00:59:25.137  5173  5173 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+05-17 00:59:25.138  5173  5173 W unknown:BridgelessReact: ReactContext.onHostResume()
+05-17 00:59:25.173  5173  5195 E [EGL-ERROR]: __egl_platform_cancel_buffers:644: surface->num_buffers(4)
+05-17 00:59:25.174   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity#0](this:0xb247c000,id:130,api:1,p:5173,c:257) disconnect(P): api 1
+05-17 00:59:25.175   257  1005 I BufferQueueConsumer: [br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity#0](this:0xb247c000,id:130,api:1,p:-1,c:257) getReleasedBuffers: returning mask 0xffffffffffffffff
+05-17 00:59:25.200   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:42.689217,dur:1007.28,max:122.95,min:18.47
+05-17 00:59:25.213   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:0
+05-17 00:59:25.214   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:12, data:0
+05-17 00:59:25.215   253   267 I libPerfService: 12: legacy set: -1 -1
+05-17 00:59:25.216   253   267 I libPerfService: 12: legacy set freq: -1 -1
+05-17 00:59:25.236   257   257 I BufferQueueConsumer: [com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity#0](this:0xafa27000,id:131,api:1,p:-1,c:-1) disconnect(C)
+05-17 00:59:25.236   257   257 I BufferQueue: [com.google.android.gms/com.google.android.gms.auth.api.signin.ui.SignInActivity#0](this:0xafa27000,id:131,api:1,p:-1,c:-1) ~BufferQueueCore
+05-17 00:59:25.380   257   257 I BufferQueueConsumer: [br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity#0](this:0xb247c000,id:130,api:1,p:-1,c:-1) disconnect(C)
+05-17 00:59:25.383   257   257 I BufferQueue: [br.com.sinalseguro.app/com.google.android.gms.auth.api.signin.internal.SignInHubActivity#0](this:0xb247c000,id:130,api:1,p:-1,c:-1) ~BufferQueueCore
+05-17 00:59:25.581  5173  5184 I zygote  : Background concurrent copying GC freed 187525(5MB) AllocSpace objects, 2(40KB) LOS objects, 48% free, 6MB/12MB, paused 550us total 174.801ms
+05-17 00:59:25.642   602   611 I zygote  : Background concurrent copying GC freed 138630(5MB) AllocSpace objects, 7(204KB) LOS objects, 34% free, 11MB/17MB, paused 321us total 289.867ms
+05-17 00:59:25.723   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:25.723   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:26.109   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.66 dur=1006.94 max=31.10 min=9.79
+05-17 00:59:26.202   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.910141,dur:1001.84,max:21.31,min:17.52
+05-17 00:59:26.522   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 00:59:26.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:26.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:27.114   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.76 dur=1005.00 max=25.06 min=16.60
+05-17 00:59:27.206   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.760632,dur:1004.91,max:21.00,min:19.89
+05-17 00:59:27.725   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:27.725   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:28.119   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.74 dur=1005.25 max=23.16 min=17.11
+05-17 00:59:28.211   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.759098,dur:1004.94,max:21.02,min:20.10
+05-17 00:59:28.737   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:28.737   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:29.120   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.94 dur=1001.17 max=23.96 min=18.10
+05-17 00:59:29.217   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.747711,dur:1005.18,max:21.02,min:20.12
+05-17 00:59:29.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:29.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:30.125   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.75 dur=1005.11 max=22.59 min=18.05
+05-17 00:59:30.221   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.768570,dur:1004.75,max:20.77,min:20.17
+05-17 00:59:30.726   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:30.726   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:59:31.130   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.80 dur=1004.17 max=25.51 min=15.49
+05-17 00:59:31.226   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.770050,dur:1004.71,max:21.00,min:20.04
+05-17 00:59:31.728   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:59:31.728   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255

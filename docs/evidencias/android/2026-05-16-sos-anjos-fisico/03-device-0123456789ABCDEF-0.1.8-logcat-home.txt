@@ -1,0 +1,986 @@
+--------- beginning of system
+05-17 00:57:50.249   602  3179 I ActivityManager: START u0 {flg=0x10000000 cmp=br.com.sinalseguro.app/.MainActivity} from uid 2000
+--------- beginning of main
+05-17 00:57:50.266   253  3336 I vendor.mediatek.hardware.power@1.1-impl: PowerHint hint:8, data:1
+05-17 00:57:50.267   253   267 I libPerfService: 8: legacy set freq: 1300000 -1
+05-17 00:57:50.268   253   267 I libPerfService: 8: legacy set: 4 -1
+05-17 00:57:50.271   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:12, data:2000
+05-17 00:57:50.273   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:10, data:2000
+05-17 00:57:50.292   602  3179 I ActivityManager: Start proc 5173:br.com.sinalseguro.app/u0a72 for activity br.com.sinalseguro.app/.MainActivity
+05-17 00:57:50.294   253  3336 I vendor.mediatek.hardware.power@1.1-impl: PowerHint hint:8, data:0
+05-17 00:57:50.298  5173  5173 I zygote  : Late-enabling -Xcheck:jni
+05-17 00:57:50.398   602   710 I InputReader: Reconfiguring input devices.  changes=0x00000004
+05-17 00:57:50.412   253  3336 I vendor.mediatek.hardware.power@1.1-impl: notifyAppState pack:br.com.sinalseguro.app, act:br.com.sinalseguro.app.MainActivity, pid:5173, state:1
+05-17 00:57:50.418   253   267 I libPerfService: perfUserGetCapability - cmd:7, id:0, val:-1
+05-17 00:57:50.731   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:57:50.731   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:57:50.912   602   642 W ActivityManager: Activity pause timeout for ActivityRecord{edb558c u0 br.com.sinalseguro.app/.MainActivity t49}
+05-17 00:57:50.963  5173  5173 W FirebaseApp: Default FirebaseApp failed to initialize because no default options were found. This usually means that com.google.gms:google-services was not applied to your gradle project.
+05-17 00:57:50.963  5173  5173 I FirebaseInitProvider: FirebaseApp initialization unsuccessful
+05-17 00:57:51.051   257  2570 I SurfaceFlinger: EventThread Client Pid (5173) created
+05-17 00:57:51.052   257  2570 I SurfaceFlinger: EventThread Client Pid (5173) created
+05-17 00:57:51.087  5173  5173 W SoLoader: Initializing SoLoader: 0
+05-17 00:57:51.089  5173  5173 W SoLoader: Recording new base apk path: /data/app/br.com.sinalseguro.app-lJqV4ZgEJEb_aK9_ihws7Q==/base.apk
+05-17 00:57:51.089  5173  5173 W SoLoader: Previously recorded 0 base apk paths.
+05-17 00:57:51.094  5173  5173 I SoLoader: Preparing SO source: DirectorySoSource[root = /system/lib flags = 2]
+05-17 00:57:51.095  5173  5173 I SoLoader: Preparing SO source: DirectorySoSource[root = /vendor/lib flags = 2]
+05-17 00:57:51.096  5173  5173 I SoLoader: Preparing SO source: DirectApkSoSource[root = [/data/app/br.com.sinalseguro.app-lJqV4ZgEJEb_aK9_ihws7Q==/base.apk!/lib/armeabi-v7a]]
+05-17 00:57:51.175  5173  5178 I zygote  : Do partial code cache collection, code=30KB, data=22KB
+05-17 00:57:51.177  5173  5178 I zygote  : After code cache collection, code=30KB, data=22KB
+05-17 00:57:51.177  5173  5178 I zygote  : Increasing code cache capacity to 128KB
+05-17 00:57:51.442  5173  5173 I SoLoader: Preparing SO source: ApplicationSoSource[DirectorySoSource[root = /data/app/br.com.sinalseguro.app-lJqV4ZgEJEb_aK9_ihws7Q==/lib/arm flags = 0]]
+05-17 00:57:51.442  5173  5173 I SoLoader: init finish: 4 SO sources prepared
+05-17 00:57:51.443  5173  5173 W SoLoader: SoLoader initialized: 8
+05-17 00:57:51.728   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:57:51.728   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:57:51.885  5173  5178 I zygote  : Do partial code cache collection, code=62KB, data=48KB
+05-17 00:57:51.886  5173  5178 I zygote  : After code cache collection, code=62KB, data=48KB
+05-17 00:57:51.886  5173  5178 I zygote  : Increasing code cache capacity to 256KB
+05-17 00:57:52.075  5173  5173 E ResourceType: Style contains key with bad entry: 0x01010586
+05-17 00:57:52.075  5173  5173 E ResourceType: Style contains key with bad entry: 0x01010668
+05-17 00:57:52.109   602   642 I ActivityManager: Waited long enough for: ServiceRecord{4aefe07 u0 com.google.android.gms/.statementservice.OperationService}
+05-17 00:57:52.271   253   267 I libPerfService: 12: legacy set: -1 -1
+05-17 00:57:52.271   253   267 I libPerfService: 12: legacy set freq: -1 -1
+05-17 00:57:52.367  5173  5173 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Schedule
+05-17 00:57:52.368  5173  5173 W unknown:BridgelessReact: ReactHost{0}.attachSurface(surfaceId = 0)
+05-17 00:57:52.371  5173  5192 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask()
+05-17 00:57:52.371  5173  5192 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Start
+05-17 00:57:52.372  5173  5192 W unknown:BridgelessReact: ReactHost{0}.getJSBundleLoader()
+05-17 00:57:52.376  5173  5192 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactContext(): Creating BridgelessReactContext
+05-17 00:57:52.379  5173  5192 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Creating ReactInstance
+05-17 00:57:52.416  5173  5173 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+05-17 00:57:52.416  5173  5173 W unknown:BridgelessReact: ReactContext.onHostResume()
+05-17 00:57:52.447   257  2570 I SurfaceFlinger: EventThread Client Pid (5173) created
+05-17 00:57:52.458   257  2570 I SurfaceFlinger: [SF client] NEW(0xb2437a90) for (602:system_server)
+05-17 00:57:52.471  5173  5173 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+05-17 00:57:52.472  5173  5173 W unknown:BridgelessReact: ReactContext.onHostPause()
+05-17 00:57:52.491  5173  5173 I Choreographer: Skipped 69 frames!  The application may be doing too much work on its main thread.
+05-17 00:57:52.562   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:12, data:0
+05-17 00:57:52.564   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:10, data:0
+05-17 00:57:52.694  4067  4067 I Finsky  : [2] SCH: job service start with id 9732.
+05-17 00:57:52.719  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 1-1337, CT: 1778919456723, Constraints: [{ L: 43195236, D: 86395236, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.719  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 12-1, CT: 1778950657854, Constraints: [{ L: 15000, D: 86400000, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.720  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 34-10, CT: 1778919460954, Constraints: [{ L: 604800000, D: 2570958255, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.720  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 34-13, CT: 1778919460974, Constraints: [{ L: 58157074, D: 1354157074, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.728  4067  4101 I Finsky  : [321] SCH: Scheduling 1 system job(s)
+05-17 00:57:52.729  4067  4101 I Finsky  : [321] SCH: Scheduling system job Id: 9737, L: 0, D: 55179231, C: false, I: false, N: 1
+05-17 00:57:52.732   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:57:52.732   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:57:52.735  4067  4067 I Finsky  : [2] SCH: job service start with id 9737.
+05-17 00:57:52.745  4067  5201 I Finsky  : [397] SCH: job service finished with id 9732.
+05-17 00:57:52.762  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 1-1337, CT: 1778919456723, Constraints: [{ L: 43195236, D: 86395236, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.762  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 12-1, CT: 1778950657854, Constraints: [{ L: 15000, D: 86400000, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.763  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 34-10, CT: 1778919460954, Constraints: [{ L: 604800000, D: 2570958255, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.763  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 34-13, CT: 1778919460974, Constraints: [{ L: 58157074, D: 1354157074, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.769  4067  4105 I Finsky  : [325] SCH: Scheduling 1 system job(s)
+05-17 00:57:52.769  4067  4105 I Finsky  : [325] SCH: Scheduling system job Id: 9741, L: 0, D: 55179190, C: false, I: false, N: 1
+05-17 00:57:52.773  4067  4067 I Finsky  : [2] SCH: job service start with id 9741.
+05-17 00:57:52.780  4067  5201 I Finsky  : [397] SCH: job service finished with id 9737.
+05-17 00:57:52.789  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 1-1337, CT: 1778919456723, Constraints: [{ L: 43195236, D: 86395236, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.790  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 12-1, CT: 1778950657854, Constraints: [{ L: 15000, D: 86400000, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.790  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 34-10, CT: 1778919460954, Constraints: [{ L: 604800000, D: 2570958255, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.790  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 34-13, CT: 1778919460974, Constraints: [{ L: 58157074, D: 1354157074, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.796  4067  4105 I Finsky  : [325] SCH: Scheduling 1 system job(s)
+05-17 00:57:52.797  4067  4105 I Finsky  : [325] SCH: Scheduling system job Id: 9745, L: 0, D: 55179162, C: false, I: false, N: 1
+05-17 00:57:52.801  4067  4067 I Finsky  : [2] SCH: job service start with id 9745.
+05-17 00:57:52.809  4067  5201 I Finsky  : [397] SCH: job service finished with id 9741.
+05-17 00:57:52.823  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 1-1337, CT: 1778919456723, Constraints: [{ L: 43195236, D: 86395236, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.823  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 12-1, CT: 1778950657854, Constraints: [{ L: 15000, D: 86400000, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.823  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 34-10, CT: 1778919460954, Constraints: [{ L: 604800000, D: 2570958255, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.824  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 34-13, CT: 1778919460974, Constraints: [{ L: 58157074, D: 1354157074, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.830  4067  4105 I Finsky  : [325] SCH: Scheduling 1 system job(s)
+05-17 00:57:52.830  4067  4105 I Finsky  : [325] SCH: Scheduling system job Id: 9749, L: 0, D: 55179129, C: false, I: false, N: 1
+05-17 00:57:52.834  4067  4067 I Finsky  : [2] SCH: job service start with id 9749.
+05-17 00:57:52.841  4067  5201 I Finsky  : [397] SCH: job service finished with id 9745.
+05-17 00:57:52.851  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 1-1337, CT: 1778919456723, Constraints: [{ L: 43195236, D: 86395236, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.852  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 12-1, CT: 1778950657854, Constraints: [{ L: 15000, D: 86400000, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.852  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 34-10, CT: 1778919460954, Constraints: [{ L: 604800000, D: 2570958255, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.852  4067  4101 I Finsky  : [321] SCH: Scheduling phonesky job Id: 34-13, CT: 1778919460974, Constraints: [{ L: 58157074, D: 1354157074, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:52.858  4067  4104 I Finsky  : [324] SCH: Scheduling 1 system job(s)
+05-17 00:57:52.859  4067  4104 I Finsky  : [324] SCH: Scheduling system job Id: 9753, L: 0, D: 55179100, C: false, I: false, N: 1
+05-17 00:57:52.863  4067  4067 I Finsky  : [2] SCH: job service start with id 9753.
+05-17 00:57:52.870  4067  5201 I Finsky  : [397] SCH: job service finished with id 9749.
+05-17 00:57:52.875  4067  5102 I Finsky  : [393] SCH: Satisfied jobs for 9753 are: 12-1
+05-17 00:57:52.876  4067  5201 I Finsky  : [397] SCH: Job 12-1 starting
+05-17 00:57:52.878  4067  4067 I Finsky  : [2] WM::SCH: Logging work start for 12-1
+05-17 00:57:52.878  4067  4067 I Finsky  : [2] [ContentSync] job started
+05-17 00:57:52.957  1116  2418 I FontLog : (REDACTED) Received query %s, URI %s
+05-17 00:57:52.958  1116  2418 I FontLog : (REDACTED) Query [%s] resolved to %s
+05-17 00:57:52.963  1116  2418 I FontLog : (REDACTED) Fetch %s end status %s
+05-17 00:57:52.980  1116  2418 I FontLog : (REDACTED) Pulling font file for id = %d, cache size = %d
+05-17 00:57:53.001  1116  2418 I FontLog : (REDACTED) Pulling font file for id = %d, cache size = %d
+05-17 00:57:53.190  5173  5192 I ExpoModulesCore: ✅ AppContext was initialized
+05-17 00:57:53.399  4067  4072 I zygote  : Do partial code cache collection, code=9KB, data=31KB
+05-17 00:57:53.401  4067  4072 I zygote  : After code cache collection, code=9KB, data=31KB
+05-17 00:57:53.402  4067  4072 I zygote  : Increasing code cache capacity to 128KB
+05-17 00:57:53.730   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:57:53.731   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:57:53.753  5173  5192 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Loading JS Bundle
+05-17 00:57:53.756  5173  5192 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Calling DevSupportManagerBase.onNewReactContextCreated(reactContext)
+05-17 00:57:53.759  5173  5173 W unknown:BridgelessReact: ReactHost{0}.getOrCreateReactInstanceTask(): Executing ReactInstanceEventListeners
+05-17 00:57:53.760  5173  5192 W unknown:BridgelessReact: ReactHost{0}.startSurface(surfaceId = 0): Execute
+05-17 00:57:54.225  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.th3rdwave.safeareacontext.SafeAreaProviderManager
+05-17 00:57:54.323  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.uimanager.LayoutShadowNode
+05-17 00:57:54.390  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.SearchBarManager
+05-17 00:57:54.423  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class expo.modules.kotlin.views.GroupViewManagerWrapper
+05-17 00:57:54.453  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenFooterManager
+05-17 00:57:54.465  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.gamma.tabs.TabScreenViewManager
+05-17 00:57:54.487  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenContainerViewManager
+05-17 00:57:54.498  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.gamma.tabs.TabsHostViewManager
+05-17 00:57:54.527  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ModalScreenViewManager
+05-17 00:57:54.585  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenStackHeaderConfigViewManager
+05-17 00:57:54.609  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenContentWrapperManager
+05-17 00:57:54.616  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.th3rdwave.safeareacontext.SafeAreaViewManager
+05-17 00:57:54.655  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.th3rdwave.safeareacontext.SafeAreaViewShadowNode
+05-17 00:57:54.670  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenViewManager
+05-17 00:57:54.702  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.reactnativegooglesignin.RNGoogleSigninButtonViewManager
+05-17 00:57:54.710  4067  4067 I Finsky  : [2] App states replicator found 3 unowned apps
+05-17 00:57:54.723  4067  4104 I Finsky  : [324] Completed 0 account content syncs with 0 successful.
+05-17 00:57:54.723  4067  4067 I Finsky  : [2] [ContentSync] Installation state replication succeeded.
+05-17 00:57:54.724  4067  4067 I Finsky  : [2] SCH: jobFinished: 12-1. TimeElapsed: 1847ms.
+05-17 00:57:54.724  4067  4067 I Finsky  : [2] WM::SCH: Logging work end for 12-1
+05-17 00:57:54.729   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:57:54.729   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:57:54.737  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenStackHeaderSubviewManager
+05-17 00:57:54.745  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 1-1337, CT: 1778919456723, Constraints: [{ L: 43195236, D: 86395236, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:54.746  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 34-10, CT: 1778919460954, Constraints: [{ L: 604800000, D: 2570958255, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:54.746  4067  4104 I Finsky  : [324] SCH: Scheduling phonesky job Id: 34-13, CT: 1778919460974, Constraints: [{ L: 58157074, D: 1354157074, C: CHARGING_NONE, I: IDLE_NONE, N: NET_ANY, B: BATTERY_ANY }]
+05-17 00:57:54.752  4067  4105 I Finsky  : [325] SCH: Scheduling 1 system job(s)
+05-17 00:57:54.752  4067  4105 I Finsky  : [325] SCH: Scheduling system job Id: 9757, L: 11977207, D: 55177207, C: false, I: false, N: 1
+05-17 00:57:54.760  4067  5201 I Finsky  : [397] SCH: job service finished with id 9753.
+05-17 00:57:54.762  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.rnscreens.ScreenStackViewManager
+05-17 00:57:55.406  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$DefsViewManager
+05-17 00:57:55.427  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.VirtualViewManager$RenderableShadowNode
+05-17 00:57:55.472  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeMergeManager
+05-17 00:57:55.513  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.safeareaview.ReactSafeAreaViewManager
+05-17 00:57:55.516  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.safeareaview.ReactSafeAreaViewShadowNode
+05-17 00:57:55.546  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$LinearGradientManager
+05-17 00:57:55.595  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeGaussianBlurManager
+05-17 00:57:55.638  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.progressbar.ReactProgressBarViewManager
+05-17 00:57:55.645  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.progressbar.ProgressBarShadowNode
+05-17 00:57:55.686  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.scroll.ReactHorizontalScrollViewManager
+05-17 00:57:55.730   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:57:55.730   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:57:55.756  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactTextViewManager
+05-17 00:57:55.772  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactTextShadowNode
+05-17 00:57:55.822  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeColorMatrixManager
+05-17 00:57:55.860  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.scroll.ReactHorizontalScrollContainerViewManager
+05-17 00:57:55.899  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$ClipPathViewManager
+05-17 00:57:55.957  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$SymbolManager
+05-17 00:57:56.014  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$PatternManager
+05-17 00:57:56.077  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeBlendManager
+05-17 00:57:56.111  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.view.ReactViewManager
+05-17 00:57:56.151  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.SvgViewManager
+05-17 00:57:56.211  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.switchview.ReactSwitchManager
+05-17 00:57:56.221  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.switchview.ReactSwitchShadowNode
+05-17 00:57:56.260  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$UseViewManager
+05-17 00:57:56.317  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$CircleViewManager
+05-17 00:57:56.351   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 00:57:56.355  5173  5178 I zygote  : Do full code cache collection, code=125KB, data=92KB
+05-17 00:57:56.357  5173  5178 I zygote  : After code cache collection, code=115KB, data=73KB
+05-17 00:57:56.370  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$TSpanViewManager
+05-17 00:57:56.426  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FilterManager
+05-17 00:57:56.463  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$MarkerManager
+05-17 00:57:56.522  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.gesturehandler.react.RNGestureHandlerButtonViewManager
+05-17 00:57:56.565  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.modal.ReactModalHostManager
+05-17 00:57:56.603  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$ForeignObjectManager
+05-17 00:57:56.651  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$EllipseViewManager
+05-17 00:57:56.698  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$LineViewManager
+05-17 00:57:56.727   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:57:56.727   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:57:56.749  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.frescosupport.FrescoBasedReactTextInlineImageViewManager
+05-17 00:57:56.750  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.frescosupport.FrescoBasedReactTextInlineImageShadowNode
+05-17 00:57:56.781  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeFloodManager
+05-17 00:57:56.816  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$GroupViewManager
+05-17 00:57:56.862  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$TextViewManager
+05-17 00:57:56.912  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$ImageViewManager
+05-17 00:57:56.960  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeCompositeManager
+05-17 00:57:57.004  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.image.ReactImageManager
+05-17 00:57:57.047  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$RadialGradientManager
+05-17 00:57:57.090  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$MaskManager
+05-17 00:57:57.142  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.unimplementedview.ReactUnimplementedViewManager
+05-17 00:57:57.172  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$RectViewManager
+05-17 00:57:57.223  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$TextPathViewManager
+05-17 00:57:57.285  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.scroll.ReactScrollViewManager
+05-17 00:57:57.336  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$FeOffsetManager
+05-17 00:57:57.371  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.horcrux.svg.RenderableViewManager$PathViewManager
+05-17 00:57:57.423  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.drawer.ReactDrawerLayoutManager
+05-17 00:57:57.458  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactVirtualTextViewManager
+05-17 00:57:57.459  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactVirtualTextShadowNode
+05-17 00:57:57.503  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.swiperefresh.SwipeRefreshLayoutManager
+05-17 00:57:57.534  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactRawTextManager
+05-17 00:57:57.535  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.text.ReactRawTextShadowNode
+05-17 00:57:57.569  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.textinput.ReactTextInputManager
+05-17 00:57:57.597  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.views.textinput.ReactTextInputShadowNode
+05-17 00:57:57.639  5173  5193 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.swmansion.gesturehandler.react.RNGestureHandlerRootViewManager
+05-17 00:57:57.694  5173  5193 W BridgelessReactContext: [WARNING] Bridgeless doesn't support CatalystInstance. Accessing an API that's not part of the new architecture is not encouraged usage.
+05-17 00:57:57.731  5173  5193 I ExpoModulesCore: ✅ JSI interop was installed
+05-17 00:57:57.750   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:57:57.750   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:57:57.815  5173  5193 I ExpoModulesCore: ✅ Constants were exported
+05-17 00:57:58.202  5173  5193 I ReactNativeJS: Running "main"
+05-17 00:57:58.579  5173  5178 I zygote  : Do partial code cache collection, code=119KB, data=79KB
+05-17 00:57:58.580  5173  5178 I zygote  : After code cache collection, code=119KB, data=79KB
+05-17 00:57:58.580  5173  5178 I zygote  : Increasing code cache capacity to 512KB
+05-17 00:57:58.727   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:57:58.727   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:57:59.324  5173  5184 I zygote  : Background concurrent copying GC freed 51845(2MB) AllocSpace objects, 4(80KB) LOS objects, 50% free, 4MB/8MB, paused 144us total 114.296ms
+05-17 00:57:59.569   602  3179 W ActivityManager: stopServiceToken startId 14 is last, but have 2 remaining args
+05-17 00:57:59.728   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:57:59.728   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:00.727   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:00.727   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:00.772  5173  5193 W ReactNativeJS: Linking found multiple possible URI schemes in your Expo config.
+05-17 00:58:00.772  5173  5193 W ReactNativeJS: Using 'sinalseguro'. Ignoring: br.com.sinalseguro.app, br.com.sinalseguro.app.
+05-17 00:58:00.772  5173  5193 W ReactNativeJS: Provide the preferred URI scheme to the Linking API.
+05-17 00:58:01.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:01.725   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:02.739   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:02.739   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:03.743   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:03.743   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:04.743   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:04.743   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:05.727   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:05.727   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:05.906  5221  5221 I BufferQueue: [unnamed-5221-0](this:0xaa9bf000,id:0,api:0,p:-1,c:-1) BufferQueue core=(5221:screencap)
+05-17 00:58:05.919  5221  5221 E DumpTunnel: open libgui_ext failed
+05-17 00:58:05.919  5221  5221 E DumpTunnel: finding regDump() failed
+05-17 00:58:05.920  5221  5221 I BufferQueueConsumer: [unnamed-5221-0](this:0xaa9bf000,id:0,api:0,p:-1,c:5221) connect(C): consumer=(5221:screencap) controlledByApp=false
+05-17 00:58:05.920  5221  5221 I BufferQueueConsumer: [unnamed-5221-0](this:0xaa9bf000,id:0,api:0,p:-1,c:5221) setConsumerName: unnamed-5221-0
+05-17 00:58:05.920  5221  5221 I BufferQueueConsumer: [ScreenshotClient](this:0xaa9bf000,id:0,api:0,p:-1,c:5221) setConsumerName: ScreenshotClient
+05-17 00:58:05.921  5221  5221 I BufferQueueProducer: [ScreenshotClient](this:0xaa9bf000,id:0,api:1,p:257,c:5221) connect(P): api=1 producer=(257:/system/bin/surfaceflinger) producerControlledByApp=false
+05-17 00:58:05.966  5221  5221 I screencap: type=1400 audit(0.0:171): avc: denied { search } for name="clients" dev="debugfs" ino=7420 scontext=u:r:shell:s0 tcontext=u:object_r:debugfs_ion:s0 tclass=dir permissive=1
+05-17 00:58:05.966   253  3336 I [Gralloc]: usage1: 0x333, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:05.977  5221  5221 I BufferQueueProducer: [ScreenshotClient](this:0xaa9bf000,id:0,api:1,p:257,c:5221) disconnect(P): api 1
+05-17 00:58:05.977  5221  5221 I BufferQueueConsumer: [ScreenshotClient](this:0xaa9bf000,id:0,api:1,p:-1,c:5221) getReleasedBuffers: returning mask 0xffffffffffffffff
+05-17 00:58:06.224   602   641 I UsageStatsService: User[0] Flushing usage stats to disk
+05-17 00:58:06.367   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 00:58:06.487   602   611 I zygote  : Background concurrent copying GC freed 89930(4MB) AllocSpace objects, 38(1592KB) LOS objects, 35% free, 11MB/17MB, paused 243us total 238.071ms
+05-17 00:58:06.515  5222  5222 W app_process: Could not reserve sentinel fault page
+05-17 00:58:06.725   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:06.725   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:06.886  5222  5222 I app_process: The ClassLoaderContext is a special shared library.
+05-17 00:58:06.893  5222  5222 I app_process: The ClassLoaderContext is a special shared library.
+05-17 00:58:07.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:07.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:08.367  5222  5222 I AccessibilityNodeInfoDumper: Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@d5e9; boundsInParent: Rect(0, 0 - 720, 248); boundsInScreen: Rect(0, 0 - 720, 0); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; contentDescription: null; viewIdResName: com.android.systemui:id/quick_settings_container; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; importantForAccessibility: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]
+05-17 00:58:08.372  5222  5222 I AccessibilityNodeInfoDumper: Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@fb73; boundsInParent: Rect(0, 0 - 96, 0); boundsInScreen: Rect(0, 501 - 96, 501); packageName: com.android.systemui; className: android.widget.Button; text: null; error: null; maxTextLength: -1; contentDescription: null; viewIdResName: com.android.systemui:id/veto; checkable: false; checked: false; focusable: true; focused: false; selected: false; clickable: true; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; importantForAccessibility: true; actions: [AccessibilityAction: ACTION_FOCUS - null, AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_CLICK - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]
+05-17 00:58:08.386  5222  5222 I AccessibilityNodeInfoDumper: Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@10e38; boundsInParent: Rect(0, 0 - 96, 0); boundsInScreen: Rect(0, 686 - 96, 686); packageName: com.android.systemui; className: android.widget.Button; text: null; error: null; maxTextLength: -1; contentDescription: null; viewIdResName: com.android.systemui:id/veto; checkable: false; checked: false; focusable: true; focused: false; selected: false; clickable: true; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; importantForAccessibility: true; actions: [AccessibilityAction: ACTION_FOCUS - null, AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_CLICK - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]
+05-17 00:58:08.414  5222  5222 I AccessibilityNodeInfoDumper: Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@8f954; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(527, 23 - 527, 23); packageName: com.android.systemui; className: android.widget.ImageView; text: null; error: null; maxTextLength: -1; contentDescription: null; viewIdResName: com.android.systemui:id/wifi_inout; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; importantForAccessibility: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]
+05-17 00:58:08.415  5222  5222 I AccessibilityNodeInfoDumper: Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@8f593; boundsInParent: Rect(0, 0 - 37, 34); boundsInScreen: Rect(527, 23 - 564, 57); packageName: com.android.systemui; className: android.widget.ImageView; text: null; error: null; maxTextLength: -1; contentDescription: null; viewIdResName: com.android.systemui:id/wifi_signal_dark; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; importantForAccessibility: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]
+05-17 00:58:08.416  5222  5222 I AccessibilityNodeInfoDumper: Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@8e2ce; boundsInParent: Rect(0, 0 - 0, 34); boundsInScreen: Rect(527, 23 - 527, 57); packageName: com.android.systemui; className: android.widget.FrameLayout; text: null; error: null; maxTextLength: -1; contentDescription: null; viewIdResName: null; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; importantForAccessibility: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]
+05-17 00:58:08.417  5222  5222 I AccessibilityNodeInfoDumper: Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@90fda; boundsInParent: Rect(0, 0 - 34, 34); boundsInScreen: Rect(572, 23 - 606, 57); packageName: com.android.systemui; className: android.widget.ImageView; text: null; error: null; maxTextLength: -1; contentDescription: null; viewIdResName: com.android.systemui:id/no_sims_dark; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; importantForAccessibility: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]
+05-17 00:58:08.418  5222  5222 I AccessibilityNodeInfoDumper: Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@90497; boundsInParent: Rect(0, 0 - 0, 0); boundsInScreen: Rect(572, 40 - 572, 40); packageName: com.android.systemui; className: android.widget.LinearLayout; text: null; error: null; maxTextLength: -1; contentDescription: null; viewIdResName: com.android.systemui:id/mobile_signal_group; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; importantForAccessibility: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]
+05-17 00:58:08.422  5222  5222 I AccessibilityNodeInfoDumper: Skipping invisible child: android.view.accessibility.AccessibilityNodeInfo@8e96; boundsInParent: Rect(0, 0 - 720, 500); boundsInScreen: Rect(0, 0 - 720, 500); packageName: com.android.systemui; className: android.view.View; text: null; error: null; maxTextLength: -1; contentDescription: null; viewIdResName: com.android.systemui:id/heads_up_scrim; checkable: false; checked: false; focusable: false; focused: false; selected: false; clickable: false; longClickable: false; contextClickable: false; enabled: true; password: false; scrollable: false; importantForAccessibility: false; actions: [AccessibilityAction: ACTION_SELECT - null, AccessibilityAction: ACTION_CLEAR_SELECTION - null, AccessibilityAction: ACTION_ACCESSIBILITY_FOCUS - null, AccessibilityAction: ACTION_SHOW_ON_SCREEN - null]
+05-17 00:58:08.426  5222  5222 W AccessibilityNodeInfoDumper: Fetch time: 211ms
+05-17 00:58:08.428   602  1272 W WindowManager: removeWindowToken: Attempted to remove non-existing token: android.os.Binder@68889ec
+05-17 00:58:08.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:08.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:09.744   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:09.744   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:10.743   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:10.743   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:11.742   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:11.743   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:12.743   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:12.743   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:13.725   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:13.725   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:14.740   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:14.741   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:15.741   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:15.741   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:16.382   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 00:58:16.741   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:16.741   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:17.746   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:17.746   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:18.744   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:18.744   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:19.744   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:19.744   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:20.743   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:20.743   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:21.742   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:21.743   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:22.743   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:22.743   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:23.747   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:23.747   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:23.776  5237  5237 W app_process: Could not reserve sentinel fault page
+05-17 00:58:24.059  5237  5237 I app_process: The ClassLoaderContext is a special shared library.
+05-17 00:58:24.153  5237  5237 I Input   : injectKeyEvent: KeyEvent { action=ACTION_DOWN, keyCode=KEYCODE_WAKEUP, scanCode=0, metaState=0, flags=0x0, repeatCount=0, eventTime=2488504, downTime=2488504, deviceId=-1, source=0x101 }
+05-17 00:58:24.157   602  1272 I PowerManagerService: Waking up from sleep (uid=1000 reason=android.policy:KEY)...
+05-17 00:58:24.161   602   660 I DisplayPowerController: Blocking screen on until initial contents have been drawn.
+05-17 00:58:24.161  5237  5237 I Input   : injectKeyEvent: KeyEvent { action=ACTION_UP, keyCode=KEYCODE_WAKEUP, scanCode=0, metaState=0, flags=0x0, repeatCount=0, eventTime=2488504, downTime=2488504, deviceId=-1, source=0x101 }
+05-17 00:58:24.162   253  3336 I vendor.mediatek.hardware.power@1.1-impl: setInteractive Restore All
+05-17 00:58:24.163   253   267 I powerd  : [powerd_req] POWER_MSG_SCN_RESTORE_ALL
+05-17 00:58:24.165   602   655 I DisplayManagerService: Display device changed state: "Tela integrada", ON
+05-17 00:58:24.172   250   459 I hwcomposer: [HWC] Display(0) SetPowerMode(2)  
+05-17 00:58:24.186   253   253 I HwBinder:253_4: type=1400 audit(0.0:172): avc: denied { read } for name="1295-0" dev="debugfs" ino=27757 scontext=u:r:merged_hal_service:s0 tcontext=u:object_r:debugfs:s0 tclass=file permissive=1
+05-17 00:58:24.186   253   253 I HwBinder:253_4: type=1400 audit(0.0:173): avc: denied { open } for path="/sys/kernel/debug/ion/clients/1295-0" dev="debugfs" ino=27757 scontext=u:r:merged_hal_service:s0 tcontext=u:object_r:debugfs:s0 tclass=file permissive=1
+05-17 00:58:24.189   253   253 I HwBinder:253_4: type=1400 audit(0.0:174): avc: denied { getattr } for path="/sys/kernel/debug/ion/clients/1295-0" dev="debugfs" ino=27757 scontext=u:r:merged_hal_service:s0 tcontext=u:object_r:debugfs:s0 tclass=file permissive=1
+05-17 00:58:24.219   602   710 I InputReader: Reconfiguring input devices.  changes=0x00000004
+05-17 00:58:24.230   602   643 I WindowManager: Waiting for drawn Window{370c6d4 u0 StatusBar}: removed=false visible=true mHasSurface=true drawState=1
+05-17 00:58:24.234   602   693 I WindowManager: Waiting for drawn Window{370c6d4 u0 StatusBar}: removed=false visible=true mHasSurface=true drawState=1
+05-17 00:58:24.250   257  2570 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 00:58:24.251   253  3336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:24.273   257   348 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.00 dur=430871.08 max=430871.08 min=430871.08
+05-17 00:58:24.276   257   348 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 00:58:24.277   253  3336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:24.297   602   693 I WindowManager: Waiting for drawn Window{370c6d4 u0 StatusBar}: removed=false visible=true mHasSurface=true drawState=4
+05-17 00:58:24.312   602   660 I DisplayPowerController: Unblocked screen on after 151 ms
+05-17 00:58:24.373   257   348 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 00:58:24.374   253  3336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:24.383   257   348 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) RunningBehind, queued size:2
+05-17 00:58:24.455  1224  5253 I SecNfcNfa: NFA_SendVsCommand() oid=0x38
+05-17 00:58:24.455  1224  1457 I SecNfcNfa: NFA got event 0x0118
+05-17 00:58:24.455  1224  1457 I SecNfcNfa: nfa_dm_evt_hdlr event: Unknown or Vendor Specific (0x18)
+05-17 00:58:24.456   251   251 I SecHAL  : nfc_hal_write: enter;
+05-17 00:58:24.456   251   251 I SecHAL  : nfc_hal_write: exit;
+05-17 00:58:24.456   251  1484 I SecHAL  : device_wakeup: Wakeup! in 80 ms
+05-17 00:58:24.537   251  1484 I SecHAL  : device_wakeup: exit
+05-17 00:58:24.537   251  1484 I SecHAL  : OSI_timer_start: enter,osi_lock
+05-17 00:58:24.537   251  1484 I SecHAL  : OSI_timer_start: before pthread_create for timer thread
+05-17 00:58:24.537   251  1484 I SecHAL  : OSI_timer_start: after pthread_create for timer thread
+05-17 00:58:24.537   251  1484 I SecHAL  : OSI_timer_start: before osi_unlock
+05-17 00:58:24.537   251  1484 I SecHAL  : OSI_timer_start: exit
+05-17 00:58:24.537   251  1484 I SecHAL  : device_write: enter
+05-17 00:58:24.537   251  1484 I SecHAL  : device_write: before system call
+05-17 00:58:24.537   251  1484 I SecHAL  : device_write: after system call
+05-17 00:58:24.537   251  1484 I SecHAL  : device_write: exit
+05-17 00:58:24.541   251  1484 I SecHAL  : OSI_timer_start: enter,osi_lock
+05-17 00:58:24.541   251  1484 I SecHAL  : OSI_timer_start: before osi_unlock
+05-17 00:58:24.541   251  1484 I SecHAL  : OSI_timer_start: exit
+05-17 00:58:24.542   251  1484 I SecHAL  : nfc_data_callback: !
+05-17 00:58:24.542  1224  1457 I SecNfcNfa: NFC received rsp gid:15
+05-17 00:58:24.543  1224  5253 I SecNfcNfa: NFA_StopRfDiscovery ()
+05-17 00:58:24.543  1224  1457 I SecNfcNfa: NFA got event 0x010F
+05-17 00:58:24.543  1224  1457 I SecNfcNfa: nfa_dm_evt_hdlr event: NFA_DM_API_STOP_RF_DISCOVERY_EVT (0x0f)
+05-17 00:58:24.543  1224  1457 I SecNfcNfa: nfa_dm_act_stop_rf_discovery ()
+05-17 00:58:24.543  1224  1457 I SecNfcNfa: nfa_dm_rf_deactivate () deactivate_type:0x0
+05-17 00:58:24.543  1224  1457 I SecNfcNfa: nfa_dm_disc_sm_execute (): state: DISCOVERY (1), event: DEACTIVATE_CMD(6) disc_flags: 0x2
+05-17 00:58:24.543  1224  1457 I SecNfcNfa: NFC_Deactivate 4 (IDLE) deactivate_type:0
+05-17 00:58:24.543   251   251 I SecHAL  : nfc_hal_write: enter;
+05-17 00:58:24.543   251   251 I SecHAL  : nfc_hal_write: exit;
+05-17 00:58:24.543   251  1484 I SecHAL  : OSI_timer_start: enter,osi_lock
+05-17 00:58:24.543   251  1484 I SecHAL  : OSI_timer_start: before osi_unlock
+05-17 00:58:24.543   251  1484 I SecHAL  : OSI_timer_start: exit
+05-17 00:58:24.543   251  1484 I SecHAL  : device_write: enter
+05-17 00:58:24.543  1224  1457 I SecNfcNfa: nfa_dm_disc_sm_execute (): new state: DISCOVERY (1), disc_flags: 0x22
+05-17 00:58:24.543   251  1484 I SecHAL  : device_write: before system call
+05-17 00:58:24.543  1224  1457 I SecNfcNfa: nfa_sys_ptim_stop_timer 9a6fd0bc
+05-17 00:58:24.543  1224  1457 I SecNfcNfa: ptim timer stop
+05-17 00:58:24.543  1224  1457 I SecNfcNfa: Stopped presence check timer (if started)
+05-17 00:58:24.544   251  1484 I SecHAL  : device_write: after system call
+05-17 00:58:24.544   251  1484 I SecHAL  : device_write: exit
+05-17 00:58:24.547   251  1484 I SecHAL  : OSI_timer_start: enter,osi_lock
+05-17 00:58:24.547   257   257 I BufferQueueConsumer: [ColorFade#0](this:0xafa3d000,id:127,api:1,p:-1,c:-1) disconnect(C)
+05-17 00:58:24.547   251  1484 I SecHAL  : OSI_timer_start: before osi_unlock
+05-17 00:58:24.547   251  1484 I SecHAL  : OSI_timer_start: exit
+05-17 00:58:24.547   251  1484 I SecHAL  : nfc_data_callback: !
+05-17 00:58:24.547  1224  1457 I SecNfcNfa: NFC received rsp gid:1
+05-17 00:58:24.547  1224  1457 I SecNfcNfa: p2p priority is running under bail out mode ONLY.
+05-17 00:58:24.547  1224  1457 I SecNfcNfa: nfc_set_state 4 (IDLE)->4 (IDLE)
+05-17 00:58:24.547  1224  1457 I SecNfcNfa: nfa_dm_disc_data_cback ()
+05-17 00:58:24.548  1224  1457 I SecNfcNfa: nfa_dm_disc_discovery_cback (): event:0x4005
+05-17 00:58:24.548  1224  1457 I SecNfcNfa: nfa_dm_disc_sm_execute (): state: DISCOVERY (1), event: DEACTIVATE_RSP(7) disc_flags: 0x22
+05-17 00:58:24.548  1224  1457 I SecNfcNfa: nfa_dm_disc_new_state (): old_state: DISCOVERY (1), new_state: IDLE (0) disc_flags: 0x2
+05-17 00:58:24.548  1224  1457 I SecNfcNfa: nfa_dm_start_rf_discover ()
+05-17 00:58:24.548  1224  1457 I SecNfcNfa: nfa_dm_disc_sm_execute (): new state: IDLE (0), disc_flags: 0x0
+05-17 00:58:24.549   257   257 I BufferQueue: [ColorFade#0](this:0xafa3d000,id:127,api:1,p:-1,c:-1) ~BufferQueueCore
+05-17 00:58:24.554  1224  5253 I SecNfcNfa: NFA_DisablePolling ()
+05-17 00:58:24.554  1224  1457 I SecNfcNfa: NFA got event 0x0107
+05-17 00:58:24.554  1224  1457 I SecNfcNfa: nfa_dm_evt_hdlr event: NFA_DM_API_DISABLE_POLLING_EVT (0x07)
+05-17 00:58:24.554  1224  1457 I SecNfcNfa: nfa_dm_act_disable_polling ()
+05-17 00:58:24.554  1224  1457 I SecNfcNfa: nfa_dm_deactivate_polling ()
+05-17 00:58:24.554  1224  1457 I SecNfcNfa: nfa_dm_delete_rf_discover () handle=0x1
+05-17 00:58:24.554  1224  5253 I SecNfcNfa: NFA_EnablePolling () 0x1
+05-17 00:58:24.554  1224  1457 I SecNfcNfa: NFA got event 0x0106
+05-17 00:58:24.554  1224  1457 I SecNfcNfa: nfa_dm_evt_hdlr event: NFA_DM_API_ENABLE_POLLING_EVT (0x06)
+05-17 00:58:24.554  1224  1457 I SecNfcNfa: nfa_dm_act_enable_polling ()
+05-17 00:58:24.554  1224  1457 I SecNfcNfa: nfa_dm_start_polling ()
+05-17 00:58:24.554  1224  1457 I SecNfcNfa: nfa_dm_add_rf_discover () disc_mask=0x200f
+05-17 00:58:24.555  1224  5253 I SecNfcNfa: NFA_PauseP2p ()
+05-17 00:58:24.555  1224  1457 I SecNfcNfa: NFA got event 0x010A
+05-17 00:58:24.555  1224  1457 I SecNfcNfa: nfa_dm_evt_hdlr event: NFA_DM_API_PAUSE_P2P_EVT (0x0a)
+05-17 00:58:24.555  1224  1457 I SecNfcNfa: nfa_dm_act_pause_p2p ()
+05-17 00:58:24.555  1224  5253 I SecNfcNfa: NFA_StartRfDiscovery ()
+05-17 00:58:24.555  1224  1457 I SecNfcNfa: NFA got event 0x010E
+05-17 00:58:24.555  1224  1457 I SecNfcNfa: nfa_dm_evt_hdlr event: NFA_DM_API_START_RF_DISCOVERY_EVT (0x0e)
+05-17 00:58:24.555  1224  1457 I SecNfcNfa: nfa_dm_act_start_rf_discovery ()
+05-17 00:58:24.555  1224  1457 I SecNfcNfa: nfa_dm_start_rf_discover ()
+05-17 00:58:24.555  1224  1457 I SecNfcNfa: nfa_ee_get_tech_route(): 1
+05-17 00:58:24.555  1224  1457 I SecNfcNfa: 0x0, 0x0, 0x0, 0x0
+05-17 00:58:24.555  1224  1457 I SecNfcNfa: nfa_dm_cb.disc_cb.entry[0].selected_disc_mask = 0x140000
+05-17 00:58:24.555  1224  1457 I SecNfcNfa: nfa_dm_cb.disc_cb.entry[1].selected_disc_mask = 0x200f
+05-17 00:58:24.555  1224  1457 I SecNfcNfa: nfa_p2p_set_config ()
+05-17 00:58:24.555  1224  1457 I SecNfcNfa: LLCP_GetDiscoveryConfig ()
+05-17 00:58:24.555  1224  1457 I SecNfcNfa: nfa_dm_check_set_config ()
+05-17 00:58:24.555   251   251 I SecHAL  : nfc_hal_write: enter;
+05-17 00:58:24.556   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:0.025159,dur:437223.83,max:436239.49,min:18.02
+05-17 00:58:24.556   251   251 I SecHAL  : nfc_hal_write: exit;
+05-17 00:58:24.556   251  1484 I SecHAL  : OSI_timer_start: enter,osi_lock
+05-17 00:58:24.556   251  1484 I SecHAL  : OSI_timer_start: before osi_unlock
+05-17 00:58:24.556   251  1484 I SecHAL  : OSI_timer_start: exit
+05-17 00:58:24.556   251  1484 I SecHAL  : device_write: enter
+05-17 00:58:24.556   251  1484 I SecHAL  : device_write: before system call
+05-17 00:58:24.556  1224  1457 I SecNfcNfa: nfa_dm_store_config: Enter
+05-17 00:58:24.556  1224  1457 I SecNfcNfa: nfa_dm_store_config: tlv list len: 2, stored_tlv_list_len: 85
+05-17 00:58:24.556  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 81, stored_len: 8
+05-17 00:58:24.556  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 88, stored_len: 1
+05-17 00:58:24.556  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 197, stored_len: 1
+05-17 00:58:24.556  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 128, stored_len: 1
+05-17 00:58:24.556  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 48, stored_len: 1
+05-17 00:58:24.556  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 49, stored_len: 1
+05-17 00:58:24.556  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 50, stored_len: 1
+05-17 00:58:24.557  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 56, stored_len: 1
+05-17 00:58:24.557  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 80, stored_len: 1
+05-17 00:58:24.557  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 0, stored_len: 2
+05-17 00:58:24.557  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 41, stored_len: 20
+05-17 00:58:24.557  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored tlv list len: 65
+05-17 00:58:24.557  1224  1457 I SecNfcNfa: nfa_dm_store_config: Exit
+05-17 00:58:24.557  1224  1457 I SecNfcNfa: dm_disc_mask = 0x14200f
+05-17 00:58:24.557  1224  1457 I SecNfcNfa: nfa_dm_set_rf_listen_mode_config () tech_proto_mask = 0x0014200F
+05-17 00:58:24.557  1224  1457 I SecNfcNfa: nfa_dm_check_set_config ()
+05-17 00:58:24.557  1224  1457 I SecNfcNfa: nfa_dm_set_total_duration ()
+05-17 00:58:24.557  1224  1457 I SecNfcNfa: nfa_dm_check_set_config ()
+05-17 00:58:24.557  1224  1457 I SecNfcNfa: NFC_DiscoveryStart
+05-17 00:58:24.557  1224  1457 I SecNfcNfa: NFC_DiscoveryStart status: 0xe3
+05-17 00:58:24.557   251  1484 I SecHAL  : device_write: after system call
+05-17 00:58:24.557   251  1484 I SecHAL  : device_write: exit
+05-17 00:58:24.563   251  1484 I SecHAL  : OSI_timer_start: enter,osi_lock
+05-17 00:58:24.563   251  1484 I SecHAL  : OSI_timer_start: before osi_unlock
+05-17 00:58:24.563   251  1484 I SecHAL  : OSI_timer_start: exit
+05-17 00:58:24.563   251  1484 I SecHAL  : nfc_data_callback: !
+05-17 00:58:24.566  1224  1457 I SecNfcNfa: NFC received rsp gid:0
+05-17 00:58:24.566  1224  1457 I SecNfcNfa: nci_proc_core_rsp opcode:0x2
+05-17 00:58:24.566  1224  1457 I SecNfcNfa: nfa_dm_nfc_response_cback () NFC_SET_CONFIG_REVT(0x5002)
+05-17 00:58:24.566   251   251 I SecHAL  : nfc_hal_pre_discover: enter;
+05-17 00:58:24.566   251   251 I SecHAL  : nfc_hal_pre_discover: exit;
+05-17 00:58:24.568   602   660 W PowerManagerService: Screen on took 415 ms
+05-17 00:58:24.573   257   601 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) RunningBehind, queued size:2
+05-17 00:58:24.573   251   251 I SecHAL  : nfc_hal_write: enter;
+05-17 00:58:24.573   251   251 I SecHAL  : nfc_hal_write: exit;
+05-17 00:58:24.573   251  1484 I SecHAL  : OSI_timer_start: enter,osi_lock
+05-17 00:58:24.574   251  1484 I SecHAL  : OSI_timer_start: before osi_unlock
+05-17 00:58:24.574   251  1484 I SecHAL  : OSI_timer_start: exit
+05-17 00:58:24.574   251  1484 I SecHAL  : device_write: enter
+05-17 00:58:24.574   251  1484 I SecHAL  : device_write: before system call
+05-17 00:58:24.574   251  1484 I SecHAL  : device_write: after system call
+05-17 00:58:24.574   251  1484 I SecHAL  : device_write: exit
+05-17 00:58:24.576   251  1484 I SecHAL  : OSI_timer_start: enter,osi_lock
+05-17 00:58:24.576   251  1484 I SecHAL  : OSI_timer_start: before osi_unlock
+05-17 00:58:24.576   251  1484 I SecHAL  : OSI_timer_start: exit
+05-17 00:58:24.576   251  1484 I SecHAL  : nfc_data_callback: !
+05-17 00:58:24.577  1224  1457 I SecNfcNfa: NFC received rsp gid:1
+05-17 00:58:24.577  1224  1457 I SecNfcNfa: p2p priority is running under bail out mode ONLY.
+05-17 00:58:24.577  1224  1457 I SecNfcNfa: nfa_dm_disc_discovery_cback (): event:0x4000
+05-17 00:58:24.577  1224  1457 I SecNfcNfa: nfa_dm_disc_sm_execute (): state: IDLE (0), event: DISCOVER_RSP(1) disc_flags: 0x31
+05-17 00:58:24.577  1224  1457 I SecNfcNfa: nfa_dm_disc_new_state (): old_state: IDLE (0), new_state: DISCOVERY (1) disc_flags: 0x11
+05-17 00:58:24.577  1224  1457 I SecNfcNfa: nfa_dm_poll_disc_cback (): event:0x00
+05-17 00:58:24.577  1224  1457 I SecNfcNfa: nfa_dm_disc_sm_execute (): new state: DISCOVERY (1), disc_flags: 0x1
+05-17 00:58:24.596   257   601 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) RunningBehind, queued size:2
+05-17 00:58:24.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:24.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:25.328  5251  5251 W app_process: Could not reserve sentinel fault page
+05-17 00:58:25.560  5251  5251 I app_process: The ClassLoaderContext is a special shared library.
+05-17 00:58:25.639  5251  5251 I Input   : injectMotionEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=360.0, y[0]=1050.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2489986, downTime=2489986, deviceId=1, source=0x1002 }
+05-17 00:58:25.641   602  1272 I PowerWrap: PowerHal_TouchBoost
+05-17 00:58:25.641   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:15, data:10000
+05-17 00:58:25.642   253   267 I libPerfService: 15: legacy set freq: 1105000 -1
+05-17 00:58:25.642   253   267 I libPerfService: 15: legacy set: 3 -1
+05-17 00:58:25.652  5251  5251 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=1050.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2489986, downTime=2489986, deviceId=1, source=0x1002 }
+05-17 00:58:25.667   251  5255 I SecHAL  : device_sleep: NFC can be going to sleep
+05-17 00:58:25.674  5251  5251 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=943.3333, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2490026, downTime=2490026, deviceId=1, source=0x1002 }
+05-17 00:58:25.695  5251  5251 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=887.3333, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2490047, downTime=2490047, deviceId=1, source=0x1002 }
+05-17 00:58:25.699   257   601 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=4.91 dur=1426.60 max=629.54 min=10.25
+05-17 00:58:25.716   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:6.034717,dur:1159.95,max:594.63,min:4.98
+05-17 00:58:25.716  5251  5251 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=831.3333, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2490068, downTime=2490068, deviceId=1, source=0x1002 }
+05-17 00:58:25.725   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:25.725   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:25.737  5251  5251 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=778.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2490088, downTime=2490088, deviceId=1, source=0x1002 }
+05-17 00:58:25.757  5251  5251 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=722.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2490109, downTime=2490109, deviceId=1, source=0x1002 }
+05-17 00:58:25.779  5251  5251 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=663.3334, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2490131, downTime=2490131, deviceId=1, source=0x1002 }
+05-17 00:58:25.798  5251  5251 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=612.6666, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2490150, downTime=2490150, deviceId=1, source=0x1002 }
+05-17 00:58:25.818  5251  5251 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=559.3333, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2490170, downTime=2490170, deviceId=1, source=0x1002 }
+05-17 00:58:25.839  5251  5251 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=503.3333, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2490191, downTime=2490191, deviceId=1, source=0x1002 }
+05-17 00:58:25.860  5251  5251 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=450.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2490211, downTime=2490211, deviceId=1, source=0x1002 }
+05-17 00:58:25.880  5251  5251 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=394.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2490232, downTime=2490232, deviceId=1, source=0x1002 }
+05-17 00:58:25.900  5251  5251 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=340.6667, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2490252, downTime=2490252, deviceId=1, source=0x1002 }
+05-17 00:58:25.923  5251  5251 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=282.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2490274, downTime=2490274, deviceId=1, source=0x1002 }
+05-17 00:58:25.942  5251  5251 I Input   : injectMotionEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=360.0, y[0]=250.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2490293, downTime=2490293, deviceId=1, source=0x1002 }
+05-17 00:58:25.944   602  1272 I PowerWrap: PowerHal_TouchBoost
+05-17 00:58:25.944   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:15, data:0
+05-17 00:58:25.945   253   267 I libPerfService: 15: legacy set: -1 -1
+05-17 00:58:25.945   253   267 I libPerfService: 15: legacy set freq: -1 -1
+05-17 00:58:26.043   253  3336 I vendor.mediatek.hardware.power@1.1-impl: notifyAppState pack:br.com.sinalseguro.app, act:br.com.sinalseguro.app.MainActivity, pid:5173, state:1
+05-17 00:58:26.043   253   267 I libPerfService: perfUserGetCapability - cmd:7, id:0, val:-1
+05-17 00:58:26.056   602   710 I InputReader: Reconfiguring input devices.  changes=0x00000004
+05-17 00:58:26.084  5173  5173 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+05-17 00:58:26.085  5173  5173 W unknown:BridgelessReact: ReactContext.onHostResume()
+05-17 00:58:26.169  5173  5173 W unknown:ViewManagerPropertyUpdater: Could not find generated setter for class com.facebook.react.uimanager.RootViewManager
+05-17 00:58:26.177   602  1272 I WindowManager: Relayout Window{4c4ca24 u0 br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity}: oldVis=4 newVis=0 focusMayChange = true
+05-17 00:58:26.178   257   257 I BufferQueue: [unnamed-257-128](this:0xb247f000,id:128,api:0,p:-1,c:-1) BufferQueue core=(257:/system/bin/surfaceflinger)
+05-17 00:58:26.178   257   257 E DumpTunnel: finding regDump() failed
+05-17 00:58:26.178   257   257 I BufferQueueConsumer: [unnamed-257-128](this:0xb247f000,id:128,api:0,p:-1,c:257) connect(C): consumer=(257:/system/bin/surfaceflinger) controlledByApp=false
+05-17 00:58:26.178   257   257 I BufferQueueConsumer: [unnamed-257-128](this:0xb247f000,id:128,api:0,p:-1,c:257) setConsumerName: unnamed-257-128
+05-17 00:58:26.178   257   257 I BufferQueueConsumer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:0,p:-1,c:257) setConsumerName: br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0
+05-17 00:58:26.179   257   257 I BufferQueueProducer: [](this:0xb247f000,id:128,api:0,p:-1,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 2
+05-17 00:58:26.179   257   257 I BufferQueueConsumer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:0,p:-1,c:257) setDefaultBufferSize: width=720 height=1280
+05-17 00:58:26.194   253  3336 I [Gralloc]: usage1: 0x900, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:26.195   253  3336 I chatty  : uid=1000(system) HwBinder:253_4 identical 1 line
+05-17 00:58:26.196   253  3336 I [Gralloc]: usage1: 0x900, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:26.199  5173  5195 E         : appName=br.com.sinalseguro.app, acAppName=/system/bin/surfaceflinger
+05-17 00:58:26.199  5173  5195 E         : 0
+05-17 00:58:26.202  5173  5195 I br.com.sinalseguro.app: android::hardware::configstore::V1_0::ISurfaceFlingerConfigs::hasWideColorDisplay retrieved: 0
+05-17 00:58:26.203  5173  5195 I OpenGLRenderer: Initialized EGL, version 1.4
+05-17 00:58:26.205  5173  5195 E         : appName=br.com.sinalseguro.app, acAppName=com.instagram.android
+05-17 00:58:26.205  5173  5195 E         : 0
+05-17 00:58:26.216  5173  5195 I HWUIExtension: Get disable program binary service property (0)
+05-17 00:58:26.216  5173  5195 I HWUIExtension: Initializing program atlas...
+05-17 00:58:26.217  5173  5195 I ProgramBinary/Service: ProgramBinaryService client side disable debugging.
+05-17 00:58:26.217  5173  5195 I ProgramBinary/Service: ProgramBinaryService client side disable binary content debugging.
+05-17 00:58:26.218  5173  5195 I HWUIExtension: Program binary detail: Binary length is 78196, program map length is 104.
+05-17 00:58:26.219  5173  5195 I HWUIExtension: Succeeded to mmap program binaries. File descriptor is 65, and path is /dev/ashmem.
+05-17 00:58:26.219  5173  5195 I HWUIExtension: No need to use file discriptor anymore, close fd(65).
+05-17 00:58:26.220   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) connect(P): api=1 producer=(5173:br.com.sinalseguro.app) producerControlledByApp=true
+05-17 00:58:26.221   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 3
+05-17 00:58:26.246  5173  5195 E [EGL-ERROR]: __egl_platform_cancel_buffers:644: surface->num_buffers(4)
+05-17 00:58:26.247   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) disconnect(P): api 1
+05-17 00:58:26.248   257  1005 I BufferQueueConsumer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:-1,c:257) getReleasedBuffers: returning mask 0xffffffffffffffff
+05-17 00:58:26.251   257   601 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) connect(P): api=1 producer=(5173:br.com.sinalseguro.app) producerControlledByApp=true
+05-17 00:58:26.253   257   601 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 3
+05-17 00:58:26.381  5173  5271 E WebViewFactory: No such method for getDefinedWebViewPackageName: java.lang.NoSuchMethodException: getDefinedWebViewPackageName []
+05-17 00:58:26.396   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 00:58:26.415  5173  5271 I WebViewFactory: Loading com.android.webview version 66.0.3359.158 (code 336015805)
+05-17 00:58:26.504   257   601 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 00:58:26.505   253  3336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:26.512  5173  5173 I RenderThread: type=1400 audit(0.0:175): avc: denied { search } for name="clients" dev="debugfs" ino=7420 scontext=u:r:untrusted_app:s0:c512,c768 tcontext=u:object_r:debugfs_ion:s0 tclass=dir permissive=1
+05-17 00:58:26.522  5173  5271 I cr_LibraryLoader: Time to load native libraries: 11 ms (timestamps 859-870)
+05-17 00:58:26.548  5173  5271 I chromium: [INFO:library_loader_hooks.cc(36)] Chromium logging enabled: level = 0, default verbosity = 0
+05-17 00:58:26.550  5173  5271 I cr_LibraryLoader: Expected native library version number "66.0.3359.158", actual native library version number "66.0.3359.158"
+05-17 00:58:26.594   257   601 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 00:58:26.594   253  3336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:26.606   257   348 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 00:58:26.606   253  3336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:26.624   602   655 I ActivityManager: Displayed br.com.sinalseguro.app/.MainActivity: +36s178ms (total +36s318ms)
+05-17 00:58:26.636   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkCusPowerHint hint:0, data:268435455
+05-17 00:58:26.639   253   267 I powerd  : [powerd_req] POWER_MSG_MTK_CUS_HINT: hint:0, hdl:36, data:268435455
+05-17 00:58:26.639   253   267 I libPerfService: perfCusUserScnEnable - handle:36
+05-17 00:58:26.639   253   267 I libPerfService: 36: legacy set: 2 -1
+05-17 00:58:26.642   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=0.02 dur=1041942.99 max=1041372.42 min=18.79
+05-17 00:58:26.674   602   655 I WindowManager: Focus moving from Window{370c6d4 u0 StatusBar} to Window{4c4ca24 u0 br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity}
+05-17 00:58:26.702   602   790 I WindowManager: Relayout Window{c148e98 u0 NavigationBar}: oldVis=8 newVis=0 focusMayChange = true
+05-17 00:58:26.715   253  3336 I [Gralloc]: usage1: 0x900, format: 1 stride: 720 vertical_stride: 96 size: 276480
+05-17 00:58:26.718   257   601 I BufferQueueProducer: [NavigationBar#0](this:0xb246c000,id:4,api:1,p:752,c:257) connect(P): api=1 producer=(752:com.android.systemui) producerControlledByApp=true
+05-17 00:58:26.718   253  3336 I [Gralloc]: usage1: 0x900, format: 1 stride: 720 vertical_stride: 96 size: 276480
+05-17 00:58:26.723   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:45.681969,dur:1006.96,max:82.41,min:19.34
+05-17 00:58:26.726   253  3336 I [Gralloc]: usage1: 0x900, format: 1 stride: 720 vertical_stride: 96 size: 276480
+05-17 00:58:26.728   253  3336 I [Gralloc]: usage1: 0x900, format: 1 stride: 720 vertical_stride: 96 size: 276480
+05-17 00:58:26.730   257   601 I BufferQueueProducer: [NavigationBar#0](this:0xb246c000,id:4,api:1,p:752,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 3
+05-17 00:58:26.752   257   348 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=18.04 dur=1053.03 max=640.13 min=16.72
+05-17 00:58:26.755   257   601 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 00:58:26.756   253  3336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 96 size: 276480
+05-17 00:58:26.761   257   601 I BufferQueueProducer: [NavigationBar#0](this:0xb246c000,id:4,api:1,p:752,c:257) queueBuffer: fps=0.01 dur=1041874.27 max=1041749.52 min=19.98
+05-17 00:58:26.778  1224  1224 I SecNfcNfa: NFA_SendVsCommand() oid=0x38
+05-17 00:58:26.778  1224  1457 I SecNfcNfa: NFA got event 0x0118
+05-17 00:58:26.778  1224  1457 I SecNfcNfa: nfa_dm_evt_hdlr event: Unknown or Vendor Specific (0x18)
+05-17 00:58:26.779   251   251 I SecHAL  : nfc_hal_write: enter;
+05-17 00:58:26.779   251   251 I SecHAL  : nfc_hal_write: exit;
+05-17 00:58:26.779   251  1484 I SecHAL  : device_wakeup: Wakeup! in 80 ms
+05-17 00:58:26.793   602   642 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.USER_PRESENT flg=0x24200010 } to com.google.android.gms/.auth.setup.devicesignals.LockScreenReceiver
+05-17 00:58:26.794   602   642 W BroadcastQueue: Background execution not allowed: receiving Intent { act=android.intent.action.USER_PRESENT flg=0x24200010 } to com.google.android.gms/.chimera.GmsIntentOperationService$PersistentTrustedReceiver
+05-17 00:58:26.796   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:26.796   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:26.862   251  1484 I SecHAL  : device_wakeup: exit
+05-17 00:58:26.862   251  1484 I SecHAL  : OSI_timer_start: enter,osi_lock
+05-17 00:58:26.862   251  1484 I SecHAL  : OSI_timer_start: before pthread_create for timer thread
+05-17 00:58:26.862   251  1484 I SecHAL  : OSI_timer_start: after pthread_create for timer thread
+05-17 00:58:26.862   251  1484 I SecHAL  : OSI_timer_start: before osi_unlock
+05-17 00:58:26.862   251  1484 I SecHAL  : OSI_timer_start: exit
+05-17 00:58:26.862   251  1484 I SecHAL  : device_write: enter
+05-17 00:58:26.862   257   349 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 00:58:26.862   251  1484 I SecHAL  : device_write: before system call
+05-17 00:58:26.864   253  3336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 96 size: 276480
+05-17 00:58:26.869   251  1484 I SecHAL  : device_write: after system call
+05-17 00:58:26.869   251  1484 I SecHAL  : device_write: exit
+05-17 00:58:26.872   251  1484 I SecHAL  : OSI_timer_start: enter,osi_lock
+05-17 00:58:26.872   251  1484 I SecHAL  : OSI_timer_start: before osi_unlock
+05-17 00:58:26.872   251  1484 I SecHAL  : OSI_timer_start: exit
+05-17 00:58:26.872   251  1484 I SecHAL  : nfc_data_callback: !
+05-17 00:58:26.873  1224  1457 I SecNfcNfa: NFC received rsp gid:15
+05-17 00:58:26.873  1224  1224 I SecNfcNfa: NFA_StopRfDiscovery ()
+05-17 00:58:26.874  1224  1457 I SecNfcNfa: NFA got event 0x010F
+05-17 00:58:26.876  1224  1457 I SecNfcNfa: nfa_dm_evt_hdlr event: NFA_DM_API_STOP_RF_DISCOVERY_EVT (0x0f)
+05-17 00:58:26.876  1224  1457 I SecNfcNfa: nfa_dm_act_stop_rf_discovery ()
+05-17 00:58:26.876  1224  1457 I SecNfcNfa: nfa_dm_rf_deactivate () deactivate_type:0x0
+05-17 00:58:26.876  1224  1457 I SecNfcNfa: nfa_dm_disc_sm_execute (): state: DISCOVERY (1), event: DEACTIVATE_CMD(6) disc_flags: 0x2
+05-17 00:58:26.876  1224  1457 I SecNfcNfa: NFC_Deactivate 4 (IDLE) deactivate_type:0
+05-17 00:58:26.877   257  1005 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 00:58:26.877   253  3336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 96 size: 276480
+05-17 00:58:26.878   251   251 I SecHAL  : nfc_hal_write: enter;
+05-17 00:58:26.878   251   251 I SecHAL  : nfc_hal_write: exit;
+05-17 00:58:26.878  1224  1457 I SecNfcNfa: nfa_dm_disc_sm_execute (): new state: DISCOVERY (1), disc_flags: 0x22
+05-17 00:58:26.878   251  1484 I SecHAL  : OSI_timer_start: enter,osi_lock
+05-17 00:58:26.878   251  1484 I SecHAL  : OSI_timer_start: before osi_unlock
+05-17 00:58:26.878   251  1484 I SecHAL  : OSI_timer_start: exit
+05-17 00:58:26.878   251  1484 I SecHAL  : device_write: enter
+05-17 00:58:26.878   251  1484 I SecHAL  : device_write: before system call
+05-17 00:58:26.879  1224  1457 I SecNfcNfa: nfa_sys_ptim_stop_timer 9a6fd0bc
+05-17 00:58:26.879  1224  1457 I SecNfcNfa: ptim timer stop
+05-17 00:58:26.879  1224  1457 I SecNfcNfa: Stopped presence check timer (if started)
+05-17 00:58:26.879   251  1484 I SecHAL  : device_write: after system call
+05-17 00:58:26.879   251  1484 I SecHAL  : device_write: exit
+05-17 00:58:26.882   251  1484 I SecHAL  : OSI_timer_start: enter,osi_lock
+05-17 00:58:26.882   251  1484 I SecHAL  : OSI_timer_start: before osi_unlock
+05-17 00:58:26.883   251  1484 I SecHAL  : OSI_timer_start: exit
+05-17 00:58:26.883   251  1484 I SecHAL  : nfc_data_callback: !
+05-17 00:58:26.888  1224  1457 I SecNfcNfa: NFC received rsp gid:1
+05-17 00:58:26.888  1224  1457 I SecNfcNfa: p2p priority is running under bail out mode ONLY.
+05-17 00:58:26.888  1224  1457 I SecNfcNfa: nfc_set_state 4 (IDLE)->4 (IDLE)
+05-17 00:58:26.888  1224  1457 I SecNfcNfa: nfa_dm_disc_data_cback ()
+05-17 00:58:26.888  1224  1457 I SecNfcNfa: nfa_dm_disc_discovery_cback (): event:0x4005
+05-17 00:58:26.888  1224  1457 I SecNfcNfa: nfa_dm_disc_sm_execute (): state: DISCOVERY (1), event: DEACTIVATE_RSP(7) disc_flags: 0x22
+05-17 00:58:26.888  1224  1457 I SecNfcNfa: nfa_dm_disc_new_state (): old_state: DISCOVERY (1), new_state: IDLE (0) disc_flags: 0x2
+05-17 00:58:26.888  1224  1457 I SecNfcNfa: NFA_DisablePolling ()
+05-17 00:58:26.889  1224  1224 I SecNfcNfa: NFA_DisablePolling ()
+05-17 00:58:26.889  1224  1457 I SecNfcNfa: nfa_dm_disc_sm_execute (): new state: IDLE (0), disc_flags: 0x0
+05-17 00:58:26.889  1224  1457 I SecNfcNfa: NFA got event 0x0107
+05-17 00:58:26.889  1224  1457 I SecNfcNfa: nfa_dm_evt_hdlr event: NFA_DM_API_DISABLE_POLLING_EVT (0x07)
+05-17 00:58:26.889  1224  1457 I SecNfcNfa: nfa_dm_act_disable_polling ()
+05-17 00:58:26.889  1224  1457 I SecNfcNfa: nfa_dm_deactivate_polling ()
+05-17 00:58:26.889  1224  1457 I SecNfcNfa: nfa_dm_delete_rf_discover () handle=0x1
+05-17 00:58:26.889  1224  1224 I SecNfcNfa: NFA_EnablePolling () 0xFF
+05-17 00:58:26.892   257  1005 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 00:58:26.893   253  3336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 96 size: 276480
+05-17 00:58:26.895  1224  1457 I SecNfcNfa: NFA got event 0x0106
+05-17 00:58:26.895  1224  1457 I SecNfcNfa: nfa_dm_evt_hdlr event: NFA_DM_API_ENABLE_POLLING_EVT (0x06)
+05-17 00:58:26.895  1224  1457 I SecNfcNfa: nfa_dm_act_enable_polling ()
+05-17 00:58:26.895  1224  1457 I SecNfcNfa: nfa_dm_start_polling ()
+05-17 00:58:26.896  1224  1457 I SecNfcNfa: nfa_dm_add_rf_discover () disc_mask=0x3f7f
+05-17 00:58:26.896  1224  1224 I SecNfcNfa: NFA_P2pSetListenTech (): tech_mask:0xC0
+05-17 00:58:26.896  1224  1457 I SecNfcNfa: NFA got event 0x010D
+05-17 00:58:26.896  1224  1457 I SecNfcNfa: nfa_dm_evt_hdlr event: NFA_DM_API_SET_P2P_LISTEN_TECH_EVT (0x0d)
+05-17 00:58:26.896  1224  1457 I SecNfcNfa: nfa_dm_set_p2p_listen_tech ()  tech_mask = 192
+05-17 00:58:26.896  1224  1457 I SecNfcNfa: nfa_p2p_update_listen_tech ()  tech_mask = 0xc0
+05-17 00:58:26.896  1224  1457 I SecNfcNfa: nfa_p2p_enable_listening () sys_id = 3, update_wks = 0
+05-17 00:58:26.896  1224  1457 I SecNfcNfa: nfa_dm_add_rf_discover () disc_mask=0xc000000
+05-17 00:58:26.896  1224  1224 I SecNfcNfa: NFA_ResumeP2p ()
+05-17 00:58:26.897  1224  1224 I SecNfcNfa: NFA_StartRfDiscovery ()
+05-17 00:58:26.898  1224  1457 I SecNfcNfa: NFA got event 0x010B
+05-17 00:58:26.898  1224  1457 I SecNfcNfa: nfa_dm_evt_hdlr event: NFA_DM_API_RESUME_P2P_EVT (0x0b)
+05-17 00:58:26.898  1224  1457 I SecNfcNfa: nfa_dm_act_resume_p2p ()
+05-17 00:58:26.898  1224  1457 I SecNfcNfa: NFA got event 0x010E
+05-17 00:58:26.898  1224  1457 I SecNfcNfa: nfa_dm_evt_hdlr event: NFA_DM_API_START_RF_DISCOVERY_EVT (0x0e)
+05-17 00:58:26.898  1224  1457 I SecNfcNfa: nfa_dm_act_start_rf_discovery ()
+05-17 00:58:26.898  1224  1457 I SecNfcNfa: nfa_dm_start_rf_discover ()
+05-17 00:58:26.898  1224  1457 I SecNfcNfa: nfa_ee_get_tech_route(): 1
+05-17 00:58:26.898  1224  1457 I SecNfcNfa: 0x0, 0x0, 0x0, 0x0
+05-17 00:58:26.898  1224  1457 I SecNfcNfa: nfa_dm_cb.disc_cb.entry[0].selected_disc_mask = 0x140000
+05-17 00:58:26.899  1224  1457 I SecNfcNfa: nfa_dm_cb.disc_cb.entry[1].selected_disc_mask = 0x3f7f
+05-17 00:58:26.899  1224  1457 I SecNfcNfa: nfa_dm_cb.disc_cb.entry[2].selected_disc_mask = 0xc000000
+05-17 00:58:26.899  1224  1457 I SecNfcNfa: nfa_p2p_set_config ()
+05-17 00:58:26.899  1224  1457 I SecNfcNfa: LLCP_GetDiscoveryConfig ()
+05-17 00:58:26.899  1224  1457 I SecNfcNfa: nfa_dm_check_set_config ()
+05-17 00:58:26.901   251   251 I SecHAL  : nfc_hal_write: enter;
+05-17 00:58:26.901   251   251 I SecHAL  : nfc_hal_write: exit;
+05-17 00:58:26.902   251  1484 I SecHAL  : OSI_timer_start: enter,osi_lock
+05-17 00:58:26.902   251  1484 I SecHAL  : OSI_timer_start: before osi_unlock
+05-17 00:58:26.902   251  1484 I SecHAL  : OSI_timer_start: exit
+05-17 00:58:26.902   251  1484 I SecHAL  : device_write: enter
+05-17 00:58:26.902   251  1484 I SecHAL  : device_write: before system call
+05-17 00:58:26.903  1224  1457 I SecNfcNfa: nfa_dm_store_config: Enter
+05-17 00:58:26.904   251  1484 I SecHAL  : device_write: after system call
+05-17 00:58:26.906   251  1484 I SecHAL  : device_write: exit
+05-17 00:58:26.909   251  1484 I SecHAL  : OSI_timer_start: enter,osi_lock
+05-17 00:58:26.909   251  1484 I SecHAL  : OSI_timer_start: before osi_unlock
+05-17 00:58:26.909   251  1484 I SecHAL  : OSI_timer_start: exit
+05-17 00:58:26.909   251  1484 I SecHAL  : nfc_data_callback: !
+05-17 00:58:26.910  1224  1457 I SecNfcNfa: nfa_dm_store_config: tlv list len: 22, stored_tlv_list_len: 65
+05-17 00:58:26.910  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 81, stored_len: 8
+05-17 00:58:26.910  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 88, stored_len: 1
+05-17 00:58:26.910  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 197, stored_len: 1
+05-17 00:58:26.910  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 128, stored_len: 1
+05-17 00:58:26.910  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 48, stored_len: 1
+05-17 00:58:26.910  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 49, stored_len: 1
+05-17 00:58:26.910  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 50, stored_len: 1
+05-17 00:58:26.910  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 56, stored_len: 1
+05-17 00:58:26.910  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 80, stored_len: 1
+05-17 00:58:26.910  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 0, stored_len: 2
+05-17 00:58:26.910  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 97, stored_len: 20
+05-17 00:58:26.910  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 96, stored_len: 1
+05-17 00:58:26.910  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored_type: 41, stored_len: 0
+05-17 00:58:26.910  1224  1457 I SecNfcNfa: nfa_dm_store_config: stored tlv list len: 85
+05-17 00:58:26.910  1224  1457 I SecNfcNfa: nfa_dm_store_config: Exit
+05-17 00:58:26.910  1224  1457 I SecNfcNfa: nfa_dm_check_set_config ()
+05-17 00:58:26.910  1224  1457 I SecNfcNfa: nfa_dm_check_set_config ()
+05-17 00:58:26.913  1224  1457 I SecNfcNfa: dm_disc_mask = 0xc143f7f
+05-17 00:58:26.913  1224  1457 I SecNfcNfa: nfa_dm_set_rf_listen_mode_config () tech_proto_mask = 0x0C143F7F
+05-17 00:58:26.913  1224  1457 I SecNfcNfa: nfa_dm_check_set_config ()
+05-17 00:58:26.913  1224  1457 I SecNfcNfa: nfa_dm_set_total_duration ()
+05-17 00:58:26.913  1224  1457 I SecNfcNfa: nfa_dm_check_set_config ()
+05-17 00:58:26.913  1224  1457 I SecNfcNfa: NFC_DiscoveryStart
+05-17 00:58:26.913  1224  1457 I SecNfcNfa: NFC_DiscoveryStart status: 0xe3
+05-17 00:58:26.914  1224  1457 I SecNfcNfa: NFC received rsp gid:0
+05-17 00:58:26.914  1224  1457 I SecNfcNfa: nci_proc_core_rsp opcode:0x2
+05-17 00:58:26.914  1224  1457 I SecNfcNfa: nfa_dm_nfc_response_cback () NFC_SET_CONFIG_REVT(0x5002)
+05-17 00:58:26.915   251   251 I SecHAL  : nfc_hal_pre_discover: enter;
+05-17 00:58:26.915   251   251 I SecHAL  : nfc_hal_pre_discover: exit;
+05-17 00:58:26.916   251   251 I SecHAL  : nfc_hal_write: enter;
+05-17 00:58:26.916   251   251 I SecHAL  : nfc_hal_write: exit;
+05-17 00:58:26.916   251  1484 I SecHAL  : OSI_timer_start: enter,osi_lock
+05-17 00:58:26.916   251  1484 I SecHAL  : OSI_timer_start: before osi_unlock
+05-17 00:58:26.916   251  1484 I SecHAL  : OSI_timer_start: exit
+05-17 00:58:26.916   251  1484 I SecHAL  : device_write: enter
+05-17 00:58:26.916   251  1484 I SecHAL  : device_write: before system call
+05-17 00:58:26.917   251  1484 I SecHAL  : device_write: after system call
+05-17 00:58:26.917   251  1484 I SecHAL  : device_write: exit
+05-17 00:58:26.920   251  1484 I SecHAL  : OSI_timer_start: enter,osi_lock
+05-17 00:58:26.920   251  1484 I SecHAL  : OSI_timer_start: before osi_unlock
+05-17 00:58:26.920   251  1484 I SecHAL  : OSI_timer_start: exit
+05-17 00:58:26.920   251  1484 I SecHAL  : nfc_data_callback: !
+05-17 00:58:26.921  1224  1457 I SecNfcNfa: NFC received rsp gid:1
+05-17 00:58:26.921  1224  1457 I SecNfcNfa: p2p priority is running under bail out mode ONLY.
+05-17 00:58:26.921  1224  1457 I SecNfcNfa: nfa_dm_disc_discovery_cback (): event:0x4000
+05-17 00:58:26.921  1224  1457 I SecNfcNfa: nfa_dm_disc_sm_execute (): state: IDLE (0), event: DISCOVER_RSP(1) disc_flags: 0x31
+05-17 00:58:26.921  1224  1457 I SecNfcNfa: nfa_dm_disc_new_state (): old_state: IDLE (0), new_state: DISCOVERY (1) disc_flags: 0x11
+05-17 00:58:26.921  1224  1457 I SecNfcNfa: nfa_dm_poll_disc_cback (): event:0x00
+05-17 00:58:26.921  1224  1457 I SecNfcNfa: nfa_p2p_discovery_cback (): event:0x00
+05-17 00:58:26.921  1224  1457 I SecNfcNfa: nfa_dm_disc_sm_execute (): new state: DISCOVERY (1), disc_flags: 0x1
+05-17 00:58:26.946  1116  1449 I NearbySharing: Screen is unlocked
+05-17 00:58:26.960  1116  1449 I NearbySharing: Uwb feature is off.
+05-17 00:58:26.961  1116  1449 I NearbySharing: Uwb feature is off.
+05-17 00:58:26.961  1116  1449 I NearbySharing: Stopping scanning because Bluetooth is disabled.
+05-17 00:58:26.962   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkCusPowerHint hint:0, data:0
+05-17 00:58:26.963   253   267 I powerd  : [powerd_req] POWER_MSG_MTK_CUS_HINT: hint:0, hdl:36, data:0
+05-17 00:58:26.963   253   267 I libPerfService: 36: legacy set: -1 -1
+05-17 00:58:27.023  1116  5287 I NearbyMediums: ModuleInitializer handles incoming intent android.intent.action.USER_PRESENT
+05-17 00:58:27.055   602   980 I WifiService: getWifiEnabledState uid=10012
+05-17 00:58:27.058   602   980 I WifiService: getSupportedFeatures uid=10012
+05-17 00:58:27.060   252   252 I WifiHAL : [WIFI HAL]wifi_get_supported_feature_set: handle=0xa9909290, feature_set=0x80101a
+05-17 00:58:27.062   252   252 I WifiHAL : [WIFI HAL]wifi_get_supported_feature_set: handle=0xa9909290, feature_set=0x80101a
+05-17 00:58:27.069   257   257 I BufferQueueConsumer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) setDefaultBufferSize: width=720 height=48
+05-17 00:58:27.082   752  1056 E [EGL-ERROR]: __egl_platform_cancel_buffers:644: surface->num_buffers(4)
+05-17 00:58:27.084   257   348 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) disconnect(P): api 1
+05-17 00:58:27.084   257   348 I BufferQueueConsumer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:-1,c:257) getReleasedBuffers: returning mask 0xffffffffffffffff
+05-17 00:58:27.085   257   348 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) connect(P): api=1 producer=(752:com.android.systemui) producerControlledByApp=true
+05-17 00:58:27.092   257   348 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 3
+05-17 00:58:27.098  1116  1449 I NearbySharing: Stopping Fast Init advertisement because Bluetooth is off.
+05-17 00:58:27.098  1116  1449 I NearbySharing: Stopping advertising because Bluetooth is disabled.
+05-17 00:58:27.099   602   794 I WifiService: getWifiEnabledState uid=10012
+05-17 00:58:27.114   257   349 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 00:58:27.114   253  3336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 48 size: 138240
+05-17 00:58:27.124   257   349 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 00:58:27.124   253  3336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 48 size: 138240
+05-17 00:58:27.179  1116  1116 I RCNIntentOperation: RCN is disabled on this network.
+05-17 00:58:27.220  1116  1449 I NearbySharing: Fast Initiation Scanning has stopped
+05-17 00:58:27.220  1116  1449 I NearbySharing: Stopping FastInitiation scanning because Bluetooth is disabled.
+05-17 00:58:27.223  1116  1449 I NearbySharing: Dismissing HUN as there's no device nearby.
+05-17 00:58:27.326  5173  5271 I System.out: port:443
+05-17 00:58:27.353  5173  5194 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+05-17 00:58:27.354  5173  5194 W unknown:ReactNative: StatusBarModule: Ignored status bar change, current activity is edge-to-edge.
+05-17 00:58:27.587   257   349 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=31.85 dur=1004.71 max=206.42 min=8.44
+05-17 00:58:27.726   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:37.873539,dur:1003.34,max:184.53,min:16.81
+05-17 00:58:27.775   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:27.776   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:28.219   251  5284 I SecHAL  : device_sleep: NFC can be going to sleep
+05-17 00:58:28.223   257   349 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=6.80 dur=1470.02 max=1089.15 min=5.35
+05-17 00:58:28.415  5296  5296 W app_process: Could not reserve sentinel fault page
+05-17 00:58:28.472  5173  5184 I zygote  : Background concurrent copying GC freed 70565(3MB) AllocSpace objects, 5(100KB) LOS objects, 50% free, 5MB/11MB, paused 289us total 174.039ms
+05-17 00:58:28.570  5173  5178 I zygote  : Do full code cache collection, code=252KB, data=203KB
+05-17 00:58:28.572  5173  5178 I zygote  : After code cache collection, code=239KB, data=152KB
+05-17 00:58:28.707  5296  5296 I app_process: The ClassLoaderContext is a special shared library.
+05-17 00:58:28.723   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:28.723   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:28.792  5296  5296 I Input   : injectKeyEvent: KeyEvent { action=ACTION_DOWN, keyCode=KEYCODE_HOME, scanCode=0, metaState=0, flags=0x0, repeatCount=0, eventTime=2493144, downTime=2493144, deviceId=-1, source=0x101 }
+05-17 00:58:28.797  5296  5296 I Input   : injectKeyEvent: KeyEvent { action=ACTION_UP, keyCode=KEYCODE_HOME, scanCode=0, metaState=0, flags=0x0, repeatCount=0, eventTime=2493144, downTime=2493144, deviceId=-1, source=0x101 }
+05-17 00:58:28.808   602   709 I ActivityManager: START u0 {act=android.intent.action.MAIN cat=[android.intent.category.HOME] flg=0x10200000 cmp=com.android.launcher3/.Launcher (has extras)} from uid 1000
+05-17 00:58:28.822   253  3336 I vendor.mediatek.hardware.power@1.1-impl: PowerHint hint:8, data:1
+05-17 00:58:28.823   253   267 I libPerfService: 8: legacy set freq: 1300000 -1
+05-17 00:58:28.823   253   267 I libPerfService: 8: legacy set: 4 -1
+05-17 00:58:28.829   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:2000
+05-17 00:58:28.835  5173  5173 W unknown:BridgelessReact: ReactHost{0}.onUserLeaveHint(activity)
+05-17 00:58:28.839   253   253 I merged_hal_serv: type=1400 audit(0.0:176): avc: denied { search } for name="thermal" dev="proc" ino=4026533566 scontext=u:r:merged_hal_service:s0 tcontext=u:object_r:proc_thermal:s0 tclass=dir permissive=1
+05-17 00:58:28.840   253  3336 I vendor.mediatek.hardware.power@1.1-impl: notifyAppState pack:com.android.launcher3, act:com.android.launcher3.Launcher, pid:1295, state:1
+05-17 00:58:28.841   253   267 I libPerfService: [perfNotifyAppState] foreground:com.android.launcher3, pid:1295
+05-17 00:58:28.842   253   267 E libPerfService: Could not open '/proc/driver/thermal/ta_fg_pid'
+05-17 00:58:28.842   253   267 E libPerfService: error : 2, No such file or directory
+05-17 00:58:28.842   253   267 E libPerfService: Could not open '/sys/module/ged/parameters/gx_top_app_pid'
+05-17 00:58:28.842   253   267 E libPerfService: error : 2, No such file or directory
+05-17 00:58:28.842   253   267 I libPerfService: perfUserGetCapability - cmd:7, id:0, val:-1
+05-17 00:58:28.843  5173  5173 W unknown:BridgelessReact: ReactHost{0}.onHostPause(activity)
+05-17 00:58:28.844  5173  5173 W unknown:BridgelessReact: ReactContext.onHostPause()
+05-17 00:58:28.845   602   655 I WindowManager: Focus moving from Window{4c4ca24 u0 br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity} to null
+05-17 00:58:28.878   602  4417 I WindowManager: Relayout Window{882afad u0 com.android.launcher3/com.android.launcher3.Launcher}: oldVis=4 newVis=0 focusMayChange = true
+05-17 00:58:28.879   257   257 I BufferQueue: [unnamed-257-129](this:0xafa2c000,id:129,api:0,p:-1,c:-1) BufferQueue core=(257:/system/bin/surfaceflinger)
+05-17 00:58:28.879   257   257 E DumpTunnel: finding regDump() failed
+05-17 00:58:28.879   257   257 I BufferQueueConsumer: [unnamed-257-129](this:0xafa2c000,id:129,api:0,p:-1,c:257) connect(C): consumer=(257:/system/bin/surfaceflinger) controlledByApp=false
+05-17 00:58:28.880   257   257 I BufferQueueConsumer: [unnamed-257-129](this:0xafa2c000,id:129,api:0,p:-1,c:257) setConsumerName: unnamed-257-129
+05-17 00:58:28.880   257   257 I BufferQueueConsumer: [com.android.launcher3/com.android.launcher3.Launcher#0](this:0xafa2c000,id:129,api:0,p:-1,c:257) setConsumerName: com.android.launcher3/com.android.launcher3.Launcher#0
+05-17 00:58:28.880   257   257 I BufferQueueProducer: [](this:0xafa2c000,id:129,api:0,p:-1,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 2
+05-17 00:58:28.880   257   257 I BufferQueueConsumer: [com.android.launcher3/com.android.launcher3.Launcher#0](this:0xafa2c000,id:129,api:0,p:-1,c:257) setDefaultBufferSize: width=720 height=1280
+05-17 00:58:28.889   602   655 I WindowManager: Focus moving from null to Window{882afad u0 com.android.launcher3/com.android.launcher3.Launcher}
+05-17 00:58:28.891   257   348 I BufferQueueProducer: [com.android.launcher3/com.android.launcher3.Launcher#0](this:0xafa2c000,id:129,api:1,p:1295,c:257) connect(P): api=1 producer=(1295:com.android.launcher3) producerControlledByApp=true
+05-17 00:58:28.891   253  3336 I [Gralloc]: usage1: 0x900, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:28.892   253   336 I [Gralloc]: usage1: 0x900, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:28.895   253  3336 I [Gralloc]: usage1: 0x900, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:28.896   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:25.649548,dur:1169.61,max:574.52,min:19.34
+05-17 00:58:28.900   257   348 I BufferQueueProducer: [com.android.launcher3/com.android.launcher3.Launcher#0](this:0xafa2c000,id:129,api:1,p:1295,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 3
+05-17 00:58:28.912   257   348 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 00:58:28.912   253  3336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:28.937   253  3336 I vendor.mediatek.hardware.power@1.1-impl: PowerHint hint:8, data:0
+05-17 00:58:28.951  5173  5195 E [EGL-ERROR]: __egl_platform_cancel_buffers:644: surface->num_buffers(4)
+05-17 00:58:28.952   257   349 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) disconnect(P): api 1
+05-17 00:58:28.952   257   349 I BufferQueueConsumer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:-1,c:257) getReleasedBuffers: returning mask 0xffffffffffffffff
+05-17 00:58:28.956   602   693 I BufferQueue: [unnamed-602-18](this:0x9cc2a000,id:18,api:0,p:-1,c:-1) BufferQueue core=(602:system_server)
+05-17 00:58:28.956   602   693 E DumpTunnel: finding regDump() failed
+05-17 00:58:28.956   602   693 I BufferQueueConsumer: [unnamed-602-18](this:0x9cc2a000,id:18,api:0,p:-1,c:602) connect(C): consumer=(602:system_server) controlledByApp=true
+05-17 00:58:28.957   602   693 I BufferQueueConsumer: [unnamed-602-18](this:0x9cc2a000,id:18,api:0,p:-1,c:602) setConsumerName: unnamed-602-18
+05-17 00:58:28.959   602   693 I BufferQueueProducer: [unnamed-602-18](this:0x9cc2a000,id:18,api:1,p:257,c:602) connect(P): api=1 producer=(257:/system/bin/surfaceflinger) producerControlledByApp=false
+05-17 00:58:28.960   253  3336 I [Gralloc]: usage1: 0x333, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:28.977   257   257 I SurfaceFlinger: screenshot (br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0)
+05-17 00:58:28.984   602   693 I BufferQueueProducer: [unnamed-602-18](this:0x9cc2a000,id:18,api:1,p:257,c:602) disconnect(P): api 1
+05-17 00:58:28.984   602   693 I BufferQueueConsumer: [unnamed-602-18](this:0x9cc2a000,id:18,api:1,p:-1,c:602) getReleasedBuffers: returning mask 0xffffffffffffffff
+05-17 00:58:28.984   602   693 I BufferQueueConsumer: [unnamed-602-18](this:0x9cc2a000,id:18,api:1,p:-1,c:-1) disconnect(C)
+05-17 00:58:28.985   602   693 I BufferQueue: [unnamed-602-18](this:0x9cc2a000,id:18,api:1,p:-1,c:-1) ~BufferQueueCore
+05-17 00:58:29.009   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:0
+05-17 00:58:29.009   253   267 I libPerfService: 11: legacy set: -1 -1
+05-17 00:58:29.010   253   267 I libPerfService: 11: legacy set freq: -1 -1
+05-17 00:58:29.021   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=3.78 dur=2379.17 max=2215.36 min=19.64
+05-17 00:58:29.026   257   348 I BufferQueueProducer: [NavigationBar#0](this:0xb246c000,id:4,api:1,p:752,c:257) queueBuffer: fps=3.53 dur=2264.93 max=2052.37 min=10.24
+05-17 00:58:29.272   602   790 I ActivityManager: START u0 {flg=0x10000000 cmp=br.com.sinalseguro.app/.MainActivity} from uid 2000
+05-17 00:58:29.281   253  3336 I vendor.mediatek.hardware.power@1.1-impl: PowerHint hint:8, data:1
+05-17 00:58:29.282   253   267 I libPerfService: 8: legacy set freq: 1300000 -1
+05-17 00:58:29.282   253   267 I libPerfService: 8: legacy set: 4 -1
+05-17 00:58:29.291   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:2000
+05-17 00:58:29.300   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:2000
+05-17 00:58:29.310   253   336 I vendor.mediatek.hardware.power@1.1-impl: notifyAppState pack:br.com.sinalseguro.app, act:br.com.sinalseguro.app.MainActivity, pid:5173, state:1
+05-17 00:58:29.311   253   267 I libPerfService: [perfNotifyAppState] foreground:br.com.sinalseguro.app, pid:5173
+05-17 00:58:29.311   253   267 E libPerfService: Could not open '/proc/driver/thermal/ta_fg_pid'
+05-17 00:58:29.311   253   267 E libPerfService: error : 2, No such file or directory
+05-17 00:58:29.311   253   267 E libPerfService: Could not open '/sys/module/ged/parameters/gx_top_app_pid'
+05-17 00:58:29.311   253   267 E libPerfService: error : 2, No such file or directory
+05-17 00:58:29.311   253   267 I libPerfService: perfUserGetCapability - cmd:7, id:0, val:-1
+05-17 00:58:29.312   602   655 I WindowManager: Focus moving from Window{882afad u0 com.android.launcher3/com.android.launcher3.Launcher} to null
+05-17 00:58:29.329  5173  5184 I zygote  : NativeAlloc concurrent copying GC freed 8336(551KB) AllocSpace objects, 3(60KB) LOS objects, 50% free, 5MB/11MB, paused 164us total 365.541ms
+05-17 00:58:29.342  5173  5178 I zygote  : Do partial code cache collection, code=246KB, data=162KB
+05-17 00:58:29.342   752   770 I zygote  : NativeAlloc concurrent copying GC freed 21780(920KB) AllocSpace objects, 0(0B) LOS objects, 50% free, 4MB/9MB, paused 10.447ms total 287.030ms
+05-17 00:58:29.347  5173  5178 I zygote  : After code cache collection, code=246KB, data=162KB
+05-17 00:58:29.347  5173  5178 I zygote  : Increasing code cache capacity to 1024KB
+05-17 00:58:29.358  5173  5173 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+05-17 00:58:29.358  5173  5173 W unknown:BridgelessReact: ReactContext.onHostResume()
+05-17 00:58:29.399   602   790 I ActivityManager: Process com.android.defcontainer (pid 4050) has died: cch+2CEM 
+05-17 00:58:29.399   602   644 W system_server: kill(-4050, 9) failed: No such process
+05-17 00:58:29.399   602   644 I system_server: Successfully killed process cgroup uid 10009 pid 4050 in 0ms
+05-17 00:58:29.403   602  1271 I ActivityManager: Process com.android.externalstorage (pid 3703) has died: cch+6CEM 
+05-17 00:58:29.403   602   644 W system_server: kill(-3703, 9) failed: No such process
+05-17 00:58:29.403   602   644 I system_server: Successfully killed process cgroup uid 10010 pid 3703 in 0ms
+05-17 00:58:29.434  1295  1428 W OpenGLRenderer: Incorrectly called buildLayer on View: ShortcutAndWidgetContainer, destroying layer...
+05-17 00:58:29.435   257  1005 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 00:58:29.436   253   336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:29.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:29.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:29.900   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.789516,dur:1004.31,max:27.23,min:14.21
+05-17 00:58:30.234   257   348 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.99 dur=2011.92 max=1269.75 min=742.18
+05-17 00:58:30.400   602  1271 I WindowManager: Relayout Window{4c4ca24 u0 br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity EXITING}: oldVis=4 newVis=0 focusMayChange = true
+05-17 00:58:30.416   602   655 I WindowManager: Focus moving from null to Window{4c4ca24 u0 br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity}
+05-17 00:58:30.420  1295  1428 E [EGL-ERROR]: __egl_platform_cancel_buffers:644: surface->num_buffers(4)
+05-17 00:58:30.422   253   336 I [Gralloc]: usage1: 0x900, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:30.422   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) connect(P): api=1 producer=(5173:br.com.sinalseguro.app) producerControlledByApp=true
+05-17 00:58:30.423   253   336 I [Gralloc]: usage1: 0x900, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:30.425   257   348 I BufferQueueProducer: [com.android.launcher3/com.android.launcher3.Launcher#0](this:0xafa2c000,id:129,api:1,p:1295,c:257) disconnect(P): api 1
+05-17 00:58:30.425   257   348 I BufferQueueConsumer: [com.android.launcher3/com.android.launcher3.Launcher#0](this:0xafa2c000,id:129,api:1,p:-1,c:257) getReleasedBuffers: returning mask 0xffffffffffffffff
+05-17 00:58:30.426   253  3336 I [Gralloc]: usage1: 0x900, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:30.427   253  3336 I [Gralloc]: usage1: 0x900, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:30.432   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) setMaxDequeuedBufferCount: maxDequeuedBuffers = 3
+05-17 00:58:30.440   257   348 I BufferQueueProducer: [NavigationBar#0](this:0xb246c000,id:4,api:1,p:752,c:257) queueBuffer: fps=4.95 dur=1413.77 max=1295.08 min=12.11
+05-17 00:58:30.652   257   348 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 00:58:30.652   253  3336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:30.680   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=11.64 dur=3092.30 max=2389.37 min=8.21
+05-17 00:58:30.726   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:30.726   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:30.744   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=5.22 dur=1722.90 max=1560.16 min=19.83
+05-17 00:58:30.792   257   601 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 00:58:30.793   253  3336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:30.822   257   601 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 00:58:30.823   253  3336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:30.858   257  1005 W GrallocMapperPassthrough: buffer descriptor with invalid usage bits 0x400
+05-17 00:58:30.858   253  3336 I [Gralloc]: usage1: 0xf02, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 00:58:30.907   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.675053,dur:1006.68,max:23.81,min:17.93
+05-17 00:58:31.107   253  3336 I vendor.mediatek.hardware.power@1.1-impl: PowerHint hint:8, data:0
+05-17 00:58:31.115   253  3336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:0
+05-17 00:58:31.116   253   267 I libPerfService: 11: legacy set: -1 -1
+05-17 00:58:31.116   253   267 I libPerfService: 11: legacy set freq: -1 -1
+05-17 00:58:31.170   257   257 I BufferQueueConsumer: [com.android.launcher3/com.android.launcher3.Launcher#0](this:0xafa2c000,id:129,api:1,p:-1,c:-1) disconnect(C)
+05-17 00:58:31.171   257   257 I BufferQueue: [com.android.launcher3/com.android.launcher3.Launcher#0](this:0xafa2c000,id:129,api:1,p:-1,c:-1) ~BufferQueueCore
+05-17 00:58:31.699   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=39.24 dur=1019.32 max=123.15 min=14.38
+05-17 00:58:31.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:31.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:31.911   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:47.805447,dur:1004.07,max:40.22,min:18.82
+05-17 00:58:32.042   602   611 I zygote  : NativeAlloc concurrent copying GC freed 58367(2MB) AllocSpace objects, 10(264KB) LOS objects, 35% free, 10MB/16MB, paused 318us total 220.692ms
+05-17 00:58:32.287  5173  5178 I zygote  : Compiler allocated 4MB to compile void android.view.ViewRootImpl.performTraversals()
+05-17 00:58:32.702   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=45.88 dur=1002.57 max=40.97 min=18.08
+05-17 00:58:32.722   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:32.722   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:32.937   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:44.809719,dur:1026.56,max:41.62,min:19.89
+05-17 00:58:33.251   257   348 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.66 dur=3016.77 max=2374.52 min=642.26
+05-17 00:58:33.711   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=47.56 dur=1009.22 max=41.25 min=10.32
+05-17 00:58:33.729   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:33.729   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:33.942   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:47.784203,dur:1004.52,max:40.74,min:19.72
+05-17 00:58:34.713   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.89 dur=1002.34 max=29.39 min=8.80
+05-17 00:58:34.737   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:34.738   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:34.808  5173  5184 I zygote  : Background concurrent copying GC freed 187274(5MB) AllocSpace objects, 0(0B) LOS objects, 49% free, 6MB/12MB, paused 165us total 146.042ms
+05-17 00:58:34.946   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.783085,dur:1004.45,max:21.15,min:20.07
+05-17 00:58:35.721   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.62 dur=1007.92 max=23.94 min=16.12
+05-17 00:58:35.737   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:35.737   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:35.952   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.724327,dur:1005.66,max:21.25,min:19.99
+05-17 00:58:36.430   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 00:58:36.725   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.81 dur=1003.89 max=30.96 min=16.33
+05-17 00:58:36.725   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:36.726   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:36.957   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.759373,dur:1004.94,max:21.04,min:20.01
+05-17 00:58:37.727   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:37.727   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:37.732   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.63 dur=1007.51 max=35.33 min=8.49
+05-17 00:58:37.962   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.761570,dur:1004.89,max:21.03,min:19.99
+05-17 00:58:38.731   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:38.731   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:38.745   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.41 dur=1012.29 max=30.05 min=17.75
+05-17 00:58:38.937  5173  5184 I zygote  : Background concurrent copying GC freed 202107(6MB) AllocSpace objects, 0(0B) LOS objects, 49% free, 6MB/12MB, paused 176us total 132.661ms
+05-17 00:58:38.966   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.796215,dur:1004.18,max:21.15,min:19.94
+05-17 00:58:39.732   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:39.732   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:39.758   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=49.34 dur=1013.47 max=29.72 min=11.37
+05-17 00:58:39.971   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.735798,dur:1005.42,max:21.01,min:20.06
+05-17 00:58:40.725   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:40.725   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:40.760   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.89 dur=1002.25 max=35.46 min=11.90
+05-17 00:58:40.977   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.706417,dur:1006.03,max:21.22,min:19.85
+05-17 00:58:41.735   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:41.735   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:41.766   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.71 dur=1005.88 max=37.66 min=7.58
+05-17 00:58:41.982   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.766411,dur:1004.79,max:21.32,min:19.40
+05-17 00:58:42.732   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:42.732   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:42.776   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.51 dur=1010.05 max=33.55 min=11.89
+05-17 00:58:42.987   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.774796,dur:1004.62,max:21.45,min:19.55
+05-17 00:58:43.732   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:43.732   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:43.779   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.85 dur=1003.00 max=37.77 min=9.35
+05-17 00:58:43.991   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.770412,dur:1004.71,max:21.15,min:19.96
+05-17 00:58:44.029  5173  5184 I zygote  : Background concurrent copying GC freed 200032(6MB) AllocSpace objects, 0(0B) LOS objects, 49% free, 6MB/12MB, paused 354us total 136.388ms
+05-17 00:58:44.254  1376  5324 I Authzen : [DeviceStateSyncManager] The server is in sync with current state. Nothing to do
+05-17 00:58:44.727   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:44.727   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:44.788   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.58 dur=1008.64 max=32.95 min=8.83
+05-17 00:58:44.997   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.717396,dur:1005.80,max:21.07,min:19.80
+05-17 00:58:45.728   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 00:58:45.728   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 00:58:45.806   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=49.10 dur=1018.43 max=37.02 min=8.47
+05-17 00:58:46.002   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.756229,dur:1005.00,max:21.58,min:19.67
+05-17 00:58:46.456   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127

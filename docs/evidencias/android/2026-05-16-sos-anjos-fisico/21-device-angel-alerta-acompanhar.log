@@ -1,0 +1,1210 @@
+--------- beginning of main
+05-16 14:23:29.229  1267 17756 W AudioFlinger: createRecord uid 99121 pid 23023 tried to pass itself off as pid 0
+05-16 14:23:29.230  1267 17756 W Permission: The package name(com.google.android.googlequicksearchbox) provided does not correspond to the uid 99121
+05-16 14:23:29.233  1267 17756 D APM_AudioPolicyManager: getInputForAttr() source 1999, sampling rate 16000, format 0x1, channel mask 0x10, session 78137, flags 0 attributes={ Content type: AUDIO_CONTENT_TYPE_UNKNOWN Usage: AUDIO_USAGE_UNKNOWN Source: AUDIO_SOURCE_HOTWORD Flags: 0x800 Tags:  } requested device ID 0
+05-16 14:23:29.234  1267 17756 D APM_AudioPolicyManager: getInputForAttr AudioPlayBackCapture not supported, appName: com.google.android.googlequicksearchbox
+05-16 14:23:29.235  1267 17756 D AudioPolicyManagerImpl: No packages for calling UID
+05-16 14:23:29.236  1267 17756 D APM_AudioPolicyManager: profile selected with name: primary input, client UID 99121 
+05-16 14:23:29.236  1267 17756 D ClientInfoStub: ClientInfoStub()
+05-16 14:23:29.236  1162  6599 D AHAL: AudioDevice: adev_open_input_stream: 785: enter: sample_rate(16000) channel_mask(0x10) devices(0x80000004)        io_handle(11134) source(1999) format 1
+05-16 14:23:29.237  1162  6599 D AHAL: AudioStream: StreamPrimary: 5184: handle: 11134 channel_mask: 16 
+05-16 14:23:29.237  1162  6599 D AHAL: AudioStream: StreamInPrimary: 4965: enter: handle (2b7e) format(0x1) sample_rate(16000) channel_mask(0x10) devices(1) flags(0)
+05-16 14:23:29.237  1162  6599 D AHAL: soundtrigger: audio_extn_sound_trigger_check_and_get_session: 352: capture_handle 11134 is sound trigger
+05-16 14:23:29.237  1162  6599 I PAL: StreamSoundTrigger: getParameters: 419: Enter, get parameter 57
+05-16 14:23:29.237  1162  6599 I PAL: StreamSoundTrigger: getParameters: 515: Exit status: 0
+05-16 14:23:29.237  1162  6599 D AHAL: AudioStream: StreamInPrimary: 5066: local : handle (2b7e) format(0x1) sample_rate(16000) channel_mask(0x10) devices(0x80000004) flags(0)
+05-16 14:23:29.237  1162  6599 D AHAL: AudioStream: StreamInPrimary: 5075: No of devices 1
+05-16 14:23:29.237  1162  6599 D AHAL: AudioDevice: GetPalDeviceIds: 2133: haldeviceIds: 1
+05-16 14:23:29.237  1162  6599 D AHAL: AudioDevice: GetPalDeviceIds: 2140: Found haldeviceId: 80000004 and PAL Device ID 22
+05-16 14:23:29.237  1162  6599 D AHAL: AudioDevice: GetPalDeviceIds: 2159: devices allocated 1, pal device ids before returning 1
+05-16 14:23:29.237  1162  6599 D AHAL: AudioStream: StreamInPrimary: 5140: Exit
+05-16 14:23:29.237  1162  6599 D AHAL: AudioDevice: CreateStreamIn: 624: input stream 1 0x6f07381a18
+05-16 14:23:29.237  1162  6599 D AHAL: AudioDevice: adev_open_input_stream: 846: Exit ret: 0
+05-16 14:23:29.237  1162  6599 D AHAL: AudioStream: in_update_sink_metadata_v7: 1310: in_update_sink_metadata_v7: sink device 0
+05-16 14:23:29.238  1267 17756 V audio_utils::mutex: mutex_impl: audio_mutex initialized: ret:0  order:12
+05-16 14:23:29.239  1267 18734 I AudioFlinger: AudioFlinger's thread 0xb400007e9ba5fa98 tid=18734 ready to run
+05-16 14:23:29.239  1162  6599 D AHAL: AudioStream: astream_in_standby: 1449: enter: stream (0xb40000713cef0db0) usecase(20: audio-record)
+05-16 14:23:29.239  1162  6599 D AHAL: AudioStream: Standby: 3973: Enter
+05-16 14:23:29.239  1162  6599 D AHAL: AudioStream: Standby: 4014: Exit ret: 0
+05-16 14:23:29.239  1162  6599 D AHAL: AudioStream: astream_in_standby: 1458: Exit ret: 0
+05-16 14:23:29.239  1267 18734 V audio_utils::mutex: add_to_registry: registered for 18734
+05-16 14:23:29.240  1267 17756 V audio_utils::mutex: mutex_impl: audio_mutex initialized: ret:0  order:6
+05-16 14:23:29.240  1267 17756 D ClientInfoStub: ClientInfoStub()
+05-16 14:23:29.241  1267 17756 D APM_AudioPolicyManager: getInputForAttr() returns input 11134 type 0 selectedDeviceId 19 for port ID 14818
+05-16 14:23:29.243  1267 18734 D AudioFlinger: updateWakeLockUids_l AudioIn_2B7E uids:
+05-16 14:23:29.243  1162  6599 D AHAL: AudioStream: astream_in_standby: 1449: enter: stream (0xb40000713cef0db0) usecase(20: audio-record)
+05-16 14:23:29.243  1162  6599 D AHAL: AudioStream: Standby: 3973: Enter
+05-16 14:23:29.243  1162  6599 D AHAL: AudioStream: Standby: 4014: Exit ret: 0
+05-16 14:23:29.243  1162  6599 D AHAL: AudioStream: astream_in_standby: 1458: Exit ret: 0
+05-16 14:23:29.247  1267 17756 D ClientInfoStub: ClientInfoStub()
+05-16 14:23:29.247   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.247   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.247   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.248  1267 17756 V audio_utils::mutex: mutex_impl: audio_mutex initialized: ret:0  order:20
+05-16 14:23:29.250  1267 18734 D AudioFlinger: updateWakeLockUids_l AudioIn_2B7E uids:
+05-16 14:23:29.252 23023 23084 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+05-16 14:23:29.252 23023 24734 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+05-16 14:23:29.252 23023 24734 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+05-16 14:23:29.253 23023 23084 I native  : I0000 00:00:1778952209.253098   23084 soda_client.cc:337] Starting capture.
+05-16 14:23:29.253 23023 23084 I native  : I0000 00:00:1778952209.253412   23084 soda_async_impl.cc:652] SODA session starting (require_hotword:1, hotword_timeout_in_millis:3000, trigger_type:TRIGGER_TYPE_UNSPECIFIED, hybrid_asr_config.mode:MODE_DEFAULT)
+05-16 14:23:29.253 23023 24734 I AudioRecord: start mSessionID=78137 start(14818): sync event 0 trigger session 0  packageName: com.google.android.googlequicksearchbox
+05-16 14:23:29.253 23023 23084 I native  : I0000 00:00:1778952209.253568   23084 hotword_processor.cc:504] Updated hotword timeout: 3000
+05-16 14:23:29.259  1267  1267 I AudioPolicyManagerImpl: isReuseInput() uid 99121, session 78137
+05-16 14:23:29.259  1267  1267 D MiAudioPolicyManager: getPackageName: No packages for calling UID
+05-16 14:23:29.259  1267  1267 V audio_utils::mutex: mutex_impl: audio_mutex initialized: ret:0  order:6
+05-16 14:23:29.260 23023 24737 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+05-16 14:23:29.260  1267  1941 V audio_utils::mutex: mutex_impl: audio_mutex initialized: ret:0  order:20
+05-16 14:23:29.261  2431  2431 D BatteryStatsManagerStub: audio on uid=99121
+05-16 14:23:29.260 10343 27040 I PowerKeeper.Event: noteStartAudioInNeed uid is 99121, sessionid is 78137, port is 14818, type is 1
+05-16 14:23:29.261 10343 10523 I AppActiveChecker: uid:99121 change to active
+05-16 14:23:29.261  1267 18734 D AudioFlinger: updateWakeLockUids_l AudioIn_2B7E uids:99121 
+05-16 14:23:29.262  1267 18734 D AudioFlingerImpl: checkForGameParameter_l() set events appname=+
+05-16 14:23:29.262  1162  6599 D AHAL: AudioStream: astream_in_set_parameters: 1468: Enter: appname=+
+05-16 14:23:29.262  1162  6599 D AHAL: AudioStreamCustom: SetParameters: 366: enter: kvpairs is appname=+
+05-16 14:23:29.262  1162  6599 D AHAL: AudioStreamCustom: SetParameters: 391: SetParameters app_types_ is (0)
+05-16 14:23:29.262  1162  6599 D AHAL: AudioStreamCustom: SetParameters: 429: [hal_apptype] SetParameters(), in: set app name + [2442, 0x0 0x0]
+05-16 14:23:29.262  1162  6599 D AHAL: AudioStreamCustom: SetParameters: 433: [hal_apptype] is sing app input 0
+05-16 14:23:29.262  1162  6599 D AHAL: AudioStreamCustom: SetParameters: 434: [hal_apptype] is singing app on 0
+05-16 14:23:29.262  1162  6599 D AHAL: AudioStream: SetParameters: 4346: enter: kvpairs: appname=+
+05-16 14:23:29.262  1162  6599 D AHAL: AudioStream: SetParameters: 4365: exit 0
+05-16 14:23:29.262  1162  6599 D AHAL: AudioStreamCustom: SetParameters: 447: Exit:0 
+05-16 14:23:29.263  1162  6599 D AHAL: AudioStream: in_update_sink_metadata_v7: 1310: in_update_sink_metadata_v7: sink device 0
+05-16 14:23:29.263  1267  1267 D APM_AudioPolicyManager: startInput portId 14818
+05-16 14:23:29.263  1267  1267 D APM_AudioPolicyManager: startInput input:11134, session:78137, portId:14818, appname com.google.android.googlequicksearchbox, uid 99121)
+05-16 14:23:29.264  1267  1267 V audio_utils::mutex: mutex_impl: audio_mutex initialized: ret:0  order:6
+05-16 14:23:29.264  1267  1941 V AudioFlinger::PatchPanel: createAudioPatch_l() num_sources 1 num_sinks 1 handle 0
+05-16 14:23:29.264  1267  1941 V audio_utils::mutex: mutex_impl: audio_mutex initialized: ret:0  order:20
+05-16 14:23:29.264  1162  6599 D AHAL: AudioStream: in_update_sink_metadata_v7: 1310: in_update_sink_metadata_v7: sink device 0
+05-16 14:23:29.265  1162  6599 D AHAL: AudioDevice: CreateAudioPatch: 432: enter: num sources 1, num_sinks 1
+05-16 14:23:29.265  1162  6599 D AHAL: AudioDevice: CreateAudioPatch: 447: source role 1, source type 1
+05-16 14:23:29.265  1162  6599 D AHAL: AudioDevice: CreateAudioPatch: 458: Capture patch from device 80000004 to mix 11134
+05-16 14:23:29.265  1162  6599 I AHAL: AudioDevice: InGetStream: 1283: Found existing stream associated with iohandle 11134
+05-16 14:23:29.265  1162  6599 I AHAL: AudioStream: RouteStream: 4160: Enter: InPrimary usecase(20: audio-record)
+05-16 14:23:29.265  1162  6599 D AHAL: AudioStream: RouteStream: 4171: mAndroidInDevices 0x80000004, mNoOfInDevices 1, new_devices 0x80000004, num new_devices: 1
+05-16 14:23:29.265  1162  6599 D AHAL: AudioStream: RouteStream: 4309: exit 0
+05-16 14:23:29.265  1162  6599 D AHAL: AudioDevice: CreateAudioPatch: 534: Added a new patch with handle 3307
+05-16 14:23:29.265  1162  6599 D AHAL: AudioDevice: CreateAudioPatch: 537: Exit ret: 0
+05-16 14:23:29.265  1267 18734 V audio_utils::mutex: mutex_impl: audio_mutex initialized: ret:0  order:20
+05-16 14:23:29.267  1267  1941 V AudioFlinger::PatchPanel: createAudioPatch_l() status 0
+05-16 14:23:29.267  1267  1267 V audio_utils::mutex: mutex_impl: audio_mutex initialized: ret:0  order:6
+05-16 14:23:29.267  1267  1267 V audio_utils::mutex: mutex_impl: audio_mutex initialized: ret:0  order:6
+05-16 14:23:29.268  1267  1267 D APM_AudioPolicyManager: startInput input 11134 source = 1999 status = 0 exit
+05-16 14:23:29.268  1267  1267 V audio_utils::mutex: mutex_impl: audio_mutex initialized: ret:0  order:20
+05-16 14:23:29.268  1162  6599 W StreamHAL: Error from HAL stream in function set_microphone_direction: Function not implemented
+05-16 14:23:29.269  1162  6599 W StreamHAL: Error from HAL stream in function set_microphone_field_dimension: Function not implemented
+05-16 14:23:29.270 23023 24734 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+05-16 14:23:29.274  2431  3200 I AudioService.RecordingActivityMonitor: rec start riid:-1 uid:99121 session:78137 src:HOTWORD not silenced pack:
+05-16 14:23:29.275  1162 18737 D AHAL: AudioStream: AutoPerfLock: 130: (Acquired) perf_lock_handle: 0x40ef8, count: 1
+05-16 14:23:29.275  1162 18737 D AHAL: AudioStreamCustom: Open: 578: cit_custom_key:default-mic mic_mode =0
+05-16 14:23:29.275  1162 18737 D AHAL: AudioDevice: GetPalDeviceIds: 2133: haldeviceIds: 1
+05-16 14:23:29.275  1162 18737 D AHAL: AudioDevice: GetPalDeviceIds: 2140: Found haldeviceId: 80000004 and PAL Device ID 22
+05-16 14:23:29.275  1162 18737 D AHAL: AudioDevice: GetPalDeviceIds: 2159: devices allocated 1, pal device ids before returning 1
+05-16 14:23:29.275  1162 18737 D AHAL: AudioStreamCustom: prepareCustomDevice: 595: uses custom key for pal stream 2, device 22, key default-mic
+05-16 14:23:29.275  1162 18737 I AHAL: AudioStream: Open: 4382: Enter: InPrimary usecase(20: audio-record)
+05-16 14:23:29.275  1162 18737 D AHAL: soundtrigger: audio_extn_sound_trigger_check_and_get_session: 352: capture_handle 11134 is sound trigger
+05-16 14:23:29.275  1162 18737 D AHAL: AudioStream: Open: 4640: Exit ret: 0
+05-16 14:23:29.275  1162 18737 D AHAL: AudioStream: ~AutoPerfLock: 140: (release) perf_lock_handle: 0x40ef8, count: 1
+05-16 14:23:29.275  1162 18737 D AHAL: AudioStream: ~AutoPerfLock: 144: Releasing perf_lock_handle: 0x40ef8
+05-16 14:23:29.275   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.275   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.275   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.276  1162 18737 E PAL: ResourceManager: voteSleepMonitor: 1410: ioctl device is not open
+05-16 14:23:29.276  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.276  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.276  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.277  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.277 23023 23135 I native  : I0000 00:00:1778952209.277157   23135 soda_async_impl.cc:1398] SODA received first mic audio buffer, size in bytes: 320, format: 1, channels: 1, sample rate: 16000
+05-16 14:23:29.277  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.278  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.278  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.278  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.278  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.278  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.279  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.279  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.279  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.279  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.280  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.280  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.280  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.281  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.281  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.281  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.281  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.282  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.282  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.282  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.283  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.283  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.283  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.283  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.284  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.284  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.284  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.284  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.284  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.285  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.285  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.285  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.286  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.286  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.286  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.286  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.286  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.287  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.287  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.287  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.287  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.288  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.288  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.288  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.288  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.289  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.289  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.289  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.290  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.290  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.290  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.290  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.291  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.291  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.291  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.291  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.292  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.292  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.292   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.292   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.292   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.292  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.292  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.293  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.293  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.293  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.294  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.294  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.294  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.295  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.295  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.295  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.295  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.295  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.296  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.296  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.296  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.296  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.296  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.297  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.297  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.299  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.299  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.299  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.300  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.300  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.301  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.301  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.301  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.302  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.302  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.302  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.302  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.303  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.304  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.304  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.304  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.305  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.305  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.305  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.306  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.306  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.306  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.307  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.309   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.309   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.309   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.311  2431  2719 I MiuiNetworkPolicy: updateUidState uid = 99910304, uidState = 19
+05-16 14:23:29.312 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~V3n5hm-ucgUjssRAiyYwkA==/com.epson.PFinder-UJhAbQopSQsBYIqON5QW1A==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:29.318  2431  2719 I MiuiNetworkPolicy: updateUidState uid = 99910304, uidState = 11
+05-16 14:23:29.323   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.323   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.323   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.327  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.338   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.338   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.338   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.348  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.350 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~mTH8G22W-msncw3pGc0RhA==/com.videodownloader.download.video.nolgo.nowatermark.downloader-CCS3VmCPZtho89VdLrfJkQ==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:29.353   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.353   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.353   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.364 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~48YNvYH0o3Err5lXTF1S0g==/com.android.thememanager-bd09oh-D7YxTH6JW-Km8lA==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:29.366   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.366   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.366   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.369  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.382   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.382   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.382   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.389  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.402   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.402   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.402   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.410  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.420   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.420   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.420   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.432  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.439   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.439   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.439   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.452   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.452   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.452   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.454  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.456  2431  5663 I ClipboardServiceI: checkProviderWakePathForClipboard: primaryClip is null
+05-16 14:23:29.465   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.465   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.465   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.475  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.478  2431  5663 I ClipboardServiceI: checkProviderWakePathForClipboard: primaryClip is null
+05-16 14:23:29.480   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.480   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.480   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.494  3201  4535 D IpClient/wlan0: addressUpdated: 2804:29b8:5099:a8d1:ac78:fdff:fe50:e419/64 on ifindex 36 flags 0x00000100 scope 0
+05-16 14:23:29.494  3201  4535 D IpClient/wlan0: addressUpdated: 2804:29b8:5099:a8d1:2ec3:12f3:4791:b404/64 on ifindex 36 flags 0x00000001 scope 0
+05-16 14:23:29.494   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.494   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.494   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.494  3201  4535 W AlarmManager: Unrecognized alarm listener com.android.networkstack.android.net.ip.IpClientLinkObserver$Dhcp6PdPreferredPrefixAlarmListener@3b85266
+05-16 14:23:29.495  3201  4535 D ApfFilter: (wlan0): Ignoring RA RA fe80::2223:51ff:fec6:81f4 -> ff02::1 30s 2804:29b8:5099:a8d1::/64 172800s/172800s DNS 10s 2804:29b8:1000:1::17 2804:29b8:1000:1::18  which matches RA fe80::2223:51ff:fec6:81f4 -> ff02::1 30s 2804:29b8:5099:a8d1::/64 172800s/172800s DNS 10s 2804:29b8:1000:1::17 2804:29b8:1000:1::18 
+05-16 14:23:29.499  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.512   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.512   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.512   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.520  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.524   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.524   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.524   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.538   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.538   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.538   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.541  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.554   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.554   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.554   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.562  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.571   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.571   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.571   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.583   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.583   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.583   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.585  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.594   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.594   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.594   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.598  3201  4535 D IpClient/wlan0: addressUpdated: 2804:29b8:5099:a8d1:ac78:fdff:fe50:e419/64 on ifindex 36 flags 0x00000100 scope 0
+05-16 14:23:29.599  3201  4535 D IpClient/wlan0: addressUpdated: 2804:29b8:5099:a8d1:2ec3:12f3:4791:b404/64 on ifindex 36 flags 0x00000001 scope 0
+05-16 14:23:29.599  3201  4535 W AlarmManager: Unrecognized alarm listener com.android.networkstack.android.net.ip.IpClientLinkObserver$Dhcp6PdPreferredPrefixAlarmListener@3b85266
+05-16 14:23:29.601  3201  4535 D ApfFilter: (wlan0): Ignoring RA RA fe80::2223:51ff:fec6:81f4 -> ff02::1 30s 2804:29b8:5099:a8d1::/64 172800s/172800s DNS 10s 2804:29b8:1000:1::17 2804:29b8:1000:1::18  which matches RA fe80::2223:51ff:fec6:81f4 -> ff02::1 30s 2804:29b8:5099:a8d1::/64 172800s/172800s DNS 10s 2804:29b8:1000:1::17 2804:29b8:1000:1::18 
+05-16 14:23:29.606  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.608   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.608   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.608   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.621   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.622   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.622   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.627  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.635   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.636   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.636   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.641 17450 17460 W aomi.finddevice: userfaultfd: MOVE ioctl seems unsupported: Connection timed out
+05-16 14:23:29.648  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.652   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.652   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.652   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.663  2431  3236 D SLM-SRV-SLAService: checktemp temperature = 37374 temperature_average = 37126 isPerformanceMode = false thermal_enable_slm = true
+05-16 14:23:29.668   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.668   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.668   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.669  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.681   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.681   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.681   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.690  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.696   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.696   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.696   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.710   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.710   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.710   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.711  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.712  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.717  3224  3484 W bluetooth: packages/modules/MiuiBluetooth/system/bta/jv/bta_jv_act.cc:2184 bta_jv_idle_timeout_handler: : true
+05-16 14:23:29.725   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.725   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.725   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.733  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.738   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.738   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.738   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.750   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.750   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.750   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.754  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.755 23023 23135 I native  : I0000 00:00:1778952209.755573   23135 soda_async_impl.cc:1154] Not receiving any loopback audio in 500ms. Last audio received time: 1969-12-31T21:00:00-03:00, Current time: 2026-05-16T14:23:29.755569519-03:00
+05-16 14:23:29.762   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.762   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.762   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.774  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.776   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.776   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.776   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.791   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.791   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.791   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.795  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.805   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.805   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.805   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.816  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.819   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.819   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.819   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.831   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.831   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.831   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.837  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.846   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.846   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.846   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.858   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.858  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.858   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.858   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.872   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.872   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.872   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.880  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.887   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.887   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.887   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.899   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.899   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.899   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.902  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.912   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.912   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.912   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.923  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.926   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.926   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.926   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.939   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.939   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.939   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.944  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.954   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.954   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.954   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.959 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~ySZu8ThLSuJ4ed2bCGwfJQ==/com.santander.app-uVMwt_bcI0_ACYkdSktkoA==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:29.965  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.969   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.969   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.969   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.975 18028 18030 I artd    : GetBestInfo: vdex next to the dex file (/data/app/~~lqVfl36Y7UjjvwuojAOCtg==/com.xiaomi.simactivate.service-eaOCbDZ30nDAei9uYE4Jvg==/oat/arm64/base.vdex) is kOatUpToDate with filter 'verify' executable 'false'
+05-16 14:23:29.983   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.983   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.983   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:29.987  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:29.995   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:29.995   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:29.995   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.008  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:30.009   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.009   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.009   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.023   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.023   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.023   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.025 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~8yFpSJM4701Tc-fjqufnqQ==/com.gaijingames.wtm-jZSOLixMVDhiMFg-tDh7ng==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:30.029  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:30.035   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.035   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.035   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.048   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.048   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.048   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.050  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:30.050  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:30.061   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.061   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.061   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.071  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:30.072 18028 18694 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~lgIGYF1X9OczKc12NMETpg==/com.xiaomi.aicr-FC2zF2VojbonCXZGS1dsQA==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:30.073   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.073   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.073   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.087   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.087   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.087   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.092  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:30.102   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.102   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.102   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.104 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~ONv412Fpb03akeclhZhURQ==/com.ionicframework.repetierinformer337630-wz6THaSdDltRqzUmfHW3nw==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:30.114  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:30.117   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.117   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.117   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.130   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.130   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.130   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.132 18028 18694 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~A-KWTOPvVmu_69a45ojd0g==/com.deepseek.chat-tKlDe-5d0fTPjVZb1y6T5Q==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:30.135  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:30.142   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.142   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.142   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.155   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.155   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.155   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.157  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:30.169   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.169   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.169   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.178  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:30.179 18028 18694 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~lEh3jcJnlnerWanJa2FywQ==/com.sec.android.app.shealth-oUpY5H0wItWp3402aFpZeg==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:30.183   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.183   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.183   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.197   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.197   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.197   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.199  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:30.208 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~XpH0CquI84QVMlQQ0ZTv3g==/com.juyi.newpublicapp-djoyP_xR9JpEw5hP48J4vg==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:30.219   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.219   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.219   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.222  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+05-16 14:23:30.223  1162 18737 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 7 for stream instance 1
+--------- beginning of system
+05-16 14:23:30.226  2431  3200 D Aurogon :  packageName = com.google.android.gms isAllowWakeUpList 
+05-16 14:23:30.229 23023 23135 I native  : I0000 00:00:1778952210.229857   23135 hotword_processor.cc:848] Hotword has timed out.
+05-16 14:23:30.230 23023 23135 I native  : I0000 00:00:1778952210.230745   23135 soda_impl.cc:1956] Adding hotword timeout event
+05-16 14:23:30.231  2431  4611 D Aurogon :  packageName = com.google.android.gms isAllowWakeUpList 
+05-16 14:23:30.231 23023 23135 I native  : I0000 00:00:1778952210.231167   23135 soda_async_impl.cc:1038] SODA stopped processing audio, mics audio processed in millis: 3000, loopback audio processed in millis: 0
+05-16 14:23:30.232 23023 23135 I native  : I0000 00:00:1778952210.232479   23135 soda_async_impl.cc:1050] Audio readers are stopped.
+05-16 14:23:30.232 23023 23135 I native  : I0000 00:00:1778952210.232976   23135 soda_async_impl.cc:1528] Ending ASR due to process sync signal.
+05-16 14:23:30.233 23023 23135 I native  : I0000 00:00:1778952210.233398   23135 soda_async_impl.cc:1113] SODA session stopped due to: HOTWORD_TIMEOUT
+05-16 14:23:30.233 23023 24730 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+05-16 14:23:30.233 23023 24730 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+05-16 14:23:30.234 23023 24730 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+05-16 14:23:30.234 23023 24730 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+05-16 14:23:30.234 23023 24730 I AudioRecord: stop mSessionID=78137, packageName: com.google.android.googlequicksearchbox
+05-16 14:23:30.234 23023 24730 D AudioRecord: stop(14818): mActive:1
+05-16 14:23:30.229 23023 23023 W pool-3-thread-1: type=1400 audit(0.0:7233285): avc:  denied  { read } for  name="u:object_r:vendor_audio_prop:s0" dev="tmpfs" ino=418 scontext=u:r:isolated_compute_app:s0:c512,c768 tcontext=u:object_r:vendor_audio_prop:s0 tclass=file permissive=0 app=com.facebook.katana
+05-16 14:23:30.234 23023 24730 W libc    : Access denied finding property "ro.vendor.audio.aac.para.modify.support"
+05-16 14:23:30.235 23023 23136 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+05-16 14:23:30.238   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.238   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.238   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.243 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~fwUKeEmVjPJoNEJ3vafHCQ==/com.google.android.apps.translate-qQCEzvt7zvgABlTu4jXBVw==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:30.244  1267 18734 D AudioFlinger: updateWakeLockUids_l AudioIn_2B7E uids:
+05-16 14:23:30.245  1162  6599 E AHAL: AudioStream: in_update_sink_metadata_v7: 1302: in_update_sink_metadata_v7: stream or sink_metadata is NULL
+05-16 14:23:30.246  1162  6599 D AHAL: AudioStream: astream_in_standby: 1449: enter: stream (0xb40000713cef0db0) usecase(20: audio-record)
+05-16 14:23:30.246  1162  6599 D AHAL: AudioStream: Standby: 3973: Enter
+05-16 14:23:30.246  1162  6599 I PAL: StreamSoundTrigger: setParameters: 528: Enter, param id 5
+05-16 14:23:30.246  1162  6599 I PAL: StreamSoundTrigger: ProcessEvent: 4231: StBuffering: handle event 5 for stream instance 1
+05-16 14:23:30.246  1162  6599 E PAL: ResourceManager: updateECDeviceMap: 4934: Cannot reset as ec ref not present
+05-16 14:23:30.246  1162  6599 I PAL: StreamSoundTrigger: setECRef_l: 653: Enter, enable 0
+05-16 14:23:30.246  1162  6599 I PAL: StreamSoundTrigger: setECRef_l: 656: No need to set ec ref
+05-16 14:23:30.246  1162  6599 I PAL: StreamSoundTrigger: setECRef_l: 678: Exit, status 0
+05-16 14:23:30.246  1162  6599 E PAL: ResourceManager: voteSleepMonitor: 1410: ioctl device is not open
+05-16 14:23:30.246  1162  6599 I PAL: SoundTriggerEngineGsl: StopRecognition: 2214: Enter
+05-16 14:23:30.254   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.254   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.254   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.261  1162 23464 I PAL: SoundTriggerEngineGsl: StartBuffering: 470: Exit, status 0
+05-16 14:23:30.262  1162  6599 I PAL: SoundTriggerEngineGsl: ProcessStopRecognition: 2181: Enter
+05-16 14:23:30.262  1162  6599 I PAL: SoundTriggerEngineGsl: UpdateSessionPayload: 2863: Enter, param : 4
+05-16 14:23:30.262  1162  6599 I PAL: PayloadBuilder: payloadSVAConfig: 1447: PID 0x8001051, payload 0xb40000708cf7f890K size 16
+05-16 14:23:30.262  1162  6599 D AGM: graph: graph_set_config: 1146 entry graph_handle 0x47534c
+05-16 14:23:30.262  1162  6599 I gsl     : gsl_send_spf_cmd:157 sending pkt with token 0x1ef5e, opcode 0x1001006
+05-16 14:23:30.263  1162  6599 I gsl     : gsl_send_spf_cmd:185 rcvd pkt token : 0x1ef5e
+05-16 14:23:30.263  1162  6599 D AGM: graph: graph_set_config: 1154 exit, graph handle 0x47534c, ret 0
+05-16 14:23:30.263  1162  6599 D AGM: graph: graph_stop: 967 entry graph_handle 0x47534c
+05-16 14:23:30.263  1162  6599 I gsl     : gsl_send_spf_cmd:157 sending pkt with token 0x1ef5f, opcode 0x1001003
+05-16 14:23:30.267   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.267   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.267   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.267  1162  6599 I gsl     : gsl_send_spf_cmd:185 rcvd pkt token : 0x1ef5f
+05-16 14:23:30.268  1162  6599 D AGM: graph: graph_stop: 1012 exit, ret 0
+05-16 14:23:30.268  1162  6599 E PAL: ResourceManager: voteSleepMonitor: 1410: ioctl device is not open
+05-16 14:23:30.268  1162  6599 I gsl     : gsl_send_spf_cmd:157 sending pkt with token 0x1ef60, opcode 0x100100e
+05-16 14:23:30.270  1162  6599 I gsl     : gsl_send_spf_cmd:185 rcvd pkt token : 0x1ef60
+05-16 14:23:30.270  1162  6599 I PAL: SoundTriggerEngineGsl: UpdateState: 1550: Engine state transitioned from 3 to 1
+05-16 14:23:30.270  1162  6599 I PAL: SoundTriggerEngineGsl: ProcessStopRecognition: 2205: Exit, status = 0
+05-16 14:23:30.270  1162  6599 I PAL: SoundTriggerEngineGsl: StopRecognition: 2264: Exit, status = 0
+05-16 14:23:30.270  1162  6599 I PAL: StreamSoundTrigger: ProcessEvent: 4375: Stop device 35-PAL_DEVICE_IN_HANDSET_VA_MIC
+05-16 14:23:30.270  1162  6599 I PAL: Device: close: 478: Enter. deviceCount 1 for device id 35 (PAL_DEVICE_IN_HANDSET_VA_MIC)
+05-16 14:23:30.277  1162  6599 E PAL: Device: close: 495: Exit. deviceCount 0 for device id 35 (PAL_DEVICE_IN_HANDSET_VA_MIC), exit status 0
+05-16 14:23:30.278  1162  6599 E PAL: Device: close: 503: [close] deviceAttr.id:[35] ,deviceCount:[0] device_name [PAL_DEVICE_IN_HANDSET_VA_MIC]
+05-16 14:23:30.278  1162  6599 I PAL: StreamSoundTrigger: TransitTo: 2973: Stream instance 1: state transitioned from ST_STATE_BUFFERING to ST_STATE_LOADED
+05-16 14:23:30.278  1162  6599 I PAL: ResourceManager: releaseWakeLock: 1021: Releasing wake lock audio_pal_wl
+05-16 14:23:30.278  1162  6599 I PAL: StreamSoundTrigger: setParameters: 576: Exit, status 0
+05-16 14:23:30.278  1162  6599 D AHAL: AudioStream: Standby: 4014: Exit ret: 0
+05-16 14:23:30.278  1162  6599 D AHAL: AudioStream: astream_in_standby: 1458: Exit ret: 0
+05-16 14:23:30.279 10343 10389 I PowerKeeper.Event: noteStopAudioInNeed uid is 99121, sessionid is 78137, port is 14818, type is 1
+05-16 14:23:30.280 10343 10523 I AppActiveChecker: uid:99121change to inactive
+05-16 14:23:30.280  1267  1470 D APM_AudioPolicyManager: stopInput portId 14818
+05-16 14:23:30.280  1267  1470 V audio_utils::mutex: mutex_impl: audio_mutex initialized: ret:0  order:6
+05-16 14:23:30.281  1267  1470 V audio_utils::mutex: mutex_impl: audio_mutex initialized: ret:0  order:6
+05-16 14:23:30.281   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.281   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.281   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.282  1267  1941 V AudioFlinger::PatchPanel: releaseAudioPatch_l handle 41820
+05-16 14:23:30.282  1267  1941 V audio_utils::mutex: mutex_impl: audio_mutex initialized: ret:0  order:20
+05-16 14:23:30.283  2431  3200 I AudioService.RecordingActivityMonitor: rec stop riid:-1 uid:99121 session:78137 src:HOTWORD not silenced pack:
+05-16 14:23:30.283  1162  6599 E AHAL: AudioStream: in_update_sink_metadata_v7: 1302: in_update_sink_metadata_v7: stream or sink_metadata is NULL
+05-16 14:23:30.283  1162  4139 D AHAL: AudioDevice: ReleaseAudioPatch: 549: Release patch with handle 3307
+05-16 14:23:30.283  1162  4139 I AHAL: AudioDevice: InGetStream: 1283: Found existing stream associated with iohandle 11134
+05-16 14:23:30.283  1162  4139 I AHAL: AudioStream: RouteStream: 4160: Enter: InPrimary usecase(20: audio-record)
+05-16 14:23:30.283  1162  4139 D AHAL: AudioStream: RouteStream: 4171: mAndroidInDevices 0x80000004, mNoOfInDevices 1, new_devices 0x0, num new_devices: 1
+05-16 14:23:30.283  1162  4139 D AHAL: AudioStream: RouteStream: 4309: exit 0
+05-16 14:23:30.283  1162  4139 D AHAL: AudioDevice: ReleaseAudioPatch: 604: Successfully released patch 3307
+05-16 14:23:30.284  1267  1470 V audio_utils::mutex: mutex_impl: audio_mutex initialized: ret:0  order:6
+05-16 14:23:30.285  1267  1470 D APM_AudioPolicyManager: stopInput: setCaptureState false for sva
+05-16 14:23:30.285  1267  1470 V audio_utils::mutex: mutex_impl: audio_mutex initialized: ret:0  order:6
+05-16 14:23:30.287  1267  1941 V audio_utils::mutex: mutex_impl: audio_mutex initialized: ret:0  order:20
+05-16 14:23:30.288  1267 18734 D AudioFlinger: updateWakeLockUids_l AudioIn_2B7E uids:
+05-16 14:23:30.288  1267 18734 D AudioFlingerImpl: checkForGameParameter_l() set events appname=-com.google.android.googlequicksearchbox
+05-16 14:23:30.289  1162  6599 D AHAL: AudioStream: astream_in_set_parameters: 1468: Enter: appname=-com.google.android.googlequicksearchbox
+05-16 14:23:30.289  1162  6599 D AHAL: AudioStreamCustom: SetParameters: 366: enter: kvpairs is appname=-com.google.android.googlequicksearchbox
+05-16 14:23:30.289  1162  6599 D AHAL: AudioStreamCustom: SetParameters: 391: SetParameters app_types_ is (0)
+05-16 14:23:30.289  1162  6599 D AHAL: AudioStreamCustom: SetParameters: 429: [hal_apptype] SetParameters(), in: set app name -com.google.android.googlequicksearchbox [2442, 0x0 0x0]
+05-16 14:23:30.289  1162  6599 D AHAL: AudioStreamCustom: SetParameters: 433: [hal_apptype] is sing app input 0
+05-16 14:23:30.289  1162  6599 D AHAL: AudioStreamCustom: SetParameters: 434: [hal_apptype] is singing app on 0
+05-16 14:23:30.289  1162  6599 D AHAL: AudioStream: SetParameters: 4346: enter: kvpairs: appname=-com.google.android.googlequicksearchbox
+05-16 14:23:30.289  1162  6599 D AHAL: AudioStream: SetParameters: 4365: exit 0
+05-16 14:23:30.289  1162  6599 D AHAL: AudioStreamCustom: SetParameters: 447: Exit:0 
+05-16 14:23:30.291 23023 24730 W BatteryNotifier: batterystats service unavailable!
+05-16 14:23:30.285 23023 23023 W pool-3-thread-1: type=1400 audit(0.0:7233286): avc:  denied  { read } for  name="u:object_r:vendor_audio_prop:s0" dev="tmpfs" ino=418 scontext=u:r:isolated_compute_app:s0:c512,c768 tcontext=u:object_r:vendor_audio_prop:s0 tclass=file permissive=0 app=com.facebook.katana
+05-16 14:23:30.291 23023 24730 I AudioRecord: stop mSessionID=78137, packageName: com.google.android.googlequicksearchbox
+05-16 14:23:30.291 23023 24730 D AudioRecord: stop(14818): mActive:0
+05-16 14:23:30.291 23023 24730 W libc    : Access denied finding property "ro.vendor.audio.aac.para.modify.support"
+05-16 14:23:30.291 23023 24730 I AudioRecord: stop mSessionID=78137, packageName: com.google.android.googlequicksearchbox
+05-16 14:23:30.291 23023 24730 D AudioRecord: stop(14818): mActive:0
+05-16 14:23:30.291 23023 24730 W libc    : Access denied finding property "ro.vendor.audio.aac.para.modify.support"
+05-16 14:23:30.292 23023 24730 D AudioRecordStub: ~AudioRecordStub() destroy
+05-16 14:23:30.285 23023 23023 W pool-3-thread-1: type=1400 audit(0.0:7233287): avc:  denied  { read } for  name="u:object_r:vendor_audio_prop:s0" dev="tmpfs" ino=418 scontext=u:r:isolated_compute_app:s0:c512,c768 tcontext=u:object_r:vendor_audio_prop:s0 tclass=file permissive=0 app=com.facebook.katana
+05-16 14:23:30.293 23023 24730 W mediametrics::Item: selfrecord: failed to record: {audiorecord, (12-31 21:00:00.000), (, -1, -1), (android.media.audiorecord.attributes={ Content type: AUDIO_CONTENT_TYPE_UNKNOWN Usage: AUDIO_USAGE_UNKNOWN Source: AUDIO_SOURCE_HOTWORD Flags: 0x800 Tags:  }, android.media.audiorecord.channelMask=16, android.media.audiorecord.channels=1, android.media.audiorecord.durationMs=1.020521e+03, android.media.audiorecord.encoding=AUDIO_FORMAT_PCM_16_BIT, android.media.audiorecord.frameCount=160000, android.media.audiorecord.latency=20, android.media.audiorecord.logSessionId=, android.media.audiorecord.portId=14818, android.media.audiorecord.samplerate=16000, android.media.audiorecord.source=AUDIO_SOURCE_HOTWORD, android.media.audiorecord.startCount=1)}
+05-16 14:23:30.293 23023 24730 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+05-16 14:23:30.295 23023 24737 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+05-16 14:23:30.295 23023 24734 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+05-16 14:23:30.295 23023 24734 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+05-16 14:23:30.295 23023 24737 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+05-16 14:23:30.295 23023 24737 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+05-16 14:23:30.295 23023 24737 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+05-16 14:23:30.295 23023 24737 W ProxyAndroidLoggerBackend: Too many Flogger logs received before configuration. Dropping old logs.
+05-16 14:23:30.299   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.299   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.299   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.299 22428 22706 I AlwaysOnHotwordDetector: onRejected
+05-16 14:23:30.300  1267  3356 D APM_AudioPolicyManager: releaseInput portId 14818
+05-16 14:23:30.300  1267  3356 D APM_AudioPolicyManager: closeInput(11134)
+05-16 14:23:30.301  1162  6599 D AHAL: AudioStream: astream_dump: 674: dump function not implemented
+05-16 14:23:30.305 22428 22698 I AlwaysOnHotwordDetector: handle message 6
+05-16 14:23:30.305 22428 22702 I ekrq    : HDM. #onRejected
+05-16 14:23:30.307 22428 22702 I ekrq    : HDM. Hotword timeout.
+05-16 14:23:30.307 22428 22702 I eksp    : (REDACTED) Hotword score : %f, Hotword model id : %s.
+05-16 14:23:30.307  1267 18734 D AudioFlinger: updateWakeLockUids_l AudioIn_2B7E uids:
+05-16 14:23:30.307 22428 22702 I eksp    : (REDACTED) Timeout reason %s, Coarse channel index %d.
+05-16 14:23:30.307  1267 18734 V audio_utils::mutex: remove_from_registry: unregistered for 18734
+05-16 14:23:30.308 22428 22702 I eksv    : onHotwordRejected called
+05-16 14:23:30.308 22428 22701 I eksv    : (REDACTED) This is hotwordRejectionEventTimestamp: %s
+05-16 14:23:30.308 22428 22702 I ekjn    : (REDACTED) HDM. #onSodaStop received %s
+05-16 14:23:30.309 22428 22701 I ekjn    : (REDACTED) HDM. Inside Sequencer. Try to start recognition again after %s
+05-16 14:23:30.309 22428 22702 I ekjn    : (REDACTED) HDM. #onSodaStop inside sequentialExecutor %s
+05-16 14:23:30.309 22428 22702 W ekjn    : (REDACTED) HDM. %s. Completer is null; It could be set earlier or we ware not waiting for the disconnect signal.
+05-16 14:23:30.309 22428 22701 I ekjn    : (REDACTED) HDM. getAllConfigAndTakeAction called because of %s
+05-16 14:23:30.309 22428 22702 I dvso    : (REDACTED) HDM event received: %s
+05-16 14:23:30.309  1162  6599 D AHAL: AudioDevice: adev_close_input_stream: 765: Enter:stream_handle(0xb40000713cef0db0)
+05-16 14:23:30.309  1162  6599 D AHAL: AudioDevice: adev_close_input_stream: 769: Exit
+05-16 14:23:30.310  1267  3356 V audio_utils::mutex: mutex_impl: audio_mutex initialized: ret:0  order:6
+05-16 14:23:30.311 22428 22703 I dvow    : (REDACTED) Platform configuration for connection(%s) has changed(@%s):%s
+05-16 14:23:30.311 22428 22703 I dvms    : (REDACTED) On platform configuration update(@%s) in connection(%s).
+05-16 14:23:30.311 22428 22701 I ekko    : (REDACTED) Operational mode passed in HotwordConfig is %s
+05-16 14:23:30.311 22428 22701 I ekrq    : (REDACTED) HDM. DSP hotword running %s
+05-16 14:23:30.311 22428 22700 I ekmh    : (REDACTED) No need to try to get the fallback locale. for keyphrase %s, locale %s
+05-16 14:23:30.312 22428 22700 I ekmn    : (REDACTED) #getDspAvailableResult locale : %s, dsp locale : %s, keyphrase : %s, DSP keyphrase : %s, isKeyphraseAndLocaleSupported : %b, canUseDownloadDspModel : %b. forceUniversalDspHotwordModel : %b
+05-16 14:23:30.312 22428 22700 W KeyphraseEnrollmentInfo: No enrollment application supports the given keyphrase/locale: 'Y Google'/pt_BR
+05-16 14:23:30.312 22428 22702 I ekmn    : (REDACTED) isDspHotwordSupportedByPlatform = %s, isDspHotwordModelAvailable = %s
+05-16 14:23:30.312  1267  3356 D ClientInfoStub: ~ClientInfoStub()
+05-16 14:23:30.312 22428 22703 I agvj    : (REDACTED) On platform configuration update(%s).
+05-16 14:23:30.312  1267  3356 D ClientInfoStub: ~ClientInfoStub()
+05-16 14:23:30.312 22428 22703 I agur    : Received ConfigurationUpdate from Triggering API
+05-16 14:23:30.312 22428 22700 I ekjn    : (REDACTED) HDM. getAllConfigAndTakeAction dspAvailable: %b, disableDspInTest: %b
+05-16 14:23:30.313 22428 22700 I ekhn    : (REDACTED) HDM. hotword enrollment state is enrolled:  %s, speakerId model exist: %s.
+05-16 14:23:30.314  1267  3356 D ClientInfoStub: ~ClientInfoStub()
+05-16 14:23:30.315 22428 22700 I ekhn    : (REDACTED) HDM. Hotword enrollment state : %s.
+05-16 14:23:30.316 22428 22700 I ekjn    : HDM. Registering for screen on/off intent ...
+05-16 14:23:30.316 22428 22700 I ekhn    : (REDACTED) HDM. Hotword enrollment state : %s.
+05-16 14:23:30.322 22428 22700 I ekko    : (REDACTED) Operational mode passed in HotwordConfig is %s
+05-16 14:23:30.323 22428 22700 I ekhn    : (REDACTED) HDM. Hotword enrollment state : %s.
+05-16 14:23:30.323 22428 22700 I ekkg    : (REDACTED) HDM. DefaultPersonalDecisionMaker#getNextAction. Voice match enabled: %b. incomplete enrollment state: %b, screen on: %b, screen locked: %b dsp available: %b
+05-16 14:23:30.323 22428 22700 I ekkq    : (REDACTED) HDM. SharedDecisionMaker#getNextAction for requester %s, mode %s 
+05-16 14:23:30.323 22428 22700 I ekkq    : HDM. #SharedDecisionMaker. NextAction.START
+05-16 14:23:30.324   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.324   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.324   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.325 22428 22700 I ekid    : HDM. Reconfig not needed.
+05-16 14:23:30.325 22428 22700 I ekjn    : (REDACTED) HDM. currentReconfigCheckerResult %s
+05-16 14:23:30.326 22428 22700 I ekqj    : (REDACTED) #setSpeakerIdRequired: %s
+05-16 14:23:30.326 22428 22700 I ekjn    : (REDACTED) HDM. Get the next action %s for requester %s.
+05-16 14:23:30.326 22428 22700 I eksf    : HDM. Trusted hotword enabled for flag
+05-16 14:23:30.326 22428 22700 I ekjn    : HDM. getDspTriggerNotificationRequirement
+05-16 14:23:30.327 22428 22700 I ekjn    : (REDACTED) HDM. dspTriggerNotificationRequirement: %s
+05-16 14:23:30.327 22428 22700 I eksf    : HDM. Trusted hotword enabled for flag
+05-16 14:23:30.327 22428 22700 I ekia    : Starting trusted DSP hotword detection
+05-16 14:23:30.327 22428 22700 I ekrq    : HDM. #setDspHotwordModel
+05-16 14:23:30.327 22428 22700 I ekrq    : HDM. #startDspHotwordRecognition
+05-16 14:23:30.327 22428 22700 I ekjn    : HDM. #handleStartHotwordDetectionResult
+05-16 14:23:30.327 22428 22708 I ekrq    : (REDACTED) HDM. #setSpeakerIdRequired inside sequencer %b
+05-16 14:23:30.327 22428 22699 I ekjn    : HDM. #handleStartHotwordDetectionResult: calling addDspHotwordPropertiesToRequestHandlingMetadata
+05-16 14:23:30.328 22428 22708 I ekrq    : HDM. No change in speaker-id requirement, so no need to update.
+05-16 14:23:30.328 22428 22699 I ekmn    : #addDspHotwordPropertiesToRequestHandlingMetadata
+05-16 14:23:30.328 22428 22700 I ekrq    : HDM. #setDspHotwordModel inside sequencer.
+05-16 14:23:30.328 22428 22699 I ekmn    : (REDACTED) #addDspHotwordPropertiesToRequestHandlingMetadata: properties=%s
+05-16 14:23:30.328 22428 22723 I ekrq    : HDM. onHotwordDetectionServiceInitialized() already Called!
+05-16 14:23:30.328 22428 22723 I ekrq    : HDM. #createAlwaysOnHotwordDetectorIfNecessary
+05-16 14:23:30.328 22428 22723 I ekrq    : alwaysOnHotwordDetector already created and first onAvailabilityChanged called.
+05-16 14:23:30.329 22428 22701 I ekmf    : HDM. #prepareDspModel
+05-16 14:23:30.329 22428 22700 I ekmf    : HDM. #prepareDspModel inside ExecutionSequencer
+05-16 14:23:30.329 22428 22700 I ekmf    : HDM. #prepareDspModel, already enrolled
+05-16 14:23:30.329 22428 22708 I ekrq    : (REDACTED) dspModelEnrollmentResult: %s, currentDownloadedDspHotwordModel.isPresent(): %b, directDspModeOrRetryInProgress: %b
+05-16 14:23:30.332  2431  2719 I MiuiNetworkPolicy: updateUidState uid = 99910304, uidState = 19
+05-16 14:23:30.335  1162  6599 V sthal_SoundTriggerDevice: stdev_start_recognition: Enter
+05-16 14:23:30.335  1162  6599 V sthal_SoundTriggerSession: StartRecognition: Enter, state = 2
+05-16 14:23:30.335  1162  6599 I PAL: StreamSoundTrigger: setParameters: 528: Enter, param id 1
+05-16 14:23:30.335  1162  6599 I PAL: StreamSoundTrigger: ProcessEvent: 3291: StLoaded: handle event 2 for stream instance 1
+05-16 14:23:30.335  1162  6599 I PAL: StreamSoundTrigger: SendRecognitionConfig: 1550: Enter
+05-16 14:23:30.335  1162  6599 I PAL: StreamSoundTrigger: SendRecognitionConfig: 1696: history buf len = 2000, preroll len = 0, read delay = 2000
+05-16 14:23:30.335  1162  6599 I PAL: SoundTriggerEngineGsl: UpdateBufConfig: 2452: updated hist buf:2000 msec, pre roll:0 msec
+05-16 14:23:30.335  1162  6599 I PAL: StreamSoundTrigger: SendRecognitionConfig: 1719: updated hist buf len = 2000, preroll len = 0 in gsl engine
+05-16 14:23:30.335  1162  6599 I PAL: SoundTriggerEngineGsl: UpdateConfLevels: 2418: Exit, status 0
+05-16 14:23:30.335  1162  6599 I PAL: SoundTriggerEngineGsl: SetCaptureRequested: 2759: capture requested 1, set to engine 1
+05-16 14:23:30.335  1162  6599 I PAL: StreamSoundTrigger: SendRecognitionConfig: 1808: Exit, status 0
+05-16 14:23:30.335  1162  6599 I PAL: StreamSoundTrigger: setParameters: 576: Exit, status 0
+05-16 14:23:30.335  1162  6599 I PAL: API: pal_stream_start: 290: Enter. Stream handle 0xb40000713ceec460K
+05-16 14:23:30.335  1162  6599 I PAL: StreamSoundTrigger: start: 326: Enter, stream direction 2
+05-16 14:23:30.335  1162  6599 I PAL: StreamSoundTrigger: ProcessEvent: 3291: StLoaded: handle event 3 for stream instance 1
+05-16 14:23:30.335  1162  6599 I PAL: StreamSoundTrigger: GetCurrentCaptureProfile: 2938: cap_prof SINGLE_MIC_16KHZ_16BIT_RAW_LPI: dev_id=0x15, chs=1, sr=16000, snd_name=va-mic-mono, ec_ref=0
+05-16 14:23:30.335  1162  6599 I PAL: Device: setDeviceAttributes: 335: DeviceAttributes for Device Id 35 updated
+05-16 14:23:30.335  1162  6599 I PAL: Device: open: 405: Enter. deviceCount 0 for device id 35 (PAL_DEVICE_IN_HANDSET_VA_MIC)
+05-16 14:23:30.335  1162  6599 I PAL: SessionAlsaUtils: setDeviceMediaConfig: 969: CODEC_DMA-LPAIF_VA-TX-0 rate ch fmt data_fmt 16000 1 2 1
+05-16 14:23:30.335  1162  6599 D audio_route: Apply path: va-mic-mono
+05-16 14:23:30.339   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.339   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.339   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.339  2431  2719 I MiuiNetworkPolicy: updateUidState uid = 99910304, uidState = 11
+05-16 14:23:30.353   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.353   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.353   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.357  1162  6599 E PAL: Device: open: 452: Exit. deviceCount 1 for device id 35 (PAL_DEVICE_IN_HANDSET_VA_MIC), exit status: 0
+05-16 14:23:30.357  1162  6599 E PAL: Device: open: 460: [open] deviceAttr.id:[35] ,deviceCount:[1] 
+05-16 14:23:30.357  1162  6599 I PAL: StreamSoundTrigger: ProcessEvent: 3436: Start device 35-PAL_DEVICE_IN_HANDSET_VA_MIC
+05-16 14:23:30.357  1162  6599 I PAL: SessionAlsaUtils: setDeviceMediaConfig: 969: CODEC_DMA-LPAIF_VA-TX-0 rate ch fmt data_fmt 16000 1 2 1
+05-16 14:23:30.357  1162  6599 I PAL: StreamSoundTrigger: ProcessEvent: 3447: device started
+05-16 14:23:30.357  1162  6599 I PAL: SoundTriggerEngineGsl: StartRecognition: 2033: Enter
+05-16 14:23:30.357  1162  6599 I PAL: SoundTriggerEngineGsl: ProcessStartRecognition: 1955: Enter
+05-16 14:23:30.357  1162  6599 I PAL: ResourceManager: acquireWakeLock: 999: Acquiring wake lock audio_pal_wl
+05-16 14:23:30.357  1162  6599 I PAL: SoundTriggerEngineGsl: UpdateSessionPayload: 2863: Enter, param : 3
+05-16 14:23:30.357  1162  6599 I PAL: PayloadBuilder: payloadSVAConfig: 1447: PID 0x8001044, payload 0xb40000701cf537e0K size 24
+05-16 14:23:30.358  1162  6599 D AGM: graph: graph_set_config: 1146 entry graph_handle 0x47534c
+05-16 14:23:30.358  1162  6599 I gsl     : gsl_send_spf_cmd:157 sending pkt with token 0x1ef61, opcode 0x1001006
+05-16 14:23:30.358 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~KGkJdZtGhkm8Fz7TFYGm-A==/br.com.serasaexperian.consumidor-OQou6qQRE0aucKgJO9JC-g==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:30.358  1162  6599 I gsl     : gsl_send_spf_cmd:185 rcvd pkt token : 0x1ef61
+05-16 14:23:30.358  1162  6599 D AGM: graph: graph_set_config: 1154 exit, graph handle 0x47534c, ret 0
+05-16 14:23:30.358  1162  6599 I PAL: SoundTriggerEngineGsl: UpdateConfigs: 1946: Exit, status 0
+05-16 14:23:30.358  1162  6599 E PAL: ResourceManager: voteSleepMonitor: 1410: ioctl device is not open
+05-16 14:23:30.358  1162  6599 I gsl     : gsl_send_spf_cmd:157 sending pkt with token 0x1ef62, opcode 0x100100e
+05-16 14:23:30.359  1162  6599 I gsl     : gsl_send_spf_cmd:185 rcvd pkt token : 0x1ef62
+05-16 14:23:30.359  1162  6599 D AGM: graph: graph_prepare: 847 entry graph_handle 0x47534c
+05-16 14:23:30.359  1162  6599 D AGM: graph_module: configure_hw_ep_media_config: 673 entry mod tag c0000005 miid 43d4 mid 7001024
+05-16 14:23:30.359  1162  6599 D AGM: graph_module: configure_hw_ep_media_config: 703 rate 16000 bw 16 ch 1, data_fmt 1
+05-16 14:23:30.359  1162  6599 I gsl     : gsl_send_spf_cmd:157 sending pkt with token 0x1ef63, opcode 0x1001006
+05-16 14:23:30.360  1162  6599 I gsl     : gsl_send_spf_cmd:185 rcvd pkt token : 0x1ef63
+05-16 14:23:30.360  1162  6599 D AGM: graph_module: configure_hw_ep_media_config: 713 exit, ret 0
+05-16 14:23:30.360  1162  6599 D AGM: graph_module: configure_codec_dma_ep: 286 cdc_dma intf cfg lpaif 3 indx 1 ch_msk 1
+05-16 14:23:30.360  1162  6599 I gsl     : gsl_send_spf_cmd:157 sending pkt with token 0x1ef64, opcode 0x1001006
+05-16 14:23:30.361  1162  6599 I gsl     : gsl_send_spf_cmd:185 rcvd pkt token : 0x1ef64
+05-16 14:23:30.361  1162  6599 D AGM: graph_module: configure_codec_dma_ep: 301 exit, ret 0
+05-16 14:23:30.361  1162  6599 D AGM: graph: configure_buffer_params: 196 configure buf params already done
+05-16 14:23:30.361  1162  6599 I gsl     : gsl_send_spf_cmd:157 sending pkt with token 0x1ef65, opcode 0x1001001
+05-16 14:23:30.362  1162  6599 I gsl     : gsl_send_spf_cmd:185 rcvd pkt token : 0x1ef65
+05-16 14:23:30.362  1162  6599 D AGM: graph: graph_prepare: 925 exit, ret 0
+05-16 14:23:30.362  1162  6599 D AGM: session: session_start: 1095 configuring device early - for SLIMBUS EPs
+05-16 14:23:30.362  1162  6599 D AGM: device: device_prepare: 401 PCM device 11 already in prepare state
+05-16 14:23:30.362  1162  6599 D AGM: graph: graph_start: 939 entry graph_handle 0x47534c
+05-16 14:23:30.362  1162  6599 I gsl     : gsl_send_spf_cmd:157 sending pkt with token 0x1ef66, opcode 0x1001002
+05-16 14:23:30.365  1162  6599 I gsl     : gsl_send_spf_cmd:185 rcvd pkt token : 0x1ef66
+05-16 14:23:30.365  1162  6599 D AGM: graph: graph_start: 951 exit, ret 0
+05-16 14:23:30.365  1162  6599 D PLUGIN: pcm: agm_pcm_plugin_reset: 431 agm_pcm_plugin_reset: reset hw_ptr to 0 
+05-16 14:23:30.365  1162  6599 I PAL: SoundTriggerEngineGsl: UpdateState: 1550: Engine state transitioned from 1 to 2
+05-16 14:23:30.365  1162  6599 I PAL: ResourceManager: releaseWakeLock: 1021: Releasing wake lock audio_pal_wl
+05-16 14:23:30.365  1162  6599 I PAL: SoundTriggerEngineGsl: ProcessStartRecognition: 2026: Exit, status 0
+05-16 14:23:30.365  1162  6599 I PAL: StreamSoundTrigger: TransitTo: 2973: Stream instance 1: state transitioned from ST_STATE_LOADED to ST_STATE_ACTIVE
+05-16 14:23:30.365  1162  6599 I PAL: StreamSoundTrigger: start: 347: Exit, status 0
+05-16 14:23:30.365  1162  6599 I PAL: API: pal_stream_start: 326: Exit. status 0
+05-16 14:23:30.365  1162  6599 D sthal_SoundTriggerSession: RegisterHalEvent:[c24] ST_EVENT_SESSION_REGISTER capture_handle 11134
+05-16 14:23:30.365  1162  6599 V sthal_SoundTriggerSession: StartRecognition: Exit, status = 0
+05-16 14:23:30.365  1162  6599 V sthal_SoundTriggerDevice: stdev_start_recognition: Exit, status = 0
+05-16 14:23:30.366  2431  3668 I SoundTriggerMiddlewareLogging: START_RECOGNITION (24, RecognitionConfig{captureRequested: true, phraseRecognitionExtras: [PhraseRecognitionExtra{id: 101, recognitionModes: 1, confidenceLevel: 0, levels: []}], audioCapabilities: 0, data: []}) -> android.os.Binder@4a08934
+05-16 14:23:30.366  2431  3668 I SoundTriggerHelper: startRecognition successful.
+05-16 14:23:30.366 22428 22708 I ekrq    : HDM. Start DSP hotword detection successfully.
+05-16 14:23:30.367 22428 22699 I ekjn    : HDM. Hotword started successfully.
+05-16 14:23:30.367 22428 22699 I dvso    : (REDACTED) HDM event received: %s
+05-16 14:23:30.367 22428 22699 I ekjn    : HDM. after notify apa
+05-16 14:23:30.368   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.368   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.368   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.368 22428 22699 I ekjn    : HDM. #logRequestHandlingNonErrorEndEvent. Reset requestIdOfFirstError, firstStartErrorCausesRetry and numOfRetriesDoneForHotwordDetectorStartErrors!
+05-16 14:23:30.369 22428 22699 I dvow    : (REDACTED) Platform configuration for connection(%s) has changed(@%s):%s
+05-16 14:23:30.369 22428 22699 I dvms    : (REDACTED) On platform configuration update(@%s) in connection(%s).
+05-16 14:23:30.370 22428 22699 I agvj    : (REDACTED) On platform configuration update(%s).
+05-16 14:23:30.370 22428 22699 I agur    : Received ConfigurationUpdate from Triggering API
+05-16 14:23:30.383   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.383   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.383   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.386 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~WpIyv6sKMQ56MKScbL2nYA==/br.ceptro.simet.client.android-3DASj8QJDW5BnwTNVZ_z0A==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:30.402   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.402   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.402   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.424   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.424   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.424   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.435   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.435   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.435   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.448   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.448   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.448   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.464   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.464   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.464   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.476   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.476   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.476   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.479 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~apzYNv3yjOggof3C0-4P5Q==/com.tencent.mm-0vIskMJ17IY_J1jg78SMbg==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:30.491   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.491   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.491   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.506   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.506   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.506   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.518 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~nzDRlsIqkqGRp8MHMxh2Cw==/com.celestron.origin-u_EgEuEWTGya2VuqODjpKw==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:30.519  3201  4535 D IpClient/wlan0: addressUpdated: 2804:29b8:5099:a8d1:ac78:fdff:fe50:e419/64 on ifindex 36 flags 0x00000100 scope 0
+05-16 14:23:30.519  3201  4535 D IpClient/wlan0: addressUpdated: 2804:29b8:5099:a8d1:2ec3:12f3:4791:b404/64 on ifindex 36 flags 0x00000001 scope 0
+05-16 14:23:30.519  3201  4535 W AlarmManager: Unrecognized alarm listener com.android.networkstack.android.net.ip.IpClientLinkObserver$Dhcp6PdPreferredPrefixAlarmListener@3b85266
+05-16 14:23:30.520  3201  4535 D ApfFilter: (wlan0): Ignoring RA RA fe80::2223:51ff:fec6:81f4 -> ff02::1 30s 2804:29b8:5099:a8d1::/64 172800s/172800s DNS 10s 2804:29b8:1000:1::17 2804:29b8:1000:1::18  which matches RA fe80::2223:51ff:fec6:81f4 -> ff02::1 30s 2804:29b8:5099:a8d1::/64 172800s/172800s DNS 10s 2804:29b8:1000:1::17 2804:29b8:1000:1::18 
+05-16 14:23:30.522   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.522   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.522   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.535   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.535   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.535   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.550   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.550   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.550   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.553  1163  3654 I vendor.qti.bluetooth@1.0-ibs_handler: ProcessIbsCmd: Received IBS_WAKE_IND: 0xFD
+05-16 14:23:30.554  1163  3654 D vendor.qti.bluetooth@1.0-ibs_handler: SerialClockVote: vote for UART CLK ON
+05-16 14:23:30.557  1163  3654 D vendor.qti.bluetooth@1.0-wake_lock: Acquire wakelock is acquired 
+05-16 14:23:30.557  1163  3654 I vendor.qti.bluetooth@1.0-ibs_handler: ProcessIbsCmd: Writing IBS_WAKE_ACK
+05-16 14:23:30.559  3224  3484 I bt_btm_pm: packages/modules/MiuiBluetooth/system/stack/acl/btm_pm.cc:718 btm_pm_proc_mode_change: Power mode switched from immediate:active[0] to immediate:sniff[2]
+05-16 14:23:30.559  3224  3484 I bt_osi_alarm: packages/modules/MiuiBluetooth/system/osi/src/alarm.cc:257 alarm_cancel: name=bta_dm.pm_timer, ptr=0xb40000780ce96af0, mutex_ptr=0xb4000079fce6c3d0, local_mutex_ptr=0xb4000079fce6c3d0
+05-16 14:23:30.563   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.563   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.563   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.569 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~xZRs1lUh3p7_n_wlY3NPog==/kling.ai.video.chat-QgvUN08e46SxzHdQG0aaxg==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:30.579  2431  3668 W ActivityManager: Unable to start service Intent { cmp=com.rabbit.bubble.shooter.shan.game/QO0I8OIQ1I08.iIiI8IIO〇 } U=0: not found
+05-16 14:23:30.583   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.583   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.583   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.593 18028 18694 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~Q8ckL-fP98ISviwUASj7Eg==/empiricus.com.br.empiricus-gJ5tOE3t_08-dpZup0Aq-w==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:30.596   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.596   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.596   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.603  1163  3654 I vendor.qti.bluetooth@1.0-ibs_handler: ProcessIbsCmd: Received IBS_SLEEP_IND: 0xFE
+05-16 14:23:30.603  1163  3654 D vendor.qti.bluetooth@1.0-ibs_handler: SerialClockVote: vote for UART CLK OFF
+05-16 14:23:30.613   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.613   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.613   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.623  3201  4535 D IpClient/wlan0: addressUpdated: 2804:29b8:5099:a8d1:ac78:fdff:fe50:e419/64 on ifindex 36 flags 0x00000100 scope 0
+05-16 14:23:30.623  3201  4535 D IpClient/wlan0: addressUpdated: 2804:29b8:5099:a8d1:2ec3:12f3:4791:b404/64 on ifindex 36 flags 0x00000001 scope 0
+05-16 14:23:30.624  3201  4535 W AlarmManager: Unrecognized alarm listener com.android.networkstack.android.net.ip.IpClientLinkObserver$Dhcp6PdPreferredPrefixAlarmListener@3b85266
+05-16 14:23:30.625  3201  4535 D ApfFilter: (wlan0): Ignoring RA RA fe80::2223:51ff:fec6:81f4 -> ff02::1 30s 2804:29b8:5099:a8d1::/64 172800s/172800s DNS 10s 2804:29b8:1000:1::17 2804:29b8:1000:1::18  which matches RA fe80::2223:51ff:fec6:81f4 -> ff02::1 30s 2804:29b8:5099:a8d1::/64 172800s/172800s DNS 10s 2804:29b8:1000:1::17 2804:29b8:1000:1::18 
+05-16 14:23:30.631   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.631   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.631   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.644   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.644   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.644   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.658   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.658   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.659   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.670 18028 18694 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~VutHOzNCeVsrAmKFpmqELA==/br.gov.caixa.tem-B2ouo13jvu0TTNDirpGGoA==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:30.671   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.671   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.671   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.684   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.684   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.684   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.699   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.699   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.699   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.713   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.713   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.713   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.717  3224  3484 W bluetooth: packages/modules/MiuiBluetooth/system/bta/jv/bta_jv_act.cc:2184 bta_jv_idle_timeout_handler: : true
+05-16 14:23:30.719 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~pfHwv5pmoIJb_UIC6VnfSA==/com.linkedin.android-C1KQZwYLJYB_d51AtcyKig==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:30.726   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.726   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.726   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.733 18028 18030 I artd    : GetBestInfo: dm (/data/app/~~pfHwv5pmoIJb_UIC6VnfSA==/com.linkedin.android-C1KQZwYLJYB_d51AtcyKig==/split_idverification.dm) is kOatUpToDate with filter 'verify' executable 'false'
+05-16 14:23:30.742   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.742   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.742   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.754  1163  3495 D vendor.qti.bluetooth@1.0-wake_lock: Release wakelock is released 
+05-16 14:23:30.757   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.757   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.757   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.771   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.771   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.771   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.785 18028 18028 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~vuFGFI2ocMQNUtMj_q5TeA==/com.miui.global.packageinstaller-vyFmc5sbv-CcOznTMbOj_A==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:30.785   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.785   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.785   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.791 18028 18028 I artd    : GetBestInfo: odex next to the dex file (/data/user/0/com.miui.global.packageinstaller/app_pccache/5/F2FF627D940052495BF0C0AF15E5A0B2723F5469/oat/arm64/pcam.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:30.797 18028 18694 I artd    : GetBestInfo: odex next to the dex file (/data/user/0/com.miui.global.packageinstaller/app_pccache/5/A6422CD2CF82BB9C0EAF521C1BF6CC70ABCF649F/oat/arm64/pcam.odex) is kOatUpToDate with filter 'verify' executable 'false'
+05-16 14:23:30.802   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.802   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.802   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.817   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.817   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.817   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.829   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.829   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.829   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.846  2431  2431 D BatteryStatsManagerStub: audio off uid=99121
+05-16 14:23:30.846   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.846   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.846   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.858 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~lCPo3GsvMO296OdTKwdxfA==/com.gigigo.ipirangaconectcar-9mVNfC8QeChAYOu6BV8nfA==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:30.860   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.860   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.860   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.875   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.875   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.875   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.890   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.890   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.890   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.900 18028 18028 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~jUVUWDLYnoUy4lBIT6lRtA==/br.com.enjoei.app-HlQY6sCJ__CX02XBVTPSRA==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:30.906   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.906   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.906   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.920   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.920   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.920   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.931 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~4m_Y8Diw6LPUMbWWkTf-Fw==/com.totalpassmobile-j1MQNq_MzNJigBDT8F_t1A==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:30.939   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.939   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.939   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.950  2431  3668 D ShortcutService: rescanPackageIfNeeded 0@com.whatsapp, forceRescan=false , isNewApp=false
+05-16 14:23:30.959   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.959   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.959   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.973   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.973   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.973   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.983 15685 16005 I SkJpegCodec: [mId: 1] skia-debug SkJpegCodec::+SkJpegCodec
+05-16 14:23:30.984 15685 16005 I SkJpegCodec: [mId: 1] skia-debug SkJpegCodec::ReadHeader: width = 160, height = 160, color = 10
+05-16 14:23:30.984 15685 16005 I SkJpegCodec: [mId: 1] skia-debug SkJpegCodec::ReadHeader: progressive_mode = 0, streamType: SkMemoryStream
+05-16 14:23:30.986 15685 16005 I SkJpegCodec: [mId: 2] skia-debug SkJpegCodec::+SkJpegCodec
+05-16 14:23:30.986 15685 16005 I SkJpegCodec: [mId: 2] skia-debug SkJpegCodec::ReadHeader: width = 160, height = 160, color = 10
+05-16 14:23:30.986 15685 16005 I SkJpegCodec: [mId: 2] skia-debug SkJpegCodec::ReadHeader: progressive_mode = 0, streamType: SkMemoryStream
+05-16 14:23:30.986   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:30.986   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:30.986   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:30.986 15685 16005 I SkJpegCodec: [mId: 2] skia-debug SkJpegCodec::onGetScaledDimensions: desiredScale = 0.500000
+05-16 14:23:30.987 15685 16005 I SkJpegCodec: [mId: 2] skia-debug SkJpegCodec::onGetPixels: dstRowBytes = 320, 
+05-16 14:23:30.987 15685 16005 I SkJpegCodec: dstInfo: SkImageInfo: {IsRGB = 1, ColorType = 4, AlphaType = 1, Dimensions.width = 80, Dimensions.height = 80};
+05-16 14:23:30.988 15685 16005 I SkJpegCodec: [mId: 2] skia-debug SkJpegCodec::onGetPixels ends with rowsDecodec = 80
+05-16 14:23:30.988 15685 16005 I SkJpegCodec: [mId: 2] skia-debug onGetGainmapInfo returns false
+05-16 14:23:31.001 15685 16005 I SkJpegCodec: [mId: 3] skia-debug SkJpegCodec::+SkJpegCodec
+05-16 14:23:31.002 15685 16005 I SkJpegCodec: [mId: 3] skia-debug SkJpegCodec::ReadHeader: width = 160, height = 160, color = 10
+05-16 14:23:31.002 15685 16005 I SkJpegCodec: [mId: 3] skia-debug SkJpegCodec::ReadHeader: progressive_mode = 0, streamType: SkMemoryStream
+05-16 14:23:31.002 15685 16005 I SkJpegCodec: [mId: 4] skia-debug SkJpegCodec::+SkJpegCodec
+05-16 14:23:31.002 15685 16005 I SkJpegCodec: [mId: 4] skia-debug SkJpegCodec::ReadHeader: width = 160, height = 160, color = 10
+05-16 14:23:31.002 15685 16005 I SkJpegCodec: [mId: 4] skia-debug SkJpegCodec::ReadHeader: progressive_mode = 0, streamType: SkMemoryStream
+05-16 14:23:31.002 15685 16005 I SkJpegCodec: [mId: 4] skia-debug SkJpegCodec::onGetScaledDimensions: desiredScale = 0.500000
+05-16 14:23:31.003 15685 16005 I SkJpegCodec: [mId: 4] skia-debug SkJpegCodec::onGetPixels: dstRowBytes = 320, 
+05-16 14:23:31.003 15685 16005 I SkJpegCodec: dstInfo: SkImageInfo: {IsRGB = 1, ColorType = 4, AlphaType = 1, Dimensions.width = 80, Dimensions.height = 80};
+05-16 14:23:31.004   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.004   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.004   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.004 15685 16005 I SkJpegCodec: [mId: 4] skia-debug SkJpegCodec::onGetPixels ends with rowsDecodec = 80
+05-16 14:23:31.004 15685 16005 I SkJpegCodec: [mId: 4] skia-debug onGetGainmapInfo returns false
+05-16 14:23:31.010 18028 18028 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~Iai-vRf70FLboDoqivNu5A==/com.mercadopago.wallet-vgcgS78JqSEjk-c-oiTfpQ==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:31.015 15685 16005 I SkJpegCodec: [mId: 5] skia-debug SkJpegCodec::+SkJpegCodec
+05-16 14:23:31.015 15685 16005 I SkJpegCodec: [mId: 5] skia-debug SkJpegCodec::ReadHeader: width = 160, height = 160, color = 10
+05-16 14:23:31.015 15685 16005 I SkJpegCodec: [mId: 5] skia-debug SkJpegCodec::ReadHeader: progressive_mode = 0, streamType: SkMemoryStream
+05-16 14:23:31.016 15685 16005 I SkJpegCodec: [mId: 6] skia-debug SkJpegCodec::+SkJpegCodec
+05-16 14:23:31.016 15685 16005 I SkJpegCodec: [mId: 6] skia-debug SkJpegCodec::ReadHeader: width = 160, height = 160, color = 10
+05-16 14:23:31.016 15685 16005 I SkJpegCodec: [mId: 6] skia-debug SkJpegCodec::ReadHeader: progressive_mode = 0, streamType: SkMemoryStream
+05-16 14:23:31.016 15685 16005 I SkJpegCodec: [mId: 6] skia-debug SkJpegCodec::onGetScaledDimensions: desiredScale = 0.500000
+05-16 14:23:31.016 15685 16005 I SkJpegCodec: [mId: 6] skia-debug SkJpegCodec::onGetPixels: dstRowBytes = 320, 
+05-16 14:23:31.016 15685 16005 I SkJpegCodec: dstInfo: SkImageInfo: {IsRGB = 1, ColorType = 4, AlphaType = 1, Dimensions.width = 80, Dimensions.height = 80};
+05-16 14:23:31.018   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.018   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.018   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.019 15685 16005 I SkJpegCodec: [mId: 6] skia-debug SkJpegCodec::onGetPixels ends with rowsDecodec = 80
+05-16 14:23:31.019 15685 16005 I SkJpegCodec: [mId: 6] skia-debug onGetGainmapInfo returns false
+05-16 14:23:31.027 15685 16005 I SkJpegCodec: [mId: 7] skia-debug SkJpegCodec::+SkJpegCodec
+05-16 14:23:31.027 15685 16005 I SkJpegCodec: [mId: 7] skia-debug SkJpegCodec::ReadHeader: width = 160, height = 160, color = 10
+05-16 14:23:31.027 15685 16005 I SkJpegCodec: [mId: 7] skia-debug SkJpegCodec::ReadHeader: progressive_mode = 0, streamType: SkMemoryStream
+05-16 14:23:31.027 15685 16005 I SkJpegCodec: [mId: 8] skia-debug SkJpegCodec::+SkJpegCodec
+05-16 14:23:31.027 15685 16005 I SkJpegCodec: [mId: 8] skia-debug SkJpegCodec::ReadHeader: width = 160, height = 160, color = 10
+05-16 14:23:31.027 15685 16005 I SkJpegCodec: [mId: 8] skia-debug SkJpegCodec::ReadHeader: progressive_mode = 0, streamType: SkMemoryStream
+05-16 14:23:31.027 15685 16005 I SkJpegCodec: [mId: 8] skia-debug SkJpegCodec::onGetScaledDimensions: desiredScale = 0.500000
+05-16 14:23:31.027 15685 16005 I SkJpegCodec: [mId: 8] skia-debug SkJpegCodec::onGetPixels: dstRowBytes = 320, 
+05-16 14:23:31.027 15685 16005 I SkJpegCodec: dstInfo: SkImageInfo: {IsRGB = 1, ColorType = 4, AlphaType = 1, Dimensions.width = 80, Dimensions.height = 80};
+05-16 14:23:31.028 15685 16005 I SkJpegCodec: [mId: 8] skia-debug SkJpegCodec::onGetPixels ends with rowsDecodec = 80
+05-16 14:23:31.028 15685 16005 I SkJpegCodec: [mId: 8] skia-debug onGetGainmapInfo returns false
+05-16 14:23:31.032 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~FeDMglbVtGA-RxY9Rfp-vA==/com.argeneration.teleportscanner-0ujSL2MIWFojIvUAHGwN0w==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:31.033   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.033   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.033   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.037 15685 16005 I SkJpegCodec: [mId: 9] skia-debug SkJpegCodec::+SkJpegCodec
+05-16 14:23:31.037 15685 16005 I SkJpegCodec: [mId: 9] skia-debug SkJpegCodec::ReadHeader: width = 160, height = 160, color = 10
+05-16 14:23:31.037 15685 16005 I SkJpegCodec: [mId: 9] skia-debug SkJpegCodec::ReadHeader: progressive_mode = 0, streamType: SkMemoryStream
+05-16 14:23:31.038 15685 16005 I SkJpegCodec: [mId: 10] skia-debug SkJpegCodec::+SkJpegCodec
+05-16 14:23:31.038 15685 16005 I SkJpegCodec: [mId: 10] skia-debug SkJpegCodec::ReadHeader: width = 160, height = 160, color = 10
+05-16 14:23:31.038 15685 16005 I SkJpegCodec: [mId: 10] skia-debug SkJpegCodec::ReadHeader: progressive_mode = 0, streamType: SkMemoryStream
+05-16 14:23:31.038 15685 16005 I SkJpegCodec: [mId: 10] skia-debug SkJpegCodec::onGetScaledDimensions: desiredScale = 0.500000
+05-16 14:23:31.039 15685 16005 I SkJpegCodec: [mId: 10] skia-debug SkJpegCodec::onGetPixels: dstRowBytes = 320, 
+05-16 14:23:31.039 15685 16005 I SkJpegCodec: dstInfo: SkImageInfo: {IsRGB = 1, ColorType = 4, AlphaType = 1, Dimensions.width = 80, Dimensions.height = 80};
+05-16 14:23:31.039 15685 16005 I SkJpegCodec: [mId: 10] skia-debug SkJpegCodec::onGetPixels ends with rowsDecodec = 80
+05-16 14:23:31.039 15685 16005 I SkJpegCodec: [mId: 10] skia-debug onGetGainmapInfo returns false
+05-16 14:23:31.049 15685 16005 I SkJpegCodec: [mId: 11] skia-debug SkJpegCodec::+SkJpegCodec
+05-16 14:23:31.049 15685 16005 I SkJpegCodec: [mId: 11] skia-debug SkJpegCodec::ReadHeader: width = 160, height = 161, color = 10
+05-16 14:23:31.049 15685 16005 I SkJpegCodec: [mId: 11] skia-debug SkJpegCodec::ReadHeader: progressive_mode = 0, streamType: SkMemoryStream
+05-16 14:23:31.050 15685 16005 I SkJpegCodec: [mId: 12] skia-debug SkJpegCodec::+SkJpegCodec
+05-16 14:23:31.050 15685 16005 I SkJpegCodec: [mId: 12] skia-debug SkJpegCodec::ReadHeader: width = 160, height = 161, color = 10
+05-16 14:23:31.050 15685 16005 I SkJpegCodec: [mId: 12] skia-debug SkJpegCodec::ReadHeader: progressive_mode = 0, streamType: SkMemoryStream
+05-16 14:23:31.050 15685 16005 I SkJpegCodec: [mId: 12] skia-debug SkJpegCodec::onGetScaledDimensions: desiredScale = 0.500000
+05-16 14:23:31.050 15685 16005 I SkJpegCodec: [mId: 12] skia-debug SkJpegCodec::onGetPixels: dstRowBytes = 320, 
+05-16 14:23:31.050 15685 16005 I SkJpegCodec: dstInfo: SkImageInfo: {IsRGB = 1, ColorType = 4, AlphaType = 1, Dimensions.width = 80, Dimensions.height = 81};
+05-16 14:23:31.050   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.050   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.050   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.051 15685 16005 I SkJpegCodec: [mId: 12] skia-debug SkJpegCodec::onGetPixels ends with rowsDecodec = 81
+05-16 14:23:31.051 15685 16005 I SkJpegCodec: [mId: 12] skia-debug onGetGainmapInfo returns false
+05-16 14:23:31.060 15685 16005 I SkJpegCodec: [mId: 13] skia-debug SkJpegCodec::+SkJpegCodec
+05-16 14:23:31.060 15685 16005 I SkJpegCodec: [mId: 13] skia-debug SkJpegCodec::ReadHeader: width = 160, height = 160, color = 10
+05-16 14:23:31.060 15685 16005 I SkJpegCodec: [mId: 13] skia-debug SkJpegCodec::ReadHeader: progressive_mode = 0, streamType: SkMemoryStream
+05-16 14:23:31.060 15685 16005 I SkJpegCodec: [mId: 14] skia-debug SkJpegCodec::+SkJpegCodec
+05-16 14:23:31.060 15685 16005 I SkJpegCodec: [mId: 14] skia-debug SkJpegCodec::ReadHeader: width = 160, height = 160, color = 10
+05-16 14:23:31.060 15685 16005 I SkJpegCodec: [mId: 14] skia-debug SkJpegCodec::ReadHeader: progressive_mode = 0, streamType: SkMemoryStream
+05-16 14:23:31.060 15685 16005 I SkJpegCodec: [mId: 14] skia-debug SkJpegCodec::onGetScaledDimensions: desiredScale = 0.500000
+05-16 14:23:31.060 15685 16005 I SkJpegCodec: [mId: 14] skia-debug SkJpegCodec::onGetPixels: dstRowBytes = 320, 
+05-16 14:23:31.060 15685 16005 I SkJpegCodec: dstInfo: SkImageInfo: {IsRGB = 1, ColorType = 4, AlphaType = 1, Dimensions.width = 80, Dimensions.height = 80};
+05-16 14:23:31.061 15685 16005 I SkJpegCodec: [mId: 14] skia-debug SkJpegCodec::onGetPixels ends with rowsDecodec = 80
+05-16 14:23:31.062 15685 16005 I SkJpegCodec: [mId: 14] skia-debug onGetGainmapInfo returns false
+05-16 14:23:31.064   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.064   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.064   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.075 15685 16005 I SkJpegCodec: [mId: 15] skia-debug SkJpegCodec::+SkJpegCodec
+05-16 14:23:31.075 15685 16005 I SkJpegCodec: [mId: 15] skia-debug SkJpegCodec::ReadHeader: width = 160, height = 160, color = 10
+05-16 14:23:31.075 15685 16005 I SkJpegCodec: [mId: 15] skia-debug SkJpegCodec::ReadHeader: progressive_mode = 0, streamType: SkMemoryStream
+05-16 14:23:31.075 15685 16005 I SkJpegCodec: [mId: 16] skia-debug SkJpegCodec::+SkJpegCodec
+05-16 14:23:31.075 15685 16005 I SkJpegCodec: [mId: 16] skia-debug SkJpegCodec::ReadHeader: width = 160, height = 160, color = 10
+05-16 14:23:31.075 15685 16005 I SkJpegCodec: [mId: 16] skia-debug SkJpegCodec::ReadHeader: progressive_mode = 0, streamType: SkMemoryStream
+05-16 14:23:31.075 15685 16005 I SkJpegCodec: [mId: 16] skia-debug SkJpegCodec::onGetScaledDimensions: desiredScale = 0.500000
+05-16 14:23:31.076 15685 16005 I SkJpegCodec: [mId: 16] skia-debug SkJpegCodec::onGetPixels: dstRowBytes = 320, 
+05-16 14:23:31.076 15685 16005 I SkJpegCodec: dstInfo: SkImageInfo: {IsRGB = 1, ColorType = 4, AlphaType = 1, Dimensions.width = 80, Dimensions.height = 80};
+05-16 14:23:31.077 15685 16005 I SkJpegCodec: [mId: 16] skia-debug SkJpegCodec::onGetPixels ends with rowsDecodec = 80
+05-16 14:23:31.077 15685 16005 I SkJpegCodec: [mId: 16] skia-debug onGetGainmapInfo returns false
+05-16 14:23:31.080   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.080   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.080   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.081  2431  3668 D ShortcutService: rescanPackageIfNeeded 0@com.whatsapp, forceRescan=false , isNewApp=false
+05-16 14:23:31.096   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.096   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.096   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.097 18028 18028 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~5axTrm3e-gHxCXmmFe2YWg==/com.fugo.wow-V9ldEqPqhUVrFuhZTRDOXA==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:31.109 27380 27380 D BoundBrokerSvc: onRebind: Intent { act=com.google.android.gms.libs.gmscorelogger.service.START dat=chimera-action:/... cmp=com.google.android.gms/.chimera.PersistentDirectBootAwareApiService }
+05-16 14:23:31.112  2431  3668 D ShortcutService: rescanPackageIfNeeded 0@com.whatsapp, forceRescan=false , isNewApp=false
+05-16 14:23:31.113  2431  3668 E ShortcutService: Invalid icon type in shortcut 242253469638787@lid. Bitmaps are not allowed in long-lived shortcuts. Use Resource icons, or Uri-based icons instead.
+05-16 14:23:31.119   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.119   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.119   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.129 18028 18030 I artd    : GetBestInfo: vdex next to the dex file (/data/app/~~P6fz_nOivjJIdY8j8mMLeA==/com.miui.thirdappassistant-X1GuQpGaMlGuiup29kcA2Q==/oat/arm64/base.vdex) is kOatUpToDate with filter 'verify' executable 'false'
+05-16 14:23:31.130 18743 18743 W BpBinder: Linking to death on android.gui.ISurfaceComposer but there are no threads (yet?) listening to incoming transactions. See ProcessState::startThreadPool and ProcessState::setThreadPoolMaxThreadCount. Generally you should setup the binder threadpool before other initialization steps.
+05-16 14:23:31.130 18743 18743 W ProcessState: Extra binder thread started, but 0 threads requested. Do not use *startThreadPool when zero threads are requested.
+05-16 14:23:31.143   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.143   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.143   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.145  1182  1182 W android.hardwar: type=1400 audit(0.0:7233288): avc:  denied  { read } for  name="type" dev="sysfs" ino=83132 scontext=u:r:hal_health_default:s0 tcontext=u:object_r:sysfs:s0 tclass=file permissive=0
+05-16 14:23:31.145  1182  1182 W android.hardwar: type=1400 audit(0.0:7233289): avc:  denied  { read } for  name="type" dev="sysfs" ino=87575 scontext=u:r:hal_health_default:s0 tcontext=u:object_r:sysfs:s0 tclass=file permissive=0
+05-16 14:23:31.157  1182  1182 W android.hardwar: type=1400 audit(0.0:7233290): avc:  denied  { read } for  name="type" dev="sysfs" ino=83132 scontext=u:r:hal_health_default:s0 tcontext=u:object_r:sysfs:s0 tclass=file permissive=0
+05-16 14:23:31.157  1182  1182 W android.hardwar: type=1400 audit(0.0:7233291): avc:  denied  { read } for  name="type" dev="sysfs" ino=87575 scontext=u:r:hal_health_default:s0 tcontext=u:object_r:sysfs:s0 tclass=file permissive=0
+05-16 14:23:31.176   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.176   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.176   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.180 10343 10624 I ProcAudioPowerManager: onBatteryChanged, onBattery is false
+05-16 14:23:31.181  3292  3292 D QtiCarrierConfigHelper: WARNING, no carrier configs on phone Id: 1
+05-16 14:23:31.182 10343 11755 D PowerCheckerService: onBatteryChanged, mBatteryLevel = 100, status = 5, level = 100, plug = 1, scale = 100
+05-16 14:23:31.183  3277  3277 D DeviceStatisticsService: onReceive: action= android.intent.action.BATTERY_CHANGED
+05-16 14:23:31.183  8399  8399 I PowerUtils: getSurfaceTemprature temp: 37
+05-16 14:23:31.183  3277  3277 D DeviceStatisticsService: Post Battery changed event to message queue...
+05-16 14:23:31.183  8399  8399 I PowerSaveService: onReceive: android.intent.action.BATTERY_CHANGED
+05-16 14:23:31.183  3277 14717 D DeviceStatisticsService: handleMessage what = 1
+05-16 14:23:31.183  3277 14717 D DeviceStatisticsService: EVENT_BATTERY_CHANGED: arg1=100 arg2=100 obj=1
+05-16 14:23:31.183  8399  8399 I PowerNoticeUI: handleBatteryChanged oldPlugType 1 mPlugType 1 oldBatteryLevel 100 mBatteryLevel 100 temperature 361
+05-16 14:23:31.183  8399  8399 I ChargerBatteryIntelligenceReceiver: onBatteryChanged temperature：36,plugType:1
+05-16 14:23:31.185  3277 14717 D DeviceStatisticsService: chargerType=1 batteryLevel=100 totalBatteryCapacity=4657000
+05-16 14:23:31.186 10343 10723 D PowerKeeper.Thermal: mBatteryTemperature: 36
+05-16 14:23:31.187  2431  2431 D UiModeManager: updateConfigurationLocked: mDockState=0; mCarMode=false; mCar=false; mPowerSave=false; mOverrideNightModeOn=false; mOverrideNightModeOff=false; mComputedNightMode=true; mNightModeValue=2; uiMode=33
+05-16 14:23:31.188 10343 10624 D PowerKeeper.FrozenApp: onBatteryChanged plug=true mBatteryPlugged=1
+05-16 14:23:31.210   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.210   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.210   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.230   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.230   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.230   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.234 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~l2xBKbBQkVZVo-UzL0cvag==/com.bpmobile.iscanner.free-tJeiikbl6oYc0vSnsyfrfA==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:31.252   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.252   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.252   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.262  2431  2640 D CompatChangeReporter: Compat change id reported: 262645982; UID 10168; state: ENABLED
+05-16 14:23:31.268   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.268   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.268   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.278  2431  2980 D ShortcutService: Saving package item com.whatsapp to /data/system_ce/0/shortcut_service/packages/com.whatsapp.xml
+05-16 14:23:31.279  2431  2981 D ShortcutService: Getting shortcuts for launcher= com.miui.homeuser=0 pkg=com.whatsapp
+05-16 14:23:31.282 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~1Dsjms6hoBuUkD_NqwfkLQ==/com.sonelli.juicessh-Q42YHP9_WTuV9Plh4qnzLQ==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:31.285   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.285   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.285   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.295  2431  2981 D ShortcutService: Getting shortcuts for launcher= com.android.systemuiuser=0 pkg=com.whatsapp
+05-16 14:23:31.296 12238 12238 D Launcher.Model: LauncherAppsCallback onShortcutsChanged|com.whatsapp|UserHandle{0}|false
+05-16 14:23:31.299  2431  5663 D ShortcutService: Getting shortcuts for launcher= com.miui.homeuser=0 pkg=com.whatsapp
+05-16 14:23:31.299 12238 12238 D PinShortcutRequestUtils: title=com.whatsapp,activity=ComponentInfo{com.whatsapp/com.whatsapp.Main}
+05-16 14:23:31.301   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.301   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.301   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.306 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~awMR4He4CdulCLJ81L_uug==/no.nordicsemi.android.mcp-11bmA6lxMiwQmp4_UkWacQ==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:31.315 12238 12238 D Launcher.ShortcutInfo: onAddToDatabase, this=DeepShortcutInfo, id=966, itemType=14, user=UserHandle{0}, mIconType=1, pkgName=com.whatsapp, className=com.whatsapp.Main, screenId=21, container=-100, cellX=4, cellY=4, spanX=1, spanY=1
+05-16 14:23:31.323   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.323   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.323   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.326 12238 12238 D Launcher.Model: Update item in database (4, 4) of screen 21 under container -100
+05-16 14:23:31.326 12238 12238 D Launcher.Model: updateItemInDatabase, item=DeepShortcutInfo, id=966, itemType=14, user=UserHandle{0}, mIconType=1, pkgName=com.whatsapp, className=com.whatsapp.Main, screenId=21, container=-100, cellX=4, cellY=4, spanX=1, spanY=1
+05-16 14:23:31.327 12238 12238 D IconCustomizer: Content Ratio = 1.0194175
+05-16 14:23:31.327 12238 12238 D IconCustomizer: drawableToBitmap: sourceWidth=103, sourceHeight=103, ratio=1.0194175
+05-16 14:23:31.332 32259 32259 D ControlCenterHeaderExpandController: onExpansionChanged: progress =  0.0
+05-16 14:23:31.339 32259 32259 D ControlCenterHeaderExpandController: onExpansionChanged: progress =  0.0
+05-16 14:23:31.342 12238 12238 W Bitmap  : Called getDensity() on a recycle()'d bitmap! This is undefined behavior!
+05-16 14:23:31.346 32259 32259 D ControlCenterHeaderExpandController: onExpansionChanged: progress =  0.0
+05-16 14:23:31.351  2431  2719 I MiuiNetworkPolicy: updateUidState uid = 99910304, uidState = 19
+05-16 14:23:31.356  2431  2719 I MiuiNetworkPolicy: updateUidState uid = 99910304, uidState = 11
+05-16 14:23:31.357  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=460439562, oldVsyncId=460439239, layerName=StatusBar#59904
+05-16 14:23:31.357  1272  1272 E MI-SF   : MiSurfaceFlingerImpl.cpp.vsyncId=460439562, mIsContainTask1=0, mIsContainTaskOther=0
+05-16 14:23:31.357 32259 32259 D ControlCenterHeaderExpandController: onExpansionChanged: progress =  0.0
+05-16 14:23:31.358  1272  1272 E SurfaceFlinger: MiSurfaceFlingerStub isAnimationScene
+05-16 14:23:31.358   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.358   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.358   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.362 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~BB5fQvGaNO19WOExjiAaQA==/com.hungrybolo.remotemouseandroid-YFzU2ypFBRFILx4N9kk6nw==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:31.378   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.379   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.379   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.392   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.392   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.392   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.392 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~SsZLd6a_hVBp3w55p6i1vg==/com.miui.gallery-72xTvE8yDnyqdwzQt2khbA==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:31.406   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.406   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.406   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.418   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.418   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.418   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.429   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.429   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.429   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.438   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.438   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.438   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.449   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.449   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.449   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.458   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.458   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.458   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.468   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.468   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.468   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.478   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.478   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.478   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.486 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~wcubn07dC9uT60C7Zz1IOA==/app.tv.telinha-YcX1mcgJRT9OTGiWML63FQ==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:31.488   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.488   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.488   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.501   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.501   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.501   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.507 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~fnTGTKulEvyYUBGMUc1bIA==/com.azure.authenticator-KxGq6_P3xljn47p2uAb85Q==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:31.516   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.516   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.516   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.528   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.529   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.529   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.539  3201  4535 D IpClient/wlan0: addressUpdated: 2804:29b8:5099:a8d1:ac78:fdff:fe50:e419/64 on ifindex 36 flags 0x00000100 scope 0
+05-16 14:23:31.540  3201  4535 D IpClient/wlan0: addressUpdated: 2804:29b8:5099:a8d1:2ec3:12f3:4791:b404/64 on ifindex 36 flags 0x00000001 scope 0
+05-16 14:23:31.540  3201  4535 W AlarmManager: Unrecognized alarm listener com.android.networkstack.android.net.ip.IpClientLinkObserver$Dhcp6PdPreferredPrefixAlarmListener@3b85266
+05-16 14:23:31.541 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~JJbLPJahkcrXN3riEhQNIA==/com.udemy.android-5La_qrq4wljHtiAZqygkDQ==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:31.542  3201  4535 D ApfFilter: (wlan0): Ignoring RA RA fe80::2223:51ff:fec6:81f4 -> ff02::1 30s 2804:29b8:5099:a8d1::/64 172800s/172800s DNS 10s 2804:29b8:1000:1::17 2804:29b8:1000:1::18  which matches RA fe80::2223:51ff:fec6:81f4 -> ff02::1 30s 2804:29b8:5099:a8d1::/64 172800s/172800s DNS 10s 2804:29b8:1000:1::17 2804:29b8:1000:1::18 
+05-16 14:23:31.543   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.543   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.543   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.557   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.557   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.557   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.575   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.575   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.575   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.578 18028 18028 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~U5xTS5_fGoM9CvZyB5tzOA==/com.google.android.apps.adm-ma6Kxvdwndt9fhUeqErdTQ==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:31.590  3201  4535 D IpClient/wlan0: addressUpdated: 2804:29b8:5099:a8d1:ac78:fdff:fe50:e419/64 on ifindex 36 flags 0x00000100 scope 0
+05-16 14:23:31.590  3201  4535 D IpClient/wlan0: addressUpdated: 2804:29b8:5099:a8d1:2ec3:12f3:4791:b404/64 on ifindex 36 flags 0x00000001 scope 0
+05-16 14:23:31.591  3201  4535 W AlarmManager: Unrecognized alarm listener com.android.networkstack.android.net.ip.IpClientLinkObserver$Dhcp6PdPreferredPrefixAlarmListener@3b85266
+05-16 14:23:31.591   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.591   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.591   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.592  3201  4535 D ApfFilter: (wlan0): Ignoring RA RA fe80::2223:51ff:fec6:81f4 -> ff02::1 30s 2804:29b8:5099:a8d1::/64 172800s/172800s DNS 10s 2804:29b8:1000:1::17 2804:29b8:1000:1::18  which matches RA fe80::2223:51ff:fec6:81f4 -> ff02::1 30s 2804:29b8:5099:a8d1::/64 172800s/172800s DNS 10s 2804:29b8:1000:1::17 2804:29b8:1000:1::18 
+05-16 14:23:31.603   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.603   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.603   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.612 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~M8fWMrVjIJxgbSfXZo6Wag==/de.tutao.tutanota-RS-Pe0IEoKAFKeTC7Lbyug==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:31.617   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.617   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.617   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.631   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.631   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.631   805   805 E KeyMasterHalDevice: ret: -28
+05-16 14:23:31.645 18028 18030 I artd    : GetBestInfo: odex next to the dex file (/data/app/~~LSRR-P0-MIWjKZAN8nYeiQ==/com.topgamesinc.evony-UYGdKjcO4DeA13JeDGlcIg==/oat/arm64/base.odex) is kOatUpToDate with filter 'speed-profile' executable 'false'
+05-16 14:23:31.648   805   805 E KeymasterUtils: rsp_header->status: -28
+05-16 14:23:31.648   805   805 E KeyMasterHalDevice: abort_operation
+05-16 14:23:31.648   805   805 E KeyMasterHalDevice: ret: -28

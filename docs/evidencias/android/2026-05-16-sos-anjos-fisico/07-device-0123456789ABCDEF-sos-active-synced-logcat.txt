@@ -1,0 +1,790 @@
+--------- beginning of main
+05-17 01:01:39.259  1116  5303 I FrewleTileCacheManagerV: (REDACTED) Downloaded %d tiles
+05-17 01:01:39.472  1116  1122 I zygote  : Do partial code cache collection, code=51KB, data=59KB
+05-17 01:01:39.474  1116  1122 I zygote  : After code cache collection, code=51KB, data=58KB
+05-17 01:01:39.474  1116  1122 I zygote  : Increasing code cache capacity to 256KB
+05-17 01:01:39.478  1116  1122 I zygote  : Compiler allocated 4MB to compile java.lang.Object gtax.a(gtac)
+05-17 01:01:39.623  1116  5303 I FrewleTileCacheManagerV: (REDACTED) Fetched %d AP models from cache
+05-17 01:01:39.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:39.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:39.741   602   794 I LocationManagerService: remove 75b9fdf
+05-17 01:01:39.743   602   794 I GnssLocationProvider: WakeLock acquired by sendMessage(SET_REQUEST, 0, com.android.server.location.GnssLocationProvider$GpsRequest@dc0ba06)
+05-17 01:01:39.745   602   641 I GnssLocationProvider: WakeLock released by handleMessage(SET_REQUEST, 0, com.android.server.location.GnssLocationProvider$GpsRequest@dc0ba06)
+05-17 01:01:40.302  5491  5491 W app_process: Could not reserve sentinel fault page
+05-17 01:01:40.562  5491  5491 I app_process: The ClassLoaderContext is a special shared library.
+05-17 01:01:40.647  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2684994, downTime=2684994, deviceId=1, source=0x1002 }
+05-17 01:01:40.648   602   980 I PowerWrap: PowerHal_TouchBoost
+05-17 01:01:40.649   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:15, data:10000
+05-17 01:01:40.649   253   267 I libPerfService: 15: legacy set freq: 1105000 -1
+05-17 01:01:40.650   253   267 I libPerfService: 15: legacy set: 3 -1
+05-17 01:01:40.655  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2684994, downTime=2684994, deviceId=1, source=0x1002 }
+05-17 01:01:40.675  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685027, downTime=2685027, deviceId=1, source=0x1002 }
+05-17 01:01:40.676   257  1005 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.50 dur=2016.19 max=2016.19 min=2016.19
+05-17 01:01:40.689  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685041, downTime=2685041, deviceId=1, source=0x1002 }
+05-17 01:01:40.690   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=4.36 dur=2294.51 max=2009.21 min=20.22
+05-17 01:01:40.691   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:6.261337,dur:2395.65,max:2009.40,min:19.16
+05-17 01:01:40.708  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685060, downTime=2685060, deviceId=1, source=0x1002 }
+05-17 01:01:40.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:40.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:40.730  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685081, downTime=2685081, deviceId=1, source=0x1002 }
+05-17 01:01:40.749  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685101, downTime=2685101, deviceId=1, source=0x1002 }
+05-17 01:01:40.770  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685122, downTime=2685122, deviceId=1, source=0x1002 }
+05-17 01:01:40.790  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685142, downTime=2685142, deviceId=1, source=0x1002 }
+05-17 01:01:40.811  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685163, downTime=2685163, deviceId=1, source=0x1002 }
+05-17 01:01:40.832  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685184, downTime=2685184, deviceId=1, source=0x1002 }
+05-17 01:01:40.852  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685204, downTime=2685204, deviceId=1, source=0x1002 }
+05-17 01:01:40.872  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685224, downTime=2685224, deviceId=1, source=0x1002 }
+05-17 01:01:40.893  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685245, downTime=2685245, deviceId=1, source=0x1002 }
+05-17 01:01:40.914  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685265, downTime=2685265, deviceId=1, source=0x1002 }
+05-17 01:01:40.934  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685286, downTime=2685286, deviceId=1, source=0x1002 }
+05-17 01:01:40.955  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685307, downTime=2685307, deviceId=1, source=0x1002 }
+05-17 01:01:40.975  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685327, downTime=2685327, deviceId=1, source=0x1002 }
+05-17 01:01:40.995  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685347, downTime=2685347, deviceId=1, source=0x1002 }
+05-17 01:01:41.016  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685368, downTime=2685368, deviceId=1, source=0x1002 }
+05-17 01:01:41.037  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685388, downTime=2685388, deviceId=1, source=0x1002 }
+05-17 01:01:41.057  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685409, downTime=2685409, deviceId=1, source=0x1002 }
+05-17 01:01:41.078  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685430, downTime=2685430, deviceId=1, source=0x1002 }
+05-17 01:01:41.098  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685450, downTime=2685450, deviceId=1, source=0x1002 }
+05-17 01:01:41.119  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685470, downTime=2685470, deviceId=1, source=0x1002 }
+05-17 01:01:41.139  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685491, downTime=2685491, deviceId=1, source=0x1002 }
+05-17 01:01:41.159  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685511, downTime=2685511, deviceId=1, source=0x1002 }
+05-17 01:01:41.180  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685532, downTime=2685532, deviceId=1, source=0x1002 }
+05-17 01:01:41.201  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685553, downTime=2685553, deviceId=1, source=0x1002 }
+05-17 01:01:41.221  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685573, downTime=2685573, deviceId=1, source=0x1002 }
+05-17 01:01:41.242  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685593, downTime=2685593, deviceId=1, source=0x1002 }
+05-17 01:01:41.262  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685614, downTime=2685614, deviceId=1, source=0x1002 }
+05-17 01:01:41.283  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685635, downTime=2685635, deviceId=1, source=0x1002 }
+05-17 01:01:41.303  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685655, downTime=2685655, deviceId=1, source=0x1002 }
+05-17 01:01:41.324  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685676, downTime=2685676, deviceId=1, source=0x1002 }
+05-17 01:01:41.344  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685696, downTime=2685696, deviceId=1, source=0x1002 }
+05-17 01:01:41.365  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685717, downTime=2685717, deviceId=1, source=0x1002 }
+05-17 01:01:41.385  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685737, downTime=2685737, deviceId=1, source=0x1002 }
+05-17 01:01:41.406  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685758, downTime=2685758, deviceId=1, source=0x1002 }
+05-17 01:01:41.426  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685778, downTime=2685778, deviceId=1, source=0x1002 }
+05-17 01:01:41.447  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685799, downTime=2685799, deviceId=1, source=0x1002 }
+05-17 01:01:41.467  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685819, downTime=2685819, deviceId=1, source=0x1002 }
+05-17 01:01:41.488  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685840, downTime=2685840, deviceId=1, source=0x1002 }
+05-17 01:01:41.508  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685860, downTime=2685860, deviceId=1, source=0x1002 }
+05-17 01:01:41.529  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685881, downTime=2685881, deviceId=1, source=0x1002 }
+05-17 01:01:41.549  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685901, downTime=2685901, deviceId=1, source=0x1002 }
+05-17 01:01:41.570  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685922, downTime=2685922, deviceId=1, source=0x1002 }
+05-17 01:01:41.590  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685942, downTime=2685942, deviceId=1, source=0x1002 }
+05-17 01:01:41.611  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685963, downTime=2685963, deviceId=1, source=0x1002 }
+05-17 01:01:41.631  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2685983, downTime=2685983, deviceId=1, source=0x1002 }
+05-17 01:01:41.652  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686004, downTime=2686004, deviceId=1, source=0x1002 }
+05-17 01:01:41.672  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686024, downTime=2686024, deviceId=1, source=0x1002 }
+05-17 01:01:41.693  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686045, downTime=2686045, deviceId=1, source=0x1002 }
+05-17 01:01:41.713  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686065, downTime=2686065, deviceId=1, source=0x1002 }
+05-17 01:01:41.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:41.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:41.734  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686086, downTime=2686086, deviceId=1, source=0x1002 }
+05-17 01:01:41.754  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686106, downTime=2686106, deviceId=1, source=0x1002 }
+05-17 01:01:41.775  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686127, downTime=2686127, deviceId=1, source=0x1002 }
+05-17 01:01:41.795  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686147, downTime=2686147, deviceId=1, source=0x1002 }
+05-17 01:01:41.816  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686168, downTime=2686168, deviceId=1, source=0x1002 }
+05-17 01:01:41.836  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686188, downTime=2686188, deviceId=1, source=0x1002 }
+05-17 01:01:41.857  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686209, downTime=2686209, deviceId=1, source=0x1002 }
+05-17 01:01:41.877  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686229, downTime=2686229, deviceId=1, source=0x1002 }
+05-17 01:01:41.898  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686250, downTime=2686250, deviceId=1, source=0x1002 }
+05-17 01:01:41.918  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686270, downTime=2686270, deviceId=1, source=0x1002 }
+05-17 01:01:41.939  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686291, downTime=2686291, deviceId=1, source=0x1002 }
+05-17 01:01:41.959  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686311, downTime=2686311, deviceId=1, source=0x1002 }
+05-17 01:01:41.980  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686332, downTime=2686332, deviceId=1, source=0x1002 }
+05-17 01:01:42.000  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686352, downTime=2686352, deviceId=1, source=0x1002 }
+05-17 01:01:42.021  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686373, downTime=2686373, deviceId=1, source=0x1002 }
+05-17 01:01:42.041  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686393, downTime=2686393, deviceId=1, source=0x1002 }
+05-17 01:01:42.062  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686414, downTime=2686414, deviceId=1, source=0x1002 }
+05-17 01:01:42.083  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686434, downTime=2686434, deviceId=1, source=0x1002 }
+05-17 01:01:42.103  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686455, downTime=2686455, deviceId=1, source=0x1002 }
+05-17 01:01:42.123  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686475, downTime=2686475, deviceId=1, source=0x1002 }
+05-17 01:01:42.144  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686496, downTime=2686496, deviceId=1, source=0x1002 }
+05-17 01:01:42.164  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686516, downTime=2686516, deviceId=1, source=0x1002 }
+05-17 01:01:42.185  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686537, downTime=2686537, deviceId=1, source=0x1002 }
+05-17 01:01:42.205  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686557, downTime=2686557, deviceId=1, source=0x1002 }
+05-17 01:01:42.226  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686578, downTime=2686578, deviceId=1, source=0x1002 }
+05-17 01:01:42.246  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686598, downTime=2686598, deviceId=1, source=0x1002 }
+05-17 01:01:42.267  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686619, downTime=2686619, deviceId=1, source=0x1002 }
+05-17 01:01:42.287  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686639, downTime=2686639, deviceId=1, source=0x1002 }
+05-17 01:01:42.308  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686660, downTime=2686660, deviceId=1, source=0x1002 }
+05-17 01:01:42.328  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686680, downTime=2686680, deviceId=1, source=0x1002 }
+05-17 01:01:42.349  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686701, downTime=2686701, deviceId=1, source=0x1002 }
+05-17 01:01:42.370  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686721, downTime=2686721, deviceId=1, source=0x1002 }
+05-17 01:01:42.390  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686742, downTime=2686742, deviceId=1, source=0x1002 }
+05-17 01:01:42.411  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686762, downTime=2686762, deviceId=1, source=0x1002 }
+05-17 01:01:42.431  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686783, downTime=2686783, deviceId=1, source=0x1002 }
+05-17 01:01:42.451  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686803, downTime=2686803, deviceId=1, source=0x1002 }
+05-17 01:01:42.472  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686824, downTime=2686824, deviceId=1, source=0x1002 }
+05-17 01:01:42.492  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686844, downTime=2686844, deviceId=1, source=0x1002 }
+05-17 01:01:42.513  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686865, downTime=2686865, deviceId=1, source=0x1002 }
+05-17 01:01:42.533  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686885, downTime=2686885, deviceId=1, source=0x1002 }
+05-17 01:01:42.554  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686906, downTime=2686906, deviceId=1, source=0x1002 }
+05-17 01:01:42.575  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686926, downTime=2686926, deviceId=1, source=0x1002 }
+05-17 01:01:42.595  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686947, downTime=2686947, deviceId=1, source=0x1002 }
+05-17 01:01:42.616  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686967, downTime=2686967, deviceId=1, source=0x1002 }
+05-17 01:01:42.636  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2686988, downTime=2686988, deviceId=1, source=0x1002 }
+05-17 01:01:42.657  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687009, downTime=2687009, deviceId=1, source=0x1002 }
+05-17 01:01:42.677  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687029, downTime=2687029, deviceId=1, source=0x1002 }
+05-17 01:01:42.679   257  1005 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.50 dur=2002.93 max=2002.93 min=2002.93
+05-17 01:01:42.698  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687050, downTime=2687050, deviceId=1, source=0x1002 }
+05-17 01:01:42.719  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687070, downTime=2687070, deviceId=1, source=0x1002 }
+05-17 01:01:42.719   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=0.49 dur=2028.84 max=2028.84 min=2028.84
+05-17 01:01:42.720   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:0.492909,dur:2028.77,max:2028.77,min:2028.77
+05-17 01:01:42.726   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:42.726   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:42.739  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687090, downTime=2687090, deviceId=1, source=0x1002 }
+05-17 01:01:42.759  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687111, downTime=2687111, deviceId=1, source=0x1002 }
+05-17 01:01:42.779  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687131, downTime=2687131, deviceId=1, source=0x1002 }
+05-17 01:01:42.800  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687152, downTime=2687152, deviceId=1, source=0x1002 }
+05-17 01:01:42.821  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687172, downTime=2687172, deviceId=1, source=0x1002 }
+05-17 01:01:42.841  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687193, downTime=2687193, deviceId=1, source=0x1002 }
+05-17 01:01:42.862  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687213, downTime=2687213, deviceId=1, source=0x1002 }
+05-17 01:01:42.882  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687234, downTime=2687234, deviceId=1, source=0x1002 }
+05-17 01:01:42.903  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687254, downTime=2687254, deviceId=1, source=0x1002 }
+05-17 01:01:42.923  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687275, downTime=2687275, deviceId=1, source=0x1002 }
+05-17 01:01:42.944  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687296, downTime=2687296, deviceId=1, source=0x1002 }
+05-17 01:01:42.964  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687316, downTime=2687316, deviceId=1, source=0x1002 }
+05-17 01:01:42.985  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687337, downTime=2687337, deviceId=1, source=0x1002 }
+05-17 01:01:43.005  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687357, downTime=2687357, deviceId=1, source=0x1002 }
+05-17 01:01:43.026  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687378, downTime=2687378, deviceId=1, source=0x1002 }
+05-17 01:01:43.046  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687398, downTime=2687398, deviceId=1, source=0x1002 }
+05-17 01:01:43.067  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687419, downTime=2687419, deviceId=1, source=0x1002 }
+05-17 01:01:43.087  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687439, downTime=2687439, deviceId=1, source=0x1002 }
+05-17 01:01:43.108  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687460, downTime=2687460, deviceId=1, source=0x1002 }
+05-17 01:01:43.128  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687480, downTime=2687480, deviceId=1, source=0x1002 }
+05-17 01:01:43.149  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687501, downTime=2687501, deviceId=1, source=0x1002 }
+05-17 01:01:43.169  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687521, downTime=2687521, deviceId=1, source=0x1002 }
+05-17 01:01:43.190  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687542, downTime=2687542, deviceId=1, source=0x1002 }
+05-17 01:01:43.210  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687562, downTime=2687562, deviceId=1, source=0x1002 }
+05-17 01:01:43.231  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_MOVE, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687583, downTime=2687583, deviceId=1, source=0x1002 }
+05-17 01:01:43.251  5491  5491 I Input   : injectMotionEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=360.0, y[0]=610.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2687603, downTime=2687603, deviceId=1, source=0x1002 }
+05-17 01:01:43.252   602   794 I PowerWrap: PowerHal_TouchBoost
+05-17 01:01:43.253   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:15, data:0
+05-17 01:01:43.253   253   267 I libPerfService: 15: legacy set: -1 -1
+05-17 01:01:43.253   253   267 I libPerfService: 15: legacy set freq: -1 -1
+05-17 01:01:43.686   257  1005 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.99 dur=1007.35 max=1007.35 min=1007.35
+05-17 01:01:43.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:43.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:44.748   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:44.748   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:45.746   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:45.747   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:46.677   257  1005 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.33 dur=2990.59 max=2990.59 min=2990.59
+05-17 01:01:46.698   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=0.50 dur=3978.67 max=2992.68 min=985.99
+05-17 01:01:46.698   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:0.502694,dur:3978.57,max:2992.88,min:985.68
+05-17 01:01:46.749   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 01:01:46.755   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:46.755   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:47.683   257  1005 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.99 dur=1006.40 max=1006.40 min=1006.40
+05-17 01:01:47.707   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=0.99 dur=1009.00 max=1009.00 min=1009.00
+05-17 01:01:47.707   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:0.991080,dur:1009.00,max:1009.00,min:1009.00
+05-17 01:01:47.749   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:47.749   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:48.747   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:48.747   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:49.748   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:49.748   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:50.735   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:50.735   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:51.743   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:51.743   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:52.746   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:52.746   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:53.747   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:53.747   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:54.746   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:54.747   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:55.220   257  1005 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.13 dur=7536.50 max=7536.50 min=7536.50
+05-17 01:01:55.232   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=0.13 dur=7524.89 max=7524.89 min=7524.89
+05-17 01:01:55.232   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:0.132894,dur:7524.77,max:7524.77,min:7524.77
+05-17 01:01:55.742   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:55.742   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:55.774  5509  5509 I BufferQueue: [unnamed-5509-0](this:0xa9abf000,id:0,api:0,p:-1,c:-1) BufferQueue core=(5509:screencap)
+05-17 01:01:55.784  5509  5509 E DumpTunnel: open libgui_ext failed
+05-17 01:01:55.784  5509  5509 E DumpTunnel: finding regDump() failed
+05-17 01:01:55.784  5509  5509 I BufferQueueConsumer: [unnamed-5509-0](this:0xa9abf000,id:0,api:0,p:-1,c:5509) connect(C): consumer=(5509:screencap) controlledByApp=false
+05-17 01:01:55.784  5509  5509 I BufferQueueConsumer: [unnamed-5509-0](this:0xa9abf000,id:0,api:0,p:-1,c:5509) setConsumerName: unnamed-5509-0
+05-17 01:01:55.784  5509  5509 I BufferQueueConsumer: [ScreenshotClient](this:0xa9abf000,id:0,api:0,p:-1,c:5509) setConsumerName: ScreenshotClient
+05-17 01:01:55.785  5509  5509 I BufferQueueProducer: [ScreenshotClient](this:0xa9abf000,id:0,api:1,p:257,c:5509) connect(P): api=1 producer=(257:/system/bin/surfaceflinger) producerControlledByApp=false
+05-17 01:01:55.819   253   336 I [Gralloc]: usage1: 0x333, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 01:01:55.825   257   257 I SurfaceFlinger: screenshot (br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0)
+05-17 01:01:55.826   257   257 I SurfaceFlinger: screenshot (com.baidu.map.location/com.baidu.map.location.ui.ConfirmAlertActivity1#1)
+05-17 01:01:55.826   257   257 I SurfaceFlinger: screenshot (DimLayerController/Stack=0#0)
+05-17 01:01:55.826   257   257 I SurfaceFlinger: screenshot (com.baidu.map.location/com.baidu.map.location.ui.ConfirmAlertActivity1#0)
+05-17 01:01:55.826   257   257 I SurfaceFlinger: screenshot (StatusBar#0)
+05-17 01:01:55.826   257   257 I SurfaceFlinger: screenshot (NavigationBar#0)
+05-17 01:01:55.837  5509  5509 I BufferQueueProducer: [ScreenshotClient](this:0xa9abf000,id:0,api:1,p:257,c:5509) disconnect(P): api 1
+05-17 01:01:55.837  5509  5509 I BufferQueueConsumer: [ScreenshotClient](this:0xa9abf000,id:0,api:1,p:-1,c:5509) getReleasedBuffers: returning mask 0xffffffffffffffff
+05-17 01:01:56.700   257  1005 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.68 dur=1480.06 max=1480.06 min=1480.06
+05-17 01:01:56.723   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=0.67 dur=1490.84 max=1490.84 min=1490.84
+05-17 01:01:56.723   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:0.670578,dur:1491.25,max:1491.25,min:1491.25
+05-17 01:01:56.733   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:56.733   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:56.764   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 01:01:57.707   257  1005 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.99 dur=1007.54 max=1007.54 min=1007.54
+05-17 01:01:57.744   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:57.744   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:58.247   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=1.31 dur=1524.14 max=993.22 min=530.92
+05-17 01:01:58.247   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:1.312575,dur:1523.72,max:992.72,min:531.00
+05-17 01:01:58.726   257  1005 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=1.96 dur=1018.62 max=532.37 min=486.25
+05-17 01:01:58.760   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:58.760   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:01:59.748   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:01:59.748   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:00.052   257  1005 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.75 dur=1326.47 max=1326.47 min=1326.47
+05-17 01:02:00.068   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=1.10 dur=1821.68 max=1326.85 min=494.83
+05-17 01:02:00.068   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:1.097887,dur:1821.68,max:1326.93,min:494.75
+05-17 01:02:00.745   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:00.745   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:01.746   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:01.746   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:01.921  1235  4986 I System.out: port:443
+05-17 01:02:02.724   257  1005 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.75 dur=2671.91 max=2647.90 min=24.01
+05-17 01:02:02.740   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=0.75 dur=2671.69 max=2647.26 min=24.43
+05-17 01:02:02.740   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:0.748567,dur:2671.77,max:2647.47,min:24.30
+05-17 01:02:02.760   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:02.761   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:03.748   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:03.749   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:04.734   257  1005 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.50 dur=2009.83 max=2009.83 min=2009.83
+05-17 01:02:04.749   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=0.50 dur=2008.58 max=2008.58 min=2008.58
+05-17 01:02:04.749   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:0.497884,dur:2008.50,max:2008.50,min:2008.50
+05-17 01:02:04.756   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:04.756   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:05.731   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:05.731   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:06.741   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:06.742   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:06.780   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 01:02:07.299   257  1005 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.39 dur=2564.78 max=2564.78 min=2564.78
+05-17 01:02:07.312   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=0.39 dur=2563.73 max=2563.73 min=2563.73
+05-17 01:02:07.313   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:0.390056,dur:2563.73,max:2563.73,min:2563.73
+05-17 01:02:07.763   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:07.763   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:08.739   257  1005 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=1.39 dur=1440.00 max=1006.58 min=433.43
+05-17 01:02:08.750   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=1.39 dur=1437.99 max=1005.58 min=432.41
+05-17 01:02:08.751   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:1.390628,dur:1438.20,max:1005.88,min:432.32
+05-17 01:02:08.766   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:08.766   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:09.749   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:09.750   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:10.319   257  1005 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.63 dur=1579.78 max=1579.78 min=1579.78
+05-17 01:02:10.331   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=0.63 dur=1581.00 max=1581.00 min=1581.00
+05-17 01:02:10.331   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:0.632592,dur:1580.80,max:1580.80,min:1580.80
+05-17 01:02:10.537   602   611 I zygote  : Background concurrent copying GC freed 133977(5MB) AllocSpace objects, 3(60KB) LOS objects, 34% free, 11MB/17MB, paused 7.681ms total 210.604ms
+05-17 01:02:10.728   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:10.728   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:11.750   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:11.750   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:12.743   257  1005 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.41 dur=2424.26 max=2424.26 min=2424.26
+05-17 01:02:12.751   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:12.751   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:12.763   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=0.41 dur=2432.09 max=2432.09 min=2432.09
+05-17 01:02:12.764   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:0.411169,dur:2432.09,max:2432.09,min:2432.09
+05-17 01:02:13.766   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:13.766   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:14.749   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:14.749   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:15.689   257  1005 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.68 dur=2946.21 max=1955.51 min=990.70
+05-17 01:02:15.701   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=0.68 dur=2937.80 max=1948.51 min=989.29
+05-17 01:02:15.701   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:0.680781,dur:2937.80,max:1948.64,min:989.16
+05-17 01:02:15.748   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:15.749   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:16.747   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:16.747   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:16.792   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 01:02:17.748   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:17.748   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:18.747   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:18.748   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:19.739   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:19.739   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:20.338  5519  5519 W app_process: Could not reserve sentinel fault page
+05-17 01:02:20.572  5519  5519 I app_process: The ClassLoaderContext is a special shared library.
+05-17 01:02:20.651  5519  5519 I Input   : injectMotionEvent: MotionEvent { action=ACTION_DOWN, actionButton=0, id[0]=0, x[0]=581.0, y[0]=939.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2724998, downTime=2724998, deviceId=1, source=0x1002 }
+05-17 01:02:20.653   602   980 I PowerWrap: PowerHal_TouchBoost
+05-17 01:02:20.653   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:15, data:10000
+05-17 01:02:20.654   253   267 I libPerfService: 15: legacy set freq: 1105000 -1
+05-17 01:02:20.654   253   267 I libPerfService: 15: legacy set: 3 -1
+05-17 01:02:20.658  5519  5519 I Input   : injectMotionEvent: MotionEvent { action=ACTION_UP, actionButton=0, id[0]=0, x[0]=581.0, y[0]=939.0, toolType[0]=TOOL_TYPE_UNKNOWN, buttonState=0, metaState=0, flags=0x0, edgeFlags=0x0, pointerCount=1, historySize=0, eventTime=2724998, downTime=2724998, deviceId=1, source=0x1002 }
+05-17 01:02:20.660   602   980 I PowerWrap: PowerHal_TouchBoost
+05-17 01:02:20.660   253  1432 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:15, data:0
+05-17 01:02:20.660   253   267 I libPerfService: 15: legacy set: -1 -1
+05-17 01:02:20.661   253   267 I libPerfService: 15: legacy set freq: -1 -1
+05-17 01:02:20.673   257  1005 I BufferQueueProducer: [com.baidu.map.location/com.baidu.map.location.ui.ConfirmAlertActivity1#0](this:0xb247c000,id:134,api:1,p:1341,c:257) queueBuffer: fps=0.26 dur=42339.29 max=42133.49 min=15.80
+05-17 01:02:20.679   253  1432 I vendor.mediatek.hardware.power@1.1-impl: mtkCusPowerHint hint:0, data:268435455
+05-17 01:02:20.680   253   267 I powerd  : [powerd_req] POWER_MSG_MTK_CUS_HINT: hint:0, hdl:36, data:268435455
+05-17 01:02:20.680   253   267 I libPerfService: perfCusUserScnEnable - handle:36
+05-17 01:02:20.680   253   267 I libPerfService: 36: legacy set: 2 -1
+05-17 01:02:20.693   257   257 I BufferQueueProducer: [FrameBufferSurface_0](this:0xb407e000,id:0,api:1,p:257,c:257) queueBuffer: fps=0.40 dur=4991.72 max=4971.05 min=20.67
+05-17 01:02:20.693   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:0.400651,dur:4991.88,max:4971.34,min:20.54
+05-17 01:02:20.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:20.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:20.926   253  1432 I vendor.mediatek.hardware.power@1.1-impl: mtkCusPowerHint hint:0, data:0
+05-17 01:02:20.926   253   267 I powerd  : [powerd_req] POWER_MSG_MTK_CUS_HINT: hint:0, hdl:36, data:0
+05-17 01:02:20.926   253   267 I libPerfService: 36: legacy set: -1 -1
+05-17 01:02:21.066   253  1432 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:2000
+05-17 01:02:21.067   253   267 I libPerfService: 11: legacy set freq: 1300000 -1
+05-17 01:02:21.067   253   267 I libPerfService: 11: legacy set: 4 -1
+05-17 01:02:21.075  1341  5470 E [EGL-ERROR]: __egl_platform_cancel_buffers:644: surface->num_buffers(4)
+05-17 01:02:21.076   257  1005 I BufferQueueProducer: [com.baidu.map.location/com.baidu.map.location.ui.ConfirmAlertActivity1#0](this:0xb247c000,id:134,api:1,p:1341,c:257) disconnect(P): api 1
+05-17 01:02:21.076   257  1005 I BufferQueueConsumer: [com.baidu.map.location/com.baidu.map.location.ui.ConfirmAlertActivity1#0](this:0xb247c000,id:134,api:1,p:-1,c:257) getReleasedBuffers: returning mask 0xffffffffffffffff
+05-17 01:02:21.092   257   257 I BufferQueueConsumer: [com.baidu.map.location/com.baidu.map.location.ui.ConfirmAlertActivity1#0](this:0xb247c000,id:134,api:1,p:-1,c:-1) disconnect(C)
+05-17 01:02:21.095   257   257 I BufferQueue: [com.baidu.map.location/com.baidu.map.location.ui.ConfirmAlertActivity1#0](this:0xb247c000,id:134,api:1,p:-1,c:-1) ~BufferQueueCore
+--------- beginning of system
+05-17 01:02:21.102   602   655 I WindowManager: Focus moving from Window{11805a5 u0 com.baidu.map.location/com.baidu.map.location.ui.ConfirmAlertActivity1} to null
+05-17 01:02:21.105   253  1432 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:2000
+05-17 01:02:21.109   253  1432 I vendor.mediatek.hardware.power@1.1-impl: notifyAppState pack:br.com.sinalseguro.app, act:br.com.sinalseguro.app.MainActivity, pid:5173, state:1
+05-17 01:02:21.110   253   267 I libPerfService: [perfNotifyAppState] foreground:br.com.sinalseguro.app, pid:5173
+05-17 01:02:21.110   253   267 E libPerfService: Could not open '/proc/driver/thermal/ta_fg_pid'
+05-17 01:02:21.110   253   267 E libPerfService: error : 2, No such file or directory
+05-17 01:02:21.110   253   267 E libPerfService: Could not open '/sys/module/ged/parameters/gx_top_app_pid'
+05-17 01:02:21.110   253   267 E libPerfService: error : 2, No such file or directory
+05-17 01:02:21.110   253   267 I libPerfService: perfUserGetCapability - cmd:7, id:0, val:-1
+05-17 01:02:21.113   602   655 I WindowManager: Focus moving from null to Window{4c4ca24 u0 br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity}
+05-17 01:02:21.134   602   980 I BufferQueue: [unnamed-602-19](this:0x96cd6000,id:19,api:0,p:-1,c:-1) BufferQueue core=(602:system_server)
+05-17 01:02:21.135   602   980 E DumpTunnel: finding regDump() failed
+05-17 01:02:21.135   602   980 I BufferQueueConsumer: [unnamed-602-19](this:0x96cd6000,id:19,api:0,p:-1,c:602) connect(C): consumer=(602:system_server) controlledByApp=true
+05-17 01:02:21.135   602   980 I BufferQueueConsumer: [unnamed-602-19](this:0x96cd6000,id:19,api:0,p:-1,c:602) setConsumerName: unnamed-602-19
+05-17 01:02:21.136   602   980 I BufferQueueProducer: [unnamed-602-19](this:0x96cd6000,id:19,api:1,p:257,c:602) connect(P): api=1 producer=(257:/system/bin/surfaceflinger) producerControlledByApp=false
+05-17 01:02:21.136   253  1432 I [Gralloc]: usage1: 0x333, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 01:02:21.143   257   257 I SurfaceFlinger: screenshot (br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0)
+05-17 01:02:21.143   257   257 I SurfaceFlinger: screenshot (com.baidu.map.location/com.baidu.map.location.ui.ConfirmAlertActivity1#1)
+05-17 01:02:21.151   602   980 I BufferQueueProducer: [unnamed-602-19](this:0x96cd6000,id:19,api:1,p:257,c:602) disconnect(P): api 1
+05-17 01:02:21.151   602   980 I BufferQueueConsumer: [unnamed-602-19](this:0x96cd6000,id:19,api:1,p:-1,c:602) getReleasedBuffers: returning mask 0xffffffffffffffff
+05-17 01:02:21.151   602   980 I BufferQueueConsumer: [unnamed-602-19](this:0x96cd6000,id:19,api:1,p:-1,c:-1) disconnect(C)
+05-17 01:02:21.151   602   980 I BufferQueue: [unnamed-602-19](this:0x96cd6000,id:19,api:1,p:-1,c:-1) ~BufferQueueCore
+05-17 01:02:21.157   253   253 I HwBinder:253_1: type=1400 audit(0.0:184): avc: denied { read } for name="4473-0" dev="debugfs" ino=118303 scontext=u:r:merged_hal_service:s0 tcontext=u:object_r:debugfs:s0 tclass=file permissive=1
+05-17 01:02:21.157   253   253 I HwBinder:253_1: type=1400 audit(0.0:185): avc: denied { open } for path="/sys/kernel/debug/ion/clients/4473-0" dev="debugfs" ino=118303 scontext=u:r:merged_hal_service:s0 tcontext=u:object_r:debugfs:s0 tclass=file permissive=1
+05-17 01:02:21.157   253   253 I HwBinder:253_1: type=1400 audit(0.0:186): avc: denied { getattr } for path="/sys/kernel/debug/ion/clients/4473-0" dev="debugfs" ino=118303 scontext=u:r:merged_hal_service:s0 tcontext=u:object_r:debugfs:s0 tclass=file permissive=1
+05-17 01:02:21.159  5173  5173 W unknown:BridgelessReact: ReactHost{0}.onHostResume(activity)
+05-17 01:02:21.159  5173  5173 W unknown:BridgelessReact: ReactContext.onHostResume()
+05-17 01:02:21.175  1341  5470 E [EGL-ERROR]: __egl_platform_cancel_buffers:644: surface->num_buffers(4)
+05-17 01:02:21.178   257  1005 I BufferQueueProducer: [com.baidu.map.location/com.baidu.map.location.ui.ConfirmAlertActivity1#1](this:0xafa30000,id:135,api:1,p:1341,c:257) disconnect(P): api 1
+05-17 01:02:21.178   257  1005 I BufferQueueConsumer: [com.baidu.map.location/com.baidu.map.location.ui.ConfirmAlertActivity1#1](this:0xafa30000,id:135,api:1,p:-1,c:257) getReleasedBuffers: returning mask 0xffffffffffffffff
+05-17 01:02:21.199   257   601 I BufferQueueProducer: [NavigationBar#0](this:0xb246c000,id:4,api:1,p:752,c:257) queueBuffer: fps=0.16 dur=43831.04 max=43708.85 min=19.01
+05-17 01:02:21.261  5173  5173 W OrientationEventListener: Cannot detect sensors. Not enabled
+05-17 01:02:21.337   752   770 I zygote  : NativeAlloc concurrent copying GC freed 43682(1663KB) AllocSpace objects, 0(0B) LOS objects, 49% free, 4MB/9MB, paused 164us total 176.214ms
+05-17 01:02:21.709   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:30.512508,dur:1015.98,max:381.97,min:17.16
+05-17 01:02:21.724   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:21.724   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:21.788   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=0.25 dur=75964.55 max=75586.90 min=10.03
+05-17 01:02:21.841  5173  5530 I CameraManagerGlobal: Connecting to camera service
+05-17 01:02:21.881   253   336 I vendor.mediatek.hardware.power@1.1-impl: mtkPowerHint hint:11, data:0
+05-17 01:02:21.882   253   267 I libPerfService: 11: legacy set: -1 -1
+05-17 01:02:21.882   253   267 I libPerfService: 11: legacy set freq: -1 -1
+05-17 01:02:21.913   257   257 I BufferQueueConsumer: [com.baidu.map.location/com.baidu.map.location.ui.ConfirmAlertActivity1#1](this:0xafa30000,id:135,api:1,p:-1,c:-1) disconnect(C)
+05-17 01:02:21.913   257   257 I BufferQueue: [com.baidu.map.location/com.baidu.map.location.ui.ConfirmAlertActivity1#1](this:0xafa30000,id:135,api:1,p:-1,c:-1) ~BufferQueueCore
+05-17 01:02:22.064  5173  5530 I Camera2CameraInfo: Device Level: INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY
+05-17 01:02:22.104  5173  5530 I CameraPresencePrvdr: Starting CameraPresenceProvider monitoring.
+05-17 01:02:22.105  5173  5530 I CameraPresenceSrc: First observer added. Starting monitoring.
+05-17 01:02:22.105  5173  5530 I Camera2PresenceSrc: Starting system availability monitoring.
+05-17 01:02:22.123  5173  5530 W CameraValidator: Camera LENS_FACING_FRONT verification failed
+05-17 01:02:22.123  5173  5530 W CameraValidator: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@87b60d0} LensFilter:0
+05-17 01:02:22.123  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:02:22.123  5173  5530 W CameraValidator: 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:02:22.123  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:02:22.123  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:02:22.123  5173  5530 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:02:22.123  5173  5530 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:02:22.123  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:02:22.123  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:02:22.123  5173  5530 W CameraValidator: 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:02:22.130  5173  5530 E CameraValidator: Camera LensFacing verification failed, existing cameras: [Camera@7b745cc[id=0]]
+05-17 01:02:22.131  5173  5530 I CameraPresencePrvdr: Shutting down CameraPresenceProvider monitoring.
+05-17 01:02:22.132  5173  5530 I CameraPresenceSrc: Last observer removed. Stopping monitoring.
+05-17 01:02:22.132  5173  5530 I Camera2PresenceSrc: Stopping system availability monitoring.
+05-17 01:02:22.136  5173  5530 W CameraX : Retry init. Start time 2726173 current time 2726485
+05-17 01:02:22.136  5173  5530 W CameraX : androidx.camera.core.impl.CameraValidator$CameraIdListIncorrectException: Expected camera missing from device.
+05-17 01:02:22.136  5173  5530 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:137)
+05-17 01:02:22.136  5173  5530 W CameraX : 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:02:22.136  5173  5530 W CameraX : 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:02:22.136  5173  5530 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:02:22.136  5173  5530 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:02:22.136  5173  5530 W CameraX : 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:02:22.136  5173  5530 W CameraX : 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:02:22.136  5173  5530 W CameraX : 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:02:22.136  5173  5530 W CameraX : Caused by: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@87b60d0} LensFilter:0
+05-17 01:02:22.136  5173  5530 W CameraX : 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:02:22.136  5173  5530 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:02:22.136  5173  5530 W CameraX : 	... 7 more
+05-17 01:02:22.568  5173  5184 I zygote  : Background concurrent copying GC freed 151206(5MB) AllocSpace objects, 4(208KB) LOS objects, 44% free, 7MB/13MB, paused 230us total 179.756ms
+05-17 01:02:22.714   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:46.755211,dur:1005.24,max:41.63,min:18.53
+05-17 01:02:22.747   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:22.747   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:22.791  5173  5530 I Camera2CameraInfo: Device Level: INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY
+05-17 01:02:22.799  5173  5530 I CameraPresencePrvdr: Starting CameraPresenceProvider monitoring.
+05-17 01:02:22.800  5173  5530 I CameraPresenceSrc: First observer added. Starting monitoring.
+05-17 01:02:22.800  5173  5530 I Camera2PresenceSrc: Starting system availability monitoring.
+05-17 01:02:22.809   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=42.14 dur=1020.37 max=70.42 min=11.24
+05-17 01:02:22.811  5173  5530 W CameraValidator: Camera LENS_FACING_FRONT verification failed
+05-17 01:02:22.811  5173  5530 W CameraValidator: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@87b60d0} LensFilter:0
+05-17 01:02:22.811  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:02:22.811  5173  5530 W CameraValidator: 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:02:22.811  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:02:22.811  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:02:22.811  5173  5530 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:02:22.811  5173  5530 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:02:22.811  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:02:22.811  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:02:22.811  5173  5530 W CameraValidator: 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:02:22.819  5173  5530 E CameraValidator: Camera LensFacing verification failed, existing cameras: [Camera@4e14c94[id=0]]
+05-17 01:02:22.820  5173  5530 I CameraPresencePrvdr: Shutting down CameraPresenceProvider monitoring.
+05-17 01:02:22.820  5173  5530 I CameraPresenceSrc: Last observer removed. Stopping monitoring.
+05-17 01:02:22.820  5173  5530 I Camera2PresenceSrc: Stopping system availability monitoring.
+05-17 01:02:22.824  5173  5530 W CameraX : Retry init. Start time 2726173 current time 2727173
+05-17 01:02:22.824  5173  5530 W CameraX : androidx.camera.core.impl.CameraValidator$CameraIdListIncorrectException: Expected camera missing from device.
+05-17 01:02:22.824  5173  5530 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:137)
+05-17 01:02:22.824  5173  5530 W CameraX : 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:02:22.824  5173  5530 W CameraX : 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:02:22.824  5173  5530 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:02:22.824  5173  5530 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:02:22.824  5173  5530 W CameraX : 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:02:22.824  5173  5530 W CameraX : 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:02:22.824  5173  5530 W CameraX : 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:02:22.824  5173  5530 W CameraX : Caused by: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@87b60d0} LensFilter:0
+05-17 01:02:22.824  5173  5530 W CameraX : 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:02:22.824  5173  5530 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:02:22.824  5173  5530 W CameraX : 	... 7 more
+05-17 01:02:22.916   602   611 I zygote  : NativeAlloc concurrent copying GC freed 30942(1651KB) AllocSpace objects, 1(20KB) LOS objects, 35% free, 11MB/17MB, paused 512us total 254.219ms
+05-17 01:02:22.938   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:23.326   257  1005 I chatty  : uid=1000(system) Binder:257_4 identical 17 lines
+05-17 01:02:23.450   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:23.471   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:23.490  5173  5530 I Camera2CameraInfo: Device Level: INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY
+05-17 01:02:23.491   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:23.498  5173  5530 I CameraPresencePrvdr: Starting CameraPresenceProvider monitoring.
+05-17 01:02:23.499  5173  5530 I CameraPresenceSrc: First observer added. Starting monitoring.
+05-17 01:02:23.499  5173  5530 I Camera2PresenceSrc: Starting system availability monitoring.
+05-17 01:02:23.510  5173  5530 W CameraValidator: Camera LENS_FACING_FRONT verification failed
+05-17 01:02:23.510  5173  5530 W CameraValidator: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@87b60d0} LensFilter:0
+05-17 01:02:23.510  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:02:23.510  5173  5530 W CameraValidator: 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:02:23.510  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:02:23.510  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:02:23.510  5173  5530 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:02:23.510  5173  5530 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:02:23.510  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:02:23.510  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:02:23.510  5173  5530 W CameraValidator: 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:02:23.512   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:23.519  5173  5530 E CameraValidator: Camera LensFacing verification failed, existing cameras: [Camera@a3b02c4[id=0]]
+05-17 01:02:23.519  5173  5530 I CameraPresencePrvdr: Shutting down CameraPresenceProvider monitoring.
+05-17 01:02:23.519  5173  5530 I CameraPresenceSrc: Last observer removed. Stopping monitoring.
+05-17 01:02:23.519  5173  5530 I Camera2PresenceSrc: Stopping system availability monitoring.
+05-17 01:02:23.522  5173  5530 W CameraX : Retry init. Start time 2726173 current time 2727872
+05-17 01:02:23.522  5173  5530 W CameraX : androidx.camera.core.impl.CameraValidator$CameraIdListIncorrectException: Expected camera missing from device.
+05-17 01:02:23.522  5173  5530 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:137)
+05-17 01:02:23.522  5173  5530 W CameraX : 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:02:23.522  5173  5530 W CameraX : 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:02:23.522  5173  5530 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:02:23.522  5173  5530 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:02:23.522  5173  5530 W CameraX : 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:02:23.522  5173  5530 W CameraX : 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:02:23.522  5173  5530 W CameraX : 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:02:23.522  5173  5530 W CameraX : Caused by: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@87b60d0} LensFilter:0
+05-17 01:02:23.522  5173  5530 W CameraX : 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:02:23.522  5173  5530 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:02:23.522  5173  5530 W CameraX : 	... 7 more
+05-17 01:02:23.533   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:23.551   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:23.693   257   348 I chatty  : uid=1000(system) Binder:257_1 identical 7 lines
+05-17 01:02:23.714   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:23.720   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:47.756229,dur:1005.10,max:40.93,min:19.38
+05-17 01:02:23.727   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:23.727   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:23.779   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:23.797   257  1005 I chatty  : uid=1000(system) Binder:257_4 identical 1 line
+05-17 01:02:23.816   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:23.817   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=49.60 dur=1008.13 max=30.91 min=10.21
+05-17 01:02:23.837   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:24.126   257  1005 I chatty  : uid=1000(system) Binder:257_4 identical 12 lines
+05-17 01:02:24.146   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:24.158  5173  5530 I Camera2CameraInfo: Device Level: INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY
+05-17 01:02:24.164  5173  5530 I CameraPresencePrvdr: Starting CameraPresenceProvider monitoring.
+05-17 01:02:24.165  5173  5530 I CameraPresenceSrc: First observer added. Starting monitoring.
+05-17 01:02:24.165  5173  5530 I Camera2PresenceSrc: Starting system availability monitoring.
+05-17 01:02:24.178  5173  5530 W CameraValidator: Camera LENS_FACING_FRONT verification failed
+05-17 01:02:24.178  5173  5530 W CameraValidator: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@87b60d0} LensFilter:0
+05-17 01:02:24.178  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:02:24.178  5173  5530 W CameraValidator: 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:02:24.178  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:02:24.178  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:02:24.178  5173  5530 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:02:24.178  5173  5530 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:02:24.178  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:02:24.178  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:02:24.178  5173  5530 W CameraValidator: 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:02:24.184  5173  5530 E CameraValidator: Camera LensFacing verification failed, existing cameras: [Camera@c788692[id=0]]
+05-17 01:02:24.184  5173  5530 I CameraPresencePrvdr: Shutting down CameraPresenceProvider monitoring.
+05-17 01:02:24.184  5173  5530 I CameraPresenceSrc: Last observer removed. Stopping monitoring.
+05-17 01:02:24.185  5173  5530 I Camera2PresenceSrc: Stopping system availability monitoring.
+05-17 01:02:24.188  5173  5530 W CameraX : Retry init. Start time 2726173 current time 2728537
+05-17 01:02:24.188  5173  5530 W CameraX : androidx.camera.core.impl.CameraValidator$CameraIdListIncorrectException: Expected camera missing from device.
+05-17 01:02:24.188  5173  5530 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:137)
+05-17 01:02:24.188  5173  5530 W CameraX : 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:02:24.188  5173  5530 W CameraX : 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:02:24.188  5173  5530 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:02:24.188  5173  5530 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:02:24.188  5173  5530 W CameraX : 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:02:24.188  5173  5530 W CameraX : 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:02:24.188  5173  5530 W CameraX : 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:02:24.188  5173  5530 W CameraX : Caused by: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@87b60d0} LensFilter:0
+05-17 01:02:24.188  5173  5530 W CameraX : 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:02:24.188  5173  5530 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:02:24.188  5173  5530 W CameraX : 	... 7 more
+05-17 01:02:24.189   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:24.371   257  1005 I chatty  : uid=1000(system) Binder:257_4 identical 9 lines
+05-17 01:02:24.393   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:24.701   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:24.721   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:24.725   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.752514,dur:1005.08,max:21.20,min:20.20
+05-17 01:02:24.738   276  5019 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:24.738   276  5019 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:24.825   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:24.825   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.61 dur=1008.11 max=32.18 min=10.34
+05-17 01:02:24.837  5173  5530 I Camera2CameraInfo: Device Level: INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY
+05-17 01:02:24.844  5173  5530 I CameraPresencePrvdr: Starting CameraPresenceProvider monitoring.
+05-17 01:02:24.844  5173  5530 I CameraPresenceSrc: First observer added. Starting monitoring.
+05-17 01:02:24.845  5173  5530 I Camera2PresenceSrc: Starting system availability monitoring.
+05-17 01:02:24.858  5173  5530 W CameraValidator: Camera LENS_FACING_FRONT verification failed
+05-17 01:02:24.858  5173  5530 W CameraValidator: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@87b60d0} LensFilter:0
+05-17 01:02:24.858  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:02:24.858  5173  5530 W CameraValidator: 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:02:24.858  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:02:24.858  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:02:24.858  5173  5530 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:02:24.858  5173  5530 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:02:24.858  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:02:24.858  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:02:24.858  5173  5530 W CameraValidator: 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:02:24.864  5173  5530 E CameraValidator: Camera LensFacing verification failed, existing cameras: [Camera@c665d90[id=0]]
+05-17 01:02:24.865  5173  5530 I CameraPresencePrvdr: Shutting down CameraPresenceProvider monitoring.
+05-17 01:02:24.865  5173  5530 I CameraPresenceSrc: Last observer removed. Stopping monitoring.
+05-17 01:02:24.865  5173  5530 I Camera2PresenceSrc: Stopping system availability monitoring.
+05-17 01:02:24.871  5173  5530 W CameraX : Retry init. Start time 2726173 current time 2729218
+05-17 01:02:24.871  5173  5530 W CameraX : androidx.camera.core.impl.CameraValidator$CameraIdListIncorrectException: Expected camera missing from device.
+05-17 01:02:24.871  5173  5530 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:137)
+05-17 01:02:24.871  5173  5530 W CameraX : 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:02:24.871  5173  5530 W CameraX : 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:02:24.871  5173  5530 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:02:24.871  5173  5530 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:02:24.871  5173  5530 W CameraX : 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:02:24.871  5173  5530 W CameraX : 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:02:24.871  5173  5530 W CameraX : 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:02:24.871  5173  5530 W CameraX : Caused by: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@87b60d0} LensFilter:0
+05-17 01:02:24.871  5173  5530 W CameraX : 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:02:24.871  5173  5530 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:02:24.871  5173  5530 W CameraX : 	... 7 more
+05-17 01:02:24.906   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:25.066  5173  5184 I zygote  : Background concurrent copying GC freed 201993(6MB) AllocSpace objects, 0(0B) LOS objects, 44% free, 7MB/13MB, paused 194us total 154.665ms
+05-17 01:02:25.131   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:25.151   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:25.270   602   980 I LocationManagerService: remove 9ed827a
+05-17 01:02:25.275   602   980 I GnssLocationProvider: WakeLock acquired by sendMessage(SET_REQUEST, 0, com.android.server.location.GnssLocationProvider$GpsRequest@cf25178)
+05-17 01:02:25.282   276   440 W MNLD    : hal_gps_stop: hal_gps_stop
+05-17 01:02:25.282   276   440 E MNLD    : fsm_gps_state_started: fsm_gps_state_started() data1=0,data2=0,data3=0x0
+05-17 01:02:25.284   602   641 I GnssLocationProvider: WakeLock released by handleMessage(SET_REQUEST, 0, com.android.server.location.GnssLocationProvider$GpsRequest@cf25178)
+05-17 01:02:25.300   602   980 I GnssLocationProvider: WakeLock acquired by sendMessage(SET_REQUEST, 0, com.android.server.location.GnssLocationProvider$GpsRequest@9c3e1b7)
+05-17 01:02:25.313   276   440 W MNLD    : hal_gps_start: hal_gps_start
+05-17 01:02:25.313   257   348 I BufferQueueProducer: [StatusBar#0](this:0xb2470000,id:5,api:1,p:752,c:257) queueBuffer: fps=0.21 dur=9624.07 max=9603.28 min=20.78
+05-17 01:02:25.313   276   440 E MNLD    : fsm_gps_state_stopping: fsm_gps_state_stopping() data1=0,data2=0,data3=0x0
+05-17 01:02:25.314   276   440 W MNLD    : main_event_hdlr: GPS2MAIN_EVENT_STOP_DONE
+05-17 01:02:25.314   276   440 E MNLD    : fsm_gps_state_stopping: fsm_gps_state_stopping() data1=0,data2=0,data3=0x0
+05-17 01:02:25.315   276   427 E mnl_linux: mnl_utl_load_property: Config is not set yet, ignore
+05-17 01:02:25.330   276   427 E gps_controlller: hasAlmanac: open file(/nvcfg/almanac.dat) fail
+05-17 01:02:25.332   276   427 E gps_controlller: mnl_write_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:25.500  5173  5530 I Camera2CameraInfo: Device Level: INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY
+05-17 01:02:25.510  5173  5530 I CameraPresencePrvdr: Starting CameraPresenceProvider monitoring.
+05-17 01:02:25.511  5173  5530 I CameraPresenceSrc: First observer added. Starting monitoring.
+05-17 01:02:25.512  5173  5530 I Camera2PresenceSrc: Starting system availability monitoring.
+05-17 01:02:25.528  5173  5530 W CameraValidator: Camera LENS_FACING_FRONT verification failed
+05-17 01:02:25.528  5173  5530 W CameraValidator: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@87b60d0} LensFilter:0
+05-17 01:02:25.528  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:02:25.528  5173  5530 W CameraValidator: 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:02:25.528  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:02:25.528  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:02:25.528  5173  5530 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:02:25.528  5173  5530 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:02:25.528  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:02:25.528  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:02:25.528  5173  5530 W CameraValidator: 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:02:25.535  5173  5530 E CameraValidator: Camera LensFacing verification failed, existing cameras: [Camera@663f3e[id=0]]
+05-17 01:02:25.535  5173  5530 I CameraPresencePrvdr: Shutting down CameraPresenceProvider monitoring.
+05-17 01:02:25.535  5173  5530 I CameraPresenceSrc: Last observer removed. Stopping monitoring.
+05-17 01:02:25.536  5173  5530 I Camera2PresenceSrc: Stopping system availability monitoring.
+05-17 01:02:25.539  5173  5530 W CameraX : Retry init. Start time 2726173 current time 2729888
+05-17 01:02:25.539  5173  5530 W CameraX : androidx.camera.core.impl.CameraValidator$CameraIdListIncorrectException: Expected camera missing from device.
+05-17 01:02:25.539  5173  5530 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:137)
+05-17 01:02:25.539  5173  5530 W CameraX : 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:02:25.539  5173  5530 W CameraX : 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:02:25.539  5173  5530 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:02:25.539  5173  5530 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:02:25.539  5173  5530 W CameraX : 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:02:25.539  5173  5530 W CameraX : 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:02:25.539  5173  5530 W CameraX : 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:02:25.539  5173  5530 W CameraX : Caused by: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@87b60d0} LensFilter:0
+05-17 01:02:25.539  5173  5530 W CameraX : 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:02:25.539  5173  5530 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:02:25.539  5173  5530 W CameraX : 	... 7 more
+05-17 01:02:25.583   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:25.623   257   348 I chatty  : uid=1000(system) Binder:257_1 identical 2 lines
+05-17 01:02:25.644   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:25.653   276   430 W mtknav  : mtknav_event_hdlr: mnld_mtknav_download() before
+05-17 01:02:25.653   276   430 W mtknav  : mnld_mtknav_download: mtknav has been downloaded today
+05-17 01:02:25.653   276   430 W mtknav  : mtknav_event_hdlr: mnld_mtknav_download() after
+05-17 01:02:25.654   276   440 W MNLD    : main_event_hdlr: mtknav download finsh before GPS start done
+05-17 01:02:25.657   276  5537 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:25.657   276  5537 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:25.658   276   440 W MNLD    : main_event_hdlr: GPS2MAIN_EVENT_START_DONE  is_assist_req=0
+05-17 01:02:25.684   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:25.706   257   348 I chatty  : uid=1000(system) Binder:257_1 identical 1 line
+05-17 01:02:25.727   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:25.730   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.758305,dur:1004.96,max:21.04,min:20.04
+05-17 01:02:25.746   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:25.786   257   348 I chatty  : uid=1000(system) Binder:257_1 identical 2 lines
+05-17 01:02:25.807   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:25.832   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.65 dur=1007.21 max=27.72 min=11.95
+05-17 01:02:25.892   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:26.074   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:26.149  5173  5530 I Camera2CameraInfo: Device Level: INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY
+05-17 01:02:26.154  5173  5530 I CameraPresencePrvdr: Starting CameraPresenceProvider monitoring.
+05-17 01:02:26.155  5173  5530 I CameraPresenceSrc: First observer added. Starting monitoring.
+05-17 01:02:26.155  5173  5530 I Camera2PresenceSrc: Starting system availability monitoring.
+05-17 01:02:26.168  5173  5530 W CameraValidator: Camera LENS_FACING_FRONT verification failed
+05-17 01:02:26.168  5173  5530 W CameraValidator: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@87b60d0} LensFilter:0
+05-17 01:02:26.168  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:02:26.168  5173  5530 W CameraValidator: 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:02:26.168  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:02:26.168  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:02:26.168  5173  5530 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:02:26.168  5173  5530 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:02:26.168  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:02:26.168  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:02:26.168  5173  5530 W CameraValidator: 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:02:26.174  5173  5530 E CameraValidator: Camera LensFacing verification failed, existing cameras: [Camera@2074f1c[id=0]]
+05-17 01:02:26.174  5173  5530 I CameraPresencePrvdr: Shutting down CameraPresenceProvider monitoring.
+05-17 01:02:26.175  5173  5530 I CameraPresenceSrc: Last observer removed. Stopping monitoring.
+05-17 01:02:26.175  5173  5530 I Camera2PresenceSrc: Stopping system availability monitoring.
+05-17 01:02:26.178  5173  5530 W CameraX : Retry init. Start time 2726173 current time 2730528
+05-17 01:02:26.178  5173  5530 W CameraX : androidx.camera.core.impl.CameraValidator$CameraIdListIncorrectException: Expected camera missing from device.
+05-17 01:02:26.178  5173  5530 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:137)
+05-17 01:02:26.178  5173  5530 W CameraX : 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:02:26.178  5173  5530 W CameraX : 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:02:26.178  5173  5530 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:02:26.178  5173  5530 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:02:26.178  5173  5530 W CameraX : 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:02:26.178  5173  5530 W CameraX : 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:02:26.178  5173  5530 W CameraX : 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:02:26.178  5173  5530 W CameraX : Caused by: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@87b60d0} LensFilter:0
+05-17 01:02:26.178  5173  5530 W CameraX : 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:02:26.178  5173  5530 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:02:26.178  5173  5530 W CameraX : 	... 7 more
+05-17 01:02:26.179   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:26.278   257  1005 I chatty  : uid=1000(system) Binder:257_4 identical 4 lines
+05-17 01:02:26.298   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:26.314   602   641 I GnssLocationProvider: WakeLock released by handleMessage(SET_REQUEST, 0, com.android.server.location.GnssLocationProvider$GpsRequest@9c3e1b7)
+05-17 01:02:26.320   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:26.422   257  1005 I chatty  : uid=1000(system) Binder:257_4 identical 4 lines
+05-17 01:02:26.443   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:26.465   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:26.528   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:26.548   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:26.663   276  5537 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:26.663   276  5537 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:26.711   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:26.735   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.737446,dur:1005.39,max:21.05,min:19.96
+05-17 01:02:26.773   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:26.786  5173  5530 I Camera2CameraInfo: Device Level: INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY
+05-17 01:02:26.791  5173  5530 I CameraPresencePrvdr: Starting CameraPresenceProvider monitoring.
+05-17 01:02:26.792  5173  5530 I CameraPresenceSrc: First observer added. Starting monitoring.
+05-17 01:02:26.792  5173  5530 I Camera2PresenceSrc: Starting system availability monitoring.
+05-17 01:02:26.807  5173  5530 W CameraValidator: Camera LENS_FACING_FRONT verification failed
+05-17 01:02:26.807  5173  5530 W CameraValidator: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@87b60d0} LensFilter:0
+05-17 01:02:26.807  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:02:26.807  5173  5530 W CameraValidator: 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:02:26.807  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:02:26.807  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:02:26.807  5173  5530 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:02:26.807  5173  5530 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:02:26.807  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:02:26.807  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:02:26.807  5173  5530 W CameraValidator: 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:02:26.808   296   296 I thermal_repeater: [recvMdThermalInfo] ret=15, strLen=127,  2, 32767, -127
+05-17 01:02:26.814  5173  5530 E CameraValidator: Camera LensFacing verification failed, existing cameras: [Camera@25cfcaa[id=0]]
+05-17 01:02:26.815  5173  5530 I CameraPresencePrvdr: Shutting down CameraPresenceProvider monitoring.
+05-17 01:02:26.815  5173  5530 I CameraPresenceSrc: Last observer removed. Stopping monitoring.
+05-17 01:02:26.817  5173  5530 I Camera2PresenceSrc: Stopping system availability monitoring.
+05-17 01:02:26.821  5173  5530 W CameraX : Retry init. Start time 2726173 current time 2731171
+05-17 01:02:26.821  5173  5530 W CameraX : androidx.camera.core.impl.CameraValidator$CameraIdListIncorrectException: Expected camera missing from device.
+05-17 01:02:26.821  5173  5530 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:137)
+05-17 01:02:26.821  5173  5530 W CameraX : 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:02:26.821  5173  5530 W CameraX : 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:02:26.821  5173  5530 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:02:26.821  5173  5530 W CameraX : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:02:26.821  5173  5530 W CameraX : 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:02:26.821  5173  5530 W CameraX : 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:02:26.821  5173  5530 W CameraX : 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:02:26.821  5173  5530 W CameraX : Caused by: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@87b60d0} LensFilter:0
+05-17 01:02:26.821  5173  5530 W CameraX : 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:02:26.821  5173  5530 W CameraX : 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:02:26.821  5173  5530 W CameraX : 	... 7 more
+05-17 01:02:26.840   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.59 dur=1008.43 max=34.94 min=13.08
+05-17 01:02:26.855   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:27.306   257   348 I chatty  : uid=1000(system) Binder:257_1 identical 18 lines
+05-17 01:02:27.327   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) RunningBehind, queued size:2
+05-17 01:02:27.485  5173  5530 I Camera2CameraInfo: Device Level: INFO_SUPPORTED_HARDWARE_LEVEL_LEGACY
+05-17 01:02:27.503  5173  5530 I CameraPresencePrvdr: Starting CameraPresenceProvider monitoring.
+05-17 01:02:27.504  5173  5530 I CameraPresenceSrc: First observer added. Starting monitoring.
+05-17 01:02:27.504  5173  5530 I Camera2PresenceSrc: Starting system availability monitoring.
+05-17 01:02:27.526  5173  5530 W CameraValidator: Camera LENS_FACING_FRONT verification failed
+05-17 01:02:27.526  5173  5530 W CameraValidator: java.lang.IllegalArgumentException: No available camera can be found. Cams:1 Id:0  Lens:1 PhyId:null  Filters:1 Id:Identifier{value=java.lang.Object@87b60d0} LensFilter:0
+05-17 01:02:27.526  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraSelector.select(CameraSelector.java:109)
+05-17 01:02:27.526  5173  5530 W CameraValidator: 	at androidx.camera.core.impl.CameraValidator.validateCameras(CameraValidator.java:118)
+05-17 01:02:27.526  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraX.lambda$initAndRetryRecursively$2$androidx-camera-core-CameraX(CameraX.java:466)
+05-17 01:02:27.526  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraX$$ExternalSyntheticLambda2.run(D8$$SyntheticClass:0)
+05-17 01:02:27.526  5173  5530 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1162)
+05-17 01:02:27.526  5173  5530 W CameraValidator: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:636)
+05-17 01:02:27.526  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1.lambda$newThread$0(CameraExecutor.java:68)
+05-17 01:02:27.526  5173  5530 W CameraValidator: 	at androidx.camera.core.CameraExecutor$1$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+05-17 01:02:27.526  5173  5530 W CameraValidator: 	at java.lang.Thread.run(Thread.java:764)
+05-17 01:02:27.538  5173  5530 E CameraValidator: Camera LensFacing verification failed, existing cameras: [Camera@98e368[id=0]]
+05-17 01:02:27.539  5173  5530 E CameraX : The device might underreport the amount of the cameras. Finish the initialize task since we are already reaching the maximum number of retries.
+05-17 01:02:27.539  5173  5530 I CameraPresencePrvdr: Shutting down CameraPresenceProvider monitoring.
+05-17 01:02:27.539  5173  5530 I CameraPresenceSrc: Last observer removed. Stopping monitoring.
+05-17 01:02:27.539  5173  5530 I Camera2PresenceSrc: Stopping system availability monitoring.
+05-17 01:02:27.582  5173  5184 I zygote  : Background concurrent copying GC freed 207856(6MB) AllocSpace objects, 0(0B) LOS objects, 43% free, 7MB/13MB, paused 152us total 226.482ms
+05-17 01:02:27.647   276  5537 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:27.647   276  5537 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:27.760   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:41.940022,dur:1025.27,max:164.43,min:19.90
+05-17 01:02:27.842   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=40.94 dur=1001.47 max=179.58 min=11.45
+05-17 01:02:28.658   276  5537 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:28.658   276  5537 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:28.766   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:43.769428,dur:1005.27,max:41.68,min:19.97
+05-17 01:02:28.847   257  2570 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=43.76 dur=1005.57 max=52.81 min=13.22
+05-17 01:02:29.653   276  5537 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:29.653   276  5537 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:29.771   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.755444,dur:1005.02,max:21.28,min:19.80
+05-17 01:02:29.871   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.86 dur=1023.24 max=31.10 min=11.47
+05-17 01:02:30.213  5173  5184 I zygote  : Background concurrent copying GC freed 208578(6MB) AllocSpace objects, 0(0B) LOS objects, 43% free, 7MB/13MB, paused 268us total 193.268ms
+05-17 01:02:30.649   276  5537 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:30.649   276  5537 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:30.776   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.724121,dur:1005.66,max:21.17,min:19.81
+05-17 01:02:30.875   257   348 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.79 dur=1004.38 max=28.08 min=10.05
+05-17 01:02:31.281  5544  5544 I BufferQueue: [unnamed-5544-0](this:0xadbbf000,id:0,api:0,p:-1,c:-1) BufferQueue core=(5544:screencap)
+05-17 01:02:31.296  5544  5544 E DumpTunnel: open libgui_ext failed
+05-17 01:02:31.296  5544  5544 E DumpTunnel: finding regDump() failed
+05-17 01:02:31.296  5544  5544 I BufferQueueConsumer: [unnamed-5544-0](this:0xadbbf000,id:0,api:0,p:-1,c:5544) connect(C): consumer=(5544:screencap) controlledByApp=false
+05-17 01:02:31.296  5544  5544 I BufferQueueConsumer: [unnamed-5544-0](this:0xadbbf000,id:0,api:0,p:-1,c:5544) setConsumerName: unnamed-5544-0
+05-17 01:02:31.296  5544  5544 I BufferQueueConsumer: [ScreenshotClient](this:0xadbbf000,id:0,api:0,p:-1,c:5544) setConsumerName: ScreenshotClient
+05-17 01:02:31.298  5544  5544 I BufferQueueProducer: [ScreenshotClient](this:0xadbbf000,id:0,api:1,p:257,c:5544) connect(P): api=1 producer=(257:/system/bin/surfaceflinger) producerControlledByApp=false
+05-17 01:02:31.344   253   336 I [Gralloc]: usage1: 0x333, format: 1 stride: 720 vertical_stride: 1280 size: 3686400
+05-17 01:02:31.354  5544  5544 I screencap: type=1400 audit(0.0:187): avc: denied { search } for name="clients" dev="debugfs" ino=7420 scontext=u:r:shell:s0 tcontext=u:object_r:debugfs_ion:s0 tclass=dir permissive=1
+05-17 01:02:31.364   257   257 I SurfaceFlinger: screenshot (br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0)
+05-17 01:02:31.364   257   257 I SurfaceFlinger: screenshot (StatusBar#0)
+05-17 01:02:31.365   257   257 I SurfaceFlinger: screenshot (NavigationBar#0)
+05-17 01:02:31.373  5544  5544 I BufferQueueProducer: [ScreenshotClient](this:0xadbbf000,id:0,api:1,p:257,c:5544) disconnect(P): api 1
+05-17 01:02:31.374  5544  5544 I BufferQueueConsumer: [ScreenshotClient](this:0xadbbf000,id:0,api:1,p:-1,c:5544) getReleasedBuffers: returning mask 0xffffffffffffffff
+05-17 01:02:31.650   276  5537 E gps_controlller: mnl_read_attr: open /sys/class/gpsdrv/gps/state err = Permission denied
+05-17 01:02:31.650   276  5537 E gps_controlller: mtk_gps_sys_gps_mnl_callback: mnl_get_state() = 0, 255
+05-17 01:02:31.781   257   257 I DisplayDevice: [Built-in Screen (type:0)] fps:48.765060,dur:1004.82,max:21.76,min:18.84
+05-17 01:02:31.879   257  1005 I BufferQueueProducer: [br.com.sinalseguro.app/br.com.sinalseguro.app.MainActivity#0](this:0xb247f000,id:128,api:1,p:5173,c:257) queueBuffer: fps=48.79 dur=1004.36 max=30.57 min=11.54

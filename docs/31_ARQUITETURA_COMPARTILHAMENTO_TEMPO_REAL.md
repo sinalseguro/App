@@ -11,6 +11,15 @@ A EC2 existente sera tratada como servidor de coordenacao do SinalSeguro, nao co
 
 O transporte preferencial futuro para anjos autorizados sera P2P com criptografia ponta a ponta. O servidor pode coordenar e sinalizar, mas nao deve precisar acessar midia, audio ou localizacao em claro. Conveniados entram em fase posterior, com contrato, RBAC, MFA, retencao, auditoria e base juridica propria.
 
+Atualizacao 2026-05-16:
+
+- chamada de emergencia audio/video adota arquitetura hibrida;
+- EC2/API e plano de controle, nao servidor de midia;
+- depois da conexao segura WebRTC, audio/video trafegam P2P entre smartphones;
+- backend nao recebe nem grava midia da chamada;
+- sinalizacao P2P fica liberada apenas em ocorrencia ativa, entre originador e anjo que aceitou, com dispositivos ativos, envelope efemero `live_session`, expiracao curta e payload limitado;
+- `media_asset` remoto segue bloqueado ate frente propria.
+
 ## Estado implementado no app
 
 - `EmergencyDeliveryPlan` ganhou `remoteSharing`.
@@ -59,6 +68,7 @@ O transporte preferencial futuro para anjos autorizados sera P2P com criptografi
 - O servidor nunca deve registrar video, audio ou localizacao em claro.
 - Chaves simetricas de midia devem ser embrulhadas por destinatario autorizado.
 - Sessao ao vivo usa chaves efemeras e deve encerrar com a emergencia.
+- SDP/ICE candidate podem trafegar apenas como sinalizacao efemera e nao podem entrar em auditoria/logs como payload.
 - Localizacao em tempo real e midia so trafegam durante `recording_local`.
 - Conveniados nao compartilham o mesmo caminho operacional dos anjos ate existir contrato e controle de acesso proprio.
 
