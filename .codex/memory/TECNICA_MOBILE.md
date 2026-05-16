@@ -226,4 +226,13 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `aapt dump badging` confirmou `versionCode='4'`, `versionName='0.1.2'` e `targetSdkVersion='36'`.
 - Artefato copiado para `distribution/android/out/sinalseguro-android.apk` e publicado no portal como `sinalseguro_android.apk`.
 - ADB no Android fisico respondeu comandos curtos, mas travou em transferencias grandes; instalacao automatizada da `0.1.2` fica pendente.
+
+# Atualizacao - 2026-05-15 - Android 0.1.3 update/anjo
+
+- Android elevado para `versionName=0.1.3` e `versionCode=5`.
+- APK debug bundled: `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `36f8518b72ff5711ff65893b675db5b47d36ef185aa34bf790a7356e6c3f2ae2`.
+- `GET /api/app-releases/current` agora pode ser consultado sem login para permitir aviso de update antes do gate de acesso; download continua restrito ao portal oficial validado no app.
+- `RootLayout` mostra modal de update quando houver nova versao; `AccessGate` nao mostra o painel de login durante bootstrap.
+- `app/contatos.tsx` sincroniza ao voltar ao foco para refletir aceite de convite em outro dispositivo.
+- `TrustedContactRelationshipSerializer` nao envia `protected_subject` ao usuario que atua como anjo.
 - Instalacao fisica ficou bloqueada: `adb install` travou e, apos reinicio do servidor ADB, o Android `23129RA5FL` ficou `offline`; nao publicar no portal ate reinstalar e validar.

@@ -8,6 +8,7 @@ import { ActivityIndicator, Platform, Pressable, StyleSheet, Text, View } from "
 import { Camera as CameraIcon, CheckCircle2, KeyRound, MapPin, ShieldCheck } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
+import { AppLaunchScreen } from "@/components/AppLaunchScreen";
 import { BrandBackground } from "@/components/BrandBackground";
 import { theme } from "@/design/theme";
 import {
@@ -284,6 +285,10 @@ export function AccessGate({ children }: AccessGateProps) {
     } finally {
       setBusy(false);
     }
+  }
+
+  if (bootstrapping) {
+    return <AppLaunchScreen />;
   }
 
   if (openRouteAllowList.has(pathname) || accessReady) {

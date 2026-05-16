@@ -30,6 +30,11 @@ Revisao juridica/LGPD: Doneda
 
 ## Atualizacao real em 2026-05-15
 
+- APK privado Android `0.1.3` gerado em `android/app/build/outputs/apk/debug/app-debug.apk`, `versionCode 5`, SHA-256 `36f8518b72ff5711ff65893b675db5b47d36ef185aa34bf790a7356e6c3f2ae2`.
+- O link direto publicado usa `?v=0.1.3-20260515` para atualizar cache mantendo o arquivo e QR estaveis.
+- A verificacao de update passa a consultar `GET /api/app-releases/current` sem exigir login, mantendo download apenas no portal oficial.
+- O modal de update aparece no layout raiz quando ha versao nova; a validacao de login fica no ciclo de carregamento e nao pisca o gate completo quando a sessao local ja existe.
+- A tela `Anjos de confianca` sincroniza ao voltar ao foco para mostrar aceite recente no aparelho que enviou o convite.
 - APK privado Android `0.1.2` gerado em `android/app/build/outputs/apk/debug/app-debug.apk`, `versionCode 4`, SHA-256 `1ee74e9dd3675a150f3a1264abf99437c494f268d0f63cde9a9bd6b1fb182539`.
 - O link direto publicado usa `?v=0.1.2-20260515` para atualizar cache mantendo o arquivo e QR estaveis.
 - A validacao automatizada no Android fisico ficou bloqueada por travamento do transporte ADB em transferencias grandes; o aparelho ainda estava em `0.1.1`/`versionCode 3`.

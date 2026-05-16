@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "expo-constants";
 import { Linking, Platform } from "react-native";
 
-import { ApiAppRelease, ApiRequestError, apiClient, apiConfig } from "@/services/apiClient";
+import { ApiAppRelease, apiClient, apiConfig } from "@/services/apiClient";
 
 const DAILY_CHECK_INTERVAL_MS = 24 * 60 * 60 * 1000;
 const UPDATE_STATE_KEY = "sinalseguro.app-update.state.v1";
@@ -187,11 +187,6 @@ export async function checkForAppUpdate(options: { force?: boolean } = {}) {
     );
   }
 
-  const session = await apiClient.getStoredSession();
-  if (!session?.access) {
-    return unavailableState(checkedAt, "Entre com sua conta SinalSeguro para verificar atualizacoes com seguranca.");
-  }
-
   try {
     const release = await apiClient.getCurrentAppRelease({
       platform: "android",
@@ -201,12 +196,8 @@ export async function checkForAppUpdate(options: { force?: boolean } = {}) {
     const state = buildState(release, checkedAt);
     await saveUpdateState(state);
     return state;
-  } catch (error) {
-    const message =
-      error instanceof ApiRequestError && error.status === 401
-        ? "Entre novamente com sua conta SinalSeguro para verificar atualizacoes."
-        : "Nao foi possivel verificar atualizacao agora. Tente novamente mais tarde.";
-    return unavailableState(checkedAt, message);
+  } catch {
+    return unavailableState(checkedAt, "Nao foi possivel verificar atualizacao agora. Tente novamente mais tarde.");
   }
 }
 

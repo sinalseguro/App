@@ -55,8 +55,6 @@ import { ApiRequestError, ApiSession, apiClient, apiConfig } from "@/services/ap
 import {
   AppUpdateState,
   checkForAppUpdate,
-  getStoredAppUpdateState,
-  isAppUpdateStateForCurrentApp,
   openAppUpdateDownload
 } from "@/services/appUpdate";
 import { AppleIdentityCancelledError, appleIdentityService } from "@/services/appleIdentity";
@@ -229,12 +227,7 @@ export default function SettingsScreen() {
     setPreferences(nextPreferences);
     setApiSession(await apiClient.getStoredSession());
     setRegisteredDeviceId(await deviceBindingService.getRegisteredApiDeviceId());
-    const storedUpdateState = await getStoredAppUpdateState();
-    setUpdateState(
-      storedUpdateState && isAppUpdateStateForCurrentApp(storedUpdateState)
-        ? storedUpdateState
-        : await checkForAppUpdate({ force: true })
-    );
+    setUpdateState(await checkForAppUpdate({ force: true }));
     const googleLoginStatus = await consumeGoogleOidcLoginStatus();
     if (googleLoginStatus) {
       setActivePanel("login");
@@ -1205,7 +1198,7 @@ export default function SettingsScreen() {
                 <Text style={[styles.statusPillText, updateState?.status === "current" && styles.statusPillTextActive]}>
                   {updateState?.status === "available" && updateState.latestVersion
                     ? `Versao ${updateState.latestVersion}`
-                    : `Versao ${updateState?.currentVersion ?? "0.1.2"}`}
+                    : `Versao ${updateState?.currentVersion ?? "0.1.3"}`}
                 </Text>
               </View>
               <View style={styles.inlineInfo}>

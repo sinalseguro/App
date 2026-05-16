@@ -210,3 +210,12 @@ Papel: seguranca, LGPD e QA.
 - API e portal publicados; registro de release em producao ficou em `0.1.2`/`versionCode 4`.
 - ADB fisico confirmou aparelho ainda em `0.1.1`/`versionCode 3`, mas travou em `install`, `push`, TCP ADB e envio em partes; nao registrar como validacao visual fisica concluida.
 - Como a instalacao local ficou bloqueada por transporte, o aceite manual deve instalar pelo portal e confirmar a atualizacao no app.
+
+## QA/Security - 2026-05-15 - Android 0.1.3 update/anjo
+
+- Gates locais aprovados: `typecheck`, `lint`, `npm test`, `private:android:readiness` com Node 22, build Android debug bundled, backend check/test/makemigrations e portal validate com Node 22.
+- APK `0.1.3`/`versionCode 5` SHA-256 `36f8518b72ff5711ff65893b675db5b47d36ef185aa34bf790a7356e6c3f2ae2`.
+- A consulta publica de versao nao entrega dados pessoais; auditoria registra hash de IP/user-agent e `actor=None` quando nao houver login.
+- Download segue apenas via `https://www.sinalseguro.com.br/baixar/android` e asset oficial `sinalseguro_android.apk`.
+- O contrato de relacionamento oculta `protected_subject` para quem atua como anjo; nomes seguem mascarados/publicos.
+- Gate fisico final: testar update pelo proprio app no Android 0.1.1/0.1.2, sem instalar via ADB.

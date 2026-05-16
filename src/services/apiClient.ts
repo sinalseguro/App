@@ -387,6 +387,26 @@ async function parseResponseBody(response: Response) {
   }
 }
 
+function extractApiErrorMessage(value: unknown): string | null {
+  if (!value) return null;
+  if (typeof value === "string") return value;
+  if (Array.isArray(value)) {
+    return value.map(extractApiErrorMessage).find(Boolean) ?? null;
+  }
+  if (typeof value === "object") {
+    const record = value as Record<string, unknown>;
+    return (
+      extractApiErrorMessage(record.detail) ??
+      extractApiErrorMessage(record.non_field_errors) ??
+      extractApiErrorMessage(record.token) ??
+      extractApiErrorMessage(record.code) ??
+      Object.values(record).map(extractApiErrorMessage).find(Boolean) ??
+      null
+    );
+  }
+  return null;
+}
+
 export class SinalSeguroApiClient {
   constructor(
     private readonly baseUrl = apiBaseUrl,
@@ -715,7 +735,7 @@ export class SinalSeguroApiClient {
     if (typeof input.versionCode === "number") query.set("version_code", String(input.versionCode));
 
     return this.request(`/app-releases/current?${query.toString()}`, ApiAppReleaseSchema, {
-      authenticated: true
+      authenticated: false
     });
   }
 
@@ -787,10 +807,7 @@ export class SinalSeguroApiClient {
     }
 
     if (!response.ok) {
-      const message =
-        typeof responseBody === "object" && responseBody && "detail" in responseBody
-          ? String(responseBody.detail)
-          : "API SinalSeguro indisponivel";
+      const message = extractApiErrorMessage(responseBody) ?? "API SinalSeguro indisponivel";
       throw new ApiRequestError(message, response.status, responseBody);
     }
 

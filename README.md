@@ -79,8 +79,8 @@ Os QR codes apontam para paginas publicas estaveis. O release privado Android at
 Status atual:
 
 - Android privado: publicado no portal em `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk`.
-- Versao/data exibida no portal: `0.1.2` em `15/05/2026`.
-- SHA-256 Android privado: `1ee74e9dd3675a150f3a1264abf99437c494f268d0f63cde9a9bd6b1fb182539`.
+- Versao/data exibida no portal: `0.1.3` em `15/05/2026`.
+- SHA-256 Android privado: `36f8518b72ff5711ff65893b675db5b47d36ef185aa34bf790a7356e6c3f2ae2`.
 - Manifesto publico: `https://www.sinalseguro.com.br/downloads/installers.json`.
 - iPhone: sem release ativo; sera disponibilizado posteriormente.
 - GitHub: nao versionar APK/AAB/IPA privados. O APK privado deve ser publicado somente no portal/EC2, com checksum, QR e manifesto versionados.

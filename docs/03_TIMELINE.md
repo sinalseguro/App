@@ -3,6 +3,38 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-15 - Android 0.1.3 para update publico, login sem flash e sincronizacao de anjos
+
+Status: codigo, build e validacoes locais aprovados; publicacao EC2 e validacao fisica por update no app entram como gate final desta rodada.
+
+Resultado:
+
+- app Android sincronizado para `versionName=0.1.3` e `versionCode=5`;
+- `GET /api/app-releases/current` passa a permitir consulta sem login, mantendo download apenas no portal oficial validado por host/caminho/checksum;
+- o layout raiz verifica atualizacao durante a abertura e mostra modal proprio quando houver versao nova;
+- o gate de acesso nao exibe o painel de login enquanto ainda esta validando sessao, consentimentos e permissoes;
+- a tela `Anjos de confianca` sincroniza ao voltar ao foco para refletir aceite recente no aparelho que enviou convite;
+- mensagens de erro da API agora preservam detalhes de serializer como token invalido/usado, perfil bloqueado e dispositivo sem chave publica;
+- o contrato de relacionamento nao expõe `protected_subject` para quem atua como anjo.
+
+Artefato:
+
+- APK local: `android/app/build/outputs/apk/debug/app-debug.apk`;
+- APK portal: `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk?v=0.1.3-20260515`;
+- SHA-256: `36f8518b72ff5711ff65893b675db5b47d36ef185aa34bf790a7356e6c3f2ae2`;
+- `aapt dump badging`: `versionCode='5'`, `versionName='0.1.3'`, `targetSdkVersion='36'`.
+
+Validacoes locais:
+
+- `npm run typecheck`: aprovado;
+- `npm run lint`: aprovado;
+- `npm test`: aprovado;
+- `npm run private:android:readiness` com Node 22: aprovado;
+- build Android debug bundled: aprovado;
+- backend local: `manage.py check`, 35 testes e `makemigrations --check --dry-run` aprovados;
+- portal local: `npm run validate` com Node 22 aprovado;
+- `git diff --check` nos repos mobile e portais aprovado.
+
 ## 2026-05-15 - Android 0.1.2 preparado para update no app e portal
 
 Status: codigo, build, backend e portal publicados; instalacao automatizada no Android fisico ficou bloqueada por transporte ADB instavel.

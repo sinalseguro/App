@@ -1,5 +1,5 @@
-import { ReactNode, useEffect, useMemo, useState } from "react";
-import { router } from "expo-router";
+import { ReactNode, useCallback, useMemo, useState } from "react";
+import { router, useFocusEffect } from "expo-router";
 import { Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from "react-native";
 import { Clock3, RefreshCw, ShieldCheck, UserCheck, UserPlus, UserRound, Users, WifiOff, XCircle } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -371,9 +371,11 @@ export default function ContactsScreen() {
     }
   }
 
-  useEffect(() => {
-    void refreshAngels();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      void refreshAngels();
+    }, [])
+  );
 
   async function shareInvitation() {
     const currentGate = canCreateTrustedContactInvitation(activeProfile);
