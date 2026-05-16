@@ -7,6 +7,7 @@ import {
   BookOpenCheck,
   Camera,
   Clock,
+  Download,
   KeyRound,
   LockKeyhole,
   LocateFixed,
@@ -55,6 +56,7 @@ import { ApiRequestError, ApiSession, apiClient, apiConfig } from "@/services/ap
 import {
   AppUpdateState,
   checkForAppUpdate,
+  formatAppVersion,
   openAppUpdateDownload
 } from "@/services/appUpdate";
 import { AppleIdentityCancelledError, appleIdentityService } from "@/services/appleIdentity";
@@ -1196,11 +1198,17 @@ export default function SettingsScreen() {
                   color={updateState?.status === "current" ? theme.colors.textOnDark : theme.colors.primary}
                 />
                 <Text style={[styles.statusPillText, updateState?.status === "current" && styles.statusPillTextActive]}>
-                  {updateState?.status === "available" && updateState.latestVersion
-                    ? `Versao ${updateState.latestVersion}`
-                    : `Versao ${updateState?.currentVersion ?? "0.1.3"}`}
+                  Instalada {formatAppVersion(updateState?.currentVersion, updateState?.currentVersionCode)}
                 </Text>
               </View>
+              {updateState?.status === "available" && updateState.latestVersion ? (
+                <View style={[styles.statusPill, updateState.status === "available" && styles.availableVersionPill]}>
+                  <Download size={18} color={theme.colors.primary} />
+                  <Text style={styles.statusPillText}>
+                    Disponivel {formatAppVersion(updateState.latestVersion, updateState.latestVersionCode)}
+                  </Text>
+                </View>
+              ) : null}
               <View style={styles.inlineInfo}>
                 <ShieldCheck
                   size={18}
@@ -1391,10 +1399,15 @@ const styles = StyleSheet.create({
   },
   statusPillText: {
     color: theme.colors.text,
+    flex: 1,
     fontSize: theme.typography.body,
     fontWeight: "900"
   },
   statusPillTextActive: {
     color: theme.colors.textOnDark
+  },
+  availableVersionPill: {
+    borderColor: theme.colors.primary,
+    borderWidth: 2
   }
 });

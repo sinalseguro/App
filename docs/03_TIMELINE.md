@@ -3,6 +3,21 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-16 - Android 0.1.7 com versao instalada clara
+
+Status: ajuste visual implementado, APK publicado e API/portal sincronizados.
+
+- Android fisico `23129RA5FL` foi inspecionado por ADB e estava instalado em `versionName=0.1.5`, `versionCode=7`, embora a tela de atualizacao exibisse visualmente `Versao 0.1.6`, que era a versao disponivel no portal;
+- captura visual salva em `docs/evidencias/android/2026-05-16-versao-fisica/01-estado-inicial.png` confirmou a ambiguidade para usuario final;
+- corrigido o texto da tela de atualizacao para separar `Instalada <versao> (codigo <versionCode>)` de `Disponivel <versao> (codigo <versionCode>)`;
+- dialogs de atualizacao passam a informar instalada/disponivel na mensagem, evitando confundir release publicada com app realmente instalado;
+- app Android sincronizado para `versionName=0.1.7` e `versionCode=9`;
+- APK privado SHA-256: `dc9c4274a05a290a81837d37831db47ff91003be6d8d51403f8f49281f91fb17`;
+- validacoes locais: `npm run typecheck`, `npm run lint`, `npm test`, build Android privado e `aapt dump badging` com `versionCode 9`;
+- API publicada com `app_releases.0008_update_android_release_20260516_v017`;
+- portal publicado em `/var/www/sinalseguro/releases/20260516T122655Z`, mantendo `/baixar/android`, QR estavel e arquivo `sinalseguro_android.apk`;
+- ADB instalou comandos leves, mas travou em instalacao pesada do APK nesse aparelho; instalacao/validacao final deve ocorrer pelo portal no Android fisico.
+
 ## 2026-05-16 - Android 0.1.6 publicado para teste manual de alertas
 
 Status: APK novo publicado no portal oficial e API de update sincronizada.

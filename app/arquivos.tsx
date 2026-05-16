@@ -24,6 +24,7 @@ import { runPlaintextMediaStorageMaintenance } from "@/features/emergency/Plaint
 import { cleanupNativeMediaResidues } from "@/features/emergency/SinalSeguroMediaEngine";
 import { EmergencyPackage } from "@/features/emergency/types";
 import { isProtectedAccessUnlocked, verifySecurityCodeStatus } from "@/security/protectedAccess";
+import { formatAppVersion } from "@/services/appUpdate";
 import { checkAppUpdate } from "@/services/appUpdateService";
 
 type VaultDialog = "player" | "cofre" | null;
@@ -187,8 +188,8 @@ export default function LocalFilesScreen() {
     setDialog({
       title: "Atualizacoes do app",
       message: result.latestVersion
-        ? `${result.message}\n\nVersao instalada: ${result.currentVersion}\nVersao disponivel: ${result.latestVersion}`
-        : `${result.message}\n\nVersao instalada: ${result.currentVersion}`,
+        ? `${result.message}\n\nInstalada: ${formatAppVersion(result.currentVersion, result.currentVersionCode)}\nDisponivel: ${formatAppVersion(result.latestVersion, result.latestVersionCode)}`
+        : `${result.message}\n\nInstalada: ${formatAppVersion(result.currentVersion, result.currentVersionCode)}`,
       icon: <RefreshCw size={18} color={theme.colors.primary} />,
       actions: [{ label: "Entendi" }]
     });

@@ -30,6 +30,11 @@ export type AppUpdateState = {
   updatedAt?: string;
 };
 
+export function formatAppVersion(version?: string, versionCode?: number) {
+  const readableVersion = version && version.trim().length > 0 ? version : "nao identificada";
+  return typeof versionCode === "number" ? `${readableVersion} (codigo ${versionCode})` : readableVersion;
+}
+
 function getCurrentVersion() {
   return Constants.expoConfig?.version ?? Constants.manifest2?.extra?.expoClient?.version ?? "0.0.0";
 }
@@ -106,6 +111,8 @@ function buildState(rawRelease: ApiAppRelease, checkedAt: string): AppUpdateStat
   const currentVersion = getCurrentVersion();
   const currentVersionCode = getCurrentVersionCode();
   const available = isUpdateAvailable(release);
+  const installedLabel = formatAppVersion(currentVersion, currentVersionCode);
+  const availableLabel = formatAppVersion(release.latestVersion, release.versionCode);
 
   return {
     checkedAt,
@@ -117,8 +124,8 @@ function buildState(rawRelease: ApiAppRelease, checkedAt: string): AppUpdateStat
     latestVersionCode: release.versionCode,
     message:
       available || release.requiredUpdate
-        ? `Atualizacao ${release.latestVersion} disponivel pelo portal oficial SinalSeguro.`
-        : `Seu app esta atualizado na versao ${currentVersion}.`,
+        ? `Atualizacao disponivel pelo portal oficial SinalSeguro.\nInstalada: ${installedLabel}.\nDisponivel: ${availableLabel}.`
+        : `Seu app esta atualizado.\nInstalada: ${installedLabel}.`,
     portalUrl: release.portalUrl,
     sha256: release.sha256,
     status: available || release.requiredUpdate ? "available" : "current",

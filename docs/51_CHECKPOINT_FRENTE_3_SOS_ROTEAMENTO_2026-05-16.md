@@ -79,6 +79,14 @@ Iniciar a Frente 3 sem reabrir a Frente 1.3 como linha principal: transformar o 
 
 ## Publicacao para teste manual
 
+- Release Android privada atualizada para `0.1.7`/`versionCode 9` apos inspecao fisica mostrar que o aparelho ainda estava em `0.1.5` e a tela chamava a versao disponivel como `Versao 0.1.6`.
+- Ajuste visual: tela e dialogs de atualizacao mostram `Instalada` e `Disponivel` separadamente.
+- APK publico estavel: `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk?v=0.1.7-20260516`
+- SHA-256: `dc9c4274a05a290a81837d37831db47ff91003be6d8d51403f8f49281f91fb17`.
+- API de update publicada com `app_releases.0008_update_android_release_20260516_v017`.
+- Portal final: `/var/www/sinalseguro/releases/20260516T122655Z`.
+- Validacao pos-publicacao: manifesto `0.1.7`, endpoint `app-releases/current` retorna `versionCode 9`, APK no servidor com hash esperado, `/baixar/android` HTTP 200, API health/ready ok, `sinalseguro-api` e `cereusia-crm` ativos, `nginx -t` aprovado e `cereusia.conf` preservado.
+
 - Release Android privada publicada como `0.1.6`/`versionCode 8`.
 - APK publico estavel: `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk?v=0.1.6-20260516`
 - SHA-256: `0b2fad382ae3f7054c0d1092ec2b2ed9414b4dc0f2c95c75d05f21761241ddf3`.

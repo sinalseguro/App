@@ -28,6 +28,14 @@ Revisao juridica/LGPD: Doneda
 - Retomada fisica em 2026-05-14 confirmou no Android `23129RA5FL` o pacote instalado `versionName=0.1.1`, `versionCode=3`, a API publica com `health=ok` e readiness `database=ok`, o gate de login bloqueando deep link direto sem sessao visivel, login Google concluido e o fluxo `Anjos de confianca` em modo API sem crash no logcat saneado.
 - iPhone/iOS permanece pos-MVP e nao faz parte deste fluxo.
 
+## Atualizacao real em 2026-05-16 - Android 0.1.7
+
+- APK privado Android `0.1.7` gerado em `android/app/build/outputs/apk/debug/app-debug.apk`, `versionCode 9`, SHA-256 `dc9c4274a05a290a81837d37831db47ff91003be6d8d51403f8f49281f91fb17`.
+- O link direto publicado usa `?v=0.1.7-20260516` para atualizar cache mantendo arquivo e QR estaveis.
+- A versao corrige a clareza visual da atualizacao: a interface mostra explicitamente a versao instalada e, separadamente, a versao disponivel no portal.
+- API e portal publicados: release EC2 `/var/www/sinalseguro/releases/20260516T122655Z`, manifesto `0.1.7`, endpoint de update `versionCode 9`, APK no servidor com SHA-256 correto e health/ready aprovados.
+- O Android fisico inspecionado ainda estava em `0.1.5`/`versionCode 7`; ADB travou ao tentar instalar o APK grande, entao a atualizacao final deve ser feita pelo portal no proprio aparelho.
+
 ## Atualizacao real em 2026-05-16 - Android 0.1.6
 
 - APK privado Android `0.1.6` gerado em `android/app/build/outputs/apk/debug/app-debug.apk`, `versionCode 8`, SHA-256 `0b2fad382ae3f7054c0d1092ec2b2ed9414b4dc0f2c95c75d05f21761241ddf3`.
