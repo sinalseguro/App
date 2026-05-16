@@ -371,7 +371,7 @@ export type CreateKeyEnvelopeInput = {
   recipientId: string;
   keyId: string;
   publicKeySha256: string;
-  encryptedKey: string;
+  encryptedKey?: string;
   algorithm: string;
   expiresAt: string;
   recipientDeviceId?: string | null;
@@ -793,19 +793,23 @@ export class SinalSeguroApiClient {
   }
 
   async createKeyEnvelope(input: CreateKeyEnvelopeInput) {
+    const body: Record<string, unknown> = {
+      algorithm: input.algorithm,
+      emergency_session: input.emergencySessionId,
+      expires_at: input.expiresAt,
+      key_id: input.keyId,
+      public_key_sha256: input.publicKeySha256,
+      recipient: input.recipientId,
+      recipient_device: input.recipientDeviceId ?? null,
+      scope: input.scope
+    };
+    if (input.encryptedKey !== undefined) {
+      body.encrypted_key = input.encryptedKey;
+    }
+
     return this.request("/key-envelopes/", KeyEnvelopeSchema, {
       authenticated: true,
-      body: {
-        algorithm: input.algorithm,
-        emergency_session: input.emergencySessionId,
-        encrypted_key: input.encryptedKey,
-        expires_at: input.expiresAt,
-        key_id: input.keyId,
-        public_key_sha256: input.publicKeySha256,
-        recipient: input.recipientId,
-        recipient_device: input.recipientDeviceId ?? null,
-        scope: input.scope
-      },
+      body,
       method: "POST"
     });
   }

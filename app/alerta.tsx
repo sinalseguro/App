@@ -4,6 +4,8 @@ import { BellRing, CheckCircle2, RefreshCw, ShieldAlert, XCircle } from "lucide-
 import { BrandedDialog, BrandedDialogAction } from "@/components/BrandedDialog";
 import { SafeScreen } from "@/components/SafeScreen";
 import { theme } from "@/design/theme";
+import { LiveAudioCallPanel } from "@/features/live-call/LiveAudioCallPanel";
+import { useLiveAudioCall } from "@/features/live-call/useLiveAudioCall";
 import { ApiEmergencySession, apiClient } from "@/services/apiClient";
 
 type AlertDialog = {
@@ -41,6 +43,7 @@ export default function AlertScreen() {
   const [status, setStatus] = useState("Carregando pedidos recebidos...");
   const [refreshing, setRefreshing] = useState(false);
   const [dialog, setDialog] = useState<AlertDialog | null>(null);
+  const liveAudioCall = useLiveAudioCall();
 
   const sortedAlerts = useMemo(() => sortAlerts(alerts), [alerts]);
 
@@ -114,6 +117,9 @@ export default function AlertScreen() {
         <View style={styles.alertStack}>
           {sortedAlerts.map((session) => {
             const isActive = session.status === "active" && session.phase !== "ended";
+            const recipientStatus = session.recipients?.find((recipient) => recipient.emergency_session === session.id)?.status;
+            const canEnterAudio = isActive && recipientStatus === "accepted";
+            const isAudioPanelSession = liveAudioCall.state.remoteSessionId === session.id;
             return (
               <View key={session.id} style={styles.alertCard}>
                 <View style={styles.alertHeader}>
@@ -128,8 +134,30 @@ export default function AlertScreen() {
 
                 <Text style={styles.alertStatus}>{phaseLabel(session)}</Text>
                 <Text style={styles.alertBody}>
-                  O app registra apenas o pedido autorizado. Ainda não envia mídia, localização ao vivo ou chamada.
+                  O app registra o pedido autorizado. O áudio só inicia quando você tocar em entrar.
                 </Text>
+
+                {canEnterAudio || isAudioPanelSession ? (
+                  <LiveAudioCallPanel
+                    actionLabel="Entrar no áudio"
+                    disabled={!canEnterAudio || (Boolean(liveAudioCall.state.remoteSessionId) && !isAudioPanelSession)}
+                    onPrimaryAction={() => {
+                      void liveAudioCall.startAngelAudioCall(session);
+                    }}
+                    onStop={liveAudioCall.stopLiveAudioCall}
+                    state={
+                      isAudioPanelSession
+                        ? liveAudioCall.state
+                        : {
+                            message: "Acompanhe o pedido antes de entrar no áudio.",
+                            participantName: session.owner_display_name,
+                            remoteSessionId: session.id,
+                            role: "angel",
+                            status: "idle"
+                          }
+                    }
+                  />
+                ) : null}
 
                 <View style={styles.actionRow}>
                   <Pressable

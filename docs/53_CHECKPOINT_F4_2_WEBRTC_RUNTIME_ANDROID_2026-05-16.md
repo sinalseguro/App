@@ -44,6 +44,10 @@ Resultado:
 - audit sem vulnerabilidades conhecidas apos override;
 - build Android debug bundled aprovado com autolinking de `react-native-webrtc`.
 
+## Evolucao imediata registrada
+
+O passo seguinte foi separado no checkpoint `54_CHECKPOINT_F4_2_AUDIO_UI_ANDROID_2026-05-16.md`: UI Android de homologacao audio-only, recepcao filtrada de sinais por ocorrencia e `callSessionId`, e envelope `live_session` como autorizacao efemera sem chave de midia falsa.
+
 ## Proximo passo
 
 Integrar o runtime a UI e ao fluxo:

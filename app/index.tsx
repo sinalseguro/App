@@ -38,6 +38,8 @@ import {
   formatDuration,
   getEmergencyPreferences
 } from "@/features/emergency/emergencyPreferences";
+import { LiveAudioCallPanel } from "@/features/live-call/LiveAudioCallPanel";
+import { useLiveAudioCall } from "@/features/live-call/useLiveAudioCall";
 import { listAcceptedOwnerRelationshipsForDelivery } from "@/features/invitations/trustedRelationshipStore";
 import { isProtectedAccessUnlocked, unlockProtectedAccess, verifySecurityCodeStatus } from "@/security/protectedAccess";
 
@@ -181,6 +183,7 @@ function FinishProgressDialog({
 export default function HomeScreen() {
   const [outboxCount, setOutboxCount] = useState(0);
   const [activePackageId, setActivePackageId] = useState<string | null>(null);
+  const [liveRemoteSessionId, setLiveRemoteSessionId] = useState<string | null>(null);
   const [mediaRecorderPackageId, setMediaRecorderPackageId] = useState<string | null>(null);
   const [preferences, setPreferences] = useState<EmergencyPreferences>(defaultEmergencyPreferences);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -203,6 +206,7 @@ export default function HomeScreen() {
   const mediaStopPendingRef = useRef(false);
   const startupRecoveryCompletedRef = useRef(false);
   const stopRecordingRequestSerialRef = useRef(0);
+  const liveAudioCall = useLiveAudioCall();
 
   async function refreshOutboxCount() {
     const activePackage = await getActiveEmergencyPackage();
@@ -226,6 +230,7 @@ export default function HomeScreen() {
       setMediaRecorderPackageId(activePackage.id);
     } else if (!mediaStopPendingRef.current) {
       setMediaRecorderPackageId(null);
+      setLiveRemoteSessionId(null);
     }
     setOutboxCount(await countPendingEmergencyPackages());
   }
@@ -508,6 +513,20 @@ export default function HomeScreen() {
     });
   }
 
+  function handleStartOwnerLiveAudio() {
+    if (!liveRemoteSessionId) {
+      setDialog({
+        title: "Audio ainda indisponivel",
+        message: "Aguarde o envio do pedido aos anjos antes de tentar conectar o audio.",
+        icon: <PhoneCall size={18} color={theme.colors.primary} />,
+        actions: [{ label: "Entendi" }]
+      });
+      return;
+    }
+
+    void liveAudioCall.startOwnerAudioCall(liveRemoteSessionId);
+  }
+
   useFocusEffect(
     useCallback(() => {
       async function prepareScreen() {
@@ -572,6 +591,7 @@ export default function HomeScreen() {
     }
 
     setRecordingStatus("Iniciando chamado seguro...");
+    setLiveRemoteSessionId(null);
     setStartInProgress(true);
     appendMediaOperationalLog("emergency_start_requested", {
       defaultDurationSeconds: preferences.defaultDurationSeconds,
@@ -615,12 +635,14 @@ export default function HomeScreen() {
             status: syncState.status
           });
           if (syncState.status === "sent_to_ec2" && syncState.recipientCount > 0) {
+            setLiveRemoteSessionId(syncState.remoteSessionId ?? null);
             setRecordingStatus(
               `Chamado ativo. ${locationText} Pedido enviado para ${syncState.recipientCount} anjo${
                 syncState.recipientCount === 1 ? "" : "s"
               }.`
             );
           } else if (syncState.status === "sent_to_ec2") {
+            setLiveRemoteSessionId(syncState.remoteSessionId ?? null);
             setRecordingStatus(`Chamado ativo. ${locationText} Sem anjo aceito para avisar agora.`);
           }
         })
@@ -669,6 +691,8 @@ export default function HomeScreen() {
     if (!activePackageId || finishInProgress || finishInProgressRef.current) return;
 
     const packageId = activePackageId;
+    liveAudioCall.stopLiveAudioCall();
+    setLiveRemoteSessionId(null);
     finishInProgressRef.current = true;
     setFinishInProgress(true);
     setRecordingStatus("Encerrando chamado seguro...");
@@ -961,6 +985,16 @@ export default function HomeScreen() {
               onTrigger={handlePanicTrigger}
             />
           </View>
+
+          {liveRemoteSessionId || liveAudioCall.state.status !== "idle" ? (
+            <LiveAudioCallPanel
+              actionLabel="Conectar anjo"
+              disabled={!activePackageId || !liveRemoteSessionId || mediaStopPending || finishInProgress}
+              onPrimaryAction={handleStartOwnerLiveAudio}
+              onStop={liveAudioCall.stopLiveAudioCall}
+              state={liveAudioCall.state}
+            />
+          ) : null}
 
           <EmergencyCallDock
             onCallTarget={confirmEmergencyCall}
