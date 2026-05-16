@@ -137,6 +137,12 @@ const InvitationSchema = z.object({
 
 const InvitationListSchema = z.array(InvitationSchema);
 
+const InvitationPublicStatusSchema = z.object({
+  can_accept: z.boolean(),
+  message: z.string().optional(),
+  status: z.enum(["available", "unavailable"])
+});
+
 const EmergencySessionSchema = z.object({
   id: z.string(),
   device: z.string().nullable().optional(),
@@ -223,6 +229,7 @@ export type ApiConsentRecord = z.infer<typeof ConsentRecordSchema>;
 export type ApiTrustedContact = z.infer<typeof TrustedContactSchema>;
 export type ApiTrustedContactRelationship = z.infer<typeof TrustedContactRelationshipSchema>;
 export type ApiInvitation = z.infer<typeof InvitationSchema>;
+export type ApiInvitationPublicStatus = z.infer<typeof InvitationPublicStatusSchema>;
 export type ApiEmergencySession = z.infer<typeof EmergencySessionSchema>;
 export type ApiKeyEnvelope = z.infer<typeof KeyEnvelopeSchema>;
 export type ApiP2PSignal = z.infer<typeof P2PSignalSchema>;
@@ -659,6 +666,14 @@ export class SinalSeguroApiClient {
   async revokeInvitation(invitationId: string) {
     return this.request(`/invitations/${invitationId}/revoke/`, InvitationSchema, {
       authenticated: true,
+      method: "POST"
+    });
+  }
+
+  async getInvitationStatus(token: string) {
+    return this.request("/invitations/status", InvitationPublicStatusSchema, {
+      authenticated: false,
+      body: { token },
       method: "POST"
     });
   }

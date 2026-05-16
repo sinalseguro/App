@@ -3,6 +3,18 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-16 - Android 0.1.5, convite somente com validacao no backend
+
+- causa do erro anexado: link recebido apontava para token que nao existia como convite disponivel no backend de producao;
+- `createLocalInvitation` passou a exigir sessao Google/API e criar convite pelo backend antes de liberar compartilhamento;
+- `Convite recebido` consulta `POST /api/invitations/status` antes de permitir aceite, limpa token pendente indisponivel e bloqueia `Aceitar como anjo` quando o servidor nao reconhecer o convite;
+- `Anjos de confianca` fecha o modal de compartilhamento quando a sessao expira e orienta a entrar com Google antes de criar novo convite seguro;
+- APK Android privado `0.1.5`/`versionCode 7` gerado em `android/app/build/outputs/apk/debug/app-debug.apk`;
+- SHA-256: `4518789cbcc844f5f8ff87dcd13009f00f7ffbc252d5cea01e2ec50855b239a2`;
+- validacoes locais: `npm run lint`, `npm run typecheck`, `npm test`, `npm run private:android:readiness` com pendencia conhecida de Node local para build publico, e build Android debug bundled aprovados;
+- validacao fisica: dois Androids receberam a `0.1.5`; link invalido exibiu `Convite indisponivel`, `Aceite bloqueado` e botao de aceite desativado.
+- publicacao: API em producao com `versionCode 7`, portal `/var/www/sinalseguro/releases/20260516T034600Z`, APK publico `sinalseguro_android.apk?v=0.1.5-20260516` e hash baixado conferido.
+
 ## 2026-05-16 - Android 0.1.4, anjos sincronizados e aceite visivel
 
 - o usuario que ja atua como anjo pode criar a propria rede de anjos quando seu perfil adulto/responsavel permite;

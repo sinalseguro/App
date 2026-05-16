@@ -79,8 +79,8 @@ Os QR codes apontam para paginas publicas estaveis. O release privado Android at
 Status atual:
 
 - Android privado: publicado no portal em `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk`.
-- Versao/data exibida no portal: `0.1.4` em `16/05/2026`.
-- SHA-256 Android privado: `93b06f022aac21ddf296eeaa34fc126ed353341c0cda7ebee311203d7ed05139`.
+- Versao/data exibida no portal: `0.1.5` em `16/05/2026`.
+- SHA-256 Android privado: `4518789cbcc844f5f8ff87dcd13009f00f7ffbc252d5cea01e2ec50855b239a2`.
 - Manifesto publico: `https://www.sinalseguro.com.br/downloads/installers.json`.
 - iPhone: sem release ativo; sera disponibilizado posteriormente.
 - GitHub: nao versionar APK/AAB/IPA privados. O APK privado deve ser publicado somente no portal/EC2, com checksum, QR e manifesto versionados.
@@ -109,7 +109,7 @@ Checkpoint tecnico atual:
 - Chamado ativo tem regra singleton no servico, evitando dois pacotes `recording_local` simultaneos.
 - Exclusao de pacote local exige confirmacao e fica bloqueada enquanto o chamado estiver ativo.
 - Simulador web usa memoria volatil, nao cofre real.
-- Pre-convite local com codigo opaco, expiracao sugerida e compartilhamento permitido pelo sistema somente para instalar/aceitar convite.
+- Convite de anjo nasce somente no backend, com link unico e aceite bloqueado quando o servidor nao reconhece o token.
 - Pacote local de emergencia com horario, consentimento, georreferencia pontual autorizada, hash e video/audio local quando a usuaria conceder camera e microfone no build privado.
 - Area `Cofre local` para acessar pacotes e videos preservados neste dispositivo e verificar o que permanece bloqueado ate backend, contrato, chaves e auditoria.
 - Build privado de midia local habilita `CAMERA` e `RECORD_AUDIO` para homologacao controlada; transmissao, compartilhamento externo, P2P critico e envio remoto de midia continuam bloqueados.
@@ -127,6 +127,7 @@ APK privado Android atual com midia local para validacao e portal:
 - Login Google real ainda depende de habilitar `Custom URI scheme` no OAuth Android privado do Google Cloud.
 - Convites por link publico usam `https://www.sinalseguro.com.br/convite#convite=<codigo>`; o app preserva convite pendente de forma cifrada durante login, consentimentos e permissoes antes do aceite.
 - A tela `Anjos de confianca` mostra `Anjos` para quem o usuario autorizou e `Sou anjo` para quem convidou o usuario; o aceite deve exibir `Voce e anjo de ...` sem expor token, telefone, e-mail bruto, midia ou localizacao.
+- A versao `0.1.5` bloqueia convites locais/antigos: se o link nao existir no backend, a tela mostra `Convite indisponivel`, `Aceite bloqueado` e desativa `Aceitar como anjo`.
 
 ## OIDC Google
 

@@ -1,4 +1,3 @@
-import * as Crypto from "expo-crypto";
 import { deleteSecureRecord, listSecureRecords, saveSecureRecord } from "@/storage/secureJsonStore";
 import { ApiTrustedContactRelationship, apiClient } from "@/services/apiClient";
 import { deviceBindingService } from "@/services/deviceBinding";
@@ -7,18 +6,6 @@ import { LocalInvitation } from "./types";
 
 const INVITATION_NAMESPACE = "sinalseguro.invitations.v1";
 const PUBLIC_INVITE_URL = "https://www.sinalseguro.com.br/convite";
-
-function addDays(date: Date, days: number) {
-  const nextDate = new Date(date);
-  nextDate.setDate(nextDate.getDate() + days);
-  return nextDate;
-}
-
-async function createOpaqueToken() {
-  const entropy = `${Crypto.randomUUID()}.${Crypto.randomUUID()}.${Date.now()}`;
-  const digest = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, entropy);
-  return digest.slice(0, 40);
-}
 
 export function buildInvitationShareText(invitation: LocalInvitation) {
   return [
@@ -38,9 +25,11 @@ function buildInvitationUrls(token: string, inviteUrl?: string) {
   };
 }
 
-async function createBackendInvitation(displayLabel: string): Promise<LocalInvitation | null> {
+async function createBackendInvitation(displayLabel: string): Promise<LocalInvitation> {
   const currentSession = await apiClient.getStoredSession();
-  if (!currentSession) return null;
+  if (!currentSession) {
+    throw new Error("Entre com Google antes de criar convite. O vinculo precisa nascer validado no servidor.");
+  }
 
   await deviceBindingService.registerAuthenticatedDevice();
   await syncActiveProtectionProfileToApi();
@@ -75,30 +64,14 @@ async function createBackendInvitation(displayLabel: string): Promise<LocalInvit
   };
 }
 
-async function createLocalPreInvitation(displayLabel: string) {
-  const now = new Date();
-  const invitationCode = await createOpaqueToken();
-  const urls = buildInvitationUrls(invitationCode);
-  const invitation: LocalInvitation = {
-    id: Crypto.randomUUID(),
-    token: invitationCode,
-    displayLabel,
-    inviteUrl: urls.inviteUrl,
-    deepLinkUrl: urls.deepLinkUrl,
-    createdAt: now.toISOString(),
-    expiresAt: addDays(now, 7).toISOString(),
-    singleUsePolicy: "backend_validation_required",
-    status: "pendente",
-    syncStatus: "local_pre_invite"
-  };
-
+export async function createLocalInvitation(displayLabel = "Anjo de confianca") {
+  const invitation = await createBackendInvitation(displayLabel);
+  await saveSecureRecord(INVITATION_NAMESPACE, invitation);
   return invitation;
 }
 
-export async function createLocalInvitation(displayLabel = "Anjo de confianca") {
-  const invitation = (await createBackendInvitation(displayLabel)) ?? (await createLocalPreInvitation(displayLabel));
-  await saveSecureRecord(INVITATION_NAMESPACE, invitation);
-  return invitation;
+export async function validateBackendInvitationToken(token: string) {
+  return apiClient.getInvitationStatus(token);
 }
 
 export async function acceptBackendInvitation(

@@ -28,7 +28,15 @@ Revisao juridica/LGPD: Doneda
 - Retomada fisica em 2026-05-14 confirmou no Android `23129RA5FL` o pacote instalado `versionName=0.1.1`, `versionCode=3`, a API publica com `health=ok` e readiness `database=ok`, o gate de login bloqueando deep link direto sem sessao visivel, login Google concluido e o fluxo `Anjos de confianca` em modo API sem crash no logcat saneado.
 - iPhone/iOS permanece pos-MVP e nao faz parte deste fluxo.
 
-## Atualizacao real em 2026-05-16
+## Atualizacao real em 2026-05-16 - Android 0.1.5
+
+- APK privado Android `0.1.5` gerado em `android/app/build/outputs/apk/debug/app-debug.apk`, `versionCode 7`, SHA-256 `4518789cbcc844f5f8ff87dcd13009f00f7ffbc252d5cea01e2ec50855b239a2`.
+- O link direto publicado usa `?v=0.1.5-20260516` para atualizar cache mantendo o arquivo e QR estaveis.
+- A versao bloqueia criacao e aceite de convite que nao esteja validado no backend.
+- Validacao fisica nos dois Androids conectados confirmou `0.1.5` instalado e link invalido exibindo `Convite indisponivel`, `Aceite bloqueado` e botao `Aceitar como anjo` desativado.
+- API e portal publicados: release EC2 `/var/www/sinalseguro/releases/20260516T034600Z`, manifesto `0.1.5`, APK baixado com SHA-256 correto e health/ready aprovados.
+
+## Atualizacao real em 2026-05-16 - Android 0.1.4
 
 - APK privado Android `0.1.4` gerado em `android/app/build/outputs/apk/debug/app-debug.apk`, `versionCode 6`, SHA-256 `93b06f022aac21ddf296eeaa34fc126ed353341c0cda7ebee311203d7ed05139`.
 - O link direto publicado usa `?v=0.1.4-20260516` para atualizar cache mantendo o arquivo e QR estaveis.

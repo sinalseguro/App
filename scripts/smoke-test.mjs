@@ -303,6 +303,7 @@ if (
 if (
   !invitationScreen.includes("canAcceptAngelInvitation") ||
   !invitationScreen.includes("getActiveProtectionProfile") ||
+  !invitationScreen.includes("validateBackendInvitationToken") ||
   !invitationScreen.includes("Configurar perfil")
 ) {
   throw new Error("Aceite de convite precisa bloquear menor e perfil ausente antes de atuar como anjo.");
@@ -483,6 +484,7 @@ if (
   !apiClient.includes("loginWithAppleIdentityToken") ||
   !apiClient.includes("createConsentRecord") ||
   !apiClient.includes("createTrustedContact") ||
+  !apiClient.includes("getInvitationStatus") ||
   !apiClient.includes("acceptInvitation") ||
   !apiClient.includes("\"login\"") ||
   !apiClient.includes("Sem conexao com a internet")
@@ -548,9 +550,11 @@ if (
   !invitationService.includes("createBackendInvitation") ||
   !invitationService.includes("backend_single_use_enforced") ||
   !invitationService.includes("acceptBackendInvitation") ||
+  !invitationService.includes("validateBackendInvitationToken") ||
+  invitationService.includes("createLocalPreInvitation") ||
   !invitationService.includes("registerAuthenticatedDevice")
 ) {
-  throw new Error("Convites de anjo precisam usar API quando ha login e exigir dispositivo registrado no aceite.");
+  throw new Error("Convites de anjo precisam ser API-backed, validar status no servidor e exigir dispositivo registrado no aceite.");
 }
 
 if (!emergencyRecorder.includes("activeStartPromise") || !emergencyRecorder.includes("Ja existe chamado local ativo")) {

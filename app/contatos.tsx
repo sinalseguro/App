@@ -32,6 +32,7 @@ import {
 import { getActiveProtectionProfile } from "@/features/profiles/profileStore";
 import {
   ApiInvitation,
+  ApiRequestError,
   ApiSession,
   ApiTrustedContact,
   ApiTrustedContactRelationship,
@@ -77,6 +78,9 @@ function formatShortDate(value: string) {
 }
 
 function invitationDescription(invitation: LocalInvitation) {
+  if (invitation.syncStatus !== "backend_validated") {
+    return "Convite antigo sem validacao no servidor. Gere um novo convite seguro.";
+  }
   if (invitation.status === "compartilhado") {
     return "Convite compartilhado. O vínculo só nasce após aceite com conta própria.";
   }
@@ -90,7 +94,7 @@ function invitationDescription(invitation: LocalInvitation) {
 }
 
 function invitationDetail(invitation: LocalInvitation) {
-  const source = invitation.syncStatus === "backend_validated" ? "API validada" : "Local";
+  const source = invitation.syncStatus === "backend_validated" ? "Servidor validado" : "Nao sincronizado";
   return `${source} · expira em ${formatShortDate(invitation.expiresAt)}`;
 }
 
@@ -460,21 +464,27 @@ export default function ContactsScreen() {
 
     const label = inviteLabel.trim() || "Anjo de confiança";
     setBusy(true);
-    setStatus("Gerando convite seguro...");
+    setStatus("Gerando convite seguro no servidor...");
 
     try {
       const invitation = await createLocalInvitation(label);
       await Share.share({ message: buildInvitationShareText(invitation), url: invitation.inviteUrl });
       await markInvitationShared(invitation.id);
       await refreshAngels();
-      setStatus(
-        invitation.syncStatus === "backend_validated"
-          ? "Convite seguro criado. Ele é único e tem validade limitada."
-          : "Convite criado neste aparelho. O vínculo só nasce após aceite com conta própria."
-      );
+      setStatus("Convite seguro criado. Ele é único, validado no servidor e tem validade limitada.");
       setDialog(null);
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Não foi possível criar convite agora.");
+      const message = error instanceof Error ? error.message : "Não foi possível criar convite agora.";
+      if (error instanceof ApiRequestError && error.status === 401) {
+        setApiSession(null);
+        setDialog(null);
+        setStatus("Sessao expirada. Entre com Google novamente para criar convite seguro.");
+        return;
+      }
+      if (message.includes("Entre com Google")) {
+        setDialog(null);
+      }
+      setStatus(message);
     } finally {
       setBusy(false);
     }
@@ -820,7 +830,7 @@ export default function ContactsScreen() {
             ) : null}
             {localPreInvitations.length > 0 ? (
               <>
-                <SectionTitle icon={<Clock3 size={18} color={theme.colors.warning} />} title="Pré-convites locais" />
+                <SectionTitle icon={<Clock3 size={18} color={theme.colors.warning} />} title="Convites antigos sem servidor" />
                 {localPreInvitations.map((invitation) => (
                   <InviteCard
                     key={`${invitation.syncStatus}-${invitation.id}`}
