@@ -34,6 +34,7 @@ Revisao juridica/LGPD: Doneda
 - O link direto publicado usa `?v=0.1.5-20260516` para atualizar cache mantendo o arquivo e QR estaveis.
 - A versao bloqueia criacao e aceite de convite que nao esteja validado no backend.
 - Validacao fisica nos dois Androids conectados confirmou `0.1.5` instalado e link invalido exibindo `Convite indisponivel`, `Aceite bloqueado` e botao `Aceitar como anjo` desativado.
+- Roberto validou os testes fisicos manuais em 2026-05-16, aprovando a continuidade apos o fluxo de convite/aceite.
 - API e portal publicados: release EC2 `/var/www/sinalseguro/releases/20260516T034600Z`, manifesto `0.1.5`, APK baixado com SHA-256 correto e health/ready aprovados.
 
 ## Atualizacao real em 2026-05-16 - Android 0.1.4

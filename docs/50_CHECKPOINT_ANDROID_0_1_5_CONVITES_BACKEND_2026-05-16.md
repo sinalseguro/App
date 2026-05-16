@@ -57,17 +57,24 @@ Evidencias:
 - `docs/evidencias/android/2026-05-16-convite-backend-015/android-012-convite-indisponivel.png`
 - `docs/evidencias/android/2026-05-16-convite-backend-015/android-231-convite-indisponivel.png`
 
-## Pendencia de aceite real
+## Aceite manual aprovado
 
-O teste visual do erro anexado foi concluido nos dois aparelhos. O aceite real entre dois usuarios deve ser repetido com novo convite criado na `0.1.5`, apos login Google valido nos dois Androids, para confirmar a propagacao final do vinculo em `Meus anjos` e `Sou anjo de`.
+Roberto informou em 2026-05-16 que validou os testes fisicos manuais da `0.1.5`. Com esse aceite, o checkpoint de convite backend-only fica aprovado para continuidade do MVP Android.
 
-Passos manuais:
+Fluxo manual aprovado:
 
 1. No aparelho que convida, entrar com Google e abrir `Anjos`.
 2. Criar novo convite; o app so deve compartilhar se o backend criar o token.
 3. No aparelho anjo, abrir o link, entrar com a propria conta Google se necessario e aceitar.
 4. No aparelho anjo, conferir `Sou anjo de`.
 5. No aparelho que convidou, abrir `Anjos` ou tocar em atualizar e conferir `Meus anjos`.
+
+Resultado aceito:
+
+- convite deve nascer validado no backend;
+- link inexistente no backend deve permanecer bloqueado;
+- aceite real deve criar vinculo visivel para quem convidou e para quem aceitou;
+- app, API e portal seguem aptos para a proxima etapa Android.
 
 ## Publicacao
 

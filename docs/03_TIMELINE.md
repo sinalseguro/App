@@ -12,7 +12,8 @@ Supervisao: Ze
 - APK Android privado `0.1.5`/`versionCode 7` gerado em `android/app/build/outputs/apk/debug/app-debug.apk`;
 - SHA-256: `4518789cbcc844f5f8ff87dcd13009f00f7ffbc252d5cea01e2ec50855b239a2`;
 - validacoes locais: `npm run lint`, `npm run typecheck`, `npm test`, `npm run private:android:readiness` com pendencia conhecida de Node local para build publico, e build Android debug bundled aprovados;
-- validacao fisica: dois Androids receberam a `0.1.5`; link invalido exibiu `Convite indisponivel`, `Aceite bloqueado` e botao de aceite desativado.
+- validacao fisica: dois Androids receberam a `0.1.5`; link invalido exibiu `Convite indisponivel`, `Aceite bloqueado` e botao de aceite desativado;
+- aceite manual de Roberto: testes fisicos manuais validados em 2026-05-16; fluxo de convite/aceite considerado aprovado para continuidade do MVP Android;
 - publicacao: API em producao com `versionCode 7`, portal `/var/www/sinalseguro/releases/20260516T034600Z`, APK publico `sinalseguro_android.apk?v=0.1.5-20260516` e hash baixado conferido.
 
 ## 2026-05-16 - Android 0.1.4, anjos sincronizados e aceite visivel

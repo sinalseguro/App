@@ -128,6 +128,7 @@ APK privado Android atual com midia local para validacao e portal:
 - Convites por link publico usam `https://www.sinalseguro.com.br/convite#convite=<codigo>`; o app preserva convite pendente de forma cifrada durante login, consentimentos e permissoes antes do aceite.
 - A tela `Anjos de confianca` mostra `Anjos` para quem o usuario autorizou e `Sou anjo` para quem convidou o usuario; o aceite deve exibir `Voce e anjo de ...` sem expor token, telefone, e-mail bruto, midia ou localizacao.
 - A versao `0.1.5` bloqueia convites locais/antigos: se o link nao existir no backend, a tela mostra `Convite indisponivel`, `Aceite bloqueado` e desativa `Aceitar como anjo`.
+- Testes fisicos manuais da `0.1.5` aprovados por Roberto em 2026-05-16; fluxo liberado para continuidade do MVP Android.
 
 ## OIDC Google
 
