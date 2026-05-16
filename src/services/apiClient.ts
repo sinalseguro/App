@@ -211,6 +211,29 @@ const P2PSignalSchema = z.object({
   created_at: z.string()
 });
 
+const LiveRecipientDeviceSchema = z.object({
+  id: z.string(),
+  platform: z.string(),
+  device_label: z.string(),
+  key_algorithm: z.string(),
+  public_key: z.string(),
+  public_key_sha256: z.string()
+});
+
+const LiveRecipientSchema = z.object({
+  id: z.string(),
+  recipient: z.string(),
+  recipient_display_name: z.string(),
+  relationship_role: z.string(),
+  accepted_at: z.string().nullable().optional(),
+  devices: z.array(LiveRecipientDeviceSchema)
+});
+
+const LiveRecipientListSchema = z.object({
+  emergency_session: z.string(),
+  recipients: z.array(LiveRecipientSchema)
+});
+
 const ApiAppReleaseSchema = z
   .object({
     id: z.string(),
@@ -261,6 +284,9 @@ export type ApiEmergencyRecipient = z.infer<typeof EmergencyRecipientSchema>;
 export type ApiEmergencySession = z.infer<typeof EmergencySessionSchema>;
 export type ApiKeyEnvelope = z.infer<typeof KeyEnvelopeSchema>;
 export type ApiP2PSignal = z.infer<typeof P2PSignalSchema>;
+export type ApiLiveRecipient = z.infer<typeof LiveRecipientSchema>;
+export type ApiLiveRecipientDevice = z.infer<typeof LiveRecipientDeviceSchema>;
+export type ApiLiveRecipientList = z.infer<typeof LiveRecipientListSchema>;
 export type ApiAppRelease = z.infer<typeof ApiAppReleaseSchema>;
 
 export type RegisterDeviceInput = {
@@ -347,14 +373,15 @@ export type CreateKeyEnvelopeInput = {
   publicKeySha256: string;
   encryptedKey: string;
   algorithm: string;
+  expiresAt: string;
   recipientDeviceId?: string | null;
-  scope?: "media" | "live" | "location";
+  scope: "live_session" | "media_asset";
 };
 
 export type SendP2PSignalInput = {
   emergencySessionId: string;
   recipientId: string;
-  signalType: "offer" | "answer" | "candidate" | "control";
+  signalType: "offer" | "answer" | "ice";
   payload: Record<string, unknown>;
   expiresAt: string;
 };
@@ -752,6 +779,12 @@ export class SinalSeguroApiClient {
     });
   }
 
+  async listLiveRecipients(remoteSessionId: string) {
+    return this.request(`/emergency-sessions/${remoteSessionId}/live-recipients/`, LiveRecipientListSchema, {
+      authenticated: true
+    });
+  }
+
   async finishEmergencySession(remoteSessionId: string) {
     return this.request(`/emergency-sessions/${remoteSessionId}/finish/`, EmergencySessionSchema, {
       authenticated: true,
@@ -766,11 +799,12 @@ export class SinalSeguroApiClient {
         algorithm: input.algorithm,
         emergency_session: input.emergencySessionId,
         encrypted_key: input.encryptedKey,
+        expires_at: input.expiresAt,
         key_id: input.keyId,
         public_key_sha256: input.publicKeySha256,
         recipient: input.recipientId,
         recipient_device: input.recipientDeviceId ?? null,
-        scope: input.scope ?? "media"
+        scope: input.scope
       },
       method: "POST"
     });
@@ -786,6 +820,19 @@ export class SinalSeguroApiClient {
         recipient: input.recipientId,
         signal_type: input.signalType
       },
+      method: "POST"
+    });
+  }
+
+  async listP2PSignals() {
+    return this.request("/p2p-signals/", z.array(P2PSignalSchema), {
+      authenticated: true
+    });
+  }
+
+  async consumeP2PSignal(signalId: string) {
+    return this.request(`/p2p-signals/${signalId}/consume/`, P2PSignalSchema, {
+      authenticated: true,
       method: "POST"
     });
   }
