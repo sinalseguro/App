@@ -62,6 +62,12 @@ Resultado local:
 - OpenAPI validado com aviso preexistente de colisao de enum e 0 erros;
 - `makemigrations --check --dry-run` sem mudancas pendentes.
 
+Publicacao EC2:
+
+- migration aplicada: `emergency.0004_keyenvelope_blank_encrypted_key`;
+- backup pre-deploy: `/opt/sinalseguro-api/backups/f4_2_20260516T191006Z/`;
+- pos-deploy validado: `sinalseguro-api`, `cereusia-crm`, `nginx -t`, health/ready publicos, rotas sensiveis protegidas por `401` sem token e `cereusia.conf` intacto.
+
 ## Proxima validacao fisica
 
 1. instalar build privado em dois Androids autenticados;
