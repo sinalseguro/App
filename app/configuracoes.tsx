@@ -1113,7 +1113,7 @@ export default function SettingsScreen() {
                 icon={<PhoneCall size={18} color={theme.colors.primary} />}
                 label={
                   preferences?.emergencyPhoneCall.callTrustedContactOnAlert
-                    ? "Chamada ao anjo aguardando gestao"
+                    ? "Videochamada ao anjo aguardando gestao"
                     : "Atalho de anjo desativado"
                 }
               />

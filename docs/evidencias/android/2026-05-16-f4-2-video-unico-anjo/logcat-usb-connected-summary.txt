@@ -1,0 +1,69 @@
+# Resumo saneado de logcat-usb-connected.txt
+
+Filtro: WebRTC/SinalSeguro/conexao/crash. Logs crus descartados para nao registrar ruido de terceiros.
+
+691:05-17 06:21:50.664 13173 13194 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 ctor +0ms
+692:05-17 06:21:50.665 13173 13194 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 addTransceiver +1ms
+694:05-17 06:21:50.807 13173 13194 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 addTransceiver +142ms
+695:05-17 06:21:50.821 13173 13194 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 createOffer +13ms
+697:05-17 06:21:50.891 13173 13194 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 createOffer OK +71ms
+698:05-17 06:21:50.893 13173 13194 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 setLocalDescription +2ms
+700:05-17 06:21:51.120 13173 13207 I org.webrtc.Logging: NetworkMonitor: Start monitoring with native observer -1922953520 fieldTrialsString:
+703:05-17 06:21:51.210 13173 13359 I org.webrtc.Logging: NetworkMonitorAutoDetect: Network handle: 429513165534 becomes available: 100
+704:05-17 06:21:51.278 13173 13359 I org.webrtc.Logging: NetworkMonitorAutoDetect: handle: 429513165534 capabilities changed: [ Transports: WIFI Capabilities: NOT_METERED&INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&VALIDATED&FOREGROUND LinkUpBandwidth>=1048576Kbps LinkDnBandwidth>=1048576Kbps SignalStrength: -57]
+705:05-17 06:21:51.317 13173 13194 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 setLocalDescription OK +424ms
+706:05-17 06:21:51.340 13173 13359 I org.webrtc.Logging: NetworkMonitorAutoDetect: handle: 429513165534 link properties changed
+757:05-17 06:21:55.769 13173 13194 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 setRemoteDescription +4s
+758:05-17 06:21:55.802 13173 13208 I org.webrtc.Logging: WebRtcAudioTrackExternal: initPlayout(sampleRate=48000, channels=1, bufferSizeFactor=1.0)
+759:05-17 06:21:55.812 13173 13208 I org.webrtc.Logging: WebRtcAudioTrackExternal: byteBuffer.capacity: 960
+760:05-17 06:21:55.820 13173 13208 I org.webrtc.Logging: WebRtcAudioTrackExternal: minBufferSizeInBytes: 4104
+761:05-17 06:21:55.821 13173 13208 I org.webrtc.Logging: WebRtcAudioTrackExternal: createAudioTrackBeforeOreo
+762:05-17 06:21:55.822 13173 13208 I org.webrtc.Logging: WebRtcAudioTrackExternal: nativeOutputSampleRate: 48000
+763:05-17 06:21:55.866 13173 13208 I org.webrtc.Logging: WebRtcAudioTrackExternal: AudioTrack: session ID: 801, channels: 1, sample rate: 48000, max gain: 1.0
+764:05-17 06:21:55.868 13173 13208 I org.webrtc.Logging: WebRtcAudioTrackExternal: AudioTrack: buffer size in frames: 2052
+765:05-17 06:21:55.869 13173 13208 I org.webrtc.Logging: WebRtcAudioTrackExternal: AudioTrack: buffer capacity in frames: 2052
+766:05-17 06:21:55.870 13173 13208 I org.webrtc.Logging: WebRtcAudioTrackExternal: startPlayout
+774:05-17 06:21:56.024 13173 13366 I org.webrtc.Logging: WebRtcAudioTrackExternal: AudioTrackThread@[name=AudioTrackJavaThread, id=588]
+775:05-17 06:21:56.025 13173 13366 I org.webrtc.Logging: WebRtcAudioTrackExternal: doAudioTrackStateCallback: 0
+781:05-17 06:21:56.274 13173 13194 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 ontrack +505ms
+783:05-17 06:21:56.441 13173 13194 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 ontrack +167ms
+788:05-17 06:21:56.658 13173 13368 I org.webrtc.Logging: AndroidVideoDecoder: ctor name: OMX.MTK.VIDEO.DECODER.AVC type: H264 color format: 19 context: org.webrtc.EglBase14Impl$Context@d003d0f
+790:05-17 06:21:56.676 13173 13194 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 setRemoteDescription OK +235ms
+791:05-17 06:21:56.715 13173 13370 I org.webrtc.Logging: EglBase14Impl: Using OpenGL ES version 2
+797:05-17 06:21:56.768 13173 13370 I org.webrtc.Logging: SurfaceTextureHelper: Setting listener to org.webrtc.AndroidVideoDecoder@c2c5c85
+798:05-17 06:21:56.768 13173 13368 I org.webrtc.Logging: AndroidVideoDecoder: initDecodeInternal name: OMX.MTK.VIDEO.DECODER.AVC type: H264 width: 640 height: 352 color format: 19
+819:05-17 06:21:56.912 13173 13368 I org.webrtc.Logging: AndroidVideoDecoder: initDecodeInternal done
+913:05-17 06:21:57.213 13173 13378 I org.webrtc.Logging: AndroidVideoDecoder: Decoder format changed: {crop-right=639, color-format=35, slice-height=352, mime=video/raw, hdr-static-info=java.nio.HeapByteBuffer[pos=0 lim=25 cap=25], stride=640, color-standard=4, color-transfer=3, crop-bottom=351, crop-left=0, width=640, color-range=2, crop-top=0, height=352}
+914:05-17 06:21:57.217 13173 13378 I org.webrtc.Logging: AndroidVideoDecoder: Frame stride and slice height: 640 x 352
+985:05-17 06:21:58.698 13173 13379 I org.webrtc.Logging: EglBase14Impl: Using OpenGL ES version 2
+987:05-17 06:21:58.700 13173 13173 I org.webrtc.Logging: EglRenderer: Initializing EglRenderer
+990:05-17 06:21:58.828 13173 13369 I org.webrtc.Logging: SurfaceEglRenderer: : Reporting first rendered frame.
+991:05-17 06:21:58.835 13173 13369 I org.webrtc.Logging: SurfaceEglRenderer: : Reporting frame resolution changed to 640x352 with rotation 270
+992:05-17 06:21:58.839 13173 13379 I org.webrtc.Logging: EglRenderer: Dropping frame - No surface
+1009:05-17 06:21:58.892 13173 13173 I org.webrtc.Logging: SurfaceEglRenderer: : surfaceChanged: format: 4 size: 604x240
+1014:05-17 06:21:59.003 13173 13194 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 addIceCandidate +2s
+1030:05-17 06:21:59.661 13173 13194 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 addIceCandidate +657ms
+1049:05-17 06:22:00.231 13173 13194 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 addIceCandidate +571ms
+1107:05-17 06:22:02.808 13173 13379 I org.webrtc.Logging: EglRenderer: Duration: 4101 ms. Frames received: 21. Dropped: 0. Rendered: 20. Render fps: 4,9. Average render time: 11504 us. Average swapBuffer time: 11132 us.
+1170:05-17 06:22:06.861 13173 13379 I org.webrtc.Logging: EglRenderer: Duration: 4048 ms. Frames received: 20. Dropped: 0. Rendered: 20. Render fps: 4,9. Average render time: 8009 us. Average swapBuffer time: 6631 us.
+1266:05-17 06:22:10.913 13173 13379 I org.webrtc.Logging: EglRenderer: Duration: 4058 ms. Frames received: 44. Dropped: 0. Rendered: 43. Render fps: 10,6. Average render time: 7922 us. Average swapBuffer time: 7936 us.
+1290:05-17 06:22:11.847 13173 13378 I org.webrtc.Logging: AndroidVideoDecoder: Releasing MediaCodec on output thread
+1313:05-17 06:22:11.969 13173 13378 I org.webrtc.Logging: AndroidVideoDecoder: Release on output thread done
+1314:05-17 06:22:11.977 13173 13368 I org.webrtc.Logging: AndroidVideoDecoder: initDecodeInternal name: OMX.MTK.VIDEO.DECODER.AVC type: H264 width: 960 height: 528 color format: 19
+1338:05-17 06:22:12.063 13173 13368 I org.webrtc.Logging: AndroidVideoDecoder: initDecodeInternal done
+1441:05-17 06:22:12.336 13173 13393 I org.webrtc.Logging: AndroidVideoDecoder: Decoder format changed: {crop-right=959, color-format=35, slice-height=528, mime=video/raw, hdr-static-info=java.nio.HeapByteBuffer[pos=0 lim=25 cap=25], stride=960, color-standard=1, color-transfer=3, crop-bottom=527, crop-left=0, width=960, color-range=2, crop-top=0, height=528}
+1442:05-17 06:22:12.340 13173 13393 I org.webrtc.Logging: AndroidVideoDecoder: Frame stride and slice height: 960 x 528
+1450:05-17 06:22:12.397 13173 13369 I org.webrtc.Logging: SurfaceEglRenderer: : Reporting frame resolution changed to 960x528 with rotation 270
+1531:05-17 06:22:14.984 13173 13379 I org.webrtc.Logging: EglRenderer: Duration: 4035 ms. Frames received: 39. Dropped: 0. Rendered: 40. Render fps: 9,9. Average render time: 8077 us. Average swapBuffer time: 9787 us.
+1606:05-17 06:22:19.029 13173 13379 I org.webrtc.Logging: EglRenderer: Duration: 4076 ms. Frames received: 24. Dropped: 0. Rendered: 23. Render fps: 5,6. Average render time: 10615 us. Average swapBuffer time: 8255 us.
+1696:05-17 06:22:23.062 13173 13379 I org.webrtc.Logging: EglRenderer: Duration: 4033 ms. Frames received: 21. Dropped: 0. Rendered: 22. Render fps: 5,5. Average render time: 6602 us. Average swapBuffer time: 11173 us.
+1873:05-17 06:22:27.108 13173 13379 I org.webrtc.Logging: EglRenderer: Duration: 4049 ms. Frames received: 49. Dropped: 0. Rendered: 48. Render fps: 11,9. Average render time: 9362 us. Average swapBuffer time: 8141 us.
+2060:05-17 06:22:31.143 13173 13379 I org.webrtc.Logging: EglRenderer: Duration: 4035 ms. Frames received: 41. Dropped: 0. Rendered: 41. Render fps: 10,2. Average render time: 8023 us. Average swapBuffer time: 9295 us.
+2082:05-17 06:22:31.743 13173 13393 I org.webrtc.Logging: AndroidVideoDecoder: Releasing MediaCodec on output thread
+2106:05-17 06:22:31.890 13173 13393 I org.webrtc.Logging: AndroidVideoDecoder: Release on output thread done
+2107:05-17 06:22:31.891 13173 13368 I org.webrtc.Logging: AndroidVideoDecoder: initDecodeInternal name: OMX.MTK.VIDEO.DECODER.AVC type: H264 width: 1280 height: 720 color format: 19
+2130:05-17 06:22:31.983 13173 13368 I org.webrtc.Logging: AndroidVideoDecoder: initDecodeInternal done
+2240:05-17 06:22:32.269 13173 13409 I org.webrtc.Logging: AndroidVideoDecoder: Decoder format changed: {crop-right=1279, color-format=35, slice-height=720, mime=video/raw, hdr-static-info=java.nio.HeapByteBuffer[pos=0 lim=25 cap=25], stride=1280, color-standard=1, color-transfer=3, crop-bottom=719, crop-left=0, width=1280, color-range=2, crop-top=0, height=720}
+2241:05-17 06:22:32.271 13173 13409 I org.webrtc.Logging: AndroidVideoDecoder: Frame stride and slice height: 1280 x 720
+2253:05-17 06:22:32.341 13173 13369 I org.webrtc.Logging: SurfaceEglRenderer: : Reporting frame resolution changed to 1280x720 with rotation 270
+2370:05-17 06:22:35.193 13173 13379 I org.webrtc.Logging: EglRenderer: Duration: 4050 ms. Frames received: 17. Dropped: 0. Rendered: 18. Render fps: 4,4. Average render time: 9231 us. Average swapBuffer time: 6895 us.

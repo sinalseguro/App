@@ -15,10 +15,12 @@ export type LiveIcePayload = Extract<LiveSignalPayload, { candidate: string }>;
 export type LiveSdpPayload = Extract<LiveSignalPayload, { sdp: string }>;
 
 export type LiveWebRtcSessionOptions = {
+  audioMode?: "recvonly" | "sendrecv";
   callSessionId: string;
   onConnectionState?: (state: LiveConnectionState) => void;
   onLocalIceCandidate?: (payload: LiveIcePayload) => void;
   onRemoteStream?: (stream: MediaStream) => void;
+  videoMode?: "disabled" | "recvonly" | "sendrecv";
   videoEnabled?: boolean;
 };
 
@@ -30,13 +32,17 @@ type PeerEventHandlers = {
 
 function assertAndroidOrNative() {
   if (Platform.OS === "web") {
-    throw new Error("Chamada ao vivo indisponivel no ambiente web.");
+    throw new Error("Videochamada indisponivel no ambiente web.");
   }
 }
 
-function buildMediaConstraints(videoEnabled: boolean) {
+type PeerWithTransceiver = RTCPeerConnection & {
+  addTransceiver?: (trackOrKind: "audio" | "video", init?: { direction: "recvonly" }) => unknown;
+};
+
+function buildMediaConstraints(audioEnabled: boolean, videoEnabled: boolean) {
   return {
-    audio: true,
+    audio: audioEnabled,
     video: videoEnabled
       ? {
           facingMode: "user",
@@ -62,18 +68,37 @@ export class LiveWebRtcSession {
 
   private constructor(
     private readonly callSessionId: string,
-    private readonly localStream: MediaStream,
+    private readonly localStream: MediaStream | null,
     private readonly peer: RTCPeerConnection
   ) {}
 
   static async create(options: LiveWebRtcSessionOptions) {
     assertAndroidOrNative();
-    const localStream = await mediaDevices.getUserMedia(buildMediaConstraints(options.videoEnabled ?? false));
+    const audioMode = options.audioMode ?? "sendrecv";
+    const videoMode = options.videoMode ?? (options.videoEnabled ? "sendrecv" : "disabled");
+    const localVideoEnabled = videoMode === "sendrecv";
+    const localCaptureEnabled = audioMode === "sendrecv" || localVideoEnabled;
+    const localStream = localCaptureEnabled
+      ? await mediaDevices.getUserMedia(buildMediaConstraints(audioMode === "sendrecv", localVideoEnabled))
+      : null;
     const peer = new RTCPeerConnection({ iceServers: [] });
 
-    localStream.getTracks().forEach((track) => {
+    localStream?.getTracks().forEach((track) => {
       peer.addTrack(track, localStream);
     });
+
+    if (!localStream && (audioMode === "recvonly" || videoMode === "recvonly")) {
+      const transceiverPeer = peer as PeerWithTransceiver;
+      if (!transceiverPeer.addTransceiver) {
+        throw new Error("Videochamada indisponivel neste aparelho.");
+      }
+      if (audioMode === "recvonly") {
+        transceiverPeer.addTransceiver("audio", { direction: "recvonly" });
+      }
+      if (videoMode === "recvonly") {
+        transceiverPeer.addTransceiver("video", { direction: "recvonly" });
+      }
+    }
 
     const eventPeer = peer as unknown as PeerEventHandlers;
     eventPeer.onconnectionstatechange = () => {
@@ -144,7 +169,7 @@ export class LiveWebRtcSession {
   close() {
     if (this.closed) return;
     this.closed = true;
-    this.localStream.getTracks().forEach((track) => {
+    this.localStream?.getTracks().forEach((track) => {
       track.stop();
     });
     this.peer.close();

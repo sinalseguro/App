@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { BellRing, CheckCircle2, RefreshCw, ShieldAlert, XCircle } from "lucide-react-native";
+import { BellRing, CheckCircle2, RefreshCw, ShieldAlert, Video, XCircle } from "lucide-react-native";
 import { BrandedDialog, BrandedDialogAction } from "@/components/BrandedDialog";
 import { SafeScreen } from "@/components/SafeScreen";
 import { theme } from "@/design/theme";
@@ -23,13 +23,21 @@ function formatAlertDate(value: string) {
   }).format(new Date(value));
 }
 
-function phaseLabel(session: ApiEmergencySession) {
-  const recipientStatus = session.recipients?.find((recipient) => recipient.emergency_session === session.id)?.status;
+function currentRecipientStatus(session: ApiEmergencySession) {
+  if (session.current_recipient_status) return session.current_recipient_status;
+
+  const recipients = session.recipients ?? [];
+  if (recipients.length === 1) return recipients[0]?.status;
+  return undefined;
+}
+
+function phaseLabel(session: ApiEmergencySession, recipientStatus?: string, acceptedByCurrentUser = false) {
+  if (acceptedByCurrentUser) return "Você aceitou acompanhar";
   if (recipientStatus === "accepted") return "Você aceitou acompanhar";
   if (recipientStatus === "declined") return "Você recusou";
   if (recipientStatus === "ended") return "Encerrado";
   if (recipientStatus === "seen") return "Visualizado";
-  if (session.phase === "accepted") return "Atendimento aceito";
+  if (session.phase === "accepted") return "Atendimento em andamento";
   if (session.phase === "ended" || session.status !== "active") return "Encerrado";
   return "Novo pedido de apoio";
 }
@@ -43,6 +51,7 @@ export default function AlertScreen() {
   const [status, setStatus] = useState("Carregando pedidos recebidos...");
   const [refreshing, setRefreshing] = useState(false);
   const [dialog, setDialog] = useState<AlertDialog | null>(null);
+  const [locallyAcceptedSessionIds, setLocallyAcceptedSessionIds] = useState<Set<string>>(() => new Set());
   const liveAudioCall = useLiveAudioCall();
 
   const sortedAlerts = useMemo(() => sortAlerts(alerts), [alerts]);
@@ -71,6 +80,15 @@ export default function AlertScreen() {
       setAlerts((currentAlerts) =>
         currentAlerts.map((item) => (item.id === updatedSession.id ? updatedSession : item))
       );
+      setLocallyAcceptedSessionIds((current) => {
+        const next = new Set(current);
+        if (action === "accept") {
+          next.add(session.id);
+        } else if (action === "decline") {
+          next.delete(session.id);
+        }
+        return next;
+      });
       setStatus(`Pedido ${actionLabel}.`);
     } catch (error) {
       setDialog({
@@ -117,9 +135,11 @@ export default function AlertScreen() {
         <View style={styles.alertStack}>
           {sortedAlerts.map((session) => {
             const isActive = session.status === "active" && session.phase !== "ended";
-            const recipientStatus = session.recipients?.find((recipient) => recipient.emergency_session === session.id)?.status;
-            const canEnterAudio = isActive && recipientStatus === "accepted";
-            const isAudioPanelSession = liveAudioCall.state.remoteSessionId === session.id;
+            const recipientStatus = currentRecipientStatus(session);
+            const hasAccepted = recipientStatus === "accepted" || locallyAcceptedSessionIds.has(session.id);
+            const canEnterCall = isActive && hasAccepted;
+            const isCallPanelSession = liveAudioCall.state.remoteSessionId === session.id;
+            const hasOtherCallSession = Boolean(liveAudioCall.state.remoteSessionId) && !isCallPanelSession;
             return (
               <View key={session.id} style={styles.alertCard}>
                 <View style={styles.alertHeader}>
@@ -132,30 +152,50 @@ export default function AlertScreen() {
                   </View>
                 </View>
 
-                <Text style={styles.alertStatus}>{phaseLabel(session)}</Text>
+                <Text style={styles.alertStatus}>{phaseLabel(session, recipientStatus, hasAccepted)}</Text>
                 <Text style={styles.alertBody}>
-                  O app registra o pedido autorizado. O áudio só inicia quando você tocar em entrar.
+                  O app registra o pedido autorizado. Sua voz só inicia quando você tocar em entrar.
                 </Text>
 
-                {canEnterAudio || isAudioPanelSession ? (
+                {canEnterCall && !isCallPanelSession ? (
+                  <View style={styles.callPromptPanel}>
+                    <View style={styles.callPromptHeader}>
+                      <View style={styles.callPromptIcon}>
+                        <Video size={18} color={theme.colors.primary} />
+                      </View>
+                      <View style={styles.callPromptTextBlock}>
+                        <Text style={styles.callPromptTitle}>Videochamada com anjo</Text>
+                        <Text style={styles.callPromptText}>Toque para abrir a videochamada segura deste pedido.</Text>
+                      </View>
+                    </View>
+                    <Pressable
+                      accessibilityLabel="Entrar na videochamada"
+                      accessibilityRole="button"
+                      disabled={hasOtherCallSession}
+                      onPress={() => {
+                        void liveAudioCall.startAngelAudioCall(session);
+                      }}
+                      style={({ pressed }) => [
+                        styles.callPrimaryAction,
+                        hasOtherCallSession && styles.actionDisabled,
+                        pressed && styles.actionPressed
+                      ]}
+                    >
+                      <Video size={18} color={theme.colors.textOnDark} />
+                      <Text style={styles.callPrimaryActionText}>Entrar na videochamada</Text>
+                    </Pressable>
+                  </View>
+                ) : null}
+
+                {isCallPanelSession ? (
                   <LiveAudioCallPanel
-                    actionLabel="Entrar no áudio"
-                    disabled={!canEnterAudio || (Boolean(liveAudioCall.state.remoteSessionId) && !isAudioPanelSession)}
+                    actionLabel="Entrar na videochamada"
+                    disabled={!canEnterCall || hasOtherCallSession}
                     onPrimaryAction={() => {
                       void liveAudioCall.startAngelAudioCall(session);
                     }}
                     onStop={liveAudioCall.stopLiveAudioCall}
-                    state={
-                      isAudioPanelSession
-                        ? liveAudioCall.state
-                        : {
-                            message: "Acompanhe o pedido antes de entrar no áudio.",
-                            participantName: session.owner_display_name,
-                            remoteSessionId: session.id,
-                            role: "angel",
-                            status: "idle"
-                          }
-                    }
+                    state={liveAudioCall.state}
                   />
                 ) : null}
 
@@ -183,18 +223,18 @@ export default function AlertScreen() {
                   <Pressable
                     accessibilityLabel="Aceitar acompanhar"
                     accessibilityRole="button"
-                    disabled={!isActive}
+                    disabled={!isActive || hasAccepted}
                     onPress={() => {
                       void respondToAlert(session, "accept");
                     }}
                     style={({ pressed }) => [
                       styles.primaryAction,
-                      !isActive && styles.actionDisabled,
+                      (!isActive || hasAccepted) && styles.actionDisabled,
                       pressed && styles.actionPressed
                     ]}
                   >
                     <CheckCircle2 size={18} color={theme.colors.textOnDark} />
-                    <Text style={styles.primaryActionText}>Acompanhar</Text>
+                    <Text style={styles.primaryActionText}>{hasAccepted ? "Acompanhando" : "Acompanhar"}</Text>
                   </Pressable>
                 </View>
               </View>
@@ -280,6 +320,61 @@ const styles = StyleSheet.create({
   alertTitleBlock: {
     flex: 1,
     minWidth: 0
+  },
+  callPrimaryAction: {
+    alignItems: "center",
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    flexDirection: "row",
+    gap: theme.spacing.xs,
+    justifyContent: "center",
+    minHeight: 48,
+    paddingHorizontal: theme.spacing.md
+  },
+  callPrimaryActionText: {
+    color: theme.colors.textOnDark,
+    fontSize: 14,
+    fontWeight: "900",
+    textAlign: "center"
+  },
+  callPromptHeader: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: theme.spacing.sm
+  },
+  callPromptIcon: {
+    alignItems: "center",
+    backgroundColor: theme.colors.surfaceMuted,
+    borderRadius: theme.radius.pill,
+    height: 36,
+    justifyContent: "center",
+    width: 36
+  },
+  callPromptPanel: {
+    backgroundColor: theme.colors.surface,
+    borderColor: theme.colors.primary,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    gap: theme.spacing.sm,
+    padding: theme.spacing.md,
+    ...theme.shadow
+  },
+  callPromptText: {
+    color: theme.colors.textMuted,
+    fontSize: theme.typography.small,
+    lineHeight: 18
+  },
+  callPromptTextBlock: {
+    flex: 1,
+    minWidth: 0
+  },
+  callPromptTitle: {
+    color: theme.colors.text,
+    fontSize: 15,
+    fontWeight: "900",
+    lineHeight: 19
   },
   emptyCard: {
     ...theme.buttonSurface,

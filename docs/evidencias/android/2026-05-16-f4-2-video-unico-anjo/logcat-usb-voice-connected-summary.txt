@@ -1,0 +1,17 @@
+# Resumo saneado de logcat-usb-voice-connected.txt
+
+Filtro: WebRTC/SinalSeguro/conexao/crash. Logs crus descartados para nao registrar ruido de terceiros.
+
+2235:05-17 06:42:34.228 13956 13978 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 close +2m
+2238:05-17 06:42:34.253 13956 13992 I org.webrtc.Logging: WebRtcAudioTrackExternal: stopPlayout
+2239:05-17 06:42:34.255 13956 13992 I org.webrtc.Logging: WebRtcAudioTrackExternal: underrun count: 1
+2241:05-17 06:42:34.265 13956 13992 I org.webrtc.Logging: WebRtcAudioTrackExternal: stopThread
+2242:05-17 06:42:34.266 13956 13992 I org.webrtc.Logging: WebRtcAudioTrackExternal: Stopping the AudioTrackThread...
+2246:05-17 06:42:34.300 13956 13992 I org.webrtc.Logging: WebRtcAudioTrackExternal: AudioTrackThread has now been stopped.
+2247:05-17 06:42:34.300 13956 13992 I org.webrtc.Logging: WebRtcAudioTrackExternal: Calling AudioTrack.stop...
+2248:05-17 06:42:34.302 13956 13992 I org.webrtc.Logging: WebRtcAudioTrackExternal: AudioTrack.stop is done.
+2249:05-17 06:42:34.303 13956 13992 I org.webrtc.Logging: WebRtcAudioTrackExternal: doAudioTrackStateCallback: 1
+2250:05-17 06:42:34.303 13956 13992 I org.webrtc.Logging: WebRtcAudioTrackExternal: releaseAudioResources
+2252:05-17 06:42:34.313 13956 13991 I org.webrtc.Logging: NetworkMonitor: Stop monitoring with native observer -1940934624
+2253:05-17 06:42:34.314 13956 13991 I org.webrtc.Logging: NetworkMonitorAutoDetect: Unregister network callback
+2254:05-17 06:42:34.315 13956 13991 I org.webrtc.Logging: NetworkMonitorAutoDetect: Unregister network callback

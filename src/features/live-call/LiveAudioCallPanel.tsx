@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { PhoneCall, PhoneOff, Radio } from "lucide-react-native";
+import { PhoneOff, Radio, Video } from "lucide-react-native";
+import { RTCView } from "react-native-webrtc";
 
 import { theme } from "@/design/theme";
 import type { LiveAudioCallState } from "./useLiveAudioCall";
@@ -13,12 +14,12 @@ type LiveAudioCallPanelProps = {
 };
 
 function statusLabel(status: LiveAudioCallState["status"]) {
-  if (status === "connected") return "Audio conectado";
+  if (status === "connected") return "Videochamada conectada";
   if (status === "connecting") return "Conectando";
-  if (status === "failed") return "Audio indisponivel";
+  if (status === "failed") return "Videochamada indisponivel";
   if (status === "waiting") return "Aguardando";
-  if (status === "ended") return "Audio encerrado";
-  return "Audio com anjo";
+  if (status === "ended") return "Videochamada encerrada";
+  return "Videochamada com anjo";
 }
 
 function accentColor(status: LiveAudioCallState["status"]) {
@@ -36,6 +37,7 @@ export function LiveAudioCallPanel({
 }: LiveAudioCallPanelProps) {
   const active = state.status === "connected" || state.status === "connecting" || state.status === "waiting";
   const accent = accentColor(state.status);
+  const remoteStreamUrl = state.remoteStream?.toURL();
 
   return (
     <View style={[styles.panel, { borderColor: accent }]}>
@@ -49,6 +51,13 @@ export function LiveAudioCallPanel({
         </View>
       </View>
 
+      {remoteStreamUrl ? (
+        <View style={styles.videoFrame}>
+          <RTCView objectFit="cover" streamURL={remoteStreamUrl} style={styles.remoteVideo} />
+          <Text style={styles.videoLabel}>{state.role === "owner" ? "Imagem do anjo" : "Imagem recebida"}</Text>
+        </View>
+      ) : null}
+
       <View style={styles.actions}>
         <Pressable
           accessibilityLabel={actionLabel}
@@ -61,12 +70,12 @@ export function LiveAudioCallPanel({
             pressed && styles.actionPressed
           ]}
         >
-          <PhoneCall size={17} color={theme.colors.textOnDark} />
+          <Video size={17} color={theme.colors.textOnDark} />
           <Text style={styles.primaryActionText}>{actionLabel}</Text>
         </Pressable>
         {active ? (
           <Pressable
-            accessibilityLabel="Encerrar audio"
+            accessibilityLabel="Encerrar videochamada"
             accessibilityRole="button"
             onPress={onStop}
             style={({ pressed }) => [styles.stopAction, pressed && styles.actionPressed]}
@@ -152,5 +161,26 @@ const styles = StyleSheet.create({
   titleBlock: {
     flex: 1,
     minWidth: 0
+  },
+  remoteVideo: {
+    flex: 1
+  },
+  videoFrame: {
+    backgroundColor: theme.colors.text,
+    borderRadius: theme.radius.md,
+    height: 120,
+    overflow: "hidden"
+  },
+  videoLabel: {
+    backgroundColor: "rgba(0,0,0,0.42)",
+    bottom: 0,
+    color: theme.colors.textOnDark,
+    fontSize: 11,
+    fontWeight: "900",
+    left: 0,
+    paddingHorizontal: theme.spacing.sm,
+    paddingVertical: 4,
+    position: "absolute",
+    right: 0
   }
 });

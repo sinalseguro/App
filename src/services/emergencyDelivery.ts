@@ -26,7 +26,9 @@ export function buildCreateAlertDraft(packageRecord: EmergencyPackage) {
 
 function packageAccuracyMeters(packageRecord: EmergencyPackage) {
   if (packageRecord.location.status !== "captured") return null;
-  return packageRecord.location.accuracyMeters;
+  const accuracyMeters = packageRecord.location.accuracyMeters;
+  if (!Number.isFinite(accuracyMeters) || accuracyMeters < 0 || accuracyMeters > 999999.99) return null;
+  return Math.round(accuracyMeters * 100) / 100;
 }
 
 function isDeviceReferenceError(error: ApiRequestError) {
@@ -119,7 +121,14 @@ export async function syncEmergencySessionWithApi(
 
       await deviceBindingService.clearRegisteredDeviceSession();
       const refreshedDevice = await deviceBindingService.registerAuthenticatedDevice();
-      remoteSession = await createRemoteEmergencySession(packageRecord, refreshedDevice.device.id);
+      try {
+        remoteSession = await createRemoteEmergencySession(packageRecord, refreshedDevice.device.id);
+      } catch (retryError) {
+        if (!(retryError instanceof ApiRequestError) || retryError.status !== 400) {
+          throw retryError;
+        }
+        remoteSession = await createRemoteEmergencySession(packageRecord, null);
+      }
     }
 
     return {

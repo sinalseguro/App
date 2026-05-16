@@ -57,9 +57,13 @@ export async function listAcceptedOwnerRelationships() {
 export async function listAcceptedOwnerRelationshipsForDelivery() {
   try {
     const relationships = await refreshTrustedContactRelationshipsFromApi();
-    return relationships.filter(
-      (relationship) => relationship.relationship_role === "owner" && relationship.status === "accepted"
-    );
+    return relationships
+      .filter((relationship) => relationship.relationship_role === "owner" && relationship.status === "accepted")
+      .sort((left, right) => {
+        const leftDate = left.accepted_at ?? left.updated_at ?? left.created_at;
+        const rightDate = right.accepted_at ?? right.updated_at ?? right.created_at;
+        return new Date(rightDate).getTime() - new Date(leftDate).getTime();
+      });
   } catch {
     return listAcceptedOwnerRelationships();
   }

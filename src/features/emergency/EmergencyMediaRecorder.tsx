@@ -26,6 +26,7 @@ export type MediaStopRequestResult = {
 
 type EmergencyMediaRecorderProps = {
   activePackageId: string | null;
+  avoidLiveAudioPanel?: boolean;
   captureStopLocked?: boolean;
   preferences: EmergencyPreferences;
   onMediaAttached?: () => void;
@@ -218,6 +219,7 @@ async function persistCaptureDiagnostic(
 
 export function EmergencyMediaRecorder({
   activePackageId,
+  avoidLiveAudioPanel = false,
   captureStopLocked = false,
   preferences,
   onMediaAttached,
@@ -908,7 +910,14 @@ export function EmergencyMediaRecorder({
   if (!mediaEnabled || Platform.OS === "web" || mediaPermissionStatus !== "granted") return null;
 
   return (
-    <View pointerEvents="none" style={[styles.captureHost, Platform.OS === "ios" && styles.captureHostIos]}>
+    <View
+      pointerEvents="none"
+      style={[
+        styles.captureHost,
+        avoidLiveAudioPanel && styles.captureHostAboveAudioPanel,
+        Platform.OS === "ios" && styles.captureHostIos
+      ]}
+    >
       <View style={[styles.previewStack, Platform.OS === "ios" && styles.previewStackIos]}>
         {activeCameraModes.map((mode) => (
           <CameraView
@@ -1010,6 +1019,10 @@ const styles = StyleSheet.create({
     right: theme.spacing.lg,
     width: 132,
     zIndex: 8
+  },
+  captureHostAboveAudioPanel: {
+    bottom: undefined,
+    top: theme.spacing.md
   },
   captureHostIos: {
     height: 130,

@@ -3,6 +3,23 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-16 - F4.2 videochamada emergencial com um unico anjo
+
+Status: implementado localmente e validado em dois Androids fisicos para o recorte MVP; publicacao no portal ainda nao executada nesta rodada.
+
+- escopo ajustado: chamada emergencial do MVP Android foca um unico anjo aceito por ocorrencia;
+- agentes homologados de instituicoes conveniadas ficam para versao/variante institucional futura, com contrato, RBAC, MFA, auditoria, retencao e RIPD/DPIA proprios;
+- backend passou a limitar roteamento e `live-recipients` ao anjo aceito mais recente para o MVP;
+- Home Android limita entrega local a um anjo aceito, reidrata sessao remota ativa e limpa estado visual da chamada ao encerrar o SOS;
+- tela `Alertas recebidos` libera `Entrar na videochamada` somente apos aceite do anjo;
+- runtime WebRTC Android usa P2P apos sinalizacao pela EC2; backend nao recebe nem armazena midia da chamada;
+- pessoa protegida mantem gravacao local ativa, envia voz e recebe video/voz do anjo; anjo envia voz/video ao entrar na chamada;
+- evidencias fisicas saneadas salvas em `docs/evidencias/android/2026-05-16-f4-2-video-unico-anjo/`;
+- EC2 confirmou sessao mais recente finalizada com um destinatario, um envelope efemero e sete sinais P2P;
+- validacoes aprovadas: backend com 46 testes focados, deploy API EC2, health/ready publicos, `npm run typecheck`, `npm run lint`, `npm test -- --runInBand` e `npm run build:android:debug:bundled`;
+- APK local `0.1.8`/`versionCode 10` gerado com SHA-256 `adc62dd434ac884c921d161c88c797300d25a3f7d26a7ad0ab5de7e79f2619a0`;
+- APK instalado no Android USB; transporte Wi-Fi respondeu comandos leves, mas travou em transferencia pesada do APK e deve ser retomado por USB ou portal.
+
 ## 2026-05-16 - Android 0.1.7 com versao instalada clara
 
 Status: ajuste visual implementado, APK publicado e API/portal sincronizados.

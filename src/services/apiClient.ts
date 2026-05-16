@@ -168,6 +168,8 @@ const EmergencySessionSchema = z.object({
   device: z.string().nullable().optional(),
   protected_subject: z.string().nullable().optional(),
   owner_display_name: z.string().optional(),
+  current_recipient: z.string().nullable().optional(),
+  current_recipient_status: z.string().nullable().optional(),
   client_alert_id: z.string(),
   idempotency_key: z.string(),
   kind: z.string(),

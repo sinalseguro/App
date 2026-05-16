@@ -27,6 +27,7 @@ import { createMediaDiagnosticRun, summarizeMediaDiagnostics } from "@/features/
 import { appendMediaOperationalLog } from "@/features/emergency/MediaOperationalLog";
 import { cleanupNativeMediaResidues } from "@/features/emergency/SinalSeguroMediaEngine";
 import {
+  listEmergencyRemoteSyncStates,
   queueEmergencyPackageForRemoteSync,
   syncEmergencyPackageWithApi,
   syncPendingEmergencyPackagesWithApi
@@ -228,6 +229,10 @@ export default function HomeScreen() {
     setActivePackageId(activePackage?.id ?? null);
     if (activePackage) {
       setMediaRecorderPackageId(activePackage.id);
+      const activeRemoteSync = (await listEmergencyRemoteSyncStates().catch(() => [])).find(
+        (state) => state.packageId === activePackage.id && state.status === "sent_to_ec2" && Boolean(state.remoteSessionId)
+      );
+      setLiveRemoteSessionId(activeRemoteSync?.remoteSessionId ?? null);
     } else if (!mediaStopPendingRef.current) {
       setMediaRecorderPackageId(null);
       setLiveRemoteSessionId(null);
@@ -516,8 +521,8 @@ export default function HomeScreen() {
   function handleStartOwnerLiveAudio() {
     if (!liveRemoteSessionId) {
       setDialog({
-        title: "Audio ainda indisponivel",
-        message: "Aguarde o envio do pedido aos anjos antes de tentar conectar o audio.",
+        title: "Videochamada indisponivel",
+        message: "Aguarde um anjo aceitar o pedido antes de conectar a videochamada.",
         icon: <PhoneCall size={18} color={theme.colors.primary} />,
         actions: [{ label: "Entendi" }]
       });
@@ -591,6 +596,7 @@ export default function HomeScreen() {
     }
 
     setRecordingStatus("Iniciando chamado seguro...");
+    liveAudioCall.resetLiveAudioCall();
     setLiveRemoteSessionId(null);
     setStartInProgress(true);
     appendMediaOperationalLog("emergency_start_requested", {
@@ -603,7 +609,7 @@ export default function HomeScreen() {
     try {
       const result = await startEmergencyPackage({
         kind: "test",
-        trustedContactIds: (await listAcceptedOwnerRelationshipsForDelivery()).map((relationship) => relationship.id),
+        trustedContactIds: (await listAcceptedOwnerRelationshipsForDelivery()).slice(0, 1).map((relationship) => relationship.id),
         captureLocation: Platform.OS !== "web",
         defaultDurationSeconds: preferences.defaultDurationSeconds,
         locationConsentMode:
@@ -691,7 +697,7 @@ export default function HomeScreen() {
     if (!activePackageId || finishInProgress || finishInProgressRef.current) return;
 
     const packageId = activePackageId;
-    liveAudioCall.stopLiveAudioCall();
+    liveAudioCall.resetLiveAudioCall();
     setLiveRemoteSessionId(null);
     finishInProgressRef.current = true;
     setFinishInProgress(true);
@@ -730,10 +736,10 @@ export default function HomeScreen() {
         showFinishProgress({
           detail:
             stopResult.status === "attached"
-              ? "Midia criptografada. Finalizando o pacote local."
+              ? "Midia criptografada. A finalizacao do pacote pode seguir em segundo plano."
               : "Camera liberada. Confirmando se o pacote ja recebeu midia preservada.",
           progress: stopResult.status === "attached" ? 72 : 48,
-          status: "running",
+          status: stopResult.status === "attached" ? "background" : "running",
           title: stopResult.status === "attached" ? "Midia protegida" : "Conferindo cofre"
         });
       }
@@ -959,6 +965,7 @@ export default function HomeScreen() {
           <BrandBackground active={Boolean(activePackageId || startInProgress)} />
           <EmergencyMediaRecorder
             activePackageId={mediaRecorderPackageId}
+            avoidLiveAudioPanel={Boolean(liveRemoteSessionId || liveAudioCall.state.status !== "idle")}
             captureStopLocked={captureStopLocked}
             preferences={preferences}
             onMediaAttached={refreshOutboxCount}
@@ -988,7 +995,7 @@ export default function HomeScreen() {
 
           {liveRemoteSessionId || liveAudioCall.state.status !== "idle" ? (
             <LiveAudioCallPanel
-              actionLabel="Conectar anjo"
+              actionLabel="Videochamar anjo"
               disabled={!activePackageId || !liveRemoteSessionId || mediaStopPending || finishInProgress}
               onPrimaryAction={handleStartOwnerLiveAudio}
               onStop={liveAudioCall.stopLiveAudioCall}

@@ -81,7 +81,7 @@ export default function ProfilesScreen() {
       <StatusBanner
         tone="warning"
         title="Limites de proteção"
-        text="Menor não cria anjo nem atua como anjo. Chamada, localização ao vivo, envio externo e instituições conveniadas ainda não estão disponíveis."
+        text="Menor não cria anjo nem atua como anjo. Videochamada, localização ao vivo, envio externo e instituições conveniadas ainda não estão disponíveis."
       />
 
       <Pressable

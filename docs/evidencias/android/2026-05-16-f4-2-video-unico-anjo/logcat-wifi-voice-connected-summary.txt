@@ -1,0 +1,203 @@
+# Resumo saneado de logcat-wifi-voice-connected.txt
+
+Filtro: WebRTC/SinalSeguro/conexao/crash. Logs crus descartados para nao registrar ruido de terceiros.
+
+54369:05-16 19:39:29.023 27710 27710 I org.webrtc.Logging: vclib: NativeLibraryLoader: loading jingle_peerconnection_so from mie
+54370:05-16 19:39:29.023 27710 27710 I org.webrtc.Logging: vclib: Beginning load of jingle_peerconnection_so...
+54429:05-16 19:39:29.089 27710 27925 I org.webrtc.Logging: CrashStartupListener: Checking conference crashes for 7 account(s).
+54835:05-16 19:39:29.392 27689 27834 D SessionsDependencies: Dependency to CRASHLYTICS added.
+54893:05-16 19:39:29.446 27710 27710 I org.webrtc.Logging: vclib: jingle_peerconnection_so (null) was loaded normally!
+54894:05-16 19:39:29.446 27710 27710 I org.webrtc.Logging: vclib: NativeLibraryLoader: loading jingle_peerconnection_so complete.
+54907:05-16 19:39:29.451 27710 27710 I PeerConnectionFactory: [000:002][27710] PeerConnectionFactory was initialized without an injected Loggable. Any existing Loggable will be deleted.
+54909:05-16 19:39:29.454 27689 27834 D SessionsDependencies: Subscriber CRASHLYTICS registered.
+63632:05-16 19:39:40.719 29755 29755 D FirebaseSessions: Dependency to CRASHLYTICS added.
+63663:05-16 19:39:40.869 29755 29755 D FirebaseSessions: Subscriber CRASHLYTICS registered.
+63673:05-16 19:39:40.926 29755 30080 D FirebaseSessions: Notified CRASHLYTICS of new session a6882e1b952f40fc90565f69d9a4679c
+65481:05-16 19:39:43.604 30147 30319 D SessionsDependencies: Dependency to CRASHLYTICS added.
+66271:05-16 19:39:44.470 30412 30412 D SessionsDependencies: Dependency to CRASHLYTICS added.
+66300:05-16 19:39:44.512 30412 30412 D SessionsDependencies: Subscriber CRASHLYTICS registered.
+71104:05-16 19:40:00.078 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Get supported formats for camera index 1.
+71105:05-16 19:40:00.085 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 2304x1728@30000
+71106:05-16 19:40:00.086 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 1920x1080@30000
+71107:05-16 19:40:00.086 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 1600x1200@30000
+71108:05-16 19:40:00.086 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 1600x720@30000
+71109:05-16 19:40:00.086 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 1440x1080@30000
+71110:05-16 19:40:00.086 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 1280x960@30000
+71111:05-16 19:40:00.086 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 1280x768@30000
+71112:05-16 19:40:00.086 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 1280x720@30000
+71113:05-16 19:40:00.086 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 1080x1080@30000
+71114:05-16 19:40:00.086 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 1024x738@30000
+71115:05-16 19:40:00.086 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 1024x768@30000
+71116:05-16 19:40:00.086 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 960x720@30000
+71117:05-16 19:40:00.086 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 864x480@30000
+71118:05-16 19:40:00.086 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 800x600@30000
+71119:05-16 19:40:00.086 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 800x480@30000
+71120:05-16 19:40:00.087 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 720x1280@30000
+71121:05-16 19:40:00.087 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 720x480@30000
+71122:05-16 19:40:00.087 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 640x480@30000
+71123:05-16 19:40:00.087 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 640x400@30000
+71124:05-16 19:40:00.087 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 640x360@30000
+71125:05-16 19:40:00.087 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 352x288@30000
+71126:05-16 19:40:00.087 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 320x240@30000
+71127:05-16 19:40:00.087 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 240x320@30000
+71128:05-16 19:40:00.087 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Format: 176x144@30000
+71129:05-16 19:40:00.087 27428 31278 I org.webrtc.Logging: Camera2Enumerator: Get supported formats for camera index 1 done. Time spent: 10 ms.
+71131:05-16 19:40:00.100 27428 31282 I org.webrtc.Logging: EglBase14Impl: Using OpenGL ES version 2
+71133:05-16 19:40:00.112 27428 31278 I org.webrtc.Logging: CameraCapturer: startCapture: 1280x720@24
+71134:05-16 19:40:00.116 27428 31282 I org.webrtc.Logging: Camera2Session: Create new camera2 session on camera 1
+71135:05-16 19:40:00.116 27428 31282 I org.webrtc.Logging: Camera2Session: start
+71136:05-16 19:40:00.118 27428 31282 I org.webrtc.Logging: Camera2Session: Available preview sizes: [2304x1728, 1920x1080, 1600x1200, 1600x720, 1440x1080, 1280x960, 1280x768, 1280x720, 1080x1080, 1024x738, 1024x768, 960x720, 864x480, 800x600, 800x480, 720x1280, 720x480, 640x480, 640x400, 640x360, 352x288, 320x240, 240x320, 176x144]
+71137:05-16 19:40:00.119 27428 31282 I org.webrtc.Logging: Camera2Session: Available fps ranges: [[10.0:10.0], [15.0:15.0], [10.0:30.0], [30.0:30.0]]
+71138:05-16 19:40:00.120 27428 31282 I org.webrtc.Logging: Camera2Session: Using capture format: 1280x720@[10.0:30.0]
+71139:05-16 19:40:00.120 27428 31282 I org.webrtc.Logging: Camera2Session: Opening camera 1
+71192:05-16 19:40:00.174 27428 27477 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 ctor +0ms
+71193:05-16 19:40:00.174 27428 27477 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 addTrack +0ms
+71207:05-16 19:40:00.202 27428 27477 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 addTrack +28ms
+71208:05-16 19:40:00.210 27428 27477 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 setRemoteDescription +7ms
+71258:05-16 19:40:00.279 27428 27477 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 ontrack +70ms
+71264:05-16 19:40:00.287 27428 27477 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 setRemoteDescription OK +8ms
+71265:05-16 19:40:00.287 27428 27477 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 createAnswer +0ms
+71323:05-16 19:40:00.394 27428 31282 I org.webrtc.Logging: Camera2Session: Camera opened.
+71353:05-16 19:40:00.446 27428 27477 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 setLocalDescription +159ms
+71354:05-16 19:40:00.452 27428 27497 I org.webrtc.Logging: WebRtcAudioTrackExternal: initPlayout(sampleRate=48000, channels=1, bufferSizeFactor=1.0)
+71355:05-16 19:40:00.452 27428 27497 I org.webrtc.Logging: WebRtcAudioTrackExternal: byteBuffer.capacity: 960
+71359:05-16 19:40:00.466 27428 27497 I org.webrtc.Logging: WebRtcAudioTrackExternal: minBufferSizeInBytes: 7688
+71360:05-16 19:40:00.466 27428 27497 I org.webrtc.Logging: WebRtcAudioTrackExternal: createAudioTrackBeforeOreo
+71362:05-16 19:40:00.467 27428 27497 I org.webrtc.Logging: WebRtcAudioTrackExternal: nativeOutputSampleRate: 48000
+71419:05-16 19:40:00.512 27428 27497 I org.webrtc.Logging: WebRtcAudioTrackExternal: AudioTrack: session ID: 79497, channels: 1, sample rate: 48000, max gain: 1.0
+71420:05-16 19:40:00.512 27428 27497 I org.webrtc.Logging: WebRtcAudioTrackExternal: AudioTrack: buffer size in frames: 3844
+71421:05-16 19:40:00.512 27428 27497 I org.webrtc.Logging: WebRtcAudioTrackExternal: AudioTrack: buffer capacity in frames: 3844
+71422:05-16 19:40:00.513 27428 27497 I org.webrtc.Logging: WebRtcAudioTrackExternal: startPlayout
+71453:05-16 19:40:00.527 27428 27428 I org.webrtc.Logging: SurfaceEglRenderer: : surfaceChanged: format: 4 size: 860x264
+71570:05-16 19:40:00.608 27428 31309 I org.webrtc.Logging: WebRtcAudioTrackExternal: AudioTrackThread@[name=AudioTrackJavaThread, id=49957]
+71584:05-16 19:40:00.609 27428 31309 I org.webrtc.Logging: WebRtcAudioTrackExternal: doAudioTrackStateCallback: 0
+71717:05-16 19:40:00.630 27428 27496 I org.webrtc.Logging: NetworkMonitor: Start monitoring with native observer -5476376631269744912 fieldTrialsString:
+72297:05-16 19:40:00.823 27428 31315 I org.webrtc.Logging: NetworkMonitorAutoDetect: Network handle: 733550137357 becomes available: 170
+72298:05-16 19:40:00.828 27428 31315 I org.webrtc.Logging: NetworkMonitorAutoDetect: handle: 733550137357 capabilities changed: [ Transports: WIFI Capabilities: NOT_METERED&INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&VALIDATED&NOT_ROAMING&FOREGROUND&NOT_CONGESTED&NOT_SUSPENDED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED LinkUpBandwidth>=15818Kbps LinkDnBandwidth>=23935Kbps TransportInfo: <SSID: <unknown ssid>, BSSID: 02:00:00:00:00:00, MAC: 02:00:00:00:00:00, IP: /192.168.0.5, Security type: 2, Supplicant state: COMPLETED, Wi-Fi standard: 11n, RSSI: -61, Link speed: 96Mbps, Tx Link speed: 96Mbps, Max Supported Tx Link speed: 72Mbps, Rx Link speed: 96Mbps, Max Supported Rx Link speed: 72Mbps, Frequency: 2452MHz, Net ID: -1, Metered hint: false, score: 60, isUsable: true, CarrierMerged: false, SubscriptionId: -1, IsPrimary: -1, Trusted: true, Restricted: false, Ephemeral: false, OEM paid: false, OEM private: false, OSU AP: false, FQDN: <none>, Provider friendly name: <none>, Requesting package name: <none><none>MLO Information: , Is TID-To-Link negotiation supported by the AP: false, AP MLD Address: <none>, AP MLO Link Id: <none>, AP MLO Affiliated links: <none>, Vendor Data: <none>> SignalStrength: -61 UnderlyingNetworks: Null]
+72299:05-16 19:40:00.829 27428 31282 I org.webrtc.Logging: Camera2Session: Camera capture session configured.
+72307:05-16 19:40:00.839 27428 31315 I org.webrtc.Logging: NetworkMonitorAutoDetect: handle: 733550137357 link properties changed
+72310:05-16 19:40:00.844 27428 31282 I org.webrtc.Logging: Camera2Session: Stabilization not available.
+72311:05-16 19:40:00.844 27428 31282 I org.webrtc.Logging: Camera2Session: Auto-focus is not available.
+72312:05-16 19:40:00.847 27428 31315 I org.webrtc.Logging: NetworkMonitorAutoDetect: Network handle: 737845104653 becomes available: 171
+72324:05-16 19:40:00.856 27428 31315 I org.webrtc.Logging: NetworkMonitorAutoDetect: handle: 737845104653 capabilities changed: [ Transports: CELLULAR Capabilities: MMS&SUPL&XCAP&INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&CAPTIVE_PORTAL&NOT_ROAMING&FOREGROUND&NOT_CONGESTED&NOT_SUSPENDED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED LinkUpBandwidth>=14Kbps LinkDnBandwidth>=14Kbps Specifier: <TelephonyNetworkSpecifier [mSubId = 1]> SubscriptionIds: {1} UnderlyingNetworks: Null]
+72327:05-16 19:40:00.868 27428 31315 I org.webrtc.Logging: NetworkMonitorAutoDetect: handle: 737845104653 link properties changed
+72340:05-16 19:40:00.879 27428 31282 I org.webrtc.Logging: Camera2Session: Camera device successfully started.
+72341:05-16 19:40:00.879 27428 31282 I org.webrtc.Logging: CameraCapturer: Create session done. Switch state: IDLE
+72344:05-16 19:40:00.899 27428 31282 I org.webrtc.Logging: SurfaceTextureHelper: Setting listener to org.webrtc.Camera2Session$CaptureSessionCallback$$ExternalSyntheticLambda0@8868b67
+72345:05-16 19:40:00.900 27428 27477 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 setLocalDescription OK +454ms
+72683:05-16 19:40:01.895 27428 27477 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 addIceCandidate +994ms
+72787:05-16 19:40:02.184 27428 27477 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 addIceCandidate +290ms
+72885:05-16 19:40:02.464 27428 27497 I org.webrtc.Logging: WebRtcAudioRecordExternal: initRecording(sampleRate=48000, channels=1)
+72886:05-16 19:40:02.465 27428 27497 I org.webrtc.Logging: WebRtcAudioRecordExternal: byteBuffer.capacity: 960
+72887:05-16 19:40:02.467 27428 27497 I org.webrtc.Logging: WebRtcAudioRecordExternal: AudioRecord.getMinBufferSize: 3840
+72888:05-16 19:40:02.467 27428 27497 I org.webrtc.Logging: WebRtcAudioRecordExternal: bufferSizeInBytes: 7680
+72889:05-16 19:40:02.467 27428 27497 I org.webrtc.Logging: WebRtcAudioRecordExternal: createAudioRecordOnMOrHigher
+73007:05-16 19:40:02.539 27428 27497 I org.webrtc.Logging: WebRtcAudioEffectsExternal: enable(audioSession=79505)
+73020:05-16 19:40:02.547 27428 27497 I org.webrtc.Logging: WebRtcAudioEffectsExternal: AcousticEchoCanceler: was enabled, enable: true, is now: enabled
+73030:05-16 19:40:02.551 27428 27497 I org.webrtc.Logging: WebRtcAudioEffectsExternal: NoiseSuppressor: was enabled, enable: true, is now: enabled
+73031:05-16 19:40:02.552 27428 27497 I org.webrtc.Logging: WebRtcAudioRecordExternal: AudioRecord: session ID: 79505, channels: 1, sample rate: 48000
+73032:05-16 19:40:02.552 27428 27497 I org.webrtc.Logging: WebRtcAudioRecordExternal: AudioRecord: buffer size in frames: 3840
+73034:05-16 19:40:02.554 27428 27497 I org.webrtc.Logging: WebRtcAudioRecordExternal: Number of active recording sessions: 0
+73035:05-16 19:40:02.554 27428 27497 I org.webrtc.Logging: WebRtcAudioRecordExternal: startRecording
+73088:05-16 19:40:02.577 27428 27497 I org.webrtc.Logging: WebRtcAudioRecordExternal: scheduleLogRecordingConfigurationsTask
+73094:05-16 19:40:02.582 27428 31378 I org.webrtc.Logging: WebRtcAudioRecordExternal: AudioRecordThread@[name=AudioRecordJavaThread, id=49963]
+73095:05-16 19:40:02.582 27428 31378 I org.webrtc.Logging: WebRtcAudioRecordExternal: doAudioRecordStateCallback: START
+73448:05-16 19:40:02.681 27428 31379 I org.webrtc.Logging: WebRtcAudioRecordExternal: Number of active recording sessions: 1
+73449:05-16 19:40:02.681 27428 31379 I org.webrtc.Logging: WebRtcAudioRecordExternal: AudioRecordingConfigurations:
+73465:05-16 19:40:02.687 27428 31379 I org.webrtc.Logging: WebRtcAudioRecordExternal:   client audio source=VOICE_COMMUNICATION, client session id=79505 (79505)
+73466:05-16 19:40:02.687 27428 31379 I org.webrtc.Logging:   Device AudioFormat: channel count=1, channel index mask=0, channel mask=IN_MONO, encoding=PCM_16BIT, sample rate=48000
+73467:05-16 19:40:02.687 27428 31379 I org.webrtc.Logging:   Client AudioFormat: channel count=1, channel index mask=0, channel mask=IN_MONO, encoding=PCM_16BIT, sample rate=48000
+73468:05-16 19:40:02.687 27428 31379 I org.webrtc.Logging:   AudioDevice: type=TYPE_BUILTIN_MIC, id=19
+73469:05-16 19:40:02.688 27428 31379 I org.webrtc.Logging: WebRtcAudioRecordExternal: verifyAudioConfig: PASS
+73548:05-16 19:40:02.899 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+74090:05-16 19:40:04.899 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+74282:05-16 19:40:06.209  1644 31319 E CameraImpl: triggerCalVariance: cameraServer send preview frame : variace = 34,maxInterval = 77,minInterval = 30,first frame = 1,last frame = 87
+74387:05-16 19:40:06.900 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+74835:05-16 19:40:08.903 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+75479:05-16 19:40:10.904 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 18.
+75595:05-16 19:40:11.218 27428 31315 I org.webrtc.Logging: NetworkMonitorAutoDetect: handle: 737845104653 link properties changed
+75972:05-16 19:40:12.905 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+76441:05-16 19:40:14.906 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+76873:05-16 19:40:16.906 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+77276:05-16 19:40:18.907 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+77795:05-16 19:40:20.908 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 16.
+77945:05-16 19:40:21.502  1644 31319 E CameraImpl: triggerCalVariance: cameraServer send preview frame : variace = 20,maxInterval = 78,minInterval = 57,first frame = 262,last frame = 343
+78183:05-16 19:40:22.908 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+78553:05-16 19:40:24.909 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+79104:05-16 19:40:26.909 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+79345:05-16 19:40:27.495 27428 31315 I org.webrtc.Logging: NetworkMonitorAutoDetect: handle: 737845104653 link properties changed
+79601:05-16 19:40:28.910 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+80234:05-16 19:40:30.911 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+80506:05-16 19:40:32.911 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+80774:05-16 19:40:34.912 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+81028:05-16 19:40:36.912 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+81309:05-16 19:40:38.913 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+81574:05-16 19:40:40.914 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+81818:05-16 19:40:42.914 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+82121:05-16 19:40:44.914 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+82389:05-16 19:40:46.915 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+82638:05-16 19:40:48.916 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+82904:05-16 19:40:50.915 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+83195:05-16 19:40:52.916 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+83448:05-16 19:40:54.916 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+83722:05-16 19:40:56.917 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+83977:05-16 19:40:58.916 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+84284:05-16 19:41:00.917 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+85219:05-16 19:41:02.918 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+85823:05-16 19:41:04.919 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+86096:05-16 19:41:06.920 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+86374:05-16 19:41:08.920 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+86640:05-16 19:41:10.920 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+86942:05-16 19:41:12.921 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+87200:05-16 19:41:14.921 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+87462:05-16 19:41:16.920 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+87715:05-16 19:41:18.921 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+87986:05-16 19:41:20.921 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+88252:05-16 19:41:22.920 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+88499:05-16 19:41:24.921 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+88784:05-16 19:41:26.921 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+89114:05-16 19:41:28.922 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+89355:05-16 19:41:30.922 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+89621:05-16 19:41:32.923 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+89900:05-16 19:41:34.923 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+90182:05-16 19:41:36.924 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+90500:05-16 19:41:38.924 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+90770:05-16 19:41:40.924 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+91048:05-16 19:41:42.924 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+91367:05-16 19:41:44.924 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+91631:05-16 19:41:46.925 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+91882:05-16 19:41:48.925 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+92150:05-16 19:41:50.926 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+92417:05-16 19:41:52.926 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+92657:05-16 19:41:54.926 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+92922:05-16 19:41:56.927 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+93236:05-16 19:41:58.928 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+93507:05-16 19:42:00.929 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+93867:05-16 19:42:02.929 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+94186:05-16 19:42:04.930 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+94457:05-16 19:42:06.929 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+94719:05-16 19:42:08.930 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+94967:05-16 19:42:10.930 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+95221:05-16 19:42:12.931 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+95661:05-16 19:42:14.930 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+96351:05-16 19:42:16.931 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+97374:05-16 19:42:18.932 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+97968:05-16 19:42:20.932 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+98259:05-16 19:42:22.932 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+98611:05-16 19:42:24.933 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+98979:05-16 19:42:26.933 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+99293:05-16 19:42:28.932 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+99700:05-16 19:42:30.933 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+100011:05-16 19:42:32.934 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 18.
+100310:05-16 19:42:34.934 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+100712:05-16 19:42:36.934 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+101009:05-16 19:42:38.935 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+101319:05-16 19:42:40.936 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+101585:05-16 19:42:42.936 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+101875:05-16 19:42:44.937 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+102196:05-16 19:42:46.938 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 18.
+102517:05-16 19:42:48.939 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+103033:05-16 19:42:50.939 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+103312:05-16 19:42:52.940 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 14.
+103471:05-16 19:42:54.147  1644 31319 E CameraImpl: triggerCalVariance: cameraServer send preview frame : variace = 69,maxInterval = 78,minInterval = 56,first frame = 2603,last frame = 2678
+103587:05-16 19:42:54.941 27428 31282 I org.webrtc.Logging: CameraStatistics: Camera fps: 13.

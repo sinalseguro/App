@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { MediaStream } from "react-native-webrtc";
 
 import {
   consumeLiveSignal,
@@ -22,6 +23,7 @@ export type LiveAudioCallState = {
   message: string;
   participantName?: string;
   remoteSessionId?: string;
+  remoteStream?: MediaStream;
   role?: LiveAudioRole;
   status: LiveAudioStatus;
 };
@@ -35,7 +37,7 @@ type LiveAudioRuntime = {
 };
 
 const idleLiveAudioCallState: LiveAudioCallState = {
-  message: "Audio com anjo disponivel apos aceite.",
+  message: "Videochamada segura disponivel apos aceite.",
   status: "idle"
 };
 
@@ -80,29 +82,45 @@ export function useLiveAudioCall() {
   }, []);
 
   const createPeer = useCallback(
-    async (callSessionId: string) =>
+    async (
+      callSessionId: string,
+      options?: {
+        audioMode?: "recvonly" | "sendrecv";
+        videoMode?: "disabled" | "recvonly" | "sendrecv";
+      }
+    ) =>
       LiveWebRtcSession.create({
+        audioMode: options?.audioMode ?? "sendrecv",
         callSessionId,
         onConnectionState: (connectionState) => {
           if (connectionState === "connected") {
             setState((current) => ({
               ...current,
-              message: current.participantName
-                ? `Audio conectado com ${current.participantName}.`
-                : "Audio conectado com anjo.",
+              message:
+                current.role === "owner"
+                  ? "Videochamada do anjo conectada. Sua gravacao local segue protegida."
+                  : current.participantName
+                    ? `Videochamada conectada com ${current.participantName}.`
+                    : "Videochamada conectada com anjo.",
               status: "connected"
             }));
           }
           if (connectionState === "disconnected" || connectionState === "failed") {
             setState((current) => ({
               ...current,
-              message: "Audio indisponivel. O pedido continua ativo.",
+              message: "Videochamada indisponivel. O pedido continua ativo.",
               status: "failed"
             }));
           }
         },
         onLocalIceCandidate: sendIceCandidate,
-        videoEnabled: false
+        onRemoteStream: (remoteStream) => {
+          setState((current) => ({
+            ...current,
+            remoteStream
+          }));
+        },
+        videoMode: options?.videoMode ?? "disabled"
       }),
     [sendIceCandidate]
   );
@@ -112,9 +130,16 @@ export function useLiveAudioCall() {
     closePeer();
     runtimeRef.current = {};
     setState({
-      message: "Audio encerrado. O pedido continua protegido.",
+      message: "Videochamada encerrada. O pedido continua protegido.",
       status: "ended"
     });
+  }, [closePeer, stopPolling]);
+
+  const resetLiveAudioCall = useCallback(() => {
+    stopPolling();
+    closePeer();
+    runtimeRef.current = {};
+    setState(idleLiveAudioCallState);
   }, [closePeer, stopPolling]);
 
   const startPolling = useCallback(
@@ -127,7 +152,7 @@ export function useLiveAudioCall() {
           .catch(() => {
             setState((current) => ({
               ...current,
-              message: "Nao foi possivel atualizar o audio agora.",
+              message: "Nao foi possivel atualizar a videochamada agora.",
               status: current.status === "connected" ? "connected" : "failed"
             }));
           })
@@ -190,7 +215,7 @@ export function useLiveAudioCall() {
       const callSessionId = createLiveCallSessionId();
       runtimeRef.current = { callSessionId, remoteSessionId, role: "owner" };
       setState({
-        message: "Verificando anjos disponiveis para audio.",
+          message: "Verificando anjo disponivel para videochamada.",
         remoteSessionId,
         role: "owner",
         status: "connecting"
@@ -217,7 +242,7 @@ export function useLiveAudioCall() {
           recipientDeviceId: recipientDevice.id,
           recipientId: recipient.recipient
         });
-        const peer = await createPeer(callSessionId);
+        const peer = await createPeer(callSessionId, { audioMode: "sendrecv", videoMode: "recvonly" });
         peerRef.current = peer;
         const offerPayload = await peer.createOfferPayload();
         await sendLiveSignal({
@@ -227,7 +252,7 @@ export function useLiveAudioCall() {
           signalType: "offer"
         });
         setState({
-          message: `Aguardando ${recipient.recipient_display_name} entrar no audio.`,
+          message: `Aguardando ${recipient.recipient_display_name} entrar na videochamada.`,
           participantName: recipient.recipient_display_name,
           remoteSessionId,
           role: "owner",
@@ -239,7 +264,7 @@ export function useLiveAudioCall() {
         closePeer();
         runtimeRef.current = {};
         setState({
-          message: error instanceof Error ? error.message : "Nao foi possivel iniciar audio com anjo.",
+          message: error instanceof Error ? error.message : "Nao foi possivel iniciar videochamada com anjo.",
           remoteSessionId,
           role: "owner",
           status: "failed"
@@ -259,7 +284,7 @@ export function useLiveAudioCall() {
         role: "angel"
       };
       setState({
-        message: `Aguardando audio de ${session.owner_display_name ?? "pessoa protegida"}.`,
+        message: `Aguardando videochamada de ${session.owner_display_name ?? "pessoa protegida"}.`,
         participantName: session.owner_display_name,
         remoteSessionId: session.id,
         role: "angel",
@@ -288,7 +313,7 @@ export function useLiveAudioCall() {
           remoteSessionId: session.id,
           role: "angel"
         };
-        const peer = await createPeer(callSessionId);
+        const peer = await createPeer(callSessionId, { audioMode: "sendrecv", videoMode: "sendrecv" });
         peerRef.current = peer;
         const answerPayload = await peer.createAnswerPayload(offerPayload);
         await sendLiveSignal({
@@ -299,7 +324,7 @@ export function useLiveAudioCall() {
         });
         await consumeLiveSignal(offerSignal.id);
         setState({
-          message: `Conectando audio com ${session.owner_display_name ?? "pessoa protegida"}.`,
+          message: `Conectando videochamada com ${session.owner_display_name ?? "pessoa protegida"}.`,
           participantName: session.owner_display_name,
           remoteSessionId: session.id,
           role: "angel",
@@ -321,6 +346,7 @@ export function useLiveAudioCall() {
   );
 
   return {
+    resetLiveAudioCall,
     startAngelAudioCall,
     startOwnerAudioCall,
     state,

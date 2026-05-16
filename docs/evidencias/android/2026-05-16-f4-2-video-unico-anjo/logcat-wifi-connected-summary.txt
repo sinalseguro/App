@@ -1,0 +1,185 @@
+# Resumo saneado de logcat-wifi-connected.txt
+
+Filtro: WebRTC/SinalSeguro/conexao/crash. Logs crus descartados para nao registrar ruido de terceiros.
+
+2199:05-16 19:18:48.290 19898 19943 I org.webrtc.Logging: NativeLibrary: Loading native library: jingle_peerconnection_so
+2200:05-16 19:18:48.291 19898 19943 I org.webrtc.Logging: LibraryLoader: Loading library: jingle_peerconnection_so
+2202:05-16 19:18:48.301 19898 19943 I org.webrtc.Logging: PeerConnectionFactory: PeerConnectionFactory was initialized without an injected Loggable. Any existing Loggable will be deleted.
+2203:05-16 19:18:48.304 19898 19943 I org.webrtc.Logging: EglBase14Impl: Using OpenGL ES version 2
+2216:05-16 19:18:48.329 19898 19943 I org.webrtc.Logging: WebRtcAudioManagerExternal: Sample rate is set to 48000 Hz
+2217:05-16 19:18:48.329 19898 19943 I org.webrtc.Logging: WebRtcAudioManagerExternal: Sample rate is set to 48000 Hz
+2218:05-16 19:18:48.330 19898 19943 I org.webrtc.Logging: JavaAudioDeviceModule: createAudioDeviceModule
+2219:05-16 19:18:48.330 19898 19943 I org.webrtc.Logging: JavaAudioDeviceModule: HW NS will be used.
+2220:05-16 19:18:48.330 19898 19943 I org.webrtc.Logging: JavaAudioDeviceModule: HW AEC will be used.
+2221:05-16 19:18:48.331 19898 19943 I org.webrtc.Logging: WebRtcAudioEffectsExternal: ctor@[name=pool-4-thread-1, id=49899]
+2222:05-16 19:18:48.331 19898 19943 I org.webrtc.Logging: WebRtcAudioRecordExternal: ctor@[name=pool-4-thread-1, id=49899]
+2223:05-16 19:18:48.332 19898 19943 I org.webrtc.Logging: WebRtcAudioTrackExternal: ctor@[name=pool-4-thread-1, id=49899]
+2238:05-16 19:18:48.412 19898 19956 I org.webrtc.Logging: WebRtcAudioRecordExternal: enableBuiltInAEC(true)
+2239:05-16 19:18:48.412 19898 19956 I org.webrtc.Logging: WebRtcAudioEffectsExternal: setAEC(true)
+2240:05-16 19:18:48.412 19898 19956 I org.webrtc.Logging: WebRtcAudioRecordExternal: enableBuiltInNS(true)
+2241:05-16 19:18:48.412 19898 19956 I org.webrtc.Logging: WebRtcAudioEffectsExternal: setNS(true)
+2242:05-16 19:18:48.413 19898 19956 I org.webrtc.Logging: PeerConnectionFactory: onWorkerThreadReady
+2243:05-16 19:18:48.413 19898 19955 I org.webrtc.Logging: PeerConnectionFactory: onNetworkThreadReady
+2244:05-16 19:18:48.413 19898 19957 I org.webrtc.Logging: PeerConnectionFactory: onSignalingThreadReady
+25639:05-16 19:19:24.663 20433 20433 D SessionsDependencies: Dependency to CRASHLYTICS added.
+25664:05-16 19:19:24.695 20433 20433 D SessionsDependencies: Subscriber CRASHLYTICS registered.
+74953:05-16 19:21:02.360 21639 21639 D SessionsDependencies: Dependency to CRASHLYTICS added.
+74958:05-16 19:21:02.383 21639 21639 D SessionsDependencies: Subscriber CRASHLYTICS registered.
+87483:05-16 19:21:53.500 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Get supported formats for camera index 1.
+87487:05-16 19:21:53.508 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 2304x1728@30000
+87488:05-16 19:21:53.508 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 1920x1080@30000
+87489:05-16 19:21:53.508 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 1600x1200@30000
+87490:05-16 19:21:53.508 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 1600x720@30000
+87491:05-16 19:21:53.508 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 1440x1080@30000
+87492:05-16 19:21:53.508 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 1280x960@30000
+87493:05-16 19:21:53.508 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 1280x768@30000
+87494:05-16 19:21:53.508 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 1280x720@30000
+87495:05-16 19:21:53.508 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 1080x1080@30000
+87496:05-16 19:21:53.508 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 1024x738@30000
+87497:05-16 19:21:53.509 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 1024x768@30000
+87498:05-16 19:21:53.509 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 960x720@30000
+87499:05-16 19:21:53.509 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 864x480@30000
+87500:05-16 19:21:53.509 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 800x600@30000
+87501:05-16 19:21:53.509 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 800x480@30000
+87502:05-16 19:21:53.509 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 720x1280@30000
+87503:05-16 19:21:53.509 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 720x480@30000
+87504:05-16 19:21:53.509 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 640x480@30000
+87505:05-16 19:21:53.509 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 640x400@30000
+87506:05-16 19:21:53.509 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 640x360@30000
+87507:05-16 19:21:53.509 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 352x288@30000
+87508:05-16 19:21:53.509 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 320x240@30000
+87509:05-16 19:21:53.509 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 240x320@30000
+87510:05-16 19:21:53.509 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Format: 176x144@30000
+87511:05-16 19:21:53.510 19898 22565 I org.webrtc.Logging: Camera2Enumerator: Get supported formats for camera index 1 done. Time spent: 10 ms.
+87513:05-16 19:21:53.519 19898 22578 I org.webrtc.Logging: EglBase14Impl: Using OpenGL ES version 2
+87518:05-16 19:21:53.529 19898 22565 I org.webrtc.Logging: CameraCapturer: startCapture: 1280x720@24
+87519:05-16 19:21:53.533 19898 22578 I org.webrtc.Logging: Camera2Session: Create new camera2 session on camera 1
+87520:05-16 19:21:53.533 19898 22578 I org.webrtc.Logging: Camera2Session: start
+87521:05-16 19:21:53.538 19898 22578 I org.webrtc.Logging: Camera2Session: Available preview sizes: [2304x1728, 1920x1080, 1600x1200, 1600x720, 1440x1080, 1280x960, 1280x768, 1280x720, 1080x1080, 1024x738, 1024x768, 960x720, 864x480, 800x600, 800x480, 720x1280, 720x480, 640x480, 640x400, 640x360, 352x288, 320x240, 240x320, 176x144]
+87522:05-16 19:21:53.538 19898 22578 I org.webrtc.Logging: Camera2Session: Available fps ranges: [[10.0:10.0], [15.0:15.0], [10.0:30.0], [30.0:30.0]]
+87524:05-16 19:21:53.539 19898 22578 I org.webrtc.Logging: Camera2Session: Using capture format: 1280x720@[10.0:30.0]
+87525:05-16 19:21:53.539 19898 22578 I org.webrtc.Logging: Camera2Session: Opening camera 1
+87549:05-16 19:21:53.568 19898 19944 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 ctor +0ms
+87550:05-16 19:21:53.568 19898 19944 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 addTrack +1ms
+87574:05-16 19:21:53.597 19898 19944 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 addTrack +29ms
+87593:05-16 19:21:53.617 19898 19944 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 setRemoteDescription +20ms
+87663:05-16 19:21:53.704 19898 19944 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 setRemoteDescription OK +87ms
+87664:05-16 19:21:53.705 19898 19944 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 createAnswer +1ms
+87694:05-16 19:21:53.717 19898 19944 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 setLocalDescription +12ms
+87702:05-16 19:21:53.729 19898 19955 I org.webrtc.Logging: NetworkMonitor: Start monitoring with native observer -5476376631269623952 fieldTrialsString:
+87737:05-16 19:21:53.817 19898 22598 I org.webrtc.Logging: NetworkMonitorAutoDetect: Network handle: 733550137357 becomes available: 170
+87744:05-16 19:21:53.822 19898 22598 I org.webrtc.Logging: NetworkMonitorAutoDetect: handle: 733550137357 capabilities changed: [ Transports: WIFI Capabilities: NOT_METERED&INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&VALIDATED&NOT_ROAMING&FOREGROUND&NOT_CONGESTED&NOT_SUSPENDED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED LinkUpBandwidth>=15818Kbps LinkDnBandwidth>=23935Kbps TransportInfo: <SSID: <unknown ssid>, BSSID: 02:00:00:00:00:00, MAC: 02:00:00:00:00:00, IP: /192.168.0.5, Security type: 2, Supplicant state: COMPLETED, Wi-Fi standard: 11n, RSSI: -62, Link speed: 96Mbps, Tx Link speed: 96Mbps, Max Supported Tx Link speed: 72Mbps, Rx Link speed: 96Mbps, Max Supported Rx Link speed: 72Mbps, Frequency: 2452MHz, Net ID: -1, Metered hint: false, score: 60, isUsable: true, CarrierMerged: false, SubscriptionId: -1, IsPrimary: -1, Trusted: true, Restricted: false, Ephemeral: false, OEM paid: false, OEM private: false, OSU AP: false, FQDN: <none>, Provider friendly name: <none>, Requesting package name: <none><none>MLO Information: , Is TID-To-Link negotiation supported by the AP: false, AP MLD Address: <none>, AP MLO Link Id: <none>, AP MLO Affiliated links: <none>, Vendor Data: <none>> SignalStrength: -62 UnderlyingNetworks: Null]
+87747:05-16 19:21:53.826 19898 22598 I org.webrtc.Logging: NetworkMonitorAutoDetect: handle: 733550137357 link properties changed
+87749:05-16 19:21:53.834 19898 19944 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 setLocalDescription OK +117ms
+87767:05-16 19:21:53.842 19898 22578 I org.webrtc.Logging: Camera2Session: Camera opened.
+87787:05-16 19:21:53.856 19898 22598 I org.webrtc.Logging: NetworkMonitorAutoDetect: Network handle: 737845104653 becomes available: 171
+87802:05-16 19:21:53.861 19898 22598 I org.webrtc.Logging: NetworkMonitorAutoDetect: handle: 737845104653 capabilities changed: [ Transports: CELLULAR Capabilities: MMS&SUPL&XCAP&INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&CAPTIVE_PORTAL&NOT_ROAMING&FOREGROUND&NOT_CONGESTED&NOT_SUSPENDED&NOT_VCN_MANAGED&NOT_BANDWIDTH_CONSTRAINED LinkUpBandwidth>=14Kbps LinkDnBandwidth>=14Kbps Specifier: <TelephonyNetworkSpecifier [mSubId = 1]> SubscriptionIds: {1} UnderlyingNetworks: Null]
+87813:05-16 19:21:53.878 19898 22598 I org.webrtc.Logging: NetworkMonitorAutoDetect: handle: 737845104653 link properties changed
+87943:05-16 19:21:54.238 19898 22578 I org.webrtc.Logging: Camera2Session: Camera capture session configured.
+87951:05-16 19:21:54.240 19898 22578 I org.webrtc.Logging: Camera2Session: Stabilization not available.
+87952:05-16 19:21:54.240 19898 22578 I org.webrtc.Logging: Camera2Session: Auto-focus is not available.
+87957:05-16 19:21:54.246 19898 22578 I org.webrtc.Logging: Camera2Session: Camera device successfully started.
+87958:05-16 19:21:54.246 19898 22578 I org.webrtc.Logging: CameraCapturer: Create session done. Switch state: IDLE
+87959:05-16 19:21:54.248 19898 22578 I org.webrtc.Logging: SurfaceTextureHelper: Setting listener to org.webrtc.Camera2Session$CaptureSessionCallback$$ExternalSyntheticLambda0@70904b4
+88257:05-16 19:21:54.632 19898 22594 I org.webrtc.Logging: HardwareVideoEncoder: initEncode name: c2.qti.avc.encoder type: H264 width: 1280 height: 720 framerate_fps: 60 bitrate_kbps: 300 surface mode: true
+88383:05-16 19:21:54.695 19898 22594 I org.webrtc.Logging: HardwareVideoEncoder: Format: {color-format=2130708361, i-frame-interval=3600, mime=video/avc, width=1280, bitrate-mode=2, bitrate=300000, frame-rate=60.0, height=720}
+88396:05-16 19:21:54.698 19898 19944 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 addIceCandidate +864ms
+88612:05-16 19:21:54.768 19898 22594 I org.webrtc.Logging: EglBase14Impl: Using OpenGL ES version 2
+88651:05-16 19:21:54.775 19898 22594 I org.webrtc.Logging: HardwareVideoEncoder: updateInputFormat format: {crop-right=1279, color-format=2130708361, mime=video/raw, hdr-static-info=java.nio.HeapByteBuffer[pos=0 lim=25 cap=25], priority=0, intra-refresh-period=0, color-standard=1, feature-secure-playback=0, color-transfer=3, crop-bottom=719, prepend-sps-pps-to-idr-frames=0, video-qp-average=0, crop-left=0, width=1280, color-range=2, crop-top=0, frame-rate=60, height=720} stride: 1280 sliceHeight: 720 isSemiPlanar: false frameSizeBytes: 1382400
+88894:05-16 19:21:54.918 19898 22668 I org.webrtc.Logging: HardwareVideoEncoder: Releasing MediaCodec on output thread
+88923:05-16 19:21:54.943 19898 22668 I org.webrtc.Logging: HardwareVideoEncoder: Release on output thread done
+88934:05-16 19:21:54.947 19898 22594 I org.webrtc.Logging: HardwareVideoEncoder: initEncode name: c2.qti.avc.encoder type: H264 width: 960 height: 528 framerate_fps: 60 bitrate_kbps: 300 surface mode: true
+88988:05-16 19:21:54.982 19898 19944 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 addIceCandidate +284ms
+89058:05-16 19:21:55.030 19898 22594 I org.webrtc.Logging: HardwareVideoEncoder: Format: {color-format=2130708361, i-frame-interval=3600, mime=video/avc, width=960, bitrate-mode=2, bitrate=300000, frame-rate=60.0, height=528}
+89162:05-16 19:21:55.038 19898 22594 I org.webrtc.Logging: EglBase14Impl: Using OpenGL ES version 2
+89193:05-16 19:21:55.042 19898 22594 I org.webrtc.Logging: HardwareVideoEncoder: updateInputFormat format: {crop-right=959, color-format=2130708361, mime=video/raw, hdr-static-info=java.nio.HeapByteBuffer[pos=0 lim=25 cap=25], priority=0, intra-refresh-period=0, color-standard=1, feature-secure-playback=0, color-transfer=3, crop-bottom=527, prepend-sps-pps-to-idr-frames=0, video-qp-average=0, crop-left=0, width=960, color-range=2, crop-top=0, frame-rate=60, height=528} stride: 960 sliceHeight: 528 isSemiPlanar: false frameSizeBytes: 760320
+89271:05-16 19:21:55.054 19898 22691 I org.webrtc.Logging: HardwareVideoEncoder: Releasing MediaCodec on output thread
+89295:05-16 19:21:55.062 19898 22691 I org.webrtc.Logging: HardwareVideoEncoder: Release on output thread done
+89302:05-16 19:21:55.064 19898 22594 I org.webrtc.Logging: HardwareVideoEncoder: initEncode name: c2.qti.avc.encoder type: H264 width: 640 height: 352 framerate_fps: 60 bitrate_kbps: 300 surface mode: true
+89381:05-16 19:21:55.099 19898 22594 I org.webrtc.Logging: HardwareVideoEncoder: Format: {color-format=2130708361, i-frame-interval=3600, mime=video/avc, width=640, bitrate-mode=2, bitrate=300000, frame-rate=60.0, height=352}
+89485:05-16 19:21:55.107 19898 22594 I org.webrtc.Logging: EglBase14Impl: Using OpenGL ES version 2
+89516:05-16 19:21:55.111 19898 22594 I org.webrtc.Logging: HardwareVideoEncoder: updateInputFormat format: {crop-right=639, color-format=2130708361, mime=video/raw, hdr-static-info=java.nio.HeapByteBuffer[pos=0 lim=25 cap=25], priority=0, intra-refresh-period=0, color-standard=5, feature-secure-playback=0, color-transfer=3, crop-bottom=351, prepend-sps-pps-to-idr-frames=0, video-qp-average=0, crop-left=0, width=640, color-range=2, crop-top=0, frame-rate=60, height=352} stride: 640 sliceHeight: 352 isSemiPlanar: false frameSizeBytes: 337920
+89608:05-16 19:21:55.156 19898 19956 I org.webrtc.Logging: WebRtcAudioRecordExternal: initRecording(sampleRate=48000, channels=1)
+89609:05-16 19:21:55.156 19898 19956 I org.webrtc.Logging: WebRtcAudioRecordExternal: byteBuffer.capacity: 960
+89610:05-16 19:21:55.165 19898 19956 I org.webrtc.Logging: WebRtcAudioRecordExternal: AudioRecord.getMinBufferSize: 3840
+89611:05-16 19:21:55.165 19898 19956 I org.webrtc.Logging: WebRtcAudioRecordExternal: bufferSizeInBytes: 7680
+89612:05-16 19:21:55.165 19898 19956 I org.webrtc.Logging: WebRtcAudioRecordExternal: createAudioRecordOnMOrHigher
+89760:05-16 19:21:55.300 19898 19956 I org.webrtc.Logging: WebRtcAudioEffectsExternal: enable(audioSession=79481)
+89770:05-16 19:21:55.307 19898 19956 I org.webrtc.Logging: WebRtcAudioEffectsExternal: AcousticEchoCanceler: was enabled, enable: true, is now: enabled
+89781:05-16 19:21:55.313 19898 19956 I org.webrtc.Logging: WebRtcAudioEffectsExternal: NoiseSuppressor: was enabled, enable: true, is now: enabled
+89782:05-16 19:21:55.313 19898 19956 I org.webrtc.Logging: WebRtcAudioRecordExternal: AudioRecord: session ID: 79481, channels: 1, sample rate: 48000
+89784:05-16 19:21:55.313 19898 19956 I org.webrtc.Logging: WebRtcAudioRecordExternal: AudioRecord: buffer size in frames: 3840
+89785:05-16 19:21:55.316 19898 19956 I org.webrtc.Logging: WebRtcAudioRecordExternal: Number of active recording sessions: 0
+89786:05-16 19:21:55.317 19898 19956 I org.webrtc.Logging: WebRtcAudioRecordExternal: startRecording
+89849:05-16 19:21:55.349 19898 19956 I org.webrtc.Logging: WebRtcAudioRecordExternal: scheduleLogRecordingConfigurationsTask
+89850:05-16 19:21:55.349 19898 22703 I org.webrtc.Logging: WebRtcAudioRecordExternal: AudioRecordThread@[name=AudioRecordJavaThread, id=49954]
+89851:05-16 19:21:55.349 19898 22703 I org.webrtc.Logging: WebRtcAudioRecordExternal: doAudioRecordStateCallback: START
+89946:05-16 19:21:55.391 19898 19944 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 addIceCandidate +408ms
+90134:05-16 19:21:55.451 19898 22704 I org.webrtc.Logging: WebRtcAudioRecordExternal: Number of active recording sessions: 1
+90135:05-16 19:21:55.452 19898 22704 I org.webrtc.Logging: WebRtcAudioRecordExternal: AudioRecordingConfigurations:
+90192:05-16 19:21:55.471 19898 22704 I org.webrtc.Logging: WebRtcAudioRecordExternal:   client audio source=VOICE_COMMUNICATION, client session id=79481 (79481)
+90193:05-16 19:21:55.471 19898 22704 I org.webrtc.Logging:   Device AudioFormat: channel count=1, channel index mask=0, channel mask=IN_MONO, encoding=PCM_16BIT, sample rate=48000
+90194:05-16 19:21:55.471 19898 22704 I org.webrtc.Logging:   Client AudioFormat: channel count=1, channel index mask=0, channel mask=IN_MONO, encoding=PCM_16BIT, sample rate=48000
+90195:05-16 19:21:55.471 19898 22704 I org.webrtc.Logging:   AudioDevice: type=TYPE_BUILTIN_MIC, id=19
+90196:05-16 19:21:55.472 19898 22704 I org.webrtc.Logging: WebRtcAudioRecordExternal: verifyAudioConfig: PASS
+90317:05-16 19:21:55.645 19898 19944 I ReactNativeJS: rn-webrtc:pc:DEBUG 0 addIceCandidate +255ms
+90388:05-16 19:21:55.715 19898 22594 E org.webrtc.Logging: HardwareVideoEncoder: Dropped frame, encoder queue full
+90475:05-16 19:21:55.735 19898 22699 I org.webrtc.Logging: HardwareVideoEncoder: Config frame generated. Offset: 0. Size: 30
+90482:05-16 19:21:55.738 19898 22699 I org.webrtc.Logging: HardwareVideoEncoder: Sync frame generated
+90483:05-16 19:21:55.739 19898 22699 I org.webrtc.Logging: HardwareVideoEncoder: Prepending config buffer of size 30 to output buffer with offset 0, size 1680
+90742:05-16 19:21:56.248 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 11.
+91965:05-16 19:21:58.249 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+92492:05-16 19:21:59.631  1644 22617 E CameraImpl: triggerCalVariance: cameraServer send preview frame : variace = 42,maxInterval = 80,minInterval = 31,first frame = 1,last frame = 86
+92686:05-16 19:22:00.249 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+93206:05-16 19:22:02.250 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+94388:05-16 19:22:04.252 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+94801:05-16 19:22:04.750  1644 22617 E CameraImpl: triggerCalVariance: cameraServer send preview frame : variace = 46,maxInterval = 94,minInterval = 30,first frame = 87,last frame = 172
+95696:05-16 19:22:06.255 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+96927:05-16 19:22:08.256 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 18.
+97479:05-16 19:22:09.829  1644 22617 E CameraImpl: triggerCalVariance: cameraServer send preview frame : variace = 39,maxInterval = 93,minInterval = 32,first frame = 173,last frame = 259
+97648:05-16 19:22:10.257 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+97747:05-16 19:22:10.705 19898 22699 I org.webrtc.Logging: HardwareVideoEncoder: Releasing MediaCodec on output thread
+97773:05-16 19:22:10.719 19898 22699 I org.webrtc.Logging: HardwareVideoEncoder: Release on output thread done
+97775:05-16 19:22:10.719 19898 22594 I org.webrtc.Logging: GlShader: Deleting shader.
+97806:05-16 19:22:10.729 19898 22594 I org.webrtc.Logging: HardwareVideoEncoder: initEncode name: c2.qti.avc.encoder type: H264 width: 960 height: 528 framerate_fps: 60 bitrate_kbps: 260 surface mode: true
+97882:05-16 19:22:10.771 19898 22594 I org.webrtc.Logging: HardwareVideoEncoder: Format: {color-format=2130708361, i-frame-interval=3600, mime=video/avc, width=960, bitrate-mode=2, bitrate=260000, frame-rate=60.0, height=528}
+98021:05-16 19:22:10.814 19898 22594 I org.webrtc.Logging: EglBase14Impl: Using OpenGL ES version 2
+98062:05-16 19:22:10.830 19898 22594 I org.webrtc.Logging: HardwareVideoEncoder: updateInputFormat format: {crop-right=959, color-format=2130708361, mime=video/raw, hdr-static-info=java.nio.HeapByteBuffer[pos=0 lim=25 cap=25], priority=0, intra-refresh-period=0, color-standard=1, feature-secure-playback=0, color-transfer=3, crop-bottom=527, prepend-sps-pps-to-idr-frames=0, video-qp-average=0, crop-left=0, width=960, color-range=2, crop-top=0, frame-rate=60, height=528} stride: 960 sliceHeight: 528 isSemiPlanar: false frameSizeBytes: 760320
+98247:05-16 19:22:10.922 19898 23663 I org.webrtc.Logging: HardwareVideoEncoder: Config frame generated. Offset: 0. Size: 31
+98253:05-16 19:22:10.926 19898 23663 I org.webrtc.Logging: HardwareVideoEncoder: Sync frame generated
+98254:05-16 19:22:10.926 19898 23663 I org.webrtc.Logging: HardwareVideoEncoder: Prepending config buffer of size 31 to output buffer with offset 0, size 2416
+100028:05-16 19:22:12.258 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 16.
+101517:05-16 19:22:14.259 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+102317:05-16 19:22:16.260 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+102837:05-16 19:22:18.260 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+103429:05-16 19:22:20.259 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 18.
+103742:05-16 19:22:22.260 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+104036:05-16 19:22:24.260 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+104313:05-16 19:22:26.261 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+104728:05-16 19:22:28.261 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+104991:05-16 19:22:30.262 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+105069:05-16 19:22:30.718 19898 23663 I org.webrtc.Logging: HardwareVideoEncoder: Releasing MediaCodec on output thread
+105097:05-16 19:22:30.729 19898 23663 I org.webrtc.Logging: HardwareVideoEncoder: Release on output thread done
+105101:05-16 19:22:30.729 19898 22594 I org.webrtc.Logging: GlShader: Deleting shader.
+105128:05-16 19:22:30.733 19898 22594 I org.webrtc.Logging: HardwareVideoEncoder: initEncode name: c2.qti.avc.encoder type: H264 width: 1280 height: 720 framerate_fps: 60 bitrate_kbps: 771 surface mode: true
+105206:05-16 19:22:30.760 19898 22594 I org.webrtc.Logging: HardwareVideoEncoder: Format: {color-format=2130708361, i-frame-interval=3600, mime=video/avc, width=1280, bitrate-mode=2, bitrate=771000, frame-rate=60.0, height=720}
+105307:05-16 19:22:30.765 19898 22594 I org.webrtc.Logging: EglBase14Impl: Using OpenGL ES version 2
+105341:05-16 19:22:30.769 19898 22594 I org.webrtc.Logging: HardwareVideoEncoder: updateInputFormat format: {crop-right=1279, color-format=2130708361, mime=video/raw, hdr-static-info=java.nio.HeapByteBuffer[pos=0 lim=25 cap=25], priority=0, intra-refresh-period=0, color-standard=1, feature-secure-playback=0, color-transfer=3, crop-bottom=719, prepend-sps-pps-to-idr-frames=0, video-qp-average=0, crop-left=0, width=1280, color-range=2, crop-top=0, frame-rate=60, height=720} stride: 1280 sliceHeight: 720 isSemiPlanar: false frameSizeBytes: 1382400
+105506:05-16 19:22:30.844 19898 24122 I org.webrtc.Logging: HardwareVideoEncoder: Config frame generated. Offset: 0. Size: 31
+105510:05-16 19:22:30.847 19898 24122 I org.webrtc.Logging: HardwareVideoEncoder: Sync frame generated
+105511:05-16 19:22:30.847 19898 24122 I org.webrtc.Logging: HardwareVideoEncoder: Prepending config buffer of size 31 to output buffer with offset 0, size 5008
+105748:05-16 19:22:32.263 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+106025:05-16 19:22:34.264 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+106321:05-16 19:22:36.264 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+106603:05-16 19:22:38.264 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+106894:05-16 19:22:40.265 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+107174:05-16 19:22:42.264 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+107449:05-16 19:22:44.265 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+107721:05-16 19:22:46.266 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 14.
+107976:05-16 19:22:48.265 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 13.
+108271:05-16 19:22:50.266 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 15.
+108322:05-16 19:22:50.604  1644 22617 E CameraImpl: triggerCalVariance: cameraServer send preview frame : variace = 21,maxInterval = 76,minInterval = 59,first frame = 814,last frame = 884
+108610:05-16 19:22:52.267 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+109136:05-16 19:22:54.268 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+110101:05-16 19:22:56.269 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
+111546:05-16 19:22:58.270 19898 22578 I org.webrtc.Logging: CameraStatistics: Camera fps: 17.
