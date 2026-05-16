@@ -3,6 +3,18 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-16 - Android 0.1.4, anjos sincronizados e aceite visivel
+
+- o usuario que ja atua como anjo pode criar a propria rede de anjos quando seu perfil adulto/responsavel permite;
+- aceite de convite sincroniza perfil ativo antes de registrar dispositivo e aceitar o token na API;
+- `GET /api/trusted-contacts/` passou a expor `contact_display_name` saneado para fallback visual do originador;
+- auditoria de `invitation_accept` passou a registrar IDs minimos de convite, contato, originador e recebedor, sem token, telefone, e-mail bruto, midia ou localizacao;
+- tela `Anjos de confianca` mostra resumo direto, usa `Meus anjos`, remove pendencias locais quando o backend ja retornou aceite/revogacao e sincroniza ao foco, ao voltar ao foreground e a cada 15s enquanto aberta;
+- `Convite recebido > Ver meus vinculos` abre diretamente o painel `Sou anjo de`;
+- APK Android privado `0.1.4`/`versionCode 6` gerado em `android/app/build/outputs/apk/debug/app-debug.apk`;
+- SHA-256: `93b06f022aac21ddf296eeaa34fc126ed353341c0cda7ebee311203d7ed05139`;
+- validacoes ate o build: `typecheck`, `lint`, `npm test`, readiness Android privado, build Android debug bundled, Django `check`, `makemigrations --check --dry-run` e 36 testes backend aprovados.
+
 ## 2026-05-15 - Android 0.1.3 para update publico, login sem flash e sincronizacao de anjos
 
 Status: codigo, build e validacoes locais aprovados; publicacao EC2 e validacao fisica por update no app entram como gate final desta rodada.

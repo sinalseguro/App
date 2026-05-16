@@ -219,6 +219,14 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `src/features/emergency/emergencySyncQueue.ts` enfileira pacote SOS finalizado e tenta sincronizar a sessao de emergencia com a EC2 quando o app volta ao foco.
 - Build Android debug bundled `arm64-v8a` aprovado com APK SHA-256 `b941cc4839639a38fb0df22a20ab6ed11e4662dac85a184ef09ccf393b926def`.
 
+# Atualizacao - 2026-05-16 - Android 0.1.4 anjos
+
+- Android elevado para `versionName=0.1.4` e `versionCode=6`.
+- APK debug bundled: `android/app/build/outputs/apk/debug/app-debug.apk`, SHA-256 `93b06f022aac21ddf296eeaa34fc126ed353341c0cda7ebee311203d7ed05139`.
+- Quem ja e anjo pode criar sua propria rede de anjos se o perfil adulto/responsavel permitir; o papel de anjo nao bloqueia `owner` em outro vinculo.
+- `Anjos de confianca` sincroniza no foco, no foreground e a cada 15s, mostra `Meus anjos` e `Sou anjo`, e limpa pendencias locais quando o backend ja retornou aceite/revogacao.
+- `Convite recebido > Ver meus vinculos` abre direto o painel `Sou anjo de`.
+
 # Atualizacao - 2026-05-15 - Android 0.1.2
 
 - Android elevado para `versionName=0.1.2` e `versionCode=4` para permitir update no app a partir da versao `0.1.1`.

@@ -1,6 +1,6 @@
-import { ReactNode, useCallback, useMemo, useState } from "react";
-import { router, useFocusEffect } from "expo-router";
-import { Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from "react-native";
+import { ReactNode, useCallback, useMemo, useRef, useState } from "react";
+import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { AppState, Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from "react-native";
 import { Clock3, RefreshCw, ShieldCheck, UserCheck, UserPlus, UserRound, Users, WifiOff, XCircle } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { AppTopBar } from "@/components/AppTopBar";
@@ -64,6 +64,10 @@ type ScreenNotice = {
 };
 
 type AngelsPanel = "estado" | "prontidao" | "anjos" | "sou_anjo" | "convites" | null;
+
+type RefreshOptions = {
+  silent?: boolean;
+};
 
 function formatShortDate(value: string) {
   return new Date(value).toLocaleDateString("pt-BR", {
@@ -138,6 +142,18 @@ function acceptedAngelSummary(count: number) {
   return `${count} pessoas`;
 }
 
+function relationshipNamesSummary(relationships: ApiTrustedContactRelationship[], fallback: string) {
+  const names = relationships
+    .filter((relationship) => relationship.status === "accepted")
+    .map(trustedRelationshipName)
+    .filter(Boolean);
+
+  if (names.length === 0) return fallback;
+  if (names.length === 1) return names[0];
+  if (names.length === 2) return `${names[0]} e ${names[1]}`;
+  return `${names[0]} e mais ${names.length - 1}`;
+}
+
 function invitationFromApi(invitation: ApiInvitation): LocalInvitation {
   return {
     id: invitation.id,
@@ -159,6 +175,15 @@ function invitationFromApi(invitation: ApiInvitation): LocalInvitation {
             ? "expirado"
             : "pendente",
     syncStatus: "backend_validated"
+  };
+}
+
+function trustedContactFallbackRelationship(contact: ApiTrustedContact): ApiTrustedContactRelationship {
+  return {
+    ...contact,
+    contact_display_name: contact.contact_display_name || contact.display_label,
+    owner_display_name: "",
+    relationship_role: "owner"
   };
 }
 
@@ -188,15 +213,19 @@ function buildNotice({
   if (acceptedOwnerCount > 0 || acceptedAngelCount > 0) {
     const ownerText =
       acceptedOwnerCount > 0
-        ? `${acceptedOwnerCount} anjo${acceptedOwnerCount > 1 ? "s" : ""} autorizado${acceptedOwnerCount > 1 ? "s" : ""}`
+        ? acceptedOwnerCount === 1
+          ? `${relationshipNamesSummary(ownerLinks, "1 pessoa")} aceitou ser seu anjo`
+          : `${acceptedOwnerCount} anjos autorizados, incluindo ${relationshipNamesSummary(ownerLinks, "pessoas de confianca")}`
         : "";
     const angelText =
       acceptedAngelCount > 0
-        ? `você é anjo de ${acceptedAngelCount} pessoa${acceptedAngelCount > 1 ? "s" : ""}`
+        ? acceptedAngelCount === 1
+          ? `você é anjo de ${relationshipNamesSummary(angelLinks, "1 pessoa")}`
+          : `você é anjo de ${acceptedAngelCount} pessoas, incluindo ${relationshipNamesSummary(angelLinks, "pessoas protegidas")}`
         : "";
     return {
       text: `${[ownerText, angelText].filter(Boolean).join(" e ")}. Nada é enviado fora de um alerta autorizado.`,
-      title: acceptedAngelCount > 0 && acceptedOwnerCount === 0 ? "Você é anjo" : "Anjos autorizados",
+      title: acceptedAngelCount > 0 && acceptedOwnerCount === 0 ? "Você é anjo" : "Meus anjos",
       tone: "secure"
     };
   }
@@ -236,6 +265,7 @@ function SectionTitle({ icon, title }: { icon: ReactNode; title: string }) {
 }
 
 export default function ContactsScreen() {
+  const { painel } = useLocalSearchParams<{ painel?: string }>();
   const [apiSession, setApiSession] = useState<ApiSession | null>(null);
   const [backendInvitations, setBackendInvitations] = useState<ApiInvitation[]>([]);
   const [busy, setBusy] = useState(false);
@@ -249,6 +279,7 @@ export default function ContactsScreen() {
   const [status, setStatus] = useState("Carregando anjos de confiança...");
   const [trustedContacts, setTrustedContacts] = useState<ApiTrustedContact[]>([]);
   const [trustedRelationships, setTrustedRelationships] = useState<ApiTrustedContactRelationship[]>([]);
+  const refreshInFlightRef = useRef(false);
 
   const mergedInvitations = useMemo(() => {
     const localByBackendId = new Set(invitations.map((invitation) => invitation.backendInvitationId).filter(Boolean));
@@ -266,6 +297,9 @@ export default function ContactsScreen() {
           .map((relationship) => relationship.id)
       ]
     );
+    const visibleLocalInvitations = invitations.filter(
+      (invitation) => !invitation.trustedContactId || !acceptedOrRevokedContactIds.has(invitation.trustedContactId)
+    );
     const remoteOnly = backendInvitations
       .filter(
         (invitation) =>
@@ -273,19 +307,26 @@ export default function ContactsScreen() {
       )
       .map(invitationFromApi);
 
-    return [...invitations, ...remoteOnly].sort(
+    return [...visibleLocalInvitations, ...remoteOnly].sort(
       (left, right) => new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime()
     );
   }, [backendInvitations, invitations, trustedContacts, trustedRelationships]);
 
-  const linkedContacts = useMemo(
-    () =>
-      trustedRelationships.filter(
+  const linkedContacts = useMemo(() => {
+    const ownerRelationships = trustedRelationships.filter(
         (contact) =>
           contact.relationship_role === "owner" && (contact.status === "accepted" || contact.status === "revoked")
-      ),
-    [trustedRelationships]
-  );
+    );
+    const relationshipIds = new Set(ownerRelationships.map((relationship) => relationship.id));
+    const contactFallbacks = trustedContacts
+      .filter(
+        (contact) =>
+          (contact.status === "accepted" || contact.status === "revoked") && !relationshipIds.has(contact.id)
+      )
+      .map(trustedContactFallbackRelationship);
+
+    return [...ownerRelationships, ...contactFallbacks];
+  }, [trustedContacts, trustedRelationships]);
 
   const angelLinks = useMemo(
     () =>
@@ -316,8 +357,12 @@ export default function ContactsScreen() {
   const profileSummary = getProfileSummary(activeProfile);
   const invitationGate = canCreateTrustedContactInvitation(activeProfile);
 
-  async function refreshAngels() {
-    setBusy(true);
+  async function refreshAngels(options: RefreshOptions = {}) {
+    if (refreshInFlightRef.current) return;
+    refreshInFlightRef.current = true;
+    if (!options.silent) {
+      setBusy(true);
+    }
     try {
       const [nextInvitations, currentSession, registeredDeviceId, nextProfile, cachedRelationships] = await Promise.all([
         listLocalInvitations(),
@@ -348,33 +393,61 @@ export default function ContactsScreen() {
         if (relationshipsResult.status === "fulfilled") {
           setTrustedRelationships(relationshipsResult.value);
           await cacheTrustedContactRelationships(relationshipsResult.value);
-          setStatus("Anjos atualizados.");
+          if (!options.silent) {
+            setStatus("Anjos atualizados.");
+          }
         } else if (cachedRelationships.length > 0) {
-          setStatus("Sem internet agora. Mostrando vínculos salvos neste aparelho.");
+          if (!options.silent) {
+            setStatus("Sem internet agora. Mostrando vínculos salvos neste aparelho.");
+          }
         } else {
-          setStatus(
-            relationshipsResult.reason instanceof Error
-              ? relationshipsResult.reason.message
-              : "Nao foi possivel atualizar vinculos agora."
-          );
+          if (!options.silent) {
+            setStatus(
+              relationshipsResult.reason instanceof Error
+                ? relationshipsResult.reason.message
+                : "Nao foi possivel atualizar vinculos agora."
+            );
+          }
         }
       } else {
         setTrustedContacts([]);
         setBackendInvitations([]);
         setTrustedRelationships([]);
-        setStatus("Entre com sua conta para sincronizar anjos.");
+        if (!options.silent) {
+          setStatus("Entre com sua conta para sincronizar anjos.");
+        }
       }
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Não foi possível atualizar anjos agora.");
+      if (!options.silent) {
+        setStatus(error instanceof Error ? error.message : "Não foi possível atualizar anjos agora.");
+      }
     } finally {
-      setBusy(false);
+      if (!options.silent) {
+        setBusy(false);
+      }
+      refreshInFlightRef.current = false;
     }
   }
 
   useFocusEffect(
     useCallback(() => {
       void refreshAngels();
-    }, [])
+      if (painel === "anjos" || painel === "sou_anjo" || painel === "convites") {
+        setPanel(painel);
+      }
+      const refreshTimer = setInterval(() => {
+        void refreshAngels({ silent: true });
+      }, 15000);
+      const appStateSubscription = AppState.addEventListener("change", (state) => {
+        if (state === "active") {
+          void refreshAngels({ silent: true });
+        }
+      });
+      return () => {
+        clearInterval(refreshTimer);
+        appStateSubscription.remove();
+      };
+    }, [painel])
   );
 
   async function shareInvitation() {
@@ -480,6 +553,7 @@ export default function ContactsScreen() {
         ) : null}
 
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} style={styles.contentScroll}>
+          <StatusBanner tone={notice.tone} title={notice.title} text={notice.text} />
           <View style={styles.resourceGrid}>
             <ResourceTile
               icon={<UserRound size={24} color={theme.colors.primary} />}
@@ -511,7 +585,7 @@ export default function ContactsScreen() {
           <View style={styles.resourceGrid}>
             <ResourceTile
               icon={<Users size={24} color={theme.colors.primary} />}
-              label="Anjos"
+              label="Meus anjos"
               description={acceptedOwnerSummary(linkedContacts.filter((contact) => contact.status === "accepted").length)}
               onPress={() => setPanel("anjos")}
             />
@@ -533,7 +607,7 @@ export default function ContactsScreen() {
               icon={<RefreshCw size={24} color={theme.colors.primary} />}
               label="Atualizar"
               description={busy ? "Sincronizando" : "Sincronizar"}
-              onPress={refreshAngels}
+              onPress={() => void refreshAngels()}
             />
           </View>
         </ScrollView>
@@ -664,7 +738,7 @@ export default function ContactsScreen() {
           actions={[{ label: "Fechar", tone: "muted" }]}
           icon={<Users size={18} color={theme.colors.primary} />}
           onClose={() => setPanel(null)}
-          title="Anjos autorizados"
+          title="Meus anjos autorizados"
           visible={panel === "anjos"}
         >
           <View style={styles.dialogStack}>

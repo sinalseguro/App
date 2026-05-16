@@ -123,7 +123,7 @@ export default function InvitationScreen() {
           disabled={busy}
           icon={<Users size={20} color={theme.colors.primary} />}
           label="Ver meus vínculos"
-          onPress={() => router.push("/contatos")}
+          onPress={() => router.push({ pathname: "/contatos", params: { painel: "sou_anjo" } })}
         />
       ) : null}
     </SafeScreen>

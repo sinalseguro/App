@@ -100,6 +100,7 @@ const ConsentRecordSchema = z.object({
 const TrustedContactSchema = z.object({
   id: z.string(),
   protected_subject: z.string().nullable().optional(),
+  contact_display_name: z.string().optional(),
   display_label: z.string(),
   status: z.string(),
   can_receive_alerts: z.boolean(),

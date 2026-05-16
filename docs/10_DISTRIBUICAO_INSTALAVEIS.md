@@ -28,6 +28,12 @@ Revisao juridica/LGPD: Doneda
 - Retomada fisica em 2026-05-14 confirmou no Android `23129RA5FL` o pacote instalado `versionName=0.1.1`, `versionCode=3`, a API publica com `health=ok` e readiness `database=ok`, o gate de login bloqueando deep link direto sem sessao visivel, login Google concluido e o fluxo `Anjos de confianca` em modo API sem crash no logcat saneado.
 - iPhone/iOS permanece pos-MVP e nao faz parte deste fluxo.
 
+## Atualizacao real em 2026-05-16
+
+- APK privado Android `0.1.4` gerado em `android/app/build/outputs/apk/debug/app-debug.apk`, `versionCode 6`, SHA-256 `93b06f022aac21ddf296eeaa34fc126ed353341c0cda7ebee311203d7ed05139`.
+- O link direto publicado usa `?v=0.1.4-20260516` para atualizar cache mantendo o arquivo e QR estaveis.
+- A versao melhora a sincronizacao de anjos aceitos, deixa o originador ver `Meus anjos` e mantem o recebedor em `Sou anjo de`.
+
 ## Atualizacao real em 2026-05-15
 
 - APK privado Android `0.1.3` gerado em `android/app/build/outputs/apk/debug/app-debug.apk`, `versionCode 5`, SHA-256 `36f8518b72ff5711ff65893b675db5b47d36ef185aa34bf790a7356e6c3f2ae2`.

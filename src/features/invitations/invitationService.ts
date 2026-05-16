@@ -110,6 +110,7 @@ export async function acceptBackendInvitation(
     throw new Error("Entre com sua propria conta SinalSeguro antes de aceitar o convite.");
   }
 
+  await syncActiveProtectionProfileToApi();
   await deviceBindingService.registerAuthenticatedDevice();
   return apiClient.acceptInvitation({ displayLabel, token });
 }

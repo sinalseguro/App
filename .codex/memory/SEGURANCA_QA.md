@@ -211,6 +211,13 @@ Papel: seguranca, LGPD e QA.
 - ADB fisico confirmou aparelho ainda em `0.1.1`/`versionCode 3`, mas travou em `install`, `push`, TCP ADB e envio em partes; nao registrar como validacao visual fisica concluida.
 - Como a instalacao local ficou bloqueada por transporte, o aceite manual deve instalar pelo portal e confirmar a atualizacao no app.
 
+## QA/Security - 2026-05-16 - Android 0.1.4 anjos
+
+- Testes backend ampliados para confirmar que usuario que ja atua como anjo pode criar sua propria rede quando o perfil permite.
+- Auditoria de aceite registra IDs minimos e nao registra token, telefone, e-mail bruto, midia nem localizacao.
+- Validacoes aprovadas: `typecheck`, `lint`, `npm test`, readiness Android privado, build Android debug bundled, `manage.py check`, `makemigrations --check --dry-run` e 36 testes backend.
+- APK `0.1.4`/`versionCode 6` SHA-256 `93b06f022aac21ddf296eeaa34fc126ed353341c0cda7ebee311203d7ed05139`.
+
 ## QA/Security - 2026-05-15 - Android 0.1.3 update/anjo
 
 - Gates locais aprovados: `typecheck`, `lint`, `npm test`, `private:android:readiness` com Node 22, build Android debug bundled, backend check/test/makemigrations e portal validate com Node 22.
