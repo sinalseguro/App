@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Stack } from "expo-router";
+import { router, Stack, usePathname } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as SplashScreen from "expo-splash-screen";
+import * as Notifications from "expo-notifications";
 import * as WebBrowser from "expo-web-browser";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { LogBox, Platform, View } from "react-native";
@@ -9,16 +10,86 @@ import { AppLaunchScreen } from "@/components/AppLaunchScreen";
 import { BrandedDialog } from "@/components/BrandedDialog";
 import { theme } from "@/design/theme";
 import { AccessGate } from "@/features/access/AccessGate";
+import { notifyIncomingEmergency } from "@/features/live-call/incomingEmergencyNotification";
+import { currentEmergencyRecipientStatus, isActiveReceivedEmergency } from "@/features/live-call/liveCallRolePolicy";
 import { AppUpdateState, checkForAppUpdate, openAppUpdateDownload } from "@/services/appUpdate";
+import { ApiEmergencySession, apiClient } from "@/services/apiClient";
 import { Download } from "lucide-react-native";
 
 const queryClient = new QueryClient();
+const incomingEmergencyForegroundPollMs = 3500;
 
 LogBox.ignoreLogs(["Unable to activate keep awake"]);
 WebBrowser.maybeCompleteAuthSession();
 
 if (Platform.OS !== "web") {
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      priority: Notifications.AndroidNotificationPriority.HIGH,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+      shouldShowBanner: true,
+      shouldShowList: true
+    })
+  });
+}
+
+if (Platform.OS !== "web") {
   void SplashScreen.preventAutoHideAsync();
+}
+
+function shouldOpenIncomingEmergency(session: ApiEmergencySession) {
+  if (!isActiveReceivedEmergency(session)) return false;
+  const recipientStatus = currentEmergencyRecipientStatus(session);
+  return recipientStatus !== "declined" && recipientStatus !== "ended";
+}
+
+function IncomingEmergencyForegroundBridge() {
+  const pathname = usePathname();
+  const pathnameRef = useRef(pathname);
+  const pollingRef = useRef(false);
+  const notifiedSessionIdsRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    pathnameRef.current = pathname;
+  }, [pathname]);
+
+  const checkIncomingEmergencies = useCallback(async () => {
+    if (pollingRef.current) return;
+    pollingRef.current = true;
+
+    try {
+      const receivedSessions = await apiClient.listReceivedEmergencySessions();
+      const incomingSession = receivedSessions.find(shouldOpenIncomingEmergency);
+      if (!incomingSession) return;
+
+      if (!notifiedSessionIdsRef.current.has(incomingSession.id)) {
+        notifiedSessionIdsRef.current.add(incomingSession.id);
+        void notifyIncomingEmergency(incomingSession).catch(() => null);
+      }
+
+      if (pathnameRef.current !== "/alerta") {
+        router.push("/alerta");
+      }
+    } catch {
+      // O app preserva o acesso local/offline; falha de rede ou login nao deve interromper a tela atual.
+    } finally {
+      pollingRef.current = false;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (Platform.OS === "web") return undefined;
+
+    void checkIncomingEmergencies();
+    const timer = setInterval(() => {
+      void checkIncomingEmergencies();
+    }, incomingEmergencyForegroundPollMs);
+
+    return () => clearInterval(timer);
+  }, [checkIncomingEmergencies]);
+
+  return null;
 }
 
 export default function RootLayout() {
@@ -54,6 +125,19 @@ export default function RootLayout() {
     };
   }, [hideNativeSplashOnce]);
 
+  useEffect(() => {
+    if (Platform.OS === "web") return undefined;
+
+    const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
+      const route = response.notification.request.content.data?.route;
+      if (route === "/alerta") {
+        router.push("/alerta");
+      }
+    });
+
+    return () => subscription.remove();
+  }, []);
+
   const hideNativeSplash = useCallback(() => {
     hideNativeSplashOnce();
   }, [hideNativeSplashOnce]);
@@ -71,6 +155,7 @@ export default function RootLayout() {
       <QueryClientProvider client={queryClient}>
         <StatusBar style="light" backgroundColor={theme.colors.backgroundStrong} />
         <AccessGate>
+          <IncomingEmergencyForegroundBridge />
           <Stack
             screenOptions={{
               headerShown: false,

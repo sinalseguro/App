@@ -61,6 +61,10 @@ const requiredFiles = [
   "src/features/emergency/EncryptedVideoPlaybackCache.ts",
   "src/features/emergency/SinalSeguroMediaEngine.ts",
   "src/features/emergency/SecureVideoThumbnailStore.ts",
+  "src/features/live-call/incomingEmergencyNotification.ts",
+  "src/features/live-call/liveCallHistory.ts",
+  "src/features/live-call/liveCallHistoryPolicy.ts",
+  "src/features/live-call/liveCallRolePolicy.ts",
   "src/services/apiClient.ts",
   "src/services/appleIdentity.ts",
   "src/services/deviceBinding.ts",
@@ -69,6 +73,7 @@ const requiredFiles = [
   "scripts/encrypted-video-store.test.ts",
   "scripts/device-key-proof.test.ts",
   "scripts/profile-policy.test.ts",
+  "scripts/live-call-history-policy.test.ts",
   "src/storage/secureJsonStore.ts",
   "scripts/android-private-media-readiness.mjs"
 ];
@@ -151,6 +156,13 @@ const mediaInterfacePresentation = await readFile("src/features/emergency/mediaI
 const appLayout = await readFile("app/_layout.tsx", "utf8");
 const homeScreen = await readFile("app/index.tsx", "utf8");
 const alertScreen = await readFile("app/alerta.tsx", "utf8");
+const incomingEmergencyNotification = await readFile("src/features/live-call/incomingEmergencyNotification.ts", "utf8");
+const liveCallHistory = await readFile("src/features/live-call/liveCallHistory.ts", "utf8");
+const liveCallHistoryPolicy = await readFile("src/features/live-call/liveCallHistoryPolicy.ts", "utf8");
+const liveCallRolePolicy = await readFile("src/features/live-call/liveCallRolePolicy.ts", "utf8");
+const liveCallControl = await readFile("src/services/liveCallControl.ts", "utf8");
+const useLiveAudioCall = await readFile("src/features/live-call/useLiveAudioCall.ts", "utf8");
+const liveWebRtcSession = await readFile("src/services/liveWebRtcSession.ts", "utf8");
 const localFilesScreen = await readFile("app/arquivos.tsx", "utf8");
 const settingsScreen = await readFile("app/configuracoes.tsx", "utf8");
 const contactsScreen = await readFile("app/contatos.tsx", "utf8");
@@ -161,6 +173,14 @@ const deviceBinding = await readFile("src/services/deviceBinding.ts", "utf8");
 const deviceKeyProof = await readFile("src/services/deviceKeyProof.ts", "utf8");
 const profilePolicy = await readFile("src/features/profiles/profilePolicy.ts", "utf8");
 const profileSurface = `${profilesScreen}\n${profilePolicy}`;
+const ownerLiveCallStartIndex = useLiveAudioCall.indexOf("const startOwnerAudioCall");
+const angelLiveCallStartIndex = useLiveAudioCall.indexOf("const startAngelAudioCall");
+const ownerLiveCallBlock =
+  ownerLiveCallStartIndex >= 0 && angelLiveCallStartIndex > ownerLiveCallStartIndex
+    ? useLiveAudioCall.slice(ownerLiveCallStartIndex, angelLiveCallStartIndex)
+    : "";
+const angelLiveCallBlock =
+  angelLiveCallStartIndex >= 0 ? useLiveAudioCall.slice(angelLiveCallStartIndex) : "";
 
 if (
   !deviceKeyProof.includes("ed25519-v1") ||
@@ -191,10 +211,163 @@ if (
 if (
   !alertScreen.includes("listReceivedEmergencySessions") ||
   !alertScreen.includes("respondToEmergencySession") ||
-  !alertScreen.includes("Pedido de") ||
-  !alertScreen.includes("Acompanhar")
+  !alertScreen.includes("Você é anjo de") ||
+  !alertScreen.includes("Atender como anjo")
 ) {
   throw new Error("Tela de alertas recebidos precisa listar pedidos roteados e permitir resposta do anjo.");
+}
+
+if (
+  !alertScreen.includes("beginReceivedLiveCallArchive") ||
+  !alertScreen.includes("listReceivedLiveCallArchives") ||
+  !alertScreen.includes("autoAcceptingSessionIdsRef") ||
+  !alertScreen.includes("autoRealtimeSessionIdsRef") ||
+  !alertScreen.includes("activeLiveCall") ||
+  !alertScreen.includes("notifyIncomingEmergency") ||
+  !alertScreen.includes("Entrar na chamada") ||
+  !alertScreen.includes("Você é o anjo") ||
+  !alertScreen.includes("Share.share") ||
+  !alertScreen.includes("openRealtimeCall")
+) {
+  throw new Error("Tela do anjo precisa notificar, registrar em background e preparar tempo real automaticamente.");
+}
+
+if (
+  !homeScreen.includes("ownerLiveCallAutoStartDelayMs") ||
+  !homeScreen.includes("ownerLiveCallAutoRetryMs") ||
+  !homeScreen.includes("activeRemoteSyncRetryMs") ||
+  !homeScreen.includes("activeRemoteSyncInFlightRef") ||
+  !homeScreen.includes("liveCallPanelVisible") ||
+  !homeScreen.includes('liveAudioCallStatus === "idle"') ||
+  !homeScreen.includes("emergency_active_remote_sync_attempt") ||
+  !homeScreen.includes("syncEmergencyPackageWithApi(activePackage)") ||
+  !homeScreen.includes("Tentando avisar seus anjos pela internet") ||
+  !homeScreen.includes("ownerAutoCallStartedSessionIdsRef") ||
+  !homeScreen.includes("listAcceptedLiveRecipients") ||
+  !homeScreen.includes("emergency_live_call_auto_start_attempt") ||
+  !homeScreen.includes("prepareMediaForOwnerLiveCall") ||
+  !homeScreen.includes("emergency_live_call_media_handoff_start") ||
+  !homeScreen.includes("waitForMediaRecorderRelease") ||
+  !homeScreen.includes("Camera liberada. Abrindo video ao vivo para o anjo.") ||
+  !homeScreen.includes("Anjo entrou. Chamando agora.")
+) {
+  throw new Error("Tela SOS precisa sincronizar chamado ativo com EC2, liberar camera/microfone locais e conectar automaticamente uma unica chamada apos aceite do anjo.");
+}
+
+if (
+  !incomingEmergencyNotification.includes("sinalseguro-emergency-alerts") ||
+  !incomingEmergencyNotification.includes("AndroidImportance.HIGH") ||
+  !incomingEmergencyNotification.includes("SOS recebido") ||
+  !incomingEmergencyNotification.includes("scheduleNotificationAsync")
+) {
+  throw new Error("Notificacao local do chamado recebido precisa ficar explicita e prioritaria no Android.");
+}
+
+if (
+  !appLayout.includes("IncomingEmergencyForegroundBridge") ||
+  !appLayout.includes("listReceivedEmergencySessions") ||
+  !appLayout.includes("shouldOpenIncomingEmergency") ||
+  !appLayout.includes('router.push("/alerta")') ||
+  !appLayout.includes("incomingEmergencyForegroundPollMs") ||
+  !appLayout.includes("notifyIncomingEmergency")
+) {
+  throw new Error("App aberto no aparelho do anjo precisa detectar SOS recebido fora da tela de alertas e abrir o atendimento.");
+}
+
+if (
+  !liveWebRtcSession.includes('videoMode === "recvonly"') ||
+  !liveWebRtcSession.includes('transceiverPeer.addTransceiver("video", { direction: "recvonly" })') ||
+  !liveWebRtcSession.includes("remoteStreamFromTrackEvent") ||
+  !liveWebRtcSession.includes("onaddstream") ||
+  !liveWebRtcSession.includes('addEventListener("track"') ||
+  !liveWebRtcSession.includes('addEventListener("iceconnectionstatechange"') ||
+  !liveWebRtcSession.includes("remote_stream_${source}") ||
+  !liveWebRtcSession.includes('facingMode: videoFacingMode') ||
+  !liveWebRtcSession.includes('options.videoFacingMode ?? "environment"') ||
+  !liveWebRtcSession.includes('value === "completed"') ||
+  !liveWebRtcSession.includes('value === "checking"')
+) {
+  throw new Error("WebRTC precisa negociar video recebido, priorizar camera do evento e refletir estados ICE quando o connectionState nativo for instavel.");
+}
+
+if (
+  !liveCallControl.includes("senderDeviceId") ||
+  !liveCallControl.includes("recipientDeviceId") ||
+  !liveCallControl.includes("senderRole") ||
+  !liveCallControl.includes("recipientRole") ||
+  !liveCallControl.includes("isAllowedLiveSignalRoute") ||
+  !liveCallControl.includes("relationship_role === \"angel\"") ||
+  !liveCallControl.includes("signal.payload.recipientDeviceId") ||
+  !liveCallControl.includes("signal.payload.senderDeviceId") ||
+  !deviceBinding.includes("requireRegisteredApiDeviceId") ||
+  !homeScreen.includes("Chamar anjo") ||
+  !homeScreen.includes("Você pediu ajuda") ||
+  !alertScreen.includes("Você é anjo de") ||
+  !alertScreen.includes("Atender como anjo") ||
+  !alertScreen.includes("Entrar na chamada")
+) {
+  throw new Error("Chamada com anjo precisa ter rota por dispositivo/papel e UX clara de solicitante versus anjo.");
+}
+
+if (
+  !liveCallRolePolicy.includes("canAngelAutoAcceptIncomingEmergency") ||
+  !liveCallRolePolicy.includes("canAngelStartRealtime") ||
+  !liveCallRolePolicy.includes("canOwnerStartLiveCallWithRecipient") ||
+  !liveCallRolePolicy.includes("current_recipient") ||
+  !liveCallRolePolicy.includes("relationship_role !== \"angel\"")
+) {
+  throw new Error("Politica de chamada precisa separar owner/anjo e impedir aceite local sem sessao recebida valida.");
+}
+
+if (!useLiveAudioCall.includes("requireRegisteredApiDeviceId")) {
+  throw new Error("Videochamada precisa exigir dispositivo registrado antes de sinalizar.");
+}
+
+if (
+  !useLiveAudioCall.includes("hasActiveCallForSession") ||
+  !useLiveAudioCall.includes("stateRef") ||
+  !useLiveAudioCall.includes("remoteStream,") ||
+  !useLiveAudioCall.includes("remoteStreamUrl") ||
+  !useLiveAudioCall.includes("streamUrlFrom") ||
+  !useLiveAudioCall.includes("shouldRenderRemoteStream") ||
+  !ownerLiveCallBlock.includes('audioMode: "sendrecv"') ||
+  !ownerLiveCallBlock.includes('videoFacingMode: "environment"') ||
+  !ownerLiveCallBlock.includes('videoMode: "sendrecv"') ||
+  !angelLiveCallBlock.includes('audioMode: "recvonly"') ||
+  !angelLiveCallBlock.includes('videoMode: "recvonly"') ||
+  !useLiveAudioCall.includes('status: current.remoteStream || current.remoteStreamUrl ? "connected" : "connecting"') ||
+  !useLiveAudioCall.includes("Transmitindo seu SOS para o anjo") ||
+  !useLiveAudioCall.includes('status: "connected"') ||
+  !useLiveAudioCall.includes('current.status === "connected"') ||
+  !useLiveAudioCall.includes("current.message")
+) {
+  throw new Error("Videochamada precisa manter owner como transmissor do SOS e anjo como receptor do video.");
+}
+
+if (
+  !useLiveAudioCall.includes("answerAccepted") ||
+  !useLiveAudioCall.includes("answerSignal") ||
+  useLiveAudioCall.indexOf("const answerSignal") > useLiveAudioCall.indexOf('signal.signal_type === "ice"')
+) {
+  throw new Error("Solicitante precisa aplicar o answer antes de processar ICE do anjo.");
+}
+
+if (
+  !liveCallHistory.includes("sinalseguro.live-call-archive.v1") ||
+  !liveCallHistory.includes("getSecureRecord") ||
+  !liveCallHistory.includes("saveSecureRecord") ||
+  !liveCallHistory.includes("listSecureRecords")
+) {
+  throw new Error("Historico de chamadas recebidas precisa usar armazenamento local seguro.");
+}
+
+if (
+  !liveCallHistoryPolicy.includes("allowedTargets: [\"autoridade\", \"usuario_protegido\"]") ||
+  !liveCallHistoryPolicy.includes("Compartilhe somente") ||
+  !liveCallHistoryPolicy.includes("backend nao recebe audio/video") ||
+  !liveCallHistoryPolicy.includes("buildLiveCallShareText")
+) {
+  throw new Error("Historico de chamadas precisa preservar regras de compartilhamento e privacidade.");
 }
 
 const interruptedRecoveryIndex = homeScreen.indexOf("await recoverInterruptedCameraResidue(");

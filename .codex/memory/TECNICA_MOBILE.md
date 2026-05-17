@@ -24,6 +24,28 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Evoluir adaptadores de outbox/API somente quando a frente de backend/anjos for aberta.
 - Nao colocar blobs de midia no `SecureStore`; midia local deve permanecer em arquivo do sandbox do app com hash e criptografia por envelope.
 
+## Atualizacao tecnica - 2026-05-16 - recebimento de chamada e registro do anjo
+
+- Tela `Alertas recebidos` passa a autoaceitar chamado SOS ativo recebido pelo anjo e criar registro local seguro em background.
+- A tela do anjo dispara notificacao local de alta prioridade quando detecta chamado ativo recebido; push real com app fechado segue subfase futura de backend/FCM/Expo Push.
+- Depois do registro local, o anjo inicia automaticamente o modo de acompanhamento ao vivo e fica aguardando a oferta WebRTC da pessoa protegida.
+- A Home da pessoa protegida tenta iniciar automaticamente a videochamada quando o backend informa que o anjo aceitou; `Acompanhar ao vivo` fica como fallback manual.
+- Atualizacao 2026-05-17: a Home tambem tenta sincronizar o pacote SOS ativo com a EC2 a cada 5 segundos enquanto nao houver `liveRemoteSessionId`, corrigindo o caso de SOS local sem sessao remota para o anjo receber.
+- Validacao fisica 2026-05-17 em dois Androids: sessao `3b717e39-dfd8-459c-bc15-4176f1128463` ficou `active/accepted`, anjo abriu `Alertas recebidos`, chamada exibiu `Anjo na chamada`/`Atendendo como anjo` e depois encerrou como `finished/ended` na EC2.
+- Sinalizacao P2P validada nessa sessao: `offer`/`ice` owner->angel e `answer`/`ice` angel->owner, com `senderDeviceId` e `recipientDeviceId` em ambos os sentidos.
+- Hardening 2026-05-17: a Home limpa `liveRemoteSessionId` e estado WebRTC local quando nao existe SOS ativo; o card `Chamada com anjo` so aparece com SOS ativo relacionado.
+- APK instalado no hardening visual: SHA-256 `475a462efeceead71baab0de7551e05aa8f8dacce895bd9e0c47528f7b334335`; validacao visual mostrou Home limpa sem card residual e EC2 com `0` sessoes ativas.
+- Correcao 2026-05-17: chamada SOS agora preserva `remoteStream`/`remoteStreamUrl` no estado do anjo, evitando que a etapa posterior de aceite sobrescreva a midia recebida por `ontrack`.
+- Validacao fisica 2026-05-17: owner USB transmitiu video/audio do SOS; anjo Wi-Fi exibiu o stream remoto com rotulo `Pessoa protegida`; logs confirmaram `remote_stream_track audio=1 video=1`, `VideoTrackAdapter` e audio `fine`.
+- APK local instalado nessa validacao: SHA-256 `32cd04e6ba9859cfd9df23234911d8e44f66dadd2261c2c75bbf01c13aa40a40`, `versionName=0.1.8`, `versionCode=10`, `primaryCpuAbi=armeabi-v7a`; usar apenas para teste fisico local, release publica deve incluir `arm64-v8a`.
+- EC2 apos validacao: sessao `9228ecac-1bb6-473d-ac95-4b4eeec9935c` encerrada como `finished/ended` e `0` sessoes ativas.
+- Historico local `Chamadas registradas` usa `secureJsonStore` via `src/features/live-call/liveCallHistory.ts` e politica pura em `liveCallHistoryPolicy.ts`.
+- Registro atual salva metadados operacionais locais: pessoa protegida, ocorrencia, snapshot textual, datas, duracao, status e regra de compartilhamento.
+- Audio/video bruto da chamada WebRTC ainda nao e gravado como arquivo local; isso exige subfase nativa propria com consentimento, retencao, criptografia, exclusao, cadeia de custodia e validacao fisica.
+- Validacoes aprovadas ate o checkpoint atual: `typecheck`, `smoke-test`, `lint`, `npm test`, `test:live-call-history`, build debug bundled e instalacao fisica em dois Androids.
+- APK instalado na retomada: SHA-256 `253ca236b1e9f78d3d747d0caca18e475fdce937dd86dd5be8ae49e7b1062c49`, `versionName=0.1.8`, `versionCode=10`; output local removido depois por limpeza de regeneraveis.
+- Checkpoint: `docs/57_CHECKPOINT_F4_3_RECEBIMENTO_CHAMADA_REGISTRO_2026-05-16.md`.
+
 ## Atualizacao tecnica - 2026-05-11 - Frente 1.2 Android validado
 
 - Android `recordAsync` deixou de receber `maxDuration` automatico; o stop explicito evita `ERROR_DURATION_LIMIT_REACHED` sem URI no CameraX e impede pacotes sem midia quando a camera excede o limite.

@@ -9,7 +9,7 @@ type EmergencyTopBarProps = {
 export function EmergencyTopBar({ active, menuOpen, onToggleMenu }: EmergencyTopBarProps) {
   return (
     <AppTopBar
-      contextLabel={active ? "Chamado ativo" : "Modo discreto"}
+      contextLabel={active ? "Você pediu ajuda" : "Modo discreto"}
       menuIcon="settings"
       menuOpen={menuOpen}
       onMenuPress={onToggleMenu}

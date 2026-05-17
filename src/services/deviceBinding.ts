@@ -227,6 +227,19 @@ export class DeviceBindingService {
     return storedPublicRecord?.apiDeviceId ?? null;
   }
 
+  async requireRegisteredApiDeviceId() {
+    const deviceId = await this.getRegisteredApiDeviceId();
+    if (!deviceId) {
+      throw new Error("Dispositivo precisa estar registrado para chamada segura.");
+    }
+    return deviceId;
+  }
+
+  async getCurrentBinding() {
+    const storedPublicRecord = safeParseJson<DeviceBindingRecord>(await readSecret(DEVICE_PUBLIC_RECORD_KEY));
+    return storedPublicRecord;
+  }
+
   async getLoginDeviceContext(): Promise<LoginDeviceContext> {
     const binding = await this.getOrCreateBinding();
     return {

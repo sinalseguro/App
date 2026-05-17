@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useRef, useState } from "react";
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { router, useFocusEffect } from "expo-router";
 import { useKeepAwake } from "expo-keep-awake";
 import { ActivityIndicator, Linking, Modal, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
@@ -27,6 +27,7 @@ import { createMediaDiagnosticRun, summarizeMediaDiagnostics } from "@/features/
 import { appendMediaOperationalLog } from "@/features/emergency/MediaOperationalLog";
 import { cleanupNativeMediaResidues } from "@/features/emergency/SinalSeguroMediaEngine";
 import {
+  type EmergencyRemoteSyncState,
   listEmergencyRemoteSyncStates,
   queueEmergencyPackageForRemoteSync,
   syncEmergencyPackageWithApi,
@@ -43,6 +44,7 @@ import { LiveAudioCallPanel } from "@/features/live-call/LiveAudioCallPanel";
 import { useLiveAudioCall } from "@/features/live-call/useLiveAudioCall";
 import { listAcceptedOwnerRelationshipsForDelivery } from "@/features/invitations/trustedRelationshipStore";
 import { isProtectedAccessUnlocked, unlockProtectedAccess, verifySecurityCodeStatus } from "@/security/protectedAccess";
+import { listAcceptedLiveRecipients } from "@/services/liveCallControl";
 
 type HomeDialog = {
   title: string;
@@ -63,6 +65,11 @@ type PendingMediaStopRequest = {
   timeout: ReturnType<typeof setTimeout>;
 };
 
+type PendingMediaReleaseRequest = {
+  resolve: () => void;
+  timeout: ReturnType<typeof setTimeout>;
+};
+
 type FinishProgressStatus = "idle" | "running" | "background" | "done" | "warning" | "error";
 
 type FinishProgressState = {
@@ -74,6 +81,10 @@ type FinishProgressState = {
 };
 
 const mediaStopWaitTimeoutMs = 30000;
+const mediaReleaseForLiveCallWaitTimeoutMs = 4500;
+const ownerLiveCallAutoStartDelayMs = 1800;
+const ownerLiveCallAutoRetryMs = 5000;
+const activeRemoteSyncRetryMs = 5000;
 const activePackageResidueGraceMs = 10 * 60 * 1000;
 const interruptedRecoveryClockSkewMs = 30 * 1000;
 const idleFinishProgressState: FinishProgressState = {
@@ -201,13 +212,21 @@ export default function HomeScreen() {
   const [protectedRouteCodeInput, setProtectedRouteCodeInput] = useState("");
   const [protectedRouteError, setProtectedRouteError] = useState("");
   const [dialog, setDialog] = useState<HomeDialog | null>(null);
-  const [recordingStatus, setRecordingStatus] = useState("Pronto para iniciar um chamado seguro.");
+  const [recordingStatus, setRecordingStatus] = useState("Pronto para pedir ajuda.");
   const pendingMediaStopRequestRef = useRef<PendingMediaStopRequest | null>(null);
+  const pendingMediaReleaseRequestRef = useRef<PendingMediaReleaseRequest | null>(null);
   const finishInProgressRef = useRef(false);
+  const mediaStopPurposeRef = useRef<"finish" | "live_call_handoff" | null>(null);
   const mediaStopPendingRef = useRef(false);
+  const activeRemoteSyncInFlightRef = useRef(false);
+  const ownerAutoCallInFlightRef = useRef(false);
+  const ownerAutoCallPausedSessionIdsRef = useRef<Set<string>>(new Set());
+  const ownerAutoCallStartedSessionIdsRef = useRef<Set<string>>(new Set());
   const startupRecoveryCompletedRef = useRef(false);
   const stopRecordingRequestSerialRef = useRef(0);
   const liveAudioCall = useLiveAudioCall();
+  const liveAudioCallStatus = liveAudioCall.state.status;
+  const liveAudioCallStateRef = useRef(liveAudioCall.state);
 
   async function refreshOutboxCount() {
     const activePackage = await getActiveEmergencyPackage();
@@ -239,6 +258,43 @@ export default function HomeScreen() {
     }
     setOutboxCount(await countPendingEmergencyPackages());
   }
+
+  const applyRemoteSyncState = useCallback((
+    syncState: EmergencyRemoteSyncState,
+    options: { locationText?: string; source: "initial" | "retry" | "resume" }
+  ) => {
+    appendMediaOperationalLog("emergency_remote_sync_state_applied", {
+      platform: Platform.OS,
+      recipientCount: syncState.recipientCount,
+      remoteSessionCreated: Boolean(syncState.remoteSessionId),
+      source: options.source,
+      status: syncState.status
+    });
+
+    const locationText = options.locationText ?? "Localizacao preservada.";
+
+    if (syncState.status === "sent_to_ec2") {
+      setLiveRemoteSessionId(syncState.remoteSessionId ?? null);
+      if (syncState.recipientCount > 0) {
+        setRecordingStatus(
+          `Você pediu ajuda. ${locationText} Pedido enviado para ${syncState.recipientCount} anjo${
+            syncState.recipientCount === 1 ? "" : "s"
+          }.`
+        );
+        return;
+      }
+
+      setRecordingStatus(`Você pediu ajuda. ${locationText} Pedido registrado. Aguardando anjo disponível.`);
+      return;
+    }
+
+    if (syncState.status === "blocked_login") {
+      setRecordingStatus("SOS local ativo. Entre com Google para avisar seus anjos quando houver internet.");
+      return;
+    }
+
+    setRecordingStatus("SOS local ativo. Tentando avisar seus anjos pela internet.");
+  }, []);
 
   async function recoverInterruptedActiveRecordingOnLaunch(currentPreferences = preferences) {
     if (startupRecoveryCompletedRef.current) return;
@@ -389,6 +445,46 @@ export default function HomeScreen() {
     }
   }
 
+  function setMediaStopPendingFlag(value: boolean) {
+    mediaStopPendingRef.current = value;
+    setMediaStopPending(value);
+  }
+
+  function resolveMediaReleaseWaiter() {
+    const waiter = pendingMediaReleaseRequestRef.current;
+    if (!waiter) return;
+
+    clearTimeout(waiter.timeout);
+    pendingMediaReleaseRequestRef.current = null;
+    waiter.resolve();
+  }
+
+  function waitForMediaRecorderRelease() {
+    const previousRequest = pendingMediaReleaseRequestRef.current;
+    if (previousRequest) {
+      clearTimeout(previousRequest.timeout);
+      previousRequest.resolve();
+    }
+
+    return new Promise<void>((resolve) => {
+      const timeout = setTimeout(() => {
+        if (pendingMediaReleaseRequestRef.current) {
+          pendingMediaReleaseRequestRef.current = null;
+        }
+        appendMediaOperationalLog("emergency_live_call_media_release_timeout", {
+          platform: Platform.OS,
+          timeoutMs: mediaReleaseForLiveCallWaitTimeoutMs
+        });
+        resolve();
+      }, mediaReleaseForLiveCallWaitTimeoutMs);
+
+      pendingMediaReleaseRequestRef.current = {
+        resolve,
+        timeout
+      };
+    });
+  }
+
   function showFinishProgress(nextState: Partial<FinishProgressState>) {
     setFinishProgress((current) => ({
       ...current,
@@ -400,6 +496,36 @@ export default function HomeScreen() {
 
   function handleMediaProcessingStateChange(state: MediaProcessingState) {
     if (!mediaStopPendingRef.current) return;
+
+    if (state === "camera_released" || state === "attached" || state === "no_media" || state === "error") {
+      resolveMediaReleaseWaiter();
+    }
+
+    if (mediaStopPurposeRef.current === "live_call_handoff") {
+      switch (state) {
+        case "stop_requested":
+          setRecordingStatus("Anjo entrou. Liberando camera e microfone para transmitir.");
+          return;
+        case "camera_released":
+          setRecordingStatus("Camera liberada. Abrindo video ao vivo para o anjo.");
+          return;
+        case "plaintext_detected":
+        case "encrypting":
+        case "packaging":
+        case "cleanup":
+          setRecordingStatus("Video local segue protegido. Transmissao ao anjo em preparacao.");
+          return;
+        case "attached":
+          setRecordingStatus("Video local protegido. Transmissao ao anjo ativa.");
+          return;
+        case "no_media":
+          setRecordingStatus("Camera liberada para transmissao. O pacote local segue com metadados.");
+          return;
+        case "error":
+          setRecordingStatus("Camera liberada com alerta local. O pedido continua ativo para o anjo.");
+          return;
+      }
+    }
 
     switch (state) {
       case "stop_requested":
@@ -518,19 +644,198 @@ export default function HomeScreen() {
     });
   }
 
+  const prepareMediaForOwnerLiveCall = useCallback(async () => {
+    if (
+      !activePackageId ||
+      captureStopLocked ||
+      Platform.OS === "web" ||
+      !preferences.localVideoCapture.requestOnSos
+    ) {
+      return;
+    }
+
+    const packageId = activePackageId;
+    mediaStopPurposeRef.current = "live_call_handoff";
+    setRecordingStatus("Anjo entrou. Preparando transmissao ao vivo.");
+    appendMediaOperationalLog("emergency_live_call_media_handoff_start", {
+      packageId,
+      platform: Platform.OS
+    });
+
+    const stopSerial = signalMediaRecorderStop();
+    setCaptureStopLocked(true);
+    setMediaRecorderPackageId(packageId);
+
+    if (!stopSerial) {
+      mediaStopPurposeRef.current = null;
+      return;
+    }
+
+    setMediaStopPendingFlag(true);
+    try {
+      await waitForMediaRecorderRelease();
+      appendMediaOperationalLog("emergency_live_call_media_handoff_camera_released", {
+        packageId,
+        platform: Platform.OS,
+        stopRequestSerial: stopSerial
+      });
+    } finally {
+      setMediaStopPendingFlag(false);
+      setMediaRecorderPackageId(packageId);
+      mediaStopPurposeRef.current = null;
+    }
+  }, [activePackageId, captureStopLocked, preferences.localVideoCapture.requestOnSos]);
+
   function handleStartOwnerLiveAudio() {
     if (!liveRemoteSessionId) {
       setDialog({
-        title: "Videochamada indisponivel",
-        message: "Aguarde um anjo aceitar o pedido antes de conectar a videochamada.",
+        title: "Aguardando anjo",
+        message: "Quando um anjo entrar no pedido, você poderá chamar por aqui.",
         icon: <PhoneCall size={18} color={theme.colors.primary} />,
         actions: [{ label: "Entendi" }]
       });
       return;
     }
 
-    void liveAudioCall.startOwnerAudioCall(liveRemoteSessionId);
+    void prepareMediaForOwnerLiveCall().then(() => liveAudioCall.startOwnerAudioCall(liveRemoteSessionId));
   }
+
+  function handleStopOwnerLiveAudio() {
+    if (liveRemoteSessionId) {
+      ownerAutoCallPausedSessionIdsRef.current.add(liveRemoteSessionId);
+    }
+    liveAudioCall.stopLiveAudioCall();
+  }
+
+  useEffect(() => {
+    liveAudioCallStateRef.current = liveAudioCall.state;
+  }, [liveAudioCall.state]);
+
+  useEffect(() => {
+    if (activePackageId || startInProgress || mediaStopPending || finishInProgress) return;
+    if (!liveRemoteSessionId && liveAudioCallStatus === "idle") return;
+
+    ownerAutoCallPausedSessionIdsRef.current.clear();
+    ownerAutoCallStartedSessionIdsRef.current.clear();
+    setLiveRemoteSessionId(null);
+    liveAudioCall.resetLiveAudioCall();
+  }, [
+    activePackageId,
+    finishInProgress,
+    liveAudioCall.resetLiveAudioCall,
+    liveAudioCallStatus,
+    liveRemoteSessionId,
+    mediaStopPending,
+    startInProgress
+  ]);
+
+  useEffect(() => {
+    if (!activePackageId || liveRemoteSessionId || mediaStopPending || finishInProgress) return undefined;
+
+    let cancelled = false;
+
+    const attemptActiveRemoteSync = (source: "retry" | "resume") => {
+      if (cancelled || activeRemoteSyncInFlightRef.current || liveRemoteSessionId) return;
+
+      activeRemoteSyncInFlightRef.current = true;
+      appendMediaOperationalLog("emergency_active_remote_sync_attempt", {
+        packageId: activePackageId,
+        platform: Platform.OS,
+        source
+      });
+      void getActiveEmergencyPackage()
+        .then((activePackage) => {
+          if (cancelled || !activePackage || activePackage.id !== activePackageId) return null;
+          return syncEmergencyPackageWithApi(activePackage);
+        })
+        .then((syncState) => {
+          if (cancelled || !syncState) return;
+          applyRemoteSyncState(syncState, { source });
+        })
+        .catch((error) => {
+          if (cancelled) return;
+          appendMediaOperationalLog("emergency_active_remote_sync_error", {
+            packageId: activePackageId,
+            platform: Platform.OS,
+            source
+          }, error);
+          setRecordingStatus("SOS local ativo. Tentando avisar seus anjos pela internet.");
+        })
+        .finally(() => {
+          activeRemoteSyncInFlightRef.current = false;
+        });
+    };
+
+    attemptActiveRemoteSync("resume");
+    const retryAttempt = setInterval(() => attemptActiveRemoteSync("retry"), activeRemoteSyncRetryMs);
+
+    return () => {
+      cancelled = true;
+      clearInterval(retryAttempt);
+    };
+  }, [activePackageId, applyRemoteSyncState, finishInProgress, liveRemoteSessionId, mediaStopPending]);
+
+  useEffect(() => {
+    if (!activePackageId || !liveRemoteSessionId || mediaStopPending || finishInProgress) return undefined;
+    if (ownerAutoCallPausedSessionIdsRef.current.has(liveRemoteSessionId)) return undefined;
+
+    let cancelled = false;
+
+    const attemptStartOwnerLiveCall = () => {
+      const currentCallState = liveAudioCallStateRef.current;
+      const alreadyActive =
+        currentCallState.remoteSessionId === liveRemoteSessionId &&
+        (currentCallState.status === "waiting" ||
+          currentCallState.status === "connecting" ||
+          currentCallState.status === "connected");
+      const alreadyStarted = ownerAutoCallStartedSessionIdsRef.current.has(liveRemoteSessionId);
+      if (cancelled || alreadyActive || alreadyStarted || ownerAutoCallInFlightRef.current) return;
+
+      ownerAutoCallInFlightRef.current = true;
+      setRecordingStatus("Você pediu ajuda. Avisando anjo.");
+      appendMediaOperationalLog("emergency_live_call_auto_start_attempt", {
+        platform: Platform.OS,
+        remoteSessionId: liveRemoteSessionId
+      });
+      void listAcceptedLiveRecipients(liveRemoteSessionId)
+        .then((recipients) => {
+          if (!recipients.length) {
+            setRecordingStatus("Você pediu ajuda. Aguardando anjo.");
+            return;
+          }
+          setRecordingStatus("Anjo entrou. Chamando agora.");
+          return prepareMediaForOwnerLiveCall().then(() => {
+            ownerAutoCallStartedSessionIdsRef.current.add(liveRemoteSessionId);
+            return liveAudioCall.startOwnerAudioCall(liveRemoteSessionId);
+          });
+        })
+        .catch((error) => {
+          appendMediaOperationalLog("emergency_live_call_auto_start_error", {
+            platform: Platform.OS,
+            remoteSessionId: liveRemoteSessionId
+          }, error);
+        })
+        .finally(() => {
+          ownerAutoCallInFlightRef.current = false;
+        });
+    };
+
+    const firstAttempt = setTimeout(attemptStartOwnerLiveCall, ownerLiveCallAutoStartDelayMs);
+    const retryAttempt = setInterval(attemptStartOwnerLiveCall, ownerLiveCallAutoRetryMs);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(firstAttempt);
+      clearInterval(retryAttempt);
+    };
+  }, [
+    activePackageId,
+    finishInProgress,
+    liveRemoteSessionId,
+    mediaStopPending,
+    liveAudioCall.startOwnerAudioCall,
+    prepareMediaForOwnerLiveCall
+  ]);
 
   useFocusEffect(
     useCallback(() => {
@@ -595,9 +900,11 @@ export default function HomeScreen() {
       return;
     }
 
-    setRecordingStatus("Iniciando chamado seguro...");
+    setRecordingStatus("Pedindo ajuda...");
     liveAudioCall.resetLiveAudioCall();
     setLiveRemoteSessionId(null);
+    ownerAutoCallPausedSessionIdsRef.current.clear();
+    ownerAutoCallStartedSessionIdsRef.current.clear();
     setStartInProgress(true);
     appendMediaOperationalLog("emergency_start_requested", {
       defaultDurationSeconds: preferences.defaultDurationSeconds,
@@ -640,17 +947,7 @@ export default function HomeScreen() {
             remoteSessionCreated: Boolean(syncState.remoteSessionId),
             status: syncState.status
           });
-          if (syncState.status === "sent_to_ec2" && syncState.recipientCount > 0) {
-            setLiveRemoteSessionId(syncState.remoteSessionId ?? null);
-            setRecordingStatus(
-              `Chamado ativo. ${locationText} Pedido enviado para ${syncState.recipientCount} anjo${
-                syncState.recipientCount === 1 ? "" : "s"
-              }.`
-            );
-          } else if (syncState.status === "sent_to_ec2") {
-            setLiveRemoteSessionId(syncState.remoteSessionId ?? null);
-            setRecordingStatus(`Chamado ativo. ${locationText} Sem anjo aceito para avisar agora.`);
-          }
+          applyRemoteSyncState(syncState, { locationText, source: "initial" });
         })
         .catch((error) => {
           appendMediaOperationalLog("emergency_remote_sync_start_error", {
@@ -659,7 +956,7 @@ export default function HomeScreen() {
         });
 
       setRecordingStatus(
-        `Chamado ativo. Gravacao ${formatDuration(preferences.defaultDurationSeconds)}. ${locationText} Arquivo no cofre local.`
+        `Você pediu ajuda. Gravacao ${formatDuration(preferences.defaultDurationSeconds)}. ${locationText} Arquivo no cofre local.`
       );
     } catch (error) {
       appendMediaOperationalLog("emergency_start_error", {
@@ -698,6 +995,10 @@ export default function HomeScreen() {
 
     const packageId = activePackageId;
     liveAudioCall.resetLiveAudioCall();
+    if (liveRemoteSessionId) {
+      ownerAutoCallPausedSessionIdsRef.current.delete(liveRemoteSessionId);
+      ownerAutoCallStartedSessionIdsRef.current.delete(liveRemoteSessionId);
+    }
     setLiveRemoteSessionId(null);
     finishInProgressRef.current = true;
     setFinishInProgress(true);
@@ -713,6 +1014,7 @@ export default function HomeScreen() {
     });
 
     try {
+      mediaStopPurposeRef.current = "finish";
       const stopSerial = signalMediaRecorderStop();
       let stopResult: MediaStopRequestResult | null = null;
       if (stopSerial) {
@@ -821,6 +1123,9 @@ export default function HomeScreen() {
         title: "Falha no encerramento"
       });
     } finally {
+      if (mediaStopPurposeRef.current === "finish") {
+        mediaStopPurposeRef.current = null;
+      }
       setCaptureStopLocked(false);
       setMediaStopPendingState(false);
       finishInProgressRef.current = false;
@@ -831,6 +1136,7 @@ export default function HomeScreen() {
   function handleMediaStopRequestSettled(serial: number, result: MediaStopRequestResult) {
     if (serial <= 0 || serial !== stopRecordingRequestSerialRef.current) return;
 
+    resolveMediaReleaseWaiter();
     appendMediaOperationalLog("emergency_media_stop_settled", {
       attachedAssets: result.attachedAssets,
       platform: Platform.OS,
@@ -940,6 +1246,8 @@ export default function HomeScreen() {
     setProtectedRouteError("");
   }
 
+  const liveCallPanelVisible = Boolean(activePackageId && (liveRemoteSessionId || liveAudioCallStatus !== "idle"));
+
   return (
     <SafeAreaView style={styles.safeArea}>
       {activePackageId || finishInProgress || startInProgress || mediaStopPending ? <EmergencyRecordingWakeLock /> : null}
@@ -965,7 +1273,7 @@ export default function HomeScreen() {
           <BrandBackground active={Boolean(activePackageId || startInProgress)} />
           <EmergencyMediaRecorder
             activePackageId={mediaRecorderPackageId}
-            avoidLiveAudioPanel={Boolean(liveRemoteSessionId || liveAudioCall.state.status !== "idle")}
+            avoidLiveAudioPanel={liveCallPanelVisible}
             captureStopLocked={captureStopLocked}
             preferences={preferences}
             onMediaAttached={refreshOutboxCount}
@@ -983,22 +1291,22 @@ export default function HomeScreen() {
                   : activePackageId
                   ? finishInProgress
                     ? "Encerrando gravacao"
-                    : "Segurar para encerrar"
+                    : "Segurar para encerrar SOS"
                   : mediaStopPending
                     ? "Protegendo video"
-                  : "Segurar para acionar"
+                  : "Segurar para pedir ajuda"
               }
               holdMs={preferences.inAppHoldMs}
               onTrigger={handlePanicTrigger}
             />
           </View>
 
-          {liveRemoteSessionId || liveAudioCall.state.status !== "idle" ? (
+          {liveCallPanelVisible ? (
             <LiveAudioCallPanel
-              actionLabel="Videochamar anjo"
+              actionLabel="Chamar anjo"
               disabled={!activePackageId || !liveRemoteSessionId || mediaStopPending || finishInProgress}
               onPrimaryAction={handleStartOwnerLiveAudio}
-              onStop={liveAudioCall.stopLiveAudioCall}
+              onStop={handleStopOwnerLiveAudio}
               state={liveAudioCall.state}
             />
           ) : null}

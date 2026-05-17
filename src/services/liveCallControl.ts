@@ -10,18 +10,27 @@ import {
 
 export const LIVE_CALL_SIGNAL_TTL_MS = 5 * 60 * 1000;
 
+export type LiveSignalRole = "angel" | "owner";
+
+type LiveSignalRoutingMetadata = {
+  recipientDeviceId?: string | null;
+  recipientRole?: LiveSignalRole;
+  senderDeviceId?: string | null;
+  senderRole?: LiveSignalRole;
+};
+
 export type LiveSignalPayload =
-  | {
+  | ({
       callSessionId: string;
       sdp: string;
-    }
-  | {
+    } & LiveSignalRoutingMetadata)
+  | ({
       callSessionId: string;
       candidate: string;
       sdpMLineIndex?: number | null;
       sdpMid?: string | null;
       usernameFragment?: string | null;
-    };
+    } & LiveSignalRoutingMetadata);
 
 export type LiveIcePayload = Extract<LiveSignalPayload, { candidate: string }>;
 export type LiveSdpPayload = Extract<LiveSignalPayload, { sdp: string }>;
@@ -30,6 +39,13 @@ export type LiveSignalKind = SendP2PSignalInput["signalType"];
 type PendingSignalFilter = {
   callSessionId?: string;
   remoteSessionId: string;
+  recipientDeviceId?: string | null;
+  recipientId?: string;
+  recipientRole?: LiveSignalRole;
+  requireDeviceRouting?: boolean;
+  senderDeviceId?: string | null;
+  senderId?: string;
+  senderRole?: LiveSignalRole;
   signalTypes?: LiveSignalKind[];
 };
 
@@ -41,9 +57,21 @@ export function createLiveCallSessionId() {
   return randomUUID();
 }
 
+export function isAllowedLiveSignalRoute(signalType: LiveSignalKind, payload: LiveSignalPayload) {
+  if (!payload.senderDeviceId || !payload.recipientDeviceId || !payload.senderRole || !payload.recipientRole) return false;
+  if (payload.senderRole === payload.recipientRole) return false;
+  if (payload.senderRole === "owner" && payload.recipientRole === "angel") {
+    return signalType === "offer" || signalType === "ice";
+  }
+  if (payload.senderRole === "angel" && payload.recipientRole === "owner") {
+    return signalType === "answer" || signalType === "ice";
+  }
+  return false;
+}
+
 export async function listAcceptedLiveRecipients(remoteSessionId: string) {
   const response = await apiClient.listLiveRecipients(remoteSessionId);
-  return response.recipients.filter((recipient) => recipient.devices.length > 0);
+  return response.recipients.filter((recipient) => recipient.relationship_role === "angel" && recipient.devices.length > 0);
 }
 
 export async function createLiveSessionEnvelope(
@@ -97,7 +125,15 @@ export async function listPendingLiveSignalsForSession(filter: PendingSignalFilt
     if (signal.emergency_session !== filter.remoteSessionId) return false;
     if (allowedTypes && !allowedTypes.has(signal.signal_type as LiveSignalKind)) return false;
     if (!hasAllowedSignalPayload(signal)) return false;
+    if (!isAllowedLiveSignalRoute(signal.signal_type as LiveSignalKind, signal.payload)) return false;
     if (filter.callSessionId && signal.payload.callSessionId !== filter.callSessionId) return false;
+    if (filter.senderId && signal.sender !== filter.senderId) return false;
+    if (filter.recipientId && signal.recipient !== filter.recipientId) return false;
+    if (filter.requireDeviceRouting && (!signal.payload.senderDeviceId || !signal.payload.recipientDeviceId)) return false;
+    if (filter.senderDeviceId && signal.payload.senderDeviceId !== filter.senderDeviceId) return false;
+    if (filter.recipientDeviceId && signal.payload.recipientDeviceId !== filter.recipientDeviceId) return false;
+    if (filter.senderRole && signal.payload.senderRole !== filter.senderRole) return false;
+    if (filter.recipientRole && signal.payload.recipientRole !== filter.recipientRole) return false;
     return true;
   }) as Array<ApiP2PSignal & { payload: LiveSignalPayload }>;
 }

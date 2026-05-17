@@ -11,15 +11,42 @@ type LiveAudioCallPanelProps = {
   onPrimaryAction: () => void;
   onStop: () => void;
   state: LiveAudioCallState;
+  stopLabel?: string;
 };
 
-function statusLabel(status: LiveAudioCallState["status"]) {
-  if (status === "connected") return "Videochamada conectada";
-  if (status === "connecting") return "Conectando";
-  if (status === "failed") return "Videochamada indisponivel";
-  if (status === "waiting") return "Aguardando";
-  if (status === "ended") return "Videochamada encerrada";
-  return "Videochamada com anjo";
+function statusLabel(state: LiveAudioCallState) {
+  if (state.role === "owner") {
+    if (state.status === "connected") return "Transmitindo ao anjo";
+    if (state.status === "connecting") return "Chamando seu anjo";
+    if (state.status === "failed") return "Chamada não entrou";
+    if (state.status === "waiting") return "Aguardando o anjo";
+    if (state.status === "ended") return "Chamada encerrada";
+    return "Chamar anjo";
+  }
+
+  if (state.role === "angel") {
+    if (state.status === "connected") return "Acompanhando SOS";
+    if (state.status === "connecting") return "Entrando como anjo";
+    if (state.status === "failed") return "Chamada não entrou";
+    if (state.status === "waiting") return "Você é o anjo";
+    if (state.status === "ended") return "Chamada encerrada";
+    return "Atender como anjo";
+  }
+
+  if (state.status === "failed") return "Chamada não entrou";
+  return "Chamada com anjo";
+}
+
+function roleBadgeLabel(role: LiveAudioCallState["role"]) {
+  if (role === "owner") return "Você pediu ajuda";
+  if (role === "angel") return "Você é o anjo";
+  return "Chamada segura";
+}
+
+function videoLabel(role: LiveAudioCallState["role"]) {
+  if (role === "owner") return "Anjo";
+  if (role === "angel") return "Pessoa protegida";
+  return "Imagem recebida";
 }
 
 function accentColor(status: LiveAudioCallState["status"]) {
@@ -33,56 +60,62 @@ export function LiveAudioCallPanel({
   disabled = false,
   onPrimaryAction,
   onStop,
-  state
+  state,
+  stopLabel = "Sair da chamada"
 }: LiveAudioCallPanelProps) {
   const active = state.status === "connected" || state.status === "connecting" || state.status === "waiting";
   const accent = accentColor(state.status);
-  const remoteStreamUrl = state.remoteStream?.toURL();
+  const remoteStreamUrl = state.remoteStreamUrl ?? state.remoteStream?.toURL();
 
   return (
     <View style={[styles.panel, { borderColor: accent }]}>
+      <View style={[styles.roleBadge, { borderColor: accent }]}>
+        <Text style={[styles.roleBadgeText, { color: accent }]}>{roleBadgeLabel(state.role)}</Text>
+      </View>
       <View style={styles.header}>
         <View style={[styles.iconSlot, { backgroundColor: `${accent}18` }]}>
           <Radio size={18} color={accent} />
         </View>
         <View style={styles.titleBlock}>
-          <Text style={styles.title}>{statusLabel(state.status)}</Text>
+          <Text style={styles.title}>{statusLabel(state)}</Text>
           <Text style={styles.message}>{state.message}</Text>
         </View>
       </View>
 
       {remoteStreamUrl ? (
         <View style={styles.videoFrame}>
-          <RTCView objectFit="cover" streamURL={remoteStreamUrl} style={styles.remoteVideo} />
-          <Text style={styles.videoLabel}>{state.role === "owner" ? "Imagem do anjo" : "Imagem recebida"}</Text>
+          <RTCView key={remoteStreamUrl} objectFit="cover" streamURL={remoteStreamUrl} style={styles.remoteVideo} />
+          <Text style={styles.videoLabel}>{videoLabel(state.role)}</Text>
         </View>
       ) : null}
 
       <View style={styles.actions}>
-        <Pressable
-          accessibilityLabel={actionLabel}
-          accessibilityRole="button"
-          disabled={disabled || active}
-          onPress={onPrimaryAction}
-          style={({ pressed }) => [
-            styles.primaryAction,
-            (disabled || active) && styles.actionDisabled,
-            pressed && styles.actionPressed
-          ]}
-        >
-          <Video size={17} color={theme.colors.textOnDark} />
-          <Text style={styles.primaryActionText}>{actionLabel}</Text>
-        </Pressable>
         {active ? (
           <Pressable
-            accessibilityLabel="Encerrar videochamada"
+            accessibilityLabel={stopLabel}
             accessibilityRole="button"
             onPress={onStop}
-            style={({ pressed }) => [styles.stopAction, pressed && styles.actionPressed]}
+            style={({ pressed }) => [styles.stopActionFull, pressed && styles.actionPressed]}
           >
             <PhoneOff size={17} color={theme.colors.danger} />
+            <Text style={styles.stopActionText}>{stopLabel}</Text>
           </Pressable>
-        ) : null}
+        ) : (
+          <Pressable
+            accessibilityLabel={actionLabel}
+            accessibilityRole="button"
+            disabled={disabled}
+            onPress={onPrimaryAction}
+            style={({ pressed }) => [
+              styles.primaryAction,
+              disabled && styles.actionDisabled,
+              pressed && styles.actionPressed
+            ]}
+          >
+            <Video size={17} color={theme.colors.textOnDark} />
+            <Text style={styles.primaryActionText}>{actionLabel}</Text>
+          </Pressable>
+        )}
       </View>
     </View>
   );
@@ -142,6 +175,20 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     textAlign: "center"
   },
+  roleBadge: {
+    alignSelf: "flex-start",
+    backgroundColor: theme.colors.surfaceMuted,
+    borderRadius: theme.radius.pill,
+    borderWidth: 1,
+    paddingHorizontal: theme.spacing.sm,
+    paddingVertical: 4
+  },
+  roleBadgeText: {
+    fontSize: 11,
+    fontWeight: "900",
+    textAlign: "center",
+    textTransform: "uppercase"
+  },
   stopAction: {
     alignItems: "center",
     backgroundColor: theme.colors.surfaceMuted,
@@ -151,6 +198,25 @@ const styles = StyleSheet.create({
     height: 44,
     justifyContent: "center",
     width: 48
+  },
+  stopActionFull: {
+    alignItems: "center",
+    backgroundColor: theme.colors.surfaceMuted,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    flex: 1,
+    flexDirection: "row",
+    gap: theme.spacing.xs,
+    justifyContent: "center",
+    minHeight: 44,
+    paddingHorizontal: theme.spacing.sm
+  },
+  stopActionText: {
+    color: theme.colors.danger,
+    fontSize: 13,
+    fontWeight: "900",
+    textAlign: "center"
   },
   title: {
     color: theme.colors.text,

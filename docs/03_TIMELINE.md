@@ -3,6 +3,22 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-16 - F4.3 recebimento de chamada pelo anjo e registro local
+
+Status: implementado localmente no Android; testes automatizados aprovados, build/ADB em validacao nesta rodada.
+
+- tela `Alertas recebidos` agora emite notificacao local de alta prioridade quando detecta chamado SOS ativo recebido pelo anjo;
+- chamados ativos ainda nao aceitos sao aceitos pelo app do anjo durante a sincronizacao autorizada, criando registro local seguro automaticamente;
+- o anjo passa a iniciar o modo de acompanhamento ao vivo automaticamente apos o registro, aguardando a oferta WebRTC da pessoa protegida;
+- a Home da pessoa protegida tenta iniciar a videochamada automaticamente quando o backend informa que o anjo aceitou, com retentativas leves enquanto o SOS segue ativo;
+- acao manual `Acompanhar ao vivo` permanece como fallback do usuario, nao como requisito principal do fluxo;
+- historico `Registros de chamados` lista pessoa protegida, snapshot textual, data, duracao, status, abertura e compartilhamento;
+- regra de compartilhamento limita o registro ao usuario protegido ou autoridade competente;
+- backend continua sem receber audio/video da chamada; esta fatia salva registro operacional local, nao arquivo bruto de midia WebRTC;
+- gravacao bruta de audio/video no aparelho do anjo permanece subfase nativa futura, pois exige consentimento/retencao/cadeia de custodia e nao pode ser gravação oculta;
+- validacoes aprovadas ate aqui: `npm run typecheck`, `npm run lint`, `npm test` e `test:live-call-history`;
+- evidencias anteriores da tela: `docs/evidencias/adb-usb-live-call-20260516-204707/`; evidencias novas devem ser salvas em diretorio proprio desta rodada.
+
 ## 2026-05-16 - F4.2 videochamada emergencial com um unico anjo
 
 Status: implementado localmente e validado em dois Androids fisicos para o recorte MVP; publicacao no portal ainda nao executada nesta rodada.
@@ -2864,3 +2880,80 @@ Validacoes:
 Checkpoint:
 
 - `docs/51_CHECKPOINT_FRENTE_3_SOS_ROTEAMENTO_2026-05-16.md`.
+
+## 2026-05-17 - SOS/anjo validado com retry EC2 e chamada P2P
+
+Status: retomada validada fisicamente em dois Androids conectados.
+
+Executado:
+
+- Corrigido o caso em que o SOS ficava ativo apenas localmente sem sessao nova na EC2.
+- A Home agora tenta sincronizar o pacote ativo com a EC2 a cada 5 segundos enquanto o SOS estiver ativo e ainda nao existir `liveRemoteSessionId`.
+- O app do anjo, aberto na Home, detectou a sessao recebida em foreground e abriu `Alertas recebidos`.
+- A sessao validada `3b717e39-dfd8-459c-bc15-4176f1128463` ficou `active/accepted`, com destinatario `angel/accepted`.
+- A sinalizacao P2P registrou `offer`/`ice` owner->angel e `answer`/`ice` angel->owner com `senderDeviceId` e `recipientDeviceId` nos dois sentidos.
+- A pessoa protegida exibiu `Anjo na chamada`; o anjo exibiu `Atendendo como anjo`.
+- Encerramento final sincronizou a EC2 para `finished/ended` e destinatario `ended`.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado.
+- `node scripts/smoke-test.mjs`: aprovado.
+- `npm test`: aprovado.
+- `npm run lint`: aprovado.
+- `npm run build:android:debug:bundled`: aprovado.
+- APK instalado nos dois Androids: `versionName=0.1.8`, `versionCode=10`, SHA-256 `253ca236b1e9f78d3d747d0caca18e475fdce937dd86dd5be8ae49e7b1062c49`.
+
+Checkpoint:
+
+- `docs/57_CHECKPOINT_F4_3_RECEBIMENTO_CHAMADA_REGISTRO_2026-05-16.md`.
+
+## 2026-05-17 - Hardening visual da Home apos chamada
+
+Status: implementado, buildado e instalado nos dois Androids.
+
+Executado:
+
+- Home limpa `liveRemoteSessionId` e estado WebRTC local quando nao ha SOS ativo, inicializacao, encerramento ou midia pendente.
+- O card `Chamada com anjo` agora so aparece na Home quando existe SOS ativo relacionado.
+- Validacao visual no Android USB mostrou a Home limpa com botao `SOS`, sem card residual.
+- EC2 conferida com `0` sessoes ativas apos a instalacao.
+
+Validacoes:
+
+- `node scripts/smoke-test.mjs`: aprovado.
+- `npm run typecheck`: aprovado.
+- `npm test`: aprovado.
+- `npm run lint`: aprovado.
+- `npm run build:android:debug:bundled`: aprovado.
+- APK instalado nos dois Androids, SHA-256 `475a462efeceead71baab0de7551e05aa8f8dacce895bd9e0c47528f7b334335`.
+
+Observacao:
+
+- Segundo Android abriu no gate de login apos reinstalacao; antes do proximo teste completo de anjo, refazer login no aparelho.
+
+## 2026-05-17 - Video SOS transmitido do solicitante para o anjo
+
+Status: corrigido e validado fisicamente em dois Androids.
+
+Executado:
+
+- Confirmado em log que o WebRTC ja entregava ao anjo `remote_stream_track audio=1 video=1`; a falha restante era renderizacao do painel.
+- `useLiveAudioCall` passou a preservar `remoteStream` e `remoteStreamUrl` quando o anjo recebe `ontrack`, evitando sobrescrita por estados posteriores de aceite/entrada.
+- `LiveAudioCallPanel` passou a renderizar o `RTCView` por URL estavel do stream remoto.
+- O build Android local passou a respeitar `reactNativeArchitectures` tambem no filtro NDK, permitindo APK fisico `armeabi-v7a` para o aparelho USB antigo sem publicar esse artefato como release.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado.
+- `node scripts/smoke-test.mjs`: aprovado.
+- `npm run lint`: aprovado.
+- `npm test -- --runInBand`: aprovado.
+- Build Android debug bundled local aprovado com `-PreactNativeArchitectures=armeabi-v7a`.
+- APK instalado nos dois Androids: `versionName=0.1.8`, `versionCode=10`, SHA-256 `32cd04e6ba9859cfd9df23234911d8e44f66dadd2261c2c75bbf01c13aa40a40`.
+- Owner USB transmitiu o SOS; anjo Wi-Fi exibiu o video remoto com rotulo `Pessoa protegida`.
+- EC2 apos o teste final: `0` sessoes ativas; sessao de validacao `9228ecac-1bb6-473d-ac95-4b4eeec9935c` encerrada como `finished/ended`.
+
+Checkpoint:
+
+- `docs/57_CHECKPOINT_F4_3_RECEBIMENTO_CHAMADA_REGISTRO_2026-05-16.md`.

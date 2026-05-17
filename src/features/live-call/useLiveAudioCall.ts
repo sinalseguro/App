@@ -15,6 +15,11 @@ import {
 } from "@/services/liveCallControl";
 import { LiveWebRtcSession } from "@/services/liveWebRtcSession";
 import type { ApiEmergencySession } from "@/services/apiClient";
+import { deviceBindingService } from "@/services/deviceBinding";
+import {
+  canAngelStartRealtime,
+  canOwnerStartLiveCallWithRecipient
+} from "@/features/live-call/liveCallRolePolicy";
 
 type LiveAudioRole = "angel" | "owner";
 type LiveAudioStatus = "connected" | "connecting" | "ended" | "failed" | "idle" | "waiting";
@@ -24,24 +29,32 @@ export type LiveAudioCallState = {
   participantName?: string;
   remoteSessionId?: string;
   remoteStream?: MediaStream;
+  remoteStreamUrl?: string;
   role?: LiveAudioRole;
   status: LiveAudioStatus;
 };
 
 type LiveAudioRuntime = {
+  answerAccepted?: boolean;
   callSessionId?: string;
+  localDeviceId?: string;
   participantName?: string;
   recipientId?: string;
+  remoteDeviceId?: string;
   remoteSessionId?: string;
   role?: LiveAudioRole;
 };
 
 const idleLiveAudioCallState: LiveAudioCallState = {
-  message: "Videochamada segura disponivel apos aceite.",
+  message: "Chamada com anjo disponivel apos aceite.",
   status: "idle"
 };
 
 const signalPollingMs = 2500;
+
+function streamUrlFrom(remoteStream: MediaStream) {
+  return remoteStream.toURL?.();
+}
 
 function isSdpPayload(payload: LiveSignalPayload): payload is LiveSdpPayload {
   return "sdp" in payload && typeof payload.sdp === "string" && Boolean(payload.sdp.trim());
@@ -55,8 +68,17 @@ export function useLiveAudioCall() {
   const [state, setState] = useState<LiveAudioCallState>(idleLiveAudioCallState);
   const peerRef = useRef<LiveWebRtcSession | null>(null);
   const runtimeRef = useRef<LiveAudioRuntime>({});
+  const stateRef = useRef<LiveAudioCallState>(idleLiveAudioCallState);
   const pollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const pollInFlightRef = useRef(false);
+
+  const setLiveAudioState = useCallback((nextState: LiveAudioCallState | ((current: LiveAudioCallState) => LiveAudioCallState)) => {
+    setState((current) => {
+      const resolved = typeof nextState === "function" ? nextState(current) : nextState;
+      stateRef.current = resolved;
+      return resolved;
+    });
+  }, []);
 
   const stopPolling = useCallback(() => {
     if (!pollTimerRef.current) return;
@@ -70,11 +92,29 @@ export function useLiveAudioCall() {
     peerRef.current = null;
   }, []);
 
+  const hasActiveCallForSession = useCallback((remoteSessionId: string) => {
+    const current = stateRef.current;
+    return (
+      runtimeRef.current.remoteSessionId === remoteSessionId &&
+      Boolean(peerRef.current) &&
+      (current.status === "waiting" ||
+        current.status === "connecting" ||
+        current.status === "connected" ||
+        Boolean(current.remoteStream))
+    );
+  }, []);
+
   const sendIceCandidate = useCallback((payload: LiveIcePayload) => {
     const runtime = runtimeRef.current;
     if (!runtime.remoteSessionId || !runtime.recipientId) return;
     void sendLiveSignal({
-      payload,
+      payload: {
+        ...payload,
+        recipientDeviceId: runtime.remoteDeviceId ?? null,
+        recipientRole: runtime.role === "owner" ? "angel" : "owner",
+        senderDeviceId: runtime.localDeviceId ?? null,
+        senderRole: runtime.role
+      },
       recipientId: runtime.recipientId,
       remoteSessionId: runtime.remoteSessionId,
       signalType: "ice"
@@ -86,6 +126,7 @@ export function useLiveAudioCall() {
       callSessionId: string,
       options?: {
         audioMode?: "recvonly" | "sendrecv";
+        videoFacingMode?: "environment" | "user";
         videoMode?: "disabled" | "recvonly" | "sendrecv";
       }
     ) =>
@@ -94,53 +135,71 @@ export function useLiveAudioCall() {
         callSessionId,
         onConnectionState: (connectionState) => {
           if (connectionState === "connected") {
-            setState((current) => ({
+            setLiveAudioState((current) => ({
               ...current,
               message:
                 current.role === "owner"
-                  ? "Videochamada do anjo conectada. Sua gravacao local segue protegida."
+                  ? "Transmitindo seu SOS para o anjo."
                   : current.participantName
-                    ? `Videochamada conectada com ${current.participantName}.`
-                    : "Videochamada conectada com anjo.",
+                    ? `Você está acompanhando ${current.participantName}.`
+                    : "Você está acompanhando como anjo.",
               status: "connected"
             }));
           }
-          if (connectionState === "disconnected" || connectionState === "failed") {
-            setState((current) => ({
+          if (connectionState === "connecting") {
+            setLiveAudioState((current) => ({
               ...current,
-              message: "Videochamada indisponivel. O pedido continua ativo.",
+              status: current.status === "connected" ? "connected" : "connecting"
+            }));
+          }
+          if (connectionState === "disconnected" || connectionState === "failed") {
+            setLiveAudioState((current) => ({
+              ...current,
+              message: "Chamada não entrou. O pedido continua ativo.",
               status: "failed"
             }));
           }
         },
         onLocalIceCandidate: sendIceCandidate,
         onRemoteStream: (remoteStream) => {
-          setState((current) => ({
+          const role = runtimeRef.current.role ?? stateRef.current.role;
+          const shouldRenderRemoteStream = role === "angel";
+          const remoteStreamUrl = streamUrlFrom(remoteStream);
+          setLiveAudioState((current) => ({
             ...current,
-            remoteStream
+            message:
+              role === "owner"
+                ? "Transmitindo seu SOS para o anjo."
+                : current.participantName
+                  ? `Você está acompanhando ${current.participantName}.`
+                  : "Você está acompanhando como anjo.",
+            remoteStream: shouldRenderRemoteStream ? remoteStream : current.remoteStream,
+            remoteStreamUrl: shouldRenderRemoteStream ? remoteStreamUrl : current.remoteStreamUrl,
+            status: "connected"
           }));
         },
+        videoFacingMode: options?.videoFacingMode,
         videoMode: options?.videoMode ?? "disabled"
       }),
-    [sendIceCandidate]
+    [sendIceCandidate, setLiveAudioState]
   );
 
   const stopLiveAudioCall = useCallback(() => {
     stopPolling();
     closePeer();
     runtimeRef.current = {};
-    setState({
-      message: "Videochamada encerrada. O pedido continua protegido.",
+    setLiveAudioState({
+      message: "Chamada encerrada. O pedido continua protegido.",
       status: "ended"
     });
-  }, [closePeer, stopPolling]);
+  }, [closePeer, setLiveAudioState, stopPolling]);
 
   const resetLiveAudioCall = useCallback(() => {
     stopPolling();
     closePeer();
     runtimeRef.current = {};
-    setState(idleLiveAudioCallState);
-  }, [closePeer, stopPolling]);
+    setLiveAudioState(idleLiveAudioCallState);
+  }, [closePeer, setLiveAudioState, stopPolling]);
 
   const startPolling = useCallback(
     (handler: () => Promise<void>) => {
@@ -150,9 +209,12 @@ export function useLiveAudioCall() {
         pollInFlightRef.current = true;
         void handler()
           .catch(() => {
-            setState((current) => ({
+            setLiveAudioState((current) => ({
               ...current,
-              message: "Nao foi possivel atualizar a videochamada agora.",
+              message:
+                current.status === "connected"
+                  ? current.message
+                  : "Nao foi possivel atualizar a videochamada agora.",
               status: current.status === "connected" ? "connected" : "failed"
             }));
           })
@@ -163,7 +225,7 @@ export function useLiveAudioCall() {
       run();
       pollTimerRef.current = setInterval(run, signalPollingMs);
     },
-    [stopPolling]
+    [setLiveAudioState, stopPolling]
   );
 
   const processOwnerSignals = useCallback(async () => {
@@ -173,21 +235,45 @@ export function useLiveAudioCall() {
 
     const signals = await listPendingLiveSignalsForSession({
       callSessionId: runtime.callSessionId,
+      recipientDeviceId: runtime.localDeviceId,
+      recipientRole: "owner",
       remoteSessionId: runtime.remoteSessionId,
+      senderDeviceId: runtime.remoteDeviceId,
+      senderId: runtime.recipientId,
+      senderRole: "angel",
       signalTypes: ["answer", "ice"]
     });
 
+    const answerSignal = runtime.answerAccepted
+      ? null
+      : signals.find((signal) => signal.signal_type === "answer" && isSdpPayload(signal.payload));
+
+    if (answerSignal && isSdpPayload(answerSignal.payload)) {
+      await peer.acceptAnswerPayload(answerSignal.payload);
+      await consumeLiveSignal(answerSignal.id);
+      runtimeRef.current = { ...runtimeRef.current, answerAccepted: true };
+      setLiveAudioState((current) => ({
+        ...current,
+        message:
+          current.status === "connected" || current.remoteStream
+            ? "Anjo na chamada. Seu SOS continua ativo."
+            : current.participantName
+              ? `${current.participantName} entrou. Conectando chamada.`
+              : "Anjo entrou. Conectando chamada.",
+        status: current.status === "connected" || current.remoteStream ? "connected" : "connecting"
+      }));
+    }
+
+    if (!runtimeRef.current.answerAccepted) return;
+
     for (const signal of signals) {
       const payload = signal.payload;
-      if (signal.signal_type === "answer" && isSdpPayload(payload)) {
-        await peer.acceptAnswerPayload(payload);
-        await consumeLiveSignal(signal.id);
-      } else if (signal.signal_type === "ice" && isIcePayload(payload)) {
+      if (signal.signal_type === "ice" && isIcePayload(payload)) {
         await peer.addIcePayload(payload);
         await consumeLiveSignal(signal.id);
       }
     }
-  }, []);
+  }, [setLiveAudioState]);
 
   const processAngelIceSignals = useCallback(async () => {
     const runtime = runtimeRef.current;
@@ -196,7 +282,12 @@ export function useLiveAudioCall() {
 
     const signals = await listPendingLiveSignalsForSession({
       callSessionId: runtime.callSessionId,
+      recipientDeviceId: runtime.localDeviceId,
+      recipientRole: "angel",
       remoteSessionId: runtime.remoteSessionId,
+      senderDeviceId: runtime.remoteDeviceId,
+      senderId: runtime.recipientId,
+      senderRole: "owner",
       signalTypes: ["ice"]
     });
 
@@ -210,12 +301,32 @@ export function useLiveAudioCall() {
 
   const startOwnerAudioCall = useCallback(
     async (remoteSessionId: string) => {
+      if (hasActiveCallForSession(remoteSessionId)) {
+        setLiveAudioState((current) => ({
+          ...current,
+          message: current.message || "A chamada com o anjo já está em andamento."
+        }));
+        return;
+      }
+
       stopPolling();
       closePeer();
+      let localDeviceId: string;
+      try {
+        localDeviceId = await deviceBindingService.requireRegisteredApiDeviceId();
+      } catch (error) {
+        setLiveAudioState({
+          message: error instanceof Error ? error.message : "Dispositivo precisa estar autenticado antes de chamar o anjo.",
+          remoteSessionId,
+          role: "owner",
+          status: "failed"
+        });
+        return;
+      }
       const callSessionId = createLiveCallSessionId();
-      runtimeRef.current = { callSessionId, remoteSessionId, role: "owner" };
-      setState({
-          message: "Verificando anjo disponivel para videochamada.",
+      runtimeRef.current = { callSessionId, localDeviceId, remoteSessionId, role: "owner" };
+      setLiveAudioState({
+        message: "Verificando anjo disponivel para a chamada.",
         remoteSessionId,
         role: "owner",
         status: "connecting"
@@ -224,14 +335,16 @@ export function useLiveAudioCall() {
       try {
         const [recipient] = await listAcceptedLiveRecipients(remoteSessionId);
         const recipientDevice = recipient ? firstLiveRecipientDevice(recipient) : null;
-        if (!recipient || !recipientDevice) {
+        if (!canOwnerStartLiveCallWithRecipient(recipient) || !recipientDevice) {
           throw new Error("Nenhum anjo aceitou acompanhar este pedido ainda.");
         }
 
         runtimeRef.current = {
           callSessionId,
+          localDeviceId,
           participantName: recipient.recipient_display_name,
           recipientId: recipient.recipient,
+          remoteDeviceId: recipientDevice.id,
           remoteSessionId,
           role: "owner"
         };
@@ -242,17 +355,27 @@ export function useLiveAudioCall() {
           recipientDeviceId: recipientDevice.id,
           recipientId: recipient.recipient
         });
-        const peer = await createPeer(callSessionId, { audioMode: "sendrecv", videoMode: "recvonly" });
+        const peer = await createPeer(callSessionId, {
+          audioMode: "sendrecv",
+          videoFacingMode: "environment",
+          videoMode: "sendrecv"
+        });
         peerRef.current = peer;
         const offerPayload = await peer.createOfferPayload();
         await sendLiveSignal({
-          payload: offerPayload,
+          payload: {
+            ...offerPayload,
+            recipientDeviceId: recipientDevice.id,
+            recipientRole: "angel",
+            senderDeviceId: localDeviceId,
+            senderRole: "owner"
+          },
           recipientId: recipient.recipient,
           remoteSessionId,
           signalType: "offer"
         });
-        setState({
-          message: `Aguardando ${recipient.recipient_display_name} entrar na videochamada.`,
+        setLiveAudioState({
+          message: `Transmitindo assim que ${recipient.recipient_display_name} entrar como anjo.`,
           participantName: recipient.recipient_display_name,
           remoteSessionId,
           role: "owner",
@@ -263,28 +386,56 @@ export function useLiveAudioCall() {
         stopPolling();
         closePeer();
         runtimeRef.current = {};
-        setState({
-          message: error instanceof Error ? error.message : "Nao foi possivel iniciar videochamada com anjo.",
+        setLiveAudioState({
+          message: error instanceof Error ? error.message : "Nao foi possivel chamar o anjo.",
           remoteSessionId,
           role: "owner",
           status: "failed"
         });
       }
     },
-    [closePeer, createPeer, processOwnerSignals, startPolling, stopPolling]
+    [closePeer, createPeer, hasActiveCallForSession, processOwnerSignals, setLiveAudioState, startPolling, stopPolling]
   );
 
   const startAngelAudioCall = useCallback(
     async (session: ApiEmergencySession) => {
+      if (hasActiveCallForSession(session.id)) {
+        return;
+      }
+
       stopPolling();
       closePeer();
+      if (!canAngelStartRealtime(session)) {
+        setLiveAudioState({
+          message: "Este pedido ainda nao esta liberado para atendimento como anjo.",
+          participantName: session.owner_display_name,
+          remoteSessionId: session.id,
+          role: "angel",
+          status: "failed"
+        });
+        return;
+      }
+      let localDeviceId: string;
+      try {
+        localDeviceId = await deviceBindingService.requireRegisteredApiDeviceId();
+      } catch (error) {
+        setLiveAudioState({
+          message: error instanceof Error ? error.message : "Dispositivo precisa estar autenticado antes de atender como anjo.",
+          participantName: session.owner_display_name,
+          remoteSessionId: session.id,
+          role: "angel",
+          status: "failed"
+        });
+        return;
+      }
       runtimeRef.current = {
+        localDeviceId,
         participantName: session.owner_display_name,
         remoteSessionId: session.id,
         role: "angel"
       };
-      setState({
-        message: `Aguardando videochamada de ${session.owner_display_name ?? "pessoa protegida"}.`,
+      setLiveAudioState({
+        message: `${session.owner_display_name ?? "Pessoa protegida"} pediu ajuda.`,
         participantName: session.owner_display_name,
         remoteSessionId: session.id,
         role: "angel",
@@ -299,7 +450,10 @@ export function useLiveAudioCall() {
         }
 
         const [offerSignal] = await listPendingLiveSignalsForSession({
+          recipientDeviceId: localDeviceId,
+          recipientRole: "angel",
           remoteSessionId: runtime.remoteSessionId,
+          senderRole: "owner",
           signalTypes: ["offer"]
         });
         const offerPayload = offerSignal?.payload;
@@ -308,32 +462,44 @@ export function useLiveAudioCall() {
         const callSessionId = offerPayload.callSessionId;
         runtimeRef.current = {
           callSessionId,
+          localDeviceId,
           participantName: session.owner_display_name,
           recipientId: offerSignal.sender,
+          remoteDeviceId: offerPayload.senderDeviceId ?? undefined,
           remoteSessionId: session.id,
           role: "angel"
         };
-        const peer = await createPeer(callSessionId, { audioMode: "sendrecv", videoMode: "sendrecv" });
+        const peer = await createPeer(callSessionId, { audioMode: "recvonly", videoMode: "recvonly" });
         peerRef.current = peer;
         const answerPayload = await peer.createAnswerPayload(offerPayload);
         await sendLiveSignal({
-          payload: answerPayload,
+          payload: {
+            ...answerPayload,
+            recipientDeviceId: offerPayload.senderDeviceId ?? null,
+            recipientRole: "owner",
+            senderDeviceId: localDeviceId,
+            senderRole: "angel"
+          },
           recipientId: offerSignal.sender,
           remoteSessionId: session.id,
           signalType: "answer"
         });
         await consumeLiveSignal(offerSignal.id);
-        setState({
-          message: `Conectando videochamada com ${session.owner_display_name ?? "pessoa protegida"}.`,
+        setLiveAudioState((current) => ({
+          ...current,
+          message:
+            current.remoteStream || current.remoteStreamUrl
+              ? `Você está acompanhando ${session.owner_display_name ?? "pessoa protegida"}.`
+              : `Entrando como anjo de ${session.owner_display_name ?? "pessoa protegida"}.`,
           participantName: session.owner_display_name,
           remoteSessionId: session.id,
           role: "angel",
-          status: "connecting"
-        });
+          status: current.remoteStream || current.remoteStreamUrl ? "connected" : "connecting"
+        }));
         await processAngelIceSignals();
       });
     },
-    [closePeer, createPeer, processAngelIceSignals, startPolling, stopPolling]
+    [closePeer, createPeer, hasActiveCallForSession, processAngelIceSignals, setLiveAudioState, startPolling, stopPolling]
   );
 
   useEffect(
