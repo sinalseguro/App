@@ -2908,6 +2908,38 @@ Checkpoint:
 
 - `docs/57_CHECKPOINT_F4_3_RECEBIMENTO_CHAMADA_REGISTRO_2026-05-16.md`.
 
+## 2026-05-17 - Android 0.1.13 video local protegido no SOS ao vivo
+
+Status: APK privado `0.1.13` publicado no portal/API de update; fluxo fisico principal validado em dois Androids.
+
+Executado:
+
+- Android sincronizado para `versionName=0.1.13` e `versionCode=15`.
+- App passou a preservar video local cifrado da chamada ao vivo do solicitante em `.nseg`.
+- Encerramento do SOS passou a aguardar `finish` remoto explicito para nao deixar sessao ativa na EC2.
+- Modal final `Video protegido` teve o botao `Continuar` validado visualmente.
+- UX de queda foi ajustada para mostrar confirmacao central pendente se a API falhar no encerramento remoto.
+- Portal/API publicados com link estavel `sinalseguro_android.apk` e cache-buster `0.1.13-20260517T203152Z`.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado.
+- `npm run lint`: aprovado.
+- `npm test`: aprovado.
+- `git diff --check`: aprovado.
+- `npm run build:android:debug:bundled`: aprovado.
+- `aapt dump badging`: `versionCode='15'`, `versionName='0.1.13'`.
+- APK SHA-256 `7b9c6f110313ade8b4740200edbf77cdbe0e92b5654ecd5aaf42a8d8f08e8bae`.
+- Dois Androids fisicos atualizados para `0.1.13`.
+- Rodada fisica do fluxo confirmou anjo vendo video da pessoa protegida, solicitante transmitindo ao anjo, `.nseg` local preservado e backend final com `active_sessions=0`, `active_live_envelopes=0`, `open_signals=0`.
+- API EC2 publicada com migration de update, `sinalseguro-api` e `cereusia-crm` ativos, `nginx -t` aprovado e health/ready publicos 200.
+- Portal publicado em `/var/www/sinalseguro/releases/20260517T205023Z`, com rollback anterior preservado em `20260517T183651Z`.
+- Download real do APK publicado confirmou SHA-256 `7b9c6f110313ade8b4740200edbf77cdbe0e92b5654ecd5aaf42a8d8f08e8bae`.
+
+Checkpoint:
+
+- `docs/60_CHECKPOINT_ANDROID_0_1_13_SOS_AO_VIVO_VIDEO_LOCAL_2026-05-17.md`.
+
 ## 2026-05-17 - Android 0.1.12 auditoria media do SOS ao vivo
 
 Status: APK privado `0.1.12` publicado no portal/API de update apos validacao fisica em dois Androids.

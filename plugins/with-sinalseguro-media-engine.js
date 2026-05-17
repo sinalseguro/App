@@ -16,6 +16,15 @@ const androidPackagePath = path.join(
   "app",
   "media"
 );
+const androidWebRtcPackagePath = path.join(
+  "app",
+  "src",
+  "main",
+  "java",
+  "com",
+  "oney",
+  "WebRTCModule"
+);
 
 function copyTemplate(templateRelativePath, targetPath) {
   const contents = fs.readFileSync(path.join(templateRoot, templateRelativePath), "utf8");
@@ -55,6 +64,14 @@ function ensureAndroid(projectRoot) {
   copyTemplate(
     path.join("android", "SinalSeguroMediaEnginePackage.kt"),
     path.join(androidRoot, androidPackagePath, "SinalSeguroMediaEnginePackage.kt")
+  );
+  copyTemplate(
+    path.join("android", "SinalSeguroLiveVideoRecorder.kt"),
+    path.join(androidRoot, androidPackagePath, "SinalSeguroLiveVideoRecorder.kt")
+  );
+  copyTemplate(
+    path.join("android", "SinalSeguroWebRtcAccess.kt"),
+    path.join(androidRoot, androidWebRtcPackagePath, "SinalSeguroWebRtcAccess.kt")
   );
 
   let contents = fs.readFileSync(mainApplicationPath, "utf8");

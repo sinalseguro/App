@@ -255,6 +255,10 @@ export default function AlertScreen() {
     }
 
     if (liveAudioCall.state.status === "failed") {
+      const failedSessionId = liveAudioCall.state.remoteSessionId;
+      if (failedSessionId) {
+        autoRealtimeSessionIdsRef.current.delete(failedSessionId);
+      }
       void updateReceivedLiveCallArchive(archiveId, {
         status: "failed"
       }).then(() => {
@@ -383,7 +387,12 @@ export default function AlertScreen() {
             const canReceiveCall = isActive && recipientStatus !== "declined";
             const isCallPanelSession = liveAudioCall.state.remoteSessionId === session.id;
             const canShowCallPanel = isActive && isCallPanelSession;
-            const hasOtherCallSession = Boolean(liveAudioCall.state.remoteSessionId) && !isCallPanelSession;
+            const hasActiveRealtimeSession =
+              Boolean(liveAudioCall.state.remoteSessionId) &&
+              (liveAudioCall.state.status === "waiting" ||
+                liveAudioCall.state.status === "connecting" ||
+                liveAudioCall.state.status === "connected");
+            const hasOtherCallSession = hasActiveRealtimeSession && !isCallPanelSession;
             const alertBody = !isActive
               ? "Este pedido foi encerrado. O registro fica apenas para consulta."
               : hasAccepted

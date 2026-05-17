@@ -79,8 +79,8 @@ Os QR codes apontam para paginas publicas estaveis. O release privado Android at
 Status atual:
 
 - Android privado: publicado no portal em `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk`.
-- Versao/data exibida no portal: `0.1.7` em `16/05/2026`.
-- SHA-256 Android privado: `dc9c4274a05a290a81837d37831db47ff91003be6d8d51403f8f49281f91fb17`.
+- Versao/data exibida no portal: `0.1.13` em `17/05/2026`.
+- SHA-256 Android privado: `7b9c6f110313ade8b4740200edbf77cdbe0e92b5654ecd5aaf42a8d8f08e8bae`.
 - Manifesto publico: `https://www.sinalseguro.com.br/downloads/installers.json`.
 - iPhone: sem release ativo; sera disponibilizado posteriormente.
 - GitHub: nao versionar APK/AAB/IPA privados. O APK privado deve ser publicado somente no portal/EC2, com checksum, QR e manifesto versionados.
@@ -118,7 +118,7 @@ APK privado Android atual para validacao fisica, portal e atualizacao pelo app:
 
 - Caminho local estavel: `distribution/android/out/sinalseguro-android.apk`.
 - URL publicada: `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk`.
-- SHA-256: `2196c90158d6a521bc6f8f1bf9f78f922ba6dc264394544f512acc9222889145`.
+- SHA-256: `7b9c6f110313ade8b4740200edbf77cdbe0e92b5654ecd5aaf42a8d8f08e8bae`.
 - Build local para o device fisico conectado: `./gradlew assembleDebug -PsinalBundleDebugJs=true -PreactNativeArchitectures=arm64-v8a`.
 - Observacao: este APK privado e artefato de homologacao Android, nao release de loja e nao deve ser versionado no Git.
 - O APK debug atual embute o bundle JS e desliga o suporte nativo de desenvolvedor apenas neste modo de validacao, abrindo sem Metro, sem `adb reverse` e sem depender de `localhost:8081`.
@@ -129,7 +129,7 @@ APK privado Android atual para validacao fisica, portal e atualizacao pelo app:
 - A tela `Anjos de confianca` mostra `Anjos` para quem o usuario autorizou e `Sou anjo` para quem convidou o usuario; o aceite deve exibir `Voce e anjo de ...` sem expor token, telefone, e-mail bruto, midia ou localizacao.
 - A versao `0.1.5` bloqueia convites locais/antigos: se o link nao existir no backend, a tela mostra `Convite indisponivel`, `Aceite bloqueado` e desativa `Aceitar como anjo`.
 - Testes fisicos manuais da `0.1.5` aprovados por Roberto em 2026-05-16; a `0.1.7` corrigiu a clareza visual da versao instalada e manteve a tela Android de alertas recebidos para teste manual pelo portal.
-- A versao `0.1.11` sincroniza ocorrencia SOS com `/api/emergency-sessions/`, roteia apenas para anjos aceitos com dispositivo ativo/chave publica, e permite que o anjo autorizado acompanhe video/audio ao vivo em WebRTC P2P.
+- A versao `0.1.13` sincroniza ocorrencia SOS com `/api/emergency-sessions/`, roteia apenas para anjos aceitos com dispositivo ativo/chave publica, permite que o anjo autorizado acompanhe video/audio ao vivo em WebRTC P2P, preserva video local cifrado da chamada no aparelho do solicitante e finaliza a sessao remota antes de tratar o fluxo como concluido.
 - Localizacao ao vivo, conveniados e compartilhamento externo de midia continuam bloqueados ate frentes proprias e revisao juridica/seguranca.
 
 ## OIDC Google
@@ -197,13 +197,13 @@ Regras:
 
 ## Status Android privado - 2026-05-17
 
-- Versao Android privada atual: `0.1.11` (`versionCode 13`).
+- Versao Android privada atual: `0.1.13` (`versionCode 15`).
 - APK multi-ABI: `arm64-v8a` e `armeabi-v7a`.
-- SHA-256: `2196c90158d6a521bc6f8f1bf9f78f922ba6dc264394544f512acc9222889145`.
+- SHA-256: `7b9c6f110313ade8b4740200edbf77cdbe0e92b5654ecd5aaf42a8d8f08e8bae`.
 - Download oficial: `https://www.sinalseguro.com.br/baixar/android`.
 - Nome publico do APK: `sinalseguro_android.apk`.
 - SOS ao vivo Android validado em dois aparelhos: solicitante transmite, anjo autorizado recebe video/audio em tempo real, e EC2/API atua como plano de controle/sinalizacao/auditoria sem armazenar midia bruta.
-- Pendencia tecnica: gravacao audiovisual local completa da chamada ao vivo ainda nao esta fechada; o registro seguro do anjo e a auditoria backend funcionam, mas o solicitante pode encerrar sem arquivo local de video quando a camera e entregue ao WebRTC.
+- O solicitante transmite audio/video ao anjo, preserva video local cifrado da chamada no cofre e encerra a sessao remota na API; captura de audio local junto ao arquivo `.nseg` ainda fica para subfase nativa posterior.
 
 ## Documentacao
 

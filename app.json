@@ -6,7 +6,7 @@
       "sinalseguro",
       "br.com.sinalseguro.app"
     ],
-    "version": "0.1.12",
+    "version": "0.1.13",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "icon": "./assets/brand/sinalseguro-icon.png",
@@ -27,7 +27,7 @@
     },
     "android": {
       "package": "br.com.sinalseguro.app",
-      "versionCode": 14,
+      "versionCode": 15,
       "adaptiveIcon": {
         "foregroundImage": "./assets/brand/sinalseguro-icon.png",
         "backgroundColor": "#1E1B2E"

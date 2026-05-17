@@ -214,6 +214,10 @@ export class LiveWebRtcSession {
     return this.localStream;
   }
 
+  getLocalStreamUrl() {
+    return this.localStream?.toURL?.() ?? null;
+  }
+
   async createOfferPayload(): Promise<LiveSdpPayload> {
     const offer = await this.peer.createOffer();
     await this.peer.setLocalDescription(offer);

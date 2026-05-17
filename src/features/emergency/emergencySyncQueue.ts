@@ -152,6 +152,40 @@ export async function syncEmergencyPackageWithApi(packageRecord: EmergencyPackag
   return syncQueuedPackageState(state, packageRecord);
 }
 
+export async function finishRemoteEmergencySessionForPackage(packageRecord: EmergencyPackage, remoteSessionId: string) {
+  const existing = (await listSecureRecords<EmergencyRemoteSyncState>(EMERGENCY_SYNC_NAMESPACE)).find(
+    (state) => state.packageId === packageRecord.id
+  );
+  const baseState: EmergencyRemoteSyncState = existing ?? {
+    id: packageRecord.id,
+    attempts: 0,
+    packageId: packageRecord.id,
+    recipientCount: recipientCount(packageRecord),
+    remoteSessionId,
+    status: "sent_to_ec2",
+    syncedAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+
+  try {
+    await apiClient.finishEmergencySession(remoteSessionId);
+    return markSyncState(baseState, {
+      remoteFinishedAt: new Date().toISOString(),
+      remoteFinishReason: undefined,
+      remoteFinishStatus: "finished",
+      remoteSessionId,
+      status: "sent_to_ec2"
+    });
+  } catch (error) {
+    return markSyncState(baseState, {
+      remoteFinishReason: syncFailureReason(error),
+      remoteFinishStatus: "failed",
+      remoteSessionId,
+      status: "sent_to_ec2"
+    });
+  }
+}
+
 export async function syncPendingEmergencyPackagesWithApi() {
   if (!apiConfig.apiEnabled || !apiConfig.apiBaseUrl) return [];
 

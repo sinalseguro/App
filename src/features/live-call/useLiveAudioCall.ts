@@ -26,6 +26,8 @@ type LiveAudioRole = "angel" | "owner";
 type LiveAudioStatus = "connected" | "connecting" | "ended" | "failed" | "idle" | "waiting";
 
 export type LiveAudioCallState = {
+  callSessionId?: string;
+  localStreamUrl?: string | null;
   message: string;
   participantName?: string;
   remoteSessionId?: string;
@@ -425,6 +427,7 @@ export function useLiveAudioCall() {
           videoMode: "sendrecv"
         });
         peerRef.current = peer;
+        const localStreamUrl = peer.getLocalStreamUrl();
         const offerPayload = await peer.createOfferPayload();
         await sendLiveSignal({
           payload: {
@@ -443,6 +446,8 @@ export function useLiveAudioCall() {
           localEvidenceStatus: "metadata_only"
         });
         setLiveAudioState({
+          callSessionId,
+          localStreamUrl,
           message: `Transmitindo assim que ${recipient.recipient_display_name} entrar como anjo.`,
           participantName: recipient.recipient_display_name,
           remoteSessionId,

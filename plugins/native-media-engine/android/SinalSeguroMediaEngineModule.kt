@@ -14,6 +14,8 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableMap
+import com.oney.WebRTCModule.SinalSeguroWebRtcAccess
+import com.oney.WebRTCModule.WebRTCModule
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
@@ -25,6 +27,7 @@ import java.security.MessageDigest
 import java.security.SecureRandom
 import java.time.Instant
 import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
 import javax.crypto.Cipher
 import javax.crypto.CipherOutputStream
 import javax.crypto.spec.GCMParameterSpec
@@ -50,6 +53,7 @@ class SinalSeguroMediaEngineModule(
 ) : ReactContextBaseJavaModule(reactContext) {
   private val random = SecureRandom()
   private val playbackHandles = mutableMapOf<String, File>()
+  private val liveVideoRecorders = ConcurrentHashMap<String, SinalSeguroLiveVideoRecorder>()
   override fun getName(): String = "SinalSeguroMediaEngine"
 
   @ReactMethod
@@ -200,6 +204,65 @@ class SinalSeguroMediaEngineModule(
       promise.resolve(result)
     } catch (error: Exception) {
       promise.reject("native_cleanup_failed", "Native residue cleanup failed.", error)
+    }
+  }
+
+  @ReactMethod
+  fun startLiveVideoRecording(input: ReadableMap, promise: Promise) {
+    try {
+      val streamReactTag = requireString(input, "streamReactTag")
+      val recordingId = optionalString(input, "recordingId") ?: UUID.randomUUID().toString()
+      if (liveVideoRecorders.containsKey(recordingId)) {
+        throw IllegalArgumentException("live_video_recording_already_started")
+      }
+
+      val webRtcModule = reactContext.getNativeModule(WebRTCModule::class.java)
+        ?: throw IllegalArgumentException("webrtc_module_unavailable")
+      val videoTrack = SinalSeguroWebRtcAccess.getVideoTrackForReactTag(webRtcModule, streamReactTag)
+        ?: throw IllegalArgumentException("live_video_track_unavailable")
+      val outputDirectory = File(reactContext.cacheDir, "sinalseguro-native-media/live-recordings")
+      val recorder = SinalSeguroLiveVideoRecorder(recordingId, videoTrack, outputDirectory)
+      recorder.start()
+      liveVideoRecorders[recordingId] = recorder
+
+      val result = Arguments.createMap()
+      result.putString("schemaVersion", "sinalseguro.live-video-recording.v1")
+      result.putString("status", "recording")
+      result.putString("engine", "SinalSeguroMediaEngine")
+      result.putString("recordingId", recordingId)
+      result.putString("startedAt", Instant.now().toString())
+      result.putBoolean("audioCaptured", false)
+      promise.resolve(result)
+    } catch (error: Exception) {
+      promise.reject("live_video_recording_start_failed", "Live video recording start failed.", error)
+    }
+  }
+
+  @ReactMethod
+  fun stopLiveVideoRecording(recordingId: String, promise: Promise) {
+    try {
+      val recorder = liveVideoRecorders.remove(recordingId)
+        ?: throw IllegalArgumentException("live_video_recording_not_found")
+      val summary = recorder.stop()
+      val result = Arguments.createMap()
+      result.putString("schemaVersion", "sinalseguro.live-video-recording.v1")
+      result.putString("status", "stopped")
+      result.putString("engine", "SinalSeguroMediaEngine")
+      result.putString("recordingId", summary.recordingId)
+      result.putString("sourceUri", summary.sourceUri)
+      result.putString("fileName", summary.fileName)
+      result.putDouble("sizeBytes", summary.sizeBytes.toDouble())
+      result.putString("sha256", summary.sha256)
+      result.putString("startedAt", summary.startedAt)
+      result.putString("completedAt", summary.completedAt)
+      result.putDouble("durationMs", summary.durationMs.toDouble())
+      result.putDouble("frameCount", summary.frameCount.toDouble())
+      result.putDouble("width", summary.width.toDouble())
+      result.putDouble("height", summary.height.toDouble())
+      result.putBoolean("audioCaptured", summary.audioCaptured)
+      promise.resolve(result)
+    } catch (error: Exception) {
+      promise.reject("live_video_recording_stop_failed", "Live video recording stop failed.", error)
     }
   }
 

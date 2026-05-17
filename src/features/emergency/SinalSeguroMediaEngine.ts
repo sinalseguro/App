@@ -77,12 +77,44 @@ export type CleanupSummary = {
   errorCode?: "native_module_unavailable" | "native_cleanup_failed";
 };
 
+export type LiveVideoRecordingStart = {
+  schemaVersion: "sinalseguro.live-video-recording.v1";
+  status: "recording";
+  engine: NativeMediaEngineName;
+  recordingId: string;
+  startedAt: string;
+  audioCaptured: boolean;
+};
+
+export type LiveVideoRecordingStop = {
+  schemaVersion: "sinalseguro.live-video-recording.v1";
+  status: "stopped";
+  engine: NativeMediaEngineName;
+  recordingId: string;
+  sourceUri: string;
+  fileName: string;
+  sizeBytes: number;
+  sha256: string;
+  startedAt: string;
+  completedAt: string;
+  durationMs: number;
+  frameCount: number;
+  width: number;
+  height: number;
+  audioCaptured: boolean;
+};
+
 type NativeMediaEngineModule = {
   encryptSegment(input: NativeEncryptedSegmentInput): Promise<EncryptedSegmentSummary>;
   openEncryptedAsset(input: NativeOpenEncryptedAssetInput): Promise<NativePlaybackHandle>;
   openEncryptedAssets(input: NativeOpenEncryptedAssetsInput): Promise<NativePlaybackHandle>;
   closePlaybackHandle(handleId: string): Promise<void>;
   cleanupMediaResidues(): Promise<CleanupSummary>;
+  startLiveVideoRecording?(input: {
+    recordingId?: string;
+    streamReactTag: string;
+  }): Promise<LiveVideoRecordingStart>;
+  stopLiveVideoRecording?(recordingId: string): Promise<LiveVideoRecordingStop>;
 };
 
 const nativeMediaEngine = NativeModules.SinalSeguroMediaEngine as NativeMediaEngineModule | undefined;
@@ -230,6 +262,34 @@ export async function cleanupNativeMediaResidues(): Promise<CleanupSummary> {
       errorCode: "native_cleanup_failed"
     };
   }
+}
+
+export function isLiveVideoRecordingAvailable() {
+  const module = getReadyNativeMediaEngine();
+  return (
+    Platform.OS === "android" &&
+    typeof module?.startLiveVideoRecording === "function" &&
+    typeof module.stopLiveVideoRecording === "function"
+  );
+}
+
+export async function startNativeLiveVideoRecording(input: {
+  recordingId?: string;
+  streamReactTag: string;
+}) {
+  const module = getReadyNativeMediaEngine();
+  if (!module?.startLiveVideoRecording || !isLiveVideoRecordingAvailable()) {
+    throw new Error("live_video_recording_unavailable");
+  }
+  return module.startLiveVideoRecording(input);
+}
+
+export async function stopNativeLiveVideoRecording(recordingId: string) {
+  const module = getReadyNativeMediaEngine();
+  if (!module?.stopLiveVideoRecording || !isLiveVideoRecordingAvailable()) {
+    throw new Error("live_video_recording_unavailable");
+  }
+  return module.stopLiveVideoRecording(recordingId);
 }
 
 function getNativeMediaEngine() {

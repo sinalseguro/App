@@ -28,6 +28,7 @@ import { appendMediaOperationalLog } from "@/features/emergency/MediaOperational
 import { cleanupNativeMediaResidues } from "@/features/emergency/SinalSeguroMediaEngine";
 import {
   type EmergencyRemoteSyncState,
+  finishRemoteEmergencySessionForPackage,
   listEmergencyRemoteSyncStates,
   queueEmergencyPackageForRemoteSync,
   syncEmergencyPackageWithApi,
@@ -47,6 +48,11 @@ import {
   type OwnerLocalEvidenceStatus,
   type OwnerLiveEvidenceStatus
 } from "@/features/live-call/liveCallOperationalEvidence";
+import {
+  startOwnerLiveVideoRecording,
+  stopOwnerLiveVideoRecording,
+  type OwnerLiveVideoRecording
+} from "@/features/live-call/liveCallLocalRecorder";
 import { useLiveAudioCall } from "@/features/live-call/useLiveAudioCall";
 import { listAcceptedOwnerRelationshipsForDelivery } from "@/features/invitations/trustedRelationshipStore";
 import { isProtectedAccessUnlocked, unlockProtectedAccess, verifySecurityCodeStatus } from "@/security/protectedAccess";
@@ -152,8 +158,13 @@ function FinishProgressDialog({
 
   return (
     <Modal animationType="fade" onRequestClose={closeIfAllowed} transparent visible={state.visible}>
-      <Pressable accessible={false} onPress={closeIfAllowed} style={styles.finishProgressBackdrop}>
-        <Pressable accessible={false} onPress={() => undefined} style={styles.finishProgressPanel}>
+      <View style={styles.finishProgressBackdrop}>
+        <Pressable
+          accessible={false}
+          onPress={closeIfAllowed}
+          style={styles.finishProgressBackdropPressArea}
+        />
+        <View style={styles.finishProgressPanel}>
           <View style={styles.finishProgressHeader}>
             <View style={[styles.finishProgressIcon, { borderColor: accentColor }]}>{icon}</View>
             <View style={styles.finishProgressTitleBlock}>
@@ -193,8 +204,8 @@ function FinishProgressDialog({
               </Pressable>
             </View>
           )}
-        </Pressable>
-      </Pressable>
+        </View>
+      </View>
     </Modal>
   );
 }
@@ -234,6 +245,8 @@ export default function HomeScreen() {
   const liveAudioCall = useLiveAudioCall();
   const liveAudioCallStatus = liveAudioCall.state.status;
   const liveAudioCallStateRef = useRef(liveAudioCall.state);
+  const ownerLiveVideoRecordingRef = useRef<OwnerLiveVideoRecording | null>(null);
+  const ownerLiveVideoPreserveInFlightRef = useRef(false);
 
   async function refreshOutboxCount() {
     const activePackage = await getActiveEmergencyPackage();
@@ -655,6 +668,118 @@ export default function HomeScreen() {
     ).catch(() => undefined);
   }
 
+  async function startOwnerLiveVideoEvidence(input: {
+    callSessionId?: string;
+    packageId: string;
+    remoteSessionId: string;
+    streamReactTag: string;
+  }) {
+    const activeRecording = ownerLiveVideoRecordingRef.current;
+    if (activeRecording?.remoteSessionId === input.remoteSessionId) return activeRecording;
+    if (activeRecording) {
+      await stopOwnerLiveVideoEvidence("replace_recording");
+    }
+
+    try {
+      const recording = await startOwnerLiveVideoRecording(input);
+      if (!recording) return null;
+      ownerLiveVideoRecordingRef.current = recording;
+      updateOwnerLiveEvidence(input.remoteSessionId, {
+        localEvidenceStatus: "recording",
+        packageId: input.packageId,
+        status: "recording"
+      });
+      recordOwnerLiveAuditMarker(input.remoteSessionId, "local_evidence_recording", {
+        connectionState: "connected",
+        localEvidenceStatus: "recording"
+      });
+      setRecordingStatus("Chamada em andamento com seu anjo. Gravando neste aparelho.");
+      return recording;
+    } catch (error) {
+      appendMediaOperationalLog("live_video_recording_start_error", {
+        platform: Platform.OS,
+        remoteSessionId: input.remoteSessionId
+      }, error);
+      updateOwnerLiveEvidence(input.remoteSessionId, {
+        localEvidenceStatus: "metadata_only",
+        packageId: input.packageId,
+        status: "transmitting"
+      });
+      return null;
+    }
+  }
+
+  async function stopOwnerLiveVideoEvidence(reason: "call_finished" | "finish" | "manual_stop" | "replace_recording") {
+    const recording = ownerLiveVideoRecordingRef.current;
+    if (!recording || ownerLiveVideoPreserveInFlightRef.current) return null;
+
+    ownerLiveVideoRecordingRef.current = null;
+    ownerLiveVideoPreserveInFlightRef.current = true;
+    try {
+      const result = await stopOwnerLiveVideoRecording(recording);
+      if (!result?.sourceUri) return null;
+
+      appendMediaOperationalLog("live_video_recording_preserve_start", {
+        audioCaptured: result.audioCaptured,
+        frameCount: result.frameCount,
+        platform: Platform.OS,
+        reason,
+        remoteSessionId: recording.remoteSessionId,
+        sizeBytes: result.sizeBytes
+      });
+      const attachedAsset = await preserveLocalVideoAsset({
+        packageId: recording.packageId,
+        sourceUri: result.sourceUri,
+        cameraMode: "back",
+        requestedCameraMode: preferences.localVideoCapture.cameraMode,
+        startedAt: result.startedAt,
+        completedAt: result.completedAt,
+        verificationMode: "bounded"
+      });
+      updateOwnerLiveEvidence(recording.remoteSessionId, {
+        endedAt: reason === "finish" || reason === "call_finished" ? result.completedAt : undefined,
+        localEvidenceStatus: "protected",
+        packageId: recording.packageId,
+        status: reason === "finish" || reason === "call_finished" ? "protected" : "transmitting"
+      });
+      recordOwnerLiveAuditMarker(recording.remoteSessionId, "local_evidence_protected", {
+        connectionState: reason === "finish" || reason === "call_finished" ? "ended" : "connected",
+        localEvidenceStatus: "protected"
+      });
+      setRecordingStatus(
+        result.audioCaptured
+          ? "Chamada salva no cofre deste aparelho."
+          : "Video da chamada salvo no cofre deste aparelho."
+      );
+      appendMediaOperationalLog("live_video_recording_preserve_success", {
+        assetCreated: Boolean(attachedAsset),
+        audioCaptured: result.audioCaptured,
+        platform: Platform.OS,
+        reason,
+        remoteSessionId: recording.remoteSessionId
+      });
+      return attachedAsset;
+    } catch (error) {
+      appendMediaOperationalLog("live_video_recording_preserve_error", {
+        platform: Platform.OS,
+        reason,
+        remoteSessionId: recording.remoteSessionId
+      }, error);
+      updateOwnerLiveEvidence(recording.remoteSessionId, {
+        localEvidenceStatus: "failed",
+        packageId: recording.packageId,
+        status: "failed"
+      });
+      recordOwnerLiveAuditMarker(recording.remoteSessionId, "local_evidence_failed", {
+        connectionState: "failed",
+        localEvidenceStatus: "failed"
+      });
+      return null;
+    } finally {
+      ownerLiveVideoPreserveInFlightRef.current = false;
+    }
+  }
+
   function openRoute(route: EmergencyHomeRoute, panel?: EmergencyHomePanel) {
     void openRouteAsync(route, panel);
   }
@@ -769,7 +894,9 @@ export default function HomeScreen() {
     if (liveRemoteSessionId) {
       ownerAutoCallPausedSessionIdsRef.current.add(liveRemoteSessionId);
     }
-    liveAudioCall.stopLiveAudioCall();
+    void stopOwnerLiveVideoEvidence("manual_stop").finally(() => {
+      liveAudioCall.stopLiveAudioCall();
+    });
   }
 
   useEffect(() => {
@@ -777,20 +904,55 @@ export default function HomeScreen() {
   }, [liveAudioCall.state]);
 
   useEffect(() => {
+    const remoteSessionId = liveAudioCall.state.remoteSessionId ?? liveRemoteSessionId;
+    const streamReactTag = liveAudioCall.state.localStreamUrl;
+    const packageId = activePackageId ?? mediaRecorderPackageId;
+    if (
+      liveAudioCall.state.role !== "owner" ||
+      !remoteSessionId ||
+      !packageId ||
+      !streamReactTag ||
+      liveAudioCall.state.status === "ended" ||
+      liveAudioCall.state.status === "failed"
+    ) {
+      return;
+    }
+
+    void startOwnerLiveVideoEvidence({
+      callSessionId: liveAudioCall.state.callSessionId,
+      packageId,
+      remoteSessionId,
+      streamReactTag
+    });
+  }, [
+    activePackageId,
+    liveAudioCall.state.callSessionId,
+    liveAudioCall.state.localStreamUrl,
+    liveAudioCall.state.remoteSessionId,
+    liveAudioCall.state.role,
+    liveAudioCall.state.status,
+    liveRemoteSessionId,
+    mediaRecorderPackageId
+  ]);
+
+  useEffect(() => {
     if (liveAudioCall.state.role !== "owner") return;
     const remoteSessionId = liveAudioCall.state.remoteSessionId ?? liveRemoteSessionId;
     if (!remoteSessionId) return;
 
     if (liveAudioCall.state.status === "connected") {
+      const hasLiveVideoRecording = ownerLiveVideoRecordingRef.current?.remoteSessionId === remoteSessionId;
       updateOwnerLiveEvidence(remoteSessionId, {
         connectedAt: new Date().toISOString(),
-        localEvidenceStatus: "metadata_only",
+        localEvidenceStatus: hasLiveVideoRecording ? "recording" : "metadata_only",
         packageId: activePackageId ?? mediaRecorderPackageId ?? undefined,
-        status: "transmitting"
+        status: hasLiveVideoRecording ? "recording" : "transmitting"
       });
     }
 
     if (liveAudioCall.state.status === "failed") {
+      ownerAutoCallStartedSessionIdsRef.current.delete(remoteSessionId);
+      void stopOwnerLiveVideoEvidence("call_finished");
       updateOwnerLiveEvidence(remoteSessionId, {
         endedAt: new Date().toISOString(),
         localEvidenceStatus: "failed",
@@ -800,6 +962,8 @@ export default function HomeScreen() {
     }
 
     if (liveAudioCall.state.status === "ended") {
+      ownerAutoCallStartedSessionIdsRef.current.delete(remoteSessionId);
+      void stopOwnerLiveVideoEvidence("call_finished");
       updateOwnerLiveEvidence(remoteSessionId, {
         endedAt: new Date().toISOString(),
         packageId: activePackageId ?? mediaRecorderPackageId ?? undefined,
@@ -1105,10 +1269,12 @@ export default function HomeScreen() {
     if (!activePackageId || finishInProgress || finishInProgressRef.current) return;
 
     const packageId = activePackageId;
+    const remoteSessionIdToFinish = liveAudioCall.state.remoteSessionId ?? liveRemoteSessionId;
+    await stopOwnerLiveVideoEvidence("finish");
     liveAudioCall.resetLiveAudioCall();
-    if (liveRemoteSessionId) {
-      ownerAutoCallPausedSessionIdsRef.current.delete(liveRemoteSessionId);
-      ownerAutoCallStartedSessionIdsRef.current.delete(liveRemoteSessionId);
+    if (remoteSessionIdToFinish) {
+      ownerAutoCallPausedSessionIdsRef.current.delete(remoteSessionIdToFinish);
+      ownerAutoCallStartedSessionIdsRef.current.delete(remoteSessionIdToFinish);
     }
     setLiveRemoteSessionId(null);
     finishInProgressRef.current = true;
@@ -1174,11 +1340,38 @@ export default function HomeScreen() {
       }
 
       await queueEmergencyPackageForRemoteSync(result.packageRecord);
-      void syncPendingEmergencyPackagesWithApi().catch((error) => {
-        appendMediaOperationalLog("emergency_remote_finish_sync_error", {
-          platform: Platform.OS
-        }, error);
+      showFinishProgress({
+        detail: "Confirmando o encerramento seguro com a central.",
+        progress: 86,
+        status: "running",
+        title: "Sincronizando chamado"
       });
+      let remoteFinishState: EmergencyRemoteSyncState | undefined;
+      if (remoteSessionIdToFinish) {
+        const directFinishState = await finishRemoteEmergencySessionForPackage(
+          result.packageRecord,
+          remoteSessionIdToFinish
+        );
+        if (directFinishState.remoteFinishStatus === "finished") {
+          remoteFinishState = directFinishState;
+        } else {
+          const retryStates = await syncPendingEmergencyPackagesWithApi();
+          remoteFinishState =
+            retryStates.find((state) => state.packageId === packageId) ?? directFinishState;
+        }
+      } else {
+        const syncStates = await syncPendingEmergencyPackagesWithApi();
+        remoteFinishState = syncStates.find((state) => state.packageId === packageId);
+      }
+      if (remoteFinishState?.remoteFinishStatus === "failed") {
+        appendMediaOperationalLog("emergency_remote_finish_sync_error", {
+          packageId,
+          platform: Platform.OS,
+          remoteFinishReason: remoteFinishState.remoteFinishReason,
+          remoteSessionId: remoteSessionIdToFinish ?? remoteFinishState.remoteSessionId
+        });
+      }
+      const remoteFinishFailed = remoteFinishState?.remoteFinishStatus === "failed";
 
       const attachedAssetsAfterFinish =
         result.packageRecord.media.status === "recorded_local" ? result.packageRecord.media.assets.length : 0;
@@ -1188,33 +1381,39 @@ export default function HomeScreen() {
         platform: Platform.OS
       });
       if (attachedAssetsAfterFinish > 0) {
-        updateOwnerLiveEvidence(liveRemoteSessionId, {
+        updateOwnerLiveEvidence(remoteSessionIdToFinish, {
           endedAt: new Date().toISOString(),
           localEvidenceStatus: "protected",
           packageId,
           status: "protected"
         });
-        recordOwnerLiveAuditMarker(liveRemoteSessionId, "local_evidence_protected", {
+        recordOwnerLiveAuditMarker(remoteSessionIdToFinish, "local_evidence_protected", {
           connectionState: "ended",
           localEvidenceStatus: "protected"
         });
-        setRecordingStatus("Chamado encerrado. Video preservado no cofre local.");
+        setRecordingStatus(
+          remoteFinishFailed
+            ? "Video protegido localmente. Confirmacao central pendente."
+            : "Chamado encerrado. Video preservado no cofre local."
+        );
         showFinishProgress({
-          detail: stopSerial
-            ? "Video protegido, camera liberada e pacote local finalizado."
-            : "Video protegido e anexado ao cofre local.",
+          detail: remoteFinishFailed
+            ? "Video protegido neste aparelho. A confirmacao com a central continuara em nova tentativa."
+            : stopSerial
+              ? "Video protegido, camera liberada e pacote local finalizado."
+              : "Video protegido e anexado ao cofre local.",
           progress: 100,
-          status: "done",
-          title: "Video protegido"
+          status: remoteFinishFailed ? "warning" : "done",
+          title: remoteFinishFailed ? "Confirmacao pendente" : "Video protegido"
         });
       } else if (stopSerial && stopResult?.status === "attached") {
-        updateOwnerLiveEvidence(liveRemoteSessionId, {
+        updateOwnerLiveEvidence(remoteSessionIdToFinish, {
           endedAt: new Date().toISOString(),
           localEvidenceStatus: "protected",
           packageId,
           status: "protected"
         });
-        recordOwnerLiveAuditMarker(liveRemoteSessionId, "local_evidence_protected", {
+        recordOwnerLiveAuditMarker(remoteSessionIdToFinish, "local_evidence_protected", {
           connectionState: "ended",
           localEvidenceStatus: "protected"
         });
@@ -1226,16 +1425,20 @@ export default function HomeScreen() {
           title: "Verificacao pendente"
         });
       } else {
-        updateOwnerLiveEvidence(liveRemoteSessionId, {
+        updateOwnerLiveEvidence(remoteSessionIdToFinish, {
           endedAt: new Date().toISOString(),
           localEvidenceStatus: stopSerial ? "metadata_only" : "protected",
           packageId,
           status: stopSerial ? "metadata_only" : "protected"
         });
-        recordOwnerLiveAuditMarker(liveRemoteSessionId, stopSerial ? "local_evidence_metadata_only" : "local_evidence_protected", {
-          connectionState: "ended",
-          localEvidenceStatus: stopSerial ? "metadata_only" : "protected"
-        });
+        recordOwnerLiveAuditMarker(
+          remoteSessionIdToFinish,
+          stopSerial ? "local_evidence_metadata_only" : "local_evidence_protected",
+          {
+            connectionState: "ended",
+            localEvidenceStatus: stopSerial ? "metadata_only" : "protected"
+          }
+        );
         setRecordingStatus("Chamado encerrado. Pacote local salvo sem gravacao de video.");
         if (stopSerial) {
           await persistFinishNoMediaDiagnostic(packageId, "camera_no_file_returned");
@@ -1693,6 +1896,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: theme.spacing.xl
   },
+  finishProgressBackdropPressArea: {
+    ...StyleSheet.absoluteFillObject
+  },
   finishProgressDetail: {
     color: theme.colors.textMuted,
     fontSize: theme.typography.body,
@@ -1725,6 +1931,7 @@ const styles = StyleSheet.create({
     maxWidth: 440,
     padding: theme.spacing.lg,
     width: "100%",
+    zIndex: 1,
     ...theme.shadow
   },
   finishProgressPendingRow: {
