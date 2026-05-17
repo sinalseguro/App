@@ -306,7 +306,7 @@ export function useLiveAudioCall() {
           ...current,
           message: current.message || "A chamada com o anjo já está em andamento."
         }));
-        return;
+        return true;
       }
 
       stopPolling();
@@ -321,7 +321,7 @@ export function useLiveAudioCall() {
           role: "owner",
           status: "failed"
         });
-        return;
+        return false;
       }
       const callSessionId = createLiveCallSessionId();
       runtimeRef.current = { callSessionId, localDeviceId, remoteSessionId, role: "owner" };
@@ -382,6 +382,7 @@ export function useLiveAudioCall() {
           status: "waiting"
         });
         startPolling(processOwnerSignals);
+        return true;
       } catch (error) {
         stopPolling();
         closePeer();
@@ -392,6 +393,7 @@ export function useLiveAudioCall() {
           role: "owner",
           status: "failed"
         });
+        return false;
       }
     },
     [closePeer, createPeer, hasActiveCallForSession, processOwnerSignals, setLiveAudioState, startPolling, stopPolling]

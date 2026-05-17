@@ -246,8 +246,11 @@ if (
   !homeScreen.includes("listAcceptedLiveRecipients") ||
   !homeScreen.includes("emergency_live_call_auto_start_attempt") ||
   !homeScreen.includes("prepareMediaForOwnerLiveCall") ||
+  !homeScreen.includes("const started = await liveAudioCall.startOwnerAudioCall") ||
+  !homeScreen.includes("if (started)") ||
   !homeScreen.includes("emergency_live_call_media_handoff_start") ||
   !homeScreen.includes("waitForMediaRecorderRelease") ||
+  !homeScreen.includes("mediaReleaseForLiveCallWaitTimeoutMs = 12000") ||
   !homeScreen.includes("Camera liberada. Abrindo video ao vivo para o anjo.") ||
   !homeScreen.includes("Anjo entrou. Chamando agora.")
 ) {
@@ -282,6 +285,9 @@ if (
   !liveWebRtcSession.includes('addEventListener("track"') ||
   !liveWebRtcSession.includes('addEventListener("iceconnectionstatechange"') ||
   !liveWebRtcSession.includes("remote_stream_${source}") ||
+  !liveWebRtcSession.includes("emergencyVideoConstraints") ||
+  !liveWebRtcSession.includes("liveMediaOpenTimeoutMs") ||
+  !liveWebRtcSession.includes("getUserMediaWithTimeout") ||
   !liveWebRtcSession.includes('facingMode: videoFacingMode') ||
   !liveWebRtcSession.includes('options.videoFacingMode ?? "environment"') ||
   !liveWebRtcSession.includes('value === "completed"') ||
@@ -626,8 +632,13 @@ if (!emergencyPreferences.includes("finishSafety") || !emergencyPreferences.incl
   throw new Error("Encerramento seguro precisa ser configuravel e usar hash local do codigo.");
 }
 
-if (!emergencyPreferences.includes("schemaVersion: 8") || !emergencyPreferences.includes("call190ShortcutEnabled: true")) {
-  throw new Error("Preferencias precisam migrar para atalhos oficiais ativos por padrao.");
+if (
+  !emergencyPreferences.includes("schemaVersion: 9") ||
+  !emergencyPreferences.includes("call190ShortcutEnabled: true") ||
+  !emergencyPreferences.includes('cameraMode: "back"') ||
+  !emergencyPreferences.includes("storedSchemaVersion < 9")
+) {
+  throw new Error("Preferencias precisam migrar para camera traseira do SOS e atalhos oficiais ativos por padrao.");
 }
 
 if (

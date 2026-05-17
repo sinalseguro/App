@@ -7,7 +7,7 @@ export type EmergencyDurationSeconds = 0 | 60 | 300 | 900 | 1800 | 3600;
 export type LocalVideoCameraMode = "front" | "back" | "both";
 
 export type EmergencyPreferences = {
-  schemaVersion: 8;
+  schemaVersion: 9;
   defaultDurationSeconds: EmergencyDurationSeconds;
   inAppHoldMs: number;
   locationMode: "ask_when_needed" | "foreground_pre_authorized";
@@ -59,7 +59,7 @@ const PREFERENCES_KEY = "sinalseguro.emergency-preferences.v1";
 export const durationOptions: EmergencyDurationSeconds[] = [0, 60, 300, 900, 1800, 3600];
 
 export const defaultEmergencyPreferences: EmergencyPreferences = {
-  schemaVersion: 8,
+  schemaVersion: 9,
   defaultDurationSeconds: 0,
   inAppHoldMs: 1800,
   locationMode: "ask_when_needed",
@@ -87,7 +87,7 @@ export const defaultEmergencyPreferences: EmergencyPreferences = {
   },
   localVideoCapture: {
     status: "enabled_local",
-    cameraMode: "front",
+    cameraMode: "back",
     requestOnSos: true,
     requiresExplicitConsent: true
   },
@@ -160,14 +160,14 @@ export async function getEmergencyPreferences(): Promise<EmergencyPreferences> {
         ? parsed.localVideoCapture.cameraMode
         : undefined;
     const normalizedCameraMode =
-      storedSchemaVersion < 6
+      storedSchemaVersion < 9
         ? defaultEmergencyPreferences.localVideoCapture.cameraMode
         : parsedCameraMode ?? defaultEmergencyPreferences.localVideoCapture.cameraMode;
 
     return {
       ...defaultEmergencyPreferences,
       ...parsed,
-      schemaVersion: 8,
+      schemaVersion: 9,
       defaultDurationSeconds: normalizeDuration(parsed.defaultDurationSeconds),
       finishSafety: {
         ...defaultEmergencyPreferences.finishSafety,

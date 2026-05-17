@@ -112,13 +112,13 @@ Checkpoint tecnico atual:
 - Convite de anjo nasce somente no backend, com link unico e aceite bloqueado quando o servidor nao reconhece o token.
 - Pacote local de emergencia com horario, consentimento, georreferencia pontual autorizada, hash e video/audio local quando a usuaria conceder camera e microfone no build privado.
 - Area `Cofre local` para acessar pacotes e videos preservados neste dispositivo e verificar o que permanece bloqueado ate backend, contrato, chaves e auditoria.
-- Build privado de midia local habilita `CAMERA` e `RECORD_AUDIO` para homologacao controlada; transmissao, compartilhamento externo, P2P critico e envio remoto de midia continuam bloqueados.
+- Build privado Android habilita `CAMERA` e `RECORD_AUDIO` para homologacao controlada. O SOS ao vivo com anjo autorizado usa WebRTC P2P apos controle pela EC2/API; compartilhamento externo, conveniados e envio remoto de midia bruta continuam bloqueados.
 
-APK privado Android atual com midia local para validacao e portal:
+APK privado Android atual para validacao fisica, portal e atualizacao pelo app:
 
 - Caminho local estavel: `distribution/android/out/sinalseguro-android.apk`.
 - URL publicada: `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk`.
-- SHA-256: `1ee74e9dd3675a150f3a1264abf99437c494f268d0f63cde9a9bd6b1fb182539`.
+- SHA-256: `2196c90158d6a521bc6f8f1bf9f78f922ba6dc264394544f512acc9222889145`.
 - Build local para o device fisico conectado: `./gradlew assembleDebug -PsinalBundleDebugJs=true -PreactNativeArchitectures=arm64-v8a`.
 - Observacao: este APK privado e artefato de homologacao Android, nao release de loja e nao deve ser versionado no Git.
 - O APK debug atual embute o bundle JS e desliga o suporte nativo de desenvolvedor apenas neste modo de validacao, abrindo sem Metro, sem `adb reverse` e sem depender de `localhost:8081`.
@@ -128,9 +128,9 @@ APK privado Android atual com midia local para validacao e portal:
 - Convites por link publico usam `https://www.sinalseguro.com.br/convite#convite=<codigo>`; o app preserva convite pendente de forma cifrada durante login, consentimentos e permissoes antes do aceite.
 - A tela `Anjos de confianca` mostra `Anjos` para quem o usuario autorizou e `Sou anjo` para quem convidou o usuario; o aceite deve exibir `Voce e anjo de ...` sem expor token, telefone, e-mail bruto, midia ou localizacao.
 - A versao `0.1.5` bloqueia convites locais/antigos: se o link nao existir no backend, a tela mostra `Convite indisponivel`, `Aceite bloqueado` e desativa `Aceitar como anjo`.
-- Testes fisicos manuais da `0.1.5` aprovados por Roberto em 2026-05-16; a `0.1.7` corrige a clareza visual da versao instalada e mantem a tela Android de alertas recebidos para teste manual pelo portal.
-- Frente 3 iniciada: ocorrencia SOS sincroniza com `/api/emergency-sessions/`, backend roteia apenas para anjos aceitos com dispositivo ativo/chave publica, e o anjo visualiza pedidos em `Alertas recebidos`.
-- P2P, midia para anjos, localizacao ao vivo e conveniados continuam bloqueados ate frentes proprias e revisao juridica/seguranca.
+- Testes fisicos manuais da `0.1.5` aprovados por Roberto em 2026-05-16; a `0.1.7` corrigiu a clareza visual da versao instalada e manteve a tela Android de alertas recebidos para teste manual pelo portal.
+- A versao `0.1.11` sincroniza ocorrencia SOS com `/api/emergency-sessions/`, roteia apenas para anjos aceitos com dispositivo ativo/chave publica, e permite que o anjo autorizado acompanhe video/audio ao vivo em WebRTC P2P.
+- Localizacao ao vivo, conveniados e compartilhamento externo de midia continuam bloqueados ate frentes proprias e revisao juridica/seguranca.
 
 ## OIDC Google
 
@@ -192,8 +192,18 @@ Regras:
 - Nao usar acessibilidade para burlar permissoes do sistema.
 - Nao prometer acionamento de orgao publico sem convenio formal.
 - Nao compartilhar evidencia por share sheet do sistema; convites sao a unica excecao permitida e nao carregam evidencia.
-- P2P fica como pesquisa futura/best-effort.
-- Midia local fica habilitada somente no build privado de homologacao; producao publica, transmissao, anjos recebendo stream e exportacao seguem bloqueados ate RIPD/DPIA, retencao, contrato, backend, RBAC, chaves e revisao juridica.
+- SOS ao vivo P2P fica habilitado somente no build Android privado de homologacao, com EC2/API como plano de controle, autorizacao, sinalizacao e auditoria.
+- Gravacao audiovisual local completa da chamada ao vivo ainda depende de subfase tecnica dedicada; producao publica, conveniados, exportacao e compartilhamento externo seguem bloqueados ate RIPD/DPIA, retencao, contrato, backend, RBAC, chaves e revisao juridica.
+
+## Status Android privado - 2026-05-17
+
+- Versao Android privada atual: `0.1.11` (`versionCode 13`).
+- APK multi-ABI: `arm64-v8a` e `armeabi-v7a`.
+- SHA-256: `2196c90158d6a521bc6f8f1bf9f78f922ba6dc264394544f512acc9222889145`.
+- Download oficial: `https://www.sinalseguro.com.br/baixar/android`.
+- Nome publico do APK: `sinalseguro_android.apk`.
+- SOS ao vivo Android validado em dois aparelhos: solicitante transmite, anjo autorizado recebe video/audio em tempo real, e EC2/API atua como plano de controle/sinalizacao/auditoria sem armazenar midia bruta.
+- Pendencia tecnica: gravacao audiovisual local completa da chamada ao vivo ainda nao esta fechada; o registro seguro do anjo e a auditoria backend funcionam, mas o solicitante pode encerrar sem arquivo local de video quando a camera e entregue ao WebRTC.
 
 ## Documentacao
 

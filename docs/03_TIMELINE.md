@@ -2908,6 +2908,37 @@ Checkpoint:
 
 - `docs/57_CHECKPOINT_F4_3_RECEBIMENTO_CHAMADA_REGISTRO_2026-05-16.md`.
 
+## 2026-05-17 - Android 0.1.11 release privada e teste SOS ao vivo
+
+Status: release privada preparada para portal/API; SOS ao vivo validado em dois Androids; gravacao audiovisual local completa da chamada ao vivo segue pendente.
+
+Executado:
+
+- Android elevado para `versionName=0.1.11` e `versionCode=13`.
+- APK privado debug bundled gerado com SHA-256 `2196c90158d6a521bc6f8f1bf9f78f922ba6dc264394544f512acc9222889145`.
+- APK instalado no Android USB `armeabi-v7a` e no Android Wi-Fi `arm64-v8a`.
+- Camera padrao do SOS local migrada para traseira e handoff para WebRTC ampliado para 12s.
+- EC2/API e dispositivos foram limpos de sessoes, sinais, envelopes e arquivos efemeros antes dos testes, preservando auditoria, login, permissoes e vinculos.
+- Teste fisico confirmou solicitante transmitindo ao anjo, anjo vendo `Pessoa protegida`, WebRTC conectado e renderizando frames.
+- Backend confirmou sessao ativa/aceita, envelope `live_session`, sinais `offer`/`answer`/`ice` e encerramento sem sinais pendentes.
+- Observacao tecnica: o solicitante ainda encerrou com pacote local sem arquivo de video quando a camera foi entregue ao WebRTC; o anjo manteve registro seguro local.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado.
+- `node scripts/smoke-test.mjs`: aprovado.
+- `npm run lint`: aprovado.
+- `npm test -- --runInBand`: aprovado.
+- `npm run private:android:readiness`: aprovado com pendencia conhecida de Node local para build privado debug.
+- Build Android privado aprovado; `aapt dump badging` confirmou `versionCode 13`, `versionName 0.1.11` e ABIs `arm64-v8a`/`armeabi-v7a`.
+- API/portal publicados na EC2; endpoint de atualizacao retorna `0.1.11`/`versionCode 13`, URL com cache-buster `0.1.11-20260517T121152Z` e SHA-256 `2196c90158d6a521bc6f8f1bf9f78f922ba6dc264394544f512acc9222889145`.
+- Download publico do APK validado com `130889547` bytes e SHA-256 correto; `installers.json`, `checksums.txt`, Nginx, `sinalseguro-api` e `cereusia-crm` aprovados.
+- Limpeza final para nova rodada manual: dispositivos sem historico local de chamados/convites antigos/chamadas ao vivo; EC2/API com `sessions=0`, `recipients=0`, `envelopes=0`, `signals=0`, preservando auditoria, logins, perfis e vinculos aceitos.
+
+Checkpoint:
+
+- `docs/58_CHECKPOINT_ANDROID_0_1_11_SOS_AO_VIVO_RELEASE_2026-05-17.md`.
+
 ## 2026-05-17 - Hardening visual da Home apos chamada
 
 Status: implementado, buildado e instalado nos dois Androids.

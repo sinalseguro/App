@@ -45,15 +45,20 @@ type PeerWithEventListeners = RTCPeerConnection & {
   addEventListener: (type: "connectionstatechange" | "icecandidate" | "iceconnectionstatechange" | "track", listener: (event: any) => void) => void;
 };
 
+const emergencyVideoConstraints = {
+  frameRate: { ideal: 12, max: 15 },
+  height: { ideal: 360, max: 360 },
+  width: { ideal: 640, max: 640 }
+};
+const liveMediaOpenTimeoutMs = 12000;
+
 function buildMediaConstraints(audioEnabled: boolean, videoEnabled: boolean, videoFacingMode: VideoFacingMode) {
   return {
     audio: audioEnabled,
     video: videoEnabled
       ? {
           facingMode: videoFacingMode,
-          frameRate: { ideal: 24, max: 30 },
-          height: { ideal: 720 },
-          width: { ideal: 1280 }
+          ...emergencyVideoConstraints
         }
       : false
   };
@@ -74,6 +79,46 @@ function logRemoteStream(source: "addstream" | "track", stream: MediaStream) {
   console.info(
     `[SinalSeguroLiveCall] remote_stream_${source} audio=${stream.getAudioTracks().length} video=${stream.getVideoTracks().length}`
   );
+}
+
+function logLocalStream(stream: MediaStream | null) {
+  if (!stream) {
+    console.info("[SinalSeguroLiveCall] local_stream audio=0 video=0");
+    return;
+  }
+
+  console.info(
+    `[SinalSeguroLiveCall] local_stream audio=${stream.getAudioTracks().length} video=${stream.getVideoTracks().length}`
+  );
+}
+
+function logPeerState(label: string, value: string) {
+  console.info(`[SinalSeguroLiveCall] ${label}=${toLiveConnectionState(value)}`);
+}
+
+async function getUserMediaWithTimeout(constraints: ReturnType<typeof buildMediaConstraints>) {
+  let timeout: ReturnType<typeof setTimeout> | null = null;
+  let timedOut = false;
+  const mediaPromise = mediaDevices.getUserMedia(constraints).then((stream) => {
+    if (timedOut) {
+      stream.getTracks().forEach((track) => track.stop());
+      throw new Error("Videochamada demorou para abrir camera e microfone.");
+    }
+    if (timeout) clearTimeout(timeout);
+    return stream;
+  });
+  const timeoutPromise = new Promise<MediaStream>((_, reject) => {
+    timeout = setTimeout(() => {
+      timedOut = true;
+      reject(new Error("Videochamada demorou para abrir camera e microfone."));
+    }, liveMediaOpenTimeoutMs);
+  });
+
+  try {
+    return await Promise.race([mediaPromise, timeoutPromise]);
+  } finally {
+    if (timeout) clearTimeout(timeout);
+  }
 }
 
 function remoteStreamFromTrackEvent(event: { streams?: MediaStream[]; track?: MediaStreamTrack | null }) {
@@ -103,10 +148,11 @@ export class LiveWebRtcSession {
     const localVideoEnabled = videoMode === "sendrecv";
     const localCaptureEnabled = audioMode === "sendrecv" || localVideoEnabled;
     const localStream = localCaptureEnabled
-      ? await mediaDevices.getUserMedia(
+      ? await getUserMediaWithTimeout(
           buildMediaConstraints(audioMode === "sendrecv", localVideoEnabled, options.videoFacingMode ?? "environment")
         )
       : null;
+    logLocalStream(localStream);
     const peer = new RTCPeerConnection({ iceServers: [] });
 
     localStream?.getTracks().forEach((track) => {
@@ -129,9 +175,11 @@ export class LiveWebRtcSession {
     const eventPeer = peer as unknown as PeerEventHandlers;
     const listenerPeer = peer as PeerWithEventListeners;
     listenerPeer.addEventListener("connectionstatechange", () => {
+      logPeerState("connection_state", peer.connectionState);
       options.onConnectionState?.(toLiveConnectionState(peer.connectionState));
     });
     listenerPeer.addEventListener("iceconnectionstatechange", () => {
+      logPeerState("ice_connection_state", peer.iceConnectionState);
       options.onConnectionState?.(toLiveConnectionState(peer.iceConnectionState));
     });
     listenerPeer.addEventListener("icecandidate", (event) => {

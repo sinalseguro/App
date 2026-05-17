@@ -226,3 +226,15 @@ Papel: seguranca, LGPD e QA.
 - Download segue apenas via `https://www.sinalseguro.com.br/baixar/android` e asset oficial `sinalseguro_android.apk`.
 - O contrato de relacionamento oculta `protected_subject` para quem atua como anjo; nomes seguem mascarados/publicos.
 - Gate fisico final: testar update pelo proprio app no Android 0.1.1/0.1.2, sem instalar via ADB.
+
+## QA/Security - 2026-05-17 - Android 0.1.11 SOS ao vivo
+
+- Gates locais aprovados: `typecheck`, `smoke-test`, `lint`, `npm test -- --runInBand`, readiness Android privado e build Android privado multi-ABI.
+- APK `0.1.11`/`versionCode 13` SHA-256 `2196c90158d6a521bc6f8f1bf9f78f922ba6dc264394544f512acc9222889145`.
+- Dispositivos e EC2 foram higienizados antes dos testes, removendo sessoes/sinais/envelopes/arquivos efemeros e preservando auditoria, login, permissoes e vinculos.
+- Teste fisico confirmou plano de controle: sessao ativa, destinatario `angel/accepted`, envelope `live_session`, sinais `offer`, `answer`, `ice`, encerramento sem sinais pendentes e sem envelope ativo.
+- Teste fisico confirmou plano de midia: anjo recebeu `remote_stream_track audio=1 video=1`, WebRTC conectado e frames renderizados.
+- Backend/EC2 nao armazenou audio/video bruto; permaneceu como controle, sinalizacao, autorizacao e auditoria minima.
+- Publicacao final validada: API retornou Android `0.1.11`/`versionCode 13`, URL com cache-buster `0.1.11-20260517T121152Z`, portal retornou manifesto alinhado, e o APK baixado pela URL publica bateu SHA-256 `2196c90158d6a521bc6f8f1bf9f78f922ba6dc264394544f512acc9222889145`.
+- Limpeza final para nova rodada manual: dispositivos sem historico local de chamados/convites antigos/chamadas ao vivo; EC2/API com sessoes, destinatarios, envelopes e sinais zerados, preservando auditoria, logins, perfis e vinculos aceitos.
+- Pendencia de seguranca/produto: gravacao audiovisual local completa da chamada ao vivo nao esta fechada. Antes de declarar cadeia de custodia audiovisual completa, implementar pipeline de captura unica/gravacao de stream com indicador persistente, consentimento, retencao, criptografia e revisao Doneda/Cristine/Eliane.

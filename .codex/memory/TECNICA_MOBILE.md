@@ -266,3 +266,16 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `app/contatos.tsx` sincroniza ao voltar ao foco para refletir aceite de convite em outro dispositivo.
 - `TrustedContactRelationshipSerializer` nao envia `protected_subject` ao usuario que atua como anjo.
 - Instalacao fisica ficou bloqueada: `adb install` travou e, apos reinicio do servidor ADB, o Android `23129RA5FL` ficou `offline`; nao publicar no portal ate reinstalar e validar.
+
+# Atualizacao - 2026-05-17 - Android 0.1.11 SOS ao vivo
+
+- Android elevado para `versionName=0.1.11` e `versionCode=13`.
+- APK debug bundled multi-ABI: SHA-256 `2196c90158d6a521bc6f8f1bf9f78f922ba6dc264394544f512acc9222889145`.
+- `emergencyPreferences` migrou o padrao local para camera traseira em `schemaVersion=9`.
+- `LiveWebRtcSession` usa perfil 640x360, 12-15 fps, timeout de midia e logs saneados de conexao.
+- `startOwnerAudioCall()` retorna booleano para permitir retry real.
+- Handoff da camera local para WebRTC foi ampliado para 12s.
+- Teste fisico confirmou owner transmitindo e anjo vendo `Pessoa protegida`.
+- Release privada publicada no portal/backend: `download_url` com `?v=0.1.11-20260517T121152Z`, arquivo publico `sinalseguro_android.apk` validado com SHA-256 `2196c90158d6a521bc6f8f1bf9f78f922ba6dc264394544f512acc9222889145`.
+- Apos a publicacao, historicos locais de teste foram limpos nos dois Androids e a EC2/API ficou sem sessoes/sinais/envelopes pendentes, preservando perfil e vinculos aceitos.
+- Pendencia tecnica: gravacao audiovisual local completa da chamada ao vivo ainda requer pipeline unico de captura/gravacao WebRTC; a captura local concorrente pode encerrar sem arquivo quando a camera e entregue ao WebRTC.

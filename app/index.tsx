@@ -81,7 +81,7 @@ type FinishProgressState = {
 };
 
 const mediaStopWaitTimeoutMs = 30000;
-const mediaReleaseForLiveCallWaitTimeoutMs = 4500;
+const mediaReleaseForLiveCallWaitTimeoutMs = 12000;
 const ownerLiveCallAutoStartDelayMs = 1800;
 const ownerLiveCallAutoRetryMs = 5000;
 const activeRemoteSyncRetryMs = 5000;
@@ -804,9 +804,12 @@ export default function HomeScreen() {
             return;
           }
           setRecordingStatus("Anjo entrou. Chamando agora.");
-          return prepareMediaForOwnerLiveCall().then(() => {
-            ownerAutoCallStartedSessionIdsRef.current.add(liveRemoteSessionId);
-            return liveAudioCall.startOwnerAudioCall(liveRemoteSessionId);
+          return prepareMediaForOwnerLiveCall().then(async () => {
+            const started = await liveAudioCall.startOwnerAudioCall(liveRemoteSessionId);
+            if (started) {
+              ownerAutoCallStartedSessionIdsRef.current.add(liveRemoteSessionId);
+            }
+            return started;
           });
         })
         .catch((error) => {
