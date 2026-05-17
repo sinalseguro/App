@@ -5,6 +5,7 @@ import {
   ApiP2PSignal,
   apiClient,
   CreateKeyEnvelopeInput,
+  RecordLiveAuditMarkerInput,
   SendP2PSignalInput
 } from "@/services/apiClient";
 
@@ -140,6 +141,10 @@ export async function listPendingLiveSignalsForSession(filter: PendingSignalFilt
 
 export async function consumeLiveSignal(signalId: string) {
   return apiClient.consumeP2PSignal(signalId);
+}
+
+export async function recordLiveAuditMarker(remoteSessionId: string, input: RecordLiveAuditMarkerInput) {
+  return apiClient.recordLiveAuditMarker(remoteSessionId, input);
 }
 
 export async function receivePendingLiveSignalsForSession(filter: PendingSignalFilter) {

@@ -1,6 +1,6 @@
 {
   "name": "sinalseguro-app",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "private": true,
   "main": "expo-router/entry",
   "engines": {

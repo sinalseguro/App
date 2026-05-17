@@ -49,13 +49,13 @@ function formatAlertDate(value: string) {
 }
 
 function phaseLabel(session: ApiEmergencySession, recipientStatus?: string, acceptedByCurrentUser = false) {
+  if (recipientStatus === "ended") return "Encerrado";
+  if (session.phase === "ended" || session.status !== "active") return "Encerrado";
   if (acceptedByCurrentUser) return "Você está atendendo como anjo";
   if (recipientStatus === "accepted") return "Você está atendendo como anjo";
   if (recipientStatus === "declined") return "Você recusou";
-  if (recipientStatus === "ended") return "Encerrado";
   if (recipientStatus === "seen") return "Visualizado";
   if (session.phase === "accepted") return "Atendimento em andamento";
-  if (session.phase === "ended" || session.status !== "active") return "Encerrado";
   return "Pedido de ajuda";
 }
 
@@ -322,6 +322,10 @@ export default function AlertScreen() {
             endedAt: session.finished_at ?? session.updated_at ?? new Date().toISOString(),
             status: "ended"
           });
+          const currentCallState = liveAudioCallStateRef.current;
+          if (currentCallState.remoteSessionId === session.id && currentCallState.status !== "idle") {
+            liveAudioCall.resetLiveAudioCall();
+          }
           autoRealtimeSessionIdsRef.current.delete(session.id);
           changed = true;
         }
@@ -343,7 +347,7 @@ export default function AlertScreen() {
     return () => {
       cancelled = true;
     };
-  }, [alerts, callArchiveRecords, loadCallArchives, locallyAcceptedSessionIds]);
+  }, [alerts, callArchiveRecords, liveAudioCall.resetLiveAudioCall, loadCallArchives, locallyAcceptedSessionIds]);
 
   return (
     <SafeScreen
@@ -378,7 +382,14 @@ export default function AlertScreen() {
             const canEnterCall = isActive && hasAccepted;
             const canReceiveCall = isActive && recipientStatus !== "declined";
             const isCallPanelSession = liveAudioCall.state.remoteSessionId === session.id;
+            const canShowCallPanel = isActive && isCallPanelSession;
             const hasOtherCallSession = Boolean(liveAudioCall.state.remoteSessionId) && !isCallPanelSession;
+            const alertBody = !isActive
+              ? "Este pedido foi encerrado. O registro fica apenas para consulta."
+              : hasAccepted
+                ? "Você já está atendendo. Acompanhe enquanto o pedido estiver ativo."
+                : "Toque em Atender para entrar como anjo. Você só fala quando entrar.";
+            const primaryActionLabel = !isActive ? "Encerrado" : hasAccepted ? "Atendendo" : "Atender como anjo";
             return (
               <View key={session.id} style={styles.alertCard}>
                 <View style={styles.alertHeader}>
@@ -392,9 +403,7 @@ export default function AlertScreen() {
                 </View>
 
                 <Text style={styles.alertStatus}>{phaseLabel(session, recipientStatus, hasAccepted)}</Text>
-                <Text style={styles.alertBody}>
-                  Toque em Atender para entrar como anjo. Você só fala quando entrar.
-                </Text>
+                <Text style={styles.alertBody}>{alertBody}</Text>
 
                 {canReceiveCall && !isCallPanelSession ? (
                   <View style={styles.incomingCallPanel}>
@@ -442,7 +451,7 @@ export default function AlertScreen() {
                   </View>
                 ) : null}
 
-                {isCallPanelSession ? (
+                {canShowCallPanel ? (
                   <LiveAudioCallPanel
                     actionLabel="Entrar como anjo"
                     disabled={!canEnterCall || hasOtherCallSession}
@@ -487,7 +496,7 @@ export default function AlertScreen() {
                     ]}
                   >
                     <CheckCircle2 size={18} color={theme.colors.textOnDark} />
-                    <Text style={styles.primaryActionText}>{hasAccepted ? "Atendendo" : "Atender como anjo"}</Text>
+                    <Text style={styles.primaryActionText}>{primaryActionLabel}</Text>
                   </Pressable>
                 </View>
               </View>

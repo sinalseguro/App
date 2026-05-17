@@ -2908,6 +2908,39 @@ Checkpoint:
 
 - `docs/57_CHECKPOINT_F4_3_RECEBIMENTO_CHAMADA_REGISTRO_2026-05-16.md`.
 
+## 2026-05-17 - Android 0.1.12 auditoria media do SOS ao vivo
+
+Status: APK privado `0.1.12` publicado no portal/API de update apos validacao fisica em dois Androids.
+
+Executado:
+
+- Android sincronizado para `versionName=0.1.12` e `versionCode=14`.
+- Backend/API recebeu marcador saneado de auditoria da chamada ao vivo em `/api/emergency-sessions/{id}/audit-marker/`.
+- Marcadores de auditoria registram papel, estado, dispositivo e hash de `callSessionId`, sem SDP, ICE, payload livre, token, caminho local ou midia.
+- App Android registra eventos de handoff, offer, answer, conexao, falha, encerramento e evidencia local.
+- Solicitante passou a manter registro local cifrado de evidencia operacional do SOS ao vivo, separado do historico do anjo.
+- Home passou a exibir faixa persistente com estado real do chamado, incluindo gravacao, transmissao, protecao e pacote sem video quando a camera e entregue ao WebRTC.
+- Tela do anjo deixa de exibir painel ativo quando o backend ja encerrou a ocorrencia; cards encerrados usam texto de consulta e botao `Encerrado`.
+- API de update publicada com Android `0.1.12`/`versionCode 14`; portal manteve o nome estavel `sinalseguro_android.apk`.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado.
+- `npm run test:live-call-history`: aprovado.
+- `npm test`: aprovado.
+- `npm run lint`: aprovado.
+- `npm run private:android:readiness`: aprovado condicionado pela pendencia conhecida de Node local para release publica.
+- API: `python manage.py check`, `python manage.py test sinalseguro_api.tests` com 49 testes e `makemigrations --check --dry-run` aprovados.
+- Build Android debug bundled aprovado; APK final SHA-256 `f0e607ad0c36110653279687a776bdf3dd72a3e90f9322ea7d03041e47e1a8f7`.
+- ADB confirmou `versionName=0.1.12`/`versionCode=14` nos dois Androids.
+- Teste fisico: owner com `local_stream audio=1 video=1`, anjo com `remote_stream_track audio=1 video=1`, WebRTC/ICE conectado e primeiro frame renderizado.
+- Backend producao confirmou sessao de teste `finished`/`ended`, marcadores de auditoria media saneados e ausencia de SDP/ICE/midia bruta na auditoria permanente.
+- Portal publicado em `/var/www/sinalseguro/releases/20260517T183651Z`; manifesto, API de update, pagina `/baixar/android`, APK e hash foram conferidos.
+
+Checkpoint:
+
+- `docs/59_CHECKPOINT_ANDROID_0_1_12_AUDITORIA_MEDIA_SOS_AO_VIVO_2026-05-17.md`.
+
 ## 2026-05-17 - Android 0.1.11 release privada e teste SOS ao vivo
 
 Status: release privada preparada para portal/API; SOS ao vivo validado em dois Androids; gravacao audiovisual local completa da chamada ao vivo segue pendente.

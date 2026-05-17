@@ -8,6 +8,7 @@ import {
   firstLiveRecipientDevice,
   listAcceptedLiveRecipients,
   listPendingLiveSignalsForSession,
+  recordLiveAuditMarker,
   sendLiveSignal,
   type LiveIcePayload,
   type LiveSdpPayload,
@@ -37,6 +38,9 @@ export type LiveAudioCallState = {
 type LiveAudioRuntime = {
   answerAccepted?: boolean;
   callSessionId?: string;
+  connectedAuditSent?: boolean;
+  endedAuditSent?: boolean;
+  failedAuditSent?: boolean;
   localDeviceId?: string;
   participantName?: string;
   recipientId?: string;
@@ -62,6 +66,18 @@ function isSdpPayload(payload: LiveSignalPayload): payload is LiveSdpPayload {
 
 function isIcePayload(payload: LiveSignalPayload): payload is LiveIcePayload {
   return "candidate" in payload && typeof payload.candidate === "string" && Boolean(payload.candidate.trim());
+}
+
+function connectedAuditEvent(role?: LiveAudioRole) {
+  return role === "angel" ? "angel_live_connected" : "owner_live_connected";
+}
+
+function failedAuditEvent(role?: LiveAudioRole) {
+  return role === "angel" ? "angel_live_failed" : "owner_live_failed";
+}
+
+function endedAuditEvent(role?: LiveAudioRole) {
+  return role === "angel" ? "angel_live_ended" : "owner_live_ended";
 }
 
 export function useLiveAudioCall() {
@@ -121,6 +137,28 @@ export function useLiveAudioCall() {
     }).catch(() => undefined);
   }, []);
 
+  const recordCurrentLiveAuditMarker = useCallback(
+    (
+      event: Parameters<typeof recordLiveAuditMarker>[1]["event"],
+      options?: {
+        connectionState?: Parameters<typeof recordLiveAuditMarker>[1]["connectionState"];
+        localEvidenceStatus?: Parameters<typeof recordLiveAuditMarker>[1]["localEvidenceStatus"];
+      }
+    ) => {
+      const runtime = runtimeRef.current;
+      if (!runtime.remoteSessionId || !runtime.role) return;
+      void recordLiveAuditMarker(runtime.remoteSessionId, {
+        callSessionId: runtime.callSessionId,
+        connectionState: options?.connectionState,
+        deviceId: runtime.localDeviceId ?? null,
+        event,
+        localEvidenceStatus: options?.localEvidenceStatus ?? "not_applicable",
+        role: runtime.role
+      }).catch(() => undefined);
+    },
+    []
+  );
+
   const createPeer = useCallback(
     async (
       callSessionId: string,
@@ -134,7 +172,15 @@ export function useLiveAudioCall() {
         audioMode: options?.audioMode ?? "sendrecv",
         callSessionId,
         onConnectionState: (connectionState) => {
+          const runtime = runtimeRef.current;
           if (connectionState === "connected") {
+            if (!runtime.connectedAuditSent) {
+              runtimeRef.current = { ...runtime, connectedAuditSent: true };
+              recordCurrentLiveAuditMarker(connectedAuditEvent(runtime.role), {
+                connectionState: "connected",
+                localEvidenceStatus: runtime.role === "owner" ? "metadata_only" : "not_applicable"
+              });
+            }
             setLiveAudioState((current) => ({
               ...current,
               message:
@@ -153,6 +199,13 @@ export function useLiveAudioCall() {
             }));
           }
           if (connectionState === "disconnected" || connectionState === "failed") {
+            if (!runtime.failedAuditSent) {
+              runtimeRef.current = { ...runtimeRef.current, failedAuditSent: true };
+              recordCurrentLiveAuditMarker(failedAuditEvent(runtime.role), {
+                connectionState: "failed",
+                localEvidenceStatus: runtime.role === "owner" ? "metadata_only" : "not_applicable"
+              });
+            }
             setLiveAudioState((current) => ({
               ...current,
               message: "Chamada não entrou. O pedido continua ativo.",
@@ -181,10 +234,17 @@ export function useLiveAudioCall() {
         videoFacingMode: options?.videoFacingMode,
         videoMode: options?.videoMode ?? "disabled"
       }),
-    [sendIceCandidate, setLiveAudioState]
+    [recordCurrentLiveAuditMarker, sendIceCandidate, setLiveAudioState]
   );
 
   const stopLiveAudioCall = useCallback(() => {
+    const runtime = runtimeRef.current;
+    if (runtime.remoteSessionId && runtime.role && !runtime.endedAuditSent) {
+      recordCurrentLiveAuditMarker(endedAuditEvent(runtime.role), {
+        connectionState: "ended",
+        localEvidenceStatus: runtime.role === "owner" ? "metadata_only" : "not_applicable"
+      });
+    }
     stopPolling();
     closePeer();
     runtimeRef.current = {};
@@ -192,7 +252,7 @@ export function useLiveAudioCall() {
       message: "Chamada encerrada. O pedido continua protegido.",
       status: "ended"
     });
-  }, [closePeer, setLiveAudioState, stopPolling]);
+  }, [closePeer, recordCurrentLiveAuditMarker, setLiveAudioState, stopPolling]);
 
   const resetLiveAudioCall = useCallback(() => {
     stopPolling();
@@ -252,6 +312,10 @@ export function useLiveAudioCall() {
       await peer.acceptAnswerPayload(answerSignal.payload);
       await consumeLiveSignal(answerSignal.id);
       runtimeRef.current = { ...runtimeRef.current, answerAccepted: true };
+      recordCurrentLiveAuditMarker("owner_live_answer_accepted", {
+        connectionState: "connecting",
+        localEvidenceStatus: "metadata_only"
+      });
       setLiveAudioState((current) => ({
         ...current,
         message:
@@ -273,7 +337,7 @@ export function useLiveAudioCall() {
         await consumeLiveSignal(signal.id);
       }
     }
-  }, [setLiveAudioState]);
+  }, [recordCurrentLiveAuditMarker, setLiveAudioState]);
 
   const processAngelIceSignals = useCallback(async () => {
     const runtime = runtimeRef.current;
@@ -374,6 +438,10 @@ export function useLiveAudioCall() {
           remoteSessionId,
           signalType: "offer"
         });
+        recordCurrentLiveAuditMarker("owner_live_offer_sent", {
+          connectionState: "waiting",
+          localEvidenceStatus: "metadata_only"
+        });
         setLiveAudioState({
           message: `Transmitindo assim que ${recipient.recipient_display_name} entrar como anjo.`,
           participantName: recipient.recipient_display_name,
@@ -471,6 +539,10 @@ export function useLiveAudioCall() {
           remoteSessionId: session.id,
           role: "angel"
         };
+        recordCurrentLiveAuditMarker("angel_live_offer_received", {
+          connectionState: "connecting",
+          localEvidenceStatus: "not_applicable"
+        });
         const peer = await createPeer(callSessionId, { audioMode: "recvonly", videoMode: "recvonly" });
         peerRef.current = peer;
         const answerPayload = await peer.createAnswerPayload(offerPayload);
@@ -485,6 +557,10 @@ export function useLiveAudioCall() {
           recipientId: offerSignal.sender,
           remoteSessionId: session.id,
           signalType: "answer"
+        });
+        recordCurrentLiveAuditMarker("angel_live_answer_sent", {
+          connectionState: "connecting",
+          localEvidenceStatus: "not_applicable"
         });
         await consumeLiveSignal(offerSignal.id);
         setLiveAudioState((current) => ({

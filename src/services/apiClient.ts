@@ -236,6 +236,11 @@ const LiveRecipientListSchema = z.object({
   recipients: z.array(LiveRecipientSchema)
 });
 
+const LiveAuditMarkerSchema = z.object({
+  event: z.string(),
+  status: z.literal("recorded")
+});
+
 const ApiAppReleaseSchema = z
   .object({
     id: z.string(),
@@ -289,6 +294,7 @@ export type ApiP2PSignal = z.infer<typeof P2PSignalSchema>;
 export type ApiLiveRecipient = z.infer<typeof LiveRecipientSchema>;
 export type ApiLiveRecipientDevice = z.infer<typeof LiveRecipientDeviceSchema>;
 export type ApiLiveRecipientList = z.infer<typeof LiveRecipientListSchema>;
+export type ApiLiveAuditMarker = z.infer<typeof LiveAuditMarkerSchema>;
 export type ApiAppRelease = z.infer<typeof ApiAppReleaseSchema>;
 
 export type RegisterDeviceInput = {
@@ -386,6 +392,33 @@ export type SendP2PSignalInput = {
   signalType: "offer" | "answer" | "ice";
   payload: Record<string, unknown>;
   expiresAt: string;
+};
+
+export type LiveAuditMarkerEvent =
+  | "angel_live_answer_sent"
+  | "angel_live_connected"
+  | "angel_live_ended"
+  | "angel_live_failed"
+  | "angel_live_offer_received"
+  | "local_evidence_failed"
+  | "local_evidence_metadata_only"
+  | "local_evidence_protected"
+  | "local_evidence_recording"
+  | "owner_live_answer_accepted"
+  | "owner_live_connected"
+  | "owner_live_ended"
+  | "owner_live_failed"
+  | "owner_live_offer_sent"
+  | "owner_media_handoff_complete"
+  | "owner_media_handoff_start";
+
+export type RecordLiveAuditMarkerInput = {
+  callSessionId?: string;
+  connectionState?: "connected" | "connecting" | "ended" | "failed" | "waiting";
+  deviceId?: string | null;
+  event: LiveAuditMarkerEvent;
+  localEvidenceStatus?: "failed" | "metadata_only" | "not_applicable" | "protected" | "recording";
+  role: "angel" | "owner";
 };
 
 export type GetCurrentAppReleaseInput = {
@@ -790,6 +823,21 @@ export class SinalSeguroApiClient {
   async finishEmergencySession(remoteSessionId: string) {
     return this.request(`/emergency-sessions/${remoteSessionId}/finish/`, EmergencySessionSchema, {
       authenticated: true,
+      method: "POST"
+    });
+  }
+
+  async recordLiveAuditMarker(remoteSessionId: string, input: RecordLiveAuditMarkerInput) {
+    return this.request(`/emergency-sessions/${remoteSessionId}/audit-marker/`, LiveAuditMarkerSchema, {
+      authenticated: true,
+      body: {
+        call_session_id: input.callSessionId,
+        connection_state: input.connectionState,
+        device: input.deviceId ?? null,
+        event: input.event,
+        local_evidence_status: input.localEvidenceStatus,
+        role: input.role
+      },
       method: "POST"
     });
   }

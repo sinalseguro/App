@@ -41,10 +41,17 @@ import {
   getEmergencyPreferences
 } from "@/features/emergency/emergencyPreferences";
 import { LiveAudioCallPanel } from "@/features/live-call/LiveAudioCallPanel";
+import {
+  beginOwnerLiveCallEvidence,
+  updateOwnerLiveCallEvidenceRecord,
+  type OwnerLocalEvidenceStatus,
+  type OwnerLiveEvidenceStatus
+} from "@/features/live-call/liveCallOperationalEvidence";
 import { useLiveAudioCall } from "@/features/live-call/useLiveAudioCall";
 import { listAcceptedOwnerRelationshipsForDelivery } from "@/features/invitations/trustedRelationshipStore";
 import { isProtectedAccessUnlocked, unlockProtectedAccess, verifySecurityCodeStatus } from "@/security/protectedAccess";
-import { listAcceptedLiveRecipients } from "@/services/liveCallControl";
+import { deviceBindingService } from "@/services/deviceBinding";
+import { listAcceptedLiveRecipients, recordLiveAuditMarker } from "@/services/liveCallControl";
 
 type HomeDialog = {
   title: string;
@@ -275,6 +282,12 @@ export default function HomeScreen() {
 
     if (syncState.status === "sent_to_ec2") {
       setLiveRemoteSessionId(syncState.remoteSessionId ?? null);
+      if (syncState.remoteSessionId) {
+        void beginOwnerLiveCallEvidence({
+          packageId: syncState.packageId,
+          remoteSessionId: syncState.remoteSessionId
+        }).catch(() => undefined);
+      }
       if (syncState.recipientCount > 0) {
         setRecordingStatus(
           `Você pediu ajuda. ${locationText} Pedido enviado para ${syncState.recipientCount} anjo${
@@ -608,6 +621,40 @@ export default function HomeScreen() {
     }).catch(() => undefined);
   }
 
+  function updateOwnerLiveEvidence(
+    remoteSessionId: string | null | undefined,
+    options: {
+      connectedAt?: string | null;
+      endedAt?: string | null;
+      localEvidenceStatus?: OwnerLocalEvidenceStatus;
+      packageId?: string;
+      status?: OwnerLiveEvidenceStatus;
+    }
+  ) {
+    if (!remoteSessionId) return;
+    void updateOwnerLiveCallEvidenceRecord(remoteSessionId, options).catch(() => undefined);
+  }
+
+  function recordOwnerLiveAuditMarker(
+    remoteSessionId: string | null | undefined,
+    event: Parameters<typeof recordLiveAuditMarker>[1]["event"],
+    options?: {
+      connectionState?: Parameters<typeof recordLiveAuditMarker>[1]["connectionState"];
+      localEvidenceStatus?: Parameters<typeof recordLiveAuditMarker>[1]["localEvidenceStatus"];
+    }
+  ) {
+    if (!remoteSessionId) return;
+    void deviceBindingService.getRegisteredApiDeviceId().then((deviceId) =>
+      recordLiveAuditMarker(remoteSessionId, {
+        connectionState: options?.connectionState,
+        deviceId,
+        event,
+        localEvidenceStatus: options?.localEvidenceStatus,
+        role: "owner"
+      })
+    ).catch(() => undefined);
+  }
+
   function openRoute(route: EmergencyHomeRoute, panel?: EmergencyHomePanel) {
     void openRouteAsync(route, panel);
   }
@@ -657,6 +704,15 @@ export default function HomeScreen() {
     const packageId = activePackageId;
     mediaStopPurposeRef.current = "live_call_handoff";
     setRecordingStatus("Anjo entrou. Preparando transmissao ao vivo.");
+    updateOwnerLiveEvidence(liveRemoteSessionId, {
+      localEvidenceStatus: "recording",
+      packageId,
+      status: "recording"
+    });
+    recordOwnerLiveAuditMarker(liveRemoteSessionId, "owner_media_handoff_start", {
+      connectionState: "connecting",
+      localEvidenceStatus: "recording"
+    });
     appendMediaOperationalLog("emergency_live_call_media_handoff_start", {
       packageId,
       platform: Platform.OS
@@ -674,6 +730,15 @@ export default function HomeScreen() {
     setMediaStopPendingFlag(true);
     try {
       await waitForMediaRecorderRelease();
+      updateOwnerLiveEvidence(liveRemoteSessionId, {
+        localEvidenceStatus: "metadata_only",
+        packageId,
+        status: "transmitting"
+      });
+      recordOwnerLiveAuditMarker(liveRemoteSessionId, "owner_media_handoff_complete", {
+        connectionState: "connecting",
+        localEvidenceStatus: "metadata_only"
+      });
       appendMediaOperationalLog("emergency_live_call_media_handoff_camera_released", {
         packageId,
         platform: Platform.OS,
@@ -684,7 +749,7 @@ export default function HomeScreen() {
       setMediaRecorderPackageId(packageId);
       mediaStopPurposeRef.current = null;
     }
-  }, [activePackageId, captureStopLocked, preferences.localVideoCapture.requestOnSos]);
+  }, [activePackageId, captureStopLocked, liveRemoteSessionId, preferences.localVideoCapture.requestOnSos]);
 
   function handleStartOwnerLiveAudio() {
     if (!liveRemoteSessionId) {
@@ -712,13 +777,56 @@ export default function HomeScreen() {
   }, [liveAudioCall.state]);
 
   useEffect(() => {
+    if (liveAudioCall.state.role !== "owner") return;
+    const remoteSessionId = liveAudioCall.state.remoteSessionId ?? liveRemoteSessionId;
+    if (!remoteSessionId) return;
+
+    if (liveAudioCall.state.status === "connected") {
+      updateOwnerLiveEvidence(remoteSessionId, {
+        connectedAt: new Date().toISOString(),
+        localEvidenceStatus: "metadata_only",
+        packageId: activePackageId ?? mediaRecorderPackageId ?? undefined,
+        status: "transmitting"
+      });
+    }
+
+    if (liveAudioCall.state.status === "failed") {
+      updateOwnerLiveEvidence(remoteSessionId, {
+        endedAt: new Date().toISOString(),
+        localEvidenceStatus: "failed",
+        packageId: activePackageId ?? mediaRecorderPackageId ?? undefined,
+        status: "failed"
+      });
+    }
+
+    if (liveAudioCall.state.status === "ended") {
+      updateOwnerLiveEvidence(remoteSessionId, {
+        endedAt: new Date().toISOString(),
+        packageId: activePackageId ?? mediaRecorderPackageId ?? undefined,
+        status: "ended"
+      });
+    }
+  }, [
+    activePackageId,
+    liveAudioCall.state.remoteSessionId,
+    liveAudioCall.state.role,
+    liveAudioCall.state.status,
+    liveRemoteSessionId,
+    mediaRecorderPackageId
+  ]);
+
+  useEffect(() => {
     if (activePackageId || startInProgress || mediaStopPending || finishInProgress) return;
     if (!liveRemoteSessionId && liveAudioCallStatus === "idle") return;
 
     ownerAutoCallPausedSessionIdsRef.current.clear();
     ownerAutoCallStartedSessionIdsRef.current.clear();
     setLiveRemoteSessionId(null);
-    liveAudioCall.resetLiveAudioCall();
+    if (liveAudioCallStatus === "idle") {
+      liveAudioCall.resetLiveAudioCall();
+    } else {
+      liveAudioCall.stopLiveAudioCall();
+    }
   }, [
     activePackageId,
     finishInProgress,
@@ -1080,6 +1188,16 @@ export default function HomeScreen() {
         platform: Platform.OS
       });
       if (attachedAssetsAfterFinish > 0) {
+        updateOwnerLiveEvidence(liveRemoteSessionId, {
+          endedAt: new Date().toISOString(),
+          localEvidenceStatus: "protected",
+          packageId,
+          status: "protected"
+        });
+        recordOwnerLiveAuditMarker(liveRemoteSessionId, "local_evidence_protected", {
+          connectionState: "ended",
+          localEvidenceStatus: "protected"
+        });
         setRecordingStatus("Chamado encerrado. Video preservado no cofre local.");
         showFinishProgress({
           detail: stopSerial
@@ -1090,6 +1208,16 @@ export default function HomeScreen() {
           title: "Video protegido"
         });
       } else if (stopSerial && stopResult?.status === "attached") {
+        updateOwnerLiveEvidence(liveRemoteSessionId, {
+          endedAt: new Date().toISOString(),
+          localEvidenceStatus: "protected",
+          packageId,
+          status: "protected"
+        });
+        recordOwnerLiveAuditMarker(liveRemoteSessionId, "local_evidence_protected", {
+          connectionState: "ended",
+          localEvidenceStatus: "protected"
+        });
         setRecordingStatus("Chamado encerrado. Video local preservado, mas ainda sem reflexo final no cofre.");
         showFinishProgress({
           detail: "A midia foi protegida pela camera, mas o cofre ainda nao refletiu o anexo. Revise o item local.",
@@ -1098,6 +1226,16 @@ export default function HomeScreen() {
           title: "Verificacao pendente"
         });
       } else {
+        updateOwnerLiveEvidence(liveRemoteSessionId, {
+          endedAt: new Date().toISOString(),
+          localEvidenceStatus: stopSerial ? "metadata_only" : "protected",
+          packageId,
+          status: stopSerial ? "metadata_only" : "protected"
+        });
+        recordOwnerLiveAuditMarker(liveRemoteSessionId, stopSerial ? "local_evidence_metadata_only" : "local_evidence_protected", {
+          connectionState: "ended",
+          localEvidenceStatus: stopSerial ? "metadata_only" : "protected"
+        });
         setRecordingStatus("Chamado encerrado. Pacote local salvo sem gravacao de video.");
         if (stopSerial) {
           await persistFinishNoMediaDiagnostic(packageId, "camera_no_file_returned");
@@ -1302,6 +1440,20 @@ export default function HomeScreen() {
               holdMs={preferences.inAppHoldMs}
               onTrigger={handlePanicTrigger}
             />
+            <View
+              accessibilityLiveRegion="polite"
+              accessibilityRole="text"
+              style={[
+                styles.statusBand,
+                activePackageId || startInProgress || mediaStopPending || liveCallPanelVisible
+                  ? styles.statusBandActive
+                  : styles.statusBandIdle
+              ]}
+            >
+              <Text numberOfLines={3} style={styles.statusBandText}>
+                {recordingStatus}
+              </Text>
+            </View>
           </View>
 
           {liveCallPanelVisible ? (
@@ -1437,6 +1589,7 @@ const styles = StyleSheet.create({
   panicStage: {
     alignItems: "center",
     flex: 1,
+    gap: theme.spacing.md,
     justifyContent: "center",
     minHeight: 0,
     width: "100%"
@@ -1610,5 +1763,30 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.pill,
     height: 10,
     overflow: "hidden"
+  },
+  statusBand: {
+    alignItems: "center",
+    alignSelf: "stretch",
+    borderRadius: theme.radius.md,
+    borderWidth: 1,
+    minHeight: 56,
+    justifyContent: "center",
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.sm
+  },
+  statusBandActive: {
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    borderColor: theme.colors.primary
+  },
+  statusBandIdle: {
+    backgroundColor: "rgba(255, 255, 255, 0.72)",
+    borderColor: theme.colors.border
+  },
+  statusBandText: {
+    color: theme.colors.text,
+    fontSize: theme.typography.small,
+    fontWeight: "900",
+    lineHeight: 19,
+    textAlign: "center"
   }
 });

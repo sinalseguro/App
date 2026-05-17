@@ -6,6 +6,10 @@ import {
   formatLiveCallDuration,
   updateLiveCallArchive
 } from "../src/features/live-call/liveCallHistoryPolicy";
+import {
+  buildOwnerLiveCallEvidence,
+  updateOwnerLiveCallEvidence
+} from "../src/features/live-call/liveCallOperationalEvidencePolicy";
 
 const baseRecord = buildReceivedCallArchive(
   {
@@ -51,5 +55,40 @@ assert.match(shareText, /Registro SinalSeguro de chamada recebida/);
 assert.match(shareText, /Pessoa protegida: Maria Protegida/);
 assert.match(shareText, /Ocorrencia: occurrence-123/);
 assert.match(shareText, /Compartilhe somente/);
+
+const ownerEvidence = buildOwnerLiveCallEvidence(
+  {
+    packageId: "package-123",
+    remoteSessionId: "occurrence-456",
+    startedAt: "2026-05-16T10:00:00.000Z"
+  },
+  { now: "2026-05-16T10:00:00.000Z" }
+);
+
+assert.equal(ownerEvidence.id, "owner-live-call-occurrence-456");
+assert.equal(ownerEvidence.role, "owner");
+assert.equal(ownerEvidence.localEvidenceStatus, "recording");
+assert.match(ownerEvidence.snapshot.backendSummary, /sem audio\/video bruto/);
+
+const transmittingEvidence = updateOwnerLiveCallEvidence(ownerEvidence, {
+  connectedAt: "2026-05-16T10:01:00.000Z",
+  localEvidenceStatus: "metadata_only",
+  now: "2026-05-16T10:01:00.000Z",
+  status: "transmitting"
+});
+
+assert.equal(transmittingEvidence.status, "transmitting");
+assert.equal(transmittingEvidence.durationSeconds, 60);
+
+const closedEvidence = updateOwnerLiveCallEvidence(transmittingEvidence, {
+  endedAt: "2026-05-16T10:03:30.000Z",
+  localEvidenceStatus: "protected",
+  now: "2026-05-16T10:03:30.000Z",
+  status: "protected"
+});
+
+assert.equal(closedEvidence.status, "protected");
+assert.equal(closedEvidence.localEvidenceStatus, "protected");
+assert.equal(closedEvidence.durationSeconds, 210);
 
 console.log("Live call history policy test aprovado.");
