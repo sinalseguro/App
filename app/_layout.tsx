@@ -10,14 +10,14 @@ import { AppLaunchScreen } from "@/components/AppLaunchScreen";
 import { BrandedDialog } from "@/components/BrandedDialog";
 import { theme } from "@/design/theme";
 import { AccessGate } from "@/features/access/AccessGate";
-import { notifyIncomingEmergency } from "@/features/live-call/incomingEmergencyNotification";
+import { ensureEmergencyAlertChannel, notifyIncomingEmergency } from "@/features/live-call/incomingEmergencyNotification";
 import { currentEmergencyRecipientStatus, isActiveReceivedEmergency } from "@/features/live-call/liveCallRolePolicy";
 import { AppUpdateState, checkForAppUpdate, openAppUpdateDownload } from "@/services/appUpdate";
 import { ApiEmergencySession, apiClient } from "@/services/apiClient";
 import { Download } from "lucide-react-native";
 
 const queryClient = new QueryClient();
-const incomingEmergencyForegroundPollMs = 3500;
+const incomingEmergencyForegroundPollMs = 1500;
 
 LogBox.ignoreLogs(["Unable to activate keep awake"]);
 WebBrowser.maybeCompleteAuthSession();
@@ -127,6 +127,8 @@ export default function RootLayout() {
 
   useEffect(() => {
     if (Platform.OS === "web") return undefined;
+
+    void ensureEmergencyAlertChannel().catch(() => undefined);
 
     const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
       const route = response.notification.request.content.data?.route;

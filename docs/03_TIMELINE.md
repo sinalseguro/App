@@ -3,6 +3,64 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-17 - Android 0.1.15 SOS ao vivo com preservacao final
+
+Status: publicado no portal/API de update e validado fisicamente em dois Androids apos limpeza controlada.
+
+- Pesquisa tecnica aplicada: WebRTC fica como plano de midia P2P, EC2/API como sinalizacao/auditoria, Trickle ICE reduz latencia e Android exige aguardar `stop`/finalizacao antes de consumir arquivo de gravacao.
+- Corrigida corrida entre inicio pendente da gravacao do stream WebRTC e encerramento do SOS ao vivo.
+- Encerramento deixa de chamar parada duplicada do gravador da camera quando a midia ja foi entregue ao fluxo WebRTC.
+- Modal final passa a distinguir `Video protegido`, pendencia local e falha real.
+- Android sincronizado para `0.1.15`, `versionCode 17`.
+- APK SHA-256: `a7b90059ce2b976c9af18ca6a43754815e423a6832aa8835305a2a99b0bb6a64`.
+- Validacoes aprovadas: `npm run typecheck`, `npm run lint`, `npm test`, `git diff --check` e build Android debug bundled.
+- Validacao fisica: originador transmitiu audio/video, anjo visualizou o video da pessoa protegida, encerramento preservou o arquivo no cofre local cifrado.
+- API publicada com `app_releases.0014_update_android_release_20260517_v0115`.
+- Portal publicado em `/var/www/sinalseguro/releases/20260517T223450Z`; download real do APK confirmou o hash publicado.
+- Limpeza controlada removeu historicos locais de SOS/chamadas dos dois Androids e zerou registros de emergencia no backend antes da rodada final.
+- Rodada final pos-limpeza gerou uma sessao finalizada de validacao, com video protegido no originador e registro encerrado no anjo.
+- Checkpoint: `docs/64_CHECKPOINT_ANDROID_0_1_15_SOS_AO_VIVO_PRESERVACAO_FINAL_2026-05-17.md`.
+
+## 2026-05-17 - SOS ao vivo com audio local no pacote
+
+Status: implementacao local iniciada e validada por compilacao Kotlin; ainda nao publicada.
+
+- `SinalSeguroLiveVideoRecorder` passou a tentar capturar audio local Android em AAC durante a gravacao do stream WebRTC local.
+- O gravador muxa audio AAC e video H.264 em MP4 temporario final antes do fluxo existente cifrar o arquivo como `.nseg`.
+- `audioCaptured=true` so e retornado quando o arquivo final contem trilha de audio confirmada por `MediaExtractor`.
+- Se o microfone local estiver indisponivel, se o Android bloquear captura simultanea ou se o mux falhar, o app preserva video-only como na `0.1.13`.
+- A EC2/API permanece apenas como controle, sinalizacao e auditoria saneada; midia bruta continua fora do backend.
+- Validacoes aprovadas: `npm run typecheck`, `git diff --check` e `android ./gradlew :app:compileDebugKotlin`.
+- Gate pendente: teste fisico em dois Androids confirmando trilha de audio, limpeza de temporarios claros e SOS ao vivo sem regressao.
+- Checkpoint: `docs/61_CHECKPOINT_ANDROID_SOS_AO_VIVO_AUDIO_LOCAL_2026-05-17.md`.
+
+## 2026-05-17 - SOS ao vivo com reconexao controlada
+
+Status: implementacao local iniciada; contrato TS e teste Django focado aprovados.
+
+- Chamada ao vivo ganhou estado `reconnecting` para oscilacao curta de rede.
+- UI mostra `Reconectando chamada` e mantem o SOS ativo em vez de apresentar falha final imediatamente.
+- Se a chamada voltar, o app registra evento de reconexao concluida; se nao voltar no prazo, registra falha de reconexao.
+- API passou a aceitar eventos saneados de reconexao para originador e anjo, alem de `connection_state=reconnecting`.
+- Auditoria segue sem SDP, ICE, tokens, caminhos locais ou midia bruta.
+- Esta subetapa nao ativa TURN/relay nem reinicio ICE automatico.
+- Validacoes aprovadas: `npm run typecheck`, `git diff --check` e teste Django focado de `audit-marker`.
+- Gate pendente: teste fisico com oscilacao de rede em dois Androids.
+- Checkpoint: `docs/62_CHECKPOINT_ANDROID_SOS_AO_VIVO_RECONEXAO_CONTROLADA_2026-05-17.md`.
+
+## 2026-05-17 - Notificacao local de chamado para o anjo
+
+Status: implementacao local iniciada; ainda nao publicada.
+
+- Canal Android de chamados de emergencia passa a ser preparado no boot do app.
+- Canal `sinalseguro-emergency-alerts` usa importancia alta no Android.
+- Notificacao local do anjo usa prioridade maxima no conteudo, vibracao e cor da marca, mantendo abertura em `Alertas recebidos`.
+- Nao foi ativado bypass de `Nao perturbe`, foreground service, FCM/push remoto ou segundo plano persistente.
+- Conteudo da notificacao permanece sem midia, SDP, ICE, token, localizacao crua ou termos tecnicos internos.
+- Validacoes aprovadas: `npm run typecheck`, `git diff --check` e teste Django focado de `audit-marker`.
+- Gate pendente: validacao visual em Android fisico com permissao de notificacao.
+- Checkpoint: `docs/63_CHECKPOINT_ANDROID_NOTIFICACAO_CHAMADO_ANJO_2026-05-17.md`.
+
 ## 2026-05-16 - F4.3 recebimento de chamada pelo anjo e registro local
 
 Status: implementado localmente no Android; testes automatizados aprovados, build/ADB em validacao nesta rodada.

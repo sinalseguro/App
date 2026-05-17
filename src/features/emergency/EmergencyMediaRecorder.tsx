@@ -1011,17 +1011,16 @@ const styles = StyleSheet.create({
     borderColor: "rgba(255, 88, 153, 0.45)",
     borderRadius: theme.radius.pill,
     borderWidth: 1,
-    bottom: 94,
     height: 62,
     justifyContent: "center",
     paddingHorizontal: theme.spacing.sm,
     position: "absolute",
     right: theme.spacing.lg,
+    top: theme.spacing.md,
     width: 132,
     zIndex: 8
   },
   captureHostAboveAudioPanel: {
-    bottom: undefined,
     top: theme.spacing.md
   },
   captureHostIos: {

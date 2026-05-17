@@ -3,7 +3,7 @@ import { Platform } from "react-native";
 
 import type { ApiEmergencySession } from "@/services/apiClient";
 
-const emergencyAlertChannelId = "sinalseguro-emergency-alerts";
+export const emergencyAlertChannelId = "sinalseguro-emergency-alerts";
 let channelPromise: Promise<void> | null = null;
 
 export type IncomingEmergencyNotificationContent = {
@@ -13,18 +13,25 @@ export type IncomingEmergencyNotificationContent = {
     route: "/alerta";
     source: "sinalseguro.incoming-emergency";
   };
+  color: string;
+  priority: Notifications.AndroidNotificationPriority.MAX;
   sound: "default";
   title: string;
+  vibrate: number[];
 };
 
 function protectedPersonLabel(session: Pick<ApiEmergencySession, "owner_display_name">) {
   return session.owner_display_name?.trim() || "Pessoa protegida";
 }
 
-async function ensureEmergencyAlertChannel() {
+export async function ensureEmergencyAlertChannel() {
   if (Platform.OS !== "android") return;
   if (!channelPromise) {
     channelPromise = Notifications.setNotificationChannelAsync(emergencyAlertChannelId, {
+      audioAttributes: {
+        usage: Notifications.AndroidAudioUsage.NOTIFICATION_COMMUNICATION_REQUEST
+      },
+      description: "Avisos de SOS recebidos quando voce atua como anjo.",
       importance: Notifications.AndroidImportance.HIGH,
       lightColor: "#A02D6D",
       name: "Chamados de emergência",
@@ -41,13 +48,16 @@ export function buildIncomingEmergencyNotificationContent(
   const ownerLabel = protectedPersonLabel(session);
   return {
     body: `${ownerLabel} acionou o SOS. O registro do chamado foi iniciado e o acompanhamento ao vivo esta sendo preparado.`,
+    color: "#A02D6D",
     data: {
       remoteSessionId: session.id,
       route: "/alerta",
       source: "sinalseguro.incoming-emergency"
     },
+    priority: Notifications.AndroidNotificationPriority.MAX,
     sound: "default",
-    title: "SOS recebido"
+    title: "SOS recebido",
+    vibrate: [0, 250, 180, 250, 180, 350]
   };
 }
 
@@ -61,7 +71,7 @@ export async function notifyIncomingEmergency(session: ApiEmergencySession) {
   await ensureEmergencyAlertChannel();
   const notificationId = await Notifications.scheduleNotificationAsync({
     content: buildIncomingEmergencyNotificationContent(session),
-    trigger: null
+    trigger: Platform.OS === "android" ? { channelId: emergencyAlertChannelId } : null
   });
 
   return { notificationId, status: "scheduled" as const };

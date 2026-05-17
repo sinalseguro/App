@@ -18,6 +18,7 @@ function statusLabel(state: LiveAudioCallState) {
   if (state.role === "owner") {
     if (state.status === "connected") return "Transmitindo ao anjo";
     if (state.status === "connecting") return "Chamando seu anjo";
+    if (state.status === "reconnecting") return "Reconectando chamada";
     if (state.status === "failed") return "Chamada não entrou";
     if (state.status === "waiting") return "Aguardando o anjo";
     if (state.status === "ended") return "Chamada encerrada";
@@ -27,6 +28,7 @@ function statusLabel(state: LiveAudioCallState) {
   if (state.role === "angel") {
     if (state.status === "connected") return "Acompanhando SOS";
     if (state.status === "connecting") return "Entrando como anjo";
+    if (state.status === "reconnecting") return "Reconectando chamada";
     if (state.status === "failed") return "Chamada não entrou";
     if (state.status === "waiting") return "Você é o anjo";
     if (state.status === "ended") return "Chamada encerrada";
@@ -51,6 +53,7 @@ function videoLabel(role: LiveAudioCallState["role"]) {
 
 function accentColor(status: LiveAudioCallState["status"]) {
   if (status === "connected") return theme.colors.secure;
+  if (status === "reconnecting") return theme.colors.warning;
   if (status === "failed") return theme.colors.warning;
   return theme.colors.primary;
 }
@@ -63,7 +66,11 @@ export function LiveAudioCallPanel({
   state,
   stopLabel = "Sair da chamada"
 }: LiveAudioCallPanelProps) {
-  const active = state.status === "connected" || state.status === "connecting" || state.status === "waiting";
+  const active =
+    state.status === "connected" ||
+    state.status === "connecting" ||
+    state.status === "reconnecting" ||
+    state.status === "waiting";
   const accent = accentColor(state.status);
   const remoteStreamUrl = state.remoteStreamUrl ?? state.remoteStream?.toURL();
 

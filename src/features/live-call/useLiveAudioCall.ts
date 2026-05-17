@@ -23,7 +23,7 @@ import {
 } from "@/features/live-call/liveCallRolePolicy";
 
 type LiveAudioRole = "angel" | "owner";
-type LiveAudioStatus = "connected" | "connecting" | "ended" | "failed" | "idle" | "waiting";
+type LiveAudioStatus = "connected" | "connecting" | "ended" | "failed" | "idle" | "reconnecting" | "waiting";
 
 export type LiveAudioCallState = {
   callSessionId?: string;
@@ -46,6 +46,9 @@ type LiveAudioRuntime = {
   localDeviceId?: string;
   participantName?: string;
   recipientId?: string;
+  reconnectFailedAuditSent?: boolean;
+  reconnectedAuditSent?: boolean;
+  reconnectingAuditSent?: boolean;
   remoteDeviceId?: string;
   remoteSessionId?: string;
   role?: LiveAudioRole;
@@ -57,6 +60,7 @@ const idleLiveAudioCallState: LiveAudioCallState = {
 };
 
 const signalPollingMs = 2500;
+const reconnectGraceMs = 14000;
 
 function streamUrlFrom(remoteStream: MediaStream) {
   return remoteStream.toURL?.();
@@ -78,6 +82,18 @@ function failedAuditEvent(role?: LiveAudioRole) {
   return role === "angel" ? "angel_live_failed" : "owner_live_failed";
 }
 
+function reconnectingAuditEvent(role?: LiveAudioRole) {
+  return role === "angel" ? "angel_live_reconnecting" : "owner_live_reconnecting";
+}
+
+function reconnectedAuditEvent(role?: LiveAudioRole) {
+  return role === "angel" ? "angel_live_reconnected" : "owner_live_reconnected";
+}
+
+function reconnectFailedAuditEvent(role?: LiveAudioRole) {
+  return role === "angel" ? "angel_live_reconnect_failed" : "owner_live_reconnect_failed";
+}
+
 function endedAuditEvent(role?: LiveAudioRole) {
   return role === "angel" ? "angel_live_ended" : "owner_live_ended";
 }
@@ -89,6 +105,7 @@ export function useLiveAudioCall() {
   const stateRef = useRef<LiveAudioCallState>(idleLiveAudioCallState);
   const pollTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const pollInFlightRef = useRef(false);
+  const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const setLiveAudioState = useCallback((nextState: LiveAudioCallState | ((current: LiveAudioCallState) => LiveAudioCallState)) => {
     setState((current) => {
@@ -103,6 +120,12 @@ export function useLiveAudioCall() {
     clearInterval(pollTimerRef.current);
     pollTimerRef.current = null;
     pollInFlightRef.current = false;
+  }, []);
+
+  const clearReconnectTimer = useCallback(() => {
+    if (!reconnectTimerRef.current) return;
+    clearTimeout(reconnectTimerRef.current);
+    reconnectTimerRef.current = null;
   }, []);
 
   const closePeer = useCallback(() => {
@@ -161,6 +184,29 @@ export function useLiveAudioCall() {
     []
   );
 
+  const markReconnectFailed = useCallback(() => {
+    const runtime = runtimeRef.current;
+    if (!runtime.remoteSessionId || !runtime.role || runtime.reconnectFailedAuditSent) return;
+    runtimeRef.current = { ...runtime, failedAuditSent: true, reconnectFailedAuditSent: true };
+    recordCurrentLiveAuditMarker(reconnectFailedAuditEvent(runtime.role), {
+      connectionState: "failed",
+      localEvidenceStatus: runtime.role === "owner" ? "metadata_only" : "not_applicable"
+    });
+    setLiveAudioState((current) => ({
+      ...current,
+      message: "Nao foi possivel restabelecer a chamada. O pedido continua ativo.",
+      status: "failed"
+    }));
+  }, [recordCurrentLiveAuditMarker, setLiveAudioState]);
+
+  const scheduleReconnectFailure = useCallback(() => {
+    clearReconnectTimer();
+    reconnectTimerRef.current = setTimeout(() => {
+      if (stateRef.current.status !== "reconnecting") return;
+      markReconnectFailed();
+    }, reconnectGraceMs);
+  }, [clearReconnectTimer, markReconnectFailed]);
+
   const createPeer = useCallback(
     async (
       callSessionId: string,
@@ -176,8 +222,16 @@ export function useLiveAudioCall() {
         onConnectionState: (connectionState) => {
           const runtime = runtimeRef.current;
           if (connectionState === "connected") {
+            clearReconnectTimer();
+            if (runtime.reconnectingAuditSent && !runtime.reconnectedAuditSent) {
+              runtimeRef.current = { ...runtime, reconnectedAuditSent: true };
+              recordCurrentLiveAuditMarker(reconnectedAuditEvent(runtime.role), {
+                connectionState: "connected",
+                localEvidenceStatus: runtime.role === "owner" ? "metadata_only" : "not_applicable"
+              });
+            }
             if (!runtime.connectedAuditSent) {
-              runtimeRef.current = { ...runtime, connectedAuditSent: true };
+              runtimeRef.current = { ...runtimeRef.current, connectedAuditSent: true };
               recordCurrentLiveAuditMarker(connectedAuditEvent(runtime.role), {
                 connectionState: "connected",
                 localEvidenceStatus: runtime.role === "owner" ? "metadata_only" : "not_applicable"
@@ -197,10 +251,33 @@ export function useLiveAudioCall() {
           if (connectionState === "connecting") {
             setLiveAudioState((current) => ({
               ...current,
-              status: current.status === "connected" ? "connected" : "connecting"
+              status: current.status === "connected" || current.status === "reconnecting" ? current.status : "connecting"
             }));
           }
-          if (connectionState === "disconnected" || connectionState === "failed") {
+          if (connectionState === "disconnected") {
+            if (runtime.remoteSessionId && runtime.role && !runtime.reconnectingAuditSent) {
+              runtimeRef.current = { ...runtime, reconnectingAuditSent: true };
+              recordCurrentLiveAuditMarker(reconnectingAuditEvent(runtime.role), {
+                connectionState: "reconnecting",
+                localEvidenceStatus: runtime.role === "owner" ? "metadata_only" : "not_applicable"
+              });
+            }
+            setLiveAudioState((current) => {
+              if (current.status === "ended" || current.status === "idle" || current.status === "failed") return current;
+              return {
+                ...current,
+                message: "Tentando restabelecer a chamada. O pedido continua ativo.",
+                status: "reconnecting"
+              };
+            });
+            scheduleReconnectFailure();
+          }
+          if (connectionState === "failed") {
+            clearReconnectTimer();
+            if (runtime.reconnectingAuditSent) {
+              markReconnectFailed();
+              return;
+            }
             if (!runtime.failedAuditSent) {
               runtimeRef.current = { ...runtimeRef.current, failedAuditSent: true };
               recordCurrentLiveAuditMarker(failedAuditEvent(runtime.role), {
@@ -236,7 +313,7 @@ export function useLiveAudioCall() {
         videoFacingMode: options?.videoFacingMode,
         videoMode: options?.videoMode ?? "disabled"
       }),
-    [recordCurrentLiveAuditMarker, sendIceCandidate, setLiveAudioState]
+    [clearReconnectTimer, markReconnectFailed, recordCurrentLiveAuditMarker, scheduleReconnectFailure, sendIceCandidate, setLiveAudioState]
   );
 
   const stopLiveAudioCall = useCallback(() => {
@@ -247,6 +324,7 @@ export function useLiveAudioCall() {
         localEvidenceStatus: runtime.role === "owner" ? "metadata_only" : "not_applicable"
       });
     }
+    clearReconnectTimer();
     stopPolling();
     closePeer();
     runtimeRef.current = {};
@@ -254,14 +332,15 @@ export function useLiveAudioCall() {
       message: "Chamada encerrada. O pedido continua protegido.",
       status: "ended"
     });
-  }, [closePeer, recordCurrentLiveAuditMarker, setLiveAudioState, stopPolling]);
+  }, [clearReconnectTimer, closePeer, recordCurrentLiveAuditMarker, setLiveAudioState, stopPolling]);
 
   const resetLiveAudioCall = useCallback(() => {
+    clearReconnectTimer();
     stopPolling();
     closePeer();
     runtimeRef.current = {};
     setLiveAudioState(idleLiveAudioCallState);
-  }, [closePeer, setLiveAudioState, stopPolling]);
+  }, [clearReconnectTimer, closePeer, setLiveAudioState, stopPolling]);
 
   const startPolling = useCallback(
     (handler: () => Promise<void>) => {
@@ -376,6 +455,7 @@ export function useLiveAudioCall() {
       }
 
       stopPolling();
+      clearReconnectTimer();
       closePeer();
       let localDeviceId: string;
       try {
@@ -469,7 +549,7 @@ export function useLiveAudioCall() {
         return false;
       }
     },
-    [closePeer, createPeer, hasActiveCallForSession, processOwnerSignals, setLiveAudioState, startPolling, stopPolling]
+    [clearReconnectTimer, closePeer, createPeer, hasActiveCallForSession, processOwnerSignals, setLiveAudioState, startPolling, stopPolling]
   );
 
   const startAngelAudioCall = useCallback(
@@ -479,6 +559,7 @@ export function useLiveAudioCall() {
       }
 
       stopPolling();
+      clearReconnectTimer();
       closePeer();
       if (!canAngelStartRealtime(session)) {
         setLiveAudioState({
@@ -582,16 +663,17 @@ export function useLiveAudioCall() {
         await processAngelIceSignals();
       });
     },
-    [closePeer, createPeer, hasActiveCallForSession, processAngelIceSignals, setLiveAudioState, startPolling, stopPolling]
+    [clearReconnectTimer, closePeer, createPeer, hasActiveCallForSession, processAngelIceSignals, setLiveAudioState, startPolling, stopPolling]
   );
 
   useEffect(
     () => () => {
+      clearReconnectTimer();
       stopPolling();
       closePeer();
       runtimeRef.current = {};
     },
-    [closePeer, stopPolling]
+    [clearReconnectTimer, closePeer, stopPolling]
   );
 
   return {

@@ -400,6 +400,9 @@ export type LiveAuditMarkerEvent =
   | "angel_live_ended"
   | "angel_live_failed"
   | "angel_live_offer_received"
+  | "angel_live_reconnect_failed"
+  | "angel_live_reconnected"
+  | "angel_live_reconnecting"
   | "local_evidence_failed"
   | "local_evidence_metadata_only"
   | "local_evidence_protected"
@@ -409,12 +412,15 @@ export type LiveAuditMarkerEvent =
   | "owner_live_ended"
   | "owner_live_failed"
   | "owner_live_offer_sent"
+  | "owner_live_reconnect_failed"
+  | "owner_live_reconnected"
+  | "owner_live_reconnecting"
   | "owner_media_handoff_complete"
   | "owner_media_handoff_start";
 
 export type RecordLiveAuditMarkerInput = {
   callSessionId?: string;
-  connectionState?: "connected" | "connecting" | "ended" | "failed" | "waiting";
+  connectionState?: "connected" | "connecting" | "ended" | "failed" | "reconnecting" | "waiting";
   deviceId?: string | null;
   event: LiveAuditMarkerEvent;
   localEvidenceStatus?: "failed" | "metadata_only" | "not_applicable" | "protected" | "recording";

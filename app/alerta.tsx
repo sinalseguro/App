@@ -60,7 +60,12 @@ function phaseLabel(session: ApiEmergencySession, recipientStatus?: string, acce
 }
 
 function sortAlerts(alerts: ApiEmergencySession[]) {
-  return [...alerts].sort((left, right) => new Date(right.started_at).getTime() - new Date(left.started_at).getTime());
+  return [...alerts].sort((left, right) => {
+    const leftActive = left.status === "active" && left.phase !== "ended";
+    const rightActive = right.status === "active" && right.phase !== "ended";
+    if (leftActive !== rightActive) return leftActive ? -1 : 1;
+    return new Date(right.started_at).getTime() - new Date(left.started_at).getTime();
+  });
 }
 
 function archiveStatusLabel(status: LiveCallArchiveRecord["status"]) {
@@ -236,7 +241,7 @@ export default function AlertScreen() {
     void loadCallArchives();
     const refreshTimer = setInterval(() => {
       void refreshAlerts(undefined, { silent: true });
-    }, 8000);
+    }, 2500);
     return () => clearInterval(refreshTimer);
   }, [loadCallArchives, refreshAlerts]);
 
@@ -398,9 +403,9 @@ export default function AlertScreen() {
               : hasAccepted
                 ? "Você já está atendendo. Acompanhe enquanto o pedido estiver ativo."
                 : "Toque em Atender para entrar como anjo. Você só fala quando entrar.";
-            const primaryActionLabel = !isActive ? "Encerrado" : hasAccepted ? "Atendendo" : "Atender como anjo";
+            const primaryActionLabel = !isActive ? "Encerrado" : hasAccepted ? "Atendendo" : "Atender agora";
             return (
-              <View key={session.id} style={styles.alertCard}>
+              <View key={session.id} style={[styles.alertCard, isActive && styles.alertCardActive]}>
                 <View style={styles.alertHeader}>
                   <View style={styles.alertIcon}>
                     <ShieldAlert size={19} color={isActive ? theme.colors.danger : theme.colors.secure} />
@@ -439,7 +444,7 @@ export default function AlertScreen() {
                             void openRealtimeCall(session, true);
                             return;
                           }
-                          void acceptAndSaveIncomingCall(session, false);
+                          void openRealtimeCall(session, false);
                         }}
                         style={({ pressed }) => [
                           styles.answerCallAction,
@@ -496,7 +501,7 @@ export default function AlertScreen() {
                     accessibilityRole="button"
                     disabled={!isActive || hasAccepted}
                     onPress={() => {
-                      void acceptAndSaveIncomingCall(session, hasAccepted);
+                      void openRealtimeCall(session, hasAccepted);
                     }}
                     style={({ pressed }) => [
                       styles.primaryAction,
@@ -722,6 +727,10 @@ const styles = StyleSheet.create({
     alignItems: "stretch",
     gap: theme.spacing.md,
     padding: theme.spacing.md
+  },
+  alertCardActive: {
+    backgroundColor: "rgba(255, 232, 242, 0.96)",
+    borderColor: theme.colors.panic
   },
   alertHeader: {
     alignItems: "center",
