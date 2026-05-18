@@ -3,6 +3,23 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-18 - Android 0.1.15 validado em dois aparelhos e publicado
+
+Status: validacao fisica, auditoria media EC2/API e publicacao privada concluidas.
+
+- Dois Androids distintos foram confirmados por ADB: `0123456789ABCDEF` e `5686add7`; a entrada Wi-Fi/mDNS do Redmi foi tratada como transporte duplicado, nao como terceiro aparelho.
+- Ambos estavam em `versionName=0.1.15` e `versionCode=17`.
+- ADB long press nao foi aceito como prova negativa do `PanicButton`; o acionamento inicial foi validado por toque fisico real.
+- Solicitante exibiu `VOCE PEDIU AJUDA` e `Transmitindo ao anjo`; anjo exibiu `Acompanhando SOS` com video `Pessoa protegida`.
+- Encerramento confirmou `Video protegido 100%`, retorno para Home e registro encerrado no anjo.
+- EC2/API confirmou ausencia de sessoes ativas, sinais validos residuais, envelopes ativos e arquivos de midia bruta no backend.
+- Sinais P2P efemeros antigos foram limpos; auditoria minima de sessoes/envelopes foi preservada.
+- Portal publicado em `/var/www/sinalseguro/releases/20260518T112908Z`.
+- API de update e portal apontam Android `0.1.15` / `versionCode=17`, SHA-256 `b4f58d1d322a890da5dab0e717d0c81ceb4fb897fb91ef96ae34522b2e1c664c`.
+- Download real do APK publicado confirmou o mesmo SHA-256.
+- Observacao QA: aparelhos ja em `versionCode=17` nao devem abrir modal de atualizacao para a mesma versao; validar modal em aparelho com codigo menor ou na proxima versao superior.
+- Checkpoint: `docs/77_CHECKPOINT_VALIDACAO_FISICA_DOIS_ANDROIDS_SOS_ANJO_2026-05-18.md`.
+
 ## 2026-05-18 - Higienizacao de regeneraveis Android
 
 Status: limpeza operacional concluida; sem alteracao de codigo do app, backend, portal ou release.

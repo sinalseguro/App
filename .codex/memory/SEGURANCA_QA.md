@@ -309,3 +309,12 @@ Papel: seguranca, LGPD e QA.
 - Encerramento confirmado: solicitante exibiu `Video protegido 100%` e voltou para Home com video preservado no cofre local; anjo exibiu registro `Encerrado` com snapshot/duracao.
 - Nao foram versionados logs brutos nem screenshots com dados pessoais; documentacao registra apenas resultado operacional saneado.
 - Antes de publicar a release como final, executar auditoria media da EC2/API: sessao criada/encerrada, destinatario anjo autorizado, sinais consumidos/expirados, ausencia de sessoes residuais e ausencia de midia bruta no backend.
+
+## QA/Security - 2026-05-18 - Android 0.1.15 publicado apos auditoria media
+
+- Auditoria EC2/API aprovada: `sinalseguro-api=active`, health `/api/health/ready` OK, sem sessoes ativas, sem envelopes ao vivo ativos, sem sinais validos pendentes e sem arquivos de midia bruta no backend.
+- Limpeza efemera removeu sinais P2P antigos, preservando auditoria minima de sessoes/envelopes para rastreabilidade.
+- Portal publicado em `/var/www/sinalseguro/releases/20260518T112908Z`, com `nginx -t`, `sinalseguro-api` e `cereusia-crm` ativos.
+- API de update, `installers.json`, `checksums.txt` e download real do APK retornaram SHA-256 `b4f58d1d322a890da5dab0e717d0c81ceb4fb897fb91ef96ae34522b2e1c664c`.
+- `npm audit --omit=dev --audit-level=high` do portal retornou 0 vulnerabilidades de producao.
+- Regra QA: aparelhos ja em `versionCode=17` nao servem para validar modal de update desta mesma publicacao; esse teste exige versao instalada anterior ou proxima versao com codigo superior.

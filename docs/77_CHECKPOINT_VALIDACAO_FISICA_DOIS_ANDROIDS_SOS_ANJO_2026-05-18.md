@@ -3,7 +3,7 @@
 Data: 2026-05-18
 Coordenacao: Ze
 Especialistas: Katia, Eliane, Cristine, Lina, Tarcila e Lucena
-Status: validacao fisica principal aprovada em dois Androids distintos com Android `0.1.15`.
+Status: validacao fisica principal aprovada em dois Androids distintos com Android `0.1.15`; auditoria media EC2/API e publicacao privada portal/API concluidas.
 
 ## Objetivo
 
@@ -71,17 +71,37 @@ O principio arquitetural permanece:
 
 ## Limites desta validacao
 
-- A EC2/API nao foi re-auditada em detalhe neste subpasso; a evidencia atual e fisica/visual dos dois apps.
 - Logs completos nao foram versionados para evitar armazenamento de dados sensiveis, tokens, caminhos, payloads, midia ou identificadores desnecessarios.
-- Antes de publicar uma release final como estavel, executar a auditoria media no backend/API para confirmar sessao, destinatario, sinais, encerramento e ausencia de midia bruta no servidor.
+- A automacao ADB segue insuficiente como prova de acionamento inicial do `PanicButton`; quando a pressao longa automatizada nao entrar no estado visual de pressao, usar toque fisico real supervisionado.
+- Como os dois Androids fisicos ja estao em `versionCode=17`, eles nao devem abrir modal de atualizacao para a mesma versao. O canal de atualizacao deve ser testado em aparelho com `versionCode` menor que `17` ou em proxima versao numericamente superior.
+
+## Auditoria EC2/API
+
+Auditoria media executada apos o teste fisico:
+
+- `sinalseguro-api` permaneceu `active`;
+- health check correto: `/api/health/ready`;
+- ultima sessao de teste ficou `finished` / `ended`, com 1 destinatario, 1 envelope ao vivo e sinais P2P efemeros consumidos;
+- nao havia sessoes ativas, envelopes ao vivo ativos, sinais validos nao consumidos ou destinatarios abertos em sessao ativa;
+- `/opt/sinalseguro-api/media` permaneceu sem arquivos de midia bruta;
+- limpeza efemera removeu 18 sinais P2P antigos e preservou auditoria minima de sessoes/envelopes.
+
+Resultado: a EC2/API atuou como plano de controle, autorizacao, sinalizacao e auditoria minima, sem armazenar audio/video bruto da chamada.
+
+## Publicacao privada Android
+
+Publicacao concluida para teste autorizado:
+
+- portal publicado em `/var/www/sinalseguro/releases/20260518T112908Z`;
+- pagina Android publicada em `https://www.sinalseguro.com.br/baixar/android`;
+- nome publico do APK preservado: `sinalseguro_android.apk`;
+- link direto versionado: `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk?v=0.1.15-20260518T112447Z`;
+- endpoint de update retornou Android `0.1.15`, `versionCode=17`, status `available` e SHA-256 `b4f58d1d322a890da5dab0e717d0c81ceb4fb897fb91ef96ae34522b2e1c664c`;
+- download real do APK publicado gerou o mesmo SHA-256;
+- `installers.json` e `checksums.txt` ficaram sincronizados;
+- `nginx -t`, `sinalseguro-api`, `cereusia-crm` e health/ready foram aprovados;
+- auditoria de dependencias de producao do portal (`npm audit --omit=dev --audit-level=high`) retornou 0 vulnerabilidades.
 
 ## Proxima acao recomendada
 
-Executar a subetapa de auditoria media da EC2/API para este mesmo fluxo, sem trafegar midia bruta pelo backend:
-
-- confirmar sessao criada e encerrada;
-- confirmar destinatario anjo autorizado;
-- confirmar sinais WebRTC consumidos/expirados;
-- confirmar que nao ha sessoes ativas residuais;
-- confirmar que o backend guarda apenas metadados/auditoria minima;
-- depois disso, se nao houver divergencia, preparar a publicacao da release privada no portal/backend.
+Roberto pode atualizar/instalar pelo portal em aparelho de teste autorizado e repetir o fluxo manual. Se o aparelho ja estiver em `0.1.15` / `versionCode=17`, o teste esperado e download/instalacao pelo portal ou aguardar a proxima versao com `versionCode` superior para validar modal de atualizacao dentro do app.

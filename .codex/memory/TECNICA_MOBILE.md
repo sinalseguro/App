@@ -356,3 +356,13 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - A chamada foi encerrada e o SOS foi finalizado com `Video protegido 100%`; a Home do solicitante voltou para `SOS` com `Chamado encerrado. Video preservado no cofre local`.
 - O anjo manteve registro finalizado com snapshot/duracao em `Alertas recebidos`.
 - Proxima etapa tecnica: auditoria media EC2/API para confirmar metadados de sessao/destinatario/sinais/encerramento e ausencia de midia bruta no backend antes de publicar nova release como final.
+
+# Atualizacao - 2026-05-18 - Android 0.1.15 publicado apos auditoria media
+
+- Auditoria EC2/API confirmou `sinalseguro-api` ativo, health `/api/health/ready` OK, sem sessoes ativas, sem envelopes ao vivo ativos, sem sinais validos pendentes e sem arquivos de midia bruta em `/opt/sinalseguro-api/media`.
+- Sinais P2P efemeros residuais foram limpos com `cleanup_ephemeral_controls --signal-grace-minutes 0`, preservando auditoria minima de sessoes/envelopes.
+- Portal publicado em `/var/www/sinalseguro/releases/20260518T112908Z`.
+- APK privado Android mantem nome publico estavel `sinalseguro_android.apk`.
+- Endpoint de update e portal apontam `0.1.15` / `versionCode=17`, cache-buster `0.1.15-20260518T112447Z` e SHA-256 `b4f58d1d322a890da5dab0e717d0c81ceb4fb897fb91ef96ae34522b2e1c664c`.
+- Download real do APK publicado bateu o SHA-256 esperado.
+- Observacao tecnica: dispositivos ja instalados com `versionCode=17` nao devem receber modal de update para a mesma versao; usar aparelho em codigo menor ou nova versao numericamente superior para validar o modal.
