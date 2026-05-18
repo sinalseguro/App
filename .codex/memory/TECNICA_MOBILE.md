@@ -345,3 +345,14 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - App no aparelho visivel: `versionName=0.1.15`, `versionCode=17`, `lastUpdateTime=2026-05-18 07:07:46`.
 - Nao executar teste SOS/anjo nem publicar release validada ate haver dois Androids distintos em `adb devices -l`.
 - Checkpoint: `docs/76_CHECKPOINT_GATE_DOIS_ANDROIDS_BLOQUEADO_DUPLICIDADE_ADB_2026-05-18.md`.
+
+# Atualizacao - 2026-05-18 - SOS/anjo validado em dois Androids
+
+- Dois Androids distintos ficaram disponiveis em ADB: `0123456789ABCDEF` e `5686add7`; a entrada Wi-Fi/mDNS do Redmi deve continuar sendo tratada como transporte duplicado.
+- Ambos confirmaram `versionName=0.1.15` e `versionCode=17`.
+- ADB long press em `PanicButton` nao e um mecanismo confiavel de teste para iniciar SOS; `swipe`/`motionevent` nao acionaram o estado visual de pressao, embora taps comuns funcionem.
+- O acionamento fisico real validou o fluxo principal: `0123456789ABCDEF` como solicitante transmitindo e `5686add7` como anjo acompanhando video em tempo real.
+- O anjo exibiu `Acompanhando SOS` e video remoto com rotulo `Pessoa protegida`; o solicitante exibiu `Transmitindo ao anjo`.
+- A chamada foi encerrada e o SOS foi finalizado com `Video protegido 100%`; a Home do solicitante voltou para `SOS` com `Chamado encerrado. Video preservado no cofre local`.
+- O anjo manteve registro finalizado com snapshot/duracao em `Alertas recebidos`.
+- Proxima etapa tecnica: auditoria media EC2/API para confirmar metadados de sessao/destinatario/sinais/encerramento e ausencia de midia bruta no backend antes de publicar nova release como final.

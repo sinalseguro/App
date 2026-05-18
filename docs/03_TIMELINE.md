@@ -3107,6 +3107,28 @@ Checkpoint:
 
 - `docs/57_CHECKPOINT_F4_3_RECEBIMENTO_CHAMADA_REGISTRO_2026-05-16.md`.
 
+## 2026-05-18 - Validacao fisica dois Androids SOS/anjo
+
+Status: validado fisicamente em dois Androids distintos com Android `0.1.15`.
+
+Executado:
+
+- ADB mostrou dois Androids reais distintos: `0123456789ABCDEF` e `5686add7`; a entrada Wi-Fi/mDNS do Redmi foi ignorada como transporte duplicado.
+- Ambos os aparelhos estavam com `versionName=0.1.15` e `versionCode=17`.
+- A simulacao de pressao longa por ADB nao foi considerada evidencia confiavel para o `PanicButton`; o acionamento foi validado por toque fisico real.
+- O Android `0123456789ABCDEF` acionou o SOS e exibiu `VOCE PEDIU AJUDA` / `Transmitindo ao anjo`.
+- O Android `5686add7` recebeu o chamado em `Alertas recebidos`, exibiu `Voce e anjo de Roberto Dantas Castro`, `Acompanhando SOS` e video com rotulo `Pessoa protegida`.
+- A chamada foi encerrada; o solicitante encerrou o SOS e exibiu `Video protegido 100%`, com retorno para Home em `SOS` e mensagem `Chamado encerrado. Video preservado no cofre local`.
+- O anjo exibiu o pedido como `Encerrado` e manteve registro local finalizado com snapshot e duracao.
+
+Limite:
+
+- Esta subetapa validou app/dispositivos. A auditoria media na EC2/API ainda deve confirmar sessao, destinatario, sinais, encerramento e ausencia de midia bruta no backend antes de publicar como release final.
+
+Checkpoint:
+
+- `docs/77_CHECKPOINT_VALIDACAO_FISICA_DOIS_ANDROIDS_SOS_ANJO_2026-05-18.md`.
+
 ## 2026-05-18 - Android 0.1.15 rebuild e instalacao unilateral
 
 Status: APK privado recompilado e instalado em um Android fisico; validacao SOS/anjo fim a fim segue bloqueada por ausencia do segundo Android no ADB.

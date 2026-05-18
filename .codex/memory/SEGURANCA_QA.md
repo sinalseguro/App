@@ -299,3 +299,13 @@ Papel: seguranca, LGPD e QA.
 - Confirmado mesmo `serialno`, modelo, `android_id` e IP interno; macOS tambem enumerou apenas um Android/Redmi no USB.
 - Decisao de QA: nao usar duplicidade ADB como evidencia de dois pares; isso invalidaria o teste de notificacao, WebRTC, auditoria e sincronizacao entre solicitante/anjo.
 - Gate fisico fim a fim continua bloqueado ate haver dois aparelhos distintos como `device`.
+
+## QA/Security - 2026-05-18 - SOS/anjo validado em dois Androids
+
+- Gate fisico desbloqueado com dois Androids distintos: `0123456789ABCDEF` e `5686add7`; transporte Wi-Fi/mDNS duplicado do Redmi nao conta como terceiro aparelho.
+- Ambos estavam em `0.1.15`/`versionCode 17`.
+- ADB long press nao deve ser usado como evidencia de falha do SOS; para `PanicButton`, o acionamento inicial precisa de toque fisico real quando a automacao nao entrar em estado pressionado.
+- Validacao visual confirmou solicitante `VOCE PEDIU AJUDA` / `Transmitindo ao anjo` e anjo `Acompanhando SOS` com video `Pessoa protegida`.
+- Encerramento confirmado: solicitante exibiu `Video protegido 100%` e voltou para Home com video preservado no cofre local; anjo exibiu registro `Encerrado` com snapshot/duracao.
+- Nao foram versionados logs brutos nem screenshots com dados pessoais; documentacao registra apenas resultado operacional saneado.
+- Antes de publicar a release como final, executar auditoria media da EC2/API: sessao criada/encerrada, destinatario anjo autorizado, sinais consumidos/expirados, ausencia de sessoes residuais e ausencia de midia bruta no backend.
