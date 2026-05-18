@@ -5,6 +5,11 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 
 ## Estado tecnico
 
+- Atualizacao 2026-05-18 pre-validacao unilateral Android: com apenas um Android em ADB, o app `0.1.15`/`versionCode 17` abriu via `am start -W` com `Status: ok`, processo ativo e `mFocusedApp` em `br.com.sinalseguro.app/.MainActivity`.
+- `mCurrentFocus` permaneceu como `NotificationShade`, entao nao tratar como validacao visual de tela; log filtrado sem `FATAL EXCEPTION`, `AndroidRuntime` ou erro React Native fatal.
+- Cameras ficaram sem cliente ativo; inventario saneado do sandbox apontou 26 arquivos, 0 midias claras persistentes, 0 `.nseg` e 0 `.sseg`.
+- Checkpoint da etapa: `docs/73_CHECKPOINT_PRE_VALIDACAO_UNILATERAL_ANDROID_2026-05-18.md`.
+
 - Atualizacao 2026-05-18 pre-validacao fisica live-call: repo limpo em `main`, ultimo commit `325571e`, e apenas um Android apareceu no ADB como `device`.
 - Android detectado: `br.com.sinalseguro.app` `versionName=0.1.15`, `versionCode=17`; permissoes de camera, microfone, notificacoes e localizacao concedidas; app sem processo ativo no levantamento.
 - Espaco local no Mac estava baixo, cerca de 3.3 GiB livres; evitar build Android pesado sem limpeza/necessidade.

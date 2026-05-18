@@ -3,6 +3,21 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-18 - Pre-validacao unilateral Android
+
+Status: pre-validacao unilateral concluida; live-call fim a fim segue bloqueada ate dois Androids.
+
+- Apenas um Android apareceu em ADB como `device`; gate fim a fim da chamada ao vivo nao foi executado.
+- `npm run test:live-call-security` aprovado antes da rodada ADB.
+- Android detectado: `br.com.sinalseguro.app`, `versionName=0.1.15`, `versionCode=17`, com camera, microfone, notificacoes e localizacao concedidas.
+- App abriu via `am start -W` com `Status: ok`; primeira abertura mediu `WaitTime: 3134`.
+- Processo do app ficou ativo e `mFocusedApp` apontou para `br.com.sinalseguro.app/.MainActivity`.
+- `mCurrentFocus` permaneceu como `NotificationShade`; portanto esta rodada nao vale como validacao visual de tela.
+- Log filtrado nao mostrou `FATAL EXCEPTION`, `AndroidRuntime` ou erro React Native fatal.
+- `dumpsys media.camera` indicou cameras fechadas sem cliente ativo.
+- Inventario local saneado: 26 arquivos no sandbox, 0 midias claras persistentes, 0 `.nseg`, 0 `.sseg`.
+- Checkpoint: `docs/73_CHECKPOINT_PRE_VALIDACAO_UNILATERAL_ANDROID_2026-05-18.md`.
+
 ## 2026-05-18 - Pre-validacao fisica live-call Android
 
 Status: checkpoint operacional; validacao fim a fim bloqueada ate dois Androids estarem disponiveis.

@@ -5,6 +5,11 @@ Papel: seguranca, LGPD e QA.
 
 ## Decisoes bloqueantes
 
+- QA/Security 2026-05-18 - pre-validacao unilateral Android: apenas disponibilidade basica em um aparelho foi validada; nao declarar chamada ao vivo fim a fim, transmissao owner->anjo, autoaceite, handoff ou encerramento SOS como aprovados nesta rodada.
+- Log filtrado do app aberto nao mostrou `FATAL EXCEPTION`, `AndroidRuntime` ou erro React Native fatal; `dumpsys media.camera` ficou sem cliente ativo.
+- Inventario local saneado apontou 0 midias claras persistentes, 0 `.nseg` e 0 `.sseg`; evidencias brutas/logcat nao foram versionados.
+- Gate fisico completo permanece bloqueado ate haver dois Androids ou segundo aparelho validado manualmente com evidencia saneada.
+
 - QA/Security 2026-05-18 - pre-validacao fisica live-call: ADB detectou apenas um Android como `device`; nao declarar validacao fim a fim de SOS ao vivo/live-call sem dois Androids ou segundo aparelho validado manualmente com evidencia saneada.
 - Android detectado tinha `br.com.sinalseguro.app` em `versionName=0.1.15`, `versionCode=17`, permissoes de camera/microfone/notificacoes/localizacao concedidas e app sem processo ativo no levantamento.
 - Nao iniciar build Android pesado com o Mac em cerca de 3.3 GiB livres sem limpar regeneraveis/necessidade objetiva.
