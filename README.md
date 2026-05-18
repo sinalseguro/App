@@ -53,6 +53,7 @@ npm run release:android:readiness
 npm run typecheck
 npm run lint
 npm test
+npm run test:live-call-session
 npm run test:api-client
 npm run build:android:debug:bundled
 npm run start
@@ -124,6 +125,12 @@ Arquitetura atual do cliente API:
 - `src/services/api/authClient.ts`, `devicesClient.ts`, `profilesClient.ts`, `contactsClient.ts`, `emergencyClient.ts` e `releasesClient.ts` separam os endpoints por recurso.
 - Mudancas futuras devem manter a fachada compativel ate existir uma etapa propria para migrar consumidores.
 - `npm run test:api-client` cobre sessao corrompida, refresh, logout, login Google, update publico e chamadas P2P/envelope autenticadas.
+
+Arquitetura atual da chamada ao vivo:
+
+- `src/features/live-call/useLiveAudioCall.ts` orquestra WebRTC, polling de sinais, estado da chamada e marcadores de auditoria.
+- `src/features/live-call/liveCallSessionPolicy.ts` concentra regras puras de payload SDP/ICE, papel da chamada, auditoria por papel e renderizacao do stream remoto.
+- `npm run test:live-call-session` cobre essas regras sem abrir camera, WebRTC real, API, UI ou backend.
 
 APK privado Android atual para validacao fisica, portal e atualizacao pelo app:
 

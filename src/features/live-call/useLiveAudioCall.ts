@@ -10,9 +10,7 @@ import {
   listPendingLiveSignalsForSession,
   recordLiveAuditMarker,
   sendLiveSignal,
-  type LiveIcePayload,
-  type LiveSdpPayload,
-  type LiveSignalPayload
+  type LiveIcePayload
 } from "@/services/liveCallControl";
 import { LiveWebRtcSession } from "@/services/liveWebRtcSession";
 import type { ApiEmergencySession } from "@/services/apiClient";
@@ -21,9 +19,16 @@ import {
   canAngelStartRealtime,
   canOwnerStartLiveCallWithRecipient
 } from "@/features/live-call/liveCallRolePolicy";
-
-type LiveAudioRole = "angel" | "owner";
-type LiveAudioStatus = "connected" | "connecting" | "ended" | "failed" | "idle" | "reconnecting" | "waiting";
+import {
+  isIcePayload,
+  isSdpPayload,
+  liveAuditEvent,
+  liveEvidenceStatusForRole,
+  oppositeLiveSignalRole,
+  shouldRenderRemoteStream,
+  type LiveAudioRole,
+  type LiveAudioStatus
+} from "@/features/live-call/liveCallSessionPolicy";
 
 export type LiveAudioCallState = {
   callSessionId?: string;
@@ -64,38 +69,6 @@ const reconnectGraceMs = 14000;
 
 function streamUrlFrom(remoteStream: MediaStream) {
   return remoteStream.toURL?.();
-}
-
-function isSdpPayload(payload: LiveSignalPayload): payload is LiveSdpPayload {
-  return "sdp" in payload && typeof payload.sdp === "string" && Boolean(payload.sdp.trim());
-}
-
-function isIcePayload(payload: LiveSignalPayload): payload is LiveIcePayload {
-  return "candidate" in payload && typeof payload.candidate === "string" && Boolean(payload.candidate.trim());
-}
-
-function connectedAuditEvent(role?: LiveAudioRole) {
-  return role === "angel" ? "angel_live_connected" : "owner_live_connected";
-}
-
-function failedAuditEvent(role?: LiveAudioRole) {
-  return role === "angel" ? "angel_live_failed" : "owner_live_failed";
-}
-
-function reconnectingAuditEvent(role?: LiveAudioRole) {
-  return role === "angel" ? "angel_live_reconnecting" : "owner_live_reconnecting";
-}
-
-function reconnectedAuditEvent(role?: LiveAudioRole) {
-  return role === "angel" ? "angel_live_reconnected" : "owner_live_reconnected";
-}
-
-function reconnectFailedAuditEvent(role?: LiveAudioRole) {
-  return role === "angel" ? "angel_live_reconnect_failed" : "owner_live_reconnect_failed";
-}
-
-function endedAuditEvent(role?: LiveAudioRole) {
-  return role === "angel" ? "angel_live_ended" : "owner_live_ended";
 }
 
 export function useLiveAudioCall() {
@@ -147,12 +120,12 @@ export function useLiveAudioCall() {
 
   const sendIceCandidate = useCallback((payload: LiveIcePayload) => {
     const runtime = runtimeRef.current;
-    if (!runtime.remoteSessionId || !runtime.recipientId) return;
+    if (!runtime.remoteSessionId || !runtime.recipientId || !runtime.role) return;
     void sendLiveSignal({
       payload: {
         ...payload,
         recipientDeviceId: runtime.remoteDeviceId ?? null,
-        recipientRole: runtime.role === "owner" ? "angel" : "owner",
+        recipientRole: oppositeLiveSignalRole(runtime.role),
         senderDeviceId: runtime.localDeviceId ?? null,
         senderRole: runtime.role
       },
@@ -188,9 +161,9 @@ export function useLiveAudioCall() {
     const runtime = runtimeRef.current;
     if (!runtime.remoteSessionId || !runtime.role || runtime.reconnectFailedAuditSent) return;
     runtimeRef.current = { ...runtime, failedAuditSent: true, reconnectFailedAuditSent: true };
-    recordCurrentLiveAuditMarker(reconnectFailedAuditEvent(runtime.role), {
+    recordCurrentLiveAuditMarker(liveAuditEvent("reconnect_failed", runtime.role), {
       connectionState: "failed",
-      localEvidenceStatus: runtime.role === "owner" ? "metadata_only" : "not_applicable"
+      localEvidenceStatus: liveEvidenceStatusForRole(runtime.role)
     });
     setLiveAudioState((current) => ({
       ...current,
@@ -223,18 +196,18 @@ export function useLiveAudioCall() {
           const runtime = runtimeRef.current;
           if (connectionState === "connected") {
             clearReconnectTimer();
-            if (runtime.reconnectingAuditSent && !runtime.reconnectedAuditSent) {
+            if (runtime.role && runtime.reconnectingAuditSent && !runtime.reconnectedAuditSent) {
               runtimeRef.current = { ...runtime, reconnectedAuditSent: true };
-              recordCurrentLiveAuditMarker(reconnectedAuditEvent(runtime.role), {
+              recordCurrentLiveAuditMarker(liveAuditEvent("reconnected", runtime.role), {
                 connectionState: "connected",
-                localEvidenceStatus: runtime.role === "owner" ? "metadata_only" : "not_applicable"
+                localEvidenceStatus: liveEvidenceStatusForRole(runtime.role)
               });
             }
-            if (!runtime.connectedAuditSent) {
+            if (runtime.role && !runtime.connectedAuditSent) {
               runtimeRef.current = { ...runtimeRef.current, connectedAuditSent: true };
-              recordCurrentLiveAuditMarker(connectedAuditEvent(runtime.role), {
+              recordCurrentLiveAuditMarker(liveAuditEvent("connected", runtime.role), {
                 connectionState: "connected",
-                localEvidenceStatus: runtime.role === "owner" ? "metadata_only" : "not_applicable"
+                localEvidenceStatus: liveEvidenceStatusForRole(runtime.role)
               });
             }
             setLiveAudioState((current) => ({
@@ -257,9 +230,9 @@ export function useLiveAudioCall() {
           if (connectionState === "disconnected") {
             if (runtime.remoteSessionId && runtime.role && !runtime.reconnectingAuditSent) {
               runtimeRef.current = { ...runtime, reconnectingAuditSent: true };
-              recordCurrentLiveAuditMarker(reconnectingAuditEvent(runtime.role), {
+              recordCurrentLiveAuditMarker(liveAuditEvent("reconnecting", runtime.role), {
                 connectionState: "reconnecting",
-                localEvidenceStatus: runtime.role === "owner" ? "metadata_only" : "not_applicable"
+                localEvidenceStatus: liveEvidenceStatusForRole(runtime.role)
               });
             }
             setLiveAudioState((current) => {
@@ -278,11 +251,11 @@ export function useLiveAudioCall() {
               markReconnectFailed();
               return;
             }
-            if (!runtime.failedAuditSent) {
+            if (runtime.role && !runtime.failedAuditSent) {
               runtimeRef.current = { ...runtimeRef.current, failedAuditSent: true };
-              recordCurrentLiveAuditMarker(failedAuditEvent(runtime.role), {
+              recordCurrentLiveAuditMarker(liveAuditEvent("failed", runtime.role), {
                 connectionState: "failed",
-                localEvidenceStatus: runtime.role === "owner" ? "metadata_only" : "not_applicable"
+                localEvidenceStatus: liveEvidenceStatusForRole(runtime.role)
               });
             }
             setLiveAudioState((current) => ({
@@ -295,7 +268,7 @@ export function useLiveAudioCall() {
         onLocalIceCandidate: sendIceCandidate,
         onRemoteStream: (remoteStream) => {
           const role = runtimeRef.current.role ?? stateRef.current.role;
-          const shouldRenderRemoteStream = role === "angel";
+          const shouldRenderRemoteStreamForRole = shouldRenderRemoteStream(role);
           const remoteStreamUrl = streamUrlFrom(remoteStream);
           setLiveAudioState((current) => ({
             ...current,
@@ -305,8 +278,8 @@ export function useLiveAudioCall() {
                 : current.participantName
                   ? `Você está acompanhando ${current.participantName}.`
                   : "Você está acompanhando como anjo.",
-            remoteStream: shouldRenderRemoteStream ? remoteStream : current.remoteStream,
-            remoteStreamUrl: shouldRenderRemoteStream ? remoteStreamUrl : current.remoteStreamUrl,
+            remoteStream: shouldRenderRemoteStreamForRole ? remoteStream : current.remoteStream,
+            remoteStreamUrl: shouldRenderRemoteStreamForRole ? remoteStreamUrl : current.remoteStreamUrl,
             status: "connected"
           }));
         },
@@ -319,9 +292,9 @@ export function useLiveAudioCall() {
   const stopLiveAudioCall = useCallback(() => {
     const runtime = runtimeRef.current;
     if (runtime.remoteSessionId && runtime.role && !runtime.endedAuditSent) {
-      recordCurrentLiveAuditMarker(endedAuditEvent(runtime.role), {
+      recordCurrentLiveAuditMarker(liveAuditEvent("ended", runtime.role), {
         connectionState: "ended",
-        localEvidenceStatus: runtime.role === "owner" ? "metadata_only" : "not_applicable"
+        localEvidenceStatus: liveEvidenceStatusForRole(runtime.role)
       });
     }
     clearReconnectTimer();

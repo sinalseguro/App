@@ -3,6 +3,21 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-18 - Etapa 1.2 politica pura de sessao live-call
+
+Status: concluida localmente, validada e pronta para checkpoint Git.
+
+- Extraida politica pura de sessao da chamada ao vivo para `src/features/live-call/liveCallSessionPolicy.ts`.
+- `useLiveAudioCall.ts` permanece como orquestrador de WebRTC, polling e estado, sem alteracao de UX, textos, backend, portal ou release.
+- A politica extraida cobre guards SDP/ICE, evento de auditoria por papel, status de evidencia por papel, papel oposto de sinalizacao e regra de renderizacao do stream remoto.
+- O contrato de tipo foi endurecido para impedir fallback implicito para `owner` quando o papel da chamada estiver indefinido.
+- Novo gate `npm run test:live-call-session` foi adicionado ao `npm test`.
+- Gate Codex Security/QA direcionado: SDP/ICE seguem apenas como payload de transporte/teste; sem novo log de runtime com token, Authorization, encrypted key, SDP, ICE, payload P2P, URI, path local ou midia.
+- Validacoes aprovadas: `npm run test:live-call-session`, `npm run typecheck`, `npm run lint`, `npm test`, `npm run private:android:readiness` e `git diff --check`.
+- Observacao ambiental: `private:android:readiness` segue condicionado apenas pelo Node local `20.16.0`; release publico exige Node `>=22.13.0`, mas build privado debug aceita essa pendencia.
+- Sem build Android nesta fatia porque a mudanca foi TypeScript puro, sem UI, nativo, WebRTC runtime, backend ou assets.
+- Checkpoint: `docs/68_CHECKPOINT_ETAPA_1_2_LIVE_CALL_SESSION_POLICY_2026-05-18.md`.
+
 ## 2026-05-17 - Etapa 1.1 testes de contrato API e hardening de erro
 
 Status: concluida localmente, validada e pronta para checkpoint Git.

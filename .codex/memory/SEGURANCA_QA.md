@@ -5,6 +5,11 @@ Papel: seguranca, LGPD e QA.
 
 ## Decisoes bloqueantes
 
+- QA/Security 2026-05-18 - Etapa 1.2 live-call: politica pura de sessao foi extraida sem alterar fluxo operacional, UI, backend, portal ou release.
+- `liveAuditEvent`, `liveEvidenceStatusForRole` e `oppositeLiveSignalRole` exigem `LiveAudioRole` definido; nao aceitar fallback implicito para `owner` quando o papel da chamada estiver ausente.
+- SDP/ICE seguem permitidos apenas como payload de transporte/teste; nao adicionar logs com `payload`, `sdp`, `candidate`, `encrypted_key`, token, URI de midia ou caminho local.
+- Gates aprovados na Etapa 1.2: `test:live-call-session`, `typecheck`, `lint`, `npm test`, `private:android:readiness` e `git diff --check`.
+
 - QA/Security 2026-05-17 - Etapa 1.1 testes API: adicionados testes de contrato para sessao corrompida, refresh valido/invalido, logout sem retry, login Google, update publico sem JWT, P2P/envelope com autenticacao obrigatoria e redaction de erro sensivel.
 - `ApiRequestError.details` nao deve expor `Authorization`, access/refresh/id token, token de convite, segredo, senha, `encrypted_key`, payload P2P, SDP ou ICE candidate; manter esse gate nas proximas refatoracoes.
 - `AuthApiClient.logout` usa `retryOnUnauthorized: false` e limpa sessao local no `finally`, evitando renovar token durante logout com access expirado.

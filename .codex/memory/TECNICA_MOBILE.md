@@ -5,6 +5,11 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 
 ## Estado tecnico
 
+- Atualizacao 2026-05-18 Etapa 1.2: regras puras da sessao live-call foram extraidas para `src/features/live-call/liveCallSessionPolicy.ts`.
+- `useLiveAudioCall.ts` continua orquestrando WebRTC/polling/estado; sem mudanca de UX, backend, portal, release ou runtime nativo.
+- Novo gate `npm run test:live-call-session` cobre SDP/ICE payload guards, eventos de auditoria por papel, evidencia local por papel, papel oposto e renderizacao de stream remoto apenas para anjo.
+- Checkpoint da etapa: `docs/68_CHECKPOINT_ETAPA_1_2_LIVE_CALL_SESSION_POLICY_2026-05-18.md`.
+
 - Atualizacao 2026-05-17 Etapa 1.1: o cliente API ganhou testes de contrato em `scripts/api-client-contract.test.ts` e `npm test` agora inclui `npm run test:api-client`.
 - `SinalSeguroApiCore` recebe `ApiSessionSecretStore` por injecao; a implementacao real fica em `src/services/api/sessionStore.ts` usando `SecureStore` e a chave `api.session.v1`.
 - `logout` nao tenta refresh quando a API retorna `401`; a sessao local e limpa no `finally`.
