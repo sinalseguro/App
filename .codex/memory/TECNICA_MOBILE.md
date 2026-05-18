@@ -439,3 +439,14 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `npm run test:owner-live-evidence` cobre agora inicio da evidencia e lifecycle owner no mesmo gate.
 - `npm test` e `scripts/smoke-test.mjs` exigem a politica pura para evitar regressao para regra inline na Home.
 - Proxima mudanca operacional em camera, WebRTC, renderizacao ou UX de chamada deve repetir validacao fisica Android.
+
+# Atualizacao - 2026-05-18 - Etapa 1.15 validacao Android das policies Home/SOS
+
+- Pos-refatoracao das policies puras ate Etapa 1.14 foi validada em dois Androids fisicos distintos.
+- Build multi-ABI estourou espaco no Mac durante `stripDebugDebugSymbols`; solucao operacional segura foi build por ABI.
+- Artefatos de QA local:
+  - `armeabi-v7a`: SHA-256 `01be88bec3e3bad7e142799dfa176201d557730408a09cf393b34ebb99185538`;
+  - `arm64-v8a`: SHA-256 `131d8a96a60590e91811f85696539a5e8a296087e424fcf044c9e145d4b49961`.
+- Ambos instalaram como `br.com.sinalseguro.app` `0.1.15`/`versionCode=17`.
+- Redmi 64-bit abriu diretamente na Home SOS; Android 32-bit exigiu cerca de 55s para sair do splash/loading, mas chegou na Home SOS.
+- Para proximas fatias, manter o Android 32-bit como sentinela de startup/performance; mudancas em runtime de SOS/camera/WebRTC/gravacao exigem teste fisico owner -> anjo.

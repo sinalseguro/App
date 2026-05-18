@@ -397,3 +397,13 @@ Papel: seguranca, LGPD e QA.
 - Os unicos `console.log` encontrados estao em testes/gates locais, seguindo padrao dos demais testes de politica.
 - Validacoes aprovadas: `test:owner-live-evidence`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
 - Performance Android: nao foi coletado perfil porque a fatia nao altera runtime operacional, camera, WebRTC, renderizacao ou loop de midia; proxima mudanca operacional sensivel deve usar perfil fisico focado.
+
+## QA/Security - 2026-05-18 - Etapa 1.15 validacao Android das policies Home/SOS
+
+- Gates pre-build aprovados: `typecheck`, `lint`, `npm test` e readiness Android privado condicionado pela pendencia ambiental de Node local para release publica.
+- Dois builds debug privados por ABI foram gerados e instalados fisicamente: `armeabi-v7a` no Android 32-bit e `arm64-v8a` no Redmi 64-bit.
+- Ambos confirmaram `versionName=0.1.15` e `versionCode=17` apos instalacao.
+- Validacao visual confirmou Home SOS pronta nos dois aparelhos; Redmi abriu direto, Android 32-bit precisou de cerca de 55s para estabilizar.
+- Buffer de crash vazio; recortes filtrados sem `FATAL EXCEPTION`, ANR, `TypeError`, `ReferenceError` ou crash React Native.
+- Varredura de sensibilidade nao encontrou token, `Authorization`, `id_token`, `encrypted_key`, SDP/ICE, chave privada ou payload P2P; logs/meminfo brutos ficaram fora do Git porque continham paths internos do app.
+- Evidencia leve de performance manteve o Android 32-bit como risco/sentinela para startup e jank; proxima mudanca operacional sensivel deve usar teste fim a fim owner -> anjo, e nao apenas abertura de Home.

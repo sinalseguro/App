@@ -3243,6 +3243,27 @@ Checkpoint:
 
 - `docs/57_CHECKPOINT_F4_3_RECEBIMENTO_CHAMADA_REGISTRO_2026-05-16.md`.
 
+## 2026-05-18 - Etapa 1.15 validacao Android das policies Home/SOS
+
+Status: validacao fisica Android concluida em dois aparelhos; sem publicacao de release.
+
+Executado:
+
+- Dois Androids fisicos foram confirmados no ADB: `0123456789ABCDEF` (`armeabi-v7a`) e `5686add7` (`arm64-v8a`), tratando o transporte Wi-Fi/mDNS duplicado do Redmi como o mesmo aparelho.
+- Gates pre-build aprovados: `typecheck`, `lint`, `npm test` e readiness Android privado condicionado pela pendencia ambiental conhecida de Node local `20.16.0` para release publica.
+- Build multi-ABI falhou por falta de espaco em `stripDebugDebugSymbols`; a validacao seguiu com builds separados por ABI.
+- APK `armeabi-v7a`: `BUILD SUCCESSFUL`, SHA-256 `01be88bec3e3bad7e142799dfa176201d557730408a09cf393b34ebb99185538`, instalado no Android 32-bit.
+- APK `arm64-v8a`: `BUILD SUCCESSFUL`, SHA-256 `131d8a96a60590e91811f85696539a5e8a296087e424fcf044c9e145d4b49961`, instalado no Redmi 64-bit.
+- Ambos confirmaram `versionName=0.1.15` e `versionCode=17`.
+- Redmi abriu diretamente na Home SOS; Android 32-bit demorou cerca de 55s, mas chegou na Home SOS.
+- Crash buffer vazio nos dois aparelhos; sem `FATAL EXCEPTION`, ANR, `TypeError` ou `ReferenceError` nos recortes filtrados.
+- Evidencia leve de performance: Redmi com jank baixo no recorte (`2.06%`), Android 32-bit com jank/startup mais pesado (`23.71%` apos estabilizacao), mantendo o aparelho 32-bit como sentinela de performance.
+- Logs, screenshots, APKs e meminfo brutos ficaram fora do Git.
+
+Checkpoint:
+
+- `docs/87_CHECKPOINT_VALIDACAO_ANDROID_ETAPA_1_15_POLICIES_HOME_SOS_2026-05-18.md`.
+
 ## 2026-05-18 - Validacao fisica dois Androids SOS/anjo
 
 Status: validado fisicamente em dois Androids distintos com Android `0.1.15`.
