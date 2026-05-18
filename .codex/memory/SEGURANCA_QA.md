@@ -469,3 +469,19 @@ Papel: seguranca, LGPD e QA.
 - Logs brutos contem paths internos gerados pelo Android loader e ficaram fora do Git; prints e demais evidencias fisicas tambem ficaram como artefatos locais ignorados.
 - Avisos nao bloqueantes: Firebase default app ausente no debug local, URI scheme duplicado em Expo/React Native e inicializacao normal de WebRTC audio module.
 - Performance: Android 32-bit segue como sentinela de startup/jank; Redmi 64-bit ficou estavel. Proxima mudanca operacional sensivel deve repetir fluxo owner -> anjo.
+
+## QA/Security - 2026-05-18 - Etapa 1.23 politica pura do painel de chamada ao vivo
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido, log runtime, backend, portal ou release.
+- Gate novo `npm run test:live-call-panel` cobre renderizacao do painel, faixa de status, afastamento do recorder e bloqueio do botao primario.
+- Varredura dirigida do diff nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P.
+- Validacoes aprovadas: `test:live-call-panel`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-18 - Etapa 1.24 politica pura de mensagens do pacote SOS local
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido, log runtime, backend, portal ou release.
+- Gate novo `npm run test:local-sos-package-status` cobre mensagens recorrentes do estado local do pacote SOS.
+- Varredura dirigida do diff nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P.
+- Validacoes aprovadas: `test:local-sos-package-status`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, renderizacao WebRTC, camera, gravacao ou loop de midia.

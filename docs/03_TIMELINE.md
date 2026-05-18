@@ -3398,6 +3398,40 @@ Checkpoint:
 
 - `docs/94_CHECKPOINT_VALIDACAO_ANDROID_ETAPA_1_22_CONSOLIDACAO_POLICIES_HOME_SOS_2026-05-18.md`.
 
+## 2026-05-18 - Etapa 1.23 politica pura do painel de chamada ao vivo
+
+Status: refatoracao pura implementada, validada e sem publicacao de release.
+
+Executado:
+
+- Criado `src/features/emergency-home/liveCallPanelPolicy.ts` para decidir exibicao do painel, faixa de status, afastamento do recorder e bloqueio do botao primario.
+- `app/index.tsx` preserva os efeitos reais de WebRTC, chamada, camera, gravacao e auditoria; somente consulta a policy para renderizacao/entrada.
+- Criado `scripts/live-call-panel-policy.test.ts` e script `npm run test:live-call-panel`.
+- `scripts/smoke-test.mjs` passou a exigir a policy pura para evitar regressao para regra inline.
+- Validacoes aprovadas: teste focado, smoke-test, `typecheck`, `lint`, `npm test`, readiness Android privado condicionado e `git diff --check`.
+- Sem build Android nesta fatia porque nao houve mudanca operacional de UX nativa, camera, WebRTC, gravacao, backend ou portal.
+
+Checkpoint:
+
+- `docs/95_CHECKPOINT_ETAPA_1_23_LIVE_CALL_PANEL_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.24 politica pura de mensagens do pacote SOS local
+
+Status: refatoracao pura implementada, validada e sem publicacao de release.
+
+Executado:
+
+- Criado `src/features/emergency-home/localSosPackageStatusPolicy.ts` para centralizar mensagens do estado local do pacote SOS.
+- `app/index.tsx` preserva os efeitos reais de inicio, recuperacao, chamada ao vivo, preservacao, encerramento e erro; somente consulta a policy para textos recorrentes.
+- Criado `scripts/local-sos-package-status-policy.test.ts` e script `npm run test:local-sos-package-status`.
+- `scripts/smoke-test.mjs` passou a exigir a policy pura para evitar regressao para mensagens inline na Home.
+- Validacoes aprovadas: teste focado, smoke-test, `typecheck`, `lint`, `npm test`, readiness Android privado condicionado e `git diff --check`.
+- Sem build Android nesta fatia porque nao houve mudanca operacional de camera, WebRTC, gravacao, storage, backend ou portal.
+
+Checkpoint:
+
+- `docs/96_CHECKPOINT_ETAPA_1_24_LOCAL_SOS_PACKAGE_STATUS_POLICY_2026-05-18.md`.
+
 ## 2026-05-18 - Validacao fisica dois Androids SOS/anjo
 
 Status: validado fisicamente em dois Androids distintos com Android `0.1.15`.

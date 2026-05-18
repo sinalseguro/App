@@ -45,6 +45,8 @@ const requiredFiles = [
   "src/features/emergency-home/ownerAutoCallPolicy.ts",
   "src/features/emergency-home/ownerLiveEvidencePolicy.ts",
   "src/features/emergency-home/liveCallCleanupPolicy.ts",
+  "src/features/emergency-home/liveCallPanelPolicy.ts",
+  "src/features/emergency-home/localSosPackageStatusPolicy.ts",
   "src/features/emergency-home/panicTriggerPolicy.ts",
   "src/features/emergency-home/protectedRouteCodePolicy.ts",
   "src/features/emergency-home/remoteSyncStatusPolicy.ts",
@@ -189,6 +191,8 @@ const mediaProcessingStatusPolicy = await readFile("src/features/emergency-home/
 const ownerAutoCallPolicy = await readFile("src/features/emergency-home/ownerAutoCallPolicy.ts", "utf8");
 const ownerLiveEvidencePolicy = await readFile("src/features/emergency-home/ownerLiveEvidencePolicy.ts", "utf8");
 const liveCallCleanupPolicy = await readFile("src/features/emergency-home/liveCallCleanupPolicy.ts", "utf8");
+const liveCallPanelPolicy = await readFile("src/features/emergency-home/liveCallPanelPolicy.ts", "utf8");
+const localSosPackageStatusPolicy = await readFile("src/features/emergency-home/localSosPackageStatusPolicy.ts", "utf8");
 const panicTriggerPolicy = await readFile("src/features/emergency-home/panicTriggerPolicy.ts", "utf8");
 const protectedRouteCodePolicy = await readFile("src/features/emergency-home/protectedRouteCodePolicy.ts", "utf8");
 const remoteSyncStatusPolicy = await readFile("src/features/emergency-home/remoteSyncStatusPolicy.ts", "utf8");
@@ -276,7 +280,7 @@ if (
   !homeScreen.includes("ownerLiveCallAutoRetryMs") ||
   !homeScreen.includes("activeRemoteSyncRetryMs") ||
   !homeScreen.includes("activeRemoteSyncInFlightRef") ||
-  !homeScreen.includes("liveCallPanelVisible") ||
+  !homeScreen.includes("resolveLiveCallPanelPolicy") ||
   !homeScreen.includes("resolveLiveCallCleanupDecision") ||
   !liveCallCleanupPolicy.includes('liveAudioCallStatus === "idle"') ||
   !homeScreen.includes("emergency_active_remote_sync_attempt") ||
@@ -731,6 +735,30 @@ if (
   !packageJson.scripts["test:live-call-cleanup"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para limpeza de chamada ao vivo sem chamado ativo.");
+}
+
+if (
+  !homeScreen.includes("resolveLiveCallPanelPolicy") ||
+  !homeScreen.includes("liveCallPanel.shouldRenderPanel") ||
+  !homeScreen.includes("liveCallPanel.primaryActionDisabled") ||
+  !liveCallPanelPolicy.includes("resolveLiveCallPanelPolicy") ||
+  !liveCallPanelPolicy.includes("shouldAvoidMediaRecorderPanel") ||
+  !liveCallPanelPolicy.includes("shouldRenderStatusBand") ||
+  !packageJson.scripts["test:live-call-panel"]
+) {
+  throw new Error("Home/SOS precisa manter politica pura testavel para exibicao e entrada do painel de chamada ao vivo.");
+}
+
+if (
+  !homeScreen.includes("initialLocalSosPackageStatus") ||
+  !homeScreen.includes("resolveLocalSosPackageStatus") ||
+  !localSosPackageStatusPolicy.includes("resolveLocalSosPackageStatus") ||
+  !localSosPackageStatusPolicy.includes("Pronto para pedir ajuda.") ||
+  !localSosPackageStatusPolicy.includes("finish_requested") ||
+  !localSosPackageStatusPolicy.includes("live_call_recording_preserved") ||
+  !packageJson.scripts["test:local-sos-package-status"]
+) {
+  throw new Error("Home/SOS precisa manter politica pura testavel para mensagens do pacote SOS local.");
 }
 
 if (

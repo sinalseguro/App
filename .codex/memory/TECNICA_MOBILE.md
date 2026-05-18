@@ -507,3 +507,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Startup observado: `WaitTime=9374ms` no Android 32-bit e `WaitTime=2898ms` no Redmi 64-bit.
 - Performance em tela estavel manteve o Android 32-bit como sentinela: 21,27% janky contra 0,60% no Redmi.
 - Proxima recomendacao tecnica: seguir com duas fatias puras da Home/SOS antes de nova mudanca operacional; liberar espaco local antes de outro build pesado.
+
+# Atualizacao - 2026-05-18 - Etapa 1.23 Home/SOS
+
+- `src/features/emergency-home/liveCallPanelPolicy.ts` centraliza a decisao de exibicao/entrada do painel de chamada ao vivo.
+- `app/index.tsx` continua responsavel por WebRTC, camera, gravacao, auditoria e callbacks reais; a policy decide renderizacao, faixa de status, afastamento do recorder e bloqueio do botao primario.
+- Novo gate `npm run test:live-call-panel` cobre ausencia de pacote, pacote sem chamada, chamada aguardando com sessao remota, bloqueios por encerramento/midia pendente e chamada conectada sem sessao remota.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline.
+- Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional em chamada/camera/WebRTC/gravacao/UX deve repetir validacao fisica.
+
+# Atualizacao - 2026-05-18 - Etapa 1.24 Home/SOS
+
+- `src/features/emergency-home/localSosPackageStatusPolicy.ts` centraliza mensagens recorrentes do estado local do pacote SOS.
+- `app/index.tsx` continua responsavel pelos efeitos reais de inicio, recuperacao, gravacao ao vivo, preservacao, encerramento e erro.
+- Novo gate `npm run test:local-sos-package-status` cobre mensagens de pronto, recuperacao, chamada gravando, chamada preservada, protecao de video, inicio, falha de inicio, encerramento, chamado ausente e falha de encerramento.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para mensagens inline.
+- Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional em chamada/camera/WebRTC/gravacao/UX deve repetir validacao fisica.

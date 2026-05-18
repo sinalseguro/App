@@ -20,6 +20,11 @@ import { resolveFinishCodeConfirmationDecision } from "@/features/emergency-home
 import { resolveFinishOutcomePolicy } from "@/features/emergency-home/finishOutcomePolicy";
 import { resolveFinishRequestDecision } from "@/features/emergency-home/finishRequestPolicy";
 import { resolveLiveCallCleanupDecision } from "@/features/emergency-home/liveCallCleanupPolicy";
+import { resolveLiveCallPanelPolicy } from "@/features/emergency-home/liveCallPanelPolicy";
+import {
+  initialLocalSosPackageStatus,
+  resolveLocalSosPackageStatus
+} from "@/features/emergency-home/localSosPackageStatusPolicy";
 import { resolveMediaHandoffPolicy } from "@/features/emergency-home/mediaHandoffPolicy";
 import {
   resolveMediaProcessingPresentation,
@@ -261,7 +266,7 @@ export default function HomeScreen() {
   const [protectedRouteCodeInput, setProtectedRouteCodeInput] = useState("");
   const [protectedRouteError, setProtectedRouteError] = useState("");
   const [dialog, setDialog] = useState<HomeDialog | null>(null);
-  const [recordingStatus, setRecordingStatus] = useState("Pronto para pedir ajuda.");
+  const [recordingStatus, setRecordingStatus] = useState(initialLocalSosPackageStatus);
   const pendingMediaStopRequestRef = useRef<PendingMediaStopRequest | null>(null);
   const pendingMediaReleaseRequestRef = useRef<PendingMediaReleaseRequest | null>(null);
   const finishInProgressRef = useRef(false);
@@ -374,11 +379,7 @@ export default function HomeScreen() {
     setMediaRecorderPackageId(null);
     setCaptureStopLocked(false);
     setMediaStopPendingState(false);
-    setRecordingStatus(
-      attachedAssetCount > 0
-        ? "Chamado anterior recuperado. Video preservado no cofre local."
-        : "Chamado anterior recuperado sem video preservado. Revise a causa saneada no cofre."
-    );
+    setRecordingStatus(resolveLocalSosPackageStatus({ attachedAssetCount, event: "interrupted_recovered" }));
     showFinishProgress({
       detail:
         attachedAssetCount > 0
@@ -642,7 +643,7 @@ export default function HomeScreen() {
           connectionState: "connected",
           localEvidenceStatus: "recording"
         });
-        setRecordingStatus("Chamada em andamento com seu anjo. Gravando neste aparelho.");
+        setRecordingStatus(resolveLocalSosPackageStatus({ event: "live_call_recording_started" }));
         return recording;
       } catch (error) {
         appendMediaOperationalLog("live_video_recording_start_error", {
@@ -717,9 +718,7 @@ export default function HomeScreen() {
           localEvidenceStatus: "protected"
         });
         setRecordingStatus(
-          result.audioCaptured
-            ? "Chamada salva no cofre deste aparelho."
-            : "Video da chamada salvo no cofre deste aparelho."
+          resolveLocalSosPackageStatus({ audioCaptured: result.audioCaptured, event: "live_call_recording_preserved" })
         );
         appendMediaOperationalLog("live_video_recording_preserve_success", {
           assetCreated: Boolean(attachedAsset),
@@ -1138,7 +1137,7 @@ export default function HomeScreen() {
           status: "running",
           title: "Protegendo video"
         });
-        setRecordingStatus("Protecao do video local em andamento. O cofre sera atualizado automaticamente.");
+        setRecordingStatus(resolveLocalSosPackageStatus({ event: "media_protection_in_progress" }));
         return;
       case "finish_active_call":
         requestFinishActiveCall();
@@ -1163,7 +1162,7 @@ export default function HomeScreen() {
         break;
     }
 
-    setRecordingStatus("Pedindo ajuda...");
+    setRecordingStatus(resolveLocalSosPackageStatus({ event: "start_requested" }));
     liveAudioCall.resetLiveAudioCall();
     setLiveRemoteSessionId(null);
     ownerAutoCallPausedSessionIdsRef.current.clear();
@@ -1225,7 +1224,7 @@ export default function HomeScreen() {
         platform: Platform.OS
       }, error);
       setActivePackageId(null);
-      setRecordingStatus("Nao foi possivel iniciar o chamado neste aparelho.");
+      setRecordingStatus(resolveLocalSosPackageStatus({ event: "start_failed" }));
       setDialog({
         title: "Chamado nao preservado",
         message:
@@ -1275,7 +1274,7 @@ export default function HomeScreen() {
     setLiveRemoteSessionId(null);
     finishInProgressRef.current = true;
     setFinishInProgress(true);
-    setRecordingStatus("Encerrando chamado seguro...");
+    setRecordingStatus(resolveLocalSosPackageStatus({ event: "finish_requested" }));
     showFinishProgress({
       detail: "Interrompendo a gravacao local e salvando o pacote.",
       progress: 12,
@@ -1323,7 +1322,7 @@ export default function HomeScreen() {
       await refreshOutboxCount();
 
       if (!result) {
-        setRecordingStatus("Nenhum chamado ativo encontrado.");
+        setRecordingStatus(resolveLocalSosPackageStatus({ event: "finish_missing_package" }));
         if (!stopSerial) {
           showFinishProgress({
             detail: "Nao havia chamado ativo para encerrar.",
@@ -1407,7 +1406,7 @@ export default function HomeScreen() {
       appendMediaOperationalLog("emergency_finish_package_error", {
         platform: Platform.OS
       }, error);
-      setRecordingStatus("Nao foi possivel encerrar o chamado neste aparelho. Tente novamente pelo botao seguro.");
+      setRecordingStatus(resolveLocalSosPackageStatus({ event: "finish_failed" }));
       showFinishProgress({
         detail: "Nao foi possivel finalizar o pacote local. Tente novamente pelo botao seguro.",
         progress: 100,
@@ -1551,7 +1550,13 @@ export default function HomeScreen() {
     setProtectedRouteError("");
   }
 
-  const liveCallPanelVisible = Boolean(activePackageId && (liveRemoteSessionId || liveAudioCallStatus !== "idle"));
+  const liveCallPanel = resolveLiveCallPanelPolicy({
+    activePackageId,
+    finishInProgress,
+    liveAudioCallStatus,
+    liveRemoteSessionId,
+    mediaStopPending
+  });
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -1578,7 +1583,7 @@ export default function HomeScreen() {
           <BrandBackground active={Boolean(activePackageId || startInProgress)} />
           <EmergencyMediaRecorder
             activePackageId={mediaRecorderPackageId}
-            avoidLiveAudioPanel={liveCallPanelVisible}
+            avoidLiveAudioPanel={liveCallPanel.shouldAvoidMediaRecorderPanel}
             captureStopLocked={captureStopLocked}
             preferences={preferences}
             onMediaAttached={refreshOutboxCount}
@@ -1594,7 +1599,7 @@ export default function HomeScreen() {
               holdMs={preferences.inAppHoldMs}
               onTrigger={handlePanicTrigger}
             />
-            {!liveCallPanelVisible ? (
+            {liveCallPanel.shouldRenderStatusBand ? (
               <View
                 accessibilityLiveRegion="polite"
                 accessibilityRole="text"
@@ -1612,10 +1617,10 @@ export default function HomeScreen() {
             ) : null}
           </View>
 
-          {liveCallPanelVisible ? (
+          {liveCallPanel.shouldRenderPanel ? (
             <LiveAudioCallPanel
               actionLabel="Chamar anjo"
-              disabled={!activePackageId || !liveRemoteSessionId || mediaStopPending || finishInProgress}
+              disabled={liveCallPanel.primaryActionDisabled}
               onPrimaryAction={handleStartOwnerLiveAudio}
               onStop={handleStopOwnerLiveAudio}
               state={liveAudioCall.state}
