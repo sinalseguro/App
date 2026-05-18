@@ -143,7 +143,7 @@ Arquitetura atual da Home/SOS:
 - `src/features/emergency-home/panicTriggerPolicy.ts` concentra regras puras do botao SOS: duplo acionamento, midia pendente, encerramento, consentimento e inicio do chamado.
 - `src/features/emergency-home/remoteSyncStatusPolicy.ts` concentra mensagens e decisao visual da sincronizacao remota do SOS ativo.
 - `src/features/emergency-home/ownerAutoCallPolicy.ts` concentra a decisao de autochamada do solicitante apos aceite do anjo.
-- `src/features/emergency-home/ownerLiveEvidencePolicy.ts` concentra a decisao de iniciar a evidencia local da chamada ao vivo no aparelho solicitante.
+- `src/features/emergency-home/ownerLiveEvidencePolicy.ts` concentra a decisao de iniciar a evidencia local da chamada ao vivo e o ciclo `connected`/`failed`/`ended` no aparelho solicitante.
 - `src/features/emergency-home/mediaHandoffPolicy.ts` concentra a decisao de preparar ou bloquear a entrega de camera/microfone locais para chamada ao vivo.
 - `src/features/emergency-home/mediaProcessingStatusPolicy.ts` concentra mensagens e progresso visual do processamento de midia no encerramento e no handoff para chamada ao vivo.
 - `src/features/emergency-home/finishOutcomePolicy.ts` concentra o resultado final do encerramento do SOS: evidencia protegida, pendente, somente metadados ou falha saneada.

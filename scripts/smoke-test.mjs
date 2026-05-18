@@ -678,13 +678,17 @@ if (
 if (
   !homeScreen.includes("resolveOwnerLiveVideoEvidenceStart") ||
   !homeScreen.includes("startDecision.startInput") ||
+  !homeScreen.includes("resolveOwnerLiveCallLifecycle") ||
+  !homeScreen.includes("lifecycleDecision.evidenceUpdate") ||
   !ownerLiveEvidencePolicy.includes("resolveOwnerLiveVideoEvidenceStart") ||
+  !ownerLiveEvidencePolicy.includes("resolveOwnerLiveCallLifecycle") ||
   !ownerLiveEvidencePolicy.includes("missing_remote_session") ||
   !ownerLiveEvidencePolicy.includes("missing_stream_tag") ||
   !ownerLiveEvidencePolicy.includes("inactive_status") ||
+  !ownerLiveEvidencePolicy.includes("status_not_actionable") ||
   !packageJson.scripts["test:owner-live-evidence"]
 ) {
-  throw new Error("Home/SOS precisa manter politica pura testavel para inicio da evidencia local da chamada do solicitante.");
+  throw new Error("Home/SOS precisa manter politica pura testavel para evidencia local da chamada do solicitante.");
 }
 
 if (

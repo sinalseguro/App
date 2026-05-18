@@ -431,3 +431,11 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:owner-live-evidence` cobre papel incorreto, sessao ausente, pacote ausente, stream ausente, status inativo e caminho permitido com dados atuais ou fallback.
 - `npm test` e `scripts/smoke-test.mjs` exigem a politica pura para evitar regressao para regra inline na Home.
 - Proxima mudanca operacional em camera, WebRTC, renderizacao ou UX de chamada deve repetir validacao fisica Android.
+
+# Atualizacao - 2026-05-18 - Etapa 1.14 Home/SOS
+
+- `src/features/emergency-home/ownerLiveEvidencePolicy.ts` tambem centraliza a decisao do ciclo `connected`/`failed`/`ended` da chamada owner.
+- `app/index.tsx` continua responsavel por limpar tentativa de autochamada, parar evidencia local, gerar timestamp e atualizar evidencia.
+- `npm run test:owner-live-evidence` cobre agora inicio da evidencia e lifecycle owner no mesmo gate.
+- `npm test` e `scripts/smoke-test.mjs` exigem a politica pura para evitar regressao para regra inline na Home.
+- Proxima mudanca operacional em camera, WebRTC, renderizacao ou UX de chamada deve repetir validacao fisica Android.

@@ -3,6 +3,19 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-18 - Etapa 1.14 politica pura do ciclo da chamada owner
+
+Status: implementada, validada e pronta para checkpoint Git.
+
+- Ampliado `src/features/emergency-home/ownerLiveEvidencePolicy.ts` com `resolveOwnerLiveCallLifecycle()`.
+- `app/index.tsx` continua aplicando limpeza, parada da evidencia, timestamp e `updateOwnerLiveEvidence()`, mas deixou de decidir inline o ciclo `connected`/`failed`/`ended`.
+- `scripts/owner-live-evidence-policy.test.ts` passou a cobrir os novos casos de lifecycle owner.
+- `scripts/smoke-test.mjs` passou a exigir a nova politica.
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, backend, portal, camera, WebRTC real ou layout.
+- Validacoes aprovadas: `npm run test:owner-live-evidence`, `node scripts/smoke-test.mjs`, `npm run typecheck`, `npm run lint`, `npm test`, `npm run private:android:readiness` condicionado e `git diff --check`.
+- Checkpoint: `docs/86_CHECKPOINT_ETAPA_1_14_OWNER_LIVE_CALL_LIFECYCLE_POLICY_2026-05-18.md`.
+- Proxima etapa: commit e push.
+
 ## 2026-05-18 - Etapa 1.13 politica pura de inicio da evidencia local do solicitante
 
 Status: implementada, validada e pronta para checkpoint Git.

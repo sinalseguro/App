@@ -19,7 +19,10 @@ import {
   shouldResolveMediaReleaseWaiter
 } from "@/features/emergency-home/mediaProcessingStatusPolicy";
 import { ownerAutoCallAttemptMessage, ownerAutoCallRecipientStatus, shouldAttemptOwnerAutoCall } from "@/features/emergency-home/ownerAutoCallPolicy";
-import { resolveOwnerLiveVideoEvidenceStart } from "@/features/emergency-home/ownerLiveEvidencePolicy";
+import {
+  resolveOwnerLiveCallLifecycle,
+  resolveOwnerLiveVideoEvidenceStart
+} from "@/features/emergency-home/ownerLiveEvidencePolicy";
 import { panicButtonLabel, resolvePanicTriggerDecision } from "@/features/emergency-home/panicTriggerPolicy";
 import { activeRemoteSyncRetryMessage, resolveActiveRemoteSyncStatus } from "@/features/emergency-home/remoteSyncStatusPolicy";
 import { EmergencyHomePanel, EmergencyHomeRoute } from "@/features/emergency-home/routes";
@@ -899,40 +902,33 @@ export default function HomeScreen() {
   ]);
 
   useEffect(() => {
-    if (liveAudioCall.state.role !== "owner") return;
-    const remoteSessionId = liveAudioCall.state.remoteSessionId ?? liveRemoteSessionId;
-    if (!remoteSessionId) return;
+    const lifecycleDecision = resolveOwnerLiveCallLifecycle({
+      activeRecordingRemoteSessionId: ownerLiveVideoRecordingRef.current?.remoteSessionId,
+      fallbackPackageId: mediaRecorderPackageId,
+      fallbackRemoteSessionId: liveRemoteSessionId,
+      packageId: activePackageId,
+      remoteSessionId: liveAudioCall.state.remoteSessionId,
+      role: liveAudioCall.state.role,
+      status: liveAudioCall.state.status
+    });
+    if (!lifecycleDecision.shouldApply) return;
 
-    if (liveAudioCall.state.status === "connected") {
-      const hasLiveVideoRecording = ownerLiveVideoRecordingRef.current?.remoteSessionId === remoteSessionId;
-      updateOwnerLiveEvidence(remoteSessionId, {
-        connectedAt: new Date().toISOString(),
-        localEvidenceStatus: hasLiveVideoRecording ? "recording" : "metadata_only",
-        packageId: activePackageId ?? mediaRecorderPackageId ?? undefined,
-        status: hasLiveVideoRecording ? "recording" : "transmitting"
-      });
+    if (lifecycleDecision.clearStartedSession) {
+      ownerAutoCallStartedSessionIdsRef.current.delete(lifecycleDecision.remoteSessionId);
     }
-
-    if (liveAudioCall.state.status === "failed") {
-      ownerAutoCallStartedSessionIdsRef.current.delete(remoteSessionId);
+    if (lifecycleDecision.shouldStopLiveVideoEvidence) {
       void stopOwnerLiveVideoEvidence("call_finished");
-      updateOwnerLiveEvidence(remoteSessionId, {
-        endedAt: new Date().toISOString(),
-        localEvidenceStatus: "failed",
-        packageId: activePackageId ?? mediaRecorderPackageId ?? undefined,
-        status: "failed"
-      });
     }
 
-    if (liveAudioCall.state.status === "ended") {
-      ownerAutoCallStartedSessionIdsRef.current.delete(remoteSessionId);
-      void stopOwnerLiveVideoEvidence("call_finished");
-      updateOwnerLiveEvidence(remoteSessionId, {
-        endedAt: new Date().toISOString(),
-        packageId: activePackageId ?? mediaRecorderPackageId ?? undefined,
-        status: "ended"
-      });
-    }
+    const lifecycleTimestamp = new Date().toISOString();
+    updateOwnerLiveEvidence(lifecycleDecision.remoteSessionId, {
+      ...(lifecycleDecision.evidenceUpdate.timestampField === "connectedAt"
+        ? { connectedAt: lifecycleTimestamp }
+        : { endedAt: lifecycleTimestamp }),
+      localEvidenceStatus: lifecycleDecision.evidenceUpdate.localEvidenceStatus,
+      packageId: lifecycleDecision.evidenceUpdate.packageId,
+      status: lifecycleDecision.evidenceUpdate.status
+    });
   }, [
     activePackageId,
     liveAudioCall.state.remoteSessionId,
