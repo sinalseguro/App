@@ -459,3 +459,13 @@ Papel: seguranca, LGPD e QA.
 - A verificacao criptografica, lockout e sessao protegida continuam em `src/security/protectedAccess.ts`; a nova policy nao manipula hash, salt ou sessao protegida.
 - Validacoes aprovadas: `test:protected-route-code`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
 - Performance Android nao foi coletada porque a fatia nao altera UX, renderizacao, camera, WebRTC, gravacao ou loop de midia; proxima mudanca operacional sensivel deve usar Android fisico e aparelho 32-bit como sentinela.
+
+## QA/Security - 2026-05-18 - Etapa 1.22 validacao Android da consolidacao Home/SOS
+
+- Dois Androids fisicos distintos foram usados por USB; a entrada Wi-Fi/mDNS duplicada do Redmi continua sem contar como terceiro aparelho.
+- Build debug bundled multi-ABI foi instalado em `0123456789ABCDEF` e `5686add7`, ambos em `0.1.15`/`versionCode 17`.
+- Validacao visual confirmou Home/SOS pronta nos dois aparelhos, com `SinalSeguro`, `MODO DISCRETO`, `SOS`, `Pronto para pedir ajuda`, `Policia`, `Bombeiros` e `SAMU`.
+- Logs filtrados nao apresentaram `FATAL EXCEPTION`, `AndroidRuntime`, ANR, `TypeError`, `ReferenceError` ou erro React Native nao tratado.
+- Logs brutos contem paths internos gerados pelo Android loader e ficaram fora do Git; prints e demais evidencias fisicas tambem ficaram como artefatos locais ignorados.
+- Avisos nao bloqueantes: Firebase default app ausente no debug local, URI scheme duplicado em Expo/React Native e inicializacao normal de WebRTC audio module.
+- Performance: Android 32-bit segue como sentinela de startup/jank; Redmi 64-bit ficou estavel. Proxima mudanca operacional sensivel deve repetir fluxo owner -> anjo.

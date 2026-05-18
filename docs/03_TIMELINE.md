@@ -3369,6 +3369,35 @@ Checkpoint:
 
 - `docs/93_CHECKPOINT_ETAPA_1_21_PROTECTED_ROUTE_CODE_POLICY_2026-05-18.md`.
 
+## 2026-05-18 - Etapa 1.22 validacao Android da consolidacao Home/SOS
+
+Status: consolidacao fisica Android aprovada para as policies puras das etapas 1.20 e 1.21.
+
+Executado:
+
+- Build debug bundled multi-ABI gerado apos limpeza de duplicatas regeneraveis em `node_modules/*/android/build`.
+- APK local de QA instalado nos dois Androids fisicos: `0123456789ABCDEF` (`armeabi-v7a`) e `5686add7` (`arm64-v8a`).
+- Ambos confirmaram `versionName=0.1.15` e `versionCode=17`.
+- Home/SOS abriu nos dois aparelhos com identidade visual preservada: `SinalSeguro`, `MODO DISCRETO`, botao `SOS`, estado `Pronto para pedir ajuda` e botoes `Policia`, `Bombeiros` e `SAMU`.
+- Logs filtrados nao apresentaram crash, ANR, erro React Native nao tratado ou excecao fatal.
+- Evidencias brutas locais ficaram fora do Git; somente resumo saneado foi versionado.
+
+Validacoes:
+
+- `npm run typecheck`: aprovado.
+- `npm run lint`: aprovado.
+- `npm test`: aprovado.
+- `npm run private:android:readiness`: aprovado condicionado pela pendencia conhecida de Node local para release publica.
+- `git diff --check`: aprovado.
+- Build Android debug bundled: aprovado.
+- ADB install/reinstall: aprovado nos dois aparelhos.
+- Startup observado: `WaitTime=9374ms` no Android 32-bit e `WaitTime=2898ms` no Redmi 64-bit.
+- `gfxinfo` em tela estavel: 21,27% janky no Android 32-bit e 0,60% janky no Redmi 64-bit.
+
+Checkpoint:
+
+- `docs/94_CHECKPOINT_VALIDACAO_ANDROID_ETAPA_1_22_CONSOLIDACAO_POLICIES_HOME_SOS_2026-05-18.md`.
+
 ## 2026-05-18 - Validacao fisica dois Androids SOS/anjo
 
 Status: validado fisicamente em dois Androids distintos com Android `0.1.15`.

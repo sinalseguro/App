@@ -498,3 +498,12 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:protected-route-code` cobre ausencia de rota, codigo ausente, incorreto, bloqueado e correto.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline.
 - Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional em chamada/camera/WebRTC/gravacao/UX deve repetir validacao fisica.
+
+# Atualizacao - 2026-05-18 - Etapa 1.22 validacao Android da consolidacao Home/SOS
+
+- As etapas 1.20 e 1.21 foram consolidadas em dois Androids fisicos conectados por USB: `0123456789ABCDEF` e `5686add7`.
+- APK local de QA `br.com.sinalseguro.app` ficou em `versionName=0.1.15`, `versionCode=17`, SHA-256 `328de08508081a8d8696241cdacf206edd6bb8c447ffa05abb1de263765e8e63`, com ABIs `armeabi-v7a` e `arm64-v8a`.
+- A Home/SOS abriu nos dois aparelhos com estado pronto, identidade visual preservada e sem sobreposicao relevante.
+- Startup observado: `WaitTime=9374ms` no Android 32-bit e `WaitTime=2898ms` no Redmi 64-bit.
+- Performance em tela estavel manteve o Android 32-bit como sentinela: 21,27% janky contra 0,60% no Redmi.
+- Proxima recomendacao tecnica: seguir com duas fatias puras da Home/SOS antes de nova mudanca operacional; liberar espaco local antes de outro build pesado.
