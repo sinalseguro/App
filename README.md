@@ -53,6 +53,7 @@ npm run release:android:readiness
 npm run typecheck
 npm run lint
 npm test
+npm run test:api-client
 npm run build:android:debug:bundled
 npm run start
 ```
@@ -118,9 +119,11 @@ Arquitetura atual do cliente API:
 
 - `src/services/apiClient.ts` preserva `apiClient`, `SinalSeguroApiClient`, `ApiRequestError`, `apiConfig`, `getHealth` e os tipos consumidos pelo app.
 - `src/services/api/contracts.ts` concentra schemas Zod, tipos e inputs.
-- `src/services/api/core.ts` concentra sessao segura, request comum, refresh e tratamento de erro.
+- `src/services/api/core.ts` concentra request comum, refresh, tratamento de erro saneado e contrato de sessao injetavel.
+- `src/services/api/sessionStore.ts` mantem a sessao real no `SecureStore`.
 - `src/services/api/authClient.ts`, `devicesClient.ts`, `profilesClient.ts`, `contactsClient.ts`, `emergencyClient.ts` e `releasesClient.ts` separam os endpoints por recurso.
 - Mudancas futuras devem manter a fachada compativel ate existir uma etapa propria para migrar consumidores.
+- `npm run test:api-client` cobre sessao corrompida, refresh, logout, login Google, update publico e chamadas P2P/envelope autenticadas.
 
 APK privado Android atual para validacao fisica, portal e atualizacao pelo app:
 

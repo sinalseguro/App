@@ -5,6 +5,11 @@ Papel: seguranca, LGPD e QA.
 
 ## Decisoes bloqueantes
 
+- QA/Security 2026-05-17 - Etapa 1.1 testes API: adicionados testes de contrato para sessao corrompida, refresh valido/invalido, logout sem retry, login Google, update publico sem JWT, P2P/envelope com autenticacao obrigatoria e redaction de erro sensivel.
+- `ApiRequestError.details` nao deve expor `Authorization`, access/refresh/id token, token de convite, segredo, senha, `encrypted_key`, payload P2P, SDP ou ICE candidate; manter esse gate nas proximas refatoracoes.
+- `AuthApiClient.logout` usa `retryOnUnauthorized: false` e limpa sessao local no `finally`, evitando renovar token durante logout com access expirado.
+- Gates aprovados na Etapa 1.1: `test:api-client`, `typecheck`, `lint`, `npm test`, `private:android:readiness`, varredura sem `console.` em API e build Android debug bundled `arm64-v8a`.
+
 - QA/Security 2026-05-17 - Etapa 1 refatoracao API: a separacao do `apiClient` por dominios nao mudou contratos publicos, rotas, fluxo SOS/WebRTC, portal ou backend.
 - Gate Codex Security direcionado: nenhum novo `console` nos modulos de API; tokens, `Authorization`, `refresh`, `id_token`, token de convite, payload P2P e envelope cifrado seguem apenas como campos de transporte validados, sem log novo.
 - Sessao continua no `SecureStore` via `api.session.v1`; refresh mantem uma retentativa; falha de refresh limpa sessao; logout limpa sessao no `finally`.

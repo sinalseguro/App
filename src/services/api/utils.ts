@@ -1,8 +1,9 @@
-import { Platform } from "react-native";
-
 import { LoginDeviceContext, LogoutDeviceContext } from "@/services/api/contracts";
 
+declare const require: <T = unknown>(moduleName: string) => T;
+
 export function currentPlatform() {
+  const { Platform } = require<{ Platform: { OS: string } }>("react-native");
   if (Platform.OS === "ios") return "ios";
   if (Platform.OS === "android") return "android";
   return "web";

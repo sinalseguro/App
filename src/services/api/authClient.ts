@@ -99,7 +99,8 @@ export class AuthApiClient {
         await this.core.request("/auth/logout", z.unknown(), {
           authenticated: true,
           body: { ...toLogoutDevicePayload(deviceContext), refresh: session.refresh },
-          method: "POST"
+          method: "POST",
+          retryOnUnauthorized: false
         });
       }
     } finally {

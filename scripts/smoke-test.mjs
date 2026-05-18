@@ -667,7 +667,12 @@ const apiClient = [
   await readFile("src/services/api/contactsClient.ts", "utf8"),
   await readFile("src/services/api/contracts.ts", "utf8"),
   await readFile("src/services/api/core.ts", "utf8"),
-  await readFile("src/services/api/devicesClient.ts", "utf8")
+  await readFile("src/services/api/devicesClient.ts", "utf8"),
+  await readFile("src/services/api/emergencyClient.ts", "utf8"),
+  await readFile("src/services/api/profilesClient.ts", "utf8"),
+  await readFile("src/services/api/releasesClient.ts", "utf8"),
+  await readFile("src/services/api/sessionStore.ts", "utf8"),
+  await readFile("src/services/api/utils.ts", "utf8")
 ].join("\n");
 const invitationService = await readFile("src/features/invitations/invitationService.ts", "utf8");
 const trustedRelationshipStore = await readFile("src/features/invitations/trustedRelationshipStore.ts", "utf8");

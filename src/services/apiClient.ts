@@ -5,6 +5,7 @@ import { DevicesApiClient } from "@/services/api/devicesClient";
 import { EmergencyApiClient } from "@/services/api/emergencyClient";
 import { ProfilesApiClient } from "@/services/api/profilesClient";
 import { ReleasesApiClient } from "@/services/api/releasesClient";
+import { secureSessionStore } from "@/services/api/sessionStore";
 import {
   ApiRequestError,
   SinalSeguroApiCore,
@@ -63,7 +64,7 @@ export class SinalSeguroApiClient {
   private readonly core: SinalSeguroApiCore;
 
   constructor(baseUrl = apiBaseUrl, enabled = apiEnabled) {
-    this.core = new SinalSeguroApiCore(baseUrl, enabled);
+    this.core = new SinalSeguroApiCore(baseUrl, enabled, secureSessionStore);
     this.auth = new AuthApiClient(this.core);
     this.contacts = new ContactsApiClient(this.core);
     this.devices = new DevicesApiClient(this.core);

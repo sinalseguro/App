@@ -5,6 +5,13 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 
 ## Estado tecnico
 
+- Atualizacao 2026-05-17 Etapa 1.1: o cliente API ganhou testes de contrato em `scripts/api-client-contract.test.ts` e `npm test` agora inclui `npm run test:api-client`.
+- `SinalSeguroApiCore` recebe `ApiSessionSecretStore` por injecao; a implementacao real fica em `src/services/api/sessionStore.ts` usando `SecureStore` e a chave `api.session.v1`.
+- `logout` nao tenta refresh quando a API retorna `401`; a sessao local e limpa no `finally`.
+- Erros de API agora saneiam `Authorization`, access/refresh/id token, convite, segredo, senha, envelope cifrado, payload P2P, SDP e ICE candidate antes de popular `ApiRequestError.details`.
+- Build Android debug bundled validado em `arm64-v8a`; APK local SHA-256 `a6c5fd8cb4947498c9b79087b699970df18edbde1e7f6ae36e7c25934404c69a`.
+- Checkpoint da etapa: `docs/67_CHECKPOINT_ETAPA_1_1_TESTES_API_CLIENT_2026-05-17.md`.
+
 - Atualizacao 2026-05-17: Etapa 1 da refatoracao mobile concluiu a separacao de `src/services/apiClient.ts` por dominios, mantendo a fachada publica compativel em `@/services/apiClient`.
 - Novos modulos de API: `src/services/api/contracts.ts`, `core.ts`, `authClient.ts`, `devicesClient.ts`, `profilesClient.ts`, `contactsClient.ts`, `emergencyClient.ts`, `releasesClient.ts` e `utils.ts`.
 - `SinalSeguroApiClient` continua expondo os mesmos metodos publicos e delega para clientes de dominio; nao alterar imports consumidores antes de nova etapa aprovada.

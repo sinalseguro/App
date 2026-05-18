@@ -1,10 +1,15 @@
 import { z } from "zod";
 
 import { ApiSession, ApiSessionSchema, TokenRefreshSchema } from "@/services/api/contracts";
-import { deleteSecret, readSecret, saveSecret } from "@/security/secureStorage";
 
 export const DEFAULT_API_BASE_URL = "https://api.sinalseguro.com.br/api";
 export const API_SESSION_SECRET_KEY = "api.session.v1";
+
+export type ApiSessionSecretStore = {
+  delete(): Promise<void>;
+  read(): Promise<string | null>;
+  save(value: string): Promise<void>;
+};
 
 function normalizeApiBaseUrl(value?: string | null) {
   const trimmedValue = value?.trim();
@@ -49,6 +54,59 @@ async function parseResponseBody(response: Response) {
   }
 }
 
+function isSensitiveApiErrorKey(key: string) {
+  const normalizedKey = key.toLowerCase();
+  return (
+    normalizedKey.includes("authorization") ||
+    normalizedKey.includes("access") ||
+    normalizedKey.includes("refresh") ||
+    normalizedKey.includes("id_token") ||
+    normalizedKey.includes("identity_token") ||
+    normalizedKey.includes("token") ||
+    normalizedKey.includes("secret") ||
+    normalizedKey.includes("password") ||
+    normalizedKey.includes("encrypted_key") ||
+    normalizedKey.includes("payload") ||
+    normalizedKey.includes("sdp") ||
+    normalizedKey.includes("candidate")
+  );
+}
+
+function redactSensitiveApiErrorString(value: string) {
+  if (!value) return value;
+
+  const redactedSdp = value.replace(/sdp\s*[:=]\s*v=0[\s\S]*/gi, "sdp=[redigido]");
+  if (
+    /\bv=0\b[\s\S]*\bm=(audio|video|application)\b/i.test(redactedSdp) ||
+    /fingerprint:sha-256/i.test(redactedSdp)
+  ) {
+    return "[sdp redigido]";
+  }
+
+  return redactedSdp
+    .replace(/Bearer\s+[A-Za-z0-9._~+/=-]+/gi, "Bearer [redigido]")
+    .replace(/\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\b/g, "[jwt redigido]")
+    .replace(/\ba=candidate:[^\r\n]+/gi, "a=candidate:[redigido]")
+    .replace(
+      /\b(token|convite|invite|authorization|access|refresh|id_token|identity_token|encrypted_key|payload|candidate|sdp|secret|segredo|senha|password)[_:\s=-]+[A-Za-z0-9._~+/=-]{6,}/gi,
+      "$1 [redigido]"
+    );
+}
+
+function sanitizeApiErrorDetails(value: unknown): unknown {
+  if (!value) return value;
+  if (typeof value === "string") return redactSensitiveApiErrorString(value);
+  if (Array.isArray(value)) return value.map(sanitizeApiErrorDetails);
+  if (typeof value !== "object") return value;
+
+  return Object.fromEntries(
+    Object.entries(value as Record<string, unknown>).map(([key, entryValue]) => [
+      key,
+      isSensitiveApiErrorKey(key) ? "[redigido]" : sanitizeApiErrorDetails(entryValue)
+    ])
+  );
+}
+
 function extractApiErrorMessage(value: unknown): string | null {
   if (!value) return null;
   if (typeof value === "string") return value;
@@ -60,9 +118,12 @@ function extractApiErrorMessage(value: unknown): string | null {
     return (
       extractApiErrorMessage(record.detail) ??
       extractApiErrorMessage(record.non_field_errors) ??
-      extractApiErrorMessage(record.token) ??
       extractApiErrorMessage(record.code) ??
-      Object.values(record).map(extractApiErrorMessage).find(Boolean) ??
+      (record.token ? "Convite indisponivel ou invalido." : null) ??
+      Object.entries(record)
+        .filter(([key]) => !isSensitiveApiErrorKey(key))
+        .map(([, entryValue]) => extractApiErrorMessage(entryValue))
+        .find(Boolean) ??
       null
     );
   }
@@ -72,7 +133,8 @@ function extractApiErrorMessage(value: unknown): string | null {
 export class SinalSeguroApiCore {
   constructor(
     private readonly baseUrl = apiBaseUrl,
-    private readonly enabled = apiEnabled
+    private readonly enabled = apiEnabled,
+    private readonly sessionStore: ApiSessionSecretStore
   ) {}
 
   get isEnabled() {
@@ -80,7 +142,7 @@ export class SinalSeguroApiCore {
   }
 
   async getStoredSession() {
-    const serializedSession = await readSecret(API_SESSION_SECRET_KEY);
+    const serializedSession = await this.sessionStore.read();
     if (!serializedSession) return null;
 
     try {
@@ -92,11 +154,11 @@ export class SinalSeguroApiCore {
   }
 
   async saveSession(session: ApiSession) {
-    await saveSecret(API_SESSION_SECRET_KEY, JSON.stringify(session));
+    await this.sessionStore.save(JSON.stringify(session));
   }
 
   async clearSession() {
-    await deleteSecret(API_SESSION_SECRET_KEY);
+    await this.sessionStore.delete();
   }
 
   async request<TSchema extends z.ZodType>(
@@ -146,8 +208,9 @@ export class SinalSeguroApiCore {
     }
 
     if (!response.ok) {
-      const message = extractApiErrorMessage(responseBody) ?? "API SinalSeguro indisponivel";
-      throw new ApiRequestError(message, response.status, responseBody);
+      const safeResponseBody = sanitizeApiErrorDetails(responseBody);
+      const message = extractApiErrorMessage(safeResponseBody) ?? "API SinalSeguro indisponivel";
+      throw new ApiRequestError(message, response.status, safeResponseBody);
     }
 
     return schema.parse(responseBody);

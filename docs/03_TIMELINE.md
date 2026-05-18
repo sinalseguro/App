@@ -3,6 +3,23 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-17 - Etapa 1.1 testes de contrato API e hardening de erro
+
+Status: concluida localmente, validada e pronta para checkpoint Git.
+
+- `SinalSeguroApiCore` passou a receber um store de sessao injetavel, mantendo a sessao real no `SecureStore` por `src/services/api/sessionStore.ts` e permitindo testes de contrato sem tocar no armazenamento nativo.
+- `AuthApiClient.logout` deixa de tentar refresh quando `/auth/logout` retorna `401`; o app limpa a sessao local no `finally` e evita renovar token durante uma saida com access expirado.
+- `ApiRequestError.details` agora recebe detalhes saneados: campos de `Authorization`, access/refresh/id token, convite, segredo, senha, envelope cifrado, payload P2P, SDP e ICE candidate sao redigidos antes de chegar na UI/camadas consumidoras.
+- `extractApiErrorMessage` preserva mensagens uteis e codigos operacionais sem ecoar valores sensiveis de token.
+- `scripts/api-client-contract.test.ts` cobre sessao corrompida, refresh valido/invalido, logout sem retry, login Google com busca de usuario, update publico sem Authorization, P2P/envelope exigindo autenticacao e redaction de erro sensivel.
+- `npm test` passou a incluir `npm run test:api-client`.
+- `scripts/smoke-test.mjs` foi ampliado para ler todos os modulos do cliente API separados por dominio, incluindo emergencia/P2P, releases, perfis, session store e utilitarios.
+- Gate Codex Security direcionado: sem `console.` nos modulos de API; sem novo log de token, Authorization, id token, convite, payload P2P, SDP, ICE candidate ou envelope cifrado.
+- Build Android debug bundled foi validado em recorte `arm64-v8a` por limite de espaco local; o APK gerado em `android/app/build/outputs/apk/debug/app-debug.apk` tem SHA-256 `a6c5fd8cb4947498c9b79087b699970df18edbde1e7f6ae36e7c25934404c69a`.
+- Validacoes aprovadas: `npm run test:api-client`, `npm run typecheck`, `npm run lint`, `npm test`, `npm run private:android:readiness`, varredura sem `console.` em API e build Android debug bundled `arm64-v8a`.
+- Observacao ambiental: `private:android:readiness` segue condicionado apenas pelo Node local `20.16.0`; release publico exige Node `>=22.13.0`, mas build privado debug aceita essa pendencia.
+- Checkpoint: `docs/67_CHECKPOINT_ETAPA_1_1_TESTES_API_CLIENT_2026-05-17.md`.
+
 ## 2026-05-17 - Etapa 1 refatoracao apiClient por dominios
 
 Status: concluida localmente, validada e pronta para checkpoint Git.
