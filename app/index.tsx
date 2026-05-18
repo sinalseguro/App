@@ -13,6 +13,7 @@ import { EmergencyCallTarget } from "@/features/emergency-home/EmergencyCallTarg
 import { EmergencySettingsDrawer } from "@/features/emergency-home/EmergencySettingsDrawer";
 import { EmergencyTopBar } from "@/features/emergency-home/EmergencyTopBar";
 import { resolveFinishOutcomePolicy } from "@/features/emergency-home/finishOutcomePolicy";
+import { resolveFinishRequestDecision } from "@/features/emergency-home/finishRequestPolicy";
 import { resolveLiveCallCleanupDecision } from "@/features/emergency-home/liveCallCleanupPolicy";
 import { resolveMediaHandoffPolicy } from "@/features/emergency-home/mediaHandoffPolicy";
 import {
@@ -1233,12 +1234,20 @@ export default function HomeScreen() {
   }
 
   function requestFinishActiveCall() {
-    if (!activePackageId || finishInProgress || finishInProgressRef.current) return;
+    const finishRequestDecision = resolveFinishRequestDecision({
+      activePackageId,
+      finishInProgress,
+      finishInProgressRef: finishInProgressRef.current,
+      requireSecurityCode: preferences.finishSafety.requireCode
+    });
+    if (!finishRequestDecision.shouldContinue) return;
 
-    setFinishError("");
-    setFinishCodeInput("");
+    if (finishRequestDecision.shouldResetConfirmationForm) {
+      setFinishError("");
+      setFinishCodeInput("");
+    }
 
-    if (preferences.finishSafety.requireCode) {
+    if (finishRequestDecision.action === "open_security_confirmation") {
       setFinishConfirmationOpen(true);
       return;
     }

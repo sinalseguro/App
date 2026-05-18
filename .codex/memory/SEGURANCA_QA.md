@@ -416,3 +416,12 @@ Papel: seguranca, LGPD e QA.
 - O unico `console.log` novo esta no teste local dedicado, seguindo padrao dos demais testes de politica.
 - Validacoes aprovadas: `test:live-call-cleanup`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
 - Performance Android nao foi coletada porque a fatia nao altera UX, renderizacao, camera, WebRTC, gravacao ou loop de midia; proxima mudanca operacional sensivel deve usar Android fisico e aparelho 32-bit como sentinela.
+
+## QA/Security - 2026-05-18 - Etapa 1.17 politica pura de solicitacao de encerramento
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido, log runtime, backend, portal ou release.
+- Gate novo `npm run test:finish-request` cobre ausencia de pacote, encerramento em andamento, ref interno em andamento, confirmacao por codigo e finalizacao direta.
+- Varredura dirigida do diff nao encontrou token, `Authorization`, `id_token`, `encrypted_key`, SDP, ICE, URI/path de midia, payload P2P ou novo endpoint.
+- O unico `console.log` novo esta no teste local dedicado, seguindo padrao dos demais testes de politica.
+- Validacoes aprovadas: `test:finish-request`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
+- Performance Android nao foi coletada porque a fatia nao altera UX, renderizacao, camera, WebRTC, gravacao ou loop de midia; proxima mudanca operacional sensivel deve usar Android fisico e aparelho 32-bit como sentinela.

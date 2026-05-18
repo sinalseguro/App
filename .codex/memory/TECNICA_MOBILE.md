@@ -458,3 +458,11 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:live-call-cleanup` cobre pacote ativo, inicio, midia pendente, encerramento, nada a limpar, reset idle e stop de chamada ativa.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline.
 - Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional em chamada/camera/WebRTC/gravacao/UX deve repetir validacao fisica.
+
+# Atualizacao - 2026-05-18 - Etapa 1.17 Home/SOS
+
+- `src/features/emergency-home/finishRequestPolicy.ts` centraliza a decisao anterior ao encerramento real: ignorar, abrir confirmacao por codigo ou finalizar direto.
+- `app/index.tsx` continua responsavel pelos efeitos reais de limpar formulario, abrir modal e chamar `handleFinishActiveCall()`.
+- Novo gate `npm run test:finish-request` cobre ausencia de pacote, encerramento em andamento, ref interno em andamento, confirmacao por codigo e finalizacao direta.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline.
+- Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional em chamada/camera/WebRTC/gravacao/UX deve repetir validacao fisica.

@@ -3282,6 +3282,24 @@ Checkpoint:
 
 - `docs/88_CHECKPOINT_ETAPA_1_16_LIVE_CALL_CLEANUP_POLICY_2026-05-18.md`.
 
+## 2026-05-18 - Etapa 1.17 politica pura de solicitacao de encerramento
+
+Status: refatoracao pura implementada, validada e sem publicacao de release.
+
+Executado:
+
+- Criado `src/features/emergency-home/finishRequestPolicy.ts` para decidir se a Home ignora a solicitacao de encerramento, abre confirmacao por codigo ou finaliza direto.
+- `app/index.tsx` preserva os efeitos reais: limpar formulario de codigo, abrir modal e chamar `handleFinishActiveCall()`.
+- Criado `scripts/finish-request-policy.test.ts` e script `npm run test:finish-request`.
+- `scripts/smoke-test.mjs` passou a exigir a policy pura para evitar regressao para regra inline.
+- Validacoes aprovadas: teste focado, smoke-test, `typecheck`, `lint`, `npm test`, readiness Android privado condicionado e `git diff --check`.
+- Varredura dirigida de seguranca nao encontrou novo token, `Authorization`, `id_token`, `encrypted_key`, SDP/ICE, URI/path de midia, payload P2P ou endpoint.
+- Sem build Android nesta fatia porque nao houve mudanca operacional de UX, camera, WebRTC, gravacao, backend ou portal.
+
+Checkpoint:
+
+- `docs/89_CHECKPOINT_ETAPA_1_17_FINISH_REQUEST_POLICY_2026-05-18.md`.
+
 ## 2026-05-18 - Validacao fisica dois Androids SOS/anjo
 
 Status: validado fisicamente em dois Androids distintos com Android `0.1.15`.
