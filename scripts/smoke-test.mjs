@@ -37,6 +37,7 @@ const requiredFiles = [
   "src/features/emergency-home/EmergencySettingsDrawer.tsx",
   "src/features/emergency-home/EmergencyTopBar.tsx",
   "src/features/emergency-home/emergencyStartPolicy.ts",
+  "src/features/emergency-home/finishCodePolicy.ts",
   "src/features/emergency-home/finishOutcomePolicy.ts",
   "src/features/emergency-home/finishRequestPolicy.ts",
   "src/features/emergency-home/mediaHandoffPolicy.ts",
@@ -45,6 +46,7 @@ const requiredFiles = [
   "src/features/emergency-home/ownerLiveEvidencePolicy.ts",
   "src/features/emergency-home/liveCallCleanupPolicy.ts",
   "src/features/emergency-home/panicTriggerPolicy.ts",
+  "src/features/emergency-home/protectedRouteCodePolicy.ts",
   "src/features/emergency-home/remoteSyncStatusPolicy.ts",
   "src/features/invitations/invitationService.ts",
   "src/features/invitations/trustedRelationshipStore.ts",
@@ -91,6 +93,8 @@ const requiredFiles = [
   "scripts/owner-auto-call-policy.test.ts",
   "scripts/live-call-cleanup-policy.test.ts",
   "scripts/finish-request-policy.test.ts",
+  "scripts/finish-code-policy.test.ts",
+  "scripts/protected-route-code-policy.test.ts",
   "scripts/live-call-history-policy.test.ts",
   "scripts/live-call-state-policy.test.ts",
   "scripts/live-webrtc-policy.test.ts",
@@ -177,6 +181,7 @@ const mediaInterfacePresentation = await readFile("src/features/emergency/mediaI
 const appLayout = await readFile("app/_layout.tsx", "utf8");
 const homeScreen = await readFile("app/index.tsx", "utf8");
 const emergencyStartPolicy = await readFile("src/features/emergency-home/emergencyStartPolicy.ts", "utf8");
+const finishCodePolicy = await readFile("src/features/emergency-home/finishCodePolicy.ts", "utf8");
 const finishOutcomePolicy = await readFile("src/features/emergency-home/finishOutcomePolicy.ts", "utf8");
 const finishRequestPolicy = await readFile("src/features/emergency-home/finishRequestPolicy.ts", "utf8");
 const mediaHandoffPolicy = await readFile("src/features/emergency-home/mediaHandoffPolicy.ts", "utf8");
@@ -185,6 +190,7 @@ const ownerAutoCallPolicy = await readFile("src/features/emergency-home/ownerAut
 const ownerLiveEvidencePolicy = await readFile("src/features/emergency-home/ownerLiveEvidencePolicy.ts", "utf8");
 const liveCallCleanupPolicy = await readFile("src/features/emergency-home/liveCallCleanupPolicy.ts", "utf8");
 const panicTriggerPolicy = await readFile("src/features/emergency-home/panicTriggerPolicy.ts", "utf8");
+const protectedRouteCodePolicy = await readFile("src/features/emergency-home/protectedRouteCodePolicy.ts", "utf8");
 const remoteSyncStatusPolicy = await readFile("src/features/emergency-home/remoteSyncStatusPolicy.ts", "utf8");
 const alertScreen = await readFile("app/alerta.tsx", "utf8");
 const incomingEmergencyNotification = await readFile("src/features/live-call/incomingEmergencyNotification.ts", "utf8");
@@ -761,6 +767,27 @@ if (
   !packageJson.scripts["test:finish-request"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para solicitacao de encerramento do chamado.");
+}
+
+if (
+  !homeScreen.includes("resolveFinishCodeConfirmationDecision") ||
+  !finishCodePolicy.includes("resolveFinishCodeConfirmationDecision") ||
+  !finishCodePolicy.includes("Codigo de seguranca nao verificado.") ||
+  !finishCodePolicy.includes("O chamado continua ativo.") ||
+  !packageJson.scripts["test:finish-code"]
+) {
+  throw new Error("Home/SOS precisa manter politica pura testavel para confirmacao de encerramento por codigo.");
+}
+
+if (
+  !homeScreen.includes("resolveProtectedRouteCodeDecision") ||
+  !protectedRouteCodePolicy.includes("resolveProtectedRouteCodeDecision") ||
+  !protectedRouteCodePolicy.includes("ignore_missing_request") ||
+  !protectedRouteCodePolicy.includes("unlock_and_navigate") ||
+  !protectedRouteCodePolicy.includes("Area protegida bloqueada.") ||
+  !packageJson.scripts["test:protected-route-code"]
+) {
+  throw new Error("Home/SOS precisa manter politica pura testavel para rotas protegidas por codigo.");
 }
 
 if (

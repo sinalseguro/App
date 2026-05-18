@@ -3335,6 +3335,40 @@ Checkpoint:
 
 - `docs/91_CHECKPOINT_ETAPA_1_19_MEDIA_STOP_SETTLEMENT_POLICY_2026-05-18.md`.
 
+## 2026-05-18 - Etapa 1.20 politica pura de confirmacao de encerramento por codigo
+
+Status: refatoracao pura implementada, validada e sem publicacao de release.
+
+Executado:
+
+- Criado `src/features/emergency-home/finishCodePolicy.ts` para decidir se a confirmacao de encerramento por codigo finaliza o chamado ou mostra erro mantendo o chamado ativo.
+- `app/index.tsx` preserva os efeitos reais: chamar `verifySecurityCodeStatus()`, atualizar `finishError` e chamar `handleFinishActiveCall()`.
+- Criado `scripts/finish-code-policy.test.ts` e script `npm run test:finish-code`.
+- `scripts/smoke-test.mjs` passou a exigir a policy pura para evitar regressao para regra inline.
+- Validacoes aprovadas: teste focado, smoke-test, `typecheck`, `lint`, `npm test`, readiness Android privado condicionado e `git diff --check`.
+- Sem build Android nesta fatia porque nao houve mudanca operacional de UX, camera, WebRTC, gravacao, backend ou portal.
+
+Checkpoint:
+
+- `docs/92_CHECKPOINT_ETAPA_1_20_FINISH_CODE_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.21 politica pura de rota protegida por codigo
+
+Status: refatoracao pura implementada, validada e sem publicacao de release.
+
+Executado:
+
+- Criado `src/features/emergency-home/protectedRouteCodePolicy.ts` para decidir se a rota protegida deve ser ignorada, bloquear com erro ou liberar acesso e navegar.
+- `app/index.tsx` preserva os efeitos reais: chamar `verifySecurityCodeStatus()`, atualizar erro, limpar campos, chamar `unlockProtectedAccess()` e navegar.
+- Criado `scripts/protected-route-code-policy.test.ts` e script `npm run test:protected-route-code`.
+- `scripts/smoke-test.mjs` passou a exigir a policy pura para evitar regressao para regra inline.
+- Validacoes aprovadas: teste focado, smoke-test, `typecheck`, `lint`, `npm test`, readiness Android privado condicionado e `git diff --check`.
+- Sem build Android nesta fatia porque nao houve mudanca operacional de UX, camera, WebRTC, gravacao, backend ou portal.
+
+Checkpoint:
+
+- `docs/93_CHECKPOINT_ETAPA_1_21_PROTECTED_ROUTE_CODE_POLICY_2026-05-18.md`.
+
 ## 2026-05-18 - Validacao fisica dois Androids SOS/anjo
 
 Status: validado fisicamente em dois Androids distintos com Android `0.1.15`.

@@ -482,3 +482,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `npm run test:media-processing-status` cobre agora processamento de midia e settlement da parada no mesmo gate.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline.
 - Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional em chamada/camera/WebRTC/gravacao/UX deve repetir validacao fisica.
+
+# Atualizacao - 2026-05-18 - Etapa 1.20 Home/SOS
+
+- `src/features/emergency-home/finishCodePolicy.ts` centraliza a decisao da confirmacao de encerramento por codigo: finalizar ou mostrar erro mantendo o chamado ativo.
+- `app/index.tsx` continua responsavel por verificar o codigo, atualizar erro e chamar o encerramento real.
+- Novo gate `npm run test:finish-code` cobre codigo ausente, incorreto, bloqueado, correto e encerramento sem codigo.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline.
+- Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional em chamada/camera/WebRTC/gravacao/UX deve repetir validacao fisica.
+
+# Atualizacao - 2026-05-18 - Etapa 1.21 Home/SOS
+
+- `src/features/emergency-home/protectedRouteCodePolicy.ts` centraliza a decisao de rota protegida por codigo: ignorar ausencia de solicitacao, bloquear com erro ou liberar acesso e navegar.
+- `app/index.tsx` continua responsavel por verificar o codigo, limpar campos, desbloquear sessao protegida e navegar.
+- Novo gate `npm run test:protected-route-code` cobre ausencia de rota, codigo ausente, incorreto, bloqueado e correto.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline.
+- Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional em chamada/camera/WebRTC/gravacao/UX deve repetir validacao fisica.

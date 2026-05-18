@@ -16,6 +16,7 @@ import {
   resolveEmergencyStartPresentation,
   resolveEmergencyStartRequestPolicy
 } from "@/features/emergency-home/emergencyStartPolicy";
+import { resolveFinishCodeConfirmationDecision } from "@/features/emergency-home/finishCodePolicy";
 import { resolveFinishOutcomePolicy } from "@/features/emergency-home/finishOutcomePolicy";
 import { resolveFinishRequestDecision } from "@/features/emergency-home/finishRequestPolicy";
 import { resolveLiveCallCleanupDecision } from "@/features/emergency-home/liveCallCleanupPolicy";
@@ -33,6 +34,7 @@ import {
   resolveOwnerLiveVideoEvidenceStart
 } from "@/features/emergency-home/ownerLiveEvidencePolicy";
 import { panicButtonLabel, resolvePanicTriggerDecision } from "@/features/emergency-home/panicTriggerPolicy";
+import { resolveProtectedRouteCodeDecision } from "@/features/emergency-home/protectedRouteCodePolicy";
 import { activeRemoteSyncRetryMessage, resolveActiveRemoteSyncStatus } from "@/features/emergency-home/remoteSyncStatusPolicy";
 import { EmergencyHomePanel, EmergencyHomeRoute } from "@/features/emergency-home/routes";
 import { CameraCaptureResidueCleaner } from "@/features/emergency/CameraCaptureResidueCleaner";
@@ -1502,14 +1504,16 @@ export default function HomeScreen() {
   }
 
   async function confirmFinishWithCode() {
-    if (!preferences.finishSafety.requireCode) {
-      void handleFinishActiveCall();
-      return;
-    }
+    const verification = preferences.finishSafety.requireCode
+      ? await verifySecurityCodeStatus(preferences, finishCodeInput)
+      : undefined;
+    const finishCodeDecision = resolveFinishCodeConfirmationDecision({
+      requireSecurityCode: preferences.finishSafety.requireCode,
+      verification
+    });
 
-    const verification = await verifySecurityCodeStatus(preferences, finishCodeInput);
-    if (!verification.ok) {
-      setFinishError(`${verification.message} O chamado continua ativo.`);
+    if (finishCodeDecision.action === "show_error") {
+      setFinishError(finishCodeDecision.errorMessage);
       return;
     }
 
@@ -1517,14 +1521,22 @@ export default function HomeScreen() {
   }
 
   async function confirmProtectedRouteWithCode() {
-    if (!protectedRouteRequest) return;
+    const verification = protectedRouteRequest
+      ? await verifySecurityCodeStatus(preferences, protectedRouteCodeInput)
+      : undefined;
+    const protectedRouteDecision = resolveProtectedRouteCodeDecision({
+      hasProtectedRouteRequest: Boolean(protectedRouteRequest),
+      verification
+    });
 
-    const verification = await verifySecurityCodeStatus(preferences, protectedRouteCodeInput);
-    if (!verification.ok) {
-      setProtectedRouteError(`${verification.message} Area protegida bloqueada.`);
+    if (protectedRouteDecision.action === "ignore_missing_request") return;
+
+    if (protectedRouteDecision.action === "show_error") {
+      setProtectedRouteError(protectedRouteDecision.errorMessage);
       return;
     }
 
+    if (!protectedRouteRequest) return;
     const nextRequest = protectedRouteRequest;
     setProtectedRouteRequest(null);
     setProtectedRouteCodeInput("");

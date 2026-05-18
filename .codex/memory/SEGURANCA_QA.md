@@ -443,3 +443,19 @@ Papel: seguranca, LGPD e QA.
 - O unico `console.log` esperado continua sendo o do teste local dedicado, seguindo padrao dos demais testes de politica.
 - Validacoes aprovadas: `test:media-processing-status`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
 - Performance Android nao foi coletada porque a fatia nao altera UX, renderizacao, camera, WebRTC, gravacao ou loop de midia; proxima mudanca operacional sensivel deve usar Android fisico e aparelho 32-bit como sentinela.
+
+## QA/Security - 2026-05-18 - Etapa 1.20 politica pura de confirmacao de encerramento por codigo
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido, log runtime, backend, portal ou release.
+- Gate novo `npm run test:finish-code` cobre codigo nao exigido, verificacao ausente, codigo incorreto, codigo bloqueado e codigo correto.
+- A verificacao criptografica, lockout e armazenamento continuam em `src/security/protectedAccess.ts`; a nova policy nao manipula hash, salt ou sessao protegida.
+- Validacoes aprovadas: `test:finish-code`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
+- Performance Android nao foi coletada porque a fatia nao altera UX, renderizacao, camera, WebRTC, gravacao ou loop de midia; proxima mudanca operacional sensivel deve usar Android fisico e aparelho 32-bit como sentinela.
+
+## QA/Security - 2026-05-18 - Etapa 1.21 politica pura de rota protegida por codigo
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido, log runtime, backend, portal ou release.
+- Gate novo `npm run test:protected-route-code` cobre ausencia de rota, verificacao ausente, codigo incorreto, codigo bloqueado e codigo correto.
+- A verificacao criptografica, lockout e sessao protegida continuam em `src/security/protectedAccess.ts`; a nova policy nao manipula hash, salt ou sessao protegida.
+- Validacoes aprovadas: `test:protected-route-code`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
+- Performance Android nao foi coletada porque a fatia nao altera UX, renderizacao, camera, WebRTC, gravacao ou loop de midia; proxima mudanca operacional sensivel deve usar Android fisico e aparelho 32-bit como sentinela.
