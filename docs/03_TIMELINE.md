@@ -3861,3 +3861,41 @@ Validacoes:
 Checkpoint:
 
 - `docs/108_CHECKPOINT_ETAPA_1_36_FINISH_PROGRESS_DIALOG_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.37 estado do progresso de encerramento Home/SOS
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishProgressStatePolicy` para centralizar estado inicial, merge/clamp de progresso, fechamento permitido e ocultacao ao abrir o cofre.
+- `app/index.tsx` manteve os efeitos reais de encerramento, callbacks do modal, cofre local, midia, backend e WebRTC.
+- `npm test` passou a executar `test:finish-progress-state`.
+
+Validacoes:
+
+- `test:finish-progress-state`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura de seguranca dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/109_CHECKPOINT_ETAPA_1_37_FINISH_PROGRESS_STATE_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.38 navegacao da Home/SOS
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `homeNavigationPolicy` para centralizar a decisao entre rota simples e abertura de `/arquivos` com painel.
+- `app/index.tsx` manteve o efeito real de fechar menu e chamar `router.push()`.
+- `npm test` passou a executar `test:home-navigation`.
+
+Validacoes:
+
+- `test:home-navigation`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura de seguranca dirigida: aprovados.
+- ADB confirmou os Androids conectados, mas sem build/perfil porque a mudanca nao altera UX nativa, chamada, camera, gravacao, WebRTC, backend ou storage.
+
+Checkpoint:
+
+- `docs/110_CHECKPOINT_ETAPA_1_38_HOME_NAVIGATION_POLICY_2026-05-18.md`.

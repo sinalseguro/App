@@ -42,6 +42,8 @@ const requiredFiles = [
   "src/features/emergency-home/emergencyStartFailureDialogPolicy.ts",
   "src/features/emergency-home/finishFlowProgressPolicy.ts",
   "src/features/emergency-home/finishProgressDialogPolicy.ts",
+  "src/features/emergency-home/finishProgressStatePolicy.ts",
+  "src/features/emergency-home/homeNavigationPolicy.ts",
   "src/features/emergency-home/emergencyStartPolicy.ts",
   "src/features/emergency-home/finishCodePolicy.ts",
   "src/features/emergency-home/finishConfirmationDialogPolicy.ts",
@@ -110,11 +112,13 @@ const requiredFiles = [
   "scripts/live-call-waiting-dialog-policy.test.ts",
   "scripts/live-call-cleanup-policy.test.ts",
   "scripts/finish-progress-dialog-policy.test.ts",
+  "scripts/finish-progress-state-policy.test.ts",
   "scripts/finish-request-policy.test.ts",
   "scripts/finish-code-policy.test.ts",
   "scripts/finish-confirmation-dialog-policy.test.ts",
   "scripts/protected-route-code-policy.test.ts",
   "scripts/protected-route-dialog-policy.test.ts",
+  "scripts/home-navigation-policy.test.ts",
   "scripts/live-call-history-policy.test.ts",
   "scripts/live-call-state-policy.test.ts",
   "scripts/live-webrtc-policy.test.ts",
@@ -206,6 +210,8 @@ const emergencyHomeActivityPolicy = await readFile("src/features/emergency-home/
 const emergencyStartFailureDialogPolicy = await readFile("src/features/emergency-home/emergencyStartFailureDialogPolicy.ts", "utf8");
 const finishFlowProgressPolicy = await readFile("src/features/emergency-home/finishFlowProgressPolicy.ts", "utf8");
 const finishProgressDialogPolicy = await readFile("src/features/emergency-home/finishProgressDialogPolicy.ts", "utf8");
+const finishProgressStatePolicy = await readFile("src/features/emergency-home/finishProgressStatePolicy.ts", "utf8");
+const homeNavigationPolicy = await readFile("src/features/emergency-home/homeNavigationPolicy.ts", "utf8");
 const emergencyStartPolicy = await readFile("src/features/emergency-home/emergencyStartPolicy.ts", "utf8");
 const finishCodePolicy = await readFile("src/features/emergency-home/finishCodePolicy.ts", "utf8");
 const finishConfirmationDialogPolicy = await readFile("src/features/emergency-home/finishConfirmationDialogPolicy.ts", "utf8");
@@ -764,6 +770,17 @@ if (
 }
 
 if (
+  !homeScreen.includes("resolveNextFinishProgressState") ||
+  !homeScreen.includes("resolveClosedFinishProgressState") ||
+  !homeScreen.includes("resolveVaultOpeningFinishProgressState") ||
+  !finishProgressStatePolicy.includes("idleFinishProgressState") ||
+  !finishProgressStatePolicy.includes("resolveNextFinishProgressState") ||
+  !packageJson.scripts["test:finish-progress-state"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para estado do progresso de encerramento.");
+}
+
+if (
   !homeScreen.includes("resolveEmergencyStartRequestPolicy") ||
   !homeScreen.includes("resolveEmergencyStartPresentation") ||
   !emergencyStartPolicy.includes("resolveEmergencyStartRequestPolicy") ||
@@ -959,6 +976,16 @@ if (
   !packageJson.scripts["test:protected-route-dialog"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para apresentacao do dialogo de rota protegida.");
+}
+
+if (
+  !homeScreen.includes("resolveEmergencyHomeNavigationTarget") ||
+  !homeNavigationPolicy.includes("resolveEmergencyHomeNavigationTarget") ||
+  !homeNavigationPolicy.includes("with_panel") ||
+  !homeNavigationPolicy.includes("painel") ||
+  !packageJson.scripts["test:home-navigation"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para decisao de navegacao com painel.");
 }
 
 if (

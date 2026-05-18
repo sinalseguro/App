@@ -34,6 +34,14 @@ import { resolveFinishConfirmationDialogPresentation } from "@/features/emergenc
 import { resolveFinishOutcomePolicy } from "@/features/emergency-home/finishOutcomePolicy";
 import { resolveFinishProgressDialogPresentation } from "@/features/emergency-home/finishProgressDialogPolicy";
 import { resolveFinishRequestDecision } from "@/features/emergency-home/finishRequestPolicy";
+import {
+  idleFinishProgressState,
+  resolveClosedFinishProgressState,
+  resolveNextFinishProgressState,
+  resolveVaultOpeningFinishProgressState,
+  type FinishProgressStateSnapshot
+} from "@/features/emergency-home/finishProgressStatePolicy";
+import { resolveEmergencyHomeNavigationTarget } from "@/features/emergency-home/homeNavigationPolicy";
 import { resolveLiveCallCleanupDecision } from "@/features/emergency-home/liveCallCleanupPolicy";
 import { resolveLiveCallPanelPolicy } from "@/features/emergency-home/liveCallPanelPolicy";
 import {
@@ -134,15 +142,7 @@ type PendingMediaReleaseRequest = {
   timeout: ReturnType<typeof setTimeout>;
 };
 
-type FinishProgressStatus = "idle" | "running" | "background" | "done" | "warning" | "error";
-
-type FinishProgressState = {
-  detail: string;
-  progress: number;
-  status: FinishProgressStatus;
-  title: string;
-  visible: boolean;
-};
+type FinishProgressState = FinishProgressStateSnapshot;
 
 type PreservedLiveVideoAsset = Awaited<ReturnType<typeof preserveLocalVideoAsset>>;
 
@@ -159,14 +159,6 @@ const ownerLiveCallAutoRetryMs = 5000;
 const activeRemoteSyncRetryMs = 5000;
 const activePackageResidueGraceMs = 10 * 60 * 1000;
 const interruptedRecoveryClockSkewMs = 30 * 1000;
-const idleFinishProgressState: FinishProgressState = {
-  detail: "",
-  progress: 0,
-  status: "idle",
-  title: "",
-  visible: false
-};
-
 function EmergencyRecordingWakeLock() {
   useKeepAwake("sinalseguro.emergency-recording", { suppressDeactivateWarnings: true });
   return null;
@@ -476,21 +468,20 @@ export default function HomeScreen() {
 
   function navigateRoute(route: EmergencyHomeRoute, panel?: EmergencyHomePanel) {
     setMenuOpen(false);
-    if (route === "/arquivos" && panel) {
-      router.push({ pathname: "/arquivos", params: { painel: panel } });
+    const target = resolveEmergencyHomeNavigationTarget(route, panel);
+    if (target.kind === "with_panel") {
+      router.push({ pathname: target.pathname, params: target.params });
       return;
     }
-    router.push(route);
+    router.push(target.route);
   }
 
   function closeFinishProgress() {
-    setFinishProgress((current) =>
-      current.status === "running" && current.progress < 100 ? current : idleFinishProgressState
-    );
+    setFinishProgress((current) => resolveClosedFinishProgressState(current));
   }
 
   function openVaultFromFinishProgress() {
-    setFinishProgress((current) => ({ ...current, visible: false }));
+    setFinishProgress((current) => resolveVaultOpeningFinishProgressState(current));
     void openRouteAsync("/arquivos", "cofre");
   }
 
@@ -543,12 +534,7 @@ export default function HomeScreen() {
   }
 
   function showFinishProgress(nextState: Partial<FinishProgressState>) {
-    setFinishProgress((current) => ({
-      ...current,
-      ...nextState,
-      progress: Math.max(0, Math.min(100, nextState.progress ?? current.progress)),
-      visible: true
-    }));
+    setFinishProgress((current) => resolveNextFinishProgressState(current, nextState));
   }
 
   function handleMediaProcessingStateChange(state: MediaProcessingState) {

@@ -619,3 +619,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:finish-progress-dialog` cobre progresso normalizado, dismiss, icone, tom, texto pendente e labels das acoes.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para apresentacao inline no dialogo.
 - Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional exige validacao fisica/performance proporcional.
+
+# Atualizacao - 2026-05-18 - Etapa 1.37 Home/SOS
+
+- `src/features/emergency-home/finishProgressStatePolicy.ts` centraliza estado inicial, merge/clamp de progresso, fechamento e ocultacao ao abrir o cofre.
+- `app/index.tsx` continua responsavel pelos efeitos reais de encerramento, cofre local, midia, backend e WebRTC.
+- Novo gate `npm run test:finish-progress-state` cobre clamp, preservacao de estado em progresso, reset permitido e ocultacao do modal.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline no estado do modal.
+- Sem build Android nesta fatia por ser refatoracao pura.
+
+# Atualizacao - 2026-05-18 - Etapa 1.38 Home/SOS
+
+- `src/features/emergency-home/homeNavigationPolicy.ts` centraliza a decisao de navegacao entre rota simples e `/arquivos` com painel.
+- `app/index.tsx` continua responsavel por fechar o menu e executar `router.push()`.
+- Novo gate `npm run test:home-navigation` cobre abertura do cofre, rota de arquivos sem painel e rota simples ignorando painel indevido.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para navegacao inline na Home.
+- Sem build Android nesta fatia por ser refatoracao pura; manter validacao fisica/performance para qualquer mudanca operacional.
