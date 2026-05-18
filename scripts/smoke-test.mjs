@@ -37,6 +37,7 @@ const requiredFiles = [
   "src/features/emergency-home/EmergencySettingsDrawer.tsx",
   "src/features/emergency-home/EmergencyTopBar.tsx",
   "src/features/emergency-home/finishOutcomePolicy.ts",
+  "src/features/emergency-home/mediaHandoffPolicy.ts",
   "src/features/emergency-home/mediaProcessingStatusPolicy.ts",
   "src/features/emergency-home/ownerAutoCallPolicy.ts",
   "src/features/emergency-home/panicTriggerPolicy.ts",
@@ -169,6 +170,7 @@ const mediaInterfacePresentation = await readFile("src/features/emergency/mediaI
 const appLayout = await readFile("app/_layout.tsx", "utf8");
 const homeScreen = await readFile("app/index.tsx", "utf8");
 const finishOutcomePolicy = await readFile("src/features/emergency-home/finishOutcomePolicy.ts", "utf8");
+const mediaHandoffPolicy = await readFile("src/features/emergency-home/mediaHandoffPolicy.ts", "utf8");
 const mediaProcessingStatusPolicy = await readFile("src/features/emergency-home/mediaProcessingStatusPolicy.ts", "utf8");
 const ownerAutoCallPolicy = await readFile("src/features/emergency-home/ownerAutoCallPolicy.ts", "utf8");
 const panicTriggerPolicy = await readFile("src/features/emergency-home/panicTriggerPolicy.ts", "utf8");
@@ -669,6 +671,18 @@ if (
   !packageJson.scripts["test:owner-auto-call"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para autochamada do solicitante apos aceite do anjo.");
+}
+
+if (
+  !homeScreen.includes("resolveMediaHandoffPolicy") ||
+  !homeScreen.includes("mediaHandoff.shouldPrepare") ||
+  !mediaHandoffPolicy.includes("resolveMediaHandoffPolicy") ||
+  !mediaHandoffPolicy.includes("owner_media_handoff_start") ||
+  !mediaHandoffPolicy.includes("owner_media_handoff_complete") ||
+  !mediaHandoffPolicy.includes("local_capture_not_requested") ||
+  !packageJson.scripts["test:media-handoff"]
+) {
+  throw new Error("Home/SOS precisa manter politica pura testavel para preparacao da midia antes da chamada ao vivo.");
 }
 
 if (

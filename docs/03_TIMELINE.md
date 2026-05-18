@@ -3,6 +3,19 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-18 - Etapa 1.12 politica pura de handoff de midia ao vivo
+
+Status: implementada, validada e pronta para checkpoint Git.
+
+- Criado `src/features/emergency-home/mediaHandoffPolicy.ts`.
+- `app/index.tsx` continua com todos os efeitos reais de camera, WebRTC, auditoria e logs saneados, mas deixou de decidir inline se a preparacao de midia deve prosseguir.
+- Criado `scripts/media-handoff-policy.test.ts` e comando `npm run test:media-handoff`.
+- `npm test` e `scripts/smoke-test.mjs` passaram a cobrir a nova politica.
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, backend, portal, camera, WebRTC real ou layout.
+- Validacoes aprovadas: `npm run test:media-handoff`, `node scripts/smoke-test.mjs`, `npm run typecheck`, `npm run lint`, `npm test`, `npm run private:android:readiness` condicionado e `git diff --check`.
+- Checkpoint: `docs/84_CHECKPOINT_ETAPA_1_12_MEDIA_HANDOFF_POLICY_2026-05-18.md`.
+- Proxima etapa: commit e push.
+
 ## 2026-05-18 - Etapa 1.11 politica pura do resultado final do SOS
 
 Status: implementado, validado e pronto para checkpoint Git.

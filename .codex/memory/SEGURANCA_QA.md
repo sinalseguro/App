@@ -370,3 +370,12 @@ Papel: seguranca, LGPD e QA.
 - Os unicos `console.log` encontrados estao em testes/gates locais, seguindo padrao dos demais testes de politica.
 - Validacoes aprovadas: `test:finish-outcome`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
 - Performance Android: nao foi coletado perfil porque a fatia nao altera runtime operacional, camera, WebRTC, renderizacao ou loop de midia; proxima mudanca operacional sensivel deve usar perfil fisico focado.
+
+## QA/Security - 2026-05-18 - Etapa 1.12 politica pura de handoff de midia
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido, log runtime, backend, portal ou release.
+- Gate novo `npm run test:media-handoff` cobre os bloqueios de preparacao e o caminho permitido para entrega de camera/microfone antes da chamada ao vivo.
+- Varredura dirigida dos arquivos tocados nao encontrou token, `Authorization`, `id_token`, `encrypted_key`, SDP, ICE, URI/path de midia ou payload P2P em log runtime.
+- Os unicos `console.log` encontrados estao em testes/gates locais, seguindo padrao dos demais testes de politica.
+- Validacoes aprovadas: `test:media-handoff`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
+- Performance Android: nao foi coletado perfil porque a fatia nao altera runtime operacional, camera, WebRTC, renderizacao ou loop de midia; proxima mudanca operacional sensivel deve usar perfil fisico focado.

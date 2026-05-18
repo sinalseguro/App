@@ -415,3 +415,11 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:finish-outcome` cobre os principais caminhos sem abrir camera, WebRTC, API, arquivo local ou backend.
 - `npm test` e `scripts/smoke-test.mjs` exigem a politica pura para evitar regressao para regra inline na Home.
 - Proxima fatia recomendada: reduzir a preparacao/entrega de midia para chamada ao vivo com policy pura, mantendo camera, WebRTC e auditoria no orquestrador.
+
+# Atualizacao - 2026-05-18 - Etapa 1.12 Home/SOS
+
+- `src/features/emergency-home/mediaHandoffPolicy.ts` centraliza a decisao de preparar ou bloquear o handoff de camera/microfone locais para chamada ao vivo.
+- `app/index.tsx` continua responsavel por `signalMediaRecorderStop`, espera da liberacao da camera, flags locais, auditoria, logs saneados e WebRTC.
+- Novo gate `npm run test:media-handoff` cobre pacote ausente, captura ja bloqueada, plataforma web, captura local desativada e caminho permitido.
+- `npm test` e `scripts/smoke-test.mjs` exigem a politica pura para evitar regressao para regra inline na Home.
+- Proxima mudanca operacional em camera, WebRTC, renderizacao ou UX de chamada deve repetir validacao fisica Android.

@@ -13,6 +13,7 @@ import { EmergencyCallTarget } from "@/features/emergency-home/EmergencyCallTarg
 import { EmergencySettingsDrawer } from "@/features/emergency-home/EmergencySettingsDrawer";
 import { EmergencyTopBar } from "@/features/emergency-home/EmergencyTopBar";
 import { resolveFinishOutcomePolicy } from "@/features/emergency-home/finishOutcomePolicy";
+import { resolveMediaHandoffPolicy } from "@/features/emergency-home/mediaHandoffPolicy";
 import {
   resolveMediaProcessingPresentation,
   shouldResolveMediaReleaseWaiter
@@ -778,26 +779,31 @@ export default function HomeScreen() {
   }
 
   const prepareMediaForOwnerLiveCall = useCallback(async () => {
-    if (
-      !activePackageId ||
-      captureStopLocked ||
-      Platform.OS === "web" ||
-      !preferences.localVideoCapture.requestOnSos
-    ) {
+    const mediaHandoff = resolveMediaHandoffPolicy({
+      activePackageId,
+      captureStopLocked,
+      isWebPlatform: Platform.OS === "web",
+      requestLocalVideoOnSos: preferences.localVideoCapture.requestOnSos
+    });
+    if (!mediaHandoff.shouldPrepare) {
       return;
     }
 
-    const packageId = activePackageId;
+    const packageId = mediaHandoff.packageId;
+    const startPresentation = mediaHandoff.start;
+    const completePresentation = mediaHandoff.complete;
     mediaStopPurposeRef.current = "live_call_handoff";
-    setRecordingStatus("Anjo entrou. Preparando transmissao ao vivo.");
+    if (startPresentation.recordingStatus) {
+      setRecordingStatus(startPresentation.recordingStatus);
+    }
     updateOwnerLiveEvidence(liveRemoteSessionId, {
-      localEvidenceStatus: "recording",
+      localEvidenceStatus: startPresentation.localEvidenceStatus,
       packageId,
-      status: "recording"
+      status: startPresentation.liveEvidenceStatus
     });
-    recordOwnerLiveAuditMarker(liveRemoteSessionId, "owner_media_handoff_start", {
-      connectionState: "connecting",
-      localEvidenceStatus: "recording"
+    recordOwnerLiveAuditMarker(liveRemoteSessionId, startPresentation.auditMarker, {
+      connectionState: startPresentation.connectionState,
+      localEvidenceStatus: startPresentation.localEvidenceStatus
     });
     appendMediaOperationalLog("emergency_live_call_media_handoff_start", {
       packageId,
@@ -817,13 +823,13 @@ export default function HomeScreen() {
     try {
       await waitForMediaRecorderRelease();
       updateOwnerLiveEvidence(liveRemoteSessionId, {
-        localEvidenceStatus: "metadata_only",
+        localEvidenceStatus: completePresentation.localEvidenceStatus,
         packageId,
-        status: "transmitting"
+        status: completePresentation.liveEvidenceStatus
       });
-      recordOwnerLiveAuditMarker(liveRemoteSessionId, "owner_media_handoff_complete", {
-        connectionState: "connecting",
-        localEvidenceStatus: "metadata_only"
+      recordOwnerLiveAuditMarker(liveRemoteSessionId, completePresentation.auditMarker, {
+        connectionState: completePresentation.connectionState,
+        localEvidenceStatus: completePresentation.localEvidenceStatus
       });
       appendMediaOperationalLog("emergency_live_call_media_handoff_camera_released", {
         packageId,
