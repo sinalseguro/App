@@ -5,6 +5,11 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 
 ## Estado tecnico
 
+- Atualizacao 2026-05-18 Etapa 1.3: regras puras de estado/ciclo da live-call foram extraidas para `src/features/live-call/liveCallStatePolicy.ts`.
+- `useLiveAudioCall.ts` continua com WebRTC/polling/API/timers/auditoria; sem mudanca de layout, UX, backend, portal, release ou runtime nativo.
+- Novo gate `npm run test:live-call-state` cobre estado inicial, chamada ativa, mensagens por papel, conexao/reconexao/falha, aceite de answer e stream remoto renderizado apenas quando a regra permitir.
+- Checkpoint da etapa: `docs/69_CHECKPOINT_ETAPA_1_3_LIVE_CALL_STATE_POLICY_2026-05-18.md`.
+
 - Atualizacao 2026-05-18 Etapa 1.2: regras puras da sessao live-call foram extraidas para `src/features/live-call/liveCallSessionPolicy.ts`.
 - `useLiveAudioCall.ts` continua orquestrando WebRTC/polling/estado; sem mudanca de UX, backend, portal, release ou runtime nativo.
 - Novo gate `npm run test:live-call-session` cobre SDP/ICE payload guards, eventos de auditoria por papel, evidencia local por papel, papel oposto e renderizacao de stream remoto apenas para anjo.

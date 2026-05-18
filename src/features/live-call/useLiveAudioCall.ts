@@ -26,21 +26,21 @@ import {
   liveEvidenceStatusForRole,
   oppositeLiveSignalRole,
   shouldRenderRemoteStream,
-  type LiveAudioRole,
-  type LiveAudioStatus
+  type LiveAudioRole
 } from "@/features/live-call/liveCallSessionPolicy";
-
-export type LiveAudioCallState = {
-  callSessionId?: string;
-  localStreamUrl?: string | null;
-  message: string;
-  participantName?: string;
-  remoteSessionId?: string;
-  remoteStream?: MediaStream;
-  remoteStreamUrl?: string;
-  role?: LiveAudioRole;
-  status: LiveAudioStatus;
-};
+import {
+  idleLiveAudioCallState,
+  isLiveAudioActive,
+  liveAudioAngelAnswerSentState,
+  liveAudioConnectedState,
+  liveAudioConnectingState,
+  liveAudioFailedState,
+  liveAudioOwnerAnswerAcceptedState,
+  liveAudioPollingFailureState,
+  liveAudioReconnectingState,
+  liveAudioRemoteStreamState,
+  type LiveAudioCallState
+} from "@/features/live-call/liveCallStatePolicy";
 
 type LiveAudioRuntime = {
   answerAccepted?: boolean;
@@ -57,11 +57,6 @@ type LiveAudioRuntime = {
   remoteDeviceId?: string;
   remoteSessionId?: string;
   role?: LiveAudioRole;
-};
-
-const idleLiveAudioCallState: LiveAudioCallState = {
-  message: "Chamada com anjo disponivel apos aceite.",
-  status: "idle"
 };
 
 const signalPollingMs = 2500;
@@ -111,10 +106,7 @@ export function useLiveAudioCall() {
     return (
       runtimeRef.current.remoteSessionId === remoteSessionId &&
       Boolean(peerRef.current) &&
-      (current.status === "waiting" ||
-        current.status === "connecting" ||
-        current.status === "connected" ||
-        Boolean(current.remoteStream))
+      isLiveAudioActive(current)
     );
   }, []);
 
@@ -211,21 +203,11 @@ export function useLiveAudioCall() {
               });
             }
             setLiveAudioState((current) => ({
-              ...current,
-              message:
-                current.role === "owner"
-                  ? "Transmitindo seu SOS para o anjo."
-                  : current.participantName
-                    ? `Você está acompanhando ${current.participantName}.`
-                    : "Você está acompanhando como anjo.",
-              status: "connected"
+              ...liveAudioConnectedState(current)
             }));
           }
           if (connectionState === "connecting") {
-            setLiveAudioState((current) => ({
-              ...current,
-              status: current.status === "connected" || current.status === "reconnecting" ? current.status : "connecting"
-            }));
+            setLiveAudioState(liveAudioConnectingState);
           }
           if (connectionState === "disconnected") {
             if (runtime.remoteSessionId && runtime.role && !runtime.reconnectingAuditSent) {
@@ -235,14 +217,7 @@ export function useLiveAudioCall() {
                 localEvidenceStatus: liveEvidenceStatusForRole(runtime.role)
               });
             }
-            setLiveAudioState((current) => {
-              if (current.status === "ended" || current.status === "idle" || current.status === "failed") return current;
-              return {
-                ...current,
-                message: "Tentando restabelecer a chamada. O pedido continua ativo.",
-                status: "reconnecting"
-              };
-            });
+            setLiveAudioState(liveAudioReconnectingState);
             scheduleReconnectFailure();
           }
           if (connectionState === "failed") {
@@ -258,11 +233,7 @@ export function useLiveAudioCall() {
                 localEvidenceStatus: liveEvidenceStatusForRole(runtime.role)
               });
             }
-            setLiveAudioState((current) => ({
-              ...current,
-              message: "Chamada não entrou. O pedido continua ativo.",
-              status: "failed"
-            }));
+            setLiveAudioState(liveAudioFailedState);
           }
         },
         onLocalIceCandidate: sendIceCandidate,
@@ -270,18 +241,14 @@ export function useLiveAudioCall() {
           const role = runtimeRef.current.role ?? stateRef.current.role;
           const shouldRenderRemoteStreamForRole = shouldRenderRemoteStream(role);
           const remoteStreamUrl = streamUrlFrom(remoteStream);
-          setLiveAudioState((current) => ({
-            ...current,
-            message:
-              role === "owner"
-                ? "Transmitindo seu SOS para o anjo."
-                : current.participantName
-                  ? `Você está acompanhando ${current.participantName}.`
-                  : "Você está acompanhando como anjo.",
-            remoteStream: shouldRenderRemoteStreamForRole ? remoteStream : current.remoteStream,
-            remoteStreamUrl: shouldRenderRemoteStreamForRole ? remoteStreamUrl : current.remoteStreamUrl,
-            status: "connected"
-          }));
+          setLiveAudioState((current) =>
+            liveAudioRemoteStreamState(current, {
+              remoteStream,
+              remoteStreamUrl,
+              renderRemoteStream: shouldRenderRemoteStreamForRole,
+              role
+            })
+          );
         },
         videoFacingMode: options?.videoFacingMode,
         videoMode: options?.videoMode ?? "disabled"
@@ -323,14 +290,7 @@ export function useLiveAudioCall() {
         pollInFlightRef.current = true;
         void handler()
           .catch(() => {
-            setLiveAudioState((current) => ({
-              ...current,
-              message:
-                current.status === "connected"
-                  ? current.message
-                  : "Nao foi possivel atualizar a videochamada agora.",
-              status: current.status === "connected" ? "connected" : "failed"
-            }));
+            setLiveAudioState(liveAudioPollingFailureState);
           })
           .finally(() => {
             pollInFlightRef.current = false;
@@ -370,16 +330,7 @@ export function useLiveAudioCall() {
         connectionState: "connecting",
         localEvidenceStatus: "metadata_only"
       });
-      setLiveAudioState((current) => ({
-        ...current,
-        message:
-          current.status === "connected" || current.remoteStream
-            ? "Anjo na chamada. Seu SOS continua ativo."
-            : current.participantName
-              ? `${current.participantName} entrou. Conectando chamada.`
-              : "Anjo entrou. Conectando chamada.",
-        status: current.status === "connected" || current.remoteStream ? "connected" : "connecting"
-      }));
+      setLiveAudioState(liveAudioOwnerAnswerAcceptedState);
     }
 
     if (!runtimeRef.current.answerAccepted) return;
@@ -622,17 +573,12 @@ export function useLiveAudioCall() {
           localEvidenceStatus: "not_applicable"
         });
         await consumeLiveSignal(offerSignal.id);
-        setLiveAudioState((current) => ({
-          ...current,
-          message:
-            current.remoteStream || current.remoteStreamUrl
-              ? `Você está acompanhando ${session.owner_display_name ?? "pessoa protegida"}.`
-              : `Entrando como anjo de ${session.owner_display_name ?? "pessoa protegida"}.`,
-          participantName: session.owner_display_name,
-          remoteSessionId: session.id,
-          role: "angel",
-          status: current.remoteStream || current.remoteStreamUrl ? "connected" : "connecting"
-        }));
+        setLiveAudioState((current) =>
+          liveAudioAngelAnswerSentState(current, {
+            participantName: session.owner_display_name,
+            remoteSessionId: session.id
+          })
+        );
         await processAngelIceSignals();
       });
     },

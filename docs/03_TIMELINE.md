@@ -3,6 +3,20 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-18 - Etapa 1.3 politica pura de estado live-call
+
+Status: concluida localmente, validada e pronta para checkpoint Git.
+
+- Extraida politica pura de estado/ciclo da chamada ao vivo para `src/features/live-call/liveCallStatePolicy.ts`.
+- `useLiveAudioCall.ts` continua como orquestrador de WebRTC, polling, API e timers; as transicoes de estado/mensagens previsiveis ficaram testaveis fora do hook.
+- A politica extraida cobre estado inicial, chamada ativa, mensagens por papel, conexao, reconexao, falha, falha de polling, aceite de answer do owner, answer enviado pelo anjo e preservacao do stream remoto apenas quando a regra permitir.
+- `LiveAudioCallPanel.tsx` passou a importar o tipo de estado do modulo de politica, sem alterar layout, textos visuais ou comportamento.
+- Novo gate `npm run test:live-call-state` foi adicionado ao `npm test`.
+- Gate Codex Security/QA direcionado: sem novo log runtime com token, Authorization, encrypted key, SDP, ICE, payload P2P, URI, path local ou midia; SDP/ICE continuam restritos a transporte/teste no modulo anterior.
+- Validacoes aprovadas ate agora: `npm run test:live-call-state`, `npm run test:live-call-session`, `npm run typecheck`, `node scripts/smoke-test.mjs` e `npm run lint`.
+- Sem build Android nesta fatia porque a mudanca foi TypeScript puro, sem UI visual, nativo, WebRTC runtime, backend ou assets.
+- Checkpoint: `docs/69_CHECKPOINT_ETAPA_1_3_LIVE_CALL_STATE_POLICY_2026-05-18.md`.
+
 ## 2026-05-18 - Etapa 1.2 politica pura de sessao live-call
 
 Status: concluida localmente, validada e pronta para checkpoint Git.

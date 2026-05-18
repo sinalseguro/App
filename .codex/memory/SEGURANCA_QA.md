@@ -5,6 +5,11 @@ Papel: seguranca, LGPD e QA.
 
 ## Decisoes bloqueantes
 
+- QA/Security 2026-05-18 - Etapa 1.3 live-call: politica pura de estado/ciclo foi extraida sem alterar fluxo operacional, UI, backend, portal ou release.
+- `liveCallStatePolicy.ts` nao pode ganhar side effects, logs, storage, API, permissao, camera/microfone ou persistencia; manter apenas regras puras/testaveis.
+- O owner continua transmissor do SOS e o anjo continua visualizador do stream remoto; qualquer alteracao nesse contrato exige teste fisico Android em dois dispositivos.
+- Gates aprovados ate a primeira validacao da Etapa 1.3: `test:live-call-state`, `test:live-call-session`, `typecheck`, `smoke-test` e `lint`.
+
 - QA/Security 2026-05-18 - Etapa 1.2 live-call: politica pura de sessao foi extraida sem alterar fluxo operacional, UI, backend, portal ou release.
 - `liveAuditEvent`, `liveEvidenceStatusForRole` e `oppositeLiveSignalRole` exigem `LiveAudioRole` definido; nao aceitar fallback implicito para `owner` quando o papel da chamada estiver ausente.
 - SDP/ICE seguem permitidos apenas como payload de transporte/teste; nao adicionar logs com `payload`, `sdp`, `candidate`, `encrypted_key`, token, URI de midia ou caminho local.

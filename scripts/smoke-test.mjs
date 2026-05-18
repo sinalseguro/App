@@ -65,6 +65,7 @@ const requiredFiles = [
   "src/features/live-call/liveCallHistory.ts",
   "src/features/live-call/liveCallHistoryPolicy.ts",
   "src/features/live-call/liveCallRolePolicy.ts",
+  "src/features/live-call/liveCallStatePolicy.ts",
   "src/services/apiClient.ts",
   "src/services/appleIdentity.ts",
   "src/services/deviceBinding.ts",
@@ -74,6 +75,7 @@ const requiredFiles = [
   "scripts/device-key-proof.test.ts",
   "scripts/profile-policy.test.ts",
   "scripts/live-call-history-policy.test.ts",
+  "scripts/live-call-state-policy.test.ts",
   "src/storage/secureJsonStore.ts",
   "scripts/android-private-media-readiness.mjs"
 ];
@@ -160,6 +162,7 @@ const incomingEmergencyNotification = await readFile("src/features/live-call/inc
 const liveCallHistory = await readFile("src/features/live-call/liveCallHistory.ts", "utf8");
 const liveCallHistoryPolicy = await readFile("src/features/live-call/liveCallHistoryPolicy.ts", "utf8");
 const liveCallRolePolicy = await readFile("src/features/live-call/liveCallRolePolicy.ts", "utf8");
+const liveCallStatePolicy = await readFile("src/features/live-call/liveCallStatePolicy.ts", "utf8");
 const liveCallControl = await readFile("src/services/liveCallControl.ts", "utf8");
 const useLiveAudioCall = await readFile("src/features/live-call/useLiveAudioCall.ts", "utf8");
 const liveWebRtcSession = await readFile("src/services/liveWebRtcSession.ts", "utf8");
@@ -341,11 +344,12 @@ if (
   !ownerLiveCallBlock.includes('videoMode: "sendrecv"') ||
   !angelLiveCallBlock.includes('audioMode: "recvonly"') ||
   !angelLiveCallBlock.includes('videoMode: "recvonly"') ||
-  !useLiveAudioCall.includes('status: current.remoteStream || current.remoteStreamUrl ? "connected" : "connecting"') ||
-  !useLiveAudioCall.includes("Transmitindo seu SOS para o anjo") ||
-  !useLiveAudioCall.includes('status: "connected"') ||
-  !useLiveAudioCall.includes('current.status === "connected"') ||
-  !useLiveAudioCall.includes("current.message")
+  !useLiveAudioCall.includes("liveAudioRemoteStreamState") ||
+  !liveCallStatePolicy.includes('status: current.remoteStream || current.remoteStreamUrl ? "connected" : "connecting"') ||
+  !liveCallStatePolicy.includes("Transmitindo seu SOS para o anjo") ||
+  !liveCallStatePolicy.includes('status: "connected"') ||
+  !liveCallStatePolicy.includes('current.status === "connected"') ||
+  !liveCallStatePolicy.includes("current.message")
 ) {
   throw new Error("Videochamada precisa manter owner como transmissor do SOS e anjo como receptor do video.");
 }

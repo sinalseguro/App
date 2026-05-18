@@ -3,7 +3,7 @@ import { PhoneOff, Radio, Video } from "lucide-react-native";
 import { RTCView } from "react-native-webrtc";
 
 import { theme } from "@/design/theme";
-import type { LiveAudioCallState } from "./useLiveAudioCall";
+import type { LiveAudioCallState } from "./liveCallStatePolicy";
 
 type LiveAudioCallPanelProps = {
   actionLabel: string;
