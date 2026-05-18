@@ -60,7 +60,13 @@ import {
   shouldHandleMediaStopSettlement,
   shouldResolveMediaReleaseWaiter
 } from "@/features/emergency-home/mediaProcessingStatusPolicy";
+import { resolveMediaStopPendingState } from "@/features/emergency-home/mediaStopPendingPolicy";
 import { ownerAutoCallAttemptMessage, ownerAutoCallRecipientStatus, shouldAttemptOwnerAutoCall } from "@/features/emergency-home/ownerAutoCallPolicy";
+import {
+  resolveOwnerLiveAuditMarkerInput,
+  type OwnerLiveAuditMarkerEvent,
+  type OwnerLiveAuditMarkerOptions
+} from "@/features/emergency-home/ownerLiveAuditMarkerPolicy";
 import {
   resolveOwnerLiveCallLifecycle,
   resolveOwnerLiveVideoEvidenceStart
@@ -486,16 +492,18 @@ export default function HomeScreen() {
   }
 
   function setMediaStopPendingState(value: boolean) {
-    mediaStopPendingRef.current = value;
-    setMediaStopPending(value);
-    if (!value) {
+    const decision = resolveMediaStopPendingState(value, { clearMediaRecorderPackageIdOnRelease: true });
+    mediaStopPendingRef.current = decision.mediaStopPending;
+    setMediaStopPending(decision.mediaStopPending);
+    if (decision.shouldClearMediaRecorderPackageId) {
       setMediaRecorderPackageId(null);
     }
   }
 
   function setMediaStopPendingFlag(value: boolean) {
-    mediaStopPendingRef.current = value;
-    setMediaStopPending(value);
+    const decision = resolveMediaStopPendingState(value);
+    mediaStopPendingRef.current = decision.mediaStopPending;
+    setMediaStopPending(decision.mediaStopPending);
   }
 
   function resolveMediaReleaseWaiter() {
@@ -583,21 +591,12 @@ export default function HomeScreen() {
 
   function recordOwnerLiveAuditMarker(
     remoteSessionId: string | null | undefined,
-    event: Parameters<typeof recordLiveAuditMarker>[1]["event"],
-    options?: {
-      connectionState?: Parameters<typeof recordLiveAuditMarker>[1]["connectionState"];
-      localEvidenceStatus?: Parameters<typeof recordLiveAuditMarker>[1]["localEvidenceStatus"];
-    }
+    event: OwnerLiveAuditMarkerEvent,
+    options?: OwnerLiveAuditMarkerOptions
   ) {
     if (!remoteSessionId) return;
     void deviceBindingService.getRegisteredApiDeviceId().then((deviceId) =>
-      recordLiveAuditMarker(remoteSessionId, {
-        connectionState: options?.connectionState,
-        deviceId,
-        event,
-        localEvidenceStatus: options?.localEvidenceStatus,
-        role: "owner"
-      })
+      recordLiveAuditMarker(remoteSessionId, resolveOwnerLiveAuditMarkerInput({ deviceId, event, options }))
     ).catch(() => undefined);
   }
 

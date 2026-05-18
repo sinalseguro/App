@@ -51,7 +51,9 @@ const requiredFiles = [
   "src/features/emergency-home/finishRequestPolicy.ts",
   "src/features/emergency-home/mediaHandoffPolicy.ts",
   "src/features/emergency-home/mediaProcessingStatusPolicy.ts",
+  "src/features/emergency-home/mediaStopPendingPolicy.ts",
   "src/features/emergency-home/ownerAutoCallPolicy.ts",
+  "src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts",
   "src/features/emergency-home/ownerLiveEvidencePolicy.ts",
   "src/features/emergency-home/liveCallCleanupPolicy.ts",
   "src/features/emergency-home/liveCallPanelPolicy.ts",
@@ -110,6 +112,7 @@ const requiredFiles = [
   "scripts/remote-sync-status-policy.test.ts",
   "scripts/owner-auto-call-policy.test.ts",
   "scripts/live-call-waiting-dialog-policy.test.ts",
+  "scripts/owner-live-audit-marker-policy.test.ts",
   "scripts/live-call-cleanup-policy.test.ts",
   "scripts/finish-progress-dialog-policy.test.ts",
   "scripts/finish-progress-state-policy.test.ts",
@@ -119,6 +122,7 @@ const requiredFiles = [
   "scripts/protected-route-code-policy.test.ts",
   "scripts/protected-route-dialog-policy.test.ts",
   "scripts/home-navigation-policy.test.ts",
+  "scripts/media-stop-pending-policy.test.ts",
   "scripts/live-call-history-policy.test.ts",
   "scripts/live-call-state-policy.test.ts",
   "scripts/live-webrtc-policy.test.ts",
@@ -219,7 +223,9 @@ const finishOutcomePolicy = await readFile("src/features/emergency-home/finishOu
 const finishRequestPolicy = await readFile("src/features/emergency-home/finishRequestPolicy.ts", "utf8");
 const mediaHandoffPolicy = await readFile("src/features/emergency-home/mediaHandoffPolicy.ts", "utf8");
 const mediaProcessingStatusPolicy = await readFile("src/features/emergency-home/mediaProcessingStatusPolicy.ts", "utf8");
+const mediaStopPendingPolicy = await readFile("src/features/emergency-home/mediaStopPendingPolicy.ts", "utf8");
 const ownerAutoCallPolicy = await readFile("src/features/emergency-home/ownerAutoCallPolicy.ts", "utf8");
+const ownerLiveAuditMarkerPolicy = await readFile("src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts", "utf8");
 const ownerLiveEvidencePolicy = await readFile("src/features/emergency-home/ownerLiveEvidencePolicy.ts", "utf8");
 const liveCallCleanupPolicy = await readFile("src/features/emergency-home/liveCallCleanupPolicy.ts", "utf8");
 const liveCallPanelPolicy = await readFile("src/features/emergency-home/liveCallPanelPolicy.ts", "utf8");
@@ -834,6 +840,16 @@ if (
 }
 
 if (
+  !homeScreen.includes("resolveOwnerLiveAuditMarkerInput") ||
+  !ownerLiveAuditMarkerPolicy.includes("resolveOwnerLiveAuditMarkerInput") ||
+  !ownerLiveAuditMarkerPolicy.includes("role: \"owner\"") ||
+  !ownerLiveAuditMarkerPolicy.includes("localEvidenceStatus") ||
+  !packageJson.scripts["test:owner-live-audit-marker"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para payload de auditoria local do solicitante.");
+}
+
+if (
   !homeScreen.includes("resolveOwnerLiveVideoEvidenceStart") ||
   !homeScreen.includes("startDecision.startInput") ||
   !homeScreen.includes("resolveOwnerLiveCallLifecycle") ||
@@ -1005,6 +1021,15 @@ if (
   !packageJson.scripts["test:media-processing-status"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para mensagens de processamento de midia.");
+}
+
+if (
+  !homeScreen.includes("resolveMediaStopPendingState") ||
+  !mediaStopPendingPolicy.includes("resolveMediaStopPendingState") ||
+  !mediaStopPendingPolicy.includes("shouldClearMediaRecorderPackageId") ||
+  !packageJson.scripts["test:media-stop-pending"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para estado de midia pendente.");
 }
 
 const emergencyPreferences = await readFile("src/features/emergency/emergencyPreferences.ts", "utf8");

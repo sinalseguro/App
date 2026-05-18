@@ -635,3 +635,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:home-navigation` cobre abertura do cofre, rota de arquivos sem painel e rota simples ignorando painel indevido.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para navegacao inline na Home.
 - Sem build Android nesta fatia por ser refatoracao pura; manter validacao fisica/performance para qualquer mudanca operacional.
+
+# Atualizacao - 2026-05-18 - Etapa 1.39 Home/SOS
+
+- `src/features/emergency-home/mediaStopPendingPolicy.ts` centraliza a decisao de marcar midia pendente e limpar `mediaRecorderPackageId` somente quando a liberacao real exige.
+- `app/index.tsx` continua responsavel por refs, estado React e efeitos reais do fluxo de midia.
+- Novo gate `npm run test:media-stop-pending` cobre pendencia ativa, liberacao com limpeza e flag sem limpeza.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline na Home.
+- Sem build Android nesta fatia por ser refatoracao pura.
+
+# Atualizacao - 2026-05-18 - Etapa 1.40 Home/SOS
+
+- `src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts` centraliza o payload de auditoria local do solicitante na chamada ao vivo.
+- `app/index.tsx` continua responsavel por obter device id e chamar `recordLiveAuditMarker()`.
+- Novo gate `npm run test:owner-live-audit-marker` cobre evento com evidencias locais e evento sem status opcional.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para montagem inline do payload owner.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em auditoria/backend deve repetir validacao fisica/API proporcional.

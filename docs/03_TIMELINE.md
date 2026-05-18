@@ -3899,3 +3899,41 @@ Validacoes:
 Checkpoint:
 
 - `docs/110_CHECKPOINT_ETAPA_1_38_HOME_NAVIGATION_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.39 estado de midia pendente Home/SOS
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `mediaStopPendingPolicy` para centralizar a decisao de marcar midia pendente e limpar `mediaRecorderPackageId` apenas quando a liberacao real exige.
+- `app/index.tsx` manteve os efeitos reais de refs, estado React e preservacao do pacote local.
+- `npm test` passou a executar `test:media-stop-pending`.
+
+Validacoes:
+
+- `test:media-stop-pending`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura de seguranca dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/111_CHECKPOINT_ETAPA_1_39_MEDIA_STOP_PENDING_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.40 payload de auditoria owner da chamada ao vivo
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `ownerLiveAuditMarkerPolicy` para centralizar o payload de auditoria local do solicitante com `role: owner`.
+- `app/index.tsx` manteve o efeito real de obter device id e chamar `recordLiveAuditMarker()`.
+- `npm test` passou a executar `test:owner-live-audit-marker`.
+
+Validacoes:
+
+- `test:owner-live-audit-marker`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura de seguranca dirigida: aprovados.
+- ADB confirmou os Androids conectados, mas sem build/perfil porque a mudanca nao altera UX nativa, chamada, camera, gravacao, WebRTC, backend ou storage.
+
+Checkpoint:
+
+- `docs/112_CHECKPOINT_ETAPA_1_40_OWNER_LIVE_AUDIT_MARKER_POLICY_2026-05-18.md`.
