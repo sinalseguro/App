@@ -3,6 +3,19 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-18 - Etapa 1.6 politica pura do botao SOS
+
+Status: concluida localmente, validada e pronta para checkpoint Git.
+
+- Criado `src/features/emergency-home/panicTriggerPolicy.ts`.
+- `app/index.tsx` passou a usar `resolvePanicTriggerDecision()` para decidir se o botao SOS ignora duplo acionamento, mostra protecao de midia, encerra chamado ativo, pede consentimento ou inicia novo SOS.
+- `panicButtonLabel()` centraliza o rotulo do `PanicButton` sem alterar os textos visiveis.
+- Criado `scripts/panic-trigger-policy.test.ts` e comando `npm run test:panic-trigger`.
+- `npm test` e `scripts/smoke-test.mjs` passaram a cobrir a nova politica.
+- Sem alteracao de UX, backend, portal, release, permissao, storage, endpoint ou log runtime.
+- Validacoes aprovadas: `npm run test:panic-trigger`, `node scripts/smoke-test.mjs`, `npm run typecheck`, `npm run lint`, `npm test`, `npm run private:android:readiness` condicionado e `git diff --check`.
+- Checkpoint: `docs/78_CHECKPOINT_ETAPA_1_6_PANIC_TRIGGER_POLICY_2026-05-18.md`.
+
 ## 2026-05-18 - Android 0.1.15 validado em dois aparelhos e publicado
 
 Status: validacao fisica, auditoria media EC2/API e publicacao privada concluidas.

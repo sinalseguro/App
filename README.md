@@ -137,11 +137,19 @@ Arquitetura atual da chamada ao vivo:
 - `src/features/live-call/liveWebRtcPolicy.ts` concentra constraints de midia, timeout, normalizacao de modos, estado ICE/conexao e selecao de stream remoto.
 - `npm run test:live-call-session`, `npm run test:live-call-state`, `npm run test:live-webrtc` e `npm run test:live-call-security` cobrem essas regras sem abrir camera, WebRTC real, API, UI ou backend.
 
+Arquitetura atual da Home/SOS:
+
+- `app/index.tsx` continua como orquestrador da Home, camera, SOS local, sincronizacao remota e chamada ao vivo.
+- `src/features/emergency-home/panicTriggerPolicy.ts` concentra regras puras do botao SOS: duplo acionamento, midia pendente, encerramento, consentimento e inicio do chamado.
+- `npm run test:panic-trigger` cobre essas decisoes sem abrir camera, WebRTC real, API, UI ou backend.
+
 APK privado Android atual para validacao fisica, portal e atualizacao pelo app:
 
 - Caminho local estavel: `distribution/android/out/sinalseguro-android.apk`.
 - URL publicada: `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk`.
-- SHA-256: `7b9c6f110313ade8b4740200edbf77cdbe0e92b5654ecd5aaf42a8d8f08e8bae`.
+- Link direto versionado: `https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk?v=0.1.15-20260518T112447Z`.
+- Versao publicada: `0.1.15` / `versionCode 17`.
+- SHA-256: `b4f58d1d322a890da5dab0e717d0c81ceb4fb897fb91ef96ae34522b2e1c664c`.
 - Build local para o device fisico conectado: `./gradlew assembleDebug -PsinalBundleDebugJs=true -PreactNativeArchitectures=arm64-v8a`.
 - Observacao: este APK privado e artefato de homologacao Android, nao release de loja e nao deve ser versionado no Git.
 - O APK debug atual embute o bundle JS e desliga o suporte nativo de desenvolvedor apenas neste modo de validacao, abrindo sem Metro, sem `adb reverse` e sem depender de `localhost:8081`.

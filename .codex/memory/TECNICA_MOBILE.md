@@ -366,3 +366,11 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Endpoint de update e portal apontam `0.1.15` / `versionCode=17`, cache-buster `0.1.15-20260518T112447Z` e SHA-256 `b4f58d1d322a890da5dab0e717d0c81ceb4fb897fb91ef96ae34522b2e1c664c`.
 - Download real do APK publicado bateu o SHA-256 esperado.
 - Observacao tecnica: dispositivos ja instalados com `versionCode=17` nao devem receber modal de update para a mesma versao; usar aparelho em codigo menor ou nova versao numericamente superior para validar o modal.
+
+# Atualizacao - 2026-05-18 - Etapa 1.6 Home/SOS
+
+- `src/features/emergency-home/panicTriggerPolicy.ts` centraliza a decisao do botao SOS e o rotulo do `PanicButton`.
+- `app/index.tsx` continua como orquestrador, mas deixa de conter inline a politica de duplo acionamento, midia pendente, encerramento, consentimento e inicio do SOS.
+- Novo gate `npm run test:panic-trigger` cobre as transicoes puras sem abrir camera, WebRTC, API, UI ou backend.
+- `npm test` e `scripts/smoke-test.mjs` exigem a politica pura para evitar regressao para regra inline na Home.
+- Proxima fatia recomendada: politica pura de mensagens/estado da sincronizacao remota do SOS ativo, sem alterar UX.

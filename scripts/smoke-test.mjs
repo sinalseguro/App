@@ -36,6 +36,7 @@ const requiredFiles = [
   "src/features/emergency-home/EmergencyCallTarget.ts",
   "src/features/emergency-home/EmergencySettingsDrawer.tsx",
   "src/features/emergency-home/EmergencyTopBar.tsx",
+  "src/features/emergency-home/panicTriggerPolicy.ts",
   "src/features/invitations/invitationService.ts",
   "src/features/invitations/trustedRelationshipStore.ts",
   "src/features/profiles/profilePolicy.ts",
@@ -75,6 +76,7 @@ const requiredFiles = [
   "scripts/encrypted-video-store.test.ts",
   "scripts/device-key-proof.test.ts",
   "scripts/profile-policy.test.ts",
+  "scripts/panic-trigger-policy.test.ts",
   "scripts/live-call-history-policy.test.ts",
   "scripts/live-call-state-policy.test.ts",
   "scripts/live-webrtc-policy.test.ts",
@@ -160,6 +162,7 @@ const evidencePlayerCard = await readFile("src/components/EvidencePlayerCard.tsx
 const mediaInterfacePresentation = await readFile("src/features/emergency/mediaInterfacePresentation.ts", "utf8");
 const appLayout = await readFile("app/_layout.tsx", "utf8");
 const homeScreen = await readFile("app/index.tsx", "utf8");
+const panicTriggerPolicy = await readFile("src/features/emergency-home/panicTriggerPolicy.ts", "utf8");
 const alertScreen = await readFile("app/alerta.tsx", "utf8");
 const incomingEmergencyNotification = await readFile("src/features/live-call/incomingEmergencyNotification.ts", "utf8");
 const liveCallHistory = await readFile("src/features/live-call/liveCallHistory.ts", "utf8");
@@ -577,7 +580,8 @@ if (
 
 if (
   !homeScreen.includes("startInProgress") ||
-  !homeScreen.includes("if (startInProgress) return") ||
+  !homeScreen.includes("resolvePanicTriggerDecision") ||
+  !panicTriggerPolicy.includes("ignore_start_in_progress") ||
   !homeScreen.includes("setStartInProgress(true)") ||
   !homeScreen.includes("setStartInProgress(false)")
 ) {
@@ -619,6 +623,17 @@ if (emergencyCallDock.includes("showPoliceShortcut") || emergencyCallDock.includ
 
 if (!emergencyCallDock.includes("emergencyCallTargets.map")) {
   throw new Error("Dock de chamadas precisa renderizar Policia 190, Bombeiros 193 e SAMU 192 por padrao.");
+}
+
+if (
+  !homeScreen.includes("resolvePanicTriggerDecision") ||
+  !homeScreen.includes("panicButtonLabel") ||
+  !panicTriggerPolicy.includes("shouldRequestRecordingConsent") ||
+  !panicTriggerPolicy.includes("request_recording_consent") ||
+  !panicTriggerPolicy.includes("show_media_protection_progress") ||
+  !packageJson.scripts["test:panic-trigger"]
+) {
+  throw new Error("Home/SOS precisa manter politica pura testavel para decisao do botao SOS e gate de consentimento.");
 }
 
 const emergencyPreferences = await readFile("src/features/emergency/emergencyPreferences.ts", "utf8");

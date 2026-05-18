@@ -12,6 +12,7 @@ import { EmergencyCallDock } from "@/features/emergency-home/EmergencyCallDock";
 import { EmergencyCallTarget } from "@/features/emergency-home/EmergencyCallTarget";
 import { EmergencySettingsDrawer } from "@/features/emergency-home/EmergencySettingsDrawer";
 import { EmergencyTopBar } from "@/features/emergency-home/EmergencyTopBar";
+import { panicButtonLabel, resolvePanicTriggerDecision } from "@/features/emergency-home/panicTriggerPolicy";
 import { EmergencyHomePanel, EmergencyHomeRoute } from "@/features/emergency-home/routes";
 import { CameraCaptureResidueCleaner } from "@/features/emergency/CameraCaptureResidueCleaner";
 import { countPendingEmergencyPackages } from "@/features/emergency/emergencyOutbox";
@@ -1187,45 +1188,46 @@ export default function HomeScreen() {
   async function handlePanicTrigger() {
     setMenuOpen(false);
 
-    if (startInProgress) return;
+    const panicDecision = resolvePanicTriggerDecision({
+      activePackageId,
+      mediaStopPending: mediaStopPendingRef.current,
+      preferences,
+      startInProgress
+    });
 
-    if (mediaStopPendingRef.current) {
-      showFinishProgress({
-        detail: "A camera ja foi encerrada. O app ainda esta criptografando e anexando a midia no cofre local.",
-        progress: Math.max(finishProgress.progress, 58),
-        status: "running",
-        title: "Protegendo video"
-      });
-      setRecordingStatus("Protecao do video local em andamento. O cofre sera atualizado automaticamente.");
-      return;
-    }
-
-    if (activePackageId) {
-      requestFinishActiveCall();
-      return;
-    }
-
-    if (
-      preferences.localVideoCapture.requestOnSos &&
-      (!preferences.legalConsent.termsAccepted ||
-        !preferences.legalConsent.privacyAccepted ||
-        !preferences.legalConsent.emergencyDataSharingAccepted)
-    ) {
-      setDialog({
-        title: "Autorizar gravacao",
-        message: "Revise e aceite os termos para permitir gravacao local durante o SOS.",
-        icon: <LockKeyhole size={18} color={theme.colors.primary} />,
-        actions: [
-          { label: "Agora nao", tone: "muted" },
-          {
-            label: "Abrir termos",
-            onPress: () => {
-              router.push("/configuracoes");
+    switch (panicDecision) {
+      case "ignore_start_in_progress":
+        return;
+      case "show_media_protection_progress":
+        showFinishProgress({
+          detail: "A camera ja foi encerrada. O app ainda esta criptografando e anexando a midia no cofre local.",
+          progress: Math.max(finishProgress.progress, 58),
+          status: "running",
+          title: "Protegendo video"
+        });
+        setRecordingStatus("Protecao do video local em andamento. O cofre sera atualizado automaticamente.");
+        return;
+      case "finish_active_call":
+        requestFinishActiveCall();
+        return;
+      case "request_recording_consent":
+        setDialog({
+          title: "Autorizar gravacao",
+          message: "Revise e aceite os termos para permitir gravacao local durante o SOS.",
+          icon: <LockKeyhole size={18} color={theme.colors.primary} />,
+          actions: [
+            { label: "Agora nao", tone: "muted" },
+            {
+              label: "Abrir termos",
+              onPress: () => {
+                router.push("/configuracoes");
+              }
             }
-          }
-        ]
-      });
-      return;
+          ]
+        });
+        return;
+      case "start_emergency_package":
+        break;
     }
 
     setRecordingStatus("Pedindo ajuda...");
@@ -1705,17 +1707,7 @@ export default function HomeScreen() {
           <View style={styles.panicStage}>
             <PanicButton
               active={Boolean(activePackageId || startInProgress)}
-              label={
-                startInProgress
-                  ? "Preparando chamado"
-                  : activePackageId
-                  ? finishInProgress
-                    ? "Encerrando gravacao"
-                    : "Segurar para encerrar SOS"
-                  : mediaStopPending
-                    ? "Protegendo video"
-                  : "Segurar para pedir ajuda"
-              }
+              label={panicButtonLabel({ activePackageId, finishInProgress, mediaStopPending, startInProgress })}
               holdMs={preferences.inAppHoldMs}
               onTrigger={handlePanicTrigger}
             />
