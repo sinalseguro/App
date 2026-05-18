@@ -587,3 +587,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:finish-confirmation-dialog` cobre titulo, mensagem, labels, placeholder e accessibility label.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para apresentacao inline na Home.
 - Sem build Android nesta fatia por ser refatoracao pura; segundo bloco autorizado pode prosseguir automaticamente se os gates permanecerem verdes.
+
+# Atualizacao - 2026-05-18 - Etapa 1.33 Home/SOS
+
+- `src/features/emergency-home/liveCallWaitingDialogPolicy.ts` centraliza a apresentacao do dialogo de chamada aguardando anjo.
+- `app/index.tsx` continua responsavel pelos efeitos reais de preparar midia e iniciar WebRTC quando existe sessao remota.
+- Novo gate `npm run test:live-call-waiting-dialog` cobre titulo, mensagem e label de confirmacao.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para apresentacao inline na Home.
+- Sem build Android nesta fatia por ser refatoracao pura.
+
+# Atualizacao - 2026-05-18 - Etapa 1.34 Home/SOS
+
+- `src/features/emergency-home/emergencyHomeActivityPolicy.ts` centraliza a decisao de wake lock emergencial, estado visual ativo e faixa de status ativa.
+- `app/index.tsx` continua responsavel por renderizar `EmergencyRecordingWakeLock`, `EmergencyTopBar`, `BrandBackground`, `PanicButton` e status band.
+- Novo gate `npm run test:emergency-home-activity` cobre repouso, pacote ativo, midia pendente e encerramento em andamento.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para booleanos inline na Home.
+- Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional exige validacao fisica/performance proporcional.

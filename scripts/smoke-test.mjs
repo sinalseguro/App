@@ -37,6 +37,7 @@ const requiredFiles = [
   "src/features/emergency-home/EmergencySettingsDrawer.tsx",
   "src/features/emergency-home/EmergencyTopBar.tsx",
   "src/features/emergency-home/emergencyCallConfirmationPolicy.ts",
+  "src/features/emergency-home/emergencyHomeActivityPolicy.ts",
   "src/features/emergency-home/emergencyStartFailureDialogPolicy.ts",
   "src/features/emergency-home/finishFlowProgressPolicy.ts",
   "src/features/emergency-home/emergencyStartPolicy.ts",
@@ -52,6 +53,7 @@ const requiredFiles = [
   "src/features/emergency-home/liveCallPanelPolicy.ts",
   "src/features/emergency-home/localSosPackageStatusPolicy.ts",
   "src/features/emergency-home/interruptedRecoveryProgressPolicy.ts",
+  "src/features/emergency-home/liveCallWaitingDialogPolicy.ts",
   "src/features/emergency-home/panicTriggerPolicy.ts",
   "src/features/emergency-home/recordingConsentDialogPolicy.ts",
   "src/features/emergency-home/protectedRouteAccessPolicy.ts",
@@ -98,9 +100,11 @@ const requiredFiles = [
   "scripts/device-key-proof.test.ts",
   "scripts/profile-policy.test.ts",
   "scripts/panic-trigger-policy.test.ts",
+  "scripts/emergency-home-activity-policy.test.ts",
   "scripts/emergency-start-policy.test.ts",
   "scripts/remote-sync-status-policy.test.ts",
   "scripts/owner-auto-call-policy.test.ts",
+  "scripts/live-call-waiting-dialog-policy.test.ts",
   "scripts/live-call-cleanup-policy.test.ts",
   "scripts/finish-request-policy.test.ts",
   "scripts/finish-code-policy.test.ts",
@@ -193,6 +197,7 @@ const mediaInterfacePresentation = await readFile("src/features/emergency/mediaI
 const appLayout = await readFile("app/_layout.tsx", "utf8");
 const homeScreen = await readFile("app/index.tsx", "utf8");
 const emergencyCallConfirmationPolicy = await readFile("src/features/emergency-home/emergencyCallConfirmationPolicy.ts", "utf8");
+const emergencyHomeActivityPolicy = await readFile("src/features/emergency-home/emergencyHomeActivityPolicy.ts", "utf8");
 const emergencyStartFailureDialogPolicy = await readFile("src/features/emergency-home/emergencyStartFailureDialogPolicy.ts", "utf8");
 const finishFlowProgressPolicy = await readFile("src/features/emergency-home/finishFlowProgressPolicy.ts", "utf8");
 const emergencyStartPolicy = await readFile("src/features/emergency-home/emergencyStartPolicy.ts", "utf8");
@@ -208,6 +213,7 @@ const liveCallCleanupPolicy = await readFile("src/features/emergency-home/liveCa
 const liveCallPanelPolicy = await readFile("src/features/emergency-home/liveCallPanelPolicy.ts", "utf8");
 const localSosPackageStatusPolicy = await readFile("src/features/emergency-home/localSosPackageStatusPolicy.ts", "utf8");
 const interruptedRecoveryProgressPolicy = await readFile("src/features/emergency-home/interruptedRecoveryProgressPolicy.ts", "utf8");
+const liveCallWaitingDialogPolicy = await readFile("src/features/emergency-home/liveCallWaitingDialogPolicy.ts", "utf8");
 const panicTriggerPolicy = await readFile("src/features/emergency-home/panicTriggerPolicy.ts", "utf8");
 const recordingConsentDialogPolicy = await readFile("src/features/emergency-home/recordingConsentDialogPolicy.ts", "utf8");
 const protectedRouteAccessPolicy = await readFile("src/features/emergency-home/protectedRouteAccessPolicy.ts", "utf8");
@@ -756,6 +762,15 @@ if (
 }
 
 if (
+  !homeScreen.includes("resolveEmergencyHomeActivityPresentation") ||
+  !emergencyHomeActivityPolicy.includes("resolveEmergencyHomeActivityPresentation") ||
+  !emergencyHomeActivityPolicy.includes("shouldKeepAwake") ||
+  !packageJson.scripts["test:emergency-home-activity"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para atividade visual e wake lock emergencial.");
+}
+
+if (
   !homeScreen.includes("resolveActiveRemoteSyncStatus") ||
   !homeScreen.includes("activeRemoteSyncRetryMessage") ||
   !remoteSyncStatusPolicy.includes("activeRemoteSyncStatusMessage") ||
@@ -814,6 +829,15 @@ if (
   !packageJson.scripts["test:live-call-panel"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para exibicao e entrada do painel de chamada ao vivo.");
+}
+
+if (
+  !homeScreen.includes("resolveLiveCallWaitingDialogPresentation") ||
+  !liveCallWaitingDialogPolicy.includes("resolveLiveCallWaitingDialogPresentation") ||
+  !liveCallWaitingDialogPolicy.includes("Quando um anjo entrar") ||
+  !packageJson.scripts["test:live-call-waiting-dialog"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para dialogo de chamada aguardando anjo.");
 }
 
 if (

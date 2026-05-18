@@ -3785,3 +3785,41 @@ Validacoes:
 Checkpoint:
 
 - `docs/104_CHECKPOINT_ETAPA_1_32_FINISH_CONFIRMATION_DIALOG_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.33 dialogo de chamada aguardando anjo Home/SOS
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `liveCallWaitingDialogPolicy` para centralizar titulo, mensagem e label do dialogo exibido quando ainda nao ha sessao remota para chamar anjo.
+- `app/index.tsx` manteve os efeitos reais de preparar midia e iniciar WebRTC quando existe sessao remota.
+- `npm test` passou a executar `test:live-call-waiting-dialog`.
+
+Validacoes:
+
+- `test:live-call-waiting-dialog`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura de seguranca dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/105_CHECKPOINT_ETAPA_1_33_LIVE_CALL_WAITING_DIALOG_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.34 atividade visual e wake lock Home/SOS
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `emergencyHomeActivityPolicy` para centralizar decisao de wake lock, estado visual ativo e faixa ativa/inativa de status.
+- `app/index.tsx` manteve os componentes reais `EmergencyRecordingWakeLock`, `EmergencyTopBar`, `BrandBackground`, `PanicButton` e status band.
+- `npm test` passou a executar `test:emergency-home-activity`.
+
+Validacoes:
+
+- `test:emergency-home-activity`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura de seguranca dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/106_CHECKPOINT_ETAPA_1_34_EMERGENCY_HOME_ACTIVITY_POLICY_2026-05-18.md`.

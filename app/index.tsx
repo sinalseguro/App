@@ -17,6 +17,7 @@ import {
   resolveEmergencyStartRequestPolicy
 } from "@/features/emergency-home/emergencyStartPolicy";
 import { resolveEmergencyCallConfirmation } from "@/features/emergency-home/emergencyCallConfirmationPolicy";
+import { resolveEmergencyHomeActivityPresentation } from "@/features/emergency-home/emergencyHomeActivityPolicy";
 import { resolveEmergencyStartFailureDialogPresentation } from "@/features/emergency-home/emergencyStartFailureDialogPolicy";
 import {
   resolveFinishFailedProgress,
@@ -54,6 +55,7 @@ import {
   resolveOwnerLiveCallLifecycle,
   resolveOwnerLiveVideoEvidenceStart
 } from "@/features/emergency-home/ownerLiveEvidencePolicy";
+import { resolveLiveCallWaitingDialogPresentation } from "@/features/emergency-home/liveCallWaitingDialogPolicy";
 import { panicButtonLabel, resolvePanicTriggerDecision } from "@/features/emergency-home/panicTriggerPolicy";
 import { resolveProtectedRouteAccessDecision } from "@/features/emergency-home/protectedRouteAccessPolicy";
 import { resolveProtectedRouteCodeDecision } from "@/features/emergency-home/protectedRouteCodePolicy";
@@ -870,11 +872,12 @@ export default function HomeScreen() {
 
   function handleStartOwnerLiveAudio() {
     if (!liveRemoteSessionId) {
+      const waitingDialog = resolveLiveCallWaitingDialogPresentation();
       setDialog({
-        title: "Aguardando anjo",
-        message: "Quando um anjo entrar no pedido, você poderá chamar por aqui.",
+        title: waitingDialog.title,
+        message: waitingDialog.message,
         icon: <PhoneCall size={18} color={theme.colors.primary} />,
-        actions: [{ label: "Entendi" }]
+        actions: [{ label: waitingDialog.confirmLabel }]
       });
       return;
     }
@@ -1534,13 +1537,19 @@ export default function HomeScreen() {
   });
   const protectedRouteDialog = resolveProtectedRouteDialogPresentation();
   const finishConfirmationDialog = resolveFinishConfirmationDialogPresentation();
+  const emergencyHomeActivity = resolveEmergencyHomeActivityPresentation({
+    activePackageId,
+    finishInProgress,
+    mediaStopPending,
+    startInProgress
+  });
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {activePackageId || finishInProgress || startInProgress || mediaStopPending ? <EmergencyRecordingWakeLock /> : null}
+      {emergencyHomeActivity.shouldKeepAwake ? <EmergencyRecordingWakeLock /> : null}
       <View style={styles.homeShell} testID="home-emergency-screen">
         <EmergencyTopBar
-          active={Boolean(activePackageId || startInProgress)}
+          active={emergencyHomeActivity.activeVisualState}
           menuOpen={menuOpen}
           onToggleMenu={() => setMenuOpen((current) => !current)}
         />
@@ -1557,7 +1566,7 @@ export default function HomeScreen() {
         ) : null}
 
         <View style={styles.emergencySurface}>
-          <BrandBackground active={Boolean(activePackageId || startInProgress)} />
+          <BrandBackground active={emergencyHomeActivity.activeVisualState} />
           <EmergencyMediaRecorder
             activePackageId={mediaRecorderPackageId}
             avoidLiveAudioPanel={liveCallPanel.shouldAvoidMediaRecorderPanel}
@@ -1571,7 +1580,7 @@ export default function HomeScreen() {
           />
           <View style={styles.panicStage}>
             <PanicButton
-              active={Boolean(activePackageId || startInProgress)}
+              active={emergencyHomeActivity.activeVisualState}
               label={panicButtonLabel({ activePackageId, finishInProgress, mediaStopPending, startInProgress })}
               holdMs={preferences.inAppHoldMs}
               onTrigger={handlePanicTrigger}
@@ -1582,7 +1591,7 @@ export default function HomeScreen() {
                 accessibilityRole="text"
                 style={[
                   styles.statusBand,
-                  activePackageId || startInProgress || mediaStopPending
+                  emergencyHomeActivity.statusBandActive
                     ? styles.statusBandActive
                     : styles.statusBandIdle
                 ]}
