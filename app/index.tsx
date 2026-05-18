@@ -17,6 +17,15 @@ import {
   resolveEmergencyStartRequestPolicy
 } from "@/features/emergency-home/emergencyStartPolicy";
 import { resolveEmergencyCallConfirmation } from "@/features/emergency-home/emergencyCallConfirmationPolicy";
+import {
+  resolveFinishFailedProgress,
+  resolveFinishMediaStopSettledProgress,
+  resolveFinishMediaStopSignaledProgress,
+  resolveFinishMissingPackageProgress,
+  resolveFinishRemoteSyncProgress,
+  resolveFinishRequestedProgress,
+  resolveMediaProtectionInProgress
+} from "@/features/emergency-home/finishFlowProgressPolicy";
 import { resolveFinishCodeConfirmationDecision } from "@/features/emergency-home/finishCodePolicy";
 import { resolveFinishOutcomePolicy } from "@/features/emergency-home/finishOutcomePolicy";
 import { resolveFinishRequestDecision } from "@/features/emergency-home/finishRequestPolicy";
@@ -26,6 +35,10 @@ import {
   initialLocalSosPackageStatus,
   resolveLocalSosPackageStatus
 } from "@/features/emergency-home/localSosPackageStatusPolicy";
+import {
+  resolveInterruptedRecoveryFinishProgress,
+  resolveInterruptedResidueRecoveryProgress
+} from "@/features/emergency-home/interruptedRecoveryProgressPolicy";
 import { resolveMediaHandoffPolicy } from "@/features/emergency-home/mediaHandoffPolicy";
 import {
   resolveMediaProcessingPresentation,
@@ -382,15 +395,7 @@ export default function HomeScreen() {
     setCaptureStopLocked(false);
     setMediaStopPendingState(false);
     setRecordingStatus(resolveLocalSosPackageStatus({ attachedAssetCount, event: "interrupted_recovered" }));
-    showFinishProgress({
-      detail:
-        attachedAssetCount > 0
-          ? "O app recuperou um chamado interrompido sem reabrir a camera."
-          : "O app encontrou um chamado interrompido e salvou a causa tecnica sem reativar camera ou microfone.",
-      progress: 100,
-      status: attachedAssetCount > 0 ? "done" : "warning",
-      title: attachedAssetCount > 0 ? "Chamado recuperado" : "Chamado recuperado sem video"
-    });
+    showFinishProgress(resolveInterruptedRecoveryFinishProgress(attachedAssetCount));
   }
 
   async function recoverInterruptedCameraResidue(
@@ -422,12 +427,7 @@ export default function HomeScreen() {
         recoverableResidues.reduce((total, residue) => total + (residue.sizeBytes ?? 0), 0) / 1024
       )
     });
-    showFinishProgress({
-      detail: "Arquivo temporario privado encontrado. Criptografando antes de atualizar o cofre.",
-      progress: 36,
-      status: "running",
-      title: "Recuperando video"
-    });
+    showFinishProgress(resolveInterruptedResidueRecoveryProgress());
 
     let recoveredAssetCount = 0;
     let segmentStartedAt = captureStartedAt;
@@ -1139,12 +1139,7 @@ export default function HomeScreen() {
       case "ignore_start_in_progress":
         return;
       case "show_media_protection_progress":
-        showFinishProgress({
-          detail: "A camera ja foi encerrada. O app ainda esta criptografando e anexando a midia no cofre local.",
-          progress: Math.max(finishProgress.progress, 58),
-          status: "running",
-          title: "Protegendo video"
-        });
+        showFinishProgress(resolveMediaProtectionInProgress(finishProgress.progress));
         setRecordingStatus(resolveLocalSosPackageStatus({ event: "media_protection_in_progress" }));
         return;
       case "finish_active_call":
@@ -1283,12 +1278,7 @@ export default function HomeScreen() {
     finishInProgressRef.current = true;
     setFinishInProgress(true);
     setRecordingStatus(resolveLocalSosPackageStatus({ event: "finish_requested" }));
-    showFinishProgress({
-      detail: "Interrompendo a gravacao local e salvando o pacote.",
-      progress: 12,
-      status: "running",
-      title: "Encerrando chamado"
-    });
+    showFinishProgress(resolveFinishRequestedProgress());
     appendMediaOperationalLog("emergency_finish_button_pressed", {
       platform: Platform.OS
     });
@@ -1302,12 +1292,7 @@ export default function HomeScreen() {
         setMediaStopPendingState(true);
         setActivePackageId(null);
         setMediaRecorderPackageId(packageId);
-        showFinishProgress({
-          detail: "Camera sinalizada. O chamado saiu do modo ativo enquanto a midia continua protegendo.",
-          progress: 24,
-          status: "running",
-          title: "Encerrando gravacao"
-        });
+        showFinishProgress(resolveFinishMediaStopSignaledProgress());
         stopResult = await waitForMediaRecorderStop(stopSerial);
         setMediaStopPendingState(false);
         appendMediaOperationalLog("emergency_media_stop_progress_result", {
@@ -1315,15 +1300,7 @@ export default function HomeScreen() {
           platform: Platform.OS,
           status: stopResult.status
         });
-        showFinishProgress({
-          detail:
-            stopResult.status === "attached"
-              ? "Midia criptografada. A finalizacao do pacote pode seguir em segundo plano."
-              : "Camera liberada. Confirmando se o pacote ja recebeu midia preservada.",
-          progress: stopResult.status === "attached" ? 72 : 48,
-          status: stopResult.status === "attached" ? "background" : "running",
-          title: stopResult.status === "attached" ? "Midia protegida" : "Conferindo cofre"
-        });
+        showFinishProgress(resolveFinishMediaStopSettledProgress(stopResult.status));
       }
 
       const result = await finishEmergencyPackage(packageId, "manual_finish");
@@ -1332,23 +1309,13 @@ export default function HomeScreen() {
       if (!result) {
         setRecordingStatus(resolveLocalSosPackageStatus({ event: "finish_missing_package" }));
         if (!stopSerial) {
-          showFinishProgress({
-            detail: "Nao havia chamado ativo para encerrar.",
-            progress: 100,
-            status: "warning",
-            title: "Chamado nao encontrado"
-          });
+          showFinishProgress(resolveFinishMissingPackageProgress());
         }
         return;
       }
 
       await queueEmergencyPackageForRemoteSync(result.packageRecord);
-      showFinishProgress({
-        detail: "Confirmando o encerramento seguro com a central.",
-        progress: 86,
-        status: "running",
-        title: "Sincronizando chamado"
-      });
+      showFinishProgress(resolveFinishRemoteSyncProgress());
       let remoteFinishState: EmergencyRemoteSyncState | undefined;
       if (remoteSessionIdToFinish) {
         const directFinishState = await finishRemoteEmergencySessionForPackage(
@@ -1415,12 +1382,7 @@ export default function HomeScreen() {
         platform: Platform.OS
       }, error);
       setRecordingStatus(resolveLocalSosPackageStatus({ event: "finish_failed" }));
-      showFinishProgress({
-        detail: "Nao foi possivel finalizar o pacote local. Tente novamente pelo botao seguro.",
-        progress: 100,
-        status: "error",
-        title: "Falha no encerramento"
-      });
+      showFinishProgress(resolveFinishFailedProgress());
     } finally {
       if (mediaStopPurposeRef.current === "finish") {
         mediaStopPurposeRef.current = null;

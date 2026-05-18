@@ -539,3 +539,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:protected-route-access` cobre codigo exigido/bloqueado, codigo exigido/desbloqueado e rota sem codigo exigido.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline.
 - Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional em chamada/camera/WebRTC/gravacao/UX deve repetir validacao fisica owner -> anjo.
+
+# Atualizacao - 2026-05-18 - Etapa 1.27 Home/SOS
+
+- `src/features/emergency-home/interruptedRecoveryProgressPolicy.ts` centraliza mensagens de progresso da recuperacao de chamado interrompido e de residuo temporario privado.
+- `app/index.tsx` continua responsavel pelos efeitos reais de recuperacao, criptografia, cofre local, auditoria e limpeza de flags de captura.
+- Novo gate `npm run test:interrupted-recovery-progress` cobre recuperacao com video, recuperacao sem video e progresso de recuperacao de residuo.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para mensagem inline na Home.
+- Sem build Android nesta fatia por ser refatoracao pura; ADB confirmou um Android USB e um Redmi Wi-Fi/mDNS duplicado no inicio da rodada.
+
+# Atualizacao - 2026-05-18 - Etapa 1.28 Home/SOS
+
+- `src/features/emergency-home/finishFlowProgressPolicy.ts` centraliza mensagens de progresso do encerramento do chamado.
+- `app/index.tsx` continua responsavel pelos efeitos reais de parada de camera, settlement do recorder, anexacao de midia, cofre local, fila de sincronizacao, backend e WebRTC.
+- Novo gate `npm run test:finish-flow-progress` cobre protecao de midia em andamento, encerramento solicitado, camera sinalizada, settlement com/sem midia, pacote ausente, sincronizacao remota e falha.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para mensagem inline na Home.
+- Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional em chamada/camera/WebRTC/gravacao/UX deve repetir validacao fisica owner -> anjo.

@@ -3671,3 +3671,41 @@ Validacoes:
 Checkpoint:
 
 - `docs/57_CHECKPOINT_F4_3_RECEBIMENTO_CHAMADA_REGISTRO_2026-05-16.md`.
+
+## 2026-05-18 - Etapa 1.27 progresso de recuperacao interrompida Home/SOS
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `interruptedRecoveryProgressPolicy` para centralizar as mensagens de progresso da recuperacao de chamado interrompido e de residuo temporario privado.
+- `app/index.tsx` manteve os efeitos reais de recuperacao, criptografia, cofre local e auditoria saneada.
+- `npm test` passou a executar `test:interrupted-recovery-progress`.
+
+Validacoes:
+
+- `test:interrupted-recovery-progress`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/99_CHECKPOINT_ETAPA_1_27_INTERRUPTED_RECOVERY_PROGRESS_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.28 progresso de encerramento Home/SOS
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishFlowProgressPolicy` para centralizar mensagens de progresso do encerramento, parada da camera, protecao da midia, sincronizacao remota e falha.
+- `app/index.tsx` manteve os efeitos reais de camera, WebRTC, cofre local, fila de sincronizacao e backend.
+- `npm test` passou a executar `test:finish-flow-progress`.
+
+Validacoes:
+
+- `test:finish-flow-progress`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/100_CHECKPOINT_ETAPA_1_28_FINISH_FLOW_PROGRESS_POLICY_2026-05-18.md`.

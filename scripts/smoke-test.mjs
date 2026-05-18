@@ -37,6 +37,7 @@ const requiredFiles = [
   "src/features/emergency-home/EmergencySettingsDrawer.tsx",
   "src/features/emergency-home/EmergencyTopBar.tsx",
   "src/features/emergency-home/emergencyCallConfirmationPolicy.ts",
+  "src/features/emergency-home/finishFlowProgressPolicy.ts",
   "src/features/emergency-home/emergencyStartPolicy.ts",
   "src/features/emergency-home/finishCodePolicy.ts",
   "src/features/emergency-home/finishOutcomePolicy.ts",
@@ -48,6 +49,7 @@ const requiredFiles = [
   "src/features/emergency-home/liveCallCleanupPolicy.ts",
   "src/features/emergency-home/liveCallPanelPolicy.ts",
   "src/features/emergency-home/localSosPackageStatusPolicy.ts",
+  "src/features/emergency-home/interruptedRecoveryProgressPolicy.ts",
   "src/features/emergency-home/panicTriggerPolicy.ts",
   "src/features/emergency-home/protectedRouteAccessPolicy.ts",
   "src/features/emergency-home/protectedRouteCodePolicy.ts",
@@ -185,6 +187,7 @@ const mediaInterfacePresentation = await readFile("src/features/emergency/mediaI
 const appLayout = await readFile("app/_layout.tsx", "utf8");
 const homeScreen = await readFile("app/index.tsx", "utf8");
 const emergencyCallConfirmationPolicy = await readFile("src/features/emergency-home/emergencyCallConfirmationPolicy.ts", "utf8");
+const finishFlowProgressPolicy = await readFile("src/features/emergency-home/finishFlowProgressPolicy.ts", "utf8");
 const emergencyStartPolicy = await readFile("src/features/emergency-home/emergencyStartPolicy.ts", "utf8");
 const finishCodePolicy = await readFile("src/features/emergency-home/finishCodePolicy.ts", "utf8");
 const finishOutcomePolicy = await readFile("src/features/emergency-home/finishOutcomePolicy.ts", "utf8");
@@ -196,6 +199,7 @@ const ownerLiveEvidencePolicy = await readFile("src/features/emergency-home/owne
 const liveCallCleanupPolicy = await readFile("src/features/emergency-home/liveCallCleanupPolicy.ts", "utf8");
 const liveCallPanelPolicy = await readFile("src/features/emergency-home/liveCallPanelPolicy.ts", "utf8");
 const localSosPackageStatusPolicy = await readFile("src/features/emergency-home/localSosPackageStatusPolicy.ts", "utf8");
+const interruptedRecoveryProgressPolicy = await readFile("src/features/emergency-home/interruptedRecoveryProgressPolicy.ts", "utf8");
 const panicTriggerPolicy = await readFile("src/features/emergency-home/panicTriggerPolicy.ts", "utf8");
 const protectedRouteAccessPolicy = await readFile("src/features/emergency-home/protectedRouteAccessPolicy.ts", "utf8");
 const protectedRouteCodePolicy = await readFile("src/features/emergency-home/protectedRouteCodePolicy.ts", "utf8");
@@ -250,7 +254,8 @@ if (
   !homeScreen.includes("emergency_interrupted_media_recovery_success") ||
   !homeScreen.includes("interrupted_on_launch") ||
   !homeScreen.includes("emergency_interrupted_active_recovered") ||
-  !homeScreen.includes("sem reativar camera ou microfone")
+  !homeScreen.includes("resolveInterruptedRecoveryFinishProgress") ||
+  !interruptedRecoveryProgressPolicy.includes("sem reativar camera ou microfone")
 ) {
   throw new Error("Tela SOS precisa recuperar chamado interrompido no startup sem remontar camera automaticamente.");
 }
@@ -685,6 +690,27 @@ if (
   !packageJson.scripts["test:emergency-call-confirmation"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para confirmacao de ligacao emergencial.");
+}
+
+if (
+  !homeScreen.includes("resolveInterruptedRecoveryFinishProgress") ||
+  !homeScreen.includes("resolveInterruptedResidueRecoveryProgress") ||
+  !interruptedRecoveryProgressPolicy.includes("resolveInterruptedRecoveryFinishProgress") ||
+  !interruptedRecoveryProgressPolicy.includes("resolveInterruptedResidueRecoveryProgress") ||
+  !packageJson.scripts["test:interrupted-recovery-progress"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para progresso de recuperacao de chamado interrompido.");
+}
+
+if (
+  !homeScreen.includes("resolveFinishRequestedProgress") ||
+  !homeScreen.includes("resolveFinishMediaStopSettledProgress") ||
+  !homeScreen.includes("resolveFinishRemoteSyncProgress") ||
+  !finishFlowProgressPolicy.includes("resolveMediaProtectionInProgress") ||
+  !finishFlowProgressPolicy.includes("resolveFinishFailedProgress") ||
+  !packageJson.scripts["test:finish-flow-progress"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para progresso de encerramento do chamado.");
 }
 
 if (
