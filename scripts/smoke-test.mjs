@@ -41,6 +41,7 @@ const requiredFiles = [
   "src/features/emergency-home/finishFlowProgressPolicy.ts",
   "src/features/emergency-home/emergencyStartPolicy.ts",
   "src/features/emergency-home/finishCodePolicy.ts",
+  "src/features/emergency-home/finishConfirmationDialogPolicy.ts",
   "src/features/emergency-home/finishOutcomePolicy.ts",
   "src/features/emergency-home/finishRequestPolicy.ts",
   "src/features/emergency-home/mediaHandoffPolicy.ts",
@@ -55,6 +56,7 @@ const requiredFiles = [
   "src/features/emergency-home/recordingConsentDialogPolicy.ts",
   "src/features/emergency-home/protectedRouteAccessPolicy.ts",
   "src/features/emergency-home/protectedRouteCodePolicy.ts",
+  "src/features/emergency-home/protectedRouteDialogPolicy.ts",
   "src/features/emergency-home/remoteSyncStatusPolicy.ts",
   "src/features/invitations/invitationService.ts",
   "src/features/invitations/trustedRelationshipStore.ts",
@@ -102,7 +104,9 @@ const requiredFiles = [
   "scripts/live-call-cleanup-policy.test.ts",
   "scripts/finish-request-policy.test.ts",
   "scripts/finish-code-policy.test.ts",
+  "scripts/finish-confirmation-dialog-policy.test.ts",
   "scripts/protected-route-code-policy.test.ts",
+  "scripts/protected-route-dialog-policy.test.ts",
   "scripts/live-call-history-policy.test.ts",
   "scripts/live-call-state-policy.test.ts",
   "scripts/live-webrtc-policy.test.ts",
@@ -193,6 +197,7 @@ const emergencyStartFailureDialogPolicy = await readFile("src/features/emergency
 const finishFlowProgressPolicy = await readFile("src/features/emergency-home/finishFlowProgressPolicy.ts", "utf8");
 const emergencyStartPolicy = await readFile("src/features/emergency-home/emergencyStartPolicy.ts", "utf8");
 const finishCodePolicy = await readFile("src/features/emergency-home/finishCodePolicy.ts", "utf8");
+const finishConfirmationDialogPolicy = await readFile("src/features/emergency-home/finishConfirmationDialogPolicy.ts", "utf8");
 const finishOutcomePolicy = await readFile("src/features/emergency-home/finishOutcomePolicy.ts", "utf8");
 const finishRequestPolicy = await readFile("src/features/emergency-home/finishRequestPolicy.ts", "utf8");
 const mediaHandoffPolicy = await readFile("src/features/emergency-home/mediaHandoffPolicy.ts", "utf8");
@@ -207,6 +212,7 @@ const panicTriggerPolicy = await readFile("src/features/emergency-home/panicTrig
 const recordingConsentDialogPolicy = await readFile("src/features/emergency-home/recordingConsentDialogPolicy.ts", "utf8");
 const protectedRouteAccessPolicy = await readFile("src/features/emergency-home/protectedRouteAccessPolicy.ts", "utf8");
 const protectedRouteCodePolicy = await readFile("src/features/emergency-home/protectedRouteCodePolicy.ts", "utf8");
+const protectedRouteDialogPolicy = await readFile("src/features/emergency-home/protectedRouteDialogPolicy.ts", "utf8");
 const remoteSyncStatusPolicy = await readFile("src/features/emergency-home/remoteSyncStatusPolicy.ts", "utf8");
 const alertScreen = await readFile("app/alerta.tsx", "utf8");
 const incomingEmergencyNotification = await readFile("src/features/live-call/incomingEmergencyNotification.ts", "utf8");
@@ -869,6 +875,15 @@ if (
 }
 
 if (
+  !homeScreen.includes("resolveFinishConfirmationDialogPresentation") ||
+  !finishConfirmationDialogPolicy.includes("resolveFinishConfirmationDialogPresentation") ||
+  !finishConfirmationDialogPolicy.includes("Encerrar chamado") ||
+  !packageJson.scripts["test:finish-confirmation-dialog"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para apresentacao do dialogo de encerramento por codigo.");
+}
+
+if (
   !homeScreen.includes("resolveProtectedRouteAccessDecision") ||
   !protectedRouteAccessPolicy.includes("resolveProtectedRouteAccessDecision") ||
   !protectedRouteAccessPolicy.includes("request_security_code") ||
@@ -886,6 +901,15 @@ if (
   !packageJson.scripts["test:protected-route-code"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para rotas protegidas por codigo.");
+}
+
+if (
+  !homeScreen.includes("resolveProtectedRouteDialogPresentation") ||
+  !protectedRouteDialogPolicy.includes("resolveProtectedRouteDialogPresentation") ||
+  !protectedRouteDialogPolicy.includes("Codigo para abrir area protegida") ||
+  !packageJson.scripts["test:protected-route-dialog"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para apresentacao do dialogo de rota protegida.");
 }
 
 if (

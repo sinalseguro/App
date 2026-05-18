@@ -3747,3 +3747,41 @@ Validacoes:
 Checkpoint:
 
 - `docs/102_CHECKPOINT_ETAPA_1_30_EMERGENCY_START_FAILURE_DIALOG_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.31 dialogo de rota protegida Home/SOS
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `protectedRouteDialogPolicy` para centralizar titulo, mensagem, labels, placeholder e accessibility label do dialogo de rota protegida.
+- `app/index.tsx` manteve os efeitos reais de verificacao criptografica, lockout, desbloqueio e navegacao.
+- `npm test` passou a executar `test:protected-route-dialog`.
+
+Validacoes:
+
+- `test:protected-route-dialog`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura de seguranca dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/103_CHECKPOINT_ETAPA_1_31_PROTECTED_ROUTE_DIALOG_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.32 dialogo de encerramento por codigo Home/SOS
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishConfirmationDialogPolicy` para centralizar titulo, mensagem, labels, placeholder e accessibility label do dialogo de encerramento por codigo.
+- `app/index.tsx` manteve os efeitos reais de confirmacao, verificacao criptografica e encerramento do chamado.
+- `npm test` passou a executar `test:finish-confirmation-dialog`.
+
+Validacoes:
+
+- `test:finish-confirmation-dialog`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura de seguranca dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/104_CHECKPOINT_ETAPA_1_32_FINISH_CONFIRMATION_DIALOG_POLICY_2026-05-18.md`.

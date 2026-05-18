@@ -28,6 +28,7 @@ import {
   resolveMediaProtectionInProgress
 } from "@/features/emergency-home/finishFlowProgressPolicy";
 import { resolveFinishCodeConfirmationDecision } from "@/features/emergency-home/finishCodePolicy";
+import { resolveFinishConfirmationDialogPresentation } from "@/features/emergency-home/finishConfirmationDialogPolicy";
 import { resolveFinishOutcomePolicy } from "@/features/emergency-home/finishOutcomePolicy";
 import { resolveFinishRequestDecision } from "@/features/emergency-home/finishRequestPolicy";
 import { resolveLiveCallCleanupDecision } from "@/features/emergency-home/liveCallCleanupPolicy";
@@ -56,6 +57,7 @@ import {
 import { panicButtonLabel, resolvePanicTriggerDecision } from "@/features/emergency-home/panicTriggerPolicy";
 import { resolveProtectedRouteAccessDecision } from "@/features/emergency-home/protectedRouteAccessPolicy";
 import { resolveProtectedRouteCodeDecision } from "@/features/emergency-home/protectedRouteCodePolicy";
+import { resolveProtectedRouteDialogPresentation } from "@/features/emergency-home/protectedRouteDialogPolicy";
 import { resolveRecordingConsentDialogPresentation } from "@/features/emergency-home/recordingConsentDialogPolicy";
 import { activeRemoteSyncRetryMessage, resolveActiveRemoteSyncStatus } from "@/features/emergency-home/remoteSyncStatusPolicy";
 import { EmergencyHomePanel, EmergencyHomeRoute } from "@/features/emergency-home/routes";
@@ -1530,6 +1532,8 @@ export default function HomeScreen() {
     liveRemoteSessionId,
     mediaStopPending
   });
+  const protectedRouteDialog = resolveProtectedRouteDialogPresentation();
+  const finishConfirmationDialog = resolveFinishConfirmationDialogPresentation();
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -1608,32 +1612,32 @@ export default function HomeScreen() {
         <BrandedDialog
           actions={[
             {
-              label: "Cancelar",
+              label: protectedRouteDialog.cancelLabel,
               tone: "muted",
               onPress: closeProtectedRouteDialog
             },
             {
               autoClose: false,
-              label: "Liberar",
+              label: protectedRouteDialog.confirmLabel,
               onPress: () => {
                 void confirmProtectedRouteWithCode();
               }
             }
           ]}
           icon={<LockKeyhole size={18} color={theme.colors.primary} />}
-          message="Informe o codigo de seguranca para continuar."
+          message={protectedRouteDialog.message}
           onClose={closeProtectedRouteDialog}
-          title="Codigo de seguranca"
+          title={protectedRouteDialog.title}
           visible={Boolean(protectedRouteRequest)}
         >
           <TextInput
-            accessibilityLabel="Codigo para abrir area protegida"
+            accessibilityLabel={protectedRouteDialog.inputAccessibilityLabel}
             autoCapitalize="none"
             autoCorrect={false}
             keyboardType="number-pad"
             maxLength={12}
             onChangeText={setProtectedRouteCodeInput}
-            placeholder="Codigo de seguranca"
+            placeholder={protectedRouteDialog.inputPlaceholder}
             placeholderTextColor={theme.colors.textMuted}
             secureTextEntry
             style={styles.codeInput}
@@ -1645,13 +1649,13 @@ export default function HomeScreen() {
         <BrandedDialog
           actions={[
             {
-              label: "Manter ativo",
+              label: finishConfirmationDialog.cancelLabel,
               tone: "muted",
               onPress: () => setFinishConfirmationOpen(false)
             },
             {
               autoClose: false,
-              label: "Encerrar chamado",
+              label: finishConfirmationDialog.confirmLabel,
               tone: "danger",
               onPress: () => {
                 void confirmFinishWithCode();
@@ -1659,18 +1663,18 @@ export default function HomeScreen() {
             }
           ]}
           icon={<LockKeyhole size={18} color={theme.colors.primary} />}
-          message="Informe o codigo para confirmar o encerramento do chamado."
+          message={finishConfirmationDialog.message}
           onClose={() => setFinishConfirmationOpen(false)}
-          title="Confirmar encerramento"
+          title={finishConfirmationDialog.title}
           visible={finishConfirmationOpen}
         >
           <TextInput
-            accessibilityLabel="Codigo para encerrar chamado"
+            accessibilityLabel={finishConfirmationDialog.inputAccessibilityLabel}
             autoCapitalize="none"
             autoCorrect={false}
             keyboardType="number-pad"
             onChangeText={setFinishCodeInput}
-            placeholder="Codigo de encerramento"
+            placeholder={finishConfirmationDialog.inputPlaceholder}
             placeholderTextColor={theme.colors.textMuted}
             secureTextEntry
             style={styles.codeInput}

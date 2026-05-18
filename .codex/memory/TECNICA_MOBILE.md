@@ -571,3 +571,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:emergency-start-failure-dialog` cobre titulo, mensagem e label de confirmacao.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para apresentacao inline na Home.
 - Sem build Android nesta fatia por ser refatoracao pura; manter duas fatias por rodada ate a proxima mudanca operacional.
+
+# Atualizacao - 2026-05-18 - Etapa 1.31 Home/SOS
+
+- `src/features/emergency-home/protectedRouteDialogPolicy.ts` centraliza a apresentacao do dialogo de rota protegida.
+- `app/index.tsx` continua responsavel pelos efeitos reais de verificacao criptografica, lockout, desbloqueio e navegacao.
+- Novo gate `npm run test:protected-route-dialog` cobre titulo, mensagem, labels, placeholder e accessibility label.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para apresentacao inline na Home.
+- Sem build Android nesta fatia por ser refatoracao pura.
+
+# Atualizacao - 2026-05-18 - Etapa 1.32 Home/SOS
+
+- `src/features/emergency-home/finishConfirmationDialogPolicy.ts` centraliza a apresentacao do dialogo de encerramento por codigo.
+- `app/index.tsx` continua responsavel pelos efeitos reais de verificacao criptografica e encerramento seguro do chamado.
+- Novo gate `npm run test:finish-confirmation-dialog` cobre titulo, mensagem, labels, placeholder e accessibility label.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para apresentacao inline na Home.
+- Sem build Android nesta fatia por ser refatoracao pura; segundo bloco autorizado pode prosseguir automaticamente se os gates permanecerem verdes.
