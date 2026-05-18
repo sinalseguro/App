@@ -34,12 +34,14 @@ const requiredFiles = [
   "src/components/PanicButton.tsx",
   "src/features/emergency-home/EmergencyCallDock.tsx",
   "src/features/emergency-home/EmergencyCallTarget.ts",
+  "src/features/emergency-home/emergencyCallHeroPolicy.ts",
   "src/features/emergency-home/EmergencySettingsDrawer.tsx",
   "src/features/emergency-home/EmergencyTopBar.tsx",
   "src/features/emergency-home/emergencyCallConfirmationPolicy.ts",
   "src/features/emergency-home/emergencyHomeActivityPolicy.ts",
   "src/features/emergency-home/emergencyStartFailureDialogPolicy.ts",
   "src/features/emergency-home/finishFlowProgressPolicy.ts",
+  "src/features/emergency-home/finishProgressDialogPolicy.ts",
   "src/features/emergency-home/emergencyStartPolicy.ts",
   "src/features/emergency-home/finishCodePolicy.ts",
   "src/features/emergency-home/finishConfirmationDialogPolicy.ts",
@@ -101,11 +103,13 @@ const requiredFiles = [
   "scripts/profile-policy.test.ts",
   "scripts/panic-trigger-policy.test.ts",
   "scripts/emergency-home-activity-policy.test.ts",
+  "scripts/emergency-call-hero-policy.test.ts",
   "scripts/emergency-start-policy.test.ts",
   "scripts/remote-sync-status-policy.test.ts",
   "scripts/owner-auto-call-policy.test.ts",
   "scripts/live-call-waiting-dialog-policy.test.ts",
   "scripts/live-call-cleanup-policy.test.ts",
+  "scripts/finish-progress-dialog-policy.test.ts",
   "scripts/finish-request-policy.test.ts",
   "scripts/finish-code-policy.test.ts",
   "scripts/finish-confirmation-dialog-policy.test.ts",
@@ -197,9 +201,11 @@ const mediaInterfacePresentation = await readFile("src/features/emergency/mediaI
 const appLayout = await readFile("app/_layout.tsx", "utf8");
 const homeScreen = await readFile("app/index.tsx", "utf8");
 const emergencyCallConfirmationPolicy = await readFile("src/features/emergency-home/emergencyCallConfirmationPolicy.ts", "utf8");
+const emergencyCallHeroPolicy = await readFile("src/features/emergency-home/emergencyCallHeroPolicy.ts", "utf8");
 const emergencyHomeActivityPolicy = await readFile("src/features/emergency-home/emergencyHomeActivityPolicy.ts", "utf8");
 const emergencyStartFailureDialogPolicy = await readFile("src/features/emergency-home/emergencyStartFailureDialogPolicy.ts", "utf8");
 const finishFlowProgressPolicy = await readFile("src/features/emergency-home/finishFlowProgressPolicy.ts", "utf8");
+const finishProgressDialogPolicy = await readFile("src/features/emergency-home/finishProgressDialogPolicy.ts", "utf8");
 const emergencyStartPolicy = await readFile("src/features/emergency-home/emergencyStartPolicy.ts", "utf8");
 const finishCodePolicy = await readFile("src/features/emergency-home/finishCodePolicy.ts", "utf8");
 const finishConfirmationDialogPolicy = await readFile("src/features/emergency-home/finishConfirmationDialogPolicy.ts", "utf8");
@@ -718,6 +724,15 @@ if (
 }
 
 if (
+  !homeScreen.includes("resolveEmergencyCallHeroPresentation") ||
+  !emergencyCallHeroPolicy.includes("resolveEmergencyCallHeroPresentation") ||
+  !emergencyCallHeroPolicy.includes("accessibilityHint") ||
+  !packageJson.scripts["test:emergency-call-hero"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para acessibilidade do numero emergencial.");
+}
+
+if (
   !homeScreen.includes("resolveInterruptedRecoveryFinishProgress") ||
   !homeScreen.includes("resolveInterruptedResidueRecoveryProgress") ||
   !interruptedRecoveryProgressPolicy.includes("resolveInterruptedRecoveryFinishProgress") ||
@@ -736,6 +751,16 @@ if (
   !packageJson.scripts["test:finish-flow-progress"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para progresso de encerramento do chamado.");
+}
+
+if (
+  !homeScreen.includes("resolveFinishProgressDialogPresentation") ||
+  !finishProgressDialogPolicy.includes("resolveFinishProgressDialogPresentation") ||
+  !finishProgressDialogPolicy.includes("normalizedProgress") ||
+  !finishProgressDialogPolicy.includes("shouldShowPendingRow") ||
+  !packageJson.scripts["test:finish-progress-dialog"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para apresentacao do dialogo de progresso do encerramento.");
 }
 
 if (

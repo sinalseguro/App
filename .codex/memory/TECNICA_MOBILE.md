@@ -603,3 +603,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:emergency-home-activity` cobre repouso, pacote ativo, midia pendente e encerramento em andamento.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para booleanos inline na Home.
 - Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional exige validacao fisica/performance proporcional.
+
+# Atualizacao - 2026-05-18 - Etapa 1.35 Home/SOS
+
+- `src/features/emergency-home/emergencyCallHeroPolicy.ts` centraliza a apresentacao de acessibilidade do numero emergencial no modal de chamada.
+- `app/index.tsx` continua responsavel por renderizar o `CallNumberHero` e executar `Linking.openURL(target.callUri)`.
+- Novo gate `npm run test:emergency-call-hero` cobre hint e label acessivel.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para acessibilidade inline na Home.
+- Sem build Android nesta fatia por ser refatoracao pura.
+
+# Atualizacao - 2026-05-18 - Etapa 1.36 Home/SOS
+
+- `src/features/emergency-home/finishProgressDialogPolicy.ts` centraliza a apresentacao do dialogo de progresso do encerramento.
+- `app/index.tsx` continua responsavel por renderizar `FinishProgressDialog`, aplicar `theme`, fechar quando permitido e abrir o cofre.
+- Novo gate `npm run test:finish-progress-dialog` cobre progresso normalizado, dismiss, icone, tom, texto pendente e labels das acoes.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para apresentacao inline no dialogo.
+- Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional exige validacao fisica/performance proporcional.

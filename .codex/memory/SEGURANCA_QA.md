@@ -573,3 +573,21 @@ Papel: seguranca, LGPD e QA.
 - Varredura dirigida do diff nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
 - Validacoes aprovadas: `test:emergency-home-activity`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida.
 - Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-18 - Etapa 1.35 politica pura de acessibilidade do numero emergencial
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido, log runtime, backend, portal ou release.
+- Gate novo `npm run test:emergency-call-hero` cobre `accessibilityHint` e `accessibilityLabel` do numero emergencial.
+- A policy nao manipula discagem, lista de numeros, permissao ou dispositivo; o efeito real continua em `app/index.tsx` via `Linking.openURL`.
+- Varredura dirigida do diff nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: `test:emergency-call-hero`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-18 - Etapa 1.36 politica pura do dialogo de progresso do encerramento
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido, log runtime, backend, portal ou release.
+- Gate novo `npm run test:finish-progress-dialog` cobre progresso normalizado, dismiss, icone, tom, texto pendente e labels das acoes.
+- A policy nao manipula midia, cofre, criptografia, storage ou backend; `app/index.tsx` continua responsavel pelos callbacks reais de fechar e abrir cofre.
+- Varredura dirigida do diff nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: `test:finish-progress-dialog`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.

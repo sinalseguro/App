@@ -3823,3 +3823,41 @@ Validacoes:
 Checkpoint:
 
 - `docs/106_CHECKPOINT_ETAPA_1_34_EMERGENCY_HOME_ACTIVITY_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.35 acessibilidade do numero emergencial Home/SOS
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `emergencyCallHeroPolicy` para centralizar `accessibilityHint` e `accessibilityLabel` do numero emergencial no modal de chamada.
+- `app/index.tsx` manteve o componente visual `CallNumberHero` e o efeito real de discagem.
+- `npm test` passou a executar `test:emergency-call-hero`.
+
+Validacoes:
+
+- `test:emergency-call-hero`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura de seguranca dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/107_CHECKPOINT_ETAPA_1_35_EMERGENCY_CALL_HERO_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.36 dialogo de progresso do encerramento Home/SOS
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishProgressDialogPolicy` para centralizar progresso normalizado, possibilidade de fechar, icone/tonalidade e labels do dialogo de progresso.
+- `app/index.tsx` manteve o componente `FinishProgressDialog`, tema visual e callbacks reais de continuar/abrir cofre.
+- `npm test` passou a executar `test:finish-progress-dialog`.
+
+Validacoes:
+
+- `test:finish-progress-dialog`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura de seguranca dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/108_CHECKPOINT_ETAPA_1_36_FINISH_PROGRESS_DIALOG_POLICY_2026-05-18.md`.

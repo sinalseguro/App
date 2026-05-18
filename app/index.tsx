@@ -10,6 +10,7 @@ import { PanicButton } from "@/components/PanicButton";
 import { theme } from "@/design/theme";
 import { EmergencyCallDock } from "@/features/emergency-home/EmergencyCallDock";
 import { EmergencyCallTarget } from "@/features/emergency-home/EmergencyCallTarget";
+import { resolveEmergencyCallHeroPresentation } from "@/features/emergency-home/emergencyCallHeroPolicy";
 import { EmergencySettingsDrawer } from "@/features/emergency-home/EmergencySettingsDrawer";
 import { EmergencyTopBar } from "@/features/emergency-home/EmergencyTopBar";
 import {
@@ -31,6 +32,7 @@ import {
 import { resolveFinishCodeConfirmationDecision } from "@/features/emergency-home/finishCodePolicy";
 import { resolveFinishConfirmationDialogPresentation } from "@/features/emergency-home/finishConfirmationDialogPolicy";
 import { resolveFinishOutcomePolicy } from "@/features/emergency-home/finishOutcomePolicy";
+import { resolveFinishProgressDialogPresentation } from "@/features/emergency-home/finishProgressDialogPolicy";
 import { resolveFinishRequestDecision } from "@/features/emergency-home/finishRequestPolicy";
 import { resolveLiveCallCleanupDecision } from "@/features/emergency-home/liveCallCleanupPolicy";
 import { resolveLiveCallPanelPolicy } from "@/features/emergency-home/liveCallPanelPolicy";
@@ -171,10 +173,11 @@ function EmergencyRecordingWakeLock() {
 }
 
 function CallNumberHero({ onPress, target }: { onPress: () => void; target: EmergencyCallTarget }) {
+  const presentation = resolveEmergencyCallHeroPresentation(target);
   return (
     <Pressable
-      accessibilityHint={`Liga para ${target.number}`}
-      accessibilityLabel={`${target.number} ${target.description}`}
+      accessibilityHint={presentation.accessibilityHint}
+      accessibilityLabel={presentation.accessibilityLabel}
       accessibilityRole="button"
       onPress={onPress}
       style={({ pressed }) => [styles.callNumberPanel, pressed && styles.callNumberPanelPressed]}
@@ -194,23 +197,25 @@ function FinishProgressDialog({
   onOpenVault: () => void;
   state: FinishProgressState;
 }) {
-  const canDismiss = state.status !== "running";
-  const progress = Math.max(0, Math.min(100, state.progress));
+  const presentation = resolveFinishProgressDialogPresentation({
+    progress: state.progress,
+    status: state.status
+  });
   const accentColor =
-    state.status === "error"
+    presentation.accentTone === "danger"
       ? theme.colors.danger
-      : state.status === "warning"
+      : presentation.accentTone === "warning"
         ? theme.colors.warning
         : theme.colors.secure;
   const icon =
-    state.status === "warning" || state.status === "error" ? (
+    presentation.iconKind === "video_off" ? (
       <VideoOff size={19} color={accentColor} />
     ) : (
       <ShieldCheck size={19} color={accentColor} />
     );
 
   function closeIfAllowed() {
-    if (canDismiss) onClose();
+    if (presentation.canDismiss) onClose();
   }
 
   return (
@@ -226,38 +231,38 @@ function FinishProgressDialog({
             <View style={[styles.finishProgressIcon, { borderColor: accentColor }]}>{icon}</View>
             <View style={styles.finishProgressTitleBlock}>
               <Text style={styles.finishProgressTitle}>{state.title}</Text>
-              <Text style={styles.finishProgressPercent}>{Math.round(progress)}%</Text>
+              <Text style={styles.finishProgressPercent}>{Math.round(presentation.normalizedProgress)}%</Text>
             </View>
           </View>
 
           <View style={styles.finishProgressTrack}>
-            <View style={[styles.finishProgressFill, { backgroundColor: accentColor, width: `${progress}%` }]} />
+            <View style={[styles.finishProgressFill, { backgroundColor: accentColor, width: `${presentation.normalizedProgress}%` }]} />
           </View>
 
           <Text style={styles.finishProgressDetail}>{state.detail}</Text>
 
-          {state.status === "running" ? (
+          {presentation.shouldShowPendingRow ? (
             <View style={styles.finishProgressPendingRow}>
               <ActivityIndicator color={theme.colors.primary} size="small" />
-              <Text style={styles.finishProgressPendingText}>Mantendo o pacote local consistente.</Text>
+              <Text style={styles.finishProgressPendingText}>{presentation.pendingText}</Text>
             </View>
           ) : (
             <View style={styles.finishProgressActions}>
               <Pressable
-                accessibilityLabel="Continuar na tela inicial"
+                accessibilityLabel={presentation.mutedActionAccessibilityLabel}
                 accessibilityRole="button"
                 onPress={onClose}
                 style={({ pressed }) => [styles.finishProgressActionMuted, pressed && styles.finishProgressActionPressed]}
               >
-                <Text style={styles.finishProgressActionMutedText}>Continuar</Text>
+                <Text style={styles.finishProgressActionMutedText}>{presentation.mutedActionLabel}</Text>
               </Pressable>
               <Pressable
-                accessibilityLabel="Abrir cofre local"
+                accessibilityLabel={presentation.primaryActionAccessibilityLabel}
                 accessibilityRole="button"
                 onPress={onOpenVault}
                 style={({ pressed }) => [styles.finishProgressActionPrimary, pressed && styles.finishProgressActionPressed]}
               >
-                <Text style={styles.finishProgressActionPrimaryText}>Abrir cofre</Text>
+                <Text style={styles.finishProgressActionPrimaryText}>{presentation.primaryActionLabel}</Text>
               </Pressable>
             </View>
           )}
