@@ -627,3 +627,21 @@ Papel: seguranca, LGPD e QA.
 - Varredura dirigida do diff nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
 - Validacoes aprovadas: `test:owner-live-audit-marker`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida.
 - Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-18 - Etapa 1.41 policy pura do waiter de liberacao de midia
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido, log runtime, backend, portal ou release.
+- Gate novo `npm run test:media-release-waiter` cobre requisicao anterior e timeout de liberacao de midia para chamada ao vivo.
+- A policy nao manipula timer, promise, ref, camera, WebRTC ou backend; `app/index.tsx` continua responsavel pelos efeitos reais.
+- Varredura dirigida do diff nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: `test:media-release-waiter`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-18 - Etapa 1.42 policy pura do waiter de parada do recorder
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido, log runtime, backend, portal ou release.
+- Gate novo `npm run test:media-stop-waiter` cobre requisicao anterior, serial divergente e timeout valido da parada do recorder.
+- A policy nao manipula timer, promise, ref, camera, cofre, WebRTC ou backend; `app/index.tsx` continua responsavel pelos efeitos reais e pela ordem antes de finalizar pacote.
+- Varredura dirigida do diff nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: `test:media-stop-waiter`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.

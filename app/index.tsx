@@ -60,7 +60,15 @@ import {
   shouldHandleMediaStopSettlement,
   shouldResolveMediaReleaseWaiter
 } from "@/features/emergency-home/mediaProcessingStatusPolicy";
+import {
+  resolveMediaReleaseTimeout,
+  resolveMediaReleaseWaiterStart
+} from "@/features/emergency-home/mediaReleaseWaiterPolicy";
 import { resolveMediaStopPendingState } from "@/features/emergency-home/mediaStopPendingPolicy";
+import {
+  resolveMediaStopTimeout,
+  resolveMediaStopWaiterStart
+} from "@/features/emergency-home/mediaStopWaiterPolicy";
 import { ownerAutoCallAttemptMessage, ownerAutoCallRecipientStatus, shouldAttemptOwnerAutoCall } from "@/features/emergency-home/ownerAutoCallPolicy";
 import {
   resolveOwnerLiveAuditMarkerInput,
@@ -517,20 +525,22 @@ export default function HomeScreen() {
 
   function waitForMediaRecorderRelease() {
     const previousRequest = pendingMediaReleaseRequestRef.current;
-    if (previousRequest) {
+    const startDecision = resolveMediaReleaseWaiterStart(Boolean(previousRequest));
+    if (previousRequest && startDecision.shouldResolvePreviousRequest) {
       clearTimeout(previousRequest.timeout);
       previousRequest.resolve();
     }
 
     return new Promise<void>((resolve) => {
       const timeout = setTimeout(() => {
-        if (pendingMediaReleaseRequestRef.current) {
-          pendingMediaReleaseRequestRef.current = null;
-        }
-        appendMediaOperationalLog("emergency_live_call_media_release_timeout", {
+        const timeoutDecision = resolveMediaReleaseTimeout({
           platform: Platform.OS,
           timeoutMs: mediaReleaseForLiveCallWaitTimeoutMs
         });
+        if (timeoutDecision.shouldClearPendingRequest && pendingMediaReleaseRequestRef.current) {
+          pendingMediaReleaseRequestRef.current = null;
+        }
+        appendMediaOperationalLog(timeoutDecision.logEvent, timeoutDecision.logPayload);
         resolve();
       }, mediaReleaseForLiveCallWaitTimeoutMs);
 
@@ -1445,21 +1455,27 @@ export default function HomeScreen() {
 
   function waitForMediaRecorderStop(serial: number) {
     const previousRequest = pendingMediaStopRequestRef.current;
-    if (previousRequest) {
+    const startDecision = resolveMediaStopWaiterStart(Boolean(previousRequest));
+    if (previousRequest && startDecision.shouldResolvePreviousRequest) {
       clearTimeout(previousRequest.timeout);
-      previousRequest.resolve({ attachedAssets: 0, status: "error" });
+      previousRequest.resolve(startDecision.previousRequestResult);
     }
 
     return new Promise<MediaStopRequestResult>((resolve) => {
       const timeout = setTimeout(() => {
-        if (pendingMediaStopRequestRef.current?.serial !== serial) return;
-
-        pendingMediaStopRequestRef.current = null;
-        appendMediaOperationalLog("emergency_media_stop_timeout", {
+        const timeoutDecision = resolveMediaStopTimeout({
+          currentSerial: pendingMediaStopRequestRef.current?.serial,
           platform: Platform.OS,
+          serial,
           timeoutMs: mediaStopWaitTimeoutMs
         });
-        resolve({ attachedAssets: 0, status: "error" });
+        if (!timeoutDecision.shouldResolve) return;
+
+        if (timeoutDecision.shouldClearPendingRequest) {
+          pendingMediaStopRequestRef.current = null;
+        }
+        appendMediaOperationalLog(timeoutDecision.logEvent, timeoutDecision.logPayload);
+        resolve(timeoutDecision.result);
       }, mediaStopWaitTimeoutMs);
 
       pendingMediaStopRequestRef.current = {

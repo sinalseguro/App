@@ -651,3 +651,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:owner-live-audit-marker` cobre evento com evidencias locais e evento sem status opcional.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para montagem inline do payload owner.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em auditoria/backend deve repetir validacao fisica/API proporcional.
+
+# Atualizacao - 2026-05-18 - Etapa 1.41 Home/SOS
+
+- `src/features/emergency-home/mediaReleaseWaiterPolicy.ts` centraliza a decisao de resolver requisicao anterior e o payload de timeout da liberacao de midia para chamada ao vivo.
+- `app/index.tsx` continua responsavel por `setTimeout`, refs, promise e `appendMediaOperationalLog()`.
+- Novo gate `npm run test:media-release-waiter` cobre requisicao anterior ausente/presente e timeout de liberacao.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline no waiter.
+- Sem build Android nesta fatia por ser refatoracao pura.
+
+# Atualizacao - 2026-05-18 - Etapa 1.42 Home/SOS
+
+- `src/features/emergency-home/mediaStopWaiterPolicy.ts` centraliza resolucao de requisicao anterior, resultado de erro controlado e timeout de parada do recorder.
+- `app/index.tsx` continua responsavel por `setTimeout`, refs, promise, log operacional e ordem de parada antes de finalizar pacote.
+- Novo gate `npm run test:media-stop-waiter` cobre requisicao anterior, serial divergente e timeout valido.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline no waiter.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional no recorder exige validacao fisica/performance proporcional.

@@ -3937,3 +3937,41 @@ Validacoes:
 Checkpoint:
 
 - `docs/112_CHECKPOINT_ETAPA_1_40_OWNER_LIVE_AUDIT_MARKER_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.41 waiter de liberacao de midia para chamada ao vivo
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `mediaReleaseWaiterPolicy` para centralizar a decisao de resolver requisicao anterior e payload de timeout de liberacao de midia.
+- `app/index.tsx` manteve os efeitos reais de timer, promise, ref e log operacional.
+- `npm test` passou a executar `test:media-release-waiter`.
+
+Validacoes:
+
+- `test:media-release-waiter`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura de seguranca dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/113_CHECKPOINT_ETAPA_1_41_MEDIA_RELEASE_WAITER_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.42 waiter de parada do recorder
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `mediaStopWaiterPolicy` para centralizar resolucao de requisicao anterior, resultado de erro controlado e payload de timeout de parada do recorder.
+- `app/index.tsx` manteve os efeitos reais de timer, promise, ref, log operacional e ordem de parada antes de finalizar pacote.
+- `npm test` passou a executar `test:media-stop-waiter`.
+
+Validacoes:
+
+- `test:media-stop-waiter`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura de seguranca dirigida: aprovados.
+- ADB confirmou os Androids conectados, mas sem build/perfil porque a mudanca nao altera UX nativa, chamada, camera, gravacao, WebRTC, backend ou storage.
+
+Checkpoint:
+
+- `docs/114_CHECKPOINT_ETAPA_1_42_MEDIA_STOP_WAITER_POLICY_2026-05-18.md`.

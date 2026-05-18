@@ -51,7 +51,9 @@ const requiredFiles = [
   "src/features/emergency-home/finishRequestPolicy.ts",
   "src/features/emergency-home/mediaHandoffPolicy.ts",
   "src/features/emergency-home/mediaProcessingStatusPolicy.ts",
+  "src/features/emergency-home/mediaReleaseWaiterPolicy.ts",
   "src/features/emergency-home/mediaStopPendingPolicy.ts",
+  "src/features/emergency-home/mediaStopWaiterPolicy.ts",
   "src/features/emergency-home/ownerAutoCallPolicy.ts",
   "src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts",
   "src/features/emergency-home/ownerLiveEvidencePolicy.ts",
@@ -116,6 +118,7 @@ const requiredFiles = [
   "scripts/live-call-cleanup-policy.test.ts",
   "scripts/finish-progress-dialog-policy.test.ts",
   "scripts/finish-progress-state-policy.test.ts",
+  "scripts/media-release-waiter-policy.test.ts",
   "scripts/finish-request-policy.test.ts",
   "scripts/finish-code-policy.test.ts",
   "scripts/finish-confirmation-dialog-policy.test.ts",
@@ -123,6 +126,7 @@ const requiredFiles = [
   "scripts/protected-route-dialog-policy.test.ts",
   "scripts/home-navigation-policy.test.ts",
   "scripts/media-stop-pending-policy.test.ts",
+  "scripts/media-stop-waiter-policy.test.ts",
   "scripts/live-call-history-policy.test.ts",
   "scripts/live-call-state-policy.test.ts",
   "scripts/live-webrtc-policy.test.ts",
@@ -223,7 +227,9 @@ const finishOutcomePolicy = await readFile("src/features/emergency-home/finishOu
 const finishRequestPolicy = await readFile("src/features/emergency-home/finishRequestPolicy.ts", "utf8");
 const mediaHandoffPolicy = await readFile("src/features/emergency-home/mediaHandoffPolicy.ts", "utf8");
 const mediaProcessingStatusPolicy = await readFile("src/features/emergency-home/mediaProcessingStatusPolicy.ts", "utf8");
+const mediaReleaseWaiterPolicy = await readFile("src/features/emergency-home/mediaReleaseWaiterPolicy.ts", "utf8");
 const mediaStopPendingPolicy = await readFile("src/features/emergency-home/mediaStopPendingPolicy.ts", "utf8");
+const mediaStopWaiterPolicy = await readFile("src/features/emergency-home/mediaStopWaiterPolicy.ts", "utf8");
 const ownerAutoCallPolicy = await readFile("src/features/emergency-home/ownerAutoCallPolicy.ts", "utf8");
 const ownerLiveAuditMarkerPolicy = await readFile("src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts", "utf8");
 const ownerLiveEvidencePolicy = await readFile("src/features/emergency-home/ownerLiveEvidencePolicy.ts", "utf8");
@@ -346,6 +352,16 @@ if (
   !ownerAutoCallPolicy.includes("Anjo entrou. Chamando agora.")
 ) {
   throw new Error("Tela SOS precisa sincronizar chamado ativo com EC2, liberar camera/microfone locais e conectar automaticamente uma unica chamada apos aceite do anjo.");
+}
+
+if (
+  !homeScreen.includes("resolveMediaReleaseWaiterStart") ||
+  !homeScreen.includes("resolveMediaReleaseTimeout") ||
+  !mediaReleaseWaiterPolicy.includes("resolveMediaReleaseWaiterStart") ||
+  !mediaReleaseWaiterPolicy.includes("emergency_live_call_media_release_timeout") ||
+  !packageJson.scripts["test:media-release-waiter"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para waiter de liberacao de midia da chamada ao vivo.");
 }
 
 if (
@@ -653,10 +669,22 @@ if (
   !homeScreen.includes("waitForMediaRecorderStop") ||
   !homeScreen.includes("mediaStopWaitTimeoutMs") ||
   !homeScreen.includes("finishInProgressRef") ||
-  !homeScreen.includes("emergency_media_stop_timeout") ||
+  !homeScreen.includes("resolveMediaStopTimeout") ||
+  !mediaStopWaiterPolicy.includes("emergency_media_stop_timeout") ||
   homeScreen.indexOf("await waitForMediaRecorderStop(stopSerial)") > homeScreen.indexOf("finishEmergencyPackage(packageId")
 ) {
   throw new Error("Home iOS precisa aguardar stop da camera, bloquear duplo encerramento e finalizar pacote sem perder midia.");
+}
+
+if (
+  !homeScreen.includes("resolveMediaStopWaiterStart") ||
+  !homeScreen.includes("resolveMediaStopTimeout") ||
+  !mediaStopWaiterPolicy.includes("resolveMediaStopWaiterStart") ||
+  !mediaStopWaiterPolicy.includes("resolveMediaStopTimeout") ||
+  !mediaStopWaiterPolicy.includes("emergency_media_stop_timeout") ||
+  !packageJson.scripts["test:media-stop-waiter"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para waiter de parada do recorder.");
 }
 
 if (
