@@ -3,6 +3,19 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-18 - Etapa 1.7 politica pura de status da sincronizacao SOS
+
+Status: concluida localmente, validada e pronta para checkpoint Git.
+
+- Criado `src/features/emergency-home/remoteSyncStatusPolicy.ts`.
+- `app/index.tsx` passou a usar `resolveActiveRemoteSyncStatus()` e `activeRemoteSyncRetryMessage()` para mensagens da sincronizacao remota do SOS ativo.
+- Criado `scripts/remote-sync-status-policy.test.ts` e comando `npm run test:remote-sync-status`.
+- `npm test` e `scripts/smoke-test.mjs` passaram a cobrir a nova politica.
+- Sem alteracao de UX, backend, portal, release, permissao, storage, endpoint ou log runtime.
+- Codex Security aplicado como validacao dirigida de diff: nenhum padrao sensivel novo em logs ou payloads.
+- Validacoes aprovadas: `npm run test:remote-sync-status`, `node scripts/smoke-test.mjs`, `npm run typecheck`, `npm run lint`, `npm test`, `npm run private:android:readiness` condicionado e `git diff --check`.
+- Checkpoint: `docs/79_CHECKPOINT_ETAPA_1_7_REMOTE_SYNC_STATUS_POLICY_2026-05-18.md`.
+
 ## 2026-05-18 - Etapa 1.6 politica pura do botao SOS
 
 Status: concluida localmente, validada e pronta para checkpoint Git.

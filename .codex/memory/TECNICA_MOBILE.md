@@ -374,3 +374,11 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:panic-trigger` cobre as transicoes puras sem abrir camera, WebRTC, API, UI ou backend.
 - `npm test` e `scripts/smoke-test.mjs` exigem a politica pura para evitar regressao para regra inline na Home.
 - Proxima fatia recomendada: politica pura de mensagens/estado da sincronizacao remota do SOS ativo, sem alterar UX.
+
+# Atualizacao - 2026-05-18 - Etapa 1.7 Home/SOS
+
+- `src/features/emergency-home/remoteSyncStatusPolicy.ts` centraliza mensagens e decisao visual da sincronizacao remota do SOS ativo.
+- `app/index.tsx` usa `resolveActiveRemoteSyncStatus()` para atualizar mensagem, `remoteSessionId` e inicio de evidencia de chamada ao vivo sem manter essa regra inline.
+- Novo gate `npm run test:remote-sync-status` cobre pluralizacao de anjos, estado aguardando anjo, bloqueio por login e mensagem de retry.
+- `npm test` e `scripts/smoke-test.mjs` exigem a politica pura para evitar regressao na Home.
+- Proxima fatia recomendada: politica pura de autochamada do solicitante apos aceite do anjo, sem mover WebRTC runtime.

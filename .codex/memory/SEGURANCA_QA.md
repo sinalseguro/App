@@ -326,3 +326,11 @@ Papel: seguranca, LGPD e QA.
 - Varredura dirigida dos arquivos tocados nao encontrou token, `Authorization`, `id_token`, `encrypted_key`, SDP, ICE, URI/path de midia ou payload P2P em log runtime.
 - Validacoes aprovadas: `test:panic-trigger`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
 - Antes de publicar uma nova release com esta refatoracao, repetir validacao fisica Android do SOS/anjo.
+
+## QA/Security - 2026-05-18 - Etapa 1.7 politica pura de status remoto
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido, log runtime, backend, portal ou release.
+- Gate novo `npm run test:remote-sync-status` cobre mensagens da sincronizacao remota e evita que a Home volte a manter a regra inline.
+- Codex Security aplicado como validacao dirigida de diff: sem novo token, `Authorization`, `id_token`, `encrypted_key`, SDP, ICE, URI/path de midia ou payload P2P.
+- Validacoes aprovadas: `test:remote-sync-status`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
+- Antes de publicar uma nova release com esta refatoracao, repetir validacao fisica Android do SOS/anjo.

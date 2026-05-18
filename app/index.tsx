@@ -13,6 +13,7 @@ import { EmergencyCallTarget } from "@/features/emergency-home/EmergencyCallTarg
 import { EmergencySettingsDrawer } from "@/features/emergency-home/EmergencySettingsDrawer";
 import { EmergencyTopBar } from "@/features/emergency-home/EmergencyTopBar";
 import { panicButtonLabel, resolvePanicTriggerDecision } from "@/features/emergency-home/panicTriggerPolicy";
+import { activeRemoteSyncRetryMessage, resolveActiveRemoteSyncStatus } from "@/features/emergency-home/remoteSyncStatusPolicy";
 import { EmergencyHomePanel, EmergencyHomeRoute } from "@/features/emergency-home/routes";
 import { CameraCaptureResidueCleaner } from "@/features/emergency/CameraCaptureResidueCleaner";
 import { countPendingEmergencyPackages } from "@/features/emergency/emergencyOutbox";
@@ -302,35 +303,19 @@ export default function HomeScreen() {
       status: syncState.status
     });
 
-    const locationText = options.locationText ?? "Localizacao preservada.";
+    const remoteSyncStatus = resolveActiveRemoteSyncStatus(syncState, {
+      locationText: options.locationText
+    });
 
-    if (syncState.status === "sent_to_ec2") {
-      setLiveRemoteSessionId(syncState.remoteSessionId ?? null);
-      if (syncState.remoteSessionId) {
-        void beginOwnerLiveCallEvidence({
-          packageId: syncState.packageId,
-          remoteSessionId: syncState.remoteSessionId
-        }).catch(() => undefined);
-      }
-      if (syncState.recipientCount > 0) {
-        setRecordingStatus(
-          `Você pediu ajuda. ${locationText} Pedido enviado para ${syncState.recipientCount} anjo${
-            syncState.recipientCount === 1 ? "" : "s"
-          }.`
-        );
-        return;
-      }
-
-      setRecordingStatus(`Você pediu ajuda. ${locationText} Pedido registrado. Aguardando anjo disponível.`);
-      return;
+    setLiveRemoteSessionId(remoteSyncStatus.remoteSessionId);
+    if (remoteSyncStatus.beginLiveEvidence && remoteSyncStatus.remoteSessionId) {
+      void beginOwnerLiveCallEvidence({
+        packageId: syncState.packageId,
+        remoteSessionId: remoteSyncStatus.remoteSessionId
+      }).catch(() => undefined);
     }
 
-    if (syncState.status === "blocked_login") {
-      setRecordingStatus("SOS local ativo. Entre com Google para avisar seus anjos quando houver internet.");
-      return;
-    }
-
-    setRecordingStatus("SOS local ativo. Tentando avisar seus anjos pela internet.");
+    setRecordingStatus(remoteSyncStatus.message);
   }, []);
 
   async function recoverInterruptedActiveRecordingOnLaunch(currentPreferences = preferences) {
@@ -1085,7 +1070,7 @@ export default function HomeScreen() {
             platform: Platform.OS,
             source
           }, error);
-          setRecordingStatus("SOS local ativo. Tentando avisar seus anjos pela internet.");
+          setRecordingStatus(activeRemoteSyncRetryMessage());
         })
         .finally(() => {
           activeRemoteSyncInFlightRef.current = false;

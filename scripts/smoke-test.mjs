@@ -37,6 +37,7 @@ const requiredFiles = [
   "src/features/emergency-home/EmergencySettingsDrawer.tsx",
   "src/features/emergency-home/EmergencyTopBar.tsx",
   "src/features/emergency-home/panicTriggerPolicy.ts",
+  "src/features/emergency-home/remoteSyncStatusPolicy.ts",
   "src/features/invitations/invitationService.ts",
   "src/features/invitations/trustedRelationshipStore.ts",
   "src/features/profiles/profilePolicy.ts",
@@ -77,6 +78,7 @@ const requiredFiles = [
   "scripts/device-key-proof.test.ts",
   "scripts/profile-policy.test.ts",
   "scripts/panic-trigger-policy.test.ts",
+  "scripts/remote-sync-status-policy.test.ts",
   "scripts/live-call-history-policy.test.ts",
   "scripts/live-call-state-policy.test.ts",
   "scripts/live-webrtc-policy.test.ts",
@@ -163,6 +165,7 @@ const mediaInterfacePresentation = await readFile("src/features/emergency/mediaI
 const appLayout = await readFile("app/_layout.tsx", "utf8");
 const homeScreen = await readFile("app/index.tsx", "utf8");
 const panicTriggerPolicy = await readFile("src/features/emergency-home/panicTriggerPolicy.ts", "utf8");
+const remoteSyncStatusPolicy = await readFile("src/features/emergency-home/remoteSyncStatusPolicy.ts", "utf8");
 const alertScreen = await readFile("app/alerta.tsx", "utf8");
 const incomingEmergencyNotification = await readFile("src/features/live-call/incomingEmergencyNotification.ts", "utf8");
 const liveCallHistory = await readFile("src/features/live-call/liveCallHistory.ts", "utf8");
@@ -251,7 +254,8 @@ if (
   !homeScreen.includes('liveAudioCallStatus === "idle"') ||
   !homeScreen.includes("emergency_active_remote_sync_attempt") ||
   !homeScreen.includes("syncEmergencyPackageWithApi(activePackage)") ||
-  !homeScreen.includes("Tentando avisar seus anjos pela internet") ||
+  !homeScreen.includes("activeRemoteSyncRetryMessage") ||
+  !remoteSyncStatusPolicy.includes("Tentando avisar seus anjos pela internet") ||
   !homeScreen.includes("ownerAutoCallStartedSessionIdsRef") ||
   !homeScreen.includes("listAcceptedLiveRecipients") ||
   !homeScreen.includes("emergency_live_call_auto_start_attempt") ||
@@ -634,6 +638,17 @@ if (
   !packageJson.scripts["test:panic-trigger"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para decisao do botao SOS e gate de consentimento.");
+}
+
+if (
+  !homeScreen.includes("resolveActiveRemoteSyncStatus") ||
+  !homeScreen.includes("activeRemoteSyncRetryMessage") ||
+  !remoteSyncStatusPolicy.includes("activeRemoteSyncStatusMessage") ||
+  !remoteSyncStatusPolicy.includes("beginLiveEvidence") ||
+  !remoteSyncStatusPolicy.includes("Pedido enviado para") ||
+  !packageJson.scripts["test:remote-sync-status"]
+) {
+  throw new Error("Home/SOS precisa manter politica pura testavel para mensagens de sincronizacao remota do SOS ativo.");
 }
 
 const emergencyPreferences = await readFile("src/features/emergency/emergencyPreferences.ts", "utf8");
