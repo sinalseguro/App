@@ -13,6 +13,7 @@ import { EmergencyCallTarget } from "@/features/emergency-home/EmergencyCallTarg
 import { EmergencySettingsDrawer } from "@/features/emergency-home/EmergencySettingsDrawer";
 import { EmergencyTopBar } from "@/features/emergency-home/EmergencyTopBar";
 import { resolveFinishOutcomePolicy } from "@/features/emergency-home/finishOutcomePolicy";
+import { resolveLiveCallCleanupDecision } from "@/features/emergency-home/liveCallCleanupPolicy";
 import { resolveMediaHandoffPolicy } from "@/features/emergency-home/mediaHandoffPolicy";
 import {
   resolveMediaProcessingPresentation,
@@ -939,13 +940,24 @@ export default function HomeScreen() {
   ]);
 
   useEffect(() => {
-    if (activePackageId || startInProgress || mediaStopPending || finishInProgress) return;
-    if (!liveRemoteSessionId && liveAudioCallStatus === "idle") return;
+    const cleanupDecision = resolveLiveCallCleanupDecision({
+      activePackageId,
+      finishInProgress,
+      liveAudioCallStatus,
+      liveRemoteSessionId,
+      mediaStopPending,
+      startInProgress
+    });
+    if (!cleanupDecision.shouldCleanup) return;
 
-    ownerAutoCallPausedSessionIdsRef.current.clear();
-    ownerAutoCallStartedSessionIdsRef.current.clear();
-    setLiveRemoteSessionId(null);
-    if (liveAudioCallStatus === "idle") {
+    if (cleanupDecision.shouldClearAutoCallState) {
+      ownerAutoCallPausedSessionIdsRef.current.clear();
+      ownerAutoCallStartedSessionIdsRef.current.clear();
+    }
+    if (cleanupDecision.shouldClearLiveRemoteSession) {
+      setLiveRemoteSessionId(null);
+    }
+    if (cleanupDecision.liveCallAction === "reset_idle_call_state") {
       liveAudioCall.resetLiveAudioCall();
     } else {
       liveAudioCall.stopLiveAudioCall();

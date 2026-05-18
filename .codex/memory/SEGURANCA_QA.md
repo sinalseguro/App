@@ -407,3 +407,12 @@ Papel: seguranca, LGPD e QA.
 - Buffer de crash vazio; recortes filtrados sem `FATAL EXCEPTION`, ANR, `TypeError`, `ReferenceError` ou crash React Native.
 - Varredura de sensibilidade nao encontrou token, `Authorization`, `id_token`, `encrypted_key`, SDP/ICE, chave privada ou payload P2P; logs/meminfo brutos ficaram fora do Git porque continham paths internos do app.
 - Evidencia leve de performance manteve o Android 32-bit como risco/sentinela para startup e jank; proxima mudanca operacional sensivel deve usar teste fim a fim owner -> anjo, e nao apenas abertura de Home.
+
+## QA/Security - 2026-05-18 - Etapa 1.16 politica pura de limpeza da chamada ao vivo
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido, log runtime, backend, portal ou release.
+- Gate novo `npm run test:live-call-cleanup` cobre bloqueios por pacote ativo, inicio, midia pendente, encerramento e os dois caminhos de limpeza permitidos.
+- Varredura dirigida do diff nao encontrou token, `Authorization`, `id_token`, `encrypted_key`, SDP, ICE, URI/path de midia, payload P2P ou novo endpoint.
+- O unico `console.log` novo esta no teste local dedicado, seguindo padrao dos demais testes de politica.
+- Validacoes aprovadas: `test:live-call-cleanup`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
+- Performance Android nao foi coletada porque a fatia nao altera UX, renderizacao, camera, WebRTC, gravacao ou loop de midia; proxima mudanca operacional sensivel deve usar Android fisico e aparelho 32-bit como sentinela.

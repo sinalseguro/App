@@ -450,3 +450,11 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Ambos instalaram como `br.com.sinalseguro.app` `0.1.15`/`versionCode=17`.
 - Redmi 64-bit abriu diretamente na Home SOS; Android 32-bit exigiu cerca de 55s para sair do splash/loading, mas chegou na Home SOS.
 - Para proximas fatias, manter o Android 32-bit como sentinela de startup/performance; mudancas em runtime de SOS/camera/WebRTC/gravacao exigem teste fisico owner -> anjo.
+
+# Atualizacao - 2026-05-18 - Etapa 1.16 Home/SOS
+
+- `src/features/emergency-home/liveCallCleanupPolicy.ts` centraliza a decisao de limpar estado de chamada ao vivo quando nao ha pacote ativo nem transicao operacional em andamento.
+- `app/index.tsx` continua responsavel pelos efeitos reais: limpar refs de autochamada, limpar sessao remota local, resetar chamada idle ou parar chamada ativa/orfa.
+- Novo gate `npm run test:live-call-cleanup` cobre pacote ativo, inicio, midia pendente, encerramento, nada a limpar, reset idle e stop de chamada ativa.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline.
+- Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional em chamada/camera/WebRTC/gravacao/UX deve repetir validacao fisica.

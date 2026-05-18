@@ -3264,6 +3264,24 @@ Checkpoint:
 
 - `docs/87_CHECKPOINT_VALIDACAO_ANDROID_ETAPA_1_15_POLICIES_HOME_SOS_2026-05-18.md`.
 
+## 2026-05-18 - Etapa 1.16 politica pura de limpeza da chamada ao vivo
+
+Status: refatoracao pura implementada, validada e sem publicacao de release.
+
+Executado:
+
+- Criado `src/features/emergency-home/liveCallCleanupPolicy.ts` para decidir quando limpar estado de chamada ao vivo sem pacote operacional.
+- `app/index.tsx` preserva os efeitos reais: limpar refs de autochamada, limpar `liveRemoteSessionId`, resetar chamada idle ou parar chamada ativa/orfa.
+- Criado `scripts/live-call-cleanup-policy.test.ts` e script `npm run test:live-call-cleanup`.
+- `scripts/smoke-test.mjs` passou a exigir a policy pura para evitar regressao para regra inline.
+- Validacoes aprovadas: teste focado, smoke-test, `typecheck`, `lint`, `npm test`, readiness Android privado condicionado e `git diff --check`.
+- Varredura dirigida de seguranca nao encontrou novo token, `Authorization`, `id_token`, `encrypted_key`, SDP/ICE, URI/path de midia, payload P2P ou endpoint.
+- Sem build Android nesta fatia porque nao houve mudanca operacional de UX, camera, WebRTC, gravacao, backend ou portal.
+
+Checkpoint:
+
+- `docs/88_CHECKPOINT_ETAPA_1_16_LIVE_CALL_CLEANUP_POLICY_2026-05-18.md`.
+
 ## 2026-05-18 - Validacao fisica dois Androids SOS/anjo
 
 Status: validado fisicamente em dois Androids distintos com Android `0.1.15`.
