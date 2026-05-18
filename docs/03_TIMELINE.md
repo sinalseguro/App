@@ -4127,3 +4127,41 @@ Validacoes:
 Checkpoint:
 
 - `docs/122_CHECKPOINT_ETAPA_1_50_FINISH_OWNER_LIVE_AUDIT_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.51 diagnostico final sem midia
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishNoMediaDiagnosticPolicy` para centralizar a decisao de persistir diagnostico saneado quando o encerramento termina sem arquivo de midia local.
+- `app/index.tsx` manteve o efeito real de `persistFinishNoMediaDiagnostic()`.
+- `npm test` passou a executar `test:finish-no-media-diagnostic`.
+
+Validacoes:
+
+- `test:finish-no-media-diagnostic`, `smoke-test`, `typecheck`, `lint`, `npm test` e `private:android:readiness` condicionado: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/123_CHECKPOINT_ETAPA_1_51_FINISH_NO_MEDIA_DIAGNOSTIC_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.52 acoes finais do encerramento
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishCompletionActionsPolicy` para centralizar status final, progresso final e limpeza do formulario de confirmacao apos o outcome.
+- `app/index.tsx` manteve os efeitos reais de estado React e apresentacao.
+- `npm test` passou a executar `test:finish-completion-actions`.
+
+Validacoes:
+
+- `test:finish-completion-actions`, `smoke-test`, `typecheck`, `lint`, `npm test` e `private:android:readiness` condicionado: aprovados.
+- ADB confirmou Android fisico `23129RA5FL` via Wi-Fi, mas sem build/perfil porque a mudanca nao altera UX nativa, chamada, camera, gravacao, WebRTC, backend ou storage.
+
+Checkpoint:
+
+- `docs/124_CHECKPOINT_ETAPA_1_52_FINISH_COMPLETION_ACTIONS_POLICY_2026-05-18.md`.

@@ -62,6 +62,8 @@ const requiredFiles = [
   "src/features/emergency-home/finishPackageResultPolicy.ts",
   "src/features/emergency-home/finishOwnerLiveEvidencePolicy.ts",
   "src/features/emergency-home/finishOwnerLiveAuditPolicy.ts",
+  "src/features/emergency-home/finishNoMediaDiagnosticPolicy.ts",
+  "src/features/emergency-home/finishCompletionActionsPolicy.ts",
   "src/features/emergency-home/ownerAutoCallPolicy.ts",
   "src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts",
   "src/features/emergency-home/ownerLiveEvidencePolicy.ts",
@@ -143,6 +145,8 @@ const requiredFiles = [
   "scripts/finish-package-result-policy.test.ts",
   "scripts/finish-owner-live-evidence-policy.test.ts",
   "scripts/finish-owner-live-audit-policy.test.ts",
+  "scripts/finish-no-media-diagnostic-policy.test.ts",
+  "scripts/finish-completion-actions-policy.test.ts",
   "scripts/live-call-history-policy.test.ts",
   "scripts/live-call-state-policy.test.ts",
   "scripts/live-webrtc-policy.test.ts",
@@ -254,6 +258,8 @@ const finishRemoteSyncPolicy = await readFile("src/features/emergency-home/finis
 const finishPackageResultPolicy = await readFile("src/features/emergency-home/finishPackageResultPolicy.ts", "utf8");
 const finishOwnerLiveEvidencePolicy = await readFile("src/features/emergency-home/finishOwnerLiveEvidencePolicy.ts", "utf8");
 const finishOwnerLiveAuditPolicy = await readFile("src/features/emergency-home/finishOwnerLiveAuditPolicy.ts", "utf8");
+const finishNoMediaDiagnosticPolicy = await readFile("src/features/emergency-home/finishNoMediaDiagnosticPolicy.ts", "utf8");
+const finishCompletionActionsPolicy = await readFile("src/features/emergency-home/finishCompletionActionsPolicy.ts", "utf8");
 const ownerAutoCallPolicy = await readFile("src/features/emergency-home/ownerAutoCallPolicy.ts", "utf8");
 const ownerLiveAuditMarkerPolicy = await readFile("src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts", "utf8");
 const ownerLiveEvidencePolicy = await readFile("src/features/emergency-home/ownerLiveEvidencePolicy.ts", "utf8");
@@ -1056,6 +1062,25 @@ if (
   !packageJson.scripts["test:finish-owner-live-audit"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para auditoria owner final do encerramento.");
+}
+
+if (
+  !homeScreen.includes("resolveFinishNoMediaDiagnosticRequest") ||
+  !finishNoMediaDiagnosticPolicy.includes("shouldPersist") ||
+  !finishNoMediaDiagnosticPolicy.includes("camera_no_file_returned") ||
+  !packageJson.scripts["test:finish-no-media-diagnostic"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para diagnostico sem midia no encerramento.");
+}
+
+if (
+  !homeScreen.includes("resolveFinishCompletionActions") ||
+  !finishCompletionActionsPolicy.includes("shouldCloseFinishConfirmation") ||
+  !finishCompletionActionsPolicy.includes("shouldClearFinishCodeInput") ||
+  !finishCompletionActionsPolicy.includes("shouldClearFinishError") ||
+  !packageJson.scripts["test:finish-completion-actions"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para acoes finais do encerramento.");
 }
 
 if (

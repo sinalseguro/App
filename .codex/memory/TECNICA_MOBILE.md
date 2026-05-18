@@ -731,3 +731,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:finish-owner-live-audit` cobre auditoria protegida, metadados e falha com `connectionState: "ended"`.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para objeto inline de auditoria final.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em auditoria/backend exige validacao fisica/API proporcional.
+
+# Atualizacao - 2026-05-18 - Etapa 1.51 Home/SOS
+
+- `src/features/emergency-home/finishNoMediaDiagnosticPolicy.ts` centraliza a decisao de persistir diagnostico final sem midia.
+- `app/index.tsx` continua responsavel por executar `persistFinishNoMediaDiagnostic()` e anexar o diagnostico ao pacote local.
+- Novo gate `npm run test:finish-no-media-diagnostic` cobre ausencia de diagnostico e persistencia de `camera_no_file_returned`.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para `if` inline no outcome final.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em recorder/cofre/backend exige validacao fisica/API proporcional.
+
+# Atualizacao - 2026-05-18 - Etapa 1.52 Home/SOS
+
+- `src/features/emergency-home/finishCompletionActionsPolicy.ts` centraliza status final, progresso final e limpeza do formulario de confirmacao apos o outcome.
+- `app/index.tsx` continua responsavel por `setRecordingStatus()`, `showFinishProgress()` e setters React.
+- Novo gate `npm run test:finish-completion-actions` cobre a decisao de fechar confirmacao, limpar codigo e limpar erro.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para limpeza final inline no encerramento.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em UX nativa/chamada/WebRTC exige validacao fisica/performance proporcional.

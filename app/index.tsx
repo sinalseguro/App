@@ -22,6 +22,7 @@ import { resolveEmergencyHomeActivityPresentation } from "@/features/emergency-h
 import { resolveEmergencyStartFailureDialogPresentation } from "@/features/emergency-home/emergencyStartFailureDialogPolicy";
 import { resolveFinishActiveCallCleanup } from "@/features/emergency-home/finishActiveCallCleanupPolicy";
 import { resolveFinishActiveCallStart } from "@/features/emergency-home/finishActiveCallStartPolicy";
+import { resolveFinishCompletionActions } from "@/features/emergency-home/finishCompletionActionsPolicy";
 import {
   resolveFinishFailedProgress,
   resolveFinishMediaStopSettledProgress,
@@ -33,6 +34,7 @@ import {
 } from "@/features/emergency-home/finishFlowProgressPolicy";
 import { resolveFinishCodeConfirmationDecision } from "@/features/emergency-home/finishCodePolicy";
 import { resolveFinishConfirmationDialogPresentation } from "@/features/emergency-home/finishConfirmationDialogPolicy";
+import { resolveFinishNoMediaDiagnosticRequest } from "@/features/emergency-home/finishNoMediaDiagnosticPolicy";
 import { resolveFinishOutcomePolicy } from "@/features/emergency-home/finishOutcomePolicy";
 import { resolveFinishOwnerLiveAuditMarker } from "@/features/emergency-home/finishOwnerLiveAuditPolicy";
 import { resolveFinishOwnerLiveEvidenceUpdate } from "@/features/emergency-home/finishOwnerLiveEvidencePolicy";
@@ -1405,14 +1407,27 @@ export default function HomeScreen() {
         localEvidenceStatus: finishOutcome.localEvidenceStatus
       });
       recordOwnerLiveAuditMarker(remoteSessionIdToFinish, finishOwnerAuditMarker.event, finishOwnerAuditMarker.options);
-      setRecordingStatus(finishOutcome.recordingStatus);
-      if (finishOutcome.diagnosticReason) {
-        await persistFinishNoMediaDiagnostic(packageId, finishOutcome.diagnosticReason);
+      const finishCompletionActions = resolveFinishCompletionActions({
+        finishOutcome
+      });
+      const finishNoMediaDiagnostic = resolveFinishNoMediaDiagnosticRequest({
+        diagnosticReason: finishOutcome.diagnosticReason,
+        packageId
+      });
+      setRecordingStatus(finishCompletionActions.recordingStatus);
+      if (finishNoMediaDiagnostic.shouldPersist) {
+        await persistFinishNoMediaDiagnostic(finishNoMediaDiagnostic.packageId, finishNoMediaDiagnostic.reason);
       }
-      showFinishProgress(finishOutcome.finishProgress);
-      setFinishConfirmationOpen(false);
-      setFinishCodeInput("");
-      setFinishError("");
+      showFinishProgress(finishCompletionActions.finishProgress);
+      if (finishCompletionActions.shouldCloseFinishConfirmation) {
+        setFinishConfirmationOpen(false);
+      }
+      if (finishCompletionActions.shouldClearFinishCodeInput) {
+        setFinishCodeInput("");
+      }
+      if (finishCompletionActions.shouldClearFinishError) {
+        setFinishError("");
+      }
     } catch (error) {
       appendMediaOperationalLog("emergency_finish_package_error", {
         platform: Platform.OS
