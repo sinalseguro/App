@@ -78,6 +78,7 @@ const requiredFiles = [
   "scripts/live-call-history-policy.test.ts",
   "scripts/live-call-state-policy.test.ts",
   "scripts/live-webrtc-policy.test.ts",
+  "scripts/live-call-sensitive-logging.test.ts",
   "src/storage/secureJsonStore.ts",
   "scripts/android-private-media-readiness.mjs"
 ];

@@ -3,6 +3,18 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-18 - Etapa 1.5 gate de logs sensiveis live-call
+
+Status: concluida localmente, validada e pronta para checkpoint Git.
+
+- Criado gate de seguranca `scripts/live-call-sensitive-logging.test.ts`.
+- Novo comando `npm run test:live-call-security` foi adicionado ao `npm test`.
+- O gate impede `console` runtime em `useLiveAudioCall.ts` e `liveCallControl.ts`, e restringe `liveWebRtcSession.ts` a telemetria saneada `SinalSeguroLiveCall`.
+- O teste falha se linha de console runtime tentar registrar `Authorization`, access/refresh/id token, `encrypted_key`, SDP, ICE candidate, payload P2P, URI, `file://`, `DocumentDirectory` ou `cacheDirectory`.
+- Sem alteracao de fluxo operacional, UI, backend, portal, release, WebRTC runtime, sinalizacao ou permissao.
+- Validacoes aprovadas ate agora: `npm run test:live-call-security`, `node scripts/smoke-test.mjs` e `npm run typecheck`.
+- Checkpoint: `docs/71_CHECKPOINT_ETAPA_1_5_LIVE_CALL_SECURITY_LOGGING_2026-05-18.md`.
+
 ## 2026-05-18 - Etapa 1.4 politica pura WebRTC live-call
 
 Status: concluida localmente, validada e pronta para checkpoint Git.

@@ -5,6 +5,11 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 
 ## Estado tecnico
 
+- Atualizacao 2026-05-18 Etapa 1.5: adicionado gate `npm run test:live-call-security` em `scripts/live-call-sensitive-logging.test.ts`.
+- O gate bloqueia regressao de logs runtime sensiveis em `useLiveAudioCall.ts`, `liveCallControl.ts` e `liveWebRtcSession.ts`, preservando apenas telemetria saneada `SinalSeguroLiveCall`.
+- `npm test` agora inclui `test:live-call-security`; sem mudanca de UX, backend, portal, release, WebRTC runtime ou codigo nativo.
+- Checkpoint da etapa: `docs/71_CHECKPOINT_ETAPA_1_5_LIVE_CALL_SECURITY_LOGGING_2026-05-18.md`.
+
 - Atualizacao 2026-05-18 Etapa 1.4: regras puras WebRTC da live-call foram extraidas para `src/features/live-call/liveWebRtcPolicy.ts`.
 - `src/services/liveWebRtcSession.ts` continua com efeitos nativos (`getUserMedia`, `RTCPeerConnection`, listeners, SDP/ICE e fechamento de tracks); sem mudanca de telas, UX, backend, portal, release ou runtime nativo.
 - Novo gate `npm run test:live-webrtc` cobre modos audio/video, constraints, timeout, captura local, transceivers `recvonly`, estado ICE/conexao e escolha de stream remoto.

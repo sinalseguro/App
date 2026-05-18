@@ -5,6 +5,11 @@ Papel: seguranca, LGPD e QA.
 
 ## Decisoes bloqueantes
 
+- QA/Security 2026-05-18 - Etapa 1.5 live-call: criado gate `npm run test:live-call-security` para impedir regressao de logs sensiveis em live-call/WebRTC.
+- `useLiveAudioCall.ts` e `liveCallControl.ts` nao devem ter `console` runtime; `liveWebRtcSession.ts` so pode registrar telemetria saneada `SinalSeguroLiveCall`.
+- Logs runtime nao podem conter `Authorization`, access/refresh/id token, `encrypted_key`, SDP, ICE candidate, payload P2P, URI/path local, `DocumentDirectory` ou `cacheDirectory`.
+- Gates aprovados ate a primeira validacao da Etapa 1.5: `test:live-call-security`, `smoke-test` e `typecheck`.
+
 - QA/Security 2026-05-18 - Etapa 1.4 live-call: politica pura WebRTC foi extraida sem alterar fluxo operacional, UI, backend, portal ou release.
 - `liveWebRtcPolicy.ts` nao pode ganhar side effects, logs, storage, API, permissao, camera/microfone real ou persistencia; manter apenas regras puras/testaveis.
 - Owner segue `sendrecv` para audio/video e anjo segue `recvonly`; qualquer alteracao nesse contrato exige teste fisico Android em dois dispositivos.
