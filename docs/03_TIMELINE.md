@@ -3,6 +3,22 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-18 - Etapa 1.9 validacao Android da refatoracao Home/SOS
+
+Status: validacao fisica Android concluida em build debug privado local; sem publicacao de release.
+
+- Validada fisicamente a base apos as etapas 1.6, 1.7 e 1.8 de refatoracao pura da Home/SOS.
+- Gates aprovados antes do build: `npm run typecheck`, `npm run lint`, `npm test` e `git diff --check`.
+- `npm run private:android:readiness` ficou pronto para build privado condicionado pela pendencia conhecida de Node local `20.16.0`.
+- Build multi-ABI inicial falhou por falta de espaco no CMake; nao houve evidencia de falha de codigo.
+- Build debug focado em `armeabi-v7a` passou com `BUILD SUCCESSFUL`, para atender os dois aparelhos fisicos conectados no contexto de QA local.
+- APK local validado: `versionName=0.1.15`, `versionCode=17`, SHA-256 `e6348935dcf864070323e3d16e5a6e0a505d91aee539903422ad87398ad67189`.
+- Instalacao via ADB concluida com sucesso em `0123456789ABCDEF` e `5686add7`.
+- Validacao visual: Home SOS abriu no `0123456789ABCDEF`; modal de preparacao de acesso abriu no `5686add7`.
+- Logs: buffer de crash vazio, 0 ocorrencias de `FATAL`/`AndroidRuntime`/`Unhandled` e sem marcador sensivel apos rechecagem dirigida.
+- Evidencias: `docs/evidencias/android/2026-05-18-refatoracao-home-sos-validacao/`.
+- Checkpoint: `docs/81_CHECKPOINT_ETAPA_1_9_VALIDACAO_ANDROID_REFATORACAO_HOME_SOS_2026-05-18.md`.
+
 ## 2026-05-18 - Etapa 1.8 politica pura de autochamada do solicitante
 
 Status: concluida localmente, validada e pronta para checkpoint Git.

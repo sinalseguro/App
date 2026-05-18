@@ -390,3 +390,12 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:owner-auto-call` cobre chamada ja ativa, tentativa cancelada, pausada, ja iniciada, em voo, ausencia de sessao e existencia de anjo aceito.
 - `npm test` e `scripts/smoke-test.mjs` exigem a politica pura para evitar regressao na Home.
 - Proxima mudanca em WebRTC runtime, camera, `app/alerta.tsx`, encerramento do SOS ou midia local deve exigir validacao fisica Android.
+
+# Atualizacao - 2026-05-18 - Etapa 1.9 validacao Android da refatoracao Home/SOS
+
+- Refatoracoes puras das etapas 1.6, 1.7 e 1.8 foram revalidadas por build e instalacao em dois Androids fisicos.
+- Build multi-ABI inicial falhou por falta de espaco, nao por erro de codigo; build debug local focado em `armeabi-v7a` passou com `BUILD SUCCESSFUL`.
+- O APK local de QA manteve `br.com.sinalseguro.app`, `versionName=0.1.15`, `versionCode=17` e SHA-256 `e6348935dcf864070323e3d16e5a6e0a505d91aee539903422ad87398ad67189`.
+- Instalacao via ADB funcionou em `0123456789ABCDEF` e `5686add7`.
+- Evidencias visuais preservadas em `docs/evidencias/android/2026-05-18-refatoracao-home-sos-validacao/`.
+- Este APK 32-bit e somente evidencia de QA local; release publica exige build adequado multi-ABI, Node compativel com o gate publico e espaco local suficiente.

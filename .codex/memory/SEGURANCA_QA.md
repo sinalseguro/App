@@ -342,3 +342,13 @@ Papel: seguranca, LGPD e QA.
 - Varredura dirigida do diff nao encontrou token, `Authorization`, `id_token`, `encrypted_key`, SDP, ICE, URI/path de midia ou payload P2P.
 - Validacoes aprovadas: `test:owner-auto-call`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
 - Antes de publicar uma nova release com esta refatoracao, repetir validacao fisica Android do SOS/anjo.
+
+## QA/Security - 2026-05-18 - Etapa 1.9 validacao Android da refatoracao Home/SOS
+
+- Gates pre-build aprovados: `typecheck`, `lint`, `npm test` e `git diff --check`.
+- `private:android:readiness` pronto para build privado condicionado pela pendencia ambiental conhecida de Node local `20.16.0`.
+- Build multi-ABI inicial falhou por falta de espaco no CMake; build debug local `armeabi-v7a` passou e foi instalado nos dois Androids fisicos.
+- Validacao visual confirmou Home SOS em um aparelho e modal de preparacao de acesso no outro, sem crash.
+- Buffer de crash vazio; logs filtrados por processo sem `FATAL`, `AndroidRuntime` ou `Unhandled`.
+- Rechecagem dirigida de logs nao encontrou `Authorization`, `id_token`, `encrypted_key`, SDP/ICE, `file://` ou path sensivel de midia.
+- Avisos remanescentes nao bloqueantes: URI scheme duplicado em debug, WebViewFactory do aparelho e spam `FPS-BOOST` do Redmi.
