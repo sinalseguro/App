@@ -69,6 +69,11 @@ import {
   resolveMediaStopTimeout,
   resolveMediaStopWaiterStart
 } from "@/features/emergency-home/mediaStopWaiterPolicy";
+import { resolveMediaStopSignal } from "@/features/emergency-home/mediaStopSignalPolicy";
+import {
+  resolveMediaStopSettlementLog,
+  resolvePendingMediaStopRequestSettlement
+} from "@/features/emergency-home/mediaStopSettlementRequestPolicy";
 import { ownerAutoCallAttemptMessage, ownerAutoCallRecipientStatus, shouldAttemptOwnerAutoCall } from "@/features/emergency-home/ownerAutoCallPolicy";
 import {
   resolveOwnerLiveAuditMarkerInput,
@@ -1413,11 +1418,11 @@ export default function HomeScreen() {
     }
 
     resolveMediaReleaseWaiter();
-    appendMediaOperationalLog("emergency_media_stop_settled", {
-      attachedAssets: result.attachedAssets,
+    const settlementLog = resolveMediaStopSettlementLog({
       platform: Platform.OS,
-      status: result.status
+      result
     });
+    appendMediaOperationalLog(settlementLog.logEvent, settlementLog.logPayload);
 
     const settlementPresentation = resolveMediaStopSettlementPresentation(result);
     if (settlementPresentation.shouldRefreshOutbox) {
@@ -1431,7 +1436,11 @@ export default function HomeScreen() {
     }
 
     const pendingRequest = pendingMediaStopRequestRef.current;
-    if (pendingRequest?.serial === serial) {
+    const pendingRequestDecision = resolvePendingMediaStopRequestSettlement({
+      pendingSerial: pendingRequest?.serial,
+      serial
+    });
+    if (pendingRequest && pendingRequestDecision.shouldResolvePendingRequest) {
       clearTimeout(pendingRequest.timeout);
       pendingMediaStopRequestRef.current = null;
       pendingRequest.resolve(result);
@@ -1439,16 +1448,19 @@ export default function HomeScreen() {
   }
 
   function signalMediaRecorderStop() {
-    if (!preferences.localVideoCapture.requestOnSos || Platform.OS === "web") {
+    const stopSignal = resolveMediaStopSignal({
+      currentSerial: stopRecordingRequestSerialRef.current,
+      isWebPlatform: Platform.OS === "web",
+      platform: Platform.OS,
+      requestLocalVideoOnSos: preferences.localVideoCapture.requestOnSos
+    });
+    if (!stopSignal.shouldSignal) {
       return null;
     }
 
-    const serial = stopRecordingRequestSerialRef.current + 1;
+    const serial = stopSignal.serial;
     stopRecordingRequestSerialRef.current = serial;
-    appendMediaOperationalLog("emergency_media_stop_signal", {
-      platform: Platform.OS,
-      stopRequestSerial: serial
-    });
+    appendMediaOperationalLog(stopSignal.logEvent, stopSignal.logPayload);
     setStopRecordingRequestSerial(serial);
     return serial;
   }

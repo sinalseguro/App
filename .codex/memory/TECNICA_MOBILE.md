@@ -667,3 +667,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:media-stop-waiter` cobre requisicao anterior, serial divergente e timeout valido.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline no waiter.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional no recorder exige validacao fisica/performance proporcional.
+
+# Atualizacao - 2026-05-18 - Etapa 1.43 Home/SOS
+
+- `src/features/emergency-home/mediaStopSignalPolicy.ts` centraliza a decisao de sinalizar parada do recorder, incrementar serial e preparar o payload de log.
+- `app/index.tsx` continua responsavel por refs, `appendMediaOperationalLog()`, `setStopRecordingRequestSerial()` e retorno do serial.
+- Novo gate `npm run test:media-stop-signal` cobre Android com video local, plataforma web e video local desativado.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline no signal.
+- Sem build Android nesta fatia por ser refatoracao pura.
+
+# Atualizacao - 2026-05-18 - Etapa 1.44 Home/SOS
+
+- `src/features/emergency-home/mediaStopSettlementRequestPolicy.ts` centraliza o payload de settlement e a decisao de resolver pending request por serial.
+- `app/index.tsx` continua responsavel por `appendMediaOperationalLog()`, `clearTimeout()`, limpeza de ref e `pendingRequest.resolve(result)`.
+- Novo gate `npm run test:media-stop-settlement-request` cobre log de settlement, serial igual, serial diferente e ausencia de pending request.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline no settlement.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional no recorder exige validacao fisica/performance proporcional.

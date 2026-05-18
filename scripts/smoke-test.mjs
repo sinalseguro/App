@@ -53,6 +53,8 @@ const requiredFiles = [
   "src/features/emergency-home/mediaProcessingStatusPolicy.ts",
   "src/features/emergency-home/mediaReleaseWaiterPolicy.ts",
   "src/features/emergency-home/mediaStopPendingPolicy.ts",
+  "src/features/emergency-home/mediaStopSignalPolicy.ts",
+  "src/features/emergency-home/mediaStopSettlementRequestPolicy.ts",
   "src/features/emergency-home/mediaStopWaiterPolicy.ts",
   "src/features/emergency-home/ownerAutoCallPolicy.ts",
   "src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts",
@@ -126,6 +128,8 @@ const requiredFiles = [
   "scripts/protected-route-dialog-policy.test.ts",
   "scripts/home-navigation-policy.test.ts",
   "scripts/media-stop-pending-policy.test.ts",
+  "scripts/media-stop-signal-policy.test.ts",
+  "scripts/media-stop-settlement-request-policy.test.ts",
   "scripts/media-stop-waiter-policy.test.ts",
   "scripts/live-call-history-policy.test.ts",
   "scripts/live-call-state-policy.test.ts",
@@ -229,6 +233,8 @@ const mediaHandoffPolicy = await readFile("src/features/emergency-home/mediaHand
 const mediaProcessingStatusPolicy = await readFile("src/features/emergency-home/mediaProcessingStatusPolicy.ts", "utf8");
 const mediaReleaseWaiterPolicy = await readFile("src/features/emergency-home/mediaReleaseWaiterPolicy.ts", "utf8");
 const mediaStopPendingPolicy = await readFile("src/features/emergency-home/mediaStopPendingPolicy.ts", "utf8");
+const mediaStopSignalPolicy = await readFile("src/features/emergency-home/mediaStopSignalPolicy.ts", "utf8");
+const mediaStopSettlementRequestPolicy = await readFile("src/features/emergency-home/mediaStopSettlementRequestPolicy.ts", "utf8");
 const mediaStopWaiterPolicy = await readFile("src/features/emergency-home/mediaStopWaiterPolicy.ts", "utf8");
 const ownerAutoCallPolicy = await readFile("src/features/emergency-home/ownerAutoCallPolicy.ts", "utf8");
 const ownerLiveAuditMarkerPolicy = await readFile("src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts", "utf8");
@@ -1058,6 +1064,27 @@ if (
   !packageJson.scripts["test:media-stop-pending"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para estado de midia pendente.");
+}
+
+if (
+  !homeScreen.includes("resolveMediaStopSignal") ||
+  !mediaStopSignalPolicy.includes("resolveMediaStopSignal") ||
+  !mediaStopSignalPolicy.includes("emergency_media_stop_signal") ||
+  !mediaStopSignalPolicy.includes("requestLocalVideoOnSos") ||
+  !packageJson.scripts["test:media-stop-signal"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para sinalizacao de parada do recorder.");
+}
+
+if (
+  !homeScreen.includes("resolveMediaStopSettlementLog") ||
+  !homeScreen.includes("resolvePendingMediaStopRequestSettlement") ||
+  !mediaStopSettlementRequestPolicy.includes("resolveMediaStopSettlementLog") ||
+  !mediaStopSettlementRequestPolicy.includes("resolvePendingMediaStopRequestSettlement") ||
+  !mediaStopSettlementRequestPolicy.includes("emergency_media_stop_settled") ||
+  !packageJson.scripts["test:media-stop-settlement-request"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para settlement da requisicao de parada do recorder.");
 }
 
 const emergencyPreferences = await readFile("src/features/emergency/emergencyPreferences.ts", "utf8");

@@ -3975,3 +3975,41 @@ Validacoes:
 Checkpoint:
 
 - `docs/114_CHECKPOINT_ETAPA_1_42_MEDIA_STOP_WAITER_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.43 sinalizacao de parada do recorder
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `mediaStopSignalPolicy` para centralizar a decisao de sinalizar stop, incrementar serial e preparar payload de log.
+- `app/index.tsx` manteve os efeitos reais de ref, log operacional, estado React e retorno do serial.
+- `npm test` passou a executar `test:media-stop-signal`.
+
+Validacoes:
+
+- `test:media-stop-signal`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura de seguranca dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/115_CHECKPOINT_ETAPA_1_43_MEDIA_STOP_SIGNAL_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.44 settlement da pending request de parada do recorder
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `mediaStopSettlementRequestPolicy` para centralizar payload de settlement e decisao de resolver pending request por serial.
+- `app/index.tsx` manteve os efeitos reais de log, `clearTimeout`, limpeza de ref e `pendingRequest.resolve(result)`.
+- `npm test` passou a executar `test:media-stop-settlement-request`.
+
+Validacoes:
+
+- `test:media-stop-settlement-request`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura de seguranca dirigida: aprovados.
+- ADB confirmou os Androids conectados, mas sem build/perfil porque a mudanca nao altera UX nativa, chamada, camera, gravacao, WebRTC, backend ou storage.
+
+Checkpoint:
+
+- `docs/116_CHECKPOINT_ETAPA_1_44_MEDIA_STOP_SETTLEMENT_REQUEST_POLICY_2026-05-18.md`.
