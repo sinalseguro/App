@@ -5,6 +5,11 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 
 ## Estado tecnico
 
+- Atualizacao 2026-05-18 higienizacao Android: `adb mdns services` nao encontrou segundo Android; limpeza de regeneraveis liberou espaco de 3.3 GiB para 5.4 GiB.
+- Removidos 38 itens regeneraveis Android, 0 falhas, incluindo `android/.gradle`, `android/app/.cxx`, `android/app/build`, `android/build`, duplicatas `* 2.*` e temporarios antigos `/private/tmp/sinalseguro-android-live-20260517*`.
+- O APK local foi removido como artefato regeneravel; app `0.1.15` segue instalado no Android fisico. Novo deploy/publicacao exige rebuild Android privado.
+- Checkpoint da etapa: `docs/74_CHECKPOINT_HIGIENIZACAO_REGENERAVEIS_ANDROID_2026-05-18.md`.
+
 - Atualizacao 2026-05-18 pre-validacao unilateral Android: com apenas um Android em ADB, o app `0.1.15`/`versionCode 17` abriu via `am start -W` com `Status: ok`, processo ativo e `mFocusedApp` em `br.com.sinalseguro.app/.MainActivity`.
 - `mCurrentFocus` permaneceu como `NotificationShade`, entao nao tratar como validacao visual de tela; log filtrado sem `FATAL EXCEPTION`, `AndroidRuntime` ou erro React Native fatal.
 - Cameras ficaram sem cliente ativo; inventario saneado do sandbox apontou 26 arquivos, 0 midias claras persistentes, 0 `.nseg` e 0 `.sseg`.

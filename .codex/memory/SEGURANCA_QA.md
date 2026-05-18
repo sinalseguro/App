@@ -5,6 +5,11 @@ Papel: seguranca, LGPD e QA.
 
 ## Decisoes bloqueantes
 
+- QA/Security 2026-05-18 - higienizacao Android: limpeza removeu apenas regeneraveis Android e temporarios antigos; nenhuma midia, token, segredo, dado pessoal, backend, portal ou release foi alterado.
+- Espaco subiu de 3.3 GiB para 5.4 GiB; ainda evitar build pesado sem necessidade objetiva, mas ambiente esta menos restrito.
+- O APK local foi removido como regeneravel; nao declarar nova versao instalada/publicada sem rebuild e validacao.
+- A validacao live-call fim a fim continua bloqueada porque ADB/mdns ainda mostrou apenas um Android.
+
 - QA/Security 2026-05-18 - pre-validacao unilateral Android: apenas disponibilidade basica em um aparelho foi validada; nao declarar chamada ao vivo fim a fim, transmissao owner->anjo, autoaceite, handoff ou encerramento SOS como aprovados nesta rodada.
 - Log filtrado do app aberto nao mostrou `FATAL EXCEPTION`, `AndroidRuntime` ou erro React Native fatal; `dumpsys media.camera` ficou sem cliente ativo.
 - Inventario local saneado apontou 0 midias claras persistentes, 0 `.nseg` e 0 `.sseg`; evidencias brutas/logcat nao foram versionados.

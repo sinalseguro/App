@@ -3,6 +3,20 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-18 - Higienizacao de regeneraveis Android
+
+Status: limpeza operacional concluida; sem alteracao de codigo do app, backend, portal ou release.
+
+- ADB continuou listando apenas um Android como `device`.
+- `adb mdns services` nao encontrou novos servicos ADB Wi-Fi.
+- Dry-run encontrou 38 reciclaveis Android, total estimado de 2.2 GiB.
+- Limpeza aplicada por `../../scripts/higienizar-reciclaveis-android.sh --select all --apply`.
+- Resultado: 38 itens removidos, 0 falhas, espaco livre variando de 3.3 GiB para 5.4 GiB.
+- Foram removidos apenas regeneraveis: `.gradle`, `.cxx`, `android/app/build`, `android/build`, duplicatas `* 2.*` de intermediarios e temporarios antigos em `/private/tmp`.
+- O APK local foi removido como artefato regeneravel; o app validado segue instalado no Android fisico.
+- Corrigido bug operacional no script raiz `scripts/higienizar-reciclaveis-mobile.sh` quando nao havia itens (`SIZES_KB[@]: unbound variable`); script raiz fica fora do Git do app mobile.
+- Checkpoint: `docs/74_CHECKPOINT_HIGIENIZACAO_REGENERAVEIS_ANDROID_2026-05-18.md`.
+
 ## 2026-05-18 - Pre-validacao unilateral Android
 
 Status: pre-validacao unilateral concluida; live-call fim a fim segue bloqueada ate dois Androids.
