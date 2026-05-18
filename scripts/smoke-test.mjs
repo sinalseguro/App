@@ -58,6 +58,8 @@ const requiredFiles = [
   "src/features/emergency-home/mediaStopWaiterPolicy.ts",
   "src/features/emergency-home/finishActiveCallStartPolicy.ts",
   "src/features/emergency-home/finishActiveCallCleanupPolicy.ts",
+  "src/features/emergency-home/finishRemoteSyncPolicy.ts",
+  "src/features/emergency-home/finishPackageResultPolicy.ts",
   "src/features/emergency-home/ownerAutoCallPolicy.ts",
   "src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts",
   "src/features/emergency-home/ownerLiveEvidencePolicy.ts",
@@ -135,6 +137,8 @@ const requiredFiles = [
   "scripts/media-stop-waiter-policy.test.ts",
   "scripts/finish-active-call-start-policy.test.ts",
   "scripts/finish-active-call-cleanup-policy.test.ts",
+  "scripts/finish-remote-sync-policy.test.ts",
+  "scripts/finish-package-result-policy.test.ts",
   "scripts/live-call-history-policy.test.ts",
   "scripts/live-call-state-policy.test.ts",
   "scripts/live-webrtc-policy.test.ts",
@@ -242,6 +246,8 @@ const mediaStopSettlementRequestPolicy = await readFile("src/features/emergency-
 const mediaStopWaiterPolicy = await readFile("src/features/emergency-home/mediaStopWaiterPolicy.ts", "utf8");
 const finishActiveCallStartPolicy = await readFile("src/features/emergency-home/finishActiveCallStartPolicy.ts", "utf8");
 const finishActiveCallCleanupPolicy = await readFile("src/features/emergency-home/finishActiveCallCleanupPolicy.ts", "utf8");
+const finishRemoteSyncPolicy = await readFile("src/features/emergency-home/finishRemoteSyncPolicy.ts", "utf8");
+const finishPackageResultPolicy = await readFile("src/features/emergency-home/finishPackageResultPolicy.ts", "utf8");
 const ownerAutoCallPolicy = await readFile("src/features/emergency-home/ownerAutoCallPolicy.ts", "utf8");
 const ownerLiveAuditMarkerPolicy = await readFile("src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts", "utf8");
 const ownerLiveEvidencePolicy = await readFile("src/features/emergency-home/ownerLiveEvidencePolicy.ts", "utf8");
@@ -1005,6 +1011,27 @@ if (
   !packageJson.scripts["test:finish-active-call-cleanup"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para limpeza final do encerramento ativo.");
+}
+
+if (
+  !homeScreen.includes("resolveRemoteFinishStateAfterDirect") ||
+  !homeScreen.includes("resolveRemoteFinishStateFromSync") ||
+  !homeScreen.includes("resolveRemoteFinishFailureLog") ||
+  !finishRemoteSyncPolicy.includes("shouldRetryRemoteFinishAfterDirect") ||
+  !finishRemoteSyncPolicy.includes("emergency_remote_finish_sync_error") ||
+  !packageJson.scripts["test:finish-remote-sync"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para sincronizacao remota final do encerramento.");
+}
+
+if (
+  !homeScreen.includes("resolveFinishPackageResult") ||
+  !finishPackageResultPolicy.includes("attachedAssetsAfterFinish") ||
+  !finishPackageResultPolicy.includes("emergency_finish_package_result") ||
+  !finishPackageResultPolicy.includes("mediaRecorded") ||
+  !packageJson.scripts["test:finish-package-result"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para resumo do pacote finalizado.");
 }
 
 if (

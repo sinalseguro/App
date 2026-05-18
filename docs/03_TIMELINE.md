@@ -4051,3 +4051,41 @@ Validacoes:
 Checkpoint:
 
 - `docs/118_CHECKPOINT_ETAPA_1_46_FINISH_ACTIVE_CALL_CLEANUP_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.47 sincronizacao remota final do encerramento
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishRemoteSyncPolicy` para centralizar selecao do estado remoto final, decisao de retry apos finish direto e payload de log de falha remota.
+- `app/index.tsx` manteve os efeitos reais de API, fila local, retry e log operacional.
+- `npm test` passou a executar `test:finish-remote-sync`.
+
+Validacoes:
+
+- `test:finish-remote-sync`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura de seguranca dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/119_CHECKPOINT_ETAPA_1_47_FINISH_REMOTE_SYNC_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.48 resumo do pacote finalizado
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishPackageResultPolicy` para centralizar contagem de midias anexadas, flag de midia gravada e payload de `emergency_finish_package_result`.
+- `app/index.tsx` manteve os efeitos reais de log, outcome, evidencia owner, auditoria e diagnostico.
+- `npm test` passou a executar `test:finish-package-result`.
+
+Validacoes:
+
+- `test:finish-package-result`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura de seguranca dirigida: aprovados.
+- ADB confirmou os Androids conectados, mas sem build/perfil porque a mudanca nao altera UX nativa, chamada, camera, gravacao, WebRTC, backend ou storage.
+
+Checkpoint:
+
+- `docs/120_CHECKPOINT_ETAPA_1_48_FINISH_PACKAGE_RESULT_POLICY_2026-05-18.md`.

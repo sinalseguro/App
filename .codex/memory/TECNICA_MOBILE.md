@@ -699,3 +699,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:finish-active-call-cleanup` cobre limpeza da finalidade `finish` e preservacao de outras finalidades de midia.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para limpeza inline no `finally`.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em camera/chamada/WebRTC exige validacao fisica/performance proporcional.
+
+# Atualizacao - 2026-05-18 - Etapa 1.47 Home/SOS
+
+- `src/features/emergency-home/finishRemoteSyncPolicy.ts` centraliza a decisao de retry da finalizacao remota, a escolha do estado remoto final e o payload de falha remota.
+- `app/index.tsx` continua responsavel por chamar `finishRemoteEmergencySessionForPackage()`, `syncPendingEmergencyPackagesWithApi()` e `appendMediaOperationalLog()`.
+- Novo gate `npm run test:finish-remote-sync` cobre finish direto concluido, retry apos falha, fallback para o estado direto e log de falha.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para selecao remota inline.
+- Sem build Android nesta fatia por ser refatoracao pura.
+
+# Atualizacao - 2026-05-18 - Etapa 1.48 Home/SOS
+
+- `src/features/emergency-home/finishPackageResultPolicy.ts` centraliza o resumo do pacote finalizado e o payload de `emergency_finish_package_result`.
+- `app/index.tsx` continua responsavel por registrar o log, resolver outcome, atualizar evidencia owner, auditoria e diagnostico.
+- Novo gate `npm run test:finish-package-result` cobre midia gravada com anexo e pacote sem midia local anexada.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para resumo inline no encerramento.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em camera/chamada/WebRTC exige validacao fisica/performance proporcional.

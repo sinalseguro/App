@@ -20,6 +20,8 @@ import {
 import { resolveEmergencyCallConfirmation } from "@/features/emergency-home/emergencyCallConfirmationPolicy";
 import { resolveEmergencyHomeActivityPresentation } from "@/features/emergency-home/emergencyHomeActivityPolicy";
 import { resolveEmergencyStartFailureDialogPresentation } from "@/features/emergency-home/emergencyStartFailureDialogPolicy";
+import { resolveFinishActiveCallCleanup } from "@/features/emergency-home/finishActiveCallCleanupPolicy";
+import { resolveFinishActiveCallStart } from "@/features/emergency-home/finishActiveCallStartPolicy";
 import {
   resolveFinishFailedProgress,
   resolveFinishMediaStopSettledProgress,
@@ -32,10 +34,15 @@ import {
 import { resolveFinishCodeConfirmationDecision } from "@/features/emergency-home/finishCodePolicy";
 import { resolveFinishConfirmationDialogPresentation } from "@/features/emergency-home/finishConfirmationDialogPolicy";
 import { resolveFinishOutcomePolicy } from "@/features/emergency-home/finishOutcomePolicy";
+import { resolveFinishPackageResult } from "@/features/emergency-home/finishPackageResultPolicy";
 import { resolveFinishProgressDialogPresentation } from "@/features/emergency-home/finishProgressDialogPolicy";
+import {
+  resolveRemoteFinishFailureLog,
+  resolveRemoteFinishStateAfterDirect,
+  resolveRemoteFinishStateFromSync,
+  shouldRetryRemoteFinishAfterDirect
+} from "@/features/emergency-home/finishRemoteSyncPolicy";
 import { resolveFinishRequestDecision } from "@/features/emergency-home/finishRequestPolicy";
-import { resolveFinishActiveCallCleanup } from "@/features/emergency-home/finishActiveCallCleanupPolicy";
-import { resolveFinishActiveCallStart } from "@/features/emergency-home/finishActiveCallStartPolicy";
 import {
   idleFinishProgressState,
   resolveClosedFinishProgressState,
@@ -1345,38 +1352,41 @@ export default function HomeScreen() {
           result.packageRecord,
           remoteSessionIdToFinish
         );
-        if (directFinishState.remoteFinishStatus === "finished") {
-          remoteFinishState = directFinishState;
-        } else {
-          const retryStates = await syncPendingEmergencyPackagesWithApi();
-          remoteFinishState =
-            retryStates.find((state) => state.packageId === packageId) ?? directFinishState;
-        }
+        const retryStates = shouldRetryRemoteFinishAfterDirect(directFinishState)
+          ? await syncPendingEmergencyPackagesWithApi()
+          : [];
+        remoteFinishState = resolveRemoteFinishStateAfterDirect({
+          directFinishState,
+          packageId,
+          retryStates
+        });
       } else {
         const syncStates = await syncPendingEmergencyPackagesWithApi();
-        remoteFinishState = syncStates.find((state) => state.packageId === packageId);
-      }
-      if (remoteFinishState?.remoteFinishStatus === "failed") {
-        appendMediaOperationalLog("emergency_remote_finish_sync_error", {
+        remoteFinishState = resolveRemoteFinishStateFromSync({
           packageId,
-          platform: Platform.OS,
-          remoteFinishReason: remoteFinishState.remoteFinishReason,
-          remoteSessionId: remoteSessionIdToFinish ?? remoteFinishState.remoteSessionId
+          syncStates
         });
       }
-      const remoteFinishFailed = remoteFinishState?.remoteFinishStatus === "failed";
+      const remoteFinishFailureLog = resolveRemoteFinishFailureLog({
+        packageId,
+        platform: Platform.OS,
+        remoteFinishState,
+        remoteSessionIdToFinish
+      });
+      if (remoteFinishFailureLog.shouldLog) {
+        appendMediaOperationalLog(remoteFinishFailureLog.logEvent, remoteFinishFailureLog.logPayload);
+      }
+      const remoteFinishFailed = remoteFinishFailureLog.remoteFinishFailed;
 
-      const attachedAssetsAfterFinish =
-        result.packageRecord.media.status === "recorded_local" ? result.packageRecord.media.assets.length : 0;
-      appendMediaOperationalLog("emergency_finish_package_result", {
-        attachedAssetCount: attachedAssetsAfterFinish,
+      const finishPackageResult = resolveFinishPackageResult({
         liveVideoAttached: Boolean(liveVideoAttachedAsset),
-        mediaRecorded: result.packageRecord.media.status === "recorded_local",
+        media: result.packageRecord.media,
         platform: Platform.OS
       });
+      appendMediaOperationalLog(finishPackageResult.logEvent, finishPackageResult.logPayload);
       const finishOutcome = resolveFinishOutcomePolicy({
-        attachedAssetsAfterFinish,
-        liveVideoAttached: Boolean(liveVideoAttachedAsset),
+        attachedAssetsAfterFinish: finishPackageResult.attachedAssetsAfterFinish,
+        liveVideoAttached: finishPackageResult.liveVideoAttached,
         mediaWasHandedToLiveCall,
         remoteFinishFailed,
         stopResultStatus: stopResult?.status,
