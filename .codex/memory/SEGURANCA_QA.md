@@ -434,3 +434,12 @@ Papel: seguranca, LGPD e QA.
 - O unico `console.log` novo esta no teste local dedicado, seguindo padrao dos demais testes de politica.
 - Validacoes aprovadas: `test:emergency-start`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
 - Performance Android nao foi coletada porque a fatia nao altera UX, renderizacao, camera, WebRTC, gravacao ou loop de midia; proxima mudanca operacional sensivel deve usar Android fisico e aparelho 32-bit como sentinela.
+
+## QA/Security - 2026-05-18 - Etapa 1.19 politica pura de settlement da parada de midia
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido, log runtime, backend, portal ou release.
+- Gate `npm run test:media-processing-status` foi ampliado para cobrir serial valido, asset anexado, refresh do outbox, mensagem final e modal `Video protegido`.
+- Varredura dirigida do diff confirmou ausencia de token, `Authorization`, `id_token`, `encrypted_key`, SDP, ICE, URI/path de midia, payload P2P ou novo endpoint.
+- O unico `console.log` esperado continua sendo o do teste local dedicado, seguindo padrao dos demais testes de politica.
+- Validacoes aprovadas: `test:media-processing-status`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
+- Performance Android nao foi coletada porque a fatia nao altera UX, renderizacao, camera, WebRTC, gravacao ou loop de midia; proxima mudanca operacional sensivel deve usar Android fisico e aparelho 32-bit como sentinela.

@@ -766,9 +766,16 @@ if (
 if (
   !homeScreen.includes("resolveMediaProcessingPresentation") ||
   !homeScreen.includes("shouldResolveMediaReleaseWaiter") ||
+  !homeScreen.includes("shouldHandleMediaStopSettlement") ||
+  !homeScreen.includes("resolveMediaStopSettlementPresentation") ||
+  !homeScreen.includes("resolveMediaStopSettlementFinishProgress") ||
   !mediaProcessingStatusPolicy.includes("resolveFinishMediaProcessingPresentation") ||
   !mediaProcessingStatusPolicy.includes("resolveLiveCallHandoffMediaStatus") ||
+  !mediaProcessingStatusPolicy.includes("shouldHandleMediaStopSettlement") ||
+  !mediaProcessingStatusPolicy.includes("resolveMediaStopSettlementPresentation") ||
+  !mediaProcessingStatusPolicy.includes("resolveMediaStopSettlementFinishProgress") ||
   !mediaProcessingStatusPolicy.includes("Midia protegida e cofre atualizado.") ||
+  !mediaProcessingStatusPolicy.includes("Video finalizado e preservado no cofre local.") ||
   !mediaProcessingStatusPolicy.includes("Falha tecnica saneada durante a preservacao") ||
   !packageJson.scripts["test:media-processing-status"]
 ) {

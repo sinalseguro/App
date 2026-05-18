@@ -474,3 +474,11 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:emergency-start` cobre Android/web, chamada emergencial, localizacao capturada/nao registrada e duracao da gravacao.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline.
 - Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional em chamada/camera/WebRTC/gravacao/UX deve repetir validacao fisica.
+
+# Atualizacao - 2026-05-18 - Etapa 1.19 Home/SOS
+
+- `src/features/emergency-home/mediaProcessingStatusPolicy.ts` tambem centraliza a decisao de settlement da parada de midia: serial valido, asset anexado, refresh do outbox, mensagem final e modal `Video protegido`.
+- `app/index.tsx` continua responsavel pelos efeitos reais de resolver waiter, registrar auditoria, atualizar outbox/status/modal e concluir promessa pendente do gravador.
+- `npm run test:media-processing-status` cobre agora processamento de midia e settlement da parada no mesmo gate.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline.
+- Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional em chamada/camera/WebRTC/gravacao/UX deve repetir validacao fisica.

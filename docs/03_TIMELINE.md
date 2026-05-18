@@ -3318,6 +3318,23 @@ Checkpoint:
 
 - `docs/90_CHECKPOINT_ETAPA_1_18_EMERGENCY_START_POLICY_2026-05-18.md`.
 
+## 2026-05-18 - Etapa 1.19 politica pura de settlement da parada de midia
+
+Status: refatoracao pura implementada, validada e sem publicacao de release.
+
+Executado:
+
+- Ampliado `src/features/emergency-home/mediaProcessingStatusPolicy.ts` para decidir tratamento do retorno do gravador: serial valido, midia anexada, refresh do outbox, status de video preservado e modal final.
+- `app/index.tsx` preserva os efeitos reais: resolver waiter, registrar auditoria saneada, atualizar outbox/status/modal e concluir promessa pendente.
+- `scripts/media-processing-status-policy.test.ts` passou a cobrir settlement da parada de midia.
+- `scripts/smoke-test.mjs` passou a exigir a policy pura para evitar regressao para regra inline.
+- Validacoes aprovadas: teste focado, smoke-test, `typecheck`, `lint`, `npm test`, readiness Android privado condicionado e `git diff --check`.
+- Sem build Android nesta fatia porque nao houve mudanca operacional de UX, camera, WebRTC, gravacao, backend ou portal.
+
+Checkpoint:
+
+- `docs/91_CHECKPOINT_ETAPA_1_19_MEDIA_STOP_SETTLEMENT_POLICY_2026-05-18.md`.
+
 ## 2026-05-18 - Validacao fisica dois Androids SOS/anjo
 
 Status: validado fisicamente em dois Androids distintos com Android `0.1.15`.

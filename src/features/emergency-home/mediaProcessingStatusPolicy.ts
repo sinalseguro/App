@@ -11,6 +11,16 @@ export type MediaProcessingFinishProgress = {
   title: string;
 };
 
+export type MediaStopSettlementResult = {
+  attachedAssets: number;
+  status: "attached" | "empty" | "error" | "idle";
+};
+
+export type MediaStopSettlementPresentation = {
+  recordingStatus?: string;
+  shouldRefreshOutbox: boolean;
+};
+
 export type MediaProcessingPresentation = {
   finishProgress?: MediaProcessingFinishProgress;
   recordingStatus?: string;
@@ -133,4 +143,37 @@ export function resolveMediaProcessingPresentation(
   }
 
   return resolveFinishMediaProcessingPresentation(state);
+}
+
+export function shouldHandleMediaStopSettlement(input: {
+  expectedSerial: number;
+  serial: number;
+}) {
+  return input.serial > 0 && input.serial === input.expectedSerial;
+}
+
+export function resolveMediaStopSettlementPresentation(
+  result: MediaStopSettlementResult
+): MediaStopSettlementPresentation {
+  const mediaAttached = result.status === "attached" && result.attachedAssets > 0;
+
+  return {
+    recordingStatus: mediaAttached ? "Video finalizado e preservado no cofre local." : undefined,
+    shouldRefreshOutbox: mediaAttached
+  };
+}
+
+export function resolveMediaStopSettlementFinishProgress(input: {
+  status: MediaProcessingFinishProgressStatus | "idle";
+  visible: boolean;
+}): (MediaProcessingFinishProgress & { visible: true }) | null {
+  if (!input.visible || input.status === "running") return null;
+
+  return {
+    detail: "Midia anexada ao cofre local apos a verificacao inicial.",
+    progress: 100,
+    status: "done",
+    title: "Video protegido",
+    visible: true
+  };
 }

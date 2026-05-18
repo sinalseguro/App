@@ -5,6 +5,9 @@ import {
   resolveFinishMediaProcessingPresentation,
   resolveLiveCallHandoffMediaStatus,
   resolveMediaProcessingPresentation,
+  resolveMediaStopSettlementFinishProgress,
+  resolveMediaStopSettlementPresentation,
+  shouldHandleMediaStopSettlement,
   shouldResolveMediaReleaseWaiter
 } from "../src/features/emergency-home/mediaProcessingStatusPolicy";
 
@@ -102,5 +105,35 @@ assert.deepEqual(resolveMediaProcessingPresentation("error", "finish"), {
     title: "Falha na midia"
   }
 });
+
+assert.equal(shouldHandleMediaStopSettlement({ expectedSerial: 7, serial: 0 }), false);
+assert.equal(shouldHandleMediaStopSettlement({ expectedSerial: 7, serial: 6 }), false);
+assert.equal(shouldHandleMediaStopSettlement({ expectedSerial: 7, serial: 7 }), true);
+
+assert.deepEqual(resolveMediaStopSettlementPresentation({ attachedAssets: 2, status: "attached" }), {
+  recordingStatus: "Video finalizado e preservado no cofre local.",
+  shouldRefreshOutbox: true
+});
+
+assert.deepEqual(resolveMediaStopSettlementPresentation({ attachedAssets: 0, status: "attached" }), {
+  recordingStatus: undefined,
+  shouldRefreshOutbox: false
+});
+
+assert.deepEqual(resolveMediaStopSettlementPresentation({ attachedAssets: 0, status: "empty" }), {
+  recordingStatus: undefined,
+  shouldRefreshOutbox: false
+});
+
+assert.deepEqual(resolveMediaStopSettlementFinishProgress({ status: "done", visible: true }), {
+  detail: "Midia anexada ao cofre local apos a verificacao inicial.",
+  progress: 100,
+  status: "done",
+  title: "Video protegido",
+  visible: true
+});
+
+assert.equal(resolveMediaStopSettlementFinishProgress({ status: "running", visible: true }), null);
+assert.equal(resolveMediaStopSettlementFinishProgress({ status: "done", visible: false }), null);
 
 console.log("media-processing-status-policy ok");

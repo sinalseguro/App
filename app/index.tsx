@@ -22,6 +22,9 @@ import { resolveLiveCallCleanupDecision } from "@/features/emergency-home/liveCa
 import { resolveMediaHandoffPolicy } from "@/features/emergency-home/mediaHandoffPolicy";
 import {
   resolveMediaProcessingPresentation,
+  resolveMediaStopSettlementFinishProgress,
+  resolveMediaStopSettlementPresentation,
+  shouldHandleMediaStopSettlement,
   shouldResolveMediaReleaseWaiter
 } from "@/features/emergency-home/mediaProcessingStatusPolicy";
 import { ownerAutoCallAttemptMessage, ownerAutoCallRecipientStatus, shouldAttemptOwnerAutoCall } from "@/features/emergency-home/ownerAutoCallPolicy";
@@ -1421,7 +1424,14 @@ export default function HomeScreen() {
   }
 
   function handleMediaStopRequestSettled(serial: number, result: MediaStopRequestResult) {
-    if (serial <= 0 || serial !== stopRecordingRequestSerialRef.current) return;
+    if (
+      !shouldHandleMediaStopSettlement({
+        expectedSerial: stopRecordingRequestSerialRef.current,
+        serial
+      })
+    ) {
+      return;
+    }
 
     resolveMediaReleaseWaiter();
     appendMediaOperationalLog("emergency_media_stop_settled", {
@@ -1429,19 +1439,15 @@ export default function HomeScreen() {
       platform: Platform.OS,
       status: result.status
     });
-    if (result.status === "attached" && result.attachedAssets > 0) {
+
+    const settlementPresentation = resolveMediaStopSettlementPresentation(result);
+    if (settlementPresentation.shouldRefreshOutbox) {
       void refreshOutboxCount();
-      setRecordingStatus("Video finalizado e preservado no cofre local.");
+      if (settlementPresentation.recordingStatus) {
+        setRecordingStatus(settlementPresentation.recordingStatus);
+      }
       setFinishProgress((current) =>
-        current.visible && current.status !== "running"
-          ? {
-              detail: "Midia anexada ao cofre local apos a verificacao inicial.",
-              progress: 100,
-              status: "done",
-              title: "Video protegido",
-              visible: true
-            }
-          : current
+        resolveMediaStopSettlementFinishProgress(current) ?? current
       );
     }
 
