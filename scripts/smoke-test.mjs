@@ -36,6 +36,7 @@ const requiredFiles = [
   "src/features/emergency-home/EmergencyCallTarget.ts",
   "src/features/emergency-home/EmergencySettingsDrawer.tsx",
   "src/features/emergency-home/EmergencyTopBar.tsx",
+  "src/features/emergency-home/ownerAutoCallPolicy.ts",
   "src/features/emergency-home/panicTriggerPolicy.ts",
   "src/features/emergency-home/remoteSyncStatusPolicy.ts",
   "src/features/invitations/invitationService.ts",
@@ -79,6 +80,7 @@ const requiredFiles = [
   "scripts/profile-policy.test.ts",
   "scripts/panic-trigger-policy.test.ts",
   "scripts/remote-sync-status-policy.test.ts",
+  "scripts/owner-auto-call-policy.test.ts",
   "scripts/live-call-history-policy.test.ts",
   "scripts/live-call-state-policy.test.ts",
   "scripts/live-webrtc-policy.test.ts",
@@ -164,6 +166,7 @@ const evidencePlayerCard = await readFile("src/components/EvidencePlayerCard.tsx
 const mediaInterfacePresentation = await readFile("src/features/emergency/mediaInterfacePresentation.ts", "utf8");
 const appLayout = await readFile("app/_layout.tsx", "utf8");
 const homeScreen = await readFile("app/index.tsx", "utf8");
+const ownerAutoCallPolicy = await readFile("src/features/emergency-home/ownerAutoCallPolicy.ts", "utf8");
 const panicTriggerPolicy = await readFile("src/features/emergency-home/panicTriggerPolicy.ts", "utf8");
 const remoteSyncStatusPolicy = await readFile("src/features/emergency-home/remoteSyncStatusPolicy.ts", "utf8");
 const alertScreen = await readFile("app/alerta.tsx", "utf8");
@@ -259,6 +262,8 @@ if (
   !homeScreen.includes("ownerAutoCallStartedSessionIdsRef") ||
   !homeScreen.includes("listAcceptedLiveRecipients") ||
   !homeScreen.includes("emergency_live_call_auto_start_attempt") ||
+  !homeScreen.includes("shouldAttemptOwnerAutoCall") ||
+  !homeScreen.includes("ownerAutoCallRecipientStatus") ||
   !homeScreen.includes("prepareMediaForOwnerLiveCall") ||
   !homeScreen.includes("const started = await liveAudioCall.startOwnerAudioCall") ||
   !homeScreen.includes("if (started)") ||
@@ -266,7 +271,7 @@ if (
   !homeScreen.includes("waitForMediaRecorderRelease") ||
   !homeScreen.includes("mediaReleaseForLiveCallWaitTimeoutMs = 12000") ||
   !homeScreen.includes("Camera liberada. Abrindo video ao vivo para o anjo.") ||
-  !homeScreen.includes("Anjo entrou. Chamando agora.")
+  !ownerAutoCallPolicy.includes("Anjo entrou. Chamando agora.")
 ) {
   throw new Error("Tela SOS precisa sincronizar chamado ativo com EC2, liberar camera/microfone locais e conectar automaticamente uma unica chamada apos aceite do anjo.");
 }
@@ -649,6 +654,16 @@ if (
   !packageJson.scripts["test:remote-sync-status"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para mensagens de sincronizacao remota do SOS ativo.");
+}
+
+if (
+  !ownerAutoCallPolicy.includes("shouldAttemptOwnerAutoCall") ||
+  !ownerAutoCallPolicy.includes("ownerAutoCallRecipientStatus") ||
+  !ownerAutoCallPolicy.includes("Anjo entrou. Chamando agora.") ||
+  !ownerAutoCallPolicy.includes("Aguardando anjo") ||
+  !packageJson.scripts["test:owner-auto-call"]
+) {
+  throw new Error("Home/SOS precisa manter politica pura testavel para autochamada do solicitante apos aceite do anjo.");
 }
 
 const emergencyPreferences = await readFile("src/features/emergency/emergencyPreferences.ts", "utf8");

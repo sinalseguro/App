@@ -12,6 +12,7 @@ import { EmergencyCallDock } from "@/features/emergency-home/EmergencyCallDock";
 import { EmergencyCallTarget } from "@/features/emergency-home/EmergencyCallTarget";
 import { EmergencySettingsDrawer } from "@/features/emergency-home/EmergencySettingsDrawer";
 import { EmergencyTopBar } from "@/features/emergency-home/EmergencyTopBar";
+import { ownerAutoCallAttemptMessage, ownerAutoCallRecipientStatus, shouldAttemptOwnerAutoCall } from "@/features/emergency-home/ownerAutoCallPolicy";
 import { panicButtonLabel, resolvePanicTriggerDecision } from "@/features/emergency-home/panicTriggerPolicy";
 import { activeRemoteSyncRetryMessage, resolveActiveRemoteSyncStatus } from "@/features/emergency-home/remoteSyncStatusPolicy";
 import { EmergencyHomePanel, EmergencyHomeRoute } from "@/features/emergency-home/routes";
@@ -1094,27 +1095,34 @@ export default function HomeScreen() {
 
     const attemptStartOwnerLiveCall = () => {
       const currentCallState = liveAudioCallStateRef.current;
-      const alreadyActive =
-        currentCallState.remoteSessionId === liveRemoteSessionId &&
-        (currentCallState.status === "waiting" ||
-          currentCallState.status === "connecting" ||
-          currentCallState.status === "connected");
       const alreadyStarted = ownerAutoCallStartedSessionIdsRef.current.has(liveRemoteSessionId);
-      if (cancelled || alreadyActive || alreadyStarted || ownerAutoCallInFlightRef.current) return;
+      if (
+        !shouldAttemptOwnerAutoCall({
+          alreadyStarted,
+          cancelled,
+          currentRemoteSessionId: currentCallState.remoteSessionId,
+          currentStatus: currentCallState.status,
+          inFlight: ownerAutoCallInFlightRef.current,
+          liveRemoteSessionId,
+          paused: false
+        })
+      ) {
+        return;
+      }
 
       ownerAutoCallInFlightRef.current = true;
-      setRecordingStatus("Você pediu ajuda. Avisando anjo.");
+      setRecordingStatus(ownerAutoCallAttemptMessage());
       appendMediaOperationalLog("emergency_live_call_auto_start_attempt", {
         platform: Platform.OS,
         remoteSessionId: liveRemoteSessionId
       });
       void listAcceptedLiveRecipients(liveRemoteSessionId)
         .then((recipients) => {
-          if (!recipients.length) {
-            setRecordingStatus("Você pediu ajuda. Aguardando anjo.");
+          const recipientStatus = ownerAutoCallRecipientStatus(recipients.length);
+          setRecordingStatus(recipientStatus.message);
+          if (!recipientStatus.shouldStartCall) {
             return;
           }
-          setRecordingStatus("Anjo entrou. Chamando agora.");
           return prepareMediaForOwnerLiveCall().then(async () => {
             const started = await liveAudioCall.startOwnerAudioCall(liveRemoteSessionId);
             if (started) {

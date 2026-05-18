@@ -334,3 +334,11 @@ Papel: seguranca, LGPD e QA.
 - Codex Security aplicado como validacao dirigida de diff: sem novo token, `Authorization`, `id_token`, `encrypted_key`, SDP, ICE, URI/path de midia ou payload P2P.
 - Validacoes aprovadas: `test:remote-sync-status`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
 - Antes de publicar uma nova release com esta refatoracao, repetir validacao fisica Android do SOS/anjo.
+
+## QA/Security - 2026-05-18 - Etapa 1.8 politica pura de autochamada owner
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido, log runtime, backend, portal ou release.
+- Gate novo `npm run test:owner-auto-call` cobre bloqueios de tentativa cancelada, pausada, ja iniciada, em voo e chamada ja ativa.
+- Varredura dirigida do diff nao encontrou token, `Authorization`, `id_token`, `encrypted_key`, SDP, ICE, URI/path de midia ou payload P2P.
+- Validacoes aprovadas: `test:owner-auto-call`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
+- Antes de publicar uma nova release com esta refatoracao, repetir validacao fisica Android do SOS/anjo.

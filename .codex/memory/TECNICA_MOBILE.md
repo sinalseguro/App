@@ -382,3 +382,11 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:remote-sync-status` cobre pluralizacao de anjos, estado aguardando anjo, bloqueio por login e mensagem de retry.
 - `npm test` e `scripts/smoke-test.mjs` exigem a politica pura para evitar regressao na Home.
 - Proxima fatia recomendada: politica pura de autochamada do solicitante apos aceite do anjo, sem mover WebRTC runtime.
+
+# Atualizacao - 2026-05-18 - Etapa 1.8 Home/SOS
+
+- `src/features/emergency-home/ownerAutoCallPolicy.ts` centraliza a decisao de autochamada do solicitante apos aceite do anjo.
+- `app/index.tsx` continua chamando `listAcceptedLiveRecipients()`, `prepareMediaForOwnerLiveCall()` e `liveAudioCall.startOwnerAudioCall()`, mas a regra de tentativa/pausa/ja-iniciado ficou testavel fora da Home.
+- Novo gate `npm run test:owner-auto-call` cobre chamada ja ativa, tentativa cancelada, pausada, ja iniciada, em voo, ausencia de sessao e existencia de anjo aceito.
+- `npm test` e `scripts/smoke-test.mjs` exigem a politica pura para evitar regressao na Home.
+- Proxima mudanca em WebRTC runtime, camera, `app/alerta.tsx`, encerramento do SOS ou midia local deve exigir validacao fisica Android.

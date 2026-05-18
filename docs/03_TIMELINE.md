@@ -3,6 +3,18 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-18 - Etapa 1.8 politica pura de autochamada do solicitante
+
+Status: concluida localmente, validada e pronta para checkpoint Git.
+
+- Criado `src/features/emergency-home/ownerAutoCallPolicy.ts`.
+- `app/index.tsx` passou a usar `shouldAttemptOwnerAutoCall()`, `ownerAutoCallAttemptMessage()` e `ownerAutoCallRecipientStatus()` para decidir autochamada apos aceite do anjo.
+- Criado `scripts/owner-auto-call-policy.test.ts` e comando `npm run test:owner-auto-call`.
+- `npm test` e `scripts/smoke-test.mjs` passaram a cobrir a nova politica.
+- Sem alteracao de UX, backend, portal, release, permissao, storage, endpoint ou log runtime.
+- Validacoes aprovadas: `npm run test:owner-auto-call`, `node scripts/smoke-test.mjs`, `npm run typecheck`, `npm run lint`, `npm test`, `npm run private:android:readiness` condicionado e `git diff --check`.
+- Checkpoint: `docs/80_CHECKPOINT_ETAPA_1_8_OWNER_AUTO_CALL_POLICY_2026-05-18.md`.
+
 ## 2026-05-18 - Etapa 1.7 politica pura de status da sincronizacao SOS
 
 Status: concluida localmente, validada e pronta para checkpoint Git.
