@@ -19,6 +19,7 @@ import {
   shouldResolveMediaReleaseWaiter
 } from "@/features/emergency-home/mediaProcessingStatusPolicy";
 import { ownerAutoCallAttemptMessage, ownerAutoCallRecipientStatus, shouldAttemptOwnerAutoCall } from "@/features/emergency-home/ownerAutoCallPolicy";
+import { resolveOwnerLiveVideoEvidenceStart } from "@/features/emergency-home/ownerLiveEvidencePolicy";
 import { panicButtonLabel, resolvePanicTriggerDecision } from "@/features/emergency-home/panicTriggerPolicy";
 import { activeRemoteSyncRetryMessage, resolveActiveRemoteSyncStatus } from "@/features/emergency-home/remoteSyncStatusPolicy";
 import { EmergencyHomePanel, EmergencyHomeRoute } from "@/features/emergency-home/routes";
@@ -871,26 +872,21 @@ export default function HomeScreen() {
   }, [liveAudioCall.state]);
 
   useEffect(() => {
-    const remoteSessionId = liveAudioCall.state.remoteSessionId ?? liveRemoteSessionId;
-    const streamReactTag = liveAudioCall.state.localStreamUrl;
-    const packageId = activePackageId ?? mediaRecorderPackageId;
-    if (
-      liveAudioCall.state.role !== "owner" ||
-      !remoteSessionId ||
-      !packageId ||
-      !streamReactTag ||
-      liveAudioCall.state.status === "ended" ||
-      liveAudioCall.state.status === "failed"
-    ) {
+    const startDecision = resolveOwnerLiveVideoEvidenceStart({
+      callSessionId: liveAudioCall.state.callSessionId,
+      fallbackPackageId: mediaRecorderPackageId,
+      fallbackRemoteSessionId: liveRemoteSessionId,
+      packageId: activePackageId,
+      remoteSessionId: liveAudioCall.state.remoteSessionId,
+      role: liveAudioCall.state.role,
+      status: liveAudioCall.state.status,
+      streamReactTag: liveAudioCall.state.localStreamUrl
+    });
+    if (!startDecision.shouldStart) {
       return;
     }
 
-    void startOwnerLiveVideoEvidence({
-      callSessionId: liveAudioCall.state.callSessionId,
-      packageId,
-      remoteSessionId,
-      streamReactTag
-    });
+    void startOwnerLiveVideoEvidence(startDecision.startInput);
   }, [
     activePackageId,
     liveAudioCall.state.callSessionId,

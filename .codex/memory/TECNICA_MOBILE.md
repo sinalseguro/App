@@ -423,3 +423,11 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:media-handoff` cobre pacote ausente, captura ja bloqueada, plataforma web, captura local desativada e caminho permitido.
 - `npm test` e `scripts/smoke-test.mjs` exigem a politica pura para evitar regressao para regra inline na Home.
 - Proxima mudanca operacional em camera, WebRTC, renderizacao ou UX de chamada deve repetir validacao fisica Android.
+
+# Atualizacao - 2026-05-18 - Etapa 1.13 Home/SOS
+
+- `src/features/emergency-home/ownerLiveEvidencePolicy.ts` centraliza a decisao de iniciar a evidencia local da videochamada no aparelho solicitante.
+- `app/index.tsx` continua responsavel por `startOwnerLiveVideoEvidence()` e por todos os efeitos reais de camera, gravacao, WebRTC, evidencia, auditoria e logs.
+- Novo gate `npm run test:owner-live-evidence` cobre papel incorreto, sessao ausente, pacote ausente, stream ausente, status inativo e caminho permitido com dados atuais ou fallback.
+- `npm test` e `scripts/smoke-test.mjs` exigem a politica pura para evitar regressao para regra inline na Home.
+- Proxima mudanca operacional em camera, WebRTC, renderizacao ou UX de chamada deve repetir validacao fisica Android.

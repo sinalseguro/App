@@ -40,6 +40,7 @@ const requiredFiles = [
   "src/features/emergency-home/mediaHandoffPolicy.ts",
   "src/features/emergency-home/mediaProcessingStatusPolicy.ts",
   "src/features/emergency-home/ownerAutoCallPolicy.ts",
+  "src/features/emergency-home/ownerLiveEvidencePolicy.ts",
   "src/features/emergency-home/panicTriggerPolicy.ts",
   "src/features/emergency-home/remoteSyncStatusPolicy.ts",
   "src/features/invitations/invitationService.ts",
@@ -173,6 +174,7 @@ const finishOutcomePolicy = await readFile("src/features/emergency-home/finishOu
 const mediaHandoffPolicy = await readFile("src/features/emergency-home/mediaHandoffPolicy.ts", "utf8");
 const mediaProcessingStatusPolicy = await readFile("src/features/emergency-home/mediaProcessingStatusPolicy.ts", "utf8");
 const ownerAutoCallPolicy = await readFile("src/features/emergency-home/ownerAutoCallPolicy.ts", "utf8");
+const ownerLiveEvidencePolicy = await readFile("src/features/emergency-home/ownerLiveEvidencePolicy.ts", "utf8");
 const panicTriggerPolicy = await readFile("src/features/emergency-home/panicTriggerPolicy.ts", "utf8");
 const remoteSyncStatusPolicy = await readFile("src/features/emergency-home/remoteSyncStatusPolicy.ts", "utf8");
 const alertScreen = await readFile("app/alerta.tsx", "utf8");
@@ -671,6 +673,18 @@ if (
   !packageJson.scripts["test:owner-auto-call"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para autochamada do solicitante apos aceite do anjo.");
+}
+
+if (
+  !homeScreen.includes("resolveOwnerLiveVideoEvidenceStart") ||
+  !homeScreen.includes("startDecision.startInput") ||
+  !ownerLiveEvidencePolicy.includes("resolveOwnerLiveVideoEvidenceStart") ||
+  !ownerLiveEvidencePolicy.includes("missing_remote_session") ||
+  !ownerLiveEvidencePolicy.includes("missing_stream_tag") ||
+  !ownerLiveEvidencePolicy.includes("inactive_status") ||
+  !packageJson.scripts["test:owner-live-evidence"]
+) {
+  throw new Error("Home/SOS precisa manter politica pura testavel para inicio da evidencia local da chamada do solicitante.");
 }
 
 if (
