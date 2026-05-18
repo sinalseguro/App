@@ -292,3 +292,10 @@ Papel: seguranca, LGPD e QA.
 - Validacao visual saneada confirmou Home/SOS pronta; log filtrado nao mostrou `FATAL EXCEPTION` nem crash React Native no recorte.
 - Build reduziu o espaco local para cerca de 361 MiB; limpeza pos-build removeu apenas regeneraveis Gradle/CMake e preservou o APK final.
 - Nao publicar como release validada nem declarar SOS/anjo aprovado ate haver dois Androids conectados e validacao fisica owner -> anjo com controle/auditoria EC2.
+
+## QA/Security - 2026-05-18 - gate dois Androids bloqueado
+
+- ADB inicialmente mostrou duas entradas, mas eram dois transportes do mesmo aparelho, nao dois Androids.
+- Confirmado mesmo `serialno`, modelo, `android_id` e IP interno; macOS tambem enumerou apenas um Android/Redmi no USB.
+- Decisao de QA: nao usar duplicidade ADB como evidencia de dois pares; isso invalidaria o teste de notificacao, WebRTC, auditoria e sincronizacao entre solicitante/anjo.
+- Gate fisico fim a fim continua bloqueado ate haver dois aparelhos distintos como `device`.

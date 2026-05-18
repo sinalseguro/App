@@ -337,3 +337,11 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Validacao visual unilateral confirmou Home/SOS pronta em um Android; segundo Android continuou ausente no ADB/mdns, entao SOS/anjo fim a fim e publicacao final seguem bloqueados.
 - Pos-build limpou novamente `android/.gradle`, `android/app/.cxx`, `android/app/build` e `android/build`, recuperando espaco de cerca de 361 MiB para 2.9 GiB e preservando o APK final.
 - Checkpoint: `docs/75_CHECKPOINT_ANDROID_0_1_15_REBUILD_INSTALACAO_UNILATERAL_2026-05-18.md`.
+
+# Atualizacao - 2026-05-18 - gate dois Androids bloqueado
+
+- ADB mostrou duas entradas, mas ambas eram o mesmo Android por USB e Wi-Fi/mDNS: mesmo `serialno`, modelo, `android_id` e IP interno.
+- O macOS enumerou apenas um Android/Redmi no USB; apos reiniciar o ADB e limpar a duplicidade, restou um aparelho real.
+- App no aparelho visivel: `versionName=0.1.15`, `versionCode=17`, `lastUpdateTime=2026-05-18 07:07:46`.
+- Nao executar teste SOS/anjo nem publicar release validada ate haver dois Androids distintos em `adb devices -l`.
+- Checkpoint: `docs/76_CHECKPOINT_GATE_DOIS_ANDROIDS_BLOQUEADO_DUPLICIDADE_ADB_2026-05-18.md`.

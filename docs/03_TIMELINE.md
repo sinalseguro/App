@@ -3124,6 +3124,27 @@ Checkpoint:
 
 - `docs/75_CHECKPOINT_ANDROID_0_1_15_REBUILD_INSTALACAO_UNILATERAL_2026-05-18.md`.
 
+## 2026-05-18 - Gate dois Androids bloqueado por duplicidade ADB
+
+Status: Roberto informou dois Androids conectados, mas ADB confirmou apenas um aparelho fisico exposto por USB e Wi-Fi/mDNS.
+
+Executado:
+
+- `adb devices -l` mostrou duas entradas com o mesmo aparelho.
+- Confirmado mesmo `serialno`, mesmo modelo, mesmo `android_id` e mesmo IP interno.
+- Barramento USB do macOS mostrou apenas um Android/Redmi.
+- ADB foi reiniciado e a conexao Wi-Fi duplicada foi limpa; restou um Android real visivel.
+- App visivel segue instalado em `versionName=0.1.15`, `versionCode=17`.
+
+Decisao:
+
+- Nao executar SOS/anjo com duas entradas que representam o mesmo aparelho.
+- Gate fim a fim segue bloqueado ate o segundo Android aparecer com identificador distinto.
+
+Checkpoint:
+
+- `docs/76_CHECKPOINT_GATE_DOIS_ANDROIDS_BLOQUEADO_DUPLICIDADE_ADB_2026-05-18.md`.
+
 ## 2026-05-17 - Android 0.1.13 video local protegido no SOS ao vivo
 
 Status: APK privado `0.1.13` publicado no portal/API de update; fluxo fisico principal validado em dois Androids.
