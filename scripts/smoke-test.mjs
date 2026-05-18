@@ -60,6 +60,8 @@ const requiredFiles = [
   "src/features/emergency-home/finishActiveCallCleanupPolicy.ts",
   "src/features/emergency-home/finishRemoteSyncPolicy.ts",
   "src/features/emergency-home/finishPackageResultPolicy.ts",
+  "src/features/emergency-home/finishOwnerLiveEvidencePolicy.ts",
+  "src/features/emergency-home/finishOwnerLiveAuditPolicy.ts",
   "src/features/emergency-home/ownerAutoCallPolicy.ts",
   "src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts",
   "src/features/emergency-home/ownerLiveEvidencePolicy.ts",
@@ -139,6 +141,8 @@ const requiredFiles = [
   "scripts/finish-active-call-cleanup-policy.test.ts",
   "scripts/finish-remote-sync-policy.test.ts",
   "scripts/finish-package-result-policy.test.ts",
+  "scripts/finish-owner-live-evidence-policy.test.ts",
+  "scripts/finish-owner-live-audit-policy.test.ts",
   "scripts/live-call-history-policy.test.ts",
   "scripts/live-call-state-policy.test.ts",
   "scripts/live-webrtc-policy.test.ts",
@@ -248,6 +252,8 @@ const finishActiveCallStartPolicy = await readFile("src/features/emergency-home/
 const finishActiveCallCleanupPolicy = await readFile("src/features/emergency-home/finishActiveCallCleanupPolicy.ts", "utf8");
 const finishRemoteSyncPolicy = await readFile("src/features/emergency-home/finishRemoteSyncPolicy.ts", "utf8");
 const finishPackageResultPolicy = await readFile("src/features/emergency-home/finishPackageResultPolicy.ts", "utf8");
+const finishOwnerLiveEvidencePolicy = await readFile("src/features/emergency-home/finishOwnerLiveEvidencePolicy.ts", "utf8");
+const finishOwnerLiveAuditPolicy = await readFile("src/features/emergency-home/finishOwnerLiveAuditPolicy.ts", "utf8");
 const ownerAutoCallPolicy = await readFile("src/features/emergency-home/ownerAutoCallPolicy.ts", "utf8");
 const ownerLiveAuditMarkerPolicy = await readFile("src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts", "utf8");
 const ownerLiveEvidencePolicy = await readFile("src/features/emergency-home/ownerLiveEvidencePolicy.ts", "utf8");
@@ -1032,6 +1038,24 @@ if (
   !packageJson.scripts["test:finish-package-result"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para resumo do pacote finalizado.");
+}
+
+if (
+  !homeScreen.includes("resolveFinishOwnerLiveEvidenceUpdate") ||
+  !finishOwnerLiveEvidencePolicy.includes("localEvidenceStatus") ||
+  !finishOwnerLiveEvidencePolicy.includes("status: input.localEvidenceStatus") ||
+  !packageJson.scripts["test:finish-owner-live-evidence"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para evidencia owner final do encerramento.");
+}
+
+if (
+  !homeScreen.includes("resolveFinishOwnerLiveAuditMarker") ||
+  !finishOwnerLiveAuditPolicy.includes('connectionState: "ended"') ||
+  !finishOwnerLiveAuditPolicy.includes("localEvidenceStatus") ||
+  !packageJson.scripts["test:finish-owner-live-audit"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para auditoria owner final do encerramento.");
 }
 
 if (

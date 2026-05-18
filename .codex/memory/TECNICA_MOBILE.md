@@ -715,3 +715,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:finish-package-result` cobre midia gravada com anexo e pacote sem midia local anexada.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para resumo inline no encerramento.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em camera/chamada/WebRTC exige validacao fisica/performance proporcional.
+
+# Atualizacao - 2026-05-18 - Etapa 1.49 Home/SOS
+
+- `src/features/emergency-home/finishOwnerLiveEvidencePolicy.ts` centraliza a atualizacao final de evidencia local do owner no encerramento do SOS.
+- `app/index.tsx` continua responsavel por chamar `updateOwnerLiveEvidence()` e persistir via storage seguro quando ha sessao remota.
+- Novo gate `npm run test:finish-owner-live-evidence` cobre status protegido, metadados e falha.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para objeto inline no update final.
+- Sem build Android nesta fatia por ser refatoracao pura.
+
+# Atualizacao - 2026-05-18 - Etapa 1.50 Home/SOS
+
+- `src/features/emergency-home/finishOwnerLiveAuditPolicy.ts` centraliza o marcador final de auditoria owner no encerramento.
+- `app/index.tsx` continua responsavel por obter device id registrado e chamar `recordOwnerLiveAuditMarker()`.
+- Novo gate `npm run test:finish-owner-live-audit` cobre auditoria protegida, metadados e falha com `connectionState: "ended"`.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para objeto inline de auditoria final.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em auditoria/backend exige validacao fisica/API proporcional.

@@ -4089,3 +4089,41 @@ Validacoes:
 Checkpoint:
 
 - `docs/120_CHECKPOINT_ETAPA_1_48_FINISH_PACKAGE_RESULT_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.49 evidencia owner final do encerramento
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishOwnerLiveEvidencePolicy` para centralizar a atualizacao final de evidencia local do owner no encerramento do SOS.
+- `app/index.tsx` manteve os efeitos reais de persistencia local segura e fallback quando nao ha sessao remota.
+- `npm test` passou a executar `test:finish-owner-live-evidence`.
+
+Validacoes:
+
+- `test:finish-owner-live-evidence`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura de seguranca dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/121_CHECKPOINT_ETAPA_1_49_FINISH_OWNER_LIVE_EVIDENCE_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.50 auditoria owner final do encerramento
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishOwnerLiveAuditPolicy` para centralizar evento de auditoria final, `connectionState: "ended"` e status local de evidencia.
+- `app/index.tsx` manteve os efeitos reais de device binding e chamada a `recordLiveAuditMarker()`.
+- `npm test` passou a executar `test:finish-owner-live-audit`.
+
+Validacoes:
+
+- `test:finish-owner-live-audit`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura de seguranca dirigida: aprovados.
+- ADB confirmou os Androids conectados, mas sem build/perfil porque a mudanca nao altera UX nativa, chamada, camera, gravacao, WebRTC, backend ou storage.
+
+Checkpoint:
+
+- `docs/122_CHECKPOINT_ETAPA_1_50_FINISH_OWNER_LIVE_AUDIT_POLICY_2026-05-18.md`.

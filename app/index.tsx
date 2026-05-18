@@ -34,6 +34,8 @@ import {
 import { resolveFinishCodeConfirmationDecision } from "@/features/emergency-home/finishCodePolicy";
 import { resolveFinishConfirmationDialogPresentation } from "@/features/emergency-home/finishConfirmationDialogPolicy";
 import { resolveFinishOutcomePolicy } from "@/features/emergency-home/finishOutcomePolicy";
+import { resolveFinishOwnerLiveAuditMarker } from "@/features/emergency-home/finishOwnerLiveAuditPolicy";
+import { resolveFinishOwnerLiveEvidenceUpdate } from "@/features/emergency-home/finishOwnerLiveEvidencePolicy";
 import { resolveFinishPackageResult } from "@/features/emergency-home/finishPackageResultPolicy";
 import { resolveFinishProgressDialogPresentation } from "@/features/emergency-home/finishProgressDialogPolicy";
 import {
@@ -1392,16 +1394,17 @@ export default function HomeScreen() {
         stopResultStatus: stopResult?.status,
         stopSerialPresent: Boolean(stopSerial)
       });
-      updateOwnerLiveEvidence(remoteSessionIdToFinish, {
+      const finishOwnerEvidenceUpdate = resolveFinishOwnerLiveEvidenceUpdate({
         endedAt: new Date().toISOString(),
         localEvidenceStatus: finishOutcome.localEvidenceStatus,
-        packageId,
-        status: finishOutcome.localEvidenceStatus
+        packageId
       });
-      recordOwnerLiveAuditMarker(remoteSessionIdToFinish, finishOutcome.auditMarker, {
-        connectionState: "ended",
+      updateOwnerLiveEvidence(remoteSessionIdToFinish, finishOwnerEvidenceUpdate);
+      const finishOwnerAuditMarker = resolveFinishOwnerLiveAuditMarker({
+        auditMarker: finishOutcome.auditMarker,
         localEvidenceStatus: finishOutcome.localEvidenceStatus
       });
+      recordOwnerLiveAuditMarker(remoteSessionIdToFinish, finishOwnerAuditMarker.event, finishOwnerAuditMarker.options);
       setRecordingStatus(finishOutcome.recordingStatus);
       if (finishOutcome.diagnosticReason) {
         await persistFinishNoMediaDiagnostic(packageId, finishOutcome.diagnosticReason);
