@@ -747,3 +747,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:finish-completion-actions` cobre a decisao de fechar confirmacao, limpar codigo e limpar erro.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para limpeza final inline no encerramento.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em UX nativa/chamada/WebRTC exige validacao fisica/performance proporcional.
+
+# Atualizacao - 2026-05-18 - Etapa 1.53 Home/SOS
+
+- `src/features/emergency-home/finishMissingPackagePolicy.ts` centraliza a resposta quando o pacote ativo nao e encontrado no encerramento.
+- `app/index.tsx` continua responsavel por aplicar `setRecordingStatus()` e `showFinishProgress()`.
+- Novo gate `npm run test:finish-missing-package` cobre os caminhos com e sem `stopSerial`.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para decisao inline de pacote ausente.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em recorder/cofre/backend exige validacao fisica/API proporcional.
+
+# Atualizacao - 2026-05-18 - Etapa 1.54 Home/SOS
+
+- `src/features/emergency-home/finishFailureActionsPolicy.ts` centraliza log, status e progresso de falha controlada no encerramento.
+- `app/index.tsx` continua responsavel por `appendMediaOperationalLog()`, `setRecordingStatus()` e `showFinishProgress()`.
+- Novo gate `npm run test:finish-failure-actions` cobre o payload saneado do erro e os textos finais preservados.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para catch inline no encerramento.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em erro/backend/UX nativa exige validacao proporcional.

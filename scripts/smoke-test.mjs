@@ -64,6 +64,8 @@ const requiredFiles = [
   "src/features/emergency-home/finishOwnerLiveAuditPolicy.ts",
   "src/features/emergency-home/finishNoMediaDiagnosticPolicy.ts",
   "src/features/emergency-home/finishCompletionActionsPolicy.ts",
+  "src/features/emergency-home/finishMissingPackagePolicy.ts",
+  "src/features/emergency-home/finishFailureActionsPolicy.ts",
   "src/features/emergency-home/ownerAutoCallPolicy.ts",
   "src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts",
   "src/features/emergency-home/ownerLiveEvidencePolicy.ts",
@@ -147,6 +149,8 @@ const requiredFiles = [
   "scripts/finish-owner-live-audit-policy.test.ts",
   "scripts/finish-no-media-diagnostic-policy.test.ts",
   "scripts/finish-completion-actions-policy.test.ts",
+  "scripts/finish-missing-package-policy.test.ts",
+  "scripts/finish-failure-actions-policy.test.ts",
   "scripts/live-call-history-policy.test.ts",
   "scripts/live-call-state-policy.test.ts",
   "scripts/live-webrtc-policy.test.ts",
@@ -260,6 +264,8 @@ const finishOwnerLiveEvidencePolicy = await readFile("src/features/emergency-hom
 const finishOwnerLiveAuditPolicy = await readFile("src/features/emergency-home/finishOwnerLiveAuditPolicy.ts", "utf8");
 const finishNoMediaDiagnosticPolicy = await readFile("src/features/emergency-home/finishNoMediaDiagnosticPolicy.ts", "utf8");
 const finishCompletionActionsPolicy = await readFile("src/features/emergency-home/finishCompletionActionsPolicy.ts", "utf8");
+const finishMissingPackagePolicy = await readFile("src/features/emergency-home/finishMissingPackagePolicy.ts", "utf8");
+const finishFailureActionsPolicy = await readFile("src/features/emergency-home/finishFailureActionsPolicy.ts", "utf8");
 const ownerAutoCallPolicy = await readFile("src/features/emergency-home/ownerAutoCallPolicy.ts", "utf8");
 const ownerLiveAuditMarkerPolicy = await readFile("src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts", "utf8");
 const ownerLiveEvidencePolicy = await readFile("src/features/emergency-home/ownerLiveEvidencePolicy.ts", "utf8");
@@ -1081,6 +1087,24 @@ if (
   !packageJson.scripts["test:finish-completion-actions"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para acoes finais do encerramento.");
+}
+
+if (
+  !homeScreen.includes("resolveFinishMissingPackageActions") ||
+  !finishMissingPackagePolicy.includes("shouldShowMissingPackageProgress") ||
+  !finishMissingPackagePolicy.includes("finish_missing_package") ||
+  !packageJson.scripts["test:finish-missing-package"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para pacote ausente no encerramento.");
+}
+
+if (
+  !homeScreen.includes("resolveFinishFailureActions") ||
+  !finishFailureActionsPolicy.includes("emergency_finish_package_error") ||
+  !finishFailureActionsPolicy.includes("finish_failed") ||
+  !packageJson.scripts["test:finish-failure-actions"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para falha controlada no encerramento.");
 }
 
 if (

@@ -24,16 +24,16 @@ import { resolveFinishActiveCallCleanup } from "@/features/emergency-home/finish
 import { resolveFinishActiveCallStart } from "@/features/emergency-home/finishActiveCallStartPolicy";
 import { resolveFinishCompletionActions } from "@/features/emergency-home/finishCompletionActionsPolicy";
 import {
-  resolveFinishFailedProgress,
   resolveFinishMediaStopSettledProgress,
   resolveFinishMediaStopSignaledProgress,
-  resolveFinishMissingPackageProgress,
   resolveFinishRemoteSyncProgress,
   resolveFinishRequestedProgress,
   resolveMediaProtectionInProgress
 } from "@/features/emergency-home/finishFlowProgressPolicy";
 import { resolveFinishCodeConfirmationDecision } from "@/features/emergency-home/finishCodePolicy";
 import { resolveFinishConfirmationDialogPresentation } from "@/features/emergency-home/finishConfirmationDialogPolicy";
+import { resolveFinishFailureActions } from "@/features/emergency-home/finishFailureActionsPolicy";
+import { resolveFinishMissingPackageActions } from "@/features/emergency-home/finishMissingPackagePolicy";
 import { resolveFinishNoMediaDiagnosticRequest } from "@/features/emergency-home/finishNoMediaDiagnosticPolicy";
 import { resolveFinishOutcomePolicy } from "@/features/emergency-home/finishOutcomePolicy";
 import { resolveFinishOwnerLiveAuditMarker } from "@/features/emergency-home/finishOwnerLiveAuditPolicy";
@@ -1341,9 +1341,12 @@ export default function HomeScreen() {
       await refreshOutboxCount();
 
       if (!result) {
-        setRecordingStatus(resolveLocalSosPackageStatus({ event: "finish_missing_package" }));
-        if (!stopSerial) {
-          showFinishProgress(resolveFinishMissingPackageProgress());
+        const missingPackageActions = resolveFinishMissingPackageActions({
+          stopSerialPresent: Boolean(stopSerial)
+        });
+        setRecordingStatus(missingPackageActions.recordingStatus);
+        if (missingPackageActions.shouldShowMissingPackageProgress && missingPackageActions.finishProgress) {
+          showFinishProgress(missingPackageActions.finishProgress);
         }
         return;
       }
@@ -1429,11 +1432,12 @@ export default function HomeScreen() {
         setFinishError("");
       }
     } catch (error) {
-      appendMediaOperationalLog("emergency_finish_package_error", {
+      const finishFailureActions = resolveFinishFailureActions({
         platform: Platform.OS
-      }, error);
-      setRecordingStatus(resolveLocalSosPackageStatus({ event: "finish_failed" }));
-      showFinishProgress(resolveFinishFailedProgress());
+      });
+      appendMediaOperationalLog(finishFailureActions.logEvent, finishFailureActions.logPayload, error);
+      setRecordingStatus(finishFailureActions.recordingStatus);
+      showFinishProgress(finishFailureActions.finishProgress);
     } finally {
       const finishCleanupDecision = resolveFinishActiveCallCleanup({
         mediaStopPurpose: mediaStopPurposeRef.current

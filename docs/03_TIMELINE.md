@@ -4165,3 +4165,41 @@ Validacoes:
 Checkpoint:
 
 - `docs/124_CHECKPOINT_ETAPA_1_52_FINISH_COMPLETION_ACTIONS_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.53 pacote ausente no encerramento
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishMissingPackagePolicy` para centralizar status e progresso quando `finishEmergencyPackage()` nao retorna pacote.
+- `app/index.tsx` manteve os efeitos reais de estado React e apresentacao.
+- `npm test` passou a executar `test:finish-missing-package`.
+
+Validacoes:
+
+- `test:finish-missing-package`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/125_CHECKPOINT_ETAPA_1_53_FINISH_MISSING_PACKAGE_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.54 falha controlada do encerramento
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishFailureActionsPolicy` para centralizar evento de log, payload saneado, status final e progresso de erro no `catch` do encerramento.
+- `app/index.tsx` manteve os efeitos reais de log, estado React e apresentacao.
+- `npm test` passou a executar `test:finish-failure-actions`.
+
+Validacoes:
+
+- `test:finish-failure-actions`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida: aprovados.
+- ADB confirmou Android fisico `23129RA5FL` via Wi-Fi, mas sem build/perfil porque a mudanca nao altera UX nativa, chamada, camera, gravacao, WebRTC, backend ou storage.
+
+Checkpoint:
+
+- `docs/126_CHECKPOINT_ETAPA_1_54_FINISH_FAILURE_ACTIONS_POLICY_2026-05-18.md`.
