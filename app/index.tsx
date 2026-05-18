@@ -34,6 +34,8 @@ import { resolveFinishConfirmationDialogPresentation } from "@/features/emergenc
 import { resolveFinishOutcomePolicy } from "@/features/emergency-home/finishOutcomePolicy";
 import { resolveFinishProgressDialogPresentation } from "@/features/emergency-home/finishProgressDialogPolicy";
 import { resolveFinishRequestDecision } from "@/features/emergency-home/finishRequestPolicy";
+import { resolveFinishActiveCallCleanup } from "@/features/emergency-home/finishActiveCallCleanupPolicy";
+import { resolveFinishActiveCallStart } from "@/features/emergency-home/finishActiveCallStartPolicy";
 import {
   idleFinishProgressState,
   resolveClosedFinishProgressState,
@@ -1276,11 +1278,19 @@ export default function HomeScreen() {
   }
 
   async function handleFinishActiveCall() {
-    if (!activePackageId || finishInProgress || finishInProgressRef.current) return;
+    const finishStartDecision = resolveFinishActiveCallStart({
+      activePackageId,
+      captureStopLocked,
+      finishInProgress,
+      finishInProgressRef: finishInProgressRef.current,
+      liveAudioRemoteSessionId: liveAudioCall.state.remoteSessionId,
+      liveRemoteSessionId,
+      ownerLiveVideoRecordingActive: Boolean(ownerLiveVideoRecordingRef.current),
+      ownerLiveVideoStartRequestActive: Boolean(ownerLiveVideoStartRequestRef.current)
+    });
+    if (!finishStartDecision.shouldStart) return;
 
-    const packageId = activePackageId;
-    const remoteSessionIdToFinish = liveAudioCall.state.remoteSessionId ?? liveRemoteSessionId;
-    const mediaWasHandedToLiveCall = captureStopLocked || Boolean(ownerLiveVideoRecordingRef.current) || Boolean(ownerLiveVideoStartRequestRef.current);
+    const { mediaWasHandedToLiveCall, packageId, remoteSessionIdToFinish } = finishStartDecision;
     const liveVideoAttachedAsset = await stopOwnerLiveVideoEvidence("finish");
     liveAudioCall.resetLiveAudioCall();
     if (remoteSessionIdToFinish) {
@@ -1397,13 +1407,22 @@ export default function HomeScreen() {
       setRecordingStatus(resolveLocalSosPackageStatus({ event: "finish_failed" }));
       showFinishProgress(resolveFinishFailedProgress());
     } finally {
-      if (mediaStopPurposeRef.current === "finish") {
+      const finishCleanupDecision = resolveFinishActiveCallCleanup({
+        mediaStopPurpose: mediaStopPurposeRef.current
+      });
+      if (finishCleanupDecision.shouldClearMediaStopPurpose) {
         mediaStopPurposeRef.current = null;
       }
-      setCaptureStopLocked(false);
-      setMediaStopPendingState(false);
-      finishInProgressRef.current = false;
-      setFinishInProgress(false);
+      if (finishCleanupDecision.shouldUnlockCaptureStop) {
+        setCaptureStopLocked(false);
+      }
+      if (finishCleanupDecision.shouldClearMediaStopPending) {
+        setMediaStopPendingState(false);
+      }
+      if (finishCleanupDecision.shouldReleaseFinishInProgress) {
+        finishInProgressRef.current = false;
+        setFinishInProgress(false);
+      }
     }
   }
 

@@ -56,6 +56,8 @@ const requiredFiles = [
   "src/features/emergency-home/mediaStopSignalPolicy.ts",
   "src/features/emergency-home/mediaStopSettlementRequestPolicy.ts",
   "src/features/emergency-home/mediaStopWaiterPolicy.ts",
+  "src/features/emergency-home/finishActiveCallStartPolicy.ts",
+  "src/features/emergency-home/finishActiveCallCleanupPolicy.ts",
   "src/features/emergency-home/ownerAutoCallPolicy.ts",
   "src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts",
   "src/features/emergency-home/ownerLiveEvidencePolicy.ts",
@@ -131,6 +133,8 @@ const requiredFiles = [
   "scripts/media-stop-signal-policy.test.ts",
   "scripts/media-stop-settlement-request-policy.test.ts",
   "scripts/media-stop-waiter-policy.test.ts",
+  "scripts/finish-active-call-start-policy.test.ts",
+  "scripts/finish-active-call-cleanup-policy.test.ts",
   "scripts/live-call-history-policy.test.ts",
   "scripts/live-call-state-policy.test.ts",
   "scripts/live-webrtc-policy.test.ts",
@@ -236,6 +240,8 @@ const mediaStopPendingPolicy = await readFile("src/features/emergency-home/media
 const mediaStopSignalPolicy = await readFile("src/features/emergency-home/mediaStopSignalPolicy.ts", "utf8");
 const mediaStopSettlementRequestPolicy = await readFile("src/features/emergency-home/mediaStopSettlementRequestPolicy.ts", "utf8");
 const mediaStopWaiterPolicy = await readFile("src/features/emergency-home/mediaStopWaiterPolicy.ts", "utf8");
+const finishActiveCallStartPolicy = await readFile("src/features/emergency-home/finishActiveCallStartPolicy.ts", "utf8");
+const finishActiveCallCleanupPolicy = await readFile("src/features/emergency-home/finishActiveCallCleanupPolicy.ts", "utf8");
 const ownerAutoCallPolicy = await readFile("src/features/emergency-home/ownerAutoCallPolicy.ts", "utf8");
 const ownerLiveAuditMarkerPolicy = await readFile("src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts", "utf8");
 const ownerLiveEvidencePolicy = await readFile("src/features/emergency-home/ownerLiveEvidencePolicy.ts", "utf8");
@@ -666,7 +672,8 @@ if (homeScreen.includes("showPoliceShortcut={preferences.emergencyPhoneCall.call
 if (
   !homeScreen.includes("useKeepAwake") ||
   !homeScreen.includes("EmergencyRecordingWakeLock") ||
-  !homeScreen.includes("activePackageId || finishInProgress")
+  !emergencyHomeActivityPolicy.includes("input.activePackageId") ||
+  !emergencyHomeActivityPolicy.includes("input.finishInProgress")
 ) {
   throw new Error("Home precisa manter tela acordada enquanto chamado ativo ou encerramento estiver em progresso.");
 }
@@ -978,6 +985,26 @@ if (
   !packageJson.scripts["test:finish-request"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para solicitacao de encerramento do chamado.");
+}
+
+if (
+  !homeScreen.includes("resolveFinishActiveCallStart") ||
+  !homeScreen.includes("finishStartDecision.shouldStart") ||
+  !finishActiveCallStartPolicy.includes("remoteSessionIdToFinish") ||
+  !finishActiveCallStartPolicy.includes("mediaWasHandedToLiveCall") ||
+  !packageJson.scripts["test:finish-active-call-start"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para guarda inicial do encerramento ativo.");
+}
+
+if (
+  !homeScreen.includes("resolveFinishActiveCallCleanup") ||
+  !finishActiveCallCleanupPolicy.includes("shouldClearMediaStopPurpose") ||
+  !finishActiveCallCleanupPolicy.includes("shouldClearMediaStopPending") ||
+  !finishActiveCallCleanupPolicy.includes("shouldReleaseFinishInProgress") ||
+  !packageJson.scripts["test:finish-active-call-cleanup"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para limpeza final do encerramento ativo.");
 }
 
 if (

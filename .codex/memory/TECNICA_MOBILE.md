@@ -683,3 +683,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:media-stop-settlement-request` cobre log de settlement, serial igual, serial diferente e ausencia de pending request.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline no settlement.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional no recorder exige validacao fisica/performance proporcional.
+
+# Atualizacao - 2026-05-18 - Etapa 1.45 Home/SOS
+
+- `src/features/emergency-home/finishActiveCallStartPolicy.ts` centraliza a guarda inicial do encerramento ativo, a sessao remota a finalizar e a decisao de midia ja entregue a chamada ao vivo.
+- `app/index.tsx` continua responsavel por parar evidencia ao vivo, resetar chamada, limpar filas de autochamada, atualizar estado visual, backend, cofre e auditoria.
+- Novo gate `npm run test:finish-active-call-start` cobre falta de pacote ativo, encerramento duplicado, prioridade da sessao remota e handoff de midia.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para guarda inline no fechamento do SOS.
+- Sem build Android nesta fatia por ser refatoracao pura.
+
+# Atualizacao - 2026-05-18 - Etapa 1.46 Home/SOS
+
+- `src/features/emergency-home/finishActiveCallCleanupPolicy.ts` centraliza a limpeza final do encerramento ativo.
+- `app/index.tsx` continua responsavel pelas mutacoes reais de `mediaStopPurposeRef`, `setCaptureStopLocked()`, `setMediaStopPendingState()` e `setFinishInProgress()`.
+- Novo gate `npm run test:finish-active-call-cleanup` cobre limpeza da finalidade `finish` e preservacao de outras finalidades de midia.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para limpeza inline no `finally`.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em camera/chamada/WebRTC exige validacao fisica/performance proporcional.

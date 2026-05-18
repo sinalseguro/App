@@ -4013,3 +4013,41 @@ Validacoes:
 Checkpoint:
 
 - `docs/116_CHECKPOINT_ETAPA_1_44_MEDIA_STOP_SETTLEMENT_REQUEST_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.45 guarda inicial do encerramento ativo
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishActiveCallStartPolicy` para centralizar a guarda de inicio do encerramento, selecao da sessao remota e decisao de midia entregue a chamada ao vivo.
+- `app/index.tsx` manteve os efeitos reais de evidencia ao vivo, chamada, refs, estado React, backend, cofre e auditoria.
+- `npm test` passou a executar `test:finish-active-call-start`.
+
+Validacoes:
+
+- `test:finish-active-call-start`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura de seguranca dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/117_CHECKPOINT_ETAPA_1_45_FINISH_ACTIVE_CALL_START_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.46 limpeza final do encerramento ativo
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishActiveCallCleanupPolicy` para centralizar a decisao de limpar finalidade de stop, liberar captura, limpar midia pendente e soltar o encerramento em progresso.
+- `app/index.tsx` manteve os efeitos reais de refs e estados React no `finally` de `handleFinishActiveCall()`.
+- `npm test` passou a executar `test:finish-active-call-cleanup`.
+
+Validacoes:
+
+- `test:finish-active-call-cleanup`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura de seguranca dirigida: aprovados.
+- ADB confirmou os Androids conectados, mas sem build/perfil porque a mudanca nao altera UX nativa, chamada, camera, gravacao, WebRTC, backend ou storage.
+
+Checkpoint:
+
+- `docs/118_CHECKPOINT_ETAPA_1_46_FINISH_ACTIVE_CALL_CLEANUP_POLICY_2026-05-18.md`.
