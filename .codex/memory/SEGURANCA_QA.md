@@ -284,3 +284,11 @@ Papel: seguranca, LGPD e QA.
 - Publicacao final validada: API retornou Android `0.1.11`/`versionCode 13`, URL com cache-buster `0.1.11-20260517T121152Z`, portal retornou manifesto alinhado, e o APK baixado pela URL publica bateu SHA-256 `2196c90158d6a521bc6f8f1bf9f78f922ba6dc264394544f512acc9222889145`.
 - Limpeza final para nova rodada manual: dispositivos sem historico local de chamados/convites antigos/chamadas ao vivo; EC2/API com sessoes, destinatarios, envelopes e sinais zerados, preservando auditoria, logins, perfis e vinculos aceitos.
 - Pendencia de seguranca/produto: gravacao audiovisual local completa da chamada ao vivo nao esta fechada. Antes de declarar cadeia de custodia audiovisual completa, implementar pipeline de captura unica/gravacao de stream com indicador persistente, consentimento, retencao, criptografia e revisao Doneda/Cristine/Eliane.
+
+## QA/Security - 2026-05-18 - Android 0.1.15 rebuild unilateral
+
+- Gates `typecheck`, `lint`, `npm test`, build Android privado e readiness Android privado foram aprovados antes da instalacao.
+- APK `0.1.15`/`versionCode 17` SHA-256 `b4f58d1d322a890da5dab0e717d0c81ceb4fb897fb91ef96ae34522b2e1c664c` instalado em um Android fisico por `adb install -r`.
+- Validacao visual saneada confirmou Home/SOS pronta; log filtrado nao mostrou `FATAL EXCEPTION` nem crash React Native no recorte.
+- Build reduziu o espaco local para cerca de 361 MiB; limpeza pos-build removeu apenas regeneraveis Gradle/CMake e preservou o APK final.
+- Nao publicar como release validada nem declarar SOS/anjo aprovado ate haver dois Androids conectados e validacao fisica owner -> anjo com controle/auditoria EC2.

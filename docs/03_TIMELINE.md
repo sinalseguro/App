@@ -3107,6 +3107,23 @@ Checkpoint:
 
 - `docs/57_CHECKPOINT_F4_3_RECEBIMENTO_CHAMADA_REGISTRO_2026-05-16.md`.
 
+## 2026-05-18 - Android 0.1.15 rebuild e instalacao unilateral
+
+Status: APK privado recompilado e instalado em um Android fisico; validacao SOS/anjo fim a fim segue bloqueada por ausencia do segundo Android no ADB.
+
+Executado:
+
+- `../../scripts/gerar-aplicativo.sh privado --overwrite --install`.
+- Gates `typecheck`, `lint`, `npm test`, build Android privado e readiness Android privado aprovados.
+- APK local preservado em `distribution/android/out/sinalseguro-android.apk`, SHA-256 `b4f58d1d322a890da5dab0e717d0c81ceb4fb897fb91ef96ae34522b2e1c664c`.
+- Instalacao ADB aprovada em `br.com.sinalseguro.app` com `versionName=0.1.15`, `versionCode=17` e `lastUpdateTime=2026-05-18 07:07:46`.
+- Validacao visual unilateral confirmou Home/SOS pronta em modo discreto.
+- Build consumiu espaco local ate cerca de `361 MiB`; regeneraveis Android foram limpos novamente e o disco voltou para cerca de `2.9 GiB`, preservando o APK final.
+
+Checkpoint:
+
+- `docs/75_CHECKPOINT_ANDROID_0_1_15_REBUILD_INSTALACAO_UNILATERAL_2026-05-18.md`.
+
 ## 2026-05-17 - Android 0.1.13 video local protegido no SOS ao vivo
 
 Status: APK privado `0.1.13` publicado no portal/API de update; fluxo fisico principal validado em dois Androids.

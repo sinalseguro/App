@@ -328,3 +328,12 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Release privada publicada no portal/backend: `download_url` com `?v=0.1.11-20260517T121152Z`, arquivo publico `sinalseguro_android.apk` validado com SHA-256 `2196c90158d6a521bc6f8f1bf9f78f922ba6dc264394544f512acc9222889145`.
 - Apos a publicacao, historicos locais de teste foram limpos nos dois Androids e a EC2/API ficou sem sessoes/sinais/envelopes pendentes, preservando perfil e vinculos aceitos.
 - Pendencia tecnica: gravacao audiovisual local completa da chamada ao vivo ainda requer pipeline unico de captura/gravacao WebRTC; a captura local concorrente pode encerrar sem arquivo quando a camera e entregue ao WebRTC.
+
+# Atualizacao - 2026-05-18 - Android 0.1.15 rebuild unilateral
+
+- `../../scripts/gerar-aplicativo.sh privado --overwrite --install` aprovou typecheck, lint, npm test, build Android privado e readiness privado condicionado.
+- APK regenerado em `distribution/android/out/sinalseguro-android.apk`, SHA-256 `b4f58d1d322a890da5dab0e717d0c81ceb4fb897fb91ef96ae34522b2e1c664c`.
+- Instalacao ADB confirmou `versionName=0.1.15`, `versionCode=17`, `lastUpdateTime=2026-05-18 07:07:46`.
+- Validacao visual unilateral confirmou Home/SOS pronta em um Android; segundo Android continuou ausente no ADB/mdns, entao SOS/anjo fim a fim e publicacao final seguem bloqueados.
+- Pos-build limpou novamente `android/.gradle`, `android/app/.cxx`, `android/app/build` e `android/build`, recuperando espaco de cerca de 361 MiB para 2.9 GiB e preservando o APK final.
+- Checkpoint: `docs/75_CHECKPOINT_ANDROID_0_1_15_REBUILD_INSTALACAO_UNILATERAL_2026-05-18.md`.
