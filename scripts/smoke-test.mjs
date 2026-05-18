@@ -37,6 +37,7 @@ const requiredFiles = [
   "src/features/emergency-home/EmergencySettingsDrawer.tsx",
   "src/features/emergency-home/EmergencyTopBar.tsx",
   "src/features/emergency-home/emergencyCallConfirmationPolicy.ts",
+  "src/features/emergency-home/emergencyStartFailureDialogPolicy.ts",
   "src/features/emergency-home/finishFlowProgressPolicy.ts",
   "src/features/emergency-home/emergencyStartPolicy.ts",
   "src/features/emergency-home/finishCodePolicy.ts",
@@ -51,6 +52,7 @@ const requiredFiles = [
   "src/features/emergency-home/localSosPackageStatusPolicy.ts",
   "src/features/emergency-home/interruptedRecoveryProgressPolicy.ts",
   "src/features/emergency-home/panicTriggerPolicy.ts",
+  "src/features/emergency-home/recordingConsentDialogPolicy.ts",
   "src/features/emergency-home/protectedRouteAccessPolicy.ts",
   "src/features/emergency-home/protectedRouteCodePolicy.ts",
   "src/features/emergency-home/remoteSyncStatusPolicy.ts",
@@ -187,6 +189,7 @@ const mediaInterfacePresentation = await readFile("src/features/emergency/mediaI
 const appLayout = await readFile("app/_layout.tsx", "utf8");
 const homeScreen = await readFile("app/index.tsx", "utf8");
 const emergencyCallConfirmationPolicy = await readFile("src/features/emergency-home/emergencyCallConfirmationPolicy.ts", "utf8");
+const emergencyStartFailureDialogPolicy = await readFile("src/features/emergency-home/emergencyStartFailureDialogPolicy.ts", "utf8");
 const finishFlowProgressPolicy = await readFile("src/features/emergency-home/finishFlowProgressPolicy.ts", "utf8");
 const emergencyStartPolicy = await readFile("src/features/emergency-home/emergencyStartPolicy.ts", "utf8");
 const finishCodePolicy = await readFile("src/features/emergency-home/finishCodePolicy.ts", "utf8");
@@ -201,6 +204,7 @@ const liveCallPanelPolicy = await readFile("src/features/emergency-home/liveCall
 const localSosPackageStatusPolicy = await readFile("src/features/emergency-home/localSosPackageStatusPolicy.ts", "utf8");
 const interruptedRecoveryProgressPolicy = await readFile("src/features/emergency-home/interruptedRecoveryProgressPolicy.ts", "utf8");
 const panicTriggerPolicy = await readFile("src/features/emergency-home/panicTriggerPolicy.ts", "utf8");
+const recordingConsentDialogPolicy = await readFile("src/features/emergency-home/recordingConsentDialogPolicy.ts", "utf8");
 const protectedRouteAccessPolicy = await readFile("src/features/emergency-home/protectedRouteAccessPolicy.ts", "utf8");
 const protectedRouteCodePolicy = await readFile("src/features/emergency-home/protectedRouteCodePolicy.ts", "utf8");
 const remoteSyncStatusPolicy = await readFile("src/features/emergency-home/remoteSyncStatusPolicy.ts", "utf8");
@@ -684,6 +688,15 @@ if (
 }
 
 if (
+  !homeScreen.includes("resolveRecordingConsentDialogPresentation") ||
+  !recordingConsentDialogPolicy.includes("resolveRecordingConsentDialogPresentation") ||
+  !recordingConsentDialogPolicy.includes("Revise e aceite os termos") ||
+  !packageJson.scripts["test:recording-consent-dialog"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para apresentacao do consentimento de gravacao.");
+}
+
+if (
   !homeScreen.includes("resolveEmergencyCallConfirmation") ||
   !emergencyCallConfirmationPolicy.includes("resolveEmergencyCallConfirmation") ||
   !emergencyCallConfirmationPolicy.includes("Ligar para") ||
@@ -725,6 +738,15 @@ if (
   !packageJson.scripts["test:emergency-start"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para inicio do chamado e apresentacao inicial.");
+}
+
+if (
+  !homeScreen.includes("resolveEmergencyStartFailureDialogPresentation") ||
+  !emergencyStartFailureDialogPolicy.includes("resolveEmergencyStartFailureDialogPresentation") ||
+  !emergencyStartFailureDialogPolicy.includes("Use 190, 193 ou 192") ||
+  !packageJson.scripts["test:emergency-start-failure-dialog"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para apresentacao de falha ao iniciar chamado.");
 }
 
 if (

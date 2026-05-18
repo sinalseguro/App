@@ -17,6 +17,7 @@ import {
   resolveEmergencyStartRequestPolicy
 } from "@/features/emergency-home/emergencyStartPolicy";
 import { resolveEmergencyCallConfirmation } from "@/features/emergency-home/emergencyCallConfirmationPolicy";
+import { resolveEmergencyStartFailureDialogPresentation } from "@/features/emergency-home/emergencyStartFailureDialogPolicy";
 import {
   resolveFinishFailedProgress,
   resolveFinishMediaStopSettledProgress,
@@ -55,6 +56,7 @@ import {
 import { panicButtonLabel, resolvePanicTriggerDecision } from "@/features/emergency-home/panicTriggerPolicy";
 import { resolveProtectedRouteAccessDecision } from "@/features/emergency-home/protectedRouteAccessPolicy";
 import { resolveProtectedRouteCodeDecision } from "@/features/emergency-home/protectedRouteCodePolicy";
+import { resolveRecordingConsentDialogPresentation } from "@/features/emergency-home/recordingConsentDialogPolicy";
 import { activeRemoteSyncRetryMessage, resolveActiveRemoteSyncStatus } from "@/features/emergency-home/remoteSyncStatusPolicy";
 import { EmergencyHomePanel, EmergencyHomeRoute } from "@/features/emergency-home/routes";
 import { CameraCaptureResidueCleaner } from "@/features/emergency/CameraCaptureResidueCleaner";
@@ -1146,14 +1148,15 @@ export default function HomeScreen() {
         requestFinishActiveCall();
         return;
       case "request_recording_consent":
+        const recordingConsentDialog = resolveRecordingConsentDialogPresentation();
         setDialog({
-          title: "Autorizar gravacao",
-          message: "Revise e aceite os termos para permitir gravacao local durante o SOS.",
+          title: recordingConsentDialog.title,
+          message: recordingConsentDialog.message,
           icon: <LockKeyhole size={18} color={theme.colors.primary} />,
           actions: [
-            { label: "Agora nao", tone: "muted" },
+            { label: recordingConsentDialog.cancelLabel, tone: "muted" },
             {
-              label: "Abrir termos",
+              label: recordingConsentDialog.confirmLabel,
               onPress: () => {
                 router.push("/configuracoes");
               }
@@ -1228,12 +1231,12 @@ export default function HomeScreen() {
       }, error);
       setActivePackageId(null);
       setRecordingStatus(resolveLocalSosPackageStatus({ event: "start_failed" }));
+      const startFailureDialog = resolveEmergencyStartFailureDialogPresentation();
       setDialog({
-        title: "Chamado nao preservado",
-        message:
-          "Nao foi possivel salvar o pacote local com seguranca neste dispositivo. Use 190, 193 ou 192 em risco imediato.",
+        title: startFailureDialog.title,
+        message: startFailureDialog.message,
         icon: <LockKeyhole size={18} color={theme.colors.danger} />,
-        actions: [{ label: "Entendi", tone: "danger" }]
+        actions: [{ label: startFailureDialog.confirmLabel, tone: "danger" }]
       });
     } finally {
       setStartInProgress(false);

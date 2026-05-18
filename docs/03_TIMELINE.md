@@ -3709,3 +3709,41 @@ Validacoes:
 Checkpoint:
 
 - `docs/100_CHECKPOINT_ETAPA_1_28_FINISH_FLOW_PROGRESS_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.29 modal de consentimento de gravacao Home/SOS
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `recordingConsentDialogPolicy` para centralizar titulo, mensagem e labels do modal de consentimento de gravacao.
+- `app/index.tsx` manteve o efeito real de navegar para `/configuracoes` quando o usuario abre os termos.
+- `npm test` passou a executar `test:recording-consent-dialog`.
+
+Validacoes:
+
+- `test:recording-consent-dialog`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e varredura de seguranca dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/101_CHECKPOINT_ETAPA_1_29_RECORDING_CONSENT_DIALOG_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.30 modal de falha ao iniciar chamado Home/SOS
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `emergencyStartFailureDialogPolicy` para centralizar titulo, mensagem e label do modal de falha ao iniciar chamado.
+- `app/index.tsx` manteve os efeitos reais de limpar pacote ativo, registrar status de falha e preservar logs saneados.
+- `npm test` passou a executar `test:emergency-start-failure-dialog`.
+
+Validacoes:
+
+- `test:emergency-start-failure-dialog`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e varredura de seguranca dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/102_CHECKPOINT_ETAPA_1_30_EMERGENCY_START_FAILURE_DIALOG_POLICY_2026-05-18.md`.

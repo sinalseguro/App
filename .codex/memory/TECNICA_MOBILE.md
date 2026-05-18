@@ -555,3 +555,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:finish-flow-progress` cobre protecao de midia em andamento, encerramento solicitado, camera sinalizada, settlement com/sem midia, pacote ausente, sincronizacao remota e falha.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para mensagem inline na Home.
 - Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional em chamada/camera/WebRTC/gravacao/UX deve repetir validacao fisica owner -> anjo.
+
+# Atualizacao - 2026-05-18 - Etapa 1.29 Home/SOS
+
+- `src/features/emergency-home/recordingConsentDialogPolicy.ts` centraliza a apresentacao do modal de consentimento de gravacao.
+- `app/index.tsx` continua responsavel pelo efeito real de navegar para `/configuracoes` quando o usuario decide abrir os termos.
+- Novo gate `npm run test:recording-consent-dialog` cobre titulo, mensagem e labels do modal.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para apresentacao inline na Home.
+- Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional em chamada/camera/WebRTC/gravacao/UX deve repetir validacao fisica.
+
+# Atualizacao - 2026-05-18 - Etapa 1.30 Home/SOS
+
+- `src/features/emergency-home/emergencyStartFailureDialogPolicy.ts` centraliza a apresentacao do modal de falha ao iniciar chamado.
+- `app/index.tsx` continua responsavel pelos efeitos reais de registrar erro, limpar pacote ativo, status local e iconografia do modal.
+- Novo gate `npm run test:emergency-start-failure-dialog` cobre titulo, mensagem e label de confirmacao.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para apresentacao inline na Home.
+- Sem build Android nesta fatia por ser refatoracao pura; manter duas fatias por rodada ate a proxima mudanca operacional.
