@@ -466,3 +466,11 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:finish-request` cobre ausencia de pacote, encerramento em andamento, ref interno em andamento, confirmacao por codigo e finalizacao direta.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline.
 - Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional em chamada/camera/WebRTC/gravacao/UX deve repetir validacao fisica.
+
+# Atualizacao - 2026-05-18 - Etapa 1.18 Home/SOS
+
+- `src/features/emergency-home/emergencyStartPolicy.ts` centraliza a decisao inicial do SOS: pacote local, captura de localizacao, consentimento, atalho telefonico emergencial e mensagem inicial.
+- `app/index.tsx` continua responsavel pelos efeitos reais de criar pacote, abrir discador, sincronizar backend, registrar auditoria saneada e atualizar estados.
+- Novo gate `npm run test:emergency-start` cobre Android/web, chamada emergencial, localizacao capturada/nao registrada e duracao da gravacao.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline.
+- Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional em chamada/camera/WebRTC/gravacao/UX deve repetir validacao fisica.

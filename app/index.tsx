@@ -12,6 +12,10 @@ import { EmergencyCallDock } from "@/features/emergency-home/EmergencyCallDock";
 import { EmergencyCallTarget } from "@/features/emergency-home/EmergencyCallTarget";
 import { EmergencySettingsDrawer } from "@/features/emergency-home/EmergencySettingsDrawer";
 import { EmergencyTopBar } from "@/features/emergency-home/EmergencyTopBar";
+import {
+  resolveEmergencyStartPresentation,
+  resolveEmergencyStartRequestPolicy
+} from "@/features/emergency-home/emergencyStartPolicy";
 import { resolveFinishOutcomePolicy } from "@/features/emergency-home/finishOutcomePolicy";
 import { resolveFinishRequestDecision } from "@/features/emergency-home/finishRequestPolicy";
 import { resolveLiveCallCleanupDecision } from "@/features/emergency-home/liveCallCleanupPolicy";
@@ -53,7 +57,6 @@ import type { MediaCaptureFailureReason, MediaProcessingState } from "@/features
 import {
   defaultEmergencyPreferences,
   EmergencyPreferences,
-  formatDuration,
   getEmergencyPreferences
 } from "@/features/emergency/emergencyPreferences";
 import { LiveAudioCallPanel } from "@/features/live-call/LiveAudioCallPanel";
@@ -1169,29 +1172,30 @@ export default function HomeScreen() {
     });
 
     try {
+      const startRequestPolicy = resolveEmergencyStartRequestPolicy({
+        platformOS: Platform.OS,
+        preferences
+      });
       const result = await startEmergencyPackage({
-        kind: "test",
+        kind: startRequestPolicy.packagePolicy.kind,
         trustedContactIds: (await listAcceptedOwnerRelationshipsForDelivery()).slice(0, 1).map((relationship) => relationship.id),
-        captureLocation: Platform.OS !== "web",
-        defaultDurationSeconds: preferences.defaultDurationSeconds,
-        locationConsentMode:
-          preferences.locationMode === "foreground_pre_authorized"
-            ? "foreground_pre_authorized"
-            : "foreground_when_triggered"
+        captureLocation: startRequestPolicy.packagePolicy.captureLocation,
+        defaultDurationSeconds: startRequestPolicy.packagePolicy.defaultDurationSeconds,
+        locationConsentMode: startRequestPolicy.packagePolicy.locationConsentMode
       });
       await refreshOutboxCount();
 
-      if (preferences.emergencyPhoneCall.call190OnSosEnabled && Platform.OS !== "web") {
+      if (startRequestPolicy.shouldOpenEmergencyPhoneCall) {
         void Linking.openURL("tel:190").catch(() => undefined);
       }
 
-      const locationText =
-        result.packageRecord.location.status === "captured"
-          ? "Localizacao preservada."
-          : "Localizacao nao registrada.";
+      const startPresentation = resolveEmergencyStartPresentation({
+        defaultDurationSeconds: preferences.defaultDurationSeconds,
+        locationStatus: result.packageRecord.location.status
+      });
       appendMediaOperationalLog("emergency_start_package_created", {
         localVideoEnabled: preferences.localVideoCapture.requestOnSos,
-        locationCaptured: result.packageRecord.location.status === "captured",
+        locationCaptured: startPresentation.locationCaptured,
         platform: Platform.OS
       });
       void syncEmergencyPackageWithApi(result.packageRecord)
@@ -1202,7 +1206,7 @@ export default function HomeScreen() {
             remoteSessionCreated: Boolean(syncState.remoteSessionId),
             status: syncState.status
           });
-          applyRemoteSyncState(syncState, { locationText, source: "initial" });
+          applyRemoteSyncState(syncState, { locationText: startPresentation.locationText, source: "initial" });
         })
         .catch((error) => {
           appendMediaOperationalLog("emergency_remote_sync_start_error", {
@@ -1210,11 +1214,7 @@ export default function HomeScreen() {
           }, error);
         });
 
-      const recordingDurationLabel =
-        preferences.defaultDurationSeconds === 0 ? "ilimitada" : formatDuration(preferences.defaultDurationSeconds);
-      setRecordingStatus(
-        `Você pediu ajuda. Gravacao ${recordingDurationLabel}. ${locationText} Arquivo no cofre local.`
-      );
+      setRecordingStatus(startPresentation.recordingStatus);
     } catch (error) {
       appendMediaOperationalLog("emergency_start_error", {
         platform: Platform.OS

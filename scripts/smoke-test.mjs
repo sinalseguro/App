@@ -36,6 +36,7 @@ const requiredFiles = [
   "src/features/emergency-home/EmergencyCallTarget.ts",
   "src/features/emergency-home/EmergencySettingsDrawer.tsx",
   "src/features/emergency-home/EmergencyTopBar.tsx",
+  "src/features/emergency-home/emergencyStartPolicy.ts",
   "src/features/emergency-home/finishOutcomePolicy.ts",
   "src/features/emergency-home/finishRequestPolicy.ts",
   "src/features/emergency-home/mediaHandoffPolicy.ts",
@@ -85,6 +86,7 @@ const requiredFiles = [
   "scripts/device-key-proof.test.ts",
   "scripts/profile-policy.test.ts",
   "scripts/panic-trigger-policy.test.ts",
+  "scripts/emergency-start-policy.test.ts",
   "scripts/remote-sync-status-policy.test.ts",
   "scripts/owner-auto-call-policy.test.ts",
   "scripts/live-call-cleanup-policy.test.ts",
@@ -174,6 +176,7 @@ const evidencePlayerCard = await readFile("src/components/EvidencePlayerCard.tsx
 const mediaInterfacePresentation = await readFile("src/features/emergency/mediaInterfacePresentation.ts", "utf8");
 const appLayout = await readFile("app/_layout.tsx", "utf8");
 const homeScreen = await readFile("app/index.tsx", "utf8");
+const emergencyStartPolicy = await readFile("src/features/emergency-home/emergencyStartPolicy.ts", "utf8");
 const finishOutcomePolicy = await readFile("src/features/emergency-home/finishOutcomePolicy.ts", "utf8");
 const finishRequestPolicy = await readFile("src/features/emergency-home/finishRequestPolicy.ts", "utf8");
 const mediaHandoffPolicy = await readFile("src/features/emergency-home/mediaHandoffPolicy.ts", "utf8");
@@ -345,7 +348,7 @@ if (
   !liveCallControl.includes("signal.payload.senderDeviceId") ||
   !deviceBinding.includes("requireRegisteredApiDeviceId") ||
   !homeScreen.includes("Chamar anjo") ||
-  !homeScreen.includes("Você pediu ajuda") ||
+  !emergencyStartPolicy.includes("Você pediu ajuda") ||
   !alertScreen.includes("Você é anjo de") ||
   !alertScreen.includes("Atender como anjo") ||
   !alertScreen.includes("Entrar na chamada")
@@ -659,6 +662,20 @@ if (
   !packageJson.scripts["test:panic-trigger"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para decisao do botao SOS e gate de consentimento.");
+}
+
+if (
+  !homeScreen.includes("resolveEmergencyStartRequestPolicy") ||
+  !homeScreen.includes("resolveEmergencyStartPresentation") ||
+  !emergencyStartPolicy.includes("resolveEmergencyStartRequestPolicy") ||
+  !emergencyStartPolicy.includes("resolveEmergencyStartPresentation") ||
+  !emergencyStartPolicy.includes("foreground_when_triggered") ||
+  !emergencyStartPolicy.includes("shouldOpenEmergencyPhoneCall") ||
+  !emergencyStartPolicy.includes("Localizacao preservada.") ||
+  !emergencyStartPolicy.includes("Arquivo no cofre local") ||
+  !packageJson.scripts["test:emergency-start"]
+) {
+  throw new Error("Home/SOS precisa manter politica pura testavel para inicio do chamado e apresentacao inicial.");
 }
 
 if (
