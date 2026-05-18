@@ -5,6 +5,11 @@ Papel: seguranca, LGPD e QA.
 
 ## Decisoes bloqueantes
 
+- QA/Security 2026-05-18 - pre-validacao fisica live-call: ADB detectou apenas um Android como `device`; nao declarar validacao fim a fim de SOS ao vivo/live-call sem dois Androids ou segundo aparelho validado manualmente com evidencia saneada.
+- Android detectado tinha `br.com.sinalseguro.app` em `versionName=0.1.15`, `versionCode=17`, permissoes de camera/microfone/notificacoes/localizacao concedidas e app sem processo ativo no levantamento.
+- Nao iniciar build Android pesado com o Mac em cerca de 3.3 GiB livres sem limpar regeneraveis/necessidade objetiva.
+- Proxima mudanca em camera, WebRTC runtime, autoaceite, handoff de midia ou encerramento SOS exige validacao fisica Android em dois aparelhos.
+
 - QA/Security 2026-05-18 - Etapa 1.5 live-call: criado gate `npm run test:live-call-security` para impedir regressao de logs sensiveis em live-call/WebRTC.
 - `useLiveAudioCall.ts` e `liveCallControl.ts` nao devem ter `console` runtime; `liveWebRtcSession.ts` so pode registrar telemetria saneada `SinalSeguroLiveCall`.
 - Logs runtime nao podem conter `Authorization`, access/refresh/id token, `encrypted_key`, SDP, ICE candidate, payload P2P, URI/path local, `DocumentDirectory` ou `cacheDirectory`.

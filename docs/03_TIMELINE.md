@@ -3,6 +3,19 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-18 - Pre-validacao fisica live-call Android
+
+Status: checkpoint operacional; validacao fim a fim bloqueada ate dois Androids estarem disponiveis.
+
+- Especialistas de seguranca/QA/mobile foram acionados para retomar apos os gates de live-call.
+- Repositorio estava limpo e sincronizado em `main`, ultimo commit `325571e`.
+- ADB detectou apenas um Android como `device`.
+- Android detectado tem `br.com.sinalseguro.app` instalado em `versionName=0.1.15`, `versionCode=17`, com camera, microfone, notificacoes e localizacao concedidas.
+- App nao estava rodando no momento do levantamento.
+- Espaco local no Mac estava baixo, cerca de 3.3 GiB livres; nao iniciar build Android pesado sem limpeza/necessidade.
+- Decisao: nao refatorar mais live-call sem necessidade objetiva; proxima mudanca em camera/WebRTC runtime/autoaceite/handoff/encerramento SOS exige validacao fisica Android em dois aparelhos.
+- Checkpoint: `docs/72_CHECKPOINT_PRE_VALIDACAO_FISICA_LIVE_CALL_2026-05-18.md`.
+
 ## 2026-05-18 - Etapa 1.5 gate de logs sensiveis live-call
 
 Status: concluida localmente, validada e pronta para checkpoint Git.

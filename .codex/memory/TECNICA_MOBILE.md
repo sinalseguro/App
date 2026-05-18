@@ -5,6 +5,11 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 
 ## Estado tecnico
 
+- Atualizacao 2026-05-18 pre-validacao fisica live-call: repo limpo em `main`, ultimo commit `325571e`, e apenas um Android apareceu no ADB como `device`.
+- Android detectado: `br.com.sinalseguro.app` `versionName=0.1.15`, `versionCode=17`; permissoes de camera, microfone, notificacoes e localizacao concedidas; app sem processo ativo no levantamento.
+- Espaco local no Mac estava baixo, cerca de 3.3 GiB livres; evitar build Android pesado sem limpeza/necessidade.
+- Checkpoint da etapa: `docs/72_CHECKPOINT_PRE_VALIDACAO_FISICA_LIVE_CALL_2026-05-18.md`.
+
 - Atualizacao 2026-05-18 Etapa 1.5: adicionado gate `npm run test:live-call-security` em `scripts/live-call-sensitive-logging.test.ts`.
 - O gate bloqueia regressao de logs runtime sensiveis em `useLiveAudioCall.ts`, `liveCallControl.ts` e `liveWebRtcSession.ts`, preservando apenas telemetria saneada `SinalSeguroLiveCall`.
 - `npm test` agora inclui `test:live-call-security`; sem mudanca de UX, backend, portal, release, WebRTC runtime ou codigo nativo.
