@@ -3,6 +3,22 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-17 - Etapa 1 refatoracao apiClient por dominios
+
+Status: concluida localmente, validada e pronta para checkpoint Git.
+
+- `src/services/apiClient.ts` virou fachada compativel para preservar imports publicos existentes via `@/services/apiClient`.
+- Schemas, tipos e contratos foram movidos para `src/services/api/contracts.ts`.
+- Sessao segura, refresh, erro HTTP e request comum foram movidos para `src/services/api/core.ts`.
+- Endpoints foram separados por dominio: `authClient`, `devicesClient`, `profilesClient`, `contactsClient`, `emergencyClient` e `releasesClient`.
+- Utilitarios de plataforma, data e payload de login/logout foram movidos para `src/services/api/utils.ts`.
+- `scripts/smoke-test.mjs` passou a ler os modulos novos para manter as mesmas garantias de Google real, consentimentos, anjos e aceite de convite.
+- Escopo preservado: sem alteracao de layout, texto publico, UX, fluxo SOS/WebRTC, contrato de API, portal, release ou backend.
+- Gate Codex Security direcionado: sem novos `console` nos modulos de API; tokens, `Authorization`, `id_token`, convite, payload P2P e envelope cifrado permanecem apenas como campos de transporte validados, sem log adicional.
+- Validacoes aprovadas: `npm run typecheck`, `npm run lint`, `npm test`, `npm run private:android:readiness`, `git diff --check` e `npm run build:android:debug:bundled`.
+- Observacao de build: a primeira tentativa Android falhou por duplicatas regeneraveis `* 2.*` em `android/app/build/intermediates`; a limpeza removeu somente esses arquivos regenerados e o build seguinte passou.
+- Checkpoint: `docs/66_CHECKPOINT_ETAPA_1_API_CLIENT_DOMINIOS_2026-05-17.md`.
+
 ## 2026-05-17 - Checkpoint pre-refatoracao mobile
 
 Status: documentado e congelado para iniciar refatoracao incremental sem alterar comportamento.

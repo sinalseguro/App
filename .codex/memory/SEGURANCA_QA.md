@@ -5,6 +5,12 @@ Papel: seguranca, LGPD e QA.
 
 ## Decisoes bloqueantes
 
+- QA/Security 2026-05-17 - Etapa 1 refatoracao API: a separacao do `apiClient` por dominios nao mudou contratos publicos, rotas, fluxo SOS/WebRTC, portal ou backend.
+- Gate Codex Security direcionado: nenhum novo `console` nos modulos de API; tokens, `Authorization`, `refresh`, `id_token`, token de convite, payload P2P e envelope cifrado seguem apenas como campos de transporte validados, sem log novo.
+- Sessao continua no `SecureStore` via `api.session.v1`; refresh mantem uma retentativa; falha de refresh limpa sessao; logout limpa sessao no `finally`.
+- Validacoes desta etapa: `typecheck`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e build Android debug bundled aprovados.
+- Primeira tentativa de build falhou por duplicatas regeneraveis `* 2.*` em `android/app/build/intermediates`; limpeza removeu somente artefatos de build gerados.
+
 - Build publico nao pode solicitar `CAMERA` nem `RECORD_AUDIO`.
 - Build privado de homologacao local pode gravar video/audio no sandbox do app com consentimento e permissao do sistema.
 - Streaming, upload real e compartilhamento externo ficam bloqueados ate homologacao controlada.

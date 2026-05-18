@@ -5,6 +5,13 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 
 ## Estado tecnico
 
+- Atualizacao 2026-05-17: Etapa 1 da refatoracao mobile concluiu a separacao de `src/services/apiClient.ts` por dominios, mantendo a fachada publica compativel em `@/services/apiClient`.
+- Novos modulos de API: `src/services/api/contracts.ts`, `core.ts`, `authClient.ts`, `devicesClient.ts`, `profilesClient.ts`, `contactsClient.ts`, `emergencyClient.ts`, `releasesClient.ts` e `utils.ts`.
+- `SinalSeguroApiClient` continua expondo os mesmos metodos publicos e delega para clientes de dominio; nao alterar imports consumidores antes de nova etapa aprovada.
+- `scripts/smoke-test.mjs` agora concatena os modulos de API para preservar o gate que antes lia apenas `apiClient.ts`.
+- Build Android debug bundled desta etapa passou apos remover apenas duplicatas regeneraveis `* 2.*` em `android/app/build/intermediates`.
+- Checkpoint da etapa: `docs/66_CHECKPOINT_ETAPA_1_API_CLIENT_DOMINIOS_2026-05-17.md`.
+
 - `AppTopBar`, `BrandedDialog` e `ResourceTile` sao componentes compartilhados.
 - Home SOS permanece fixa e sem `SafeScreen`.
 - Cofre local foi convertido para tela fixa por icones.

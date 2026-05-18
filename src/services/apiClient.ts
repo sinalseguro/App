@@ -1,987 +1,175 @@
-import { Platform } from "react-native";
-import { z } from "zod";
+import { HealthSchema } from "@/services/api/contracts";
+import { AuthApiClient } from "@/services/api/authClient";
+import { ContactsApiClient } from "@/services/api/contactsClient";
+import { DevicesApiClient } from "@/services/api/devicesClient";
+import { EmergencyApiClient } from "@/services/api/emergencyClient";
+import { ProfilesApiClient } from "@/services/api/profilesClient";
+import { ReleasesApiClient } from "@/services/api/releasesClient";
+import {
+  ApiRequestError,
+  SinalSeguroApiCore,
+  apiBaseUrl,
+  apiConfig,
+  apiEnabled
+} from "@/services/api/core";
 
-import { deleteSecret, readSecret, saveSecret } from "@/security/secureStorage";
-import { DeviceKeyProof } from "@/services/deviceKeyProof";
+export type {
+  AcceptInvitationInput,
+  ApiAppRelease,
+  ApiConsentRecord,
+  ApiConsentScope,
+  ApiDevice,
+  ApiEmergencyRecipient,
+  ApiEmergencySession,
+  ApiInvitation,
+  ApiInvitationPublicStatus,
+  ApiKeyEnvelope,
+  ApiLiveAuditMarker,
+  ApiLiveRecipient,
+  ApiLiveRecipientDevice,
+  ApiLiveRecipientList,
+  ApiP2PSignal,
+  ApiProtectionProfile,
+  ApiSession,
+  ApiTrustedContact,
+  ApiTrustedContactRelationship,
+  ApiUser,
+  CreateConsentRecordInput,
+  CreateEmergencySessionInput,
+  CreateInvitationInput,
+  CreateKeyEnvelopeInput,
+  CreateTrustedContactInput,
+  EmergencySessionResponseAction,
+  GetCurrentAppReleaseInput,
+  LiveAuditMarkerEvent,
+  LoginDeviceContext,
+  LogoutDeviceContext,
+  RecordLiveAuditMarkerInput,
+  RegisterDeviceInput,
+  RotateDeviceKeyInput,
+  SendP2PSignalInput,
+  UpdateProtectionProfileInput
+} from "@/services/api/contracts";
 
-const DEFAULT_API_BASE_URL = "https://api.sinalseguro.com.br/api";
-const API_SESSION_SECRET_KEY = "api.session.v1";
-
-function normalizeApiBaseUrl(value?: string | null) {
-  const trimmedValue = value?.trim();
-  if (!trimmedValue) return null;
-  return trimmedValue.replace(/\/+$/, "");
-}
-
-const apiBaseUrl = normalizeApiBaseUrl(
-  process.env.EXPO_PUBLIC_SINALSEGURO_API_BASE_URL ?? DEFAULT_API_BASE_URL
-);
-const apiEnabled =
-  process.env.EXPO_PUBLIC_SINALSEGURO_API_ENABLED?.trim() !== "0" && Boolean(apiBaseUrl);
-
-const HealthSchema = z.object({
-  status: z.string().optional()
-});
-
-const ApiUserSchema = z.object({
-  id: z.string(),
-  email: z.string().email(),
-  display_name: z.string().nullable().optional(),
-  role: z.string(),
-  terms_version: z.string().nullable().optional(),
-  created_at: z.string().optional()
-});
-
-const AuthTokenResponseSchema = z.object({
-  access: z.string(),
-  refresh: z.string(),
-  user: ApiUserSchema.optional()
-});
-
-const TokenRefreshSchema = z.object({
-  access: z.string(),
-  refresh: z.string().optional()
-});
-
-const ApiSessionSchema = z.object({
-  access: z.string(),
-  refresh: z.string(),
-  user: ApiUserSchema.nullable().optional()
-});
-
-const ProtectionProfileSchema = z.object({
-  id: z.string(),
-  kind: z.enum(["unknown", "adult_self", "guardian", "minor_protected", "guardian_without_minor"]),
-  status: z.string(),
-  policy_version: z.string(),
-  configured_at: z.string(),
-  updated_at: z.string()
-});
-
-const DeviceSchema = z.object({
-  id: z.string(),
-  platform: z.string(),
-  device_label: z.string(),
-  app_version: z.string(),
-  key_algorithm: z.string().optional(),
-  key_registered_at: z.string().nullable().optional(),
-  key_rotated_at: z.string().nullable().optional(),
-  public_key_sha256: z.string().optional(),
-  revocation_reason: z.string().optional(),
-  revoked_at: z.string().nullable().optional(),
-  status: z.string(),
-  last_seen_at: z.string().nullable().optional(),
-  created_at: z.string(),
-  updated_at: z.string()
-});
-
-const ConsentScopeSchema = z.enum([
-  "login",
-  "terms",
-  "privacy",
-  "location",
-  "alerts",
-  "media_homologation",
-  "emergency_data_sharing",
-  "receiver_encrypted_save"
-]);
-
-const ConsentRecordSchema = z.object({
-  id: z.string(),
-  device: z.string().nullable().optional(),
-  scope: ConsentScopeSchema,
-  version: z.string(),
-  accepted: z.boolean(),
-  accepted_at: z.string(),
-  evidence: z.record(z.string(), z.unknown()).optional(),
-  created_at: z.string()
-});
-
-const TrustedContactSchema = z.object({
-  id: z.string(),
-  protected_subject: z.string().nullable().optional(),
-  contact_display_name: z.string().optional(),
-  display_label: z.string(),
-  status: z.string(),
-  can_receive_alerts: z.boolean(),
-  can_receive_media: z.boolean(),
-  can_receive_location: z.boolean(),
-  accepted_at: z.string().nullable().optional(),
-  revoked_at: z.string().nullable().optional(),
-  created_at: z.string(),
-  updated_at: z.string()
-});
-
-const TrustedContactListSchema = z.array(TrustedContactSchema);
-
-const TrustedContactRelationshipSchema = TrustedContactSchema.extend({
-  contact_display_name: z.string().optional(),
-  owner_display_name: z.string(),
-  relationship_role: z.enum(["owner", "angel"])
-});
-
-const TrustedContactRelationshipListSchema = z.array(TrustedContactRelationshipSchema);
-
-const InvitationSchema = z.object({
-  id: z.string(),
-  trusted_contact: z.string(),
-  protected_subject: z.string().nullable().optional(),
-  display_label: z.string(),
-  status: z.string(),
-  expires_at: z.string(),
-  accepted_at: z.string().nullable().optional(),
-  created_at: z.string(),
-  token: z.string().optional(),
-  invite_url: z.string().optional()
-});
-
-const InvitationListSchema = z.array(InvitationSchema);
-
-const InvitationPublicStatusSchema = z.object({
-  can_accept: z.boolean(),
-  message: z.string().optional(),
-  status: z.enum(["available", "unavailable"])
-});
-
-const EmergencyRecipientSchema = z.object({
-  id: z.string(),
-  emergency_session: z.string(),
-  trusted_contact: z.string(),
-  recipient: z.string(),
-  relationship_role: z.string(),
-  owner_display_name: z.string().optional(),
-  recipient_display_name: z.string().optional(),
-  status: z.string(),
-  can_receive_alerts_snapshot: z.boolean(),
-  can_receive_media_snapshot: z.boolean(),
-  can_receive_location_snapshot: z.boolean(),
-  routed_at: z.string(),
-  first_seen_at: z.string().nullable().optional(),
-  accepted_at: z.string().nullable().optional(),
-  ended_at: z.string().nullable().optional(),
-  created_at: z.string(),
-  updated_at: z.string()
-});
-
-const EmergencySessionSchema = z.object({
-  id: z.string(),
-  device: z.string().nullable().optional(),
-  protected_subject: z.string().nullable().optional(),
-  owner_display_name: z.string().optional(),
-  current_recipient: z.string().nullable().optional(),
-  current_recipient_status: z.string().nullable().optional(),
-  client_alert_id: z.string(),
-  idempotency_key: z.string(),
-  kind: z.string(),
-  status: z.string(),
-  phase: z.string().optional(),
-  location_status: z.string(),
-  location_accuracy_meters: z.string().nullable().optional(),
-  recipient_count: z.number().int().nonnegative().optional(),
-  recipients: z.array(EmergencyRecipientSchema).optional(),
-  started_at: z.string(),
-  finished_at: z.string().nullable().optional(),
-  created_at: z.string(),
-  updated_at: z.string()
-});
-
-const EmergencySessionListSchema = z.array(EmergencySessionSchema);
-
-const KeyEnvelopeSchema = z.object({
-  id: z.string(),
-  emergency_session: z.string(),
-  recipient: z.string(),
-  recipient_device: z.string().nullable().optional(),
-  scope: z.string(),
-  key_id: z.string(),
-  public_key_sha256: z.string(),
-  algorithm: z.string(),
-  status: z.string(),
-  created_at: z.string(),
-  revoked_at: z.string().nullable().optional()
-});
-
-const P2PSignalSchema = z.object({
-  id: z.string(),
-  emergency_session: z.string(),
-  sender: z.string(),
-  recipient: z.string(),
-  signal_type: z.string(),
-  payload: z.record(z.string(), z.unknown()),
-  expires_at: z.string(),
-  consumed_at: z.string().nullable().optional(),
-  created_at: z.string()
-});
-
-const LiveRecipientDeviceSchema = z.object({
-  id: z.string(),
-  platform: z.string(),
-  device_label: z.string(),
-  key_algorithm: z.string(),
-  public_key: z.string(),
-  public_key_sha256: z.string()
-});
-
-const LiveRecipientSchema = z.object({
-  id: z.string(),
-  recipient: z.string(),
-  recipient_display_name: z.string(),
-  relationship_role: z.string(),
-  accepted_at: z.string().nullable().optional(),
-  devices: z.array(LiveRecipientDeviceSchema)
-});
-
-const LiveRecipientListSchema = z.object({
-  emergency_session: z.string(),
-  recipients: z.array(LiveRecipientSchema)
-});
-
-const LiveAuditMarkerSchema = z.object({
-  event: z.string(),
-  status: z.literal("recorded")
-});
-
-const ApiAppReleaseSchema = z
-  .object({
-    id: z.string(),
-    platform: z.enum(["android", "ios"]),
-    channel: z.string(),
-    version: z.string(),
-    version_code: z.number().int().positive(),
-    minimum_version: z.string().optional(),
-    minimum_version_code: z.number().int().positive().nullable().optional(),
-    download_url: z.string().url(),
-    portal_url: z.string().url(),
-    checksum_url: z.string().optional(),
-    sha256: z.string(),
-    status: z.string(),
-    required_update: z.boolean().optional(),
-    published_at: z.string().optional(),
-    updated_at: z.string().optional()
-  })
-  .transform((release) => ({
-    channel: release.channel,
-    checksumUrl: release.checksum_url || undefined,
-    downloadUrl: release.download_url,
-    id: release.id,
-    latestVersion: release.version,
-    minimumVersion: release.minimum_version || undefined,
-    minimumVersionCode: release.minimum_version_code ?? undefined,
-    platform: release.platform,
-    portalUrl: release.portal_url,
-    publishedAt: release.published_at,
-    requiredUpdate: release.required_update ?? false,
-    sha256: release.sha256,
-    status: release.status,
-    updatedAt: release.updated_at,
-    versionCode: release.version_code
-  }));
-
-export type ApiUser = z.infer<typeof ApiUserSchema>;
-export type ApiSession = z.infer<typeof ApiSessionSchema>;
-export type ApiProtectionProfile = z.infer<typeof ProtectionProfileSchema>;
-export type ApiDevice = z.infer<typeof DeviceSchema>;
-export type ApiConsentScope = z.infer<typeof ConsentScopeSchema>;
-export type ApiConsentRecord = z.infer<typeof ConsentRecordSchema>;
-export type ApiTrustedContact = z.infer<typeof TrustedContactSchema>;
-export type ApiTrustedContactRelationship = z.infer<typeof TrustedContactRelationshipSchema>;
-export type ApiInvitation = z.infer<typeof InvitationSchema>;
-export type ApiInvitationPublicStatus = z.infer<typeof InvitationPublicStatusSchema>;
-export type ApiEmergencyRecipient = z.infer<typeof EmergencyRecipientSchema>;
-export type ApiEmergencySession = z.infer<typeof EmergencySessionSchema>;
-export type ApiKeyEnvelope = z.infer<typeof KeyEnvelopeSchema>;
-export type ApiP2PSignal = z.infer<typeof P2PSignalSchema>;
-export type ApiLiveRecipient = z.infer<typeof LiveRecipientSchema>;
-export type ApiLiveRecipientDevice = z.infer<typeof LiveRecipientDeviceSchema>;
-export type ApiLiveRecipientList = z.infer<typeof LiveRecipientListSchema>;
-export type ApiLiveAuditMarker = z.infer<typeof LiveAuditMarkerSchema>;
-export type ApiAppRelease = z.infer<typeof ApiAppReleaseSchema>;
-
-export type RegisterDeviceInput = {
-  appVersion: string;
-  deviceLabel: string;
-  keyAlgorithm?: string;
-  keyProof: DeviceKeyProof;
-  platform?: "android" | "ios" | "web";
-  publicKey?: string;
-  pushToken?: string;
-  replacesPublicKeySha256?: string;
-};
-
-export type RotateDeviceKeyInput = {
-  appVersion: string;
-  deviceLabel: string;
-  keyAlgorithm: string;
-  keyProof: DeviceKeyProof;
-  platform: "android" | "ios" | "web";
-  publicKey: string;
-};
-
-export type LoginDeviceContext = {
-  appVersion: string;
-  deviceLabel: string;
-  legacyPublicKeySha256?: string;
-  platform: "android" | "ios" | "web";
-  publicKeySha256: string;
-};
-
-export type LogoutDeviceContext = {
-  deviceId?: string | null;
-  publicKeySha256?: string | null;
-};
-
-export type CreateConsentRecordInput = {
-  accepted: boolean;
-  acceptedAt?: string;
-  deviceId?: string | null;
-  evidence?: Record<string, unknown>;
-  scope: ApiConsentScope;
-  version: string;
-};
-
-export type CreateTrustedContactInput = {
-  canReceiveAlerts?: boolean;
-  canReceiveLocation?: boolean;
-  canReceiveMedia?: boolean;
-  displayLabel: string;
-  protectedSubjectId?: string | null;
-};
-
-export type UpdateProtectionProfileInput = {
-  kind: ApiProtectionProfile["kind"];
-};
-
-export type CreateInvitationInput = {
-  displayLabel: string;
-  trustedContactId: string;
-};
-
-export type AcceptInvitationInput = {
-  displayLabel?: string;
-  token: string;
-};
-
-export type CreateEmergencySessionInput = {
-  clientAlertId: string;
-  idempotencyKey: string;
-  kind: "test" | "real";
-  locationStatus: string;
-  deviceId?: string | null;
-  locationAccuracyMeters?: number | null;
-  protectedSubjectId?: string | null;
-  startedAt?: string;
-};
-
-export type EmergencySessionResponseAction = "accept" | "decline" | "end" | "seen";
-
-export type CreateKeyEnvelopeInput = {
-  emergencySessionId: string;
-  recipientId: string;
-  keyId: string;
-  publicKeySha256: string;
-  encryptedKey?: string;
-  algorithm: string;
-  expiresAt: string;
-  recipientDeviceId?: string | null;
-  scope: "live_session" | "media_asset";
-};
-
-export type SendP2PSignalInput = {
-  emergencySessionId: string;
-  recipientId: string;
-  signalType: "offer" | "answer" | "ice";
-  payload: Record<string, unknown>;
-  expiresAt: string;
-};
-
-export type LiveAuditMarkerEvent =
-  | "angel_live_answer_sent"
-  | "angel_live_connected"
-  | "angel_live_ended"
-  | "angel_live_failed"
-  | "angel_live_offer_received"
-  | "angel_live_reconnect_failed"
-  | "angel_live_reconnected"
-  | "angel_live_reconnecting"
-  | "local_evidence_failed"
-  | "local_evidence_metadata_only"
-  | "local_evidence_protected"
-  | "local_evidence_recording"
-  | "owner_live_answer_accepted"
-  | "owner_live_connected"
-  | "owner_live_ended"
-  | "owner_live_failed"
-  | "owner_live_offer_sent"
-  | "owner_live_reconnect_failed"
-  | "owner_live_reconnected"
-  | "owner_live_reconnecting"
-  | "owner_media_handoff_complete"
-  | "owner_media_handoff_start";
-
-export type RecordLiveAuditMarkerInput = {
-  callSessionId?: string;
-  connectionState?: "connected" | "connecting" | "ended" | "failed" | "reconnecting" | "waiting";
-  deviceId?: string | null;
-  event: LiveAuditMarkerEvent;
-  localEvidenceStatus?: "failed" | "metadata_only" | "not_applicable" | "protected" | "recording";
-  role: "angel" | "owner";
-};
-
-export type GetCurrentAppReleaseInput = {
-  platform?: "android" | "ios";
-  version?: string;
-  versionCode?: number;
-};
-
-type ApiRequestOptions = {
-  authenticated?: boolean;
-  body?: unknown;
-  method?: "GET" | "POST" | "PATCH";
-  retryOnUnauthorized?: boolean;
-};
-
-export class ApiRequestError extends Error {
-  readonly details: unknown;
-  readonly status: number;
-
-  constructor(message: string, status: number, details?: unknown) {
-    super(message);
-    this.name = "ApiRequestError";
-    this.status = status;
-    this.details = details;
-  }
-}
-
-function currentPlatform() {
-  if (Platform.OS === "ios") return "ios";
-  if (Platform.OS === "android") return "android";
-  return "web";
-}
-
-function toApiDateTime(value?: string) {
-  return value ?? new Date().toISOString();
-}
-
-function toLoginDevicePayload(deviceContext?: LoginDeviceContext | null) {
-  if (!deviceContext) return {};
-
-  return {
-    device_app_version: deviceContext.appVersion,
-    device_label: deviceContext.deviceLabel,
-    device_legacy_public_key_sha256: deviceContext.legacyPublicKeySha256,
-    device_platform: deviceContext.platform,
-    device_public_key_sha256: deviceContext.publicKeySha256
-  };
-}
-
-function toLogoutDevicePayload(deviceContext?: LogoutDeviceContext | null) {
-  if (!deviceContext) return {};
-
-  return {
-    device_id: deviceContext.deviceId ?? undefined,
-    device_public_key_sha256: deviceContext.publicKeySha256 ?? undefined
-  };
-}
-
-async function parseResponseBody(response: Response) {
-  const text = await response.text();
-  if (!text) return null;
-
-  try {
-    return JSON.parse(text);
-  } catch {
-    return text;
-  }
-}
-
-function extractApiErrorMessage(value: unknown): string | null {
-  if (!value) return null;
-  if (typeof value === "string") return value;
-  if (Array.isArray(value)) {
-    return value.map(extractApiErrorMessage).find(Boolean) ?? null;
-  }
-  if (typeof value === "object") {
-    const record = value as Record<string, unknown>;
-    return (
-      extractApiErrorMessage(record.detail) ??
-      extractApiErrorMessage(record.non_field_errors) ??
-      extractApiErrorMessage(record.token) ??
-      extractApiErrorMessage(record.code) ??
-      Object.values(record).map(extractApiErrorMessage).find(Boolean) ??
-      null
-    );
-  }
-  return null;
-}
+export { ApiRequestError, apiConfig };
 
 export class SinalSeguroApiClient {
-  constructor(
-    private readonly baseUrl = apiBaseUrl,
-    private readonly enabled = apiEnabled
-  ) {}
+  private readonly auth: AuthApiClient;
+  private readonly contacts: ContactsApiClient;
+  private readonly devices: DevicesApiClient;
+  private readonly emergency: EmergencyApiClient;
+  private readonly profiles: ProfilesApiClient;
+  private readonly releases: ReleasesApiClient;
+  private readonly core: SinalSeguroApiCore;
+
+  constructor(baseUrl = apiBaseUrl, enabled = apiEnabled) {
+    this.core = new SinalSeguroApiCore(baseUrl, enabled);
+    this.auth = new AuthApiClient(this.core);
+    this.contacts = new ContactsApiClient(this.core);
+    this.devices = new DevicesApiClient(this.core);
+    this.emergency = new EmergencyApiClient(this.core);
+    this.profiles = new ProfilesApiClient(this.core);
+    this.releases = new ReleasesApiClient(this.core);
+  }
 
   get isEnabled() {
-    return this.enabled && Boolean(this.baseUrl);
+    return this.core.isEnabled;
   }
 
   async getStoredSession() {
-    const serializedSession = await readSecret(API_SESSION_SECRET_KEY);
-    if (!serializedSession) return null;
-
-    try {
-      return ApiSessionSchema.parse(JSON.parse(serializedSession));
-    } catch {
-      await this.clearSession();
-      return null;
-    }
+    return this.auth.getStoredSession();
   }
 
   async clearSession() {
-    await deleteSecret(API_SESSION_SECRET_KEY);
+    return this.auth.clearSession();
   }
 
   async getHealth() {
-    return this.request("/health", HealthSchema, { authenticated: false });
+    return this.core.request("/health", HealthSchema, { authenticated: false });
   }
 
-  async loginWithEmail(email: string, password: string, deviceContext?: LoginDeviceContext | null) {
-    const tokenResponse = await this.request("/auth/login", AuthTokenResponseSchema, {
-      authenticated: false,
-      body: { ...toLoginDevicePayload(deviceContext), email, password },
-      method: "POST"
-    });
-    const session: ApiSession = {
-      access: tokenResponse.access,
-      refresh: tokenResponse.refresh,
-      user: tokenResponse.user ?? null
-    };
+  loginWithEmail: AuthApiClient["loginWithEmail"] = (...args) => this.auth.loginWithEmail(...args);
 
-    await this.saveSession(session);
-    if (!session.user) {
-      session.user = await this.getMe();
-      await this.saveSession(session);
-    }
+  loginWithGoogleIdToken: AuthApiClient["loginWithGoogleIdToken"] = (...args) =>
+    this.auth.loginWithGoogleIdToken(...args);
 
-    return session;
-  }
+  loginWithAppleIdentityToken: AuthApiClient["loginWithAppleIdentityToken"] = (...args) =>
+    this.auth.loginWithAppleIdentityToken(...args);
 
-  async loginWithGoogleIdToken(idToken: string, deviceContext?: LoginDeviceContext | null) {
-    const tokenResponse = await this.request("/auth/google", AuthTokenResponseSchema, {
-      authenticated: false,
-      body: { ...toLoginDevicePayload(deviceContext), id_token: idToken },
-      method: "POST"
-    });
-    const session: ApiSession = {
-      access: tokenResponse.access,
-      refresh: tokenResponse.refresh,
-      user: tokenResponse.user ?? null
-    };
+  logout: AuthApiClient["logout"] = (...args) => this.auth.logout(...args);
 
-    await this.saveSession(session);
-    if (!session.user) {
-      session.user = await this.getMe();
-      await this.saveSession(session);
-    }
+  getMe: AuthApiClient["getMe"] = () => this.auth.getMe();
 
-    return session;
-  }
+  registerDevice: DevicesApiClient["registerDevice"] = (...args) => this.devices.registerDevice(...args);
 
-  async loginWithAppleIdentityToken(
-    identityToken: string,
-    displayName?: string,
-    deviceContext?: LoginDeviceContext | null
-  ) {
-    const tokenResponse = await this.request("/auth/apple", AuthTokenResponseSchema, {
-      authenticated: false,
-      body: {
-        ...toLoginDevicePayload(deviceContext),
-        display_name: displayName,
-        id_token: identityToken
-      },
-      method: "POST"
-    });
-    const session: ApiSession = {
-      access: tokenResponse.access,
-      refresh: tokenResponse.refresh,
-      user: tokenResponse.user ?? null
-    };
+  rotateDeviceKey: DevicesApiClient["rotateDeviceKey"] = (...args) => this.devices.rotateDeviceKey(...args);
 
-    await this.saveSession(session);
-    if (!session.user) {
-      session.user = await this.getMe();
-      await this.saveSession(session);
-    }
+  revokeDevice: DevicesApiClient["revokeDevice"] = (...args) => this.devices.revokeDevice(...args);
 
-    return session;
-  }
+  markDeviceLost: DevicesApiClient["markDeviceLost"] = (...args) => this.devices.markDeviceLost(...args);
 
-  async logout(deviceContext?: LogoutDeviceContext | null) {
-    const session = await this.getStoredSession();
-    try {
-      if (session?.refresh) {
-        await this.request("/auth/logout", z.unknown(), {
-          authenticated: true,
-          body: { ...toLogoutDevicePayload(deviceContext), refresh: session.refresh },
-          method: "POST"
-        });
-      }
-    } finally {
-      await this.clearSession();
-    }
-  }
+  createConsentRecord: DevicesApiClient["createConsentRecord"] = (...args) =>
+    this.devices.createConsentRecord(...args);
 
-  async getMe() {
-    return this.request("/auth/me", ApiUserSchema, { authenticated: true });
-  }
+  getProtectionProfile: ProfilesApiClient["getProtectionProfile"] = () =>
+    this.profiles.getProtectionProfile();
 
-  async registerDevice(input: RegisterDeviceInput) {
-    return this.request("/devices/", DeviceSchema, {
-      authenticated: true,
-      body: {
-        app_version: input.appVersion,
-        device_label: input.deviceLabel,
-        key_algorithm: input.keyAlgorithm,
-        key_proof: input.keyProof,
-        platform: input.platform ?? currentPlatform(),
-        public_key: input.publicKey,
-        push_token: input.pushToken,
-        replaces_public_key_sha256: input.replacesPublicKeySha256
-      },
-      method: "POST"
-    });
-  }
+  updateProtectionProfile: ProfilesApiClient["updateProtectionProfile"] = (...args) =>
+    this.profiles.updateProtectionProfile(...args);
 
-  async rotateDeviceKey(deviceId: string, input: RotateDeviceKeyInput) {
-    return this.request(`/devices/${deviceId}/rotate-key/`, DeviceSchema, {
-      authenticated: true,
-      body: {
-        app_version: input.appVersion,
-        device_label: input.deviceLabel,
-        key_algorithm: input.keyAlgorithm,
-        key_proof: input.keyProof,
-        platform: input.platform,
-        public_key: input.publicKey
-      },
-      method: "POST"
-    });
-  }
+  createTrustedContact: ContactsApiClient["createTrustedContact"] = (...args) =>
+    this.contacts.createTrustedContact(...args);
 
-  async revokeDevice(deviceId: string, reason: "manual" | "logout" | "lost" | "rotated" = "manual") {
-    return this.request(`/devices/${deviceId}/revoke/`, DeviceSchema, {
-      authenticated: true,
-      body: { reason },
-      method: "POST"
-    });
-  }
+  listTrustedContacts: ContactsApiClient["listTrustedContacts"] = () => this.contacts.listTrustedContacts();
 
-  async markDeviceLost(deviceId: string) {
-    return this.request(`/devices/${deviceId}/mark-lost/`, DeviceSchema, {
-      authenticated: true,
-      method: "POST"
-    });
-  }
+  listTrustedContactRelationships: ContactsApiClient["listTrustedContactRelationships"] = () =>
+    this.contacts.listTrustedContactRelationships();
 
-  async createConsentRecord(input: CreateConsentRecordInput) {
-    return this.request("/consents/", ConsentRecordSchema, {
-      authenticated: true,
-      body: {
-        accepted: input.accepted,
-        accepted_at: toApiDateTime(input.acceptedAt),
-        device: input.deviceId ?? null,
-        evidence: input.evidence ?? {},
-        scope: input.scope,
-        version: input.version
-      },
-      method: "POST"
-    });
-  }
+  revokeTrustedContact: ContactsApiClient["revokeTrustedContact"] = (...args) =>
+    this.contacts.revokeTrustedContact(...args);
 
-  async getProtectionProfile() {
-    return this.request("/profiles/me", ProtectionProfileSchema, {
-      authenticated: true
-    });
-  }
+  createInvitation: ContactsApiClient["createInvitation"] = (...args) => this.contacts.createInvitation(...args);
 
-  async updateProtectionProfile(input: UpdateProtectionProfileInput) {
-    return this.request("/profiles/me", ProtectionProfileSchema, {
-      authenticated: true,
-      body: {
-        kind: input.kind
-      },
-      method: "PATCH"
-    });
-  }
+  listInvitations: ContactsApiClient["listInvitations"] = () => this.contacts.listInvitations();
 
-  async createTrustedContact(input: CreateTrustedContactInput) {
-    return this.request("/trusted-contacts/", TrustedContactSchema, {
-      authenticated: true,
-      body: {
-        can_receive_alerts: input.canReceiveAlerts ?? true,
-        can_receive_location: input.canReceiveLocation ?? false,
-        can_receive_media: input.canReceiveMedia ?? false,
-        display_label: input.displayLabel,
-        protected_subject: input.protectedSubjectId ?? null
-      },
-      method: "POST"
-    });
-  }
+  revokeInvitation: ContactsApiClient["revokeInvitation"] = (...args) =>
+    this.contacts.revokeInvitation(...args);
 
-  async listTrustedContacts() {
-    return this.request("/trusted-contacts/", TrustedContactListSchema, {
-      authenticated: true
-    });
-  }
+  getInvitationStatus: ContactsApiClient["getInvitationStatus"] = (...args) =>
+    this.contacts.getInvitationStatus(...args);
 
-  async listTrustedContactRelationships() {
-    return this.request("/trusted-contacts/relationships", TrustedContactRelationshipListSchema, {
-      authenticated: true
-    });
-  }
+  acceptInvitation: ContactsApiClient["acceptInvitation"] = (...args) => this.contacts.acceptInvitation(...args);
 
-  async revokeTrustedContact(trustedContactId: string) {
-    return this.request(`/trusted-contacts/${trustedContactId}/revoke/`, TrustedContactSchema, {
-      authenticated: true,
-      method: "POST"
-    });
-  }
+  createEmergencySession: EmergencyApiClient["createEmergencySession"] = (...args) =>
+    this.emergency.createEmergencySession(...args);
 
-  async createInvitation(input: CreateInvitationInput) {
-    return this.request("/invitations/", InvitationSchema, {
-      authenticated: true,
-      body: {
-        display_label: input.displayLabel,
-        trusted_contact: input.trustedContactId
-      },
-      method: "POST"
-    });
-  }
+  listReceivedEmergencySessions: EmergencyApiClient["listReceivedEmergencySessions"] = () =>
+    this.emergency.listReceivedEmergencySessions();
 
-  async listInvitations() {
-    return this.request("/invitations/", InvitationListSchema, {
-      authenticated: true
-    });
-  }
+  respondToEmergencySession: EmergencyApiClient["respondToEmergencySession"] = (...args) =>
+    this.emergency.respondToEmergencySession(...args);
 
-  async revokeInvitation(invitationId: string) {
-    return this.request(`/invitations/${invitationId}/revoke/`, InvitationSchema, {
-      authenticated: true,
-      method: "POST"
-    });
-  }
+  listLiveRecipients: EmergencyApiClient["listLiveRecipients"] = (...args) =>
+    this.emergency.listLiveRecipients(...args);
 
-  async getInvitationStatus(token: string) {
-    return this.request("/invitations/status", InvitationPublicStatusSchema, {
-      authenticated: false,
-      body: { token },
-      method: "POST"
-    });
-  }
+  finishEmergencySession: EmergencyApiClient["finishEmergencySession"] = (...args) =>
+    this.emergency.finishEmergencySession(...args);
 
-  async acceptInvitation(input: AcceptInvitationInput) {
-    return this.request("/invitations/accept", TrustedContactRelationshipSchema, {
-      authenticated: true,
-      body: {
-        display_label: input.displayLabel,
-        token: input.token
-      },
-      method: "POST"
-    });
-  }
+  recordLiveAuditMarker: EmergencyApiClient["recordLiveAuditMarker"] = (...args) =>
+    this.emergency.recordLiveAuditMarker(...args);
 
-  async createEmergencySession(input: CreateEmergencySessionInput) {
-    return this.request("/emergency-sessions/", EmergencySessionSchema, {
-      authenticated: true,
-      body: {
-        client_alert_id: input.clientAlertId,
-        device: input.deviceId ?? null,
-        idempotency_key: input.idempotencyKey,
-        kind: input.kind,
-        location_accuracy_meters:
-          typeof input.locationAccuracyMeters === "number" ? String(input.locationAccuracyMeters) : null,
-        location_status: input.locationStatus,
-        protected_subject: input.protectedSubjectId ?? null,
-        started_at: toApiDateTime(input.startedAt)
-      },
-      method: "POST"
-    });
-  }
+  createKeyEnvelope: EmergencyApiClient["createKeyEnvelope"] = (...args) =>
+    this.emergency.createKeyEnvelope(...args);
 
-  async listReceivedEmergencySessions() {
-    return this.request("/emergency-sessions/received/", EmergencySessionListSchema, {
-      authenticated: true
-    });
-  }
+  sendP2PSignal: EmergencyApiClient["sendP2PSignal"] = (...args) => this.emergency.sendP2PSignal(...args);
 
-  async respondToEmergencySession(remoteSessionId: string, action: EmergencySessionResponseAction) {
-    return this.request(`/emergency-sessions/${remoteSessionId}/respond/`, EmergencySessionSchema, {
-      authenticated: true,
-      body: { action },
-      method: "POST"
-    });
-  }
+  listP2PSignals: EmergencyApiClient["listP2PSignals"] = () => this.emergency.listP2PSignals();
 
-  async listLiveRecipients(remoteSessionId: string) {
-    return this.request(`/emergency-sessions/${remoteSessionId}/live-recipients/`, LiveRecipientListSchema, {
-      authenticated: true
-    });
-  }
+  consumeP2PSignal: EmergencyApiClient["consumeP2PSignal"] = (...args) =>
+    this.emergency.consumeP2PSignal(...args);
 
-  async finishEmergencySession(remoteSessionId: string) {
-    return this.request(`/emergency-sessions/${remoteSessionId}/finish/`, EmergencySessionSchema, {
-      authenticated: true,
-      method: "POST"
-    });
-  }
-
-  async recordLiveAuditMarker(remoteSessionId: string, input: RecordLiveAuditMarkerInput) {
-    return this.request(`/emergency-sessions/${remoteSessionId}/audit-marker/`, LiveAuditMarkerSchema, {
-      authenticated: true,
-      body: {
-        call_session_id: input.callSessionId,
-        connection_state: input.connectionState,
-        device: input.deviceId ?? null,
-        event: input.event,
-        local_evidence_status: input.localEvidenceStatus,
-        role: input.role
-      },
-      method: "POST"
-    });
-  }
-
-  async createKeyEnvelope(input: CreateKeyEnvelopeInput) {
-    const body: Record<string, unknown> = {
-      algorithm: input.algorithm,
-      emergency_session: input.emergencySessionId,
-      expires_at: input.expiresAt,
-      key_id: input.keyId,
-      public_key_sha256: input.publicKeySha256,
-      recipient: input.recipientId,
-      recipient_device: input.recipientDeviceId ?? null,
-      scope: input.scope
-    };
-    if (input.encryptedKey !== undefined) {
-      body.encrypted_key = input.encryptedKey;
-    }
-
-    return this.request("/key-envelopes/", KeyEnvelopeSchema, {
-      authenticated: true,
-      body,
-      method: "POST"
-    });
-  }
-
-  async sendP2PSignal(input: SendP2PSignalInput) {
-    return this.request("/p2p-signals/", P2PSignalSchema, {
-      authenticated: true,
-      body: {
-        emergency_session: input.emergencySessionId,
-        expires_at: input.expiresAt,
-        payload: input.payload,
-        recipient: input.recipientId,
-        signal_type: input.signalType
-      },
-      method: "POST"
-    });
-  }
-
-  async listP2PSignals() {
-    return this.request("/p2p-signals/", z.array(P2PSignalSchema), {
-      authenticated: true
-    });
-  }
-
-  async consumeP2PSignal(signalId: string) {
-    return this.request(`/p2p-signals/${signalId}/consume/`, P2PSignalSchema, {
-      authenticated: true,
-      method: "POST"
-    });
-  }
-
-  async getCurrentAppRelease(input: GetCurrentAppReleaseInput = {}) {
-    const query = new URLSearchParams();
-    query.set("platform", input.platform ?? (currentPlatform() === "ios" ? "ios" : "android"));
-    if (input.version) query.set("version", input.version);
-    if (typeof input.versionCode === "number") query.set("version_code", String(input.versionCode));
-
-    return this.request(`/app-releases/current?${query.toString()}`, ApiAppReleaseSchema, {
-      authenticated: false
-    });
-  }
-
-  private async saveSession(session: ApiSession) {
-    await saveSecret(API_SESSION_SECRET_KEY, JSON.stringify(session));
-  }
-
-  private async refreshAccessToken(session: ApiSession) {
-    const tokenResponse = await this.request("/auth/refresh", TokenRefreshSchema, {
-      authenticated: false,
-      body: { refresh: session.refresh },
-      method: "POST",
-      retryOnUnauthorized: false
-    });
-    const refreshedSession: ApiSession = {
-      ...session,
-      access: tokenResponse.access,
-      refresh: tokenResponse.refresh ?? session.refresh
-    };
-
-    await this.saveSession(refreshedSession);
-    return refreshedSession;
-  }
-
-  private async request<TSchema extends z.ZodType>(
-    path: string,
-    schema: TSchema,
-    options: ApiRequestOptions = {}
-  ): Promise<z.infer<TSchema>> {
-    if (!this.isEnabled || !this.baseUrl) {
-      throw new ApiRequestError("API SinalSeguro indisponivel neste build.", 0);
-    }
-
-    const authenticated = options.authenticated ?? true;
-    const retryOnUnauthorized = options.retryOnUnauthorized ?? true;
-    const session = authenticated ? await this.getStoredSession() : null;
-
-    if (authenticated && !session?.access) {
-      throw new ApiRequestError("Login SinalSeguro necessario para acessar a API.", 401);
-    }
-
-    let response: Response;
-    try {
-      response = await fetch(`${this.baseUrl}${path}`, {
-        body: options.body === undefined ? undefined : JSON.stringify(options.body),
-        headers: {
-          ...(authenticated && session?.access ? { Authorization: `Bearer ${session.access}` } : {}),
-          ...(options.body === undefined ? {} : { "Content-Type": "application/json" })
-        },
-        method: options.method ?? (options.body === undefined ? "GET" : "POST")
-      });
-    } catch (error) {
-      throw new ApiRequestError(
-        "Sem conexao com a internet. Os recursos locais continuam disponiveis neste aparelho.",
-        0,
-        error instanceof Error ? error.message : null
-      );
-    }
-    const responseBody = await parseResponseBody(response);
-
-    if (response.status === 401 && authenticated && retryOnUnauthorized && session?.refresh) {
-      try {
-        await this.refreshAccessToken(session);
-        return this.request(path, schema, { ...options, retryOnUnauthorized: false });
-      } catch (error) {
-        await this.clearSession();
-        throw error;
-      }
-    }
-
-    if (!response.ok) {
-      const message = extractApiErrorMessage(responseBody) ?? "API SinalSeguro indisponivel";
-      throw new ApiRequestError(message, response.status, responseBody);
-    }
-
-    return schema.parse(responseBody);
-  }
+  getCurrentAppRelease: ReleasesApiClient["getCurrentAppRelease"] = (...args) =>
+    this.releases.getCurrentAppRelease(...args);
 }
 
 export const apiClient = new SinalSeguroApiClient();
@@ -989,9 +177,3 @@ export const apiClient = new SinalSeguroApiClient();
 export async function getHealth() {
   return apiClient.getHealth();
 }
-
-export const apiConfig = {
-  apiBaseUrl,
-  apiEnabled,
-  defaultApiBaseUrl: DEFAULT_API_BASE_URL
-};

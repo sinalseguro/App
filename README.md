@@ -28,7 +28,7 @@ O app nao substitui 190, 180, delegacias, saude, assistencia social, Defensoria,
 Referencia canonica do projeto: `../../../docs/tecnico/ESTADO_ATUAL_APP_BACKEND_2026-05-07.md`.
 
 - API publica validada: `health=ok` e readiness `database=ok`.
-- Cliente API real em `src/services/apiClient.ts`, com base padrao `https://api.sinalseguro.com.br/api`.
+- Cliente API real com fachada publica em `src/services/apiClient.ts` e modulos por dominio em `src/services/api/`, com base padrao `https://api.sinalseguro.com.br/api`.
 - Login por e-mail, Google OIDC e Apple Sign-In estao preparados no app/API; Apple fica condicionado por env e capability.
 - Android privado corrige redirect OAuth nativo com schemes `sinalseguro` e `br.com.sinalseguro.app`.
 - Bloqueio atual: habilitar `Custom URI scheme` no OAuth Android privado do Google Cloud e repetir login fisico para validar `/auth/google`, JWT, `auth/me`, `/devices/` e logout.
@@ -114,6 +114,14 @@ Checkpoint tecnico atual:
 - Area `Cofre local` para acessar pacotes e videos preservados neste dispositivo e verificar o que permanece bloqueado ate backend, contrato, chaves e auditoria.
 - Build privado Android habilita `CAMERA` e `RECORD_AUDIO` para homologacao controlada. O SOS ao vivo com anjo autorizado usa WebRTC P2P apos controle pela EC2/API; compartilhamento externo, conveniados e envio remoto de midia bruta continuam bloqueados.
 
+Arquitetura atual do cliente API:
+
+- `src/services/apiClient.ts` preserva `apiClient`, `SinalSeguroApiClient`, `ApiRequestError`, `apiConfig`, `getHealth` e os tipos consumidos pelo app.
+- `src/services/api/contracts.ts` concentra schemas Zod, tipos e inputs.
+- `src/services/api/core.ts` concentra sessao segura, request comum, refresh e tratamento de erro.
+- `src/services/api/authClient.ts`, `devicesClient.ts`, `profilesClient.ts`, `contactsClient.ts`, `emergencyClient.ts` e `releasesClient.ts` separam os endpoints por recurso.
+- Mudancas futuras devem manter a fachada compativel ate existir uma etapa propria para migrar consumidores.
+
 APK privado Android atual para validacao fisica, portal e atualizacao pelo app:
 
 - Caminho local estavel: `distribution/android/out/sinalseguro-android.apk`.
@@ -197,9 +205,9 @@ Regras:
 
 ## Status Android privado - 2026-05-17
 
-- Versao Android privada atual: `0.1.13` (`versionCode 15`).
+- Versao Android privada atual: `0.1.15` (`versionCode 17`).
 - APK multi-ABI: `arm64-v8a` e `armeabi-v7a`.
-- SHA-256: `7b9c6f110313ade8b4740200edbf77cdbe0e92b5654ecd5aaf42a8d8f08e8bae`.
+- SHA-256: `a7b90059ce2b976c9af18ca6a43754815e423a6832aa8835305a2a99b0bb6a64`.
 - Download oficial: `https://www.sinalseguro.com.br/baixar/android`.
 - Nome publico do APK: `sinalseguro_android.apk`.
 - SOS ao vivo Android validado em dois aparelhos: solicitante transmite, anjo autorizado recebe video/audio em tempo real, e EC2/API atua como plano de controle/sinalizacao/auditoria sem armazenar midia bruta.

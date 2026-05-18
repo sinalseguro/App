@@ -661,7 +661,14 @@ if (/const DEFAULT_FINISH_CODE_HASH = "e41d64/.test(emergencyPreferences)) {
 }
 
 const secureStorage = await readFile("src/security/secureStorage.ts", "utf8");
-const apiClient = await readFile("src/services/apiClient.ts", "utf8");
+const apiClient = [
+  await readFile("src/services/apiClient.ts", "utf8"),
+  await readFile("src/services/api/authClient.ts", "utf8"),
+  await readFile("src/services/api/contactsClient.ts", "utf8"),
+  await readFile("src/services/api/contracts.ts", "utf8"),
+  await readFile("src/services/api/core.ts", "utf8"),
+  await readFile("src/services/api/devicesClient.ts", "utf8")
+].join("\n");
 const invitationService = await readFile("src/features/invitations/invitationService.ts", "utf8");
 const trustedRelationshipStore = await readFile("src/features/invitations/trustedRelationshipStore.ts", "utf8");
 const emergencySyncQueue = await readFile("src/features/emergency/emergencySyncQueue.ts", "utf8");
