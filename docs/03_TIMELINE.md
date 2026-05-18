@@ -3432,6 +3432,40 @@ Checkpoint:
 
 - `docs/96_CHECKPOINT_ETAPA_1_24_LOCAL_SOS_PACKAGE_STATUS_POLICY_2026-05-18.md`.
 
+## 2026-05-18 - Etapa 1.25 politica pura de confirmacao de ligacao emergencial
+
+Status: refatoracao pura implementada, validada e sem publicacao de release.
+
+Executado:
+
+- Criado `src/features/emergency-home/emergencyCallConfirmationPolicy.ts` para centralizar titulo, mensagem e labels do modal de ligacao emergencial.
+- `app/index.tsx` preserva o efeito real de `Linking.openURL(target.callUri)` e apenas consulta a policy para apresentacao.
+- Criado `scripts/emergency-call-confirmation-policy.test.ts` e script `npm run test:emergency-call-confirmation`.
+- `scripts/smoke-test.mjs` passou a exigir a policy pura para evitar regressao para regra inline.
+- Validacoes aprovadas: teste focado, smoke-test, `typecheck`, `lint`, `npm test`, readiness Android privado condicionado e `git diff --check`.
+- Sem build Android nesta fatia porque nao houve mudanca operacional de UX nativa, chamada real, camera, WebRTC, gravacao, backend ou portal.
+
+Checkpoint:
+
+- `docs/97_CHECKPOINT_ETAPA_1_25_EMERGENCY_CALL_CONFIRMATION_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.26 politica pura de acesso inicial a rotas protegidas
+
+Status: refatoracao pura implementada, validada e sem publicacao de release.
+
+Executado:
+
+- Criado `src/features/emergency-home/protectedRouteAccessPolicy.ts` para decidir entre navegar direto ou solicitar codigo de seguranca.
+- `app/index.tsx` preserva a verificacao real em `isProtectedAccessUnlocked()`, o desbloqueio em `unlockProtectedAccess()` e a navegacao final.
+- Criado `scripts/protected-route-access-policy.test.ts` e script `npm run test:protected-route-access`.
+- `scripts/smoke-test.mjs` passou a exigir a policy pura para evitar regressao para regra inline.
+- Validacoes aprovadas: teste focado, smoke-test, `typecheck`, `lint`, `npm test`, readiness Android privado condicionado e `git diff --check`.
+- Sem build Android nesta fatia porque nao houve mudanca operacional de UX nativa, criptografia, storage, camera, WebRTC, gravacao, backend ou portal.
+
+Checkpoint:
+
+- `docs/98_CHECKPOINT_ETAPA_1_26_PROTECTED_ROUTE_ACCESS_POLICY_2026-05-18.md`.
+
 ## 2026-05-18 - Validacao fisica dois Androids SOS/anjo
 
 Status: validado fisicamente em dois Androids distintos com Android `0.1.15`.

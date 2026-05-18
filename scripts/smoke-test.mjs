@@ -36,6 +36,7 @@ const requiredFiles = [
   "src/features/emergency-home/EmergencyCallTarget.ts",
   "src/features/emergency-home/EmergencySettingsDrawer.tsx",
   "src/features/emergency-home/EmergencyTopBar.tsx",
+  "src/features/emergency-home/emergencyCallConfirmationPolicy.ts",
   "src/features/emergency-home/emergencyStartPolicy.ts",
   "src/features/emergency-home/finishCodePolicy.ts",
   "src/features/emergency-home/finishOutcomePolicy.ts",
@@ -48,6 +49,7 @@ const requiredFiles = [
   "src/features/emergency-home/liveCallPanelPolicy.ts",
   "src/features/emergency-home/localSosPackageStatusPolicy.ts",
   "src/features/emergency-home/panicTriggerPolicy.ts",
+  "src/features/emergency-home/protectedRouteAccessPolicy.ts",
   "src/features/emergency-home/protectedRouteCodePolicy.ts",
   "src/features/emergency-home/remoteSyncStatusPolicy.ts",
   "src/features/invitations/invitationService.ts",
@@ -182,6 +184,7 @@ const evidencePlayerCard = await readFile("src/components/EvidencePlayerCard.tsx
 const mediaInterfacePresentation = await readFile("src/features/emergency/mediaInterfacePresentation.ts", "utf8");
 const appLayout = await readFile("app/_layout.tsx", "utf8");
 const homeScreen = await readFile("app/index.tsx", "utf8");
+const emergencyCallConfirmationPolicy = await readFile("src/features/emergency-home/emergencyCallConfirmationPolicy.ts", "utf8");
 const emergencyStartPolicy = await readFile("src/features/emergency-home/emergencyStartPolicy.ts", "utf8");
 const finishCodePolicy = await readFile("src/features/emergency-home/finishCodePolicy.ts", "utf8");
 const finishOutcomePolicy = await readFile("src/features/emergency-home/finishOutcomePolicy.ts", "utf8");
@@ -194,6 +197,7 @@ const liveCallCleanupPolicy = await readFile("src/features/emergency-home/liveCa
 const liveCallPanelPolicy = await readFile("src/features/emergency-home/liveCallPanelPolicy.ts", "utf8");
 const localSosPackageStatusPolicy = await readFile("src/features/emergency-home/localSosPackageStatusPolicy.ts", "utf8");
 const panicTriggerPolicy = await readFile("src/features/emergency-home/panicTriggerPolicy.ts", "utf8");
+const protectedRouteAccessPolicy = await readFile("src/features/emergency-home/protectedRouteAccessPolicy.ts", "utf8");
 const protectedRouteCodePolicy = await readFile("src/features/emergency-home/protectedRouteCodePolicy.ts", "utf8");
 const remoteSyncStatusPolicy = await readFile("src/features/emergency-home/remoteSyncStatusPolicy.ts", "utf8");
 const alertScreen = await readFile("app/alerta.tsx", "utf8");
@@ -675,6 +679,15 @@ if (
 }
 
 if (
+  !homeScreen.includes("resolveEmergencyCallConfirmation") ||
+  !emergencyCallConfirmationPolicy.includes("resolveEmergencyCallConfirmation") ||
+  !emergencyCallConfirmationPolicy.includes("Ligar para") ||
+  !packageJson.scripts["test:emergency-call-confirmation"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para confirmacao de ligacao emergencial.");
+}
+
+if (
   !homeScreen.includes("resolveEmergencyStartRequestPolicy") ||
   !homeScreen.includes("resolveEmergencyStartPresentation") ||
   !emergencyStartPolicy.includes("resolveEmergencyStartRequestPolicy") ||
@@ -805,6 +818,15 @@ if (
   !packageJson.scripts["test:finish-code"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para confirmacao de encerramento por codigo.");
+}
+
+if (
+  !homeScreen.includes("resolveProtectedRouteAccessDecision") ||
+  !protectedRouteAccessPolicy.includes("resolveProtectedRouteAccessDecision") ||
+  !protectedRouteAccessPolicy.includes("request_security_code") ||
+  !packageJson.scripts["test:protected-route-access"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para acesso inicial a rotas protegidas.");
 }
 
 if (

@@ -16,6 +16,7 @@ import {
   resolveEmergencyStartPresentation,
   resolveEmergencyStartRequestPolicy
 } from "@/features/emergency-home/emergencyStartPolicy";
+import { resolveEmergencyCallConfirmation } from "@/features/emergency-home/emergencyCallConfirmationPolicy";
 import { resolveFinishCodeConfirmationDecision } from "@/features/emergency-home/finishCodePolicy";
 import { resolveFinishOutcomePolicy } from "@/features/emergency-home/finishOutcomePolicy";
 import { resolveFinishRequestDecision } from "@/features/emergency-home/finishRequestPolicy";
@@ -39,6 +40,7 @@ import {
   resolveOwnerLiveVideoEvidenceStart
 } from "@/features/emergency-home/ownerLiveEvidencePolicy";
 import { panicButtonLabel, resolvePanicTriggerDecision } from "@/features/emergency-home/panicTriggerPolicy";
+import { resolveProtectedRouteAccessDecision } from "@/features/emergency-home/protectedRouteAccessPolicy";
 import { resolveProtectedRouteCodeDecision } from "@/features/emergency-home/protectedRouteCodePolicy";
 import { activeRemoteSyncRetryMessage, resolveActiveRemoteSyncStatus } from "@/features/emergency-home/remoteSyncStatusPolicy";
 import { EmergencyHomePanel, EmergencyHomeRoute } from "@/features/emergency-home/routes";
@@ -760,7 +762,12 @@ export default function HomeScreen() {
   }
 
   async function openRouteAsync(route: EmergencyHomeRoute, panel?: EmergencyHomePanel) {
-    if (preferences.finishSafety.requireCode && !(await isProtectedAccessUnlocked())) {
+    const accessDecision = resolveProtectedRouteAccessDecision({
+      protectedAccessUnlocked: await isProtectedAccessUnlocked(),
+      requireSecurityCode: preferences.finishSafety.requireCode
+    });
+
+    if (accessDecision === "request_security_code") {
       setMenuOpen(false);
       setProtectedRouteRequest({ route, panel });
       setProtectedRouteCodeInput("");
@@ -772,19 +779,20 @@ export default function HomeScreen() {
   }
 
   function confirmEmergencyCall(target: EmergencyCallTarget) {
+    const confirmation = resolveEmergencyCallConfirmation(target);
     const callTarget = () => {
       void Linking.openURL(target.callUri);
     };
 
     setDialog({
-      title: `Ligar para ${target.description}?`,
-      message: "",
+      title: confirmation.title,
+      message: confirmation.message,
       children: <CallNumberHero target={target} onPress={callTarget} />,
       icon: <PhoneCall size={18} color={theme.colors.primary} />,
       actions: [
-        { label: "Cancelar", tone: "muted" },
+        { label: confirmation.cancelLabel, tone: "muted" },
         {
-          label: "Ligar",
+          label: confirmation.confirmLabel,
           onPress: callTarget
         }
       ]

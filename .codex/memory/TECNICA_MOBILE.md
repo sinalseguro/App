@@ -523,3 +523,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:local-sos-package-status` cobre mensagens de pronto, recuperacao, chamada gravando, chamada preservada, protecao de video, inicio, falha de inicio, encerramento, chamado ausente e falha de encerramento.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para mensagens inline.
 - Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional em chamada/camera/WebRTC/gravacao/UX deve repetir validacao fisica.
+
+# Atualizacao - 2026-05-18 - Etapa 1.25 Home/SOS
+
+- `src/features/emergency-home/emergencyCallConfirmationPolicy.ts` centraliza a apresentacao da confirmacao de ligacao emergencial.
+- `app/index.tsx` continua responsavel pelo efeito real de `Linking.openURL(target.callUri)`.
+- Novo gate `npm run test:emergency-call-confirmation` cobre o modal de ligacao para alvo emergencial.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline.
+- Sem build Android nesta fatia por ser refatoracao pura; ADB retornou somente Redmi via Wi-Fi/mDNS nesta rodada.
+
+# Atualizacao - 2026-05-18 - Etapa 1.26 Home/SOS
+
+- `src/features/emergency-home/protectedRouteAccessPolicy.ts` centraliza a decisao inicial de acessar rota protegida ou solicitar codigo.
+- `app/index.tsx` continua responsavel por `isProtectedAccessUnlocked()`, `unlockProtectedAccess()` e navegacao real.
+- Novo gate `npm run test:protected-route-access` cobre codigo exigido/bloqueado, codigo exigido/desbloqueado e rota sem codigo exigido.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para regra inline.
+- Sem build Android nesta fatia por ser refatoracao pura; proxima mudanca operacional em chamada/camera/WebRTC/gravacao/UX deve repetir validacao fisica owner -> anjo.
