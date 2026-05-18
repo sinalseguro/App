@@ -3,6 +3,17 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-17 - Checkpoint pre-refatoracao mobile
+
+Status: documentado e congelado para iniciar refatoracao incremental sem alterar comportamento.
+
+- Android base preservado: `0.1.15`, `versionCode 17`, APK `sinalseguro_android.apk`, SHA-256 `a7b90059ce2b976c9af18ca6a43754815e423a6832aa8835305a2a99b0bb6a64`.
+- Backup local geral criado em `/Users/roberto/SinalSeguro-backups/pre-refatoracao-20260517T224401-0300`.
+- Hotspots reconhecidos: `app/index.tsx`, `src/services/apiClient.ts`, `src/features/emergency/` e `src/features/live-call/`.
+- Regra da refatoracao: sem mudanca de layout, UX, textos publicos, contratos de API ou fluxo SOS/WebRTC.
+- Primeira subetapa recomendada: separar `apiClient.ts` por dominio mantendo fachada compativel.
+- Checkpoint: `docs/65_CHECKPOINT_PRE_REFATORACAO_2026-05-17.md`.
+
 ## 2026-05-17 - Android 0.1.15 SOS ao vivo com preservacao final
 
 Status: publicado no portal/API de update e validado fisicamente em dois Androids apos limpeza controlada.
