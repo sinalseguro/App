@@ -3,6 +3,20 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-18 - Etapa 1.4 politica pura WebRTC live-call
+
+Status: concluida localmente, validada e pronta para checkpoint Git.
+
+- Extraida politica pura de WebRTC para `src/features/live-call/liveWebRtcPolicy.ts`.
+- `src/services/liveWebRtcSession.ts` continua responsavel apenas por side effects nativos: abrir camera/microfone, criar `RTCPeerConnection`, registrar listeners, enviar ICE local, aplicar SDP/ICE e fechar tracks.
+- A politica extraida cobre normalizacao de modos audio/video, constraints de midia, timeout de abertura, mapeamento de estado ICE/conexao e selecao de stream remoto priorizando stream com video.
+- Novo gate `npm run test:live-webrtc` foi adicionado ao `npm test`.
+- `scripts/smoke-test.mjs` passou a validar o contrato WebRTC distribuido entre servico de side effects e politica pura.
+- Gate Codex Security/QA direcionado: sem novo storage, endpoint, permissao, log sensivel, token, Authorization, encrypted key, SDP, ICE, payload P2P, URI, path local ou midia.
+- Validacoes aprovadas ate agora: `npm run test:live-webrtc`, `node scripts/smoke-test.mjs` e `npm run typecheck`.
+- Sem build Android nesta fatia porque a mudanca foi TypeScript puro e nao toca UI visual, backend, portal, release, codigo nativo ou assets.
+- Checkpoint: `docs/70_CHECKPOINT_ETAPA_1_4_LIVE_WEBRTC_POLICY_2026-05-18.md`.
+
 ## 2026-05-18 - Etapa 1.3 politica pura de estado live-call
 
 Status: concluida localmente, validada e pronta para checkpoint Git.

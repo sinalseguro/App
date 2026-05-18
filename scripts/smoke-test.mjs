@@ -66,6 +66,7 @@ const requiredFiles = [
   "src/features/live-call/liveCallHistoryPolicy.ts",
   "src/features/live-call/liveCallRolePolicy.ts",
   "src/features/live-call/liveCallStatePolicy.ts",
+  "src/features/live-call/liveWebRtcPolicy.ts",
   "src/services/apiClient.ts",
   "src/services/appleIdentity.ts",
   "src/services/deviceBinding.ts",
@@ -76,6 +77,7 @@ const requiredFiles = [
   "scripts/profile-policy.test.ts",
   "scripts/live-call-history-policy.test.ts",
   "scripts/live-call-state-policy.test.ts",
+  "scripts/live-webrtc-policy.test.ts",
   "src/storage/secureJsonStore.ts",
   "scripts/android-private-media-readiness.mjs"
 ];
@@ -163,6 +165,7 @@ const liveCallHistory = await readFile("src/features/live-call/liveCallHistory.t
 const liveCallHistoryPolicy = await readFile("src/features/live-call/liveCallHistoryPolicy.ts", "utf8");
 const liveCallRolePolicy = await readFile("src/features/live-call/liveCallRolePolicy.ts", "utf8");
 const liveCallStatePolicy = await readFile("src/features/live-call/liveCallStatePolicy.ts", "utf8");
+const liveWebRtcPolicy = await readFile("src/features/live-call/liveWebRtcPolicy.ts", "utf8");
 const liveCallControl = await readFile("src/services/liveCallControl.ts", "utf8");
 const useLiveAudioCall = await readFile("src/features/live-call/useLiveAudioCall.ts", "utf8");
 const liveWebRtcSession = await readFile("src/services/liveWebRtcSession.ts", "utf8");
@@ -281,20 +284,23 @@ if (
 }
 
 if (
-  !liveWebRtcSession.includes('videoMode === "recvonly"') ||
+  !liveWebRtcSession.includes("shouldAddRecvOnlyVideoTransceiver") ||
   !liveWebRtcSession.includes('transceiverPeer.addTransceiver("video", { direction: "recvonly" })') ||
   !liveWebRtcSession.includes("remoteStreamFromTrackEvent") ||
   !liveWebRtcSession.includes("onaddstream") ||
   !liveWebRtcSession.includes('addEventListener("track"') ||
   !liveWebRtcSession.includes('addEventListener("iceconnectionstatechange"') ||
   !liveWebRtcSession.includes("remote_stream_${source}") ||
-  !liveWebRtcSession.includes("emergencyVideoConstraints") ||
   !liveWebRtcSession.includes("liveMediaOpenTimeoutMs") ||
   !liveWebRtcSession.includes("getUserMediaWithTimeout") ||
-  !liveWebRtcSession.includes('facingMode: videoFacingMode') ||
+  !liveWebRtcSession.includes("buildLiveMediaConstraints") ||
   !liveWebRtcSession.includes('options.videoFacingMode ?? "environment"') ||
-  !liveWebRtcSession.includes('value === "completed"') ||
-  !liveWebRtcSession.includes('value === "checking"')
+  !liveWebRtcPolicy.includes('videoMode === "recvonly"') ||
+  !liveWebRtcPolicy.includes("emergencyVideoConstraints") ||
+  !liveWebRtcPolicy.includes("liveMediaOpenTimeoutMs") ||
+  !liveWebRtcPolicy.includes('facingMode: videoFacingMode') ||
+  !liveWebRtcPolicy.includes('value === "completed"') ||
+  !liveWebRtcPolicy.includes('value === "checking"')
 ) {
   throw new Error("WebRTC precisa negociar video recebido, priorizar camera do evento e refletir estados ICE quando o connectionState nativo for instavel.");
 }

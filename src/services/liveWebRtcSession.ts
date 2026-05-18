@@ -8,22 +8,34 @@ import {
   RTCSessionDescription
 } from "react-native-webrtc";
 
+import {
+  buildLiveMediaConstraints,
+  liveMediaOpenTimeoutMs,
+  normalizeLiveAudioMode,
+  normalizeLiveVideoMode,
+  remoteStreamFromTrackEvent,
+  shouldAddRecvOnlyAudioTransceiver,
+  shouldAddRecvOnlyVideoTransceiver,
+  shouldOpenLocalLiveMedia,
+  toLiveConnectionState,
+  type LiveAudioMode,
+  type LiveConnectionState,
+  type LiveVideoFacingMode,
+  type LiveVideoMode
+} from "@/features/live-call/liveWebRtcPolicy";
 import { LiveSignalPayload } from "@/services/liveCallControl";
-
-type LiveConnectionState = "closed" | "connected" | "connecting" | "disconnected" | "failed" | "new";
-type VideoFacingMode = "environment" | "user";
 
 export type LiveIcePayload = Extract<LiveSignalPayload, { candidate: string }>;
 export type LiveSdpPayload = Extract<LiveSignalPayload, { sdp: string }>;
 
 export type LiveWebRtcSessionOptions = {
-  audioMode?: "recvonly" | "sendrecv";
+  audioMode?: LiveAudioMode;
   callSessionId: string;
   onConnectionState?: (state: LiveConnectionState) => void;
   onLocalIceCandidate?: (payload: LiveIcePayload) => void;
   onRemoteStream?: (stream: MediaStream) => void;
-  videoFacingMode?: VideoFacingMode;
-  videoMode?: "disabled" | "recvonly" | "sendrecv";
+  videoFacingMode?: LiveVideoFacingMode;
+  videoMode?: LiveVideoMode;
   videoEnabled?: boolean;
 };
 
@@ -44,36 +56,6 @@ type PeerWithTransceiver = RTCPeerConnection & {
 type PeerWithEventListeners = RTCPeerConnection & {
   addEventListener: (type: "connectionstatechange" | "icecandidate" | "iceconnectionstatechange" | "track", listener: (event: any) => void) => void;
 };
-
-const emergencyVideoConstraints = {
-  frameRate: { ideal: 12, max: 15 },
-  height: { ideal: 360, max: 360 },
-  width: { ideal: 640, max: 640 }
-};
-const liveMediaOpenTimeoutMs = 12000;
-
-function buildMediaConstraints(audioEnabled: boolean, videoEnabled: boolean, videoFacingMode: VideoFacingMode) {
-  return {
-    audio: audioEnabled,
-    video: videoEnabled
-      ? {
-          facingMode: videoFacingMode,
-          ...emergencyVideoConstraints
-        }
-      : false
-  };
-}
-
-function toLiveConnectionState(value: string): LiveConnectionState {
-  if (value === "connected") return "connected";
-  if (value === "completed") return "connected";
-  if (value === "checking") return "connecting";
-  if (value === "connecting") return "connecting";
-  if (value === "disconnected") return "disconnected";
-  if (value === "failed") return "failed";
-  if (value === "closed") return "closed";
-  return "new";
-}
 
 function logRemoteStream(source: "addstream" | "track", stream: MediaStream) {
   console.info(
@@ -96,7 +78,7 @@ function logPeerState(label: string, value: string) {
   console.info(`[SinalSeguroLiveCall] ${label}=${toLiveConnectionState(value)}`);
 }
 
-async function getUserMediaWithTimeout(constraints: ReturnType<typeof buildMediaConstraints>) {
+async function getUserMediaWithTimeout(constraints: ReturnType<typeof buildLiveMediaConstraints>) {
   let timeout: ReturnType<typeof setTimeout> | null = null;
   let timedOut = false;
   const mediaPromise = mediaDevices.getUserMedia(constraints).then((stream) => {
@@ -121,17 +103,6 @@ async function getUserMediaWithTimeout(constraints: ReturnType<typeof buildMedia
   }
 }
 
-function remoteStreamFromTrackEvent(event: { streams?: MediaStream[]; track?: MediaStreamTrack | null }) {
-  const streams = event.streams ?? [];
-  const streamWithVideo = streams.find((stream) => stream.getVideoTracks().length > 0);
-  if (streamWithVideo) return streamWithVideo;
-
-  const streamWithAnyTrack = streams.find((stream) => stream.getTracks().length > 0);
-  if (streamWithAnyTrack) return streamWithAnyTrack;
-
-  return event.track ? new MediaStream([event.track]) : null;
-}
-
 export class LiveWebRtcSession {
   private closed = false;
 
@@ -143,13 +114,12 @@ export class LiveWebRtcSession {
 
   static async create(options: LiveWebRtcSessionOptions) {
     assertAndroidOrNative();
-    const audioMode = options.audioMode ?? "sendrecv";
-    const videoMode = options.videoMode ?? (options.videoEnabled ? "sendrecv" : "disabled");
-    const localVideoEnabled = videoMode === "sendrecv";
-    const localCaptureEnabled = audioMode === "sendrecv" || localVideoEnabled;
-    const localStream = localCaptureEnabled
+    const audioMode = normalizeLiveAudioMode(options.audioMode);
+    const videoMode = normalizeLiveVideoMode(options.videoMode, options.videoEnabled);
+    const videoFacingMode = options.videoFacingMode ?? "environment";
+    const localStream = shouldOpenLocalLiveMedia(audioMode, videoMode)
       ? await getUserMediaWithTimeout(
-          buildMediaConstraints(audioMode === "sendrecv", localVideoEnabled, options.videoFacingMode ?? "environment")
+          buildLiveMediaConstraints(audioMode, videoMode, videoFacingMode)
         )
       : null;
     logLocalStream(localStream);
@@ -159,15 +129,15 @@ export class LiveWebRtcSession {
       peer.addTrack(track, localStream);
     });
 
-    if (audioMode === "recvonly" || videoMode === "recvonly") {
+    if (shouldAddRecvOnlyAudioTransceiver(audioMode) || shouldAddRecvOnlyVideoTransceiver(videoMode)) {
       const transceiverPeer = peer as PeerWithTransceiver;
       if (!transceiverPeer.addTransceiver) {
         throw new Error("Videochamada indisponivel neste aparelho.");
       }
-      if (audioMode === "recvonly") {
+      if (shouldAddRecvOnlyAudioTransceiver(audioMode)) {
         transceiverPeer.addTransceiver("audio", { direction: "recvonly" });
       }
-      if (videoMode === "recvonly") {
+      if (shouldAddRecvOnlyVideoTransceiver(videoMode)) {
         transceiverPeer.addTransceiver("video", { direction: "recvonly" });
       }
     }
@@ -200,7 +170,10 @@ export class LiveWebRtcSession {
       }
     };
     listenerPeer.addEventListener("track", (event) => {
-      const remoteStream = remoteStreamFromTrackEvent(event);
+      const remoteStream = remoteStreamFromTrackEvent<MediaStream, MediaStreamTrack>(
+        event,
+        (track) => new MediaStream([track])
+      );
       if (remoteStream) {
         logRemoteStream("track", remoteStream);
         options.onRemoteStream?.(remoteStream);

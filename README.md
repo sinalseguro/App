@@ -55,6 +55,7 @@ npm run lint
 npm test
 npm run test:live-call-session
 npm run test:live-call-state
+npm run test:live-webrtc
 npm run test:api-client
 npm run build:android:debug:bundled
 npm run start
@@ -132,7 +133,8 @@ Arquitetura atual da chamada ao vivo:
 - `src/features/live-call/useLiveAudioCall.ts` orquestra WebRTC, polling de sinais, estado da chamada e marcadores de auditoria.
 - `src/features/live-call/liveCallSessionPolicy.ts` concentra regras puras de payload SDP/ICE, papel da chamada, auditoria por papel e renderizacao do stream remoto.
 - `src/features/live-call/liveCallStatePolicy.ts` concentra estado inicial, chamada ativa, mensagens e transicoes previsiveis do ciclo owner/anjo.
-- `npm run test:live-call-session` e `npm run test:live-call-state` cobrem essas regras sem abrir camera, WebRTC real, API, UI ou backend.
+- `src/features/live-call/liveWebRtcPolicy.ts` concentra constraints de midia, timeout, normalizacao de modos, estado ICE/conexao e selecao de stream remoto.
+- `npm run test:live-call-session`, `npm run test:live-call-state` e `npm run test:live-webrtc` cobrem essas regras sem abrir camera, WebRTC real, API, UI ou backend.
 
 APK privado Android atual para validacao fisica, portal e atualizacao pelo app:
 

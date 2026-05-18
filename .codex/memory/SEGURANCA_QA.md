@@ -5,6 +5,11 @@ Papel: seguranca, LGPD e QA.
 
 ## Decisoes bloqueantes
 
+- QA/Security 2026-05-18 - Etapa 1.4 live-call: politica pura WebRTC foi extraida sem alterar fluxo operacional, UI, backend, portal ou release.
+- `liveWebRtcPolicy.ts` nao pode ganhar side effects, logs, storage, API, permissao, camera/microfone real ou persistencia; manter apenas regras puras/testaveis.
+- Owner segue `sendrecv` para audio/video e anjo segue `recvonly`; qualquer alteracao nesse contrato exige teste fisico Android em dois dispositivos.
+- Gates aprovados ate a primeira validacao da Etapa 1.4: `test:live-webrtc`, `smoke-test` e `typecheck`.
+
 - QA/Security 2026-05-18 - Etapa 1.3 live-call: politica pura de estado/ciclo foi extraida sem alterar fluxo operacional, UI, backend, portal ou release.
 - `liveCallStatePolicy.ts` nao pode ganhar side effects, logs, storage, API, permissao, camera/microfone ou persistencia; manter apenas regras puras/testaveis.
 - O owner continua transmissor do SOS e o anjo continua visualizador do stream remoto; qualquer alteracao nesse contrato exige teste fisico Android em dois dispositivos.
