@@ -407,3 +407,11 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:media-processing-status` cobre estados que liberam waiter, mensagens de handoff, titulos/detalhes/progresso/status do modal e estados de erro/sem midia.
 - `npm test` e `scripts/smoke-test.mjs` exigem a politica pura para evitar regressao na Home.
 - Proxima fatia recomendada: politica pura do resultado final de encerramento do SOS, mantendo efeitos assincronos no orquestrador.
+
+# Atualizacao - 2026-05-18 - Etapa 1.11 Home/SOS
+
+- `src/features/emergency-home/finishOutcomePolicy.ts` centraliza a decisao final do encerramento do SOS: evidencia protegida, confirmacao pendente, video local pendente, verificacao pendente, somente metadados ou pacote encerrado sem video.
+- `app/index.tsx` continua responsavel pelos efeitos reais de UI, evidencia local, auditoria, diagnostico saneado e progresso final.
+- Novo gate `npm run test:finish-outcome` cobre os principais caminhos sem abrir camera, WebRTC, API, arquivo local ou backend.
+- `npm test` e `scripts/smoke-test.mjs` exigem a politica pura para evitar regressao para regra inline na Home.
+- Proxima fatia recomendada: reduzir a preparacao/entrega de midia para chamada ao vivo com policy pura, mantendo camera, WebRTC e auditoria no orquestrador.

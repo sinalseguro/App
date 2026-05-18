@@ -36,6 +36,7 @@ const requiredFiles = [
   "src/features/emergency-home/EmergencyCallTarget.ts",
   "src/features/emergency-home/EmergencySettingsDrawer.tsx",
   "src/features/emergency-home/EmergencyTopBar.tsx",
+  "src/features/emergency-home/finishOutcomePolicy.ts",
   "src/features/emergency-home/mediaProcessingStatusPolicy.ts",
   "src/features/emergency-home/ownerAutoCallPolicy.ts",
   "src/features/emergency-home/panicTriggerPolicy.ts",
@@ -167,6 +168,7 @@ const evidencePlayerCard = await readFile("src/components/EvidencePlayerCard.tsx
 const mediaInterfacePresentation = await readFile("src/features/emergency/mediaInterfacePresentation.ts", "utf8");
 const appLayout = await readFile("app/_layout.tsx", "utf8");
 const homeScreen = await readFile("app/index.tsx", "utf8");
+const finishOutcomePolicy = await readFile("src/features/emergency-home/finishOutcomePolicy.ts", "utf8");
 const mediaProcessingStatusPolicy = await readFile("src/features/emergency-home/mediaProcessingStatusPolicy.ts", "utf8");
 const ownerAutoCallPolicy = await readFile("src/features/emergency-home/ownerAutoCallPolicy.ts", "utf8");
 const panicTriggerPolicy = await readFile("src/features/emergency-home/panicTriggerPolicy.ts", "utf8");
@@ -667,6 +669,18 @@ if (
   !packageJson.scripts["test:owner-auto-call"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para autochamada do solicitante apos aceite do anjo.");
+}
+
+if (
+  !homeScreen.includes("resolveFinishOutcomePolicy") ||
+  !finishOutcomePolicy.includes("resolveFinishOutcomePolicy") ||
+  !finishOutcomePolicy.includes("camera_no_file_returned") ||
+  !finishOutcomePolicy.includes("local_evidence_metadata_only") ||
+  !finishOutcomePolicy.includes("Confirmacao pendente") ||
+  !finishOutcomePolicy.includes("Video local pendente") ||
+  !packageJson.scripts["test:finish-outcome"]
+) {
+  throw new Error("Home/SOS precisa manter politica pura testavel para resultado final do encerramento do chamado.");
 }
 
 if (

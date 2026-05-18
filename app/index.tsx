@@ -12,6 +12,7 @@ import { EmergencyCallDock } from "@/features/emergency-home/EmergencyCallDock";
 import { EmergencyCallTarget } from "@/features/emergency-home/EmergencyCallTarget";
 import { EmergencySettingsDrawer } from "@/features/emergency-home/EmergencySettingsDrawer";
 import { EmergencyTopBar } from "@/features/emergency-home/EmergencyTopBar";
+import { resolveFinishOutcomePolicy } from "@/features/emergency-home/finishOutcomePolicy";
 import {
   resolveMediaProcessingPresentation,
   shouldResolveMediaReleaseWaiter
@@ -1352,97 +1353,29 @@ export default function HomeScreen() {
         mediaRecorded: result.packageRecord.media.status === "recorded_local",
         platform: Platform.OS
       });
-      if (attachedAssetsAfterFinish > 0 || liveVideoAttachedAsset) {
-        updateOwnerLiveEvidence(remoteSessionIdToFinish, {
-          endedAt: new Date().toISOString(),
-          localEvidenceStatus: "protected",
-          packageId,
-          status: "protected"
-        });
-        recordOwnerLiveAuditMarker(remoteSessionIdToFinish, "local_evidence_protected", {
-          connectionState: "ended",
-          localEvidenceStatus: "protected"
-        });
-        setRecordingStatus(
-          remoteFinishFailed
-            ? "Video protegido localmente. Confirmacao central pendente."
-            : "Chamado encerrado. Video preservado no cofre local."
-        );
-        showFinishProgress({
-          detail: remoteFinishFailed
-            ? "Video protegido neste aparelho. A confirmacao com a central continuara em nova tentativa."
-            : stopSerial
-              ? "Video protegido, camera liberada e pacote local finalizado."
-              : "Video protegido e anexado ao cofre local.",
-          progress: 100,
-          status: remoteFinishFailed ? "warning" : "done",
-          title: remoteFinishFailed ? "Confirmacao pendente" : "Video protegido"
-        });
-      } else if (mediaWasHandedToLiveCall) {
-        updateOwnerLiveEvidence(remoteSessionIdToFinish, {
-          endedAt: new Date().toISOString(),
-          localEvidenceStatus: "failed",
-          packageId,
-          status: "failed"
-        });
-        recordOwnerLiveAuditMarker(remoteSessionIdToFinish, "local_evidence_failed", {
-          connectionState: "ended",
-          localEvidenceStatus: "failed"
-        });
-        setRecordingStatus("Chamado encerrado. A transmissao ocorreu, mas o video local precisa de nova verificacao.");
-        await persistFinishNoMediaDiagnostic(packageId, "camera_no_file_returned");
-        showFinishProgress({
-          detail: "O anjo acompanhou a chamada, mas o video local nao foi anexado ao cofre deste aparelho.",
-          progress: 100,
-          status: "warning",
-          title: "Video local pendente"
-        });
-      } else if (stopSerial && stopResult?.status === "attached") {
-        updateOwnerLiveEvidence(remoteSessionIdToFinish, {
-          endedAt: new Date().toISOString(),
-          localEvidenceStatus: "protected",
-          packageId,
-          status: "protected"
-        });
-        recordOwnerLiveAuditMarker(remoteSessionIdToFinish, "local_evidence_protected", {
-          connectionState: "ended",
-          localEvidenceStatus: "protected"
-        });
-        setRecordingStatus("Chamado encerrado. Video local preservado, mas ainda sem reflexo final no cofre.");
-        showFinishProgress({
-          detail: "A midia foi protegida pela camera, mas o cofre ainda nao refletiu o anexo. Revise o item local.",
-          progress: 100,
-          status: "warning",
-          title: "Verificacao pendente"
-        });
-      } else {
-        updateOwnerLiveEvidence(remoteSessionIdToFinish, {
-          endedAt: new Date().toISOString(),
-          localEvidenceStatus: stopSerial ? "metadata_only" : "protected",
-          packageId,
-          status: stopSerial ? "metadata_only" : "protected"
-        });
-        recordOwnerLiveAuditMarker(
-          remoteSessionIdToFinish,
-          stopSerial ? "local_evidence_metadata_only" : "local_evidence_protected",
-          {
-            connectionState: "ended",
-            localEvidenceStatus: stopSerial ? "metadata_only" : "protected"
-          }
-        );
-        setRecordingStatus("Chamado encerrado. Pacote local salvo sem gravacao de video.");
-        if (stopSerial) {
-          await persistFinishNoMediaDiagnostic(packageId, "camera_no_file_returned");
-        }
-        showFinishProgress({
-          detail: stopSerial
-            ? "A camera foi liberada, mas nao devolveu arquivo de video para este pacote."
-            : "Pacote encerrado e preservado no cofre local.",
-          progress: 100,
-          status: stopSerial ? "warning" : "done",
-          title: stopSerial ? "Chamado salvo sem video" : "Chamado encerrado"
-        });
+      const finishOutcome = resolveFinishOutcomePolicy({
+        attachedAssetsAfterFinish,
+        liveVideoAttached: Boolean(liveVideoAttachedAsset),
+        mediaWasHandedToLiveCall,
+        remoteFinishFailed,
+        stopResultStatus: stopResult?.status,
+        stopSerialPresent: Boolean(stopSerial)
+      });
+      updateOwnerLiveEvidence(remoteSessionIdToFinish, {
+        endedAt: new Date().toISOString(),
+        localEvidenceStatus: finishOutcome.localEvidenceStatus,
+        packageId,
+        status: finishOutcome.localEvidenceStatus
+      });
+      recordOwnerLiveAuditMarker(remoteSessionIdToFinish, finishOutcome.auditMarker, {
+        connectionState: "ended",
+        localEvidenceStatus: finishOutcome.localEvidenceStatus
+      });
+      setRecordingStatus(finishOutcome.recordingStatus);
+      if (finishOutcome.diagnosticReason) {
+        await persistFinishNoMediaDiagnostic(packageId, finishOutcome.diagnosticReason);
       }
+      showFinishProgress(finishOutcome.finishProgress);
       setFinishConfirmationOpen(false);
       setFinishCodeInput("");
       setFinishError("");

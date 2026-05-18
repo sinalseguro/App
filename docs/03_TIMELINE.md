@@ -3,6 +3,19 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-18 - Etapa 1.11 politica pura do resultado final do SOS
+
+Status: implementado, validado e pronto para checkpoint Git.
+
+- Criado `src/features/emergency-home/finishOutcomePolicy.ts`.
+- `app/index.tsx` continua aplicando efeitos de UI, evidencia local, auditoria e diagnostico, mas deixou de decidir inline o resultado final do encerramento.
+- Criado `scripts/finish-outcome-policy.test.ts` e comando `npm run test:finish-outcome`.
+- `npm test` e `scripts/smoke-test.mjs` passaram a cobrir a nova politica.
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, backend, portal, camera, WebRTC real ou layout.
+- Validacoes aprovadas: `npm run test:finish-outcome`, `node scripts/smoke-test.mjs`, `npm run typecheck`, `npm run lint`, `npm test`, `npm run private:android:readiness` condicionado e `git diff --check`.
+- Checkpoint: `docs/83_CHECKPOINT_ETAPA_1_11_FINISH_OUTCOME_POLICY_2026-05-18.md`.
+- Proxima fatia recomendada: policy pura para preparacao/entrega da midia para chamada ao vivo, sem mover os side effects de camera, WebRTC e auditoria.
+
 ## 2026-05-18 - Etapa 1.10 politica pura de status de processamento de midia
 
 Status: concluida localmente, validada e pronta para checkpoint Git.

@@ -144,7 +144,8 @@ Arquitetura atual da Home/SOS:
 - `src/features/emergency-home/remoteSyncStatusPolicy.ts` concentra mensagens e decisao visual da sincronizacao remota do SOS ativo.
 - `src/features/emergency-home/ownerAutoCallPolicy.ts` concentra a decisao de autochamada do solicitante apos aceite do anjo.
 - `src/features/emergency-home/mediaProcessingStatusPolicy.ts` concentra mensagens e progresso visual do processamento de midia no encerramento e no handoff para chamada ao vivo.
-- `npm run test:panic-trigger`, `npm run test:remote-sync-status`, `npm run test:owner-auto-call` e `npm run test:media-processing-status` cobrem essas decisoes sem abrir camera, WebRTC real, API, UI ou backend.
+- `src/features/emergency-home/finishOutcomePolicy.ts` concentra o resultado final do encerramento do SOS: evidencia protegida, pendente, somente metadados ou falha saneada.
+- `npm run test:panic-trigger`, `npm run test:remote-sync-status`, `npm run test:owner-auto-call`, `npm run test:media-processing-status` e `npm run test:finish-outcome` cobrem essas decisoes sem abrir camera, WebRTC real, API, UI ou backend.
 
 APK privado Android atual para validacao fisica, portal e atualizacao pelo app:
 
