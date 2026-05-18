@@ -12,6 +12,10 @@ import { EmergencyCallDock } from "@/features/emergency-home/EmergencyCallDock";
 import { EmergencyCallTarget } from "@/features/emergency-home/EmergencyCallTarget";
 import { EmergencySettingsDrawer } from "@/features/emergency-home/EmergencySettingsDrawer";
 import { EmergencyTopBar } from "@/features/emergency-home/EmergencyTopBar";
+import {
+  resolveMediaProcessingPresentation,
+  shouldResolveMediaReleaseWaiter
+} from "@/features/emergency-home/mediaProcessingStatusPolicy";
 import { ownerAutoCallAttemptMessage, ownerAutoCallRecipientStatus, shouldAttemptOwnerAutoCall } from "@/features/emergency-home/ownerAutoCallPolicy";
 import { panicButtonLabel, resolvePanicTriggerDecision } from "@/features/emergency-home/panicTriggerPolicy";
 import { activeRemoteSyncRetryMessage, resolveActiveRemoteSyncStatus } from "@/features/emergency-home/remoteSyncStatusPolicy";
@@ -520,103 +524,19 @@ export default function HomeScreen() {
   function handleMediaProcessingStateChange(state: MediaProcessingState) {
     if (!mediaStopPendingRef.current) return;
 
-    if (state === "camera_released" || state === "attached" || state === "no_media" || state === "error") {
+    if (shouldResolveMediaReleaseWaiter(state)) {
       resolveMediaReleaseWaiter();
     }
 
-    if (mediaStopPurposeRef.current === "live_call_handoff") {
-      switch (state) {
-        case "stop_requested":
-          setRecordingStatus("Anjo entrou. Liberando camera e microfone para transmitir.");
-          return;
-        case "camera_released":
-          setRecordingStatus("Camera liberada. Abrindo video ao vivo para o anjo.");
-          return;
-        case "plaintext_detected":
-        case "encrypting":
-        case "packaging":
-        case "cleanup":
-          setRecordingStatus("Video local segue protegido. Transmissao ao anjo em preparacao.");
-          return;
-        case "attached":
-          setRecordingStatus("Video local protegido. Transmissao ao anjo ativa.");
-          return;
-        case "no_media":
-          setRecordingStatus("Camera liberada para transmissao. O pacote local segue com metadados.");
-          return;
-        case "error":
-          setRecordingStatus("Camera liberada com alerta local. O pedido continua ativo para o anjo.");
-          return;
-      }
+    const presentation = resolveMediaProcessingPresentation(state, mediaStopPurposeRef.current);
+    if (!presentation) return;
+
+    if (presentation.recordingStatus) {
+      setRecordingStatus(presentation.recordingStatus);
     }
 
-    switch (state) {
-      case "stop_requested":
-        showFinishProgress({
-          detail: "Camera sinalizada para encerrar. Aguarde a liberacao do microfone e da camera.",
-          progress: 22,
-          status: "running",
-          title: "Encerrando gravacao"
-        });
-        return;
-      case "camera_released":
-        setRecordingStatus("Camera e microfone liberados. Video local segue em protecao.");
-        showFinishProgress({
-          detail: "Camera e microfone foram liberados. A criptografia continua em segundo plano controlado.",
-          progress: 42,
-          status: "background",
-          title: "Camera desligada"
-        });
-        return;
-      case "plaintext_detected":
-        showFinishProgress({
-          detail: "Arquivo temporario localizado. Iniciando empacotamento seguro.",
-          progress: 50,
-          status: "background",
-          title: "Empacotando video"
-        });
-        return;
-      case "encrypting":
-      case "packaging":
-        showFinishProgress({
-          detail: "Criptografando o video local antes de anexar ao cofre.",
-          progress: 68,
-          status: "background",
-          title: "Criptografando"
-        });
-        return;
-      case "cleanup":
-        showFinishProgress({
-          detail: "Removendo arquivo temporario claro e conferindo o cofre.",
-          progress: 86,
-          status: "background",
-          title: "Limpando temporarios"
-        });
-        return;
-      case "attached":
-        showFinishProgress({
-          detail: "Midia protegida e cofre atualizado.",
-          progress: 100,
-          status: "done",
-          title: "Video protegido"
-        });
-        return;
-      case "no_media":
-        showFinishProgress({
-          detail: "A camera encerrou sem devolver arquivo. O cofre mostra a causa tecnica saneada.",
-          progress: 100,
-          status: "warning",
-          title: "Chamado salvo sem video"
-        });
-        return;
-      case "error":
-        showFinishProgress({
-          detail: "Falha tecnica saneada durante a preservacao. Revise o cofre antes de novo teste.",
-          progress: 100,
-          status: "error",
-          title: "Falha na midia"
-        });
-        return;
+    if (presentation.finishProgress) {
+      showFinishProgress(presentation.finishProgress);
     }
   }
 

@@ -3,6 +3,19 @@
 Responsavel: Cristine  
 Supervisao: Ze
 
+## 2026-05-18 - Etapa 1.10 politica pura de status de processamento de midia
+
+Status: concluida localmente, validada e pronta para checkpoint Git.
+
+- Criado `src/features/emergency-home/mediaProcessingStatusPolicy.ts`.
+- `app/index.tsx` passou a usar `shouldResolveMediaReleaseWaiter()` e `resolveMediaProcessingPresentation()` para mensagens e progresso de processamento de midia.
+- Criado `scripts/media-processing-status-policy.test.ts` e comando `npm run test:media-processing-status`.
+- `npm test` e `scripts/smoke-test.mjs` passaram a cobrir a nova politica.
+- Sem alteracao de UX, backend, portal, release, permissao, storage, endpoint, WebRTC runtime, camera ou log runtime.
+- Codex Security aplicado como validacao dirigida de diff: nenhum padrao sensivel novo em logs ou payloads; o unico `console.log` novo fica em teste local.
+- Validacoes aprovadas: `npm run test:media-processing-status`, `node scripts/smoke-test.mjs`, `npm run typecheck`, `npm run lint`, `npm test`, `npm run private:android:readiness` condicionado e `git diff --check`.
+- Checkpoint: `docs/82_CHECKPOINT_ETAPA_1_10_MEDIA_PROCESSING_STATUS_POLICY_2026-05-18.md`.
+
 ## 2026-05-18 - Etapa 1.9 validacao Android da refatoracao Home/SOS
 
 Status: validacao fisica Android concluida em build debug privado local; sem publicacao de release.

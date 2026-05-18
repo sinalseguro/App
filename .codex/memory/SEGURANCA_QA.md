@@ -352,3 +352,12 @@ Papel: seguranca, LGPD e QA.
 - Buffer de crash vazio; logs filtrados por processo sem `FATAL`, `AndroidRuntime` ou `Unhandled`.
 - Rechecagem dirigida de logs nao encontrou `Authorization`, `id_token`, `encrypted_key`, SDP/ICE, `file://` ou path sensivel de midia.
 - Avisos remanescentes nao bloqueantes: URI scheme duplicado em debug, WebViewFactory do aparelho e spam `FPS-BOOST` do Redmi.
+
+## QA/Security - 2026-05-18 - Etapa 1.10 politica pura de processamento de midia
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- Gate novo `npm run test:media-processing-status` cobre mensagens e progresso visual sem abrir camera, WebRTC, API, arquivo local ou backend.
+- Varredura dirigida dos arquivos tocados nao encontrou token, `Authorization`, `id_token`, `encrypted_key`, SDP, ICE, URI/path de midia ou payload P2P em log runtime.
+- O unico `console.log` novo esta no teste local dedicado, seguindo padrao dos demais testes de politica.
+- Validacoes aprovadas: `test:media-processing-status`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado e `git diff --check`.
+- Performance Android: nao foi coletado perfil porque a fatia nao altera runtime, camera, WebRTC, renderizacao ou loop de midia; proxima mudanca operacional sensivel deve usar perfil fisico focado.

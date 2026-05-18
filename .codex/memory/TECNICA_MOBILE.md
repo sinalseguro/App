@@ -399,3 +399,11 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Instalacao via ADB funcionou em `0123456789ABCDEF` e `5686add7`.
 - Evidencias visuais preservadas em `docs/evidencias/android/2026-05-18-refatoracao-home-sos-validacao/`.
 - Este APK 32-bit e somente evidencia de QA local; release publica exige build adequado multi-ABI, Node compativel com o gate publico e espaco local suficiente.
+
+# Atualizacao - 2026-05-18 - Etapa 1.10 Home/SOS
+
+- `src/features/emergency-home/mediaProcessingStatusPolicy.ts` centraliza mensagens e progresso visual do processamento de midia durante encerramento e handoff para chamada ao vivo.
+- `app/index.tsx` continua responsavel pelos side effects, mas deixou de manter inline os textos e percentuais do processamento de midia.
+- Novo gate `npm run test:media-processing-status` cobre estados que liberam waiter, mensagens de handoff, titulos/detalhes/progresso/status do modal e estados de erro/sem midia.
+- `npm test` e `scripts/smoke-test.mjs` exigem a politica pura para evitar regressao na Home.
+- Proxima fatia recomendada: politica pura do resultado final de encerramento do SOS, mantendo efeitos assincronos no orquestrador.
