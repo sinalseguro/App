@@ -827,3 +827,18 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:finish-post-outcome` cobre caminho com diagnostico e caminho protegido sem diagnostico.
 - As policies individuais de diagnostico e completion seguem preservadas e testadas.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em recorder/cofre/backend/UX real exige validacao proporcional.
+
+# Atualizacao - 2026-05-19 - Etapa 1.63 Home/SOS
+
+- `src/features/emergency-home/mediaStopSettledActionsPolicy.ts` centraliza o tratamento do settlement da parada de midia.
+- `app/index.tsx` continua responsavel por resolver waiter, registrar log, atualizar outbox/status e aplicar progresso final.
+- Novo gate `npm run test:media-stop-settled-actions` cobre serial tratado e serial ignorado.
+- `scripts/smoke-test.mjs` exige a nova policy para evitar regressao para regra inline de settlement.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em recorder/camera/WebRTC exige validacao proporcional.
+
+# Atualizacao - 2026-05-19 - Etapa 1.64 Home/SOS
+
+- `src/features/emergency-home/mediaStopPendingRequestCompletionPolicy.ts` centraliza a conclusao do pedido pendente de parada de midia.
+- `app/index.tsx` continua responsavel por `clearTimeout()`, limpar `pendingMediaStopRequestRef` e resolver a promise do pedido.
+- Novo gate `npm run test:media-stop-pending-request-completion` cobre serial compativel, serial divergente e ausencia de pedido pendente.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em waiter/recorder exige validacao fisica proporcional.

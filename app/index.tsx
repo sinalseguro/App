@@ -70,8 +70,6 @@ import { resolveMediaHandoffPolicy } from "@/features/emergency-home/mediaHandof
 import {
   resolveMediaProcessingPresentation,
   resolveMediaStopSettlementFinishProgress,
-  resolveMediaStopSettlementPresentation,
-  shouldHandleMediaStopSettlement,
   shouldResolveMediaReleaseWaiter
 } from "@/features/emergency-home/mediaProcessingStatusPolicy";
 import {
@@ -84,10 +82,8 @@ import {
   resolveMediaStopWaiterStart
 } from "@/features/emergency-home/mediaStopWaiterPolicy";
 import { resolveMediaStopSignal } from "@/features/emergency-home/mediaStopSignalPolicy";
-import {
-  resolveMediaStopSettlementLog,
-  resolvePendingMediaStopRequestSettlement
-} from "@/features/emergency-home/mediaStopSettlementRequestPolicy";
+import { resolveMediaStopPendingRequestCompletion } from "@/features/emergency-home/mediaStopPendingRequestCompletionPolicy";
+import { resolveMediaStopSettledActions } from "@/features/emergency-home/mediaStopSettledActionsPolicy";
 import { ownerAutoCallAttemptMessage, ownerAutoCallRecipientStatus, shouldAttemptOwnerAutoCall } from "@/features/emergency-home/ownerAutoCallPolicy";
 import {
   resolveOwnerLiveAuditMarkerInput,
@@ -1482,23 +1478,23 @@ export default function HomeScreen() {
   }
 
   function handleMediaStopRequestSettled(serial: number, result: MediaStopRequestResult) {
-    if (
-      !shouldHandleMediaStopSettlement({
-        expectedSerial: stopRecordingRequestSerialRef.current,
-        serial
-      })
-    ) {
+    const mediaStopSettledActions = resolveMediaStopSettledActions({
+      expectedSerial: stopRecordingRequestSerialRef.current,
+      platform: Platform.OS,
+      result,
+      serial
+    });
+    if (!mediaStopSettledActions.shouldHandle) {
       return;
     }
 
-    resolveMediaReleaseWaiter();
-    const settlementLog = resolveMediaStopSettlementLog({
-      platform: Platform.OS,
-      result
-    });
+    if (mediaStopSettledActions.shouldResolveMediaReleaseWaiter) {
+      resolveMediaReleaseWaiter();
+    }
+    const settlementLog = mediaStopSettledActions.settlementLog;
     appendMediaOperationalLog(settlementLog.logEvent, settlementLog.logPayload);
 
-    const settlementPresentation = resolveMediaStopSettlementPresentation(result);
+    const settlementPresentation = mediaStopSettledActions.settlementPresentation;
     if (settlementPresentation.shouldRefreshOutbox) {
       void refreshOutboxCount();
       if (settlementPresentation.recordingStatus) {
@@ -1510,13 +1506,18 @@ export default function HomeScreen() {
     }
 
     const pendingRequest = pendingMediaStopRequestRef.current;
-    const pendingRequestDecision = resolvePendingMediaStopRequestSettlement({
+    const pendingRequestDecision = resolveMediaStopPendingRequestCompletion({
+      hasPendingRequest: Boolean(pendingRequest),
       pendingSerial: pendingRequest?.serial,
       serial
     });
-    if (pendingRequest && pendingRequestDecision.shouldResolvePendingRequest) {
+    if (pendingRequest && pendingRequestDecision.shouldClearTimeout) {
       clearTimeout(pendingRequest.timeout);
+    }
+    if (pendingRequestDecision.shouldClearPendingRequest) {
       pendingMediaStopRequestRef.current = null;
+    }
+    if (pendingRequest && pendingRequestDecision.shouldResolvePendingRequest) {
       pendingRequest.resolve(result);
     }
   }

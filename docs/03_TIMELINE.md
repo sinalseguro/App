@@ -4355,3 +4355,41 @@ Validacoes:
 Checkpoint:
 
 - `docs/134_CHECKPOINT_ETAPA_1_62_FINISH_POST_OUTCOME_POLICY_2026-05-18.md`.
+
+## 2026-05-19 - Etapa 1.63 acoes de settlement da parada de midia
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `mediaStopSettledActionsPolicy` para centralizar tratamento do serial, log saneado e apresentacao da midia encerrada.
+- `app/index.tsx` manteve os efeitos reais de resolver waiter, atualizar outbox/status/progresso e registrar log.
+- `test:media-stop-settled-actions` cobre serial valido e serial ignorado.
+
+Validacoes:
+
+- `test:media-stop-settled-actions`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida: aprovados.
+- ADB confirmou Android fisico `23129RA5FL` via Wi-Fi, mas sem build/perfil porque a mudanca nao altera UX nativa, chamada, camera, gravacao, WebRTC, backend ou storage.
+
+Checkpoint:
+
+- `docs/135_CHECKPOINT_ETAPA_1_63_MEDIA_STOP_SETTLED_ACTIONS_POLICY_2026-05-19.md`.
+
+## 2026-05-19 - Etapa 1.64 conclusao do pedido pendente de parada de midia
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `mediaStopPendingRequestCompletionPolicy` para centralizar limpeza de timeout, referencia pendente e resolucao da promise.
+- `app/index.tsx` manteve os efeitos reais de `clearTimeout()`, limpeza de ref e `resolve(result)`.
+- `test:media-stop-pending-request-completion` cobre serial compativel, serial divergente e ausencia de pedido pendente.
+
+Validacoes:
+
+- `test:media-stop-pending-request-completion`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/136_CHECKPOINT_ETAPA_1_64_MEDIA_STOP_PENDING_REQUEST_COMPLETION_POLICY_2026-05-19.md`.

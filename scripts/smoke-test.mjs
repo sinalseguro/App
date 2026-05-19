@@ -55,6 +55,8 @@ const requiredFiles = [
   "src/features/emergency-home/mediaStopPendingPolicy.ts",
   "src/features/emergency-home/mediaStopSignalPolicy.ts",
   "src/features/emergency-home/mediaStopSettlementRequestPolicy.ts",
+  "src/features/emergency-home/mediaStopSettledActionsPolicy.ts",
+  "src/features/emergency-home/mediaStopPendingRequestCompletionPolicy.ts",
   "src/features/emergency-home/mediaStopWaiterPolicy.ts",
   "src/features/emergency-home/finishActiveCallStartPolicy.ts",
   "src/features/emergency-home/finishActiveCallRuntimeStartPolicy.ts",
@@ -146,6 +148,8 @@ const requiredFiles = [
   "scripts/media-stop-pending-policy.test.ts",
   "scripts/media-stop-signal-policy.test.ts",
   "scripts/media-stop-settlement-request-policy.test.ts",
+  "scripts/media-stop-settled-actions-policy.test.ts",
+  "scripts/media-stop-pending-request-completion-policy.test.ts",
   "scripts/media-stop-waiter-policy.test.ts",
   "scripts/finish-active-call-start-policy.test.ts",
   "scripts/finish-active-call-runtime-start-policy.test.ts",
@@ -267,6 +271,8 @@ const mediaReleaseWaiterPolicy = await readFile("src/features/emergency-home/med
 const mediaStopPendingPolicy = await readFile("src/features/emergency-home/mediaStopPendingPolicy.ts", "utf8");
 const mediaStopSignalPolicy = await readFile("src/features/emergency-home/mediaStopSignalPolicy.ts", "utf8");
 const mediaStopSettlementRequestPolicy = await readFile("src/features/emergency-home/mediaStopSettlementRequestPolicy.ts", "utf8");
+const mediaStopSettledActionsPolicy = await readFile("src/features/emergency-home/mediaStopSettledActionsPolicy.ts", "utf8");
+const mediaStopPendingRequestCompletionPolicy = await readFile("src/features/emergency-home/mediaStopPendingRequestCompletionPolicy.ts", "utf8");
 const mediaStopWaiterPolicy = await readFile("src/features/emergency-home/mediaStopWaiterPolicy.ts", "utf8");
 const finishActiveCallStartPolicy = await readFile("src/features/emergency-home/finishActiveCallStartPolicy.ts", "utf8");
 const finishActiveCallRuntimeStartPolicy = await readFile("src/features/emergency-home/finishActiveCallRuntimeStartPolicy.ts", "utf8");
@@ -1231,8 +1237,9 @@ if (
 if (
   !homeScreen.includes("resolveMediaProcessingPresentation") ||
   !homeScreen.includes("shouldResolveMediaReleaseWaiter") ||
-  !homeScreen.includes("shouldHandleMediaStopSettlement") ||
-  !homeScreen.includes("resolveMediaStopSettlementPresentation") ||
+  !homeScreen.includes("resolveMediaStopSettledActions") ||
+  !mediaStopSettledActionsPolicy.includes("shouldHandleMediaStopSettlement") ||
+  !mediaStopSettledActionsPolicy.includes("resolveMediaStopSettlementPresentation") ||
   !homeScreen.includes("resolveMediaStopSettlementFinishProgress") ||
   !mediaProcessingStatusPolicy.includes("resolveFinishMediaProcessingPresentation") ||
   !mediaProcessingStatusPolicy.includes("resolveLiveCallHandoffMediaStatus") ||
@@ -1267,11 +1274,16 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveMediaStopSettlementLog") ||
-  !homeScreen.includes("resolvePendingMediaStopRequestSettlement") ||
+  !homeScreen.includes("resolveMediaStopSettledActions") ||
+  !homeScreen.includes("resolveMediaStopPendingRequestCompletion") ||
+  !mediaStopSettledActionsPolicy.includes("resolveMediaStopSettlementLog") ||
+  !mediaStopPendingRequestCompletionPolicy.includes("shouldClearTimeout") ||
+  !mediaStopPendingRequestCompletionPolicy.includes("shouldClearPendingRequest") ||
   !mediaStopSettlementRequestPolicy.includes("resolveMediaStopSettlementLog") ||
   !mediaStopSettlementRequestPolicy.includes("resolvePendingMediaStopRequestSettlement") ||
   !mediaStopSettlementRequestPolicy.includes("emergency_media_stop_settled") ||
+  !packageJson.scripts["test:media-stop-settled-actions"] ||
+  !packageJson.scripts["test:media-stop-pending-request-completion"] ||
   !packageJson.scripts["test:media-stop-settlement-request"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para settlement da requisicao de parada do recorder.");
