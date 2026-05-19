@@ -24,8 +24,6 @@ import { resolveFinishActiveCallCleanup } from "@/features/emergency-home/finish
 import { resolveFinishActiveCallStart } from "@/features/emergency-home/finishActiveCallStartPolicy";
 import { resolveFinishCompletionActions } from "@/features/emergency-home/finishCompletionActionsPolicy";
 import {
-  resolveFinishMediaStopSettledProgress,
-  resolveFinishMediaStopSignaledProgress,
   resolveFinishRemoteSyncProgress,
   resolveFinishRequestedProgress,
   resolveMediaProtectionInProgress
@@ -33,6 +31,8 @@ import {
 import { resolveFinishCodeConfirmationDecision } from "@/features/emergency-home/finishCodePolicy";
 import { resolveFinishConfirmationDialogPresentation } from "@/features/emergency-home/finishConfirmationDialogPolicy";
 import { resolveFinishFailureActions } from "@/features/emergency-home/finishFailureActionsPolicy";
+import { resolveFinishMediaStopResultActions } from "@/features/emergency-home/finishMediaStopResultPolicy";
+import { resolveFinishMediaStopStartActions } from "@/features/emergency-home/finishMediaStopStartPolicy";
 import { resolveFinishMissingPackageActions } from "@/features/emergency-home/finishMissingPackagePolicy";
 import { resolveFinishNoMediaDiagnosticRequest } from "@/features/emergency-home/finishNoMediaDiagnosticPolicy";
 import { resolveFinishOutcomePolicy } from "@/features/emergency-home/finishOutcomePolicy";
@@ -1322,19 +1322,29 @@ export default function HomeScreen() {
       const stopSerial = mediaWasHandedToLiveCall ? null : signalMediaRecorderStop();
       let stopResult: MediaStopRequestResult | null = null;
       if (stopSerial) {
-        setCaptureStopLocked(true);
-        setMediaStopPendingState(true);
-        setActivePackageId(null);
-        setMediaRecorderPackageId(packageId);
-        showFinishProgress(resolveFinishMediaStopSignaledProgress());
+        const mediaStopStartActions = resolveFinishMediaStopStartActions({
+          packageId
+        });
+        if (mediaStopStartActions.shouldLockCaptureStop) {
+          setCaptureStopLocked(true);
+        }
+        if (mediaStopStartActions.shouldSetMediaStopPending) {
+          setMediaStopPendingState(true);
+        }
+        setActivePackageId(mediaStopStartActions.nextActivePackageId);
+        setMediaRecorderPackageId(mediaStopStartActions.mediaRecorderPackageId);
+        showFinishProgress(mediaStopStartActions.finishProgress);
         stopResult = await waitForMediaRecorderStop(stopSerial);
-        setMediaStopPendingState(false);
-        appendMediaOperationalLog("emergency_media_stop_progress_result", {
+        const mediaStopResultActions = resolveFinishMediaStopResultActions({
           attachedAssets: stopResult.attachedAssets,
           platform: Platform.OS,
           status: stopResult.status
         });
-        showFinishProgress(resolveFinishMediaStopSettledProgress(stopResult.status));
+        if (mediaStopResultActions.shouldClearMediaStopPending) {
+          setMediaStopPendingState(false);
+        }
+        appendMediaOperationalLog(mediaStopResultActions.logEvent, mediaStopResultActions.logPayload);
+        showFinishProgress(mediaStopResultActions.finishProgress);
       }
 
       const result = await finishEmergencyPackage(packageId, "manual_finish");

@@ -58,6 +58,8 @@ const requiredFiles = [
   "src/features/emergency-home/mediaStopWaiterPolicy.ts",
   "src/features/emergency-home/finishActiveCallStartPolicy.ts",
   "src/features/emergency-home/finishActiveCallCleanupPolicy.ts",
+  "src/features/emergency-home/finishMediaStopStartPolicy.ts",
+  "src/features/emergency-home/finishMediaStopResultPolicy.ts",
   "src/features/emergency-home/finishRemoteSyncPolicy.ts",
   "src/features/emergency-home/finishPackageResultPolicy.ts",
   "src/features/emergency-home/finishOwnerLiveEvidencePolicy.ts",
@@ -143,6 +145,8 @@ const requiredFiles = [
   "scripts/media-stop-waiter-policy.test.ts",
   "scripts/finish-active-call-start-policy.test.ts",
   "scripts/finish-active-call-cleanup-policy.test.ts",
+  "scripts/finish-media-stop-start-policy.test.ts",
+  "scripts/finish-media-stop-result-policy.test.ts",
   "scripts/finish-remote-sync-policy.test.ts",
   "scripts/finish-package-result-policy.test.ts",
   "scripts/finish-owner-live-evidence-policy.test.ts",
@@ -258,6 +262,8 @@ const mediaStopSettlementRequestPolicy = await readFile("src/features/emergency-
 const mediaStopWaiterPolicy = await readFile("src/features/emergency-home/mediaStopWaiterPolicy.ts", "utf8");
 const finishActiveCallStartPolicy = await readFile("src/features/emergency-home/finishActiveCallStartPolicy.ts", "utf8");
 const finishActiveCallCleanupPolicy = await readFile("src/features/emergency-home/finishActiveCallCleanupPolicy.ts", "utf8");
+const finishMediaStopStartPolicy = await readFile("src/features/emergency-home/finishMediaStopStartPolicy.ts", "utf8");
+const finishMediaStopResultPolicy = await readFile("src/features/emergency-home/finishMediaStopResultPolicy.ts", "utf8");
 const finishRemoteSyncPolicy = await readFile("src/features/emergency-home/finishRemoteSyncPolicy.ts", "utf8");
 const finishPackageResultPolicy = await readFile("src/features/emergency-home/finishPackageResultPolicy.ts", "utf8");
 const finishOwnerLiveEvidencePolicy = await readFile("src/features/emergency-home/finishOwnerLiveEvidencePolicy.ts", "utf8");
@@ -821,8 +827,11 @@ if (
 
 if (
   !homeScreen.includes("resolveFinishRequestedProgress") ||
-  !homeScreen.includes("resolveFinishMediaStopSettledProgress") ||
+  !homeScreen.includes("resolveFinishMediaStopStartActions") ||
+  !homeScreen.includes("resolveFinishMediaStopResultActions") ||
   !homeScreen.includes("resolveFinishRemoteSyncProgress") ||
+  !finishMediaStopStartPolicy.includes("resolveFinishMediaStopSignaledProgress") ||
+  !finishMediaStopResultPolicy.includes("resolveFinishMediaStopSettledProgress") ||
   !finishFlowProgressPolicy.includes("resolveMediaProtectionInProgress") ||
   !finishFlowProgressPolicy.includes("resolveFinishFailedProgress") ||
   !packageJson.scripts["test:finish-flow-progress"]
@@ -1029,6 +1038,25 @@ if (
   !packageJson.scripts["test:finish-active-call-cleanup"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para limpeza final do encerramento ativo.");
+}
+
+if (
+  !homeScreen.includes("resolveFinishMediaStopStartActions") ||
+  !finishMediaStopStartPolicy.includes("shouldLockCaptureStop") ||
+  !finishMediaStopStartPolicy.includes("shouldSetMediaStopPending") ||
+  !finishMediaStopStartPolicy.includes("mediaRecorderPackageId") ||
+  !packageJson.scripts["test:finish-media-stop-start"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para inicio da parada de midia no encerramento.");
+}
+
+if (
+  !homeScreen.includes("resolveFinishMediaStopResultActions") ||
+  !finishMediaStopResultPolicy.includes("shouldClearMediaStopPending") ||
+  !finishMediaStopResultPolicy.includes("emergency_media_stop_progress_result") ||
+  !packageJson.scripts["test:finish-media-stop-result"]
+) {
+  throw new Error("Home/SOS precisa manter policy pura testavel para resultado da parada de midia no encerramento.");
 }
 
 if (

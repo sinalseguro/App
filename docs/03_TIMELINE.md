@@ -4203,3 +4203,41 @@ Validacoes:
 Checkpoint:
 
 - `docs/126_CHECKPOINT_ETAPA_1_54_FINISH_FAILURE_ACTIONS_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.55 inicio da parada de midia no encerramento
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishMediaStopStartPolicy` para centralizar bloqueio de captura, estado pendente, pacote do recorder e progresso inicial da parada de midia.
+- `app/index.tsx` manteve os efeitos reais de setters React e espera do recorder.
+- `npm test` passou a executar `test:finish-media-stop-start`.
+
+Validacoes:
+
+- `test:finish-media-stop-start`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/127_CHECKPOINT_ETAPA_1_55_FINISH_MEDIA_STOP_START_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.56 resultado da parada de midia no encerramento
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishMediaStopResultPolicy` para centralizar limpeza de pending, evento de log saneado e progresso final da parada de midia.
+- `app/index.tsx` manteve os efeitos reais de log, estado React e apresentacao.
+- `npm test` passou a executar `test:finish-media-stop-result`.
+
+Validacoes:
+
+- `test:finish-media-stop-result`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida: aprovados.
+- ADB confirmou Android fisico `23129RA5FL` via Wi-Fi, mas sem build/perfil porque a mudanca nao altera UX nativa, chamada, camera, gravacao, WebRTC, backend ou storage.
+
+Checkpoint:
+
+- `docs/128_CHECKPOINT_ETAPA_1_56_FINISH_MEDIA_STOP_RESULT_POLICY_2026-05-18.md`.

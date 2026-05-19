@@ -763,3 +763,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:finish-failure-actions` cobre o payload saneado do erro e os textos finais preservados.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para catch inline no encerramento.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em erro/backend/UX nativa exige validacao proporcional.
+
+# Atualizacao - 2026-05-18 - Etapa 1.55 Home/SOS
+
+- `src/features/emergency-home/finishMediaStopStartPolicy.ts` centraliza a decisao inicial apos `stopSerial` no encerramento.
+- `app/index.tsx` continua responsavel por `setCaptureStopLocked()`, `setMediaStopPendingState()`, `setActivePackageId()`, `setMediaRecorderPackageId()` e `showFinishProgress()`.
+- Novo gate `npm run test:finish-media-stop-start` cobre bloqueio de captura, pending, pacote do recorder e progresso inicial.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para setup inline da parada de midia.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em recorder/camera exige validacao fisica/performance proporcional.
+
+# Atualizacao - 2026-05-18 - Etapa 1.56 Home/SOS
+
+- `src/features/emergency-home/finishMediaStopResultPolicy.ts` centraliza limpeza de pending, payload de `emergency_media_stop_progress_result` e progresso final da parada de midia.
+- `app/index.tsx` continua responsavel por `setMediaStopPendingState()`, `appendMediaOperationalLog()` e `showFinishProgress()`.
+- Novo gate `npm run test:finish-media-stop-result` cobre midia anexada e caminho sem midia anexada.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para log/progresso inline da parada de midia.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em recorder/camera/log runtime exige validacao proporcional.
