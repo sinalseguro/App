@@ -1,5 +1,27 @@
 import type { EmergencyRemoteSyncState } from "@/features/emergency/emergencySyncQueue";
 
+import {
+  resolveFinishRemoteSyncProgress,
+  type FinishFlowProgress
+} from "./finishFlowProgressPolicy";
+
+export type FinishRemoteSyncStartActionsDecision = {
+  finishProgress: FinishFlowProgress;
+  shouldQueueForRemoteSync: true;
+};
+
+export type FinishRemoteSyncModeDecision =
+  | {
+      mode: "direct_finish";
+      remoteSessionId: string;
+      shouldSyncPendingOnly: false;
+    }
+  | {
+      mode: "pending_sync";
+      remoteSessionId?: undefined;
+      shouldSyncPendingOnly: true;
+    };
+
 export type FinishRemoteFailureLogDecision =
   | {
       remoteFinishFailed: false;
@@ -16,6 +38,30 @@ export type FinishRemoteFailureLogDecision =
       remoteFinishFailed: true;
       shouldLog: true;
     };
+
+export function resolveFinishRemoteSyncStartActions(): FinishRemoteSyncStartActionsDecision {
+  return {
+    finishProgress: resolveFinishRemoteSyncProgress(),
+    shouldQueueForRemoteSync: true
+  };
+}
+
+export function resolveFinishRemoteSyncMode(input: {
+  remoteSessionIdToFinish?: string | null;
+}): FinishRemoteSyncModeDecision {
+  if (input.remoteSessionIdToFinish) {
+    return {
+      mode: "direct_finish",
+      remoteSessionId: input.remoteSessionIdToFinish,
+      shouldSyncPendingOnly: false
+    };
+  }
+
+  return {
+    mode: "pending_sync",
+    shouldSyncPendingOnly: true
+  };
+}
 
 export function shouldRetryRemoteFinishAfterDirect(state: EmergencyRemoteSyncState): boolean {
   return state.remoteFinishStatus !== "finished";

@@ -779,3 +779,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:finish-media-stop-result` cobre midia anexada e caminho sem midia anexada.
 - `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para log/progresso inline da parada de midia.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em recorder/camera/log runtime exige validacao proporcional.
+
+# Atualizacao - 2026-05-18 - Etapa 1.57 Home/SOS
+
+- `src/features/emergency-home/finishRemoteSyncPolicy.ts` ganhou `resolveFinishRemoteSyncStartActions()` para centralizar a decision inicial da sync remota final.
+- `app/index.tsx` continua responsavel por `queueEmergencyPackageForRemoteSync()` e `showFinishProgress()`.
+- `npm run test:finish-remote-sync` cobre a fila remota obrigatoria e progresso final de sincronizacao.
+- `scripts/smoke-test.mjs` exige a decision para evitar regressao para regra inline no inicio da sync remota.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em API/backend exige validacao proporcional.
+
+# Atualizacao - 2026-05-18 - Etapa 1.58 Home/SOS
+
+- `src/features/emergency-home/finishRemoteSyncPolicy.ts` ganhou `resolveFinishRemoteSyncMode()` para centralizar modo direto `direct_finish` ou fallback `pending_sync`.
+- `app/index.tsx` continua responsavel por `finishRemoteEmergencySessionForPackage()`, `syncPendingEmergencyPackagesWithApi()`, retry e estado remoto final.
+- `npm run test:finish-remote-sync` cobre sessao remota valida, `null` e string vazia.
+- `scripts/smoke-test.mjs` exige os modos para evitar regressao para selecao inline no encerramento.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em API/backend exige validacao proporcional.

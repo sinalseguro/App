@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 
 import {
+  resolveFinishRemoteSyncMode,
+  resolveFinishRemoteSyncStartActions,
   resolveRemoteFinishFailureLog,
   resolveRemoteFinishStateAfterDirect,
   resolveRemoteFinishStateFromSync,
@@ -26,6 +28,47 @@ const finishedDirect = state({
   remoteFinishStatus: "finished",
   remoteSessionId: "session-1"
 });
+
+assert.deepEqual(resolveFinishRemoteSyncStartActions(), {
+  finishProgress: {
+    detail: "Confirmando o encerramento seguro com a central.",
+    progress: 86,
+    status: "running",
+    title: "Sincronizando chamado"
+  },
+  shouldQueueForRemoteSync: true
+});
+
+assert.deepEqual(
+  resolveFinishRemoteSyncMode({
+    remoteSessionIdToFinish: "session-1"
+  }),
+  {
+    mode: "direct_finish",
+    remoteSessionId: "session-1",
+    shouldSyncPendingOnly: false
+  }
+);
+
+assert.deepEqual(
+  resolveFinishRemoteSyncMode({
+    remoteSessionIdToFinish: null
+  }),
+  {
+    mode: "pending_sync",
+    shouldSyncPendingOnly: true
+  }
+);
+
+assert.deepEqual(
+  resolveFinishRemoteSyncMode({
+    remoteSessionIdToFinish: ""
+  }),
+  {
+    mode: "pending_sync",
+    shouldSyncPendingOnly: true
+  }
+);
 
 assert.equal(shouldRetryRemoteFinishAfterDirect(finishedDirect), false);
 

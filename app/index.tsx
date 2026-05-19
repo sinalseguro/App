@@ -41,6 +41,8 @@ import { resolveFinishOwnerLiveEvidenceUpdate } from "@/features/emergency-home/
 import { resolveFinishPackageResult } from "@/features/emergency-home/finishPackageResultPolicy";
 import { resolveFinishProgressDialogPresentation } from "@/features/emergency-home/finishProgressDialogPolicy";
 import {
+  resolveFinishRemoteSyncMode,
+  resolveFinishRemoteSyncStartActions,
   resolveRemoteFinishFailureLog,
   resolveRemoteFinishStateAfterDirect,
   resolveRemoteFinishStateFromSync,
@@ -1361,13 +1363,19 @@ export default function HomeScreen() {
         return;
       }
 
-      await queueEmergencyPackageForRemoteSync(result.packageRecord);
-      showFinishProgress(resolveFinishRemoteSyncProgress());
+      const remoteSyncStartActions = resolveFinishRemoteSyncStartActions();
+      if (remoteSyncStartActions.shouldQueueForRemoteSync) {
+        await queueEmergencyPackageForRemoteSync(result.packageRecord);
+      }
+      showFinishProgress(remoteSyncStartActions.finishProgress);
       let remoteFinishState: EmergencyRemoteSyncState | undefined;
-      if (remoteSessionIdToFinish) {
+      const remoteSyncMode = resolveFinishRemoteSyncMode({
+        remoteSessionIdToFinish
+      });
+      if (remoteSyncMode.mode === "direct_finish") {
         const directFinishState = await finishRemoteEmergencySessionForPackage(
           result.packageRecord,
-          remoteSessionIdToFinish
+          remoteSyncMode.remoteSessionId
         );
         const retryStates = shouldRetryRemoteFinishAfterDirect(directFinishState)
           ? await syncPendingEmergencyPackagesWithApi()

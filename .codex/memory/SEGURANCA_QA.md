@@ -771,3 +771,21 @@ Papel: seguranca, LGPD e QA.
 - Varredura dirigida do diff nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
 - Validacoes aprovadas: `test:finish-media-stop-result`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida.
 - Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-18 - Etapa 1.57 policy pura de inicio da sync remota final
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido novo, backend, portal ou release.
+- Gate `npm run test:finish-remote-sync` cobre fila remota obrigatoria e progresso de sincronizacao.
+- A policy nao chama API nem grava fila; `app/index.tsx` continua responsavel pelos efeitos reais.
+- Varredura dirigida do diff nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: `test:finish-remote-sync`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-18 - Etapa 1.58 policy pura de modo da sync remota final
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido novo, backend, portal ou release.
+- Gate `npm run test:finish-remote-sync` cobre caminho direto, caminho pendente e entrada vazia.
+- A policy nao chama backend, nao reenvia fila e nao toca WebRTC; `app/index.tsx` continua responsavel pelos efeitos reais.
+- Varredura dirigida do diff nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: `test:finish-remote-sync`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.

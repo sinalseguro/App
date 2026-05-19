@@ -1060,9 +1060,14 @@ if (
 }
 
 if (
+  !homeScreen.includes("resolveFinishRemoteSyncStartActions") ||
+  !homeScreen.includes("resolveFinishRemoteSyncMode") ||
   !homeScreen.includes("resolveRemoteFinishStateAfterDirect") ||
   !homeScreen.includes("resolveRemoteFinishStateFromSync") ||
   !homeScreen.includes("resolveRemoteFinishFailureLog") ||
+  !finishRemoteSyncPolicy.includes("shouldQueueForRemoteSync") ||
+  !finishRemoteSyncPolicy.includes("direct_finish") ||
+  !finishRemoteSyncPolicy.includes("pending_sync") ||
   !finishRemoteSyncPolicy.includes("shouldRetryRemoteFinishAfterDirect") ||
   !finishRemoteSyncPolicy.includes("emergency_remote_finish_sync_error") ||
   !packageJson.scripts["test:finish-remote-sync"]

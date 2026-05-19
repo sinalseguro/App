@@ -4241,3 +4241,41 @@ Validacoes:
 Checkpoint:
 
 - `docs/128_CHECKPOINT_ETAPA_1_56_FINISH_MEDIA_STOP_RESULT_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.57 inicio da sincronizacao remota no encerramento
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Atualizada `finishRemoteSyncPolicy` com `resolveFinishRemoteSyncStartActions()` para centralizar fila remota obrigatoria e progresso `Sincronizando chamado`.
+- `app/index.tsx` manteve os efeitos reais de fila local e apresentacao.
+- `test:finish-remote-sync` passou a cobrir a decision.
+
+Validacoes:
+
+- `test:finish-remote-sync`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/129_CHECKPOINT_ETAPA_1_57_FINISH_REMOTE_SYNC_START_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.58 modo da sincronizacao remota no encerramento
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Atualizada `finishRemoteSyncPolicy` com `resolveFinishRemoteSyncMode()` para centralizar selecao entre `direct_finish` e `pending_sync`.
+- `app/index.tsx` manteve os efeitos reais de API direta, retry e sincronizacao pendente.
+- `test:finish-remote-sync` passou a cobrir sessao valida, `null` e string vazia.
+
+Validacoes:
+
+- `test:finish-remote-sync`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida: aprovados.
+- ADB confirmou Android fisico `23129RA5FL` via Wi-Fi, mas sem build/perfil porque a mudanca nao altera UX nativa, chamada, camera, gravacao, WebRTC, backend ou storage.
+
+Checkpoint:
+
+- `docs/130_CHECKPOINT_ETAPA_1_58_FINISH_REMOTE_SYNC_MODE_POLICY_2026-05-18.md`.
