@@ -19,7 +19,8 @@ import {
 } from "@/features/emergency-home/emergencyStartPolicy";
 import { resolveEmergencyCallConfirmation } from "@/features/emergency-home/emergencyCallConfirmationPolicy";
 import { resolveEmergencyHomeActivityPresentation } from "@/features/emergency-home/emergencyHomeActivityPolicy";
-import { resolveEmergencyStartFailureDialogPresentation } from "@/features/emergency-home/emergencyStartFailureDialogPolicy";
+import { resolveEmergencyStartFailureActions } from "@/features/emergency-home/emergencyStartFailureActionsPolicy";
+import { resolveEmergencyStartRuntimeActions } from "@/features/emergency-home/emergencyStartRuntimePolicy";
 import { resolveFinishActiveCallCleanup } from "@/features/emergency-home/finishActiveCallCleanupPolicy";
 import { resolveFinishActiveCallRuntimeStartActions } from "@/features/emergency-home/finishActiveCallRuntimeStartPolicy";
 import { resolveFinishActiveCallStart } from "@/features/emergency-home/finishActiveCallStartPolicy";
@@ -1188,18 +1189,25 @@ export default function HomeScreen() {
         break;
     }
 
-    setRecordingStatus(resolveLocalSosPackageStatus({ event: "start_requested" }));
-    liveAudioCall.resetLiveAudioCall();
-    setLiveRemoteSessionId(null);
-    ownerAutoCallPausedSessionIdsRef.current.clear();
-    ownerAutoCallStartedSessionIdsRef.current.clear();
-    setStartInProgress(true);
-    appendMediaOperationalLog("emergency_start_requested", {
-      defaultDurationSeconds: preferences.defaultDurationSeconds,
-      localVideoEnabled: preferences.localVideoCapture.requestOnSos,
+    const emergencyStartRuntimeActions = resolveEmergencyStartRuntimeActions({
       platform: Platform.OS,
-      requestedCameraMode: preferences.localVideoCapture.cameraMode
+      preferences
     });
+    setRecordingStatus(emergencyStartRuntimeActions.recordingStatus);
+    if (emergencyStartRuntimeActions.shouldResetLiveAudioCall) {
+      liveAudioCall.resetLiveAudioCall();
+    }
+    if (emergencyStartRuntimeActions.shouldClearLiveRemoteSession) {
+      setLiveRemoteSessionId(null);
+    }
+    if (emergencyStartRuntimeActions.shouldClearOwnerAutoCallState) {
+      ownerAutoCallPausedSessionIdsRef.current.clear();
+      ownerAutoCallStartedSessionIdsRef.current.clear();
+    }
+    if (emergencyStartRuntimeActions.shouldMarkStartInProgress) {
+      setStartInProgress(true);
+    }
+    appendMediaOperationalLog(emergencyStartRuntimeActions.logEvent, emergencyStartRuntimeActions.logPayload);
 
     try {
       const startRequestPolicy = resolveEmergencyStartRequestPolicy({
@@ -1246,18 +1254,23 @@ export default function HomeScreen() {
 
       setRecordingStatus(startPresentation.recordingStatus);
     } catch (error) {
-      appendMediaOperationalLog("emergency_start_error", {
+      const emergencyStartFailureActions = resolveEmergencyStartFailureActions({
         platform: Platform.OS
-      }, error);
-      setActivePackageId(null);
-      setRecordingStatus(resolveLocalSosPackageStatus({ event: "start_failed" }));
-      const startFailureDialog = resolveEmergencyStartFailureDialogPresentation();
-      setDialog({
-        title: startFailureDialog.title,
-        message: startFailureDialog.message,
-        icon: <LockKeyhole size={18} color={theme.colors.danger} />,
-        actions: [{ label: startFailureDialog.confirmLabel, tone: "danger" }]
       });
+      appendMediaOperationalLog(emergencyStartFailureActions.logEvent, emergencyStartFailureActions.logPayload, error);
+      if (emergencyStartFailureActions.shouldClearActivePackageId) {
+        setActivePackageId(null);
+      }
+      setRecordingStatus(emergencyStartFailureActions.recordingStatus);
+      if (emergencyStartFailureActions.shouldShowDialog) {
+        const startFailureDialog = emergencyStartFailureActions.dialogPresentation;
+        setDialog({
+          title: startFailureDialog.title,
+          message: startFailureDialog.message,
+          icon: <LockKeyhole size={18} color={theme.colors.danger} />,
+          actions: [{ label: startFailureDialog.confirmLabel, tone: "danger" }]
+        });
+      }
     } finally {
       setStartInProgress(false);
     }

@@ -4393,3 +4393,41 @@ Validacoes:
 Checkpoint:
 
 - `docs/136_CHECKPOINT_ETAPA_1_64_MEDIA_STOP_PENDING_REQUEST_COMPLETION_POLICY_2026-05-19.md`.
+
+## 2026-05-19 - Etapa 1.65 runtime inicial do SOS
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `emergencyStartRuntimePolicy` para centralizar status inicial, log saneado, reset de chamada, limpeza de sessao remota e estado de inicio em progresso.
+- `app/index.tsx` manteve os efeitos reais de reset, limpeza de refs, estados React e log operacional.
+- `test:emergency-start-runtime` cobre payload Android com video local e payload iOS sem video local.
+
+Validacoes:
+
+- `test:emergency-start-runtime`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida: aprovados.
+- ADB confirmou Android fisico `23129RA5FL` via Wi-Fi, mas sem build/perfil porque a mudanca nao altera UX nativa, chamada, camera, gravacao, WebRTC, backend ou storage.
+
+Checkpoint:
+
+- `docs/137_CHECKPOINT_ETAPA_1_65_EMERGENCY_START_RUNTIME_POLICY_2026-05-19.md`.
+
+## 2026-05-19 - Etapa 1.66 falha controlada ao iniciar SOS
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `emergencyStartFailureActionsPolicy` para centralizar log, status, limpeza de pacote ativo e dialogo de falha no inicio.
+- `app/index.tsx` manteve os efeitos reais de log com erro, limpeza de estado, status e modal.
+- `test:emergency-start-failure-actions` cobre payload saneado, status e dialogo.
+
+Validacoes:
+
+- `test:emergency-start-failure-actions`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/138_CHECKPOINT_ETAPA_1_66_EMERGENCY_START_FAILURE_ACTIONS_POLICY_2026-05-19.md`.

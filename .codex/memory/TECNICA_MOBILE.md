@@ -842,3 +842,18 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `app/index.tsx` continua responsavel por `clearTimeout()`, limpar `pendingMediaStopRequestRef` e resolver a promise do pedido.
 - Novo gate `npm run test:media-stop-pending-request-completion` cobre serial compativel, serial divergente e ausencia de pedido pendente.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em waiter/recorder exige validacao fisica proporcional.
+
+# Atualizacao - 2026-05-19 - Etapa 1.65 Home/SOS
+
+- `src/features/emergency-home/emergencyStartRuntimePolicy.ts` centraliza as acoes iniciais de runtime ao iniciar o SOS.
+- `app/index.tsx` continua responsavel por resetar chamada ao vivo, limpar sessao remota/autochamada, marcar inicio em progresso e registrar log.
+- Novo gate `npm run test:emergency-start-runtime` cobre payload Android com video local e payload iOS sem video local.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em criacao de pacote/camera/chamada exige validacao proporcional.
+
+# Atualizacao - 2026-05-19 - Etapa 1.66 Home/SOS
+
+- `src/features/emergency-home/emergencyStartFailureActionsPolicy.ts` centraliza a falha controlada ao iniciar o SOS.
+- `app/index.tsx` continua responsavel por registrar o erro, limpar pacote ativo, atualizar status e mostrar o modal.
+- `emergencyStartFailureDialogPolicy.ts` segue preservada e testada individualmente.
+- Novo gate `npm run test:emergency-start-failure-actions` cobre payload saneado, status e dialogo.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em start/backend/UX real exige validacao proporcional.

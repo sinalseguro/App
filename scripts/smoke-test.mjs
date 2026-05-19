@@ -40,6 +40,8 @@ const requiredFiles = [
   "src/features/emergency-home/emergencyCallConfirmationPolicy.ts",
   "src/features/emergency-home/emergencyHomeActivityPolicy.ts",
   "src/features/emergency-home/emergencyStartFailureDialogPolicy.ts",
+  "src/features/emergency-home/emergencyStartFailureActionsPolicy.ts",
+  "src/features/emergency-home/emergencyStartRuntimePolicy.ts",
   "src/features/emergency-home/finishFlowProgressPolicy.ts",
   "src/features/emergency-home/finishProgressDialogPolicy.ts",
   "src/features/emergency-home/finishProgressStatePolicy.ts",
@@ -131,6 +133,8 @@ const requiredFiles = [
   "scripts/emergency-home-activity-policy.test.ts",
   "scripts/emergency-call-hero-policy.test.ts",
   "scripts/emergency-start-policy.test.ts",
+  "scripts/emergency-start-runtime-policy.test.ts",
+  "scripts/emergency-start-failure-actions-policy.test.ts",
   "scripts/remote-sync-status-policy.test.ts",
   "scripts/owner-auto-call-policy.test.ts",
   "scripts/live-call-waiting-dialog-policy.test.ts",
@@ -256,6 +260,8 @@ const emergencyCallConfirmationPolicy = await readFile("src/features/emergency-h
 const emergencyCallHeroPolicy = await readFile("src/features/emergency-home/emergencyCallHeroPolicy.ts", "utf8");
 const emergencyHomeActivityPolicy = await readFile("src/features/emergency-home/emergencyHomeActivityPolicy.ts", "utf8");
 const emergencyStartFailureDialogPolicy = await readFile("src/features/emergency-home/emergencyStartFailureDialogPolicy.ts", "utf8");
+const emergencyStartFailureActionsPolicy = await readFile("src/features/emergency-home/emergencyStartFailureActionsPolicy.ts", "utf8");
+const emergencyStartRuntimePolicy = await readFile("src/features/emergency-home/emergencyStartRuntimePolicy.ts", "utf8");
 const finishFlowProgressPolicy = await readFile("src/features/emergency-home/finishFlowProgressPolicy.ts", "utf8");
 const finishProgressDialogPolicy = await readFile("src/features/emergency-home/finishProgressDialogPolicy.ts", "utf8");
 const finishProgressStatePolicy = await readFile("src/features/emergency-home/finishProgressStatePolicy.ts", "utf8");
@@ -879,23 +885,30 @@ if (
 }
 
 if (
+  !homeScreen.includes("resolveEmergencyStartRuntimeActions") ||
   !homeScreen.includes("resolveEmergencyStartRequestPolicy") ||
   !homeScreen.includes("resolveEmergencyStartPresentation") ||
+  !emergencyStartRuntimePolicy.includes("emergency_start_requested") ||
+  !emergencyStartRuntimePolicy.includes("shouldClearOwnerAutoCallState") ||
   !emergencyStartPolicy.includes("resolveEmergencyStartRequestPolicy") ||
   !emergencyStartPolicy.includes("resolveEmergencyStartPresentation") ||
   !emergencyStartPolicy.includes("foreground_when_triggered") ||
   !emergencyStartPolicy.includes("shouldOpenEmergencyPhoneCall") ||
   !emergencyStartPolicy.includes("Localizacao preservada.") ||
   !emergencyStartPolicy.includes("Arquivo no cofre local") ||
+  !packageJson.scripts["test:emergency-start-runtime"] ||
   !packageJson.scripts["test:emergency-start"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para inicio do chamado e apresentacao inicial.");
 }
 
 if (
-  !homeScreen.includes("resolveEmergencyStartFailureDialogPresentation") ||
+  !homeScreen.includes("resolveEmergencyStartFailureActions") ||
+  !emergencyStartFailureActionsPolicy.includes("resolveEmergencyStartFailureDialogPresentation") ||
+  !emergencyStartFailureActionsPolicy.includes("emergency_start_error") ||
   !emergencyStartFailureDialogPolicy.includes("resolveEmergencyStartFailureDialogPresentation") ||
   !emergencyStartFailureDialogPolicy.includes("Use 190, 193 ou 192") ||
+  !packageJson.scripts["test:emergency-start-failure-actions"] ||
   !packageJson.scripts["test:emergency-start-failure-dialog"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para apresentacao de falha ao iniciar chamado.");
