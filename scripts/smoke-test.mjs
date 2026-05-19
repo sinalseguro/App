@@ -57,6 +57,7 @@ const requiredFiles = [
   "src/features/emergency-home/mediaStopSettlementRequestPolicy.ts",
   "src/features/emergency-home/mediaStopWaiterPolicy.ts",
   "src/features/emergency-home/finishActiveCallStartPolicy.ts",
+  "src/features/emergency-home/finishActiveCallRuntimeStartPolicy.ts",
   "src/features/emergency-home/finishActiveCallCleanupPolicy.ts",
   "src/features/emergency-home/finishMediaStopStartPolicy.ts",
   "src/features/emergency-home/finishMediaStopResultPolicy.ts",
@@ -66,6 +67,7 @@ const requiredFiles = [
   "src/features/emergency-home/finishOwnerLiveEvidencePolicy.ts",
   "src/features/emergency-home/finishOwnerLiveAuditPolicy.ts",
   "src/features/emergency-home/finishOwnerCompletionPolicy.ts",
+  "src/features/emergency-home/finishPostOutcomeActionsPolicy.ts",
   "src/features/emergency-home/finishNoMediaDiagnosticPolicy.ts",
   "src/features/emergency-home/finishCompletionActionsPolicy.ts",
   "src/features/emergency-home/finishMissingPackagePolicy.ts",
@@ -146,6 +148,7 @@ const requiredFiles = [
   "scripts/media-stop-settlement-request-policy.test.ts",
   "scripts/media-stop-waiter-policy.test.ts",
   "scripts/finish-active-call-start-policy.test.ts",
+  "scripts/finish-active-call-runtime-start-policy.test.ts",
   "scripts/finish-active-call-cleanup-policy.test.ts",
   "scripts/finish-media-stop-start-policy.test.ts",
   "scripts/finish-media-stop-result-policy.test.ts",
@@ -155,6 +158,7 @@ const requiredFiles = [
   "scripts/finish-owner-live-evidence-policy.test.ts",
   "scripts/finish-owner-live-audit-policy.test.ts",
   "scripts/finish-owner-completion-policy.test.ts",
+  "scripts/finish-post-outcome-actions-policy.test.ts",
   "scripts/finish-no-media-diagnostic-policy.test.ts",
   "scripts/finish-completion-actions-policy.test.ts",
   "scripts/finish-missing-package-policy.test.ts",
@@ -265,6 +269,7 @@ const mediaStopSignalPolicy = await readFile("src/features/emergency-home/mediaS
 const mediaStopSettlementRequestPolicy = await readFile("src/features/emergency-home/mediaStopSettlementRequestPolicy.ts", "utf8");
 const mediaStopWaiterPolicy = await readFile("src/features/emergency-home/mediaStopWaiterPolicy.ts", "utf8");
 const finishActiveCallStartPolicy = await readFile("src/features/emergency-home/finishActiveCallStartPolicy.ts", "utf8");
+const finishActiveCallRuntimeStartPolicy = await readFile("src/features/emergency-home/finishActiveCallRuntimeStartPolicy.ts", "utf8");
 const finishActiveCallCleanupPolicy = await readFile("src/features/emergency-home/finishActiveCallCleanupPolicy.ts", "utf8");
 const finishMediaStopStartPolicy = await readFile("src/features/emergency-home/finishMediaStopStartPolicy.ts", "utf8");
 const finishMediaStopResultPolicy = await readFile("src/features/emergency-home/finishMediaStopResultPolicy.ts", "utf8");
@@ -274,6 +279,7 @@ const finishOutcomeInputPolicy = await readFile("src/features/emergency-home/fin
 const finishOwnerLiveEvidencePolicy = await readFile("src/features/emergency-home/finishOwnerLiveEvidencePolicy.ts", "utf8");
 const finishOwnerLiveAuditPolicy = await readFile("src/features/emergency-home/finishOwnerLiveAuditPolicy.ts", "utf8");
 const finishOwnerCompletionPolicy = await readFile("src/features/emergency-home/finishOwnerCompletionPolicy.ts", "utf8");
+const finishPostOutcomeActionsPolicy = await readFile("src/features/emergency-home/finishPostOutcomeActionsPolicy.ts", "utf8");
 const finishNoMediaDiagnosticPolicy = await readFile("src/features/emergency-home/finishNoMediaDiagnosticPolicy.ts", "utf8");
 const finishCompletionActionsPolicy = await readFile("src/features/emergency-home/finishCompletionActionsPolicy.ts", "utf8");
 const finishMissingPackagePolicy = await readFile("src/features/emergency-home/finishMissingPackagePolicy.ts", "utf8");
@@ -832,7 +838,7 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishRequestedProgress") ||
+  !finishActiveCallRuntimeStartPolicy.includes("resolveFinishRequestedProgress") ||
   !homeScreen.includes("resolveFinishMediaStopStartActions") ||
   !homeScreen.includes("resolveFinishMediaStopResultActions") ||
   !homeScreen.includes("resolveFinishRemoteSyncProgress") ||
@@ -1032,9 +1038,13 @@ if (
 
 if (
   !homeScreen.includes("resolveFinishActiveCallStart") ||
+  !homeScreen.includes("resolveFinishActiveCallRuntimeStartActions") ||
   !homeScreen.includes("finishStartDecision.shouldStart") ||
   !finishActiveCallStartPolicy.includes("remoteSessionIdToFinish") ||
   !finishActiveCallStartPolicy.includes("mediaWasHandedToLiveCall") ||
+  !finishActiveCallRuntimeStartPolicy.includes("shouldClearOwnerAutoCallSession") ||
+  !finishActiveCallRuntimeStartPolicy.includes("emergency_finish_button_pressed") ||
+  !packageJson.scripts["test:finish-active-call-runtime-start"] ||
   !packageJson.scripts["test:finish-active-call-start"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para guarda inicial do encerramento ativo.");
@@ -1119,19 +1129,24 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishNoMediaDiagnosticRequest") ||
+  !homeScreen.includes("resolveFinishPostOutcomeActions") ||
+  !finishPostOutcomeActionsPolicy.includes("resolveFinishNoMediaDiagnosticRequest") ||
+  !finishPostOutcomeActionsPolicy.includes("resolveFinishCompletionActions") ||
   !finishNoMediaDiagnosticPolicy.includes("shouldPersist") ||
   !finishNoMediaDiagnosticPolicy.includes("camera_no_file_returned") ||
+  !packageJson.scripts["test:finish-post-outcome"] ||
   !packageJson.scripts["test:finish-no-media-diagnostic"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para diagnostico sem midia no encerramento.");
 }
 
 if (
-  !homeScreen.includes("resolveFinishCompletionActions") ||
+  !homeScreen.includes("resolveFinishPostOutcomeActions") ||
+  !finishPostOutcomeActionsPolicy.includes("resolveFinishCompletionActions") ||
   !finishCompletionActionsPolicy.includes("shouldCloseFinishConfirmation") ||
   !finishCompletionActionsPolicy.includes("shouldClearFinishCodeInput") ||
   !finishCompletionActionsPolicy.includes("shouldClearFinishError") ||
+  !packageJson.scripts["test:finish-post-outcome"] ||
   !packageJson.scripts["test:finish-completion-actions"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para acoes finais do encerramento.");

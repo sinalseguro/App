@@ -21,11 +21,10 @@ import { resolveEmergencyCallConfirmation } from "@/features/emergency-home/emer
 import { resolveEmergencyHomeActivityPresentation } from "@/features/emergency-home/emergencyHomeActivityPolicy";
 import { resolveEmergencyStartFailureDialogPresentation } from "@/features/emergency-home/emergencyStartFailureDialogPolicy";
 import { resolveFinishActiveCallCleanup } from "@/features/emergency-home/finishActiveCallCleanupPolicy";
+import { resolveFinishActiveCallRuntimeStartActions } from "@/features/emergency-home/finishActiveCallRuntimeStartPolicy";
 import { resolveFinishActiveCallStart } from "@/features/emergency-home/finishActiveCallStartPolicy";
-import { resolveFinishCompletionActions } from "@/features/emergency-home/finishCompletionActionsPolicy";
 import {
   resolveFinishRemoteSyncProgress,
-  resolveFinishRequestedProgress,
   resolveMediaProtectionInProgress
 } from "@/features/emergency-home/finishFlowProgressPolicy";
 import { resolveFinishCodeConfirmationDecision } from "@/features/emergency-home/finishCodePolicy";
@@ -34,11 +33,11 @@ import { resolveFinishFailureActions } from "@/features/emergency-home/finishFai
 import { resolveFinishMediaStopResultActions } from "@/features/emergency-home/finishMediaStopResultPolicy";
 import { resolveFinishMediaStopStartActions } from "@/features/emergency-home/finishMediaStopStartPolicy";
 import { resolveFinishMissingPackageActions } from "@/features/emergency-home/finishMissingPackagePolicy";
-import { resolveFinishNoMediaDiagnosticRequest } from "@/features/emergency-home/finishNoMediaDiagnosticPolicy";
 import { resolveFinishOutcomeInput } from "@/features/emergency-home/finishOutcomeInputPolicy";
 import { resolveFinishOutcomePolicy } from "@/features/emergency-home/finishOutcomePolicy";
 import { resolveFinishOwnerCompletionActions } from "@/features/emergency-home/finishOwnerCompletionPolicy";
 import { resolveFinishPackageResult } from "@/features/emergency-home/finishPackageResultPolicy";
+import { resolveFinishPostOutcomeActions } from "@/features/emergency-home/finishPostOutcomeActionsPolicy";
 import { resolveFinishProgressDialogPresentation } from "@/features/emergency-home/finishProgressDialogPolicy";
 import {
   resolveFinishRemoteSyncMode,
@@ -1304,20 +1303,30 @@ export default function HomeScreen() {
     if (!finishStartDecision.shouldStart) return;
 
     const { mediaWasHandedToLiveCall, packageId, remoteSessionIdToFinish } = finishStartDecision;
-    const liveVideoAttachedAsset = await stopOwnerLiveVideoEvidence("finish");
-    liveAudioCall.resetLiveAudioCall();
-    if (remoteSessionIdToFinish) {
+    const finishRuntimeStartActions = resolveFinishActiveCallRuntimeStartActions({
+      platform: Platform.OS,
+      remoteSessionIdToFinish
+    });
+    const liveVideoAttachedAsset = finishRuntimeStartActions.shouldStopOwnerLiveVideoEvidence
+      ? await stopOwnerLiveVideoEvidence("finish")
+      : null;
+    if (finishRuntimeStartActions.shouldResetLiveAudioCall) {
+      liveAudioCall.resetLiveAudioCall();
+    }
+    if (finishRuntimeStartActions.shouldClearOwnerAutoCallSession && remoteSessionIdToFinish) {
       ownerAutoCallPausedSessionIdsRef.current.delete(remoteSessionIdToFinish);
       ownerAutoCallStartedSessionIdsRef.current.delete(remoteSessionIdToFinish);
     }
-    setLiveRemoteSessionId(null);
-    finishInProgressRef.current = true;
-    setFinishInProgress(true);
-    setRecordingStatus(resolveLocalSosPackageStatus({ event: "finish_requested" }));
-    showFinishProgress(resolveFinishRequestedProgress());
-    appendMediaOperationalLog("emergency_finish_button_pressed", {
-      platform: Platform.OS
-    });
+    if (finishRuntimeStartActions.shouldClearLiveRemoteSession) {
+      setLiveRemoteSessionId(null);
+    }
+    if (finishRuntimeStartActions.shouldMarkFinishInProgress) {
+      finishInProgressRef.current = true;
+      setFinishInProgress(true);
+    }
+    setRecordingStatus(finishRuntimeStartActions.recordingStatus);
+    showFinishProgress(finishRuntimeStartActions.finishProgress);
+    appendMediaOperationalLog(finishRuntimeStartActions.logEvent, finishRuntimeStartActions.logPayload);
 
     try {
       mediaStopPurposeRef.current = "finish";
@@ -1425,13 +1434,12 @@ export default function HomeScreen() {
       updateOwnerLiveEvidence(remoteSessionIdToFinish, finishOwnerCompletionActions.evidenceUpdate);
       const finishOwnerAuditMarker = finishOwnerCompletionActions.auditMarker;
       recordOwnerLiveAuditMarker(remoteSessionIdToFinish, finishOwnerAuditMarker.event, finishOwnerAuditMarker.options);
-      const finishCompletionActions = resolveFinishCompletionActions({
-        finishOutcome
-      });
-      const finishNoMediaDiagnostic = resolveFinishNoMediaDiagnosticRequest({
-        diagnosticReason: finishOutcome.diagnosticReason,
+      const finishPostOutcomeActions = resolveFinishPostOutcomeActions({
+        finishOutcome,
         packageId
       });
+      const finishCompletionActions = finishPostOutcomeActions.completionActions;
+      const finishNoMediaDiagnostic = finishPostOutcomeActions.noMediaDiagnostic;
       setRecordingStatus(finishCompletionActions.recordingStatus);
       if (finishNoMediaDiagnostic.shouldPersist) {
         await persistFinishNoMediaDiagnostic(finishNoMediaDiagnostic.packageId, finishNoMediaDiagnostic.reason);

@@ -4317,3 +4317,41 @@ Validacoes:
 Checkpoint:
 
 - `docs/132_CHECKPOINT_ETAPA_1_60_FINISH_OWNER_COMPLETION_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.61 runtime inicial do encerramento ativo
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishActiveCallRuntimeStartPolicy` para centralizar progresso inicial, status local, log saneado e flags de runtime no inicio do encerramento.
+- `app/index.tsx` manteve os efeitos reais de parar evidencia ao vivo, resetar chamada, limpar refs e atualizar estados React.
+- `test:finish-active-call-runtime-start` passou a cobrir sessao remota presente e ausente.
+
+Validacoes:
+
+- `test:finish-active-call-runtime-start`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida: aprovados.
+- ADB confirmou Android fisico `23129RA5FL` via Wi-Fi, mas sem build/perfil porque a mudanca nao altera UX nativa, chamada, camera, gravacao, WebRTC, backend ou storage.
+
+Checkpoint:
+
+- `docs/133_CHECKPOINT_ETAPA_1_61_FINISH_RUNTIME_START_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.62 acoes pos-outcome do encerramento
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishPostOutcomeActionsPolicy` para agrupar `completionActions` e `noMediaDiagnostic`.
+- `app/index.tsx` manteve os efeitos reais de persistir diagnostico, atualizar status, progresso e limpar formulario.
+- `test:finish-post-outcome` passou a cobrir caminho com diagnostico e caminho protegido sem diagnostico.
+
+Validacoes:
+
+- `test:finish-post-outcome`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/134_CHECKPOINT_ETAPA_1_62_FINISH_POST_OUTCOME_POLICY_2026-05-18.md`.

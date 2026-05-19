@@ -811,3 +811,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - As policies especificas `finishOwnerLiveEvidencePolicy.ts` e `finishOwnerLiveAuditPolicy.ts` seguem preservadas e testadas.
 - Novo gate `npm run test:finish-owner-completion` cobre caminhos protegido e falho.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em auditoria/backend/UX real exige validacao proporcional.
+
+# Atualizacao - 2026-05-18 - Etapa 1.61 Home/SOS
+
+- `src/features/emergency-home/finishActiveCallRuntimeStartPolicy.ts` centraliza as acoes iniciais de runtime do encerramento ativo.
+- `app/index.tsx` continua responsavel por parar evidencia de video ao vivo, resetar chamada, limpar refs de autochamada e aplicar estados React.
+- Novo gate `npm run test:finish-active-call-runtime-start` cobre sessao remota presente e ausente.
+- `scripts/smoke-test.mjs` exige a nova policy e valida que o progresso inicial saiu da tela para a policy.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em chamada/camera/WebRTC exige validacao proporcional.
+
+# Atualizacao - 2026-05-18 - Etapa 1.62 Home/SOS
+
+- `src/features/emergency-home/finishPostOutcomeActionsPolicy.ts` agrupa `resolveFinishCompletionActions()` e `resolveFinishNoMediaDiagnosticRequest()`.
+- `app/index.tsx` continua responsavel por `persistFinishNoMediaDiagnostic()`, `setRecordingStatus()`, `showFinishProgress()` e limpeza do formulario.
+- Novo gate `npm run test:finish-post-outcome` cobre caminho com diagnostico e caminho protegido sem diagnostico.
+- As policies individuais de diagnostico e completion seguem preservadas e testadas.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em recorder/cofre/backend/UX real exige validacao proporcional.
