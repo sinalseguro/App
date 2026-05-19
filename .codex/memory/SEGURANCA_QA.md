@@ -789,3 +789,21 @@ Papel: seguranca, LGPD e QA.
 - Varredura dirigida do diff nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
 - Validacoes aprovadas: `test:finish-remote-sync`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida.
 - Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-18 - Etapa 1.59 policy pura de entrada do outcome final
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido novo, backend, portal ou release.
+- Gate novo `npm run test:finish-outcome-input` cobre a entrada entregue ao outcome final.
+- A policy nao calcula resultado final, nao toca cofre, recorder, WebRTC ou backend; `app/index.tsx` continua responsavel pelos efeitos reais.
+- Varredura dirigida do diff nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: `test:finish-outcome-input`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-18 - Etapa 1.60 policy pura de conclusao owner final
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido novo, backend, portal ou release.
+- Gate novo `npm run test:finish-owner-completion` cobre composicao final de evidencia owner e auditoria owner.
+- A policy nao persiste, nao chama backend e nao registra auditoria diretamente; `app/index.tsx` continua responsavel pelos efeitos reais.
+- Varredura dirigida do diff nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: `test:finish-owner-completion`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.

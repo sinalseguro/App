@@ -795,3 +795,19 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `npm run test:finish-remote-sync` cobre sessao remota valida, `null` e string vazia.
 - `scripts/smoke-test.mjs` exige os modos para evitar regressao para selecao inline no encerramento.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em API/backend exige validacao proporcional.
+
+# Atualizacao - 2026-05-18 - Etapa 1.59 Home/SOS
+
+- `src/features/emergency-home/finishOutcomeInputPolicy.ts` centraliza a montagem da entrada para `resolveFinishOutcomePolicy()`.
+- `app/index.tsx` continua responsavel por ler o resultado do pacote, estado remoto, `stopResult` e presenca de `stopSerial`.
+- Novo gate `npm run test:finish-outcome-input` cobre o mapeamento preservando o campo opcional `stopResultStatus` quando ausente.
+- `npm test` e `scripts/smoke-test.mjs` exigem a policy pura para evitar regressao para objeto inline no outcome final.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em recorder/camera/backend exige validacao proporcional.
+
+# Atualizacao - 2026-05-18 - Etapa 1.60 Home/SOS
+
+- `src/features/emergency-home/finishOwnerCompletionPolicy.ts` agrupa a conclusao owner do encerramento com `evidenceUpdate` e `auditMarker`.
+- `app/index.tsx` continua responsavel por executar `updateOwnerLiveEvidence()` e `recordOwnerLiveAuditMarker()`.
+- As policies especificas `finishOwnerLiveEvidencePolicy.ts` e `finishOwnerLiveAuditPolicy.ts` seguem preservadas e testadas.
+- Novo gate `npm run test:finish-owner-completion` cobre caminhos protegido e falho.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em auditoria/backend/UX real exige validacao proporcional.

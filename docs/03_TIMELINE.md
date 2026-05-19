@@ -4279,3 +4279,41 @@ Validacoes:
 Checkpoint:
 
 - `docs/130_CHECKPOINT_ETAPA_1_58_FINISH_REMOTE_SYNC_MODE_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.59 entrada do outcome final do encerramento
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishOutcomeInputPolicy` para centralizar a montagem da entrada de `resolveFinishOutcomePolicy()`.
+- `app/index.tsx` manteve os efeitos reais e o algoritmo de outcome final.
+- `test:finish-outcome-input` passou a cobrir o objeto de decisao.
+
+Validacoes:
+
+- `test:finish-outcome-input`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida: aprovados.
+- ADB confirmou Android fisico `23129RA5FL` via Wi-Fi, mas sem build/perfil porque a mudanca nao altera UX nativa, chamada, camera, gravacao, WebRTC, backend ou storage.
+
+Checkpoint:
+
+- `docs/131_CHECKPOINT_ETAPA_1_59_FINISH_OUTCOME_INPUT_POLICY_2026-05-18.md`.
+
+## 2026-05-18 - Etapa 1.60 conclusao owner no encerramento
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishOwnerCompletionPolicy` para agrupar `evidenceUpdate` e `auditMarker` finais do owner.
+- `app/index.tsx` manteve os efeitos reais de storage/auditoria local.
+- `test:finish-owner-completion` passou a cobrir caminhos protegido e falho.
+
+Validacoes:
+
+- `test:finish-owner-completion`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida: aprovados.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/132_CHECKPOINT_ETAPA_1_60_FINISH_OWNER_COMPLETION_POLICY_2026-05-18.md`.

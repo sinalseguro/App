@@ -35,9 +35,9 @@ import { resolveFinishMediaStopResultActions } from "@/features/emergency-home/f
 import { resolveFinishMediaStopStartActions } from "@/features/emergency-home/finishMediaStopStartPolicy";
 import { resolveFinishMissingPackageActions } from "@/features/emergency-home/finishMissingPackagePolicy";
 import { resolveFinishNoMediaDiagnosticRequest } from "@/features/emergency-home/finishNoMediaDiagnosticPolicy";
+import { resolveFinishOutcomeInput } from "@/features/emergency-home/finishOutcomeInputPolicy";
 import { resolveFinishOutcomePolicy } from "@/features/emergency-home/finishOutcomePolicy";
-import { resolveFinishOwnerLiveAuditMarker } from "@/features/emergency-home/finishOwnerLiveAuditPolicy";
-import { resolveFinishOwnerLiveEvidenceUpdate } from "@/features/emergency-home/finishOwnerLiveEvidencePolicy";
+import { resolveFinishOwnerCompletionActions } from "@/features/emergency-home/finishOwnerCompletionPolicy";
 import { resolveFinishPackageResult } from "@/features/emergency-home/finishPackageResultPolicy";
 import { resolveFinishProgressDialogPresentation } from "@/features/emergency-home/finishProgressDialogPolicy";
 import {
@@ -1409,24 +1409,21 @@ export default function HomeScreen() {
         platform: Platform.OS
       });
       appendMediaOperationalLog(finishPackageResult.logEvent, finishPackageResult.logPayload);
-      const finishOutcome = resolveFinishOutcomePolicy({
-        attachedAssetsAfterFinish: finishPackageResult.attachedAssetsAfterFinish,
-        liveVideoAttached: finishPackageResult.liveVideoAttached,
+      const finishOutcomeInput = resolveFinishOutcomeInput({
+        finishPackageResult,
         mediaWasHandedToLiveCall,
         remoteFinishFailed,
         stopResultStatus: stopResult?.status,
         stopSerialPresent: Boolean(stopSerial)
       });
-      const finishOwnerEvidenceUpdate = resolveFinishOwnerLiveEvidenceUpdate({
+      const finishOutcome = resolveFinishOutcomePolicy(finishOutcomeInput);
+      const finishOwnerCompletionActions = resolveFinishOwnerCompletionActions({
         endedAt: new Date().toISOString(),
-        localEvidenceStatus: finishOutcome.localEvidenceStatus,
+        finishOutcome,
         packageId
       });
-      updateOwnerLiveEvidence(remoteSessionIdToFinish, finishOwnerEvidenceUpdate);
-      const finishOwnerAuditMarker = resolveFinishOwnerLiveAuditMarker({
-        auditMarker: finishOutcome.auditMarker,
-        localEvidenceStatus: finishOutcome.localEvidenceStatus
-      });
+      updateOwnerLiveEvidence(remoteSessionIdToFinish, finishOwnerCompletionActions.evidenceUpdate);
+      const finishOwnerAuditMarker = finishOwnerCompletionActions.auditMarker;
       recordOwnerLiveAuditMarker(remoteSessionIdToFinish, finishOwnerAuditMarker.event, finishOwnerAuditMarker.options);
       const finishCompletionActions = resolveFinishCompletionActions({
         finishOutcome

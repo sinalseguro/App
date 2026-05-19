@@ -62,8 +62,10 @@ const requiredFiles = [
   "src/features/emergency-home/finishMediaStopResultPolicy.ts",
   "src/features/emergency-home/finishRemoteSyncPolicy.ts",
   "src/features/emergency-home/finishPackageResultPolicy.ts",
+  "src/features/emergency-home/finishOutcomeInputPolicy.ts",
   "src/features/emergency-home/finishOwnerLiveEvidencePolicy.ts",
   "src/features/emergency-home/finishOwnerLiveAuditPolicy.ts",
+  "src/features/emergency-home/finishOwnerCompletionPolicy.ts",
   "src/features/emergency-home/finishNoMediaDiagnosticPolicy.ts",
   "src/features/emergency-home/finishCompletionActionsPolicy.ts",
   "src/features/emergency-home/finishMissingPackagePolicy.ts",
@@ -149,8 +151,10 @@ const requiredFiles = [
   "scripts/finish-media-stop-result-policy.test.ts",
   "scripts/finish-remote-sync-policy.test.ts",
   "scripts/finish-package-result-policy.test.ts",
+  "scripts/finish-outcome-input-policy.test.ts",
   "scripts/finish-owner-live-evidence-policy.test.ts",
   "scripts/finish-owner-live-audit-policy.test.ts",
+  "scripts/finish-owner-completion-policy.test.ts",
   "scripts/finish-no-media-diagnostic-policy.test.ts",
   "scripts/finish-completion-actions-policy.test.ts",
   "scripts/finish-missing-package-policy.test.ts",
@@ -266,8 +270,10 @@ const finishMediaStopStartPolicy = await readFile("src/features/emergency-home/f
 const finishMediaStopResultPolicy = await readFile("src/features/emergency-home/finishMediaStopResultPolicy.ts", "utf8");
 const finishRemoteSyncPolicy = await readFile("src/features/emergency-home/finishRemoteSyncPolicy.ts", "utf8");
 const finishPackageResultPolicy = await readFile("src/features/emergency-home/finishPackageResultPolicy.ts", "utf8");
+const finishOutcomeInputPolicy = await readFile("src/features/emergency-home/finishOutcomeInputPolicy.ts", "utf8");
 const finishOwnerLiveEvidencePolicy = await readFile("src/features/emergency-home/finishOwnerLiveEvidencePolicy.ts", "utf8");
 const finishOwnerLiveAuditPolicy = await readFile("src/features/emergency-home/finishOwnerLiveAuditPolicy.ts", "utf8");
+const finishOwnerCompletionPolicy = await readFile("src/features/emergency-home/finishOwnerCompletionPolicy.ts", "utf8");
 const finishNoMediaDiagnosticPolicy = await readFile("src/features/emergency-home/finishNoMediaDiagnosticPolicy.ts", "utf8");
 const finishCompletionActionsPolicy = await readFile("src/features/emergency-home/finishCompletionActionsPolicy.ts", "utf8");
 const finishMissingPackagePolicy = await readFile("src/features/emergency-home/finishMissingPackagePolicy.ts", "utf8");
@@ -997,12 +1003,16 @@ if (
 }
 
 if (
+  !homeScreen.includes("resolveFinishOutcomeInput") ||
   !homeScreen.includes("resolveFinishOutcomePolicy") ||
+  !finishOutcomeInputPolicy.includes("attachedAssetsAfterFinish") ||
+  !finishOutcomeInputPolicy.includes("remoteFinishFailed") ||
   !finishOutcomePolicy.includes("resolveFinishOutcomePolicy") ||
   !finishOutcomePolicy.includes("camera_no_file_returned") ||
   !finishOutcomePolicy.includes("local_evidence_metadata_only") ||
   !finishOutcomePolicy.includes("Confirmacao pendente") ||
   !finishOutcomePolicy.includes("Video local pendente") ||
+  !packageJson.scripts["test:finish-outcome-input"] ||
   !packageJson.scripts["test:finish-outcome"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para resultado final do encerramento do chamado.");
@@ -1086,18 +1096,23 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishOwnerLiveEvidenceUpdate") ||
+  !homeScreen.includes("resolveFinishOwnerCompletionActions") ||
+  !finishOwnerCompletionPolicy.includes("resolveFinishOwnerLiveEvidenceUpdate") ||
+  !finishOwnerCompletionPolicy.includes("resolveFinishOwnerLiveAuditMarker") ||
   !finishOwnerLiveEvidencePolicy.includes("localEvidenceStatus") ||
   !finishOwnerLiveEvidencePolicy.includes("status: input.localEvidenceStatus") ||
+  !packageJson.scripts["test:finish-owner-completion"] ||
   !packageJson.scripts["test:finish-owner-live-evidence"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para evidencia owner final do encerramento.");
 }
 
 if (
-  !homeScreen.includes("resolveFinishOwnerLiveAuditMarker") ||
+  !homeScreen.includes("resolveFinishOwnerCompletionActions") ||
+  !finishOwnerCompletionPolicy.includes("resolveFinishOwnerLiveAuditMarker") ||
   !finishOwnerLiveAuditPolicy.includes('connectionState: "ended"') ||
   !finishOwnerLiveAuditPolicy.includes("localEvidenceStatus") ||
+  !packageJson.scripts["test:finish-owner-completion"] ||
   !packageJson.scripts["test:finish-owner-live-audit"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para auditoria owner final do encerramento.");
