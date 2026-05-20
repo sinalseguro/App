@@ -4431,3 +4431,46 @@ Validacoes:
 Checkpoint:
 
 - `docs/138_CHECKPOINT_ETAPA_1_66_EMERGENCY_START_FAILURE_ACTIONS_POLICY_2026-05-19.md`.
+
+## 2026-05-20 - Etapa 1.67 formulario de confirmacao do encerramento
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishConfirmationFormPolicy` para centralizar patches reutilizaveis do formulario de encerramento do SOS.
+- `app/index.tsx` manteve os efeitos React reais em `applyFinishConfirmationFormPatch()`.
+- `test:finish-confirmation-form` cobre abertura do modal por codigo, encerramento direto e limpeza final do formulario.
+
+Validacoes:
+
+- `test:finish-confirmation-form`, `test:finish-request`, `test:finish-completion-actions`, `smoke-test`, `npm test`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso no Node local ate interrupcao operacional.
+- `lint` completo encontrou `ETIMEDOUT` ao ler documentacao em iCloud; varredura dirigida dos arquivos alterados nao encontrou padrao sensivel.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/139_CHECKPOINT_ETAPA_1_67_FINISH_CONFIRMATION_FORM_POLICY_2026-05-20.md`.
+
+## 2026-05-20 - Etapa 1.68 formulario de rota protegida
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `protectedRouteFormPolicy` para centralizar patches reutilizaveis do formulario de rota protegida por codigo.
+- `app/index.tsx` manteve os efeitos React reais em `applyProtectedRouteFormPatch()`.
+- `test:protected-route-form` cobre pedido de codigo, erro, aceite e fechamento do dialogo.
+
+Validacoes:
+
+- `test:protected-route-form`, `test:protected-route-access`, `test:protected-route-code`, `smoke-test`, `npm test`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso no Node local ate interrupcao operacional.
+- `lint` completo encontrou `ETIMEDOUT` ao ler documentacao em iCloud; varredura dirigida dos arquivos alterados nao encontrou padrao sensivel.
+- Git local tinha packs/refs antigos corrompidos; foram isolados em quarentena `.git/objects/pack/corrupt-20260520-083643` e o fetch de `main` voltou a funcionar.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/140_CHECKPOINT_ETAPA_1_68_PROTECTED_ROUTE_FORM_POLICY_2026-05-20.md`.

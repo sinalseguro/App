@@ -861,3 +861,23 @@ Papel: seguranca, LGPD e QA.
 - Varredura dirigida do diff nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
 - Validacoes aprovadas: `test:emergency-start-failure-actions`, `smoke-test`, `typecheck`, `lint`, `npm test`, `private:android:readiness` condicionado, `git diff --check` e varredura dirigida.
 - Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-20 - Etapa 1.67 policy pura de formulario de encerramento
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido novo, backend, portal ou release.
+- Gate novo `npm run test:finish-confirmation-form` cobre patches do formulario de encerramento em request, encerramento direto e completion.
+- A policy nao verifica codigo, nao desbloqueia acesso e nao encerra pacote; `app/index.tsx` continua responsavel pelos efeitos reais.
+- Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: testes focados, `smoke-test`, `npm test`, `git diff --check` e varredura dirigida.
+- `typecheck` nao emitiu erro mas ficou preso no Node local; `lint` completo encontrou `ETIMEDOUT` em documentacao iCloud. Nenhum achado de seguranca nos arquivos alterados.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-20 - Etapa 1.68 policy pura de formulario de rota protegida
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido novo, backend, portal ou release.
+- Gate novo `npm run test:protected-route-form` cobre patches de pedido de codigo, erro, aceite e fechamento do dialogo.
+- A policy nao valida codigo, nao chama `unlockProtectedAccess()` e nao navega; `app/index.tsx` continua responsavel pelos efeitos reais.
+- Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: testes focados, `smoke-test`, `npm test`, `git diff --check` e varredura dirigida.
+- Git local tinha pack/refs antigos corrompidos; os itens afetados foram isolados em quarentena local antes de continuar. Nao houve alteracao de codigo por esse reparo.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.

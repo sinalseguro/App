@@ -857,3 +857,21 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `emergencyStartFailureDialogPolicy.ts` segue preservada e testada individualmente.
 - Novo gate `npm run test:emergency-start-failure-actions` cobre payload saneado, status e dialogo.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em start/backend/UX real exige validacao proporcional.
+
+# Atualizacao - 2026-05-20 - Etapa 1.67 Home/SOS
+
+- `src/features/emergency-home/finishConfirmationFormPolicy.ts` centraliza patches reutilizaveis do formulario de encerramento do SOS.
+- `app/index.tsx` continua responsavel pelos efeitos React via `applyFinishConfirmationFormPatch()`.
+- A policy preserva abertura do modal de codigo, encerramento direto sem codigo, limpeza final e exibicao de erro.
+- Novo gate `npm run test:finish-confirmation-form` cobre os patches derivados de request e completion.
+- `scripts/smoke-test.mjs` agora chama `process.exit(0)` ao final para evitar handle aberto no Node local apos sucesso.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em UX real/camera/chamada exige validacao proporcional.
+
+# Atualizacao - 2026-05-20 - Etapa 1.68 Home/SOS
+
+- `src/features/emergency-home/protectedRouteFormPolicy.ts` centraliza patches reutilizaveis do formulario de rota protegida por codigo.
+- `app/index.tsx` continua responsavel pelos efeitos React via `applyProtectedRouteFormPatch()`, alem de `unlockProtectedAccess()` e navegacao.
+- A policy preserva pedido de codigo, erro de validacao, limpeza no aceite e limpeza no fechamento.
+- Novo gate `npm run test:protected-route-form` cobre pedido, erro, aceite e fechamento.
+- Git local apresentou packs/refs antigos corrompidos; os objetos/refs afetados foram movidos para quarentena local e `git fetch --no-tags origin main` voltou a funcionar.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em permissao, navegacao real ou UX visual exige validacao proporcional.

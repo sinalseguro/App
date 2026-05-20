@@ -29,6 +29,12 @@ import {
   resolveMediaProtectionInProgress
 } from "@/features/emergency-home/finishFlowProgressPolicy";
 import { resolveFinishCodeConfirmationDecision } from "@/features/emergency-home/finishCodePolicy";
+import {
+  resolveFinishCompletionConfirmationFormPatch,
+  resolveFinishRequestConfirmationFormPatch,
+  shouldFinishImmediatelyAfterRequest,
+  type FinishConfirmationFormPatch
+} from "@/features/emergency-home/finishConfirmationFormPolicy";
 import { resolveFinishConfirmationDialogPresentation } from "@/features/emergency-home/finishConfirmationDialogPolicy";
 import { resolveFinishFailureActions } from "@/features/emergency-home/finishFailureActionsPolicy";
 import { resolveFinishMediaStopResultActions } from "@/features/emergency-home/finishMediaStopResultPolicy";
@@ -100,6 +106,13 @@ import { panicButtonLabel, resolvePanicTriggerDecision } from "@/features/emerge
 import { resolveProtectedRouteAccessDecision } from "@/features/emergency-home/protectedRouteAccessPolicy";
 import { resolveProtectedRouteCodeDecision } from "@/features/emergency-home/protectedRouteCodePolicy";
 import { resolveProtectedRouteDialogPresentation } from "@/features/emergency-home/protectedRouteDialogPolicy";
+import {
+  resolveProtectedRouteAcceptedFormPatch,
+  resolveProtectedRouteClosedFormPatch,
+  resolveProtectedRouteErrorFormPatch,
+  resolveProtectedRouteRequestFormPatch,
+  type ProtectedRouteFormPatch
+} from "@/features/emergency-home/protectedRouteFormPolicy";
 import { resolveRecordingConsentDialogPresentation } from "@/features/emergency-home/recordingConsentDialogPolicy";
 import { activeRemoteSyncRetryMessage, resolveActiveRemoteSyncStatus } from "@/features/emergency-home/remoteSyncStatusPolicy";
 import { EmergencyHomePanel, EmergencyHomeRoute } from "@/features/emergency-home/routes";
@@ -515,6 +528,33 @@ export default function HomeScreen() {
     void openRouteAsync("/arquivos", "cofre");
   }
 
+  function applyFinishConfirmationFormPatch(patch: FinishConfirmationFormPatch) {
+    if (patch.finishConfirmationOpen !== undefined) {
+      setFinishConfirmationOpen(patch.finishConfirmationOpen);
+    }
+    if (patch.finishCodeInput !== undefined) {
+      setFinishCodeInput(patch.finishCodeInput);
+    }
+    if (patch.finishError !== undefined) {
+      setFinishError(patch.finishError);
+    }
+  }
+
+  function applyProtectedRouteFormPatch(patch: ProtectedRouteFormPatch) {
+    if (patch.menuOpen !== undefined) {
+      setMenuOpen(patch.menuOpen);
+    }
+    if ("protectedRouteRequest" in patch) {
+      setProtectedRouteRequest(patch.protectedRouteRequest ?? null);
+    }
+    if (patch.protectedRouteCodeInput !== undefined) {
+      setProtectedRouteCodeInput(patch.protectedRouteCodeInput);
+    }
+    if (patch.protectedRouteError !== undefined) {
+      setProtectedRouteError(patch.protectedRouteError);
+    }
+  }
+
   function setMediaStopPendingState(value: boolean) {
     const decision = resolveMediaStopPendingState(value, { clearMediaRecorderPackageIdOnRelease: true });
     mediaStopPendingRef.current = decision.mediaStopPending;
@@ -790,10 +830,7 @@ export default function HomeScreen() {
     });
 
     if (accessDecision === "request_security_code") {
-      setMenuOpen(false);
-      setProtectedRouteRequest({ route, panel });
-      setProtectedRouteCodeInput("");
-      setProtectedRouteError("");
+      applyProtectedRouteFormPatch(resolveProtectedRouteRequestFormPatch({ route, panel }));
       return;
     }
 
@@ -1285,17 +1322,11 @@ export default function HomeScreen() {
     });
     if (!finishRequestDecision.shouldContinue) return;
 
-    if (finishRequestDecision.shouldResetConfirmationForm) {
-      setFinishError("");
-      setFinishCodeInput("");
-    }
+    applyFinishConfirmationFormPatch(resolveFinishRequestConfirmationFormPatch(finishRequestDecision));
 
-    if (finishRequestDecision.action === "open_security_confirmation") {
-      setFinishConfirmationOpen(true);
-      return;
+    if (shouldFinishImmediatelyAfterRequest(finishRequestDecision)) {
+      void handleFinishActiveCall();
     }
-
-    void handleFinishActiveCall();
   }
 
   async function handleFinishActiveCall() {
@@ -1454,15 +1485,7 @@ export default function HomeScreen() {
         await persistFinishNoMediaDiagnostic(finishNoMediaDiagnostic.packageId, finishNoMediaDiagnostic.reason);
       }
       showFinishProgress(finishCompletionActions.finishProgress);
-      if (finishCompletionActions.shouldCloseFinishConfirmation) {
-        setFinishConfirmationOpen(false);
-      }
-      if (finishCompletionActions.shouldClearFinishCodeInput) {
-        setFinishCodeInput("");
-      }
-      if (finishCompletionActions.shouldClearFinishError) {
-        setFinishError("");
-      }
+      applyFinishConfirmationFormPatch(resolveFinishCompletionConfirmationFormPatch(finishCompletionActions));
     } catch (error) {
       const finishFailureActions = resolveFinishFailureActions({
         platform: Platform.OS
@@ -1596,7 +1619,7 @@ export default function HomeScreen() {
     });
 
     if (finishCodeDecision.action === "show_error") {
-      setFinishError(finishCodeDecision.errorMessage);
+      applyFinishConfirmationFormPatch({ finishError: finishCodeDecision.errorMessage });
       return;
     }
 
@@ -1615,23 +1638,19 @@ export default function HomeScreen() {
     if (protectedRouteDecision.action === "ignore_missing_request") return;
 
     if (protectedRouteDecision.action === "show_error") {
-      setProtectedRouteError(protectedRouteDecision.errorMessage);
+      applyProtectedRouteFormPatch(resolveProtectedRouteErrorFormPatch(protectedRouteDecision.errorMessage));
       return;
     }
 
     if (!protectedRouteRequest) return;
     const nextRequest = protectedRouteRequest;
-    setProtectedRouteRequest(null);
-    setProtectedRouteCodeInput("");
-    setProtectedRouteError("");
+    applyProtectedRouteFormPatch(resolveProtectedRouteAcceptedFormPatch());
     await unlockProtectedAccess();
     navigateRoute(nextRequest.route, nextRequest.panel);
   }
 
   function closeProtectedRouteDialog() {
-    setProtectedRouteRequest(null);
-    setProtectedRouteCodeInput("");
-    setProtectedRouteError("");
+    applyProtectedRouteFormPatch(resolveProtectedRouteClosedFormPatch());
   }
 
   const liveCallPanel = resolveLiveCallPanelPolicy({

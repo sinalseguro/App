@@ -49,6 +49,7 @@ const requiredFiles = [
   "src/features/emergency-home/emergencyStartPolicy.ts",
   "src/features/emergency-home/finishCodePolicy.ts",
   "src/features/emergency-home/finishConfirmationDialogPolicy.ts",
+  "src/features/emergency-home/finishConfirmationFormPolicy.ts",
   "src/features/emergency-home/finishOutcomePolicy.ts",
   "src/features/emergency-home/finishRequestPolicy.ts",
   "src/features/emergency-home/mediaHandoffPolicy.ts",
@@ -89,6 +90,7 @@ const requiredFiles = [
   "src/features/emergency-home/protectedRouteAccessPolicy.ts",
   "src/features/emergency-home/protectedRouteCodePolicy.ts",
   "src/features/emergency-home/protectedRouteDialogPolicy.ts",
+  "src/features/emergency-home/protectedRouteFormPolicy.ts",
   "src/features/emergency-home/remoteSyncStatusPolicy.ts",
   "src/features/invitations/invitationService.ts",
   "src/features/invitations/trustedRelationshipStore.ts",
@@ -144,9 +146,11 @@ const requiredFiles = [
   "scripts/finish-progress-state-policy.test.ts",
   "scripts/media-release-waiter-policy.test.ts",
   "scripts/finish-request-policy.test.ts",
+  "scripts/finish-confirmation-form-policy.test.ts",
   "scripts/finish-code-policy.test.ts",
   "scripts/finish-confirmation-dialog-policy.test.ts",
   "scripts/protected-route-code-policy.test.ts",
+  "scripts/protected-route-form-policy.test.ts",
   "scripts/protected-route-dialog-policy.test.ts",
   "scripts/home-navigation-policy.test.ts",
   "scripts/media-stop-pending-policy.test.ts",
@@ -269,6 +273,7 @@ const homeNavigationPolicy = await readFile("src/features/emergency-home/homeNav
 const emergencyStartPolicy = await readFile("src/features/emergency-home/emergencyStartPolicy.ts", "utf8");
 const finishCodePolicy = await readFile("src/features/emergency-home/finishCodePolicy.ts", "utf8");
 const finishConfirmationDialogPolicy = await readFile("src/features/emergency-home/finishConfirmationDialogPolicy.ts", "utf8");
+const finishConfirmationFormPolicy = await readFile("src/features/emergency-home/finishConfirmationFormPolicy.ts", "utf8");
 const finishOutcomePolicy = await readFile("src/features/emergency-home/finishOutcomePolicy.ts", "utf8");
 const finishRequestPolicy = await readFile("src/features/emergency-home/finishRequestPolicy.ts", "utf8");
 const mediaHandoffPolicy = await readFile("src/features/emergency-home/mediaHandoffPolicy.ts", "utf8");
@@ -309,6 +314,7 @@ const recordingConsentDialogPolicy = await readFile("src/features/emergency-home
 const protectedRouteAccessPolicy = await readFile("src/features/emergency-home/protectedRouteAccessPolicy.ts", "utf8");
 const protectedRouteCodePolicy = await readFile("src/features/emergency-home/protectedRouteCodePolicy.ts", "utf8");
 const protectedRouteDialogPolicy = await readFile("src/features/emergency-home/protectedRouteDialogPolicy.ts", "utf8");
+const protectedRouteFormPolicy = await readFile("src/features/emergency-home/protectedRouteFormPolicy.ts", "utf8");
 const remoteSyncStatusPolicy = await readFile("src/features/emergency-home/remoteSyncStatusPolicy.ts", "utf8");
 const alertScreen = await readFile("app/alerta.tsx", "utf8");
 const incomingEmergencyNotification = await readFile("src/features/live-call/incomingEmergencyNotification.ts", "utf8");
@@ -1045,12 +1051,16 @@ if (
 
 if (
   !homeScreen.includes("resolveFinishRequestDecision") ||
-  !homeScreen.includes("finishRequestDecision.action") ||
+  !homeScreen.includes("resolveFinishRequestConfirmationFormPatch") ||
+  !homeScreen.includes("shouldFinishImmediatelyAfterRequest") ||
   !finishRequestPolicy.includes("resolveFinishRequestDecision") ||
   !finishRequestPolicy.includes("open_security_confirmation") ||
   !finishRequestPolicy.includes("finish_now") ||
   !finishRequestPolicy.includes("finish_ref_in_progress") ||
-  !packageJson.scripts["test:finish-request"]
+  !finishConfirmationFormPolicy.includes("resolveFinishRequestConfirmationFormPatch") ||
+  !finishConfirmationFormPolicy.includes("shouldFinishImmediatelyAfterRequest") ||
+  !packageJson.scripts["test:finish-request"] ||
+  !packageJson.scripts["test:finish-confirmation-form"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para solicitacao de encerramento do chamado.");
 }
@@ -1161,11 +1171,14 @@ if (
 
 if (
   !homeScreen.includes("resolveFinishPostOutcomeActions") ||
+  !homeScreen.includes("resolveFinishCompletionConfirmationFormPatch") ||
   !finishPostOutcomeActionsPolicy.includes("resolveFinishCompletionActions") ||
+  !finishConfirmationFormPolicy.includes("resolveFinishCompletionConfirmationFormPatch") ||
   !finishCompletionActionsPolicy.includes("shouldCloseFinishConfirmation") ||
   !finishCompletionActionsPolicy.includes("shouldClearFinishCodeInput") ||
   !finishCompletionActionsPolicy.includes("shouldClearFinishError") ||
   !packageJson.scripts["test:finish-post-outcome"] ||
+  !packageJson.scripts["test:finish-confirmation-form"] ||
   !packageJson.scripts["test:finish-completion-actions"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para acoes finais do encerramento.");
@@ -1219,11 +1232,20 @@ if (
 
 if (
   !homeScreen.includes("resolveProtectedRouteCodeDecision") ||
+  !homeScreen.includes("resolveProtectedRouteRequestFormPatch") ||
+  !homeScreen.includes("resolveProtectedRouteAcceptedFormPatch") ||
+  !homeScreen.includes("resolveProtectedRouteClosedFormPatch") ||
+  !homeScreen.includes("resolveProtectedRouteErrorFormPatch") ||
   !protectedRouteCodePolicy.includes("resolveProtectedRouteCodeDecision") ||
   !protectedRouteCodePolicy.includes("ignore_missing_request") ||
   !protectedRouteCodePolicy.includes("unlock_and_navigate") ||
   !protectedRouteCodePolicy.includes("Area protegida bloqueada.") ||
-  !packageJson.scripts["test:protected-route-code"]
+  !protectedRouteFormPolicy.includes("resolveProtectedRouteRequestFormPatch") ||
+  !protectedRouteFormPolicy.includes("resolveProtectedRouteAcceptedFormPatch") ||
+  !protectedRouteFormPolicy.includes("resolveProtectedRouteClosedFormPatch") ||
+  !protectedRouteFormPolicy.includes("resolveProtectedRouteErrorFormPatch") ||
+  !packageJson.scripts["test:protected-route-code"] ||
+  !packageJson.scripts["test:protected-route-form"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para rotas protegidas por codigo.");
 }
@@ -1775,3 +1797,4 @@ if (!emergencyOutbox.includes("removed_from_device")) {
 }
 
 console.log("Smoke test mobile aprovado.");
+process.exit(0);
