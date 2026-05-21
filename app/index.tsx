@@ -19,7 +19,12 @@ import {
 } from "@/features/emergency-home/emergencyStartPolicy";
 import { resolveEmergencyCallConfirmation } from "@/features/emergency-home/emergencyCallConfirmationPolicy";
 import { resolveEmergencyHomeActivityPresentation } from "@/features/emergency-home/emergencyHomeActivityPolicy";
+import { resolveEmergencyStartCreatedActions } from "@/features/emergency-home/emergencyStartCreatedActionsPolicy";
 import { resolveEmergencyStartFailureActions } from "@/features/emergency-home/emergencyStartFailureActionsPolicy";
+import {
+  resolveEmergencyStartRemoteSyncErrorActions,
+  resolveEmergencyStartRemoteSyncResultActions
+} from "@/features/emergency-home/emergencyStartRemoteSyncActionsPolicy";
 import { resolveEmergencyStartRuntimeActions } from "@/features/emergency-home/emergencyStartRuntimePolicy";
 import { resolveFinishActiveCallCleanup } from "@/features/emergency-home/finishActiveCallCleanupPolicy";
 import { resolveFinishActiveCallRuntimeStartActions } from "@/features/emergency-home/finishActiveCallRuntimeStartPolicy";
@@ -1353,28 +1358,32 @@ export default function HomeScreen() {
         defaultDurationSeconds: preferences.defaultDurationSeconds,
         locationStatus: result.packageRecord.location.status
       });
-      appendMediaOperationalLog("emergency_start_package_created", {
+      const startCreatedActions = resolveEmergencyStartCreatedActions({
         localVideoEnabled: preferences.localVideoCapture.requestOnSos,
-        locationCaptured: startPresentation.locationCaptured,
-        platform: Platform.OS
+        platform: Platform.OS,
+        presentation: startPresentation
       });
+      appendMediaOperationalLog(startCreatedActions.log.event, startCreatedActions.log.payload);
       void syncEmergencyPackageWithApi(result.packageRecord)
         .then((syncState) => {
-          appendMediaOperationalLog("emergency_remote_sync_start_result", {
+          const remoteSyncActions = resolveEmergencyStartRemoteSyncResultActions({
+            locationText: startPresentation.locationText,
             platform: Platform.OS,
-            recipientCount: syncState.recipientCount,
-            remoteSessionCreated: Boolean(syncState.remoteSessionId),
-            status: syncState.status
+            syncState
           });
-          applyRemoteSyncState(syncState, { locationText: startPresentation.locationText, source: "initial" });
+          appendMediaOperationalLog(remoteSyncActions.log.event, remoteSyncActions.log.payload);
+          if (remoteSyncActions.shouldApplyRemoteSyncState) {
+            applyRemoteSyncState(syncState, remoteSyncActions.applyRemoteSyncStateOptions);
+          }
         })
         .catch((error) => {
-          appendMediaOperationalLog("emergency_remote_sync_start_error", {
+          const remoteSyncErrorActions = resolveEmergencyStartRemoteSyncErrorActions({
             platform: Platform.OS
-          }, error);
+          });
+          appendMediaOperationalLog(remoteSyncErrorActions.log.event, remoteSyncErrorActions.log.payload, error);
         });
 
-      setRecordingStatus(startPresentation.recordingStatus);
+      setRecordingStatus(startCreatedActions.recordingStatus);
     } catch (error) {
       const emergencyStartFailureActions = resolveEmergencyStartFailureActions({
         platform: Platform.OS

@@ -1001,3 +1001,17 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `app/index.tsx` continua responsavel por buscar pacote, sincronizar com a API, aplicar estado remoto, atualizar status e limpar `activeRemoteSyncInFlightRef`.
 - Novo gate `npm run test:active-remote-sync-completion-actions` cobre pacote cancelado/ausente/alterado, resultado ausente, erro cancelado/aplicavel e finally.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em API/backend real, chamada, WebRTC ou UX real exige validacao proporcional.
+
+# Atualizacao - 2026-05-21 - Etapa 1.87 Home/SOS
+
+- `src/features/emergency-home/emergencyStartCreatedActionsPolicy.ts` centraliza log saneado e status inicial apos criacao do pacote SOS.
+- `app/index.tsx` continua responsavel por `startEmergencyPackage()`, `refreshOutboxCount()`, abertura telefonica opcional e `setRecordingStatus()`.
+- Novo gate `npm run test:emergency-start-created-actions` cobre log/status derivados da apresentacao inicial.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em API/backend real, chamada, camera ou UX real exige validacao proporcional.
+
+# Atualizacao - 2026-05-21 - Etapa 1.88 Home/SOS
+
+- `src/features/emergency-home/emergencyStartRemoteSyncActionsPolicy.ts` centraliza log de resultado, opcoes de aplicacao inicial do estado remoto e log de erro da sincronizacao inicial do SOS.
+- `app/index.tsx` continua responsavel por `syncEmergencyPackageWithApi()`, `appendMediaOperationalLog()` e `applyRemoteSyncState()`.
+- Novo gate `npm run test:emergency-start-remote-sync-actions` cobre resultado com/sem sessao remota e erro controlado.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em API/backend real, chamada, WebRTC ou UX real exige validacao proporcional.

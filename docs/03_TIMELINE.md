@@ -4836,3 +4836,43 @@ Validacoes:
 Checkpoint:
 
 - `docs/158_CHECKPOINT_ETAPA_1_86_ACTIVE_REMOTE_SYNC_COMPLETION_ACTIONS_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapa 1.87 acoes de pacote SOS criado
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `emergencyStartCreatedActionsPolicy` para centralizar log saneado e status inicial apos criacao do pacote SOS.
+- `app/index.tsx` manteve criacao do pacote, refresh, chamada telefonica opcional, log real e estado React como efeitos do componente.
+- `test:emergency-start-created-actions` cobre video/localizacao habilitados e status derivado da apresentacao inicial.
+
+Validacoes:
+
+- `test:emergency-start-created-actions`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/159_CHECKPOINT_ETAPA_1_87_EMERGENCY_START_CREATED_ACTIONS_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapa 1.88 acoes de sincronizacao inicial do SOS
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `emergencyStartRemoteSyncActionsPolicy` para centralizar log de resultado, opcoes de aplicacao do estado remoto inicial e log de erro.
+- `app/index.tsx` manteve `syncEmergencyPackageWithApi()`, `appendMediaOperationalLog()` e `applyRemoteSyncState()` como efeitos do componente.
+- `test:emergency-start-remote-sync-actions` cobre resultado com/sem sessao remota e erro controlado.
+
+Validacoes:
+
+- `test:emergency-start-remote-sync-actions`, `test:emergency-start-created-actions`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/160_CHECKPOINT_ETAPA_1_88_EMERGENCY_START_REMOTE_SYNC_ACTIONS_POLICY_2026-05-21.md`.

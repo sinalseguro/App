@@ -69,6 +69,8 @@ const requiredFiles = [
   "src/features/emergency-home/finishActiveCallStartPolicy.ts",
   "src/features/emergency-home/finishActiveCallRuntimeStartPolicy.ts",
   "src/features/emergency-home/finishActiveCallCleanupPolicy.ts",
+  "src/features/emergency-home/emergencyStartCreatedActionsPolicy.ts",
+  "src/features/emergency-home/emergencyStartRemoteSyncActionsPolicy.ts",
   "src/features/emergency-home/finishMediaStopStartPolicy.ts",
   "src/features/emergency-home/finishMediaStopResultPolicy.ts",
   "src/features/emergency-home/finishRemoteSyncPolicy.ts",
@@ -154,6 +156,8 @@ const requiredFiles = [
   "scripts/emergency-call-hero-policy.test.ts",
   "scripts/emergency-start-policy.test.ts",
   "scripts/emergency-start-runtime-policy.test.ts",
+  "scripts/emergency-start-created-actions-policy.test.ts",
+  "scripts/emergency-start-remote-sync-actions-policy.test.ts",
   "scripts/emergency-start-failure-actions-policy.test.ts",
   "scripts/remote-sync-status-policy.test.ts",
   "scripts/active-remote-sync-attempt-actions-policy.test.ts",
@@ -329,6 +333,8 @@ const mediaStopWaiterPolicy = await readFile("src/features/emergency-home/mediaS
 const finishActiveCallStartPolicy = await readFile("src/features/emergency-home/finishActiveCallStartPolicy.ts", "utf8");
 const finishActiveCallRuntimeStartPolicy = await readFile("src/features/emergency-home/finishActiveCallRuntimeStartPolicy.ts", "utf8");
 const finishActiveCallCleanupPolicy = await readFile("src/features/emergency-home/finishActiveCallCleanupPolicy.ts", "utf8");
+const emergencyStartCreatedActionsPolicy = await readFile("src/features/emergency-home/emergencyStartCreatedActionsPolicy.ts", "utf8");
+const emergencyStartRemoteSyncActionsPolicy = await readFile("src/features/emergency-home/emergencyStartRemoteSyncActionsPolicy.ts", "utf8");
 const finishMediaStopStartPolicy = await readFile("src/features/emergency-home/finishMediaStopStartPolicy.ts", "utf8");
 const finishMediaStopResultPolicy = await readFile("src/features/emergency-home/finishMediaStopResultPolicy.ts", "utf8");
 const finishRemoteSyncPolicy = await readFile("src/features/emergency-home/finishRemoteSyncPolicy.ts", "utf8");
@@ -963,8 +969,16 @@ if (
   !homeScreen.includes("resolveEmergencyStartRuntimeActions") ||
   !homeScreen.includes("resolveEmergencyStartRequestPolicy") ||
   !homeScreen.includes("resolveEmergencyStartPresentation") ||
+  !homeScreen.includes("resolveEmergencyStartCreatedActions") ||
+  !homeScreen.includes("resolveEmergencyStartRemoteSyncResultActions") ||
+  !homeScreen.includes("resolveEmergencyStartRemoteSyncErrorActions") ||
   !emergencyStartRuntimePolicy.includes("emergency_start_requested") ||
   !emergencyStartRuntimePolicy.includes("shouldClearOwnerAutoCallState") ||
+  !emergencyStartCreatedActionsPolicy.includes("emergency_start_package_created") ||
+  !emergencyStartCreatedActionsPolicy.includes("recordingStatus") ||
+  !emergencyStartRemoteSyncActionsPolicy.includes("emergency_remote_sync_start_result") ||
+  !emergencyStartRemoteSyncActionsPolicy.includes("emergency_remote_sync_start_error") ||
+  !emergencyStartRemoteSyncActionsPolicy.includes("source: \"initial\"") ||
   !emergencyStartPolicy.includes("resolveEmergencyStartRequestPolicy") ||
   !emergencyStartPolicy.includes("resolveEmergencyStartPresentation") ||
   !emergencyStartPolicy.includes("foreground_when_triggered") ||
@@ -972,6 +986,8 @@ if (
   !emergencyStartPolicy.includes("Localizacao preservada.") ||
   !emergencyStartPolicy.includes("Arquivo no cofre local") ||
   !packageJson.scripts["test:emergency-start-runtime"] ||
+  !packageJson.scripts["test:emergency-start-created-actions"] ||
+  !packageJson.scripts["test:emergency-start-remote-sync-actions"] ||
   !packageJson.scripts["test:emergency-start"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para inicio do chamado e apresentacao inicial.");
