@@ -931,3 +931,17 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `app/index.tsx` continua responsavel por `startOwnerLiveVideoRecording()`, refs, update de evidencia, marcador de auditoria, status local e log operacional.
 - Novo gate `npm run test:owner-live-video-start-outcome` cobre gravacao iniciada, metadata-only e erro.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em camera, recorder, WebRTC ou backend real exige validacao proporcional.
+
+# Atualizacao - 2026-05-20 - Etapa 1.77 Home/SOS
+
+- `src/features/emergency-home/ownerLiveVideoPreserveRequestPolicy.ts` centraliza a decisao de reutilizar preservacao existente, aguardar inicio pendente, ignorar ausencia/in-flight ou iniciar preservacao owner.
+- `app/index.tsx` continua responsavel por promises, refs, await de inicio pendente e controle real de preservacao.
+- Novo gate `npm run test:owner-live-video-preserve-request` cobre reutilizacao, aguardo pendente, ausencia, in-flight e inicio de preservacao.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em camera, recorder, WebRTC ou storage real exige validacao proporcional.
+
+# Atualizacao - 2026-05-20 - Etapa 1.78 Home/SOS
+
+- `src/features/emergency-home/ownerLiveVideoPreserveOutcomePolicy.ts` centraliza acoes derivadas da parada/preservacao do video owner.
+- `app/index.tsx` continua responsavel por `stopOwnerLiveVideoRecording()`, `preserveLocalVideoAsset()`, evidencia, auditoria, status e logs reais.
+- Novo gate `npm run test:owner-live-video-preserve-outcome` cobre fonte ausente, fonte valida, conclusao protegida e erro.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em motor nativo, storage seguro real ou backend exige validacao proporcional.

@@ -108,6 +108,13 @@ import {
   resolveOwnerLiveCallLifecycle,
   resolveOwnerLiveVideoEvidenceStart
 } from "@/features/emergency-home/ownerLiveEvidencePolicy";
+import {
+  resolveOwnerLiveVideoPreserveCompletionActions,
+  resolveOwnerLiveVideoPreserveErrorActions,
+  resolveOwnerLiveVideoPreserveStoppedActions,
+  type OwnerLiveVideoPreserveReason
+} from "@/features/emergency-home/ownerLiveVideoPreserveOutcomePolicy";
+import { resolveOwnerLiveVideoPreserveRequest } from "@/features/emergency-home/ownerLiveVideoPreserveRequestPolicy";
 import { resolveOwnerLiveVideoStartOutcomeActions } from "@/features/emergency-home/ownerLiveVideoStartOutcomePolicy";
 import { resolveOwnerLiveVideoStartRequest } from "@/features/emergency-home/ownerLiveVideoStartRequestPolicy";
 import { resolveLiveCallWaitingDialogPresentation } from "@/features/emergency-home/liveCallWaitingDialogPolicy";
@@ -764,15 +771,29 @@ export default function HomeScreen() {
     return startPromise;
   }
 
-  async function stopOwnerLiveVideoEvidence(reason: "call_finished" | "finish" | "manual_stop" | "replace_recording") {
-    if (ownerLiveVideoPreservePromiseRef.current) return ownerLiveVideoPreservePromiseRef.current;
+  async function stopOwnerLiveVideoEvidence(reason: OwnerLiveVideoPreserveReason) {
+    const initialPreserveDecision = resolveOwnerLiveVideoPreserveRequest({
+      hasActiveRecording: Boolean(ownerLiveVideoRecordingRef.current),
+      hasPendingStart: Boolean(ownerLiveVideoStartRequestRef.current),
+      preserveInFlight: ownerLiveVideoPreserveInFlightRef.current,
+      preservePromiseActive: Boolean(ownerLiveVideoPreservePromiseRef.current)
+    });
+    if (initialPreserveDecision.shouldReturnPreservePromise && ownerLiveVideoPreservePromiseRef.current) {
+      return ownerLiveVideoPreservePromiseRef.current;
+    }
 
     const pendingStart = ownerLiveVideoStartRequestRef.current;
     let recording = ownerLiveVideoRecordingRef.current;
-    if (!recording && pendingStart) {
+    if (initialPreserveDecision.shouldAwaitPendingStart && pendingStart) {
       recording = await pendingStart.promise;
     }
-    if (!recording || ownerLiveVideoPreserveInFlightRef.current) return null;
+    const preserveDecision = resolveOwnerLiveVideoPreserveRequest({
+      hasActiveRecording: Boolean(recording),
+      hasPendingStart: false,
+      preserveInFlight: ownerLiveVideoPreserveInFlightRef.current,
+      preservePromiseActive: false
+    });
+    if (!recording || !preserveDecision.shouldStartPreserve) return null;
 
     const recordingToPreserve = recording;
     ownerLiveVideoRecordingRef.current = null;
@@ -781,61 +802,57 @@ export default function HomeScreen() {
     preservePromise = (async () => {
       try {
         const result = await stopOwnerLiveVideoRecording(recordingToPreserve);
-        if (!result?.sourceUri) return null;
-
-        appendMediaOperationalLog("live_video_recording_preserve_start", {
-          audioCaptured: result.audioCaptured,
-          frameCount: result.frameCount,
+        const stoppedActions = resolveOwnerLiveVideoPreserveStoppedActions({
+          audioCaptured: result?.audioCaptured,
+          completedAt: result?.completedAt,
+          frameCount: result?.frameCount,
+          packageId: recordingToPreserve.packageId,
           platform: Platform.OS,
           reason,
           remoteSessionId: recordingToPreserve.remoteSessionId,
-          sizeBytes: result.sizeBytes
-        });
-        const attachedAsset = await preserveLocalVideoAsset({
-          packageId: recordingToPreserve.packageId,
-          sourceUri: result.sourceUri,
-          cameraMode: "back",
           requestedCameraMode: preferences.localVideoCapture.cameraMode,
-          startedAt: result.startedAt,
-          completedAt: result.completedAt,
-          verificationMode: "bounded"
+          sizeBytes: result?.sizeBytes,
+          sourceUri: result?.sourceUri,
+          startedAt: result?.startedAt
         });
-        updateOwnerLiveEvidence(recordingToPreserve.remoteSessionId, {
-          endedAt: reason === "finish" || reason === "call_finished" ? result.completedAt : undefined,
-          localEvidenceStatus: "protected",
-          packageId: recordingToPreserve.packageId,
-          status: reason === "finish" || reason === "call_finished" ? "protected" : "transmitting"
-        });
-        recordOwnerLiveAuditMarker(recordingToPreserve.remoteSessionId, "local_evidence_protected", {
-          connectionState: reason === "finish" || reason === "call_finished" ? "ended" : "connected",
-          localEvidenceStatus: "protected"
-        });
-        setRecordingStatus(
-          resolveLocalSosPackageStatus({ audioCaptured: result.audioCaptured, event: "live_call_recording_preserved" })
-        );
-        appendMediaOperationalLog("live_video_recording_preserve_success", {
+        if (!stoppedActions.shouldPreserve) return null;
+
+        appendMediaOperationalLog(stoppedActions.preserveStartLog.event, stoppedActions.preserveStartLog.payload);
+        const attachedAsset = await preserveLocalVideoAsset(stoppedActions.preserveAssetInput);
+        const completionActions = resolveOwnerLiveVideoPreserveCompletionActions({
           assetCreated: Boolean(attachedAsset),
-          audioCaptured: result.audioCaptured,
+          audioCaptured: stoppedActions.audioCaptured,
+          completedAt: stoppedActions.completedAt,
+          packageId: recordingToPreserve.packageId,
           platform: Platform.OS,
           reason,
           remoteSessionId: recordingToPreserve.remoteSessionId
         });
+        updateOwnerLiveEvidence(recordingToPreserve.remoteSessionId, completionActions.evidenceUpdate);
+        recordOwnerLiveAuditMarker(
+          recordingToPreserve.remoteSessionId,
+          completionActions.auditMarker.event,
+          completionActions.auditMarker.options
+        );
+        setRecordingStatus(
+          resolveLocalSosPackageStatus(completionActions.recordingStatusInput)
+        );
+        appendMediaOperationalLog(completionActions.successLog.event, completionActions.successLog.payload);
         return attachedAsset;
       } catch (error) {
-        appendMediaOperationalLog("live_video_recording_preserve_error", {
+        const errorActions = resolveOwnerLiveVideoPreserveErrorActions({
+          packageId: recordingToPreserve.packageId,
           platform: Platform.OS,
           reason,
           remoteSessionId: recordingToPreserve.remoteSessionId
-        }, error);
-        updateOwnerLiveEvidence(recordingToPreserve.remoteSessionId, {
-          localEvidenceStatus: "failed",
-          packageId: recordingToPreserve.packageId,
-          status: "failed"
         });
-        recordOwnerLiveAuditMarker(recordingToPreserve.remoteSessionId, "local_evidence_failed", {
-          connectionState: "failed",
-          localEvidenceStatus: "failed"
-        });
+        appendMediaOperationalLog(errorActions.errorLog.event, errorActions.errorLog.payload, error);
+        updateOwnerLiveEvidence(recordingToPreserve.remoteSessionId, errorActions.evidenceUpdate);
+        recordOwnerLiveAuditMarker(
+          recordingToPreserve.remoteSessionId,
+          errorActions.auditMarker.event,
+          errorActions.auditMarker.options
+        );
         return null;
       } finally {
         ownerLiveVideoPreserveInFlightRef.current = false;

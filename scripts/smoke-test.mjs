@@ -85,6 +85,8 @@ const requiredFiles = [
   "src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts",
   "src/features/emergency-home/ownerLiveEvidenceUpdatePolicy.ts",
   "src/features/emergency-home/ownerLiveEvidencePolicy.ts",
+  "src/features/emergency-home/ownerLiveVideoPreserveOutcomePolicy.ts",
+  "src/features/emergency-home/ownerLiveVideoPreserveRequestPolicy.ts",
   "src/features/emergency-home/ownerLiveVideoStartOutcomePolicy.ts",
   "src/features/emergency-home/ownerLiveVideoStartRequestPolicy.ts",
   "src/features/emergency-home/liveCallCleanupPolicy.ts",
@@ -151,6 +153,8 @@ const requiredFiles = [
   "scripts/owner-live-audit-marker-actions-policy.test.ts",
   "scripts/owner-live-audit-marker-policy.test.ts",
   "scripts/owner-live-evidence-update-policy.test.ts",
+  "scripts/owner-live-video-preserve-outcome-policy.test.ts",
+  "scripts/owner-live-video-preserve-request-policy.test.ts",
   "scripts/owner-live-video-start-outcome-policy.test.ts",
   "scripts/owner-live-video-start-request-policy.test.ts",
   "scripts/live-call-cleanup-policy.test.ts",
@@ -325,6 +329,8 @@ const ownerLiveAuditMarkerActionsPolicy = await readFile("src/features/emergency
 const ownerLiveAuditMarkerPolicy = await readFile("src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts", "utf8");
 const ownerLiveEvidenceUpdatePolicy = await readFile("src/features/emergency-home/ownerLiveEvidenceUpdatePolicy.ts", "utf8");
 const ownerLiveEvidencePolicy = await readFile("src/features/emergency-home/ownerLiveEvidencePolicy.ts", "utf8");
+const ownerLiveVideoPreserveOutcomePolicy = await readFile("src/features/emergency-home/ownerLiveVideoPreserveOutcomePolicy.ts", "utf8");
+const ownerLiveVideoPreserveRequestPolicy = await readFile("src/features/emergency-home/ownerLiveVideoPreserveRequestPolicy.ts", "utf8");
 const ownerLiveVideoStartOutcomePolicy = await readFile("src/features/emergency-home/ownerLiveVideoStartOutcomePolicy.ts", "utf8");
 const ownerLiveVideoStartRequestPolicy = await readFile("src/features/emergency-home/ownerLiveVideoStartRequestPolicy.ts", "utf8");
 const liveCallCleanupPolicy = await readFile("src/features/emergency-home/liveCallCleanupPolicy.ts", "utf8");
@@ -998,6 +1004,10 @@ if (
 
 if (
   !homeScreen.includes("resolveOwnerLiveEvidenceUpdate") ||
+  !homeScreen.includes("resolveOwnerLiveVideoPreserveCompletionActions") ||
+  !homeScreen.includes("resolveOwnerLiveVideoPreserveErrorActions") ||
+  !homeScreen.includes("resolveOwnerLiveVideoPreserveRequest") ||
+  !homeScreen.includes("resolveOwnerLiveVideoPreserveStoppedActions") ||
   !homeScreen.includes("resolveOwnerLiveVideoStartOutcomeActions") ||
   !homeScreen.includes("resolveOwnerLiveVideoStartRequest") ||
   !homeScreen.includes("resolveOwnerLiveVideoEvidenceStart") ||
@@ -1006,6 +1016,11 @@ if (
   !homeScreen.includes("lifecycleDecision.evidenceUpdate") ||
   !ownerLiveEvidenceUpdatePolicy.includes("resolveOwnerLiveEvidenceUpdate") ||
   !ownerLiveEvidenceUpdatePolicy.includes("shouldUpdate") ||
+  !ownerLiveVideoPreserveOutcomePolicy.includes("resolveOwnerLiveVideoPreserveCompletionActions") ||
+  !ownerLiveVideoPreserveOutcomePolicy.includes("live_video_recording_preserve_error") ||
+  !ownerLiveVideoPreserveOutcomePolicy.includes("verificationMode: \"bounded\"") ||
+  !ownerLiveVideoPreserveRequestPolicy.includes("resolveOwnerLiveVideoPreserveRequest") ||
+  !ownerLiveVideoPreserveRequestPolicy.includes("await_pending_start") ||
   !ownerLiveVideoStartOutcomePolicy.includes("resolveOwnerLiveVideoStartOutcomeActions") ||
   !ownerLiveVideoStartOutcomePolicy.includes("live_video_recording_start_error") ||
   !ownerLiveVideoStartRequestPolicy.includes("resolveOwnerLiveVideoStartRequest") ||
@@ -1018,6 +1033,8 @@ if (
   !ownerLiveEvidencePolicy.includes("status_not_actionable") ||
   !packageJson.scripts["test:owner-live-evidence"] ||
   !packageJson.scripts["test:owner-live-evidence-update"] ||
+  !packageJson.scripts["test:owner-live-video-preserve-request"] ||
+  !packageJson.scripts["test:owner-live-video-preserve-outcome"] ||
   !packageJson.scripts["test:owner-live-video-start-request"] ||
   !packageJson.scripts["test:owner-live-video-start-outcome"]
 ) {

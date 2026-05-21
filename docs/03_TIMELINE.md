@@ -4634,3 +4634,43 @@ Validacoes:
 Checkpoint:
 
 - `docs/148_CHECKPOINT_ETAPA_1_76_OWNER_LIVE_VIDEO_START_OUTCOME_POLICY_2026-05-20.md`.
+
+## 2026-05-20 - Etapa 1.77 pedido de preservacao de video owner
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `ownerLiveVideoPreserveRequestPolicy` para centralizar a decisao de reutilizar promise de preservacao, aguardar inicio pendente, ignorar por ausencia/in-flight ou iniciar preservacao.
+- `app/index.tsx` manteve promise real, refs, await de inicio pendente e controle de preservacao como efeitos do componente.
+- `test:owner-live-video-preserve-request` cobre reutilizacao, aguardo pendente, ausencia, in-flight e inicio de preservacao.
+
+Validacoes:
+
+- `test:owner-live-video-preserve-request`, `test:owner-live-video-preserve-outcome`, `test:owner-live-video-start-request`, `test:owner-live-video-start-outcome`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/149_CHECKPOINT_ETAPA_1_77_OWNER_LIVE_VIDEO_PRESERVE_REQUEST_POLICY_2026-05-20.md`.
+
+## 2026-05-20 - Etapa 1.78 resultado da preservacao de video owner
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `ownerLiveVideoPreserveOutcomePolicy` para centralizar acoes de fonte parada, conclusao protegida e erro controlado.
+- `app/index.tsx` manteve parada nativa, preservacao no cofre, update de evidencia, auditoria, status e logs como efeitos do componente.
+- `test:owner-live-video-preserve-outcome` cobre ausencia de fonte, fonte valida, conclusao terminal, conclusao nao terminal e erro.
+
+Validacoes:
+
+- `test:owner-live-video-preserve-outcome`, `test:owner-live-video-preserve-request`, `test:owner-live-video-start-request`, `test:owner-live-video-start-outcome`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/150_CHECKPOINT_ETAPA_1_78_OWNER_LIVE_VIDEO_PRESERVE_OUTCOME_POLICY_2026-05-20.md`.
