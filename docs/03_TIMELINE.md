@@ -5126,3 +5126,24 @@ Validacoes:
 Checkpoint:
 
 - `docs/172_CHECKPOINT_ETAPAS_1_101_1_102_TRUSTED_ANGELS_ACTION_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapas 1.103 e 1.104 refresh de anjos
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `trustedAngelsRefreshPolicy` para centralizar decisoes puras do ciclo de atualizacao da tela `Anjos de confianca`.
+- Etapa 1.103: extraidos inicio do refresh, busy visivel/silencioso, estado local/cache, estado sem sessao e falha local.
+- Etapa 1.104: extraidos resultado remoto de contatos/convites/vinculos/cache e abertura de painel por parametro.
+- `app/contatos.tsx` continua responsavel por API real, cache real, storage local, timers, AppState e estado React.
+- Novo gate `npm run test:trusted-angels-refresh` foi adicionado ao `npm test`.
+
+Validacoes:
+
+- `test:trusted-angels-refresh`, `test:trusted-angels-action`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`: aprovados.
+- Sem build Android por ser mudanca pura de decisao/status sem runtime nativo.
+
+Checkpoint:
+
+- `docs/173_CHECKPOINT_ETAPAS_1_103_1_104_TRUSTED_ANGELS_REFRESH_POLICY_2026-05-21.md`.

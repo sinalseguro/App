@@ -890,3 +890,11 @@ Proximas acoes atualizadas:
 - Novo gate `npm run test:trusted-angels-action` cobre bloqueio por perfil, label saneado, sessao expirada e planos de revogacao.
 - Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
+
+## Memoria viva - 2026-05-21 - refresh Anjos/Convites sem build
+
+- Etapas 1.103 e 1.104 extraem decisoes puras de refresh para `trustedAngelsRefreshPolicy`.
+- `app/contatos.tsx` ainda executa API real, cache real, storage local, timers, AppState e estado React.
+- Novo gate `npm run test:trusted-angels-refresh` cobre refresh visivel/silencioso, cache offline, sessao ausente, falha local e painel por parametro.
+- Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.

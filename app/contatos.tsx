@@ -29,6 +29,15 @@ import {
   splitTrustedAngelInvitationSections
 } from "@/features/invitations/trustedAngelsListPolicy";
 import {
+  buildTrustedAngelsLocalRefreshState,
+  resolveTrustedAngelsNoSessionRefresh,
+  resolveTrustedAngelsPanelParam,
+  resolveTrustedAngelsRefreshFailure,
+  resolveTrustedAngelsRefreshStart,
+  resolveTrustedAngelsRemoteRefreshOutcome,
+  type TrustedAngelsPanel
+} from "@/features/invitations/trustedAngelsRefreshPolicy";
+import {
   buildTrustedAngelContactRevocationPlan,
   buildTrustedAngelInvitationRevocationPlan,
   resolveTrustedAngelActionFailure,
@@ -82,8 +91,6 @@ type AngelsDialog =
     }
   | null;
 
-type AngelsPanel = "estado" | "prontidao" | "anjos" | "sou_anjo" | "convites" | null;
-
 type RefreshOptions = {
   silent?: boolean;
 };
@@ -107,7 +114,7 @@ export default function ContactsScreen() {
   const [inviteLabel, setInviteLabel] = useState("Anjo de confiança");
   const [invitations, setInvitations] = useState<LocalInvitation[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [panel, setPanel] = useState<AngelsPanel>(null);
+  const [panel, setPanel] = useState<TrustedAngelsPanel>(null);
   const [activeProfile, setActiveProfile] = useState<ProtectionProfile | null>(null);
   const [status, setStatus] = useState("Carregando anjos de confiança...");
   const [trustedContacts, setTrustedContacts] = useState<ApiTrustedContact[]>([]);
@@ -145,9 +152,13 @@ export default function ContactsScreen() {
   const invitationGate = canCreateTrustedContactInvitation(activeProfile);
 
   async function refreshAngels(options: RefreshOptions = {}) {
-    if (refreshInFlightRef.current) return;
+    const refreshStart = resolveTrustedAngelsRefreshStart({
+      inFlight: refreshInFlightRef.current,
+      silent: options.silent
+    });
+    if (!refreshStart.shouldRefresh) return;
     refreshInFlightRef.current = true;
-    if (!options.silent) {
+    if (refreshStart.setBusy) {
       setBusy(true);
     }
     try {
@@ -159,10 +170,15 @@ export default function ContactsScreen() {
         listCachedTrustedContactRelationships()
       ]);
       setInvitations(nextInvitations);
-      setApiSession(currentSession);
-      setDeviceReady(Boolean(registeredDeviceId));
       setActiveProfile(nextProfile);
-      setTrustedRelationships(cachedRelationships);
+      const localState = buildTrustedAngelsLocalRefreshState({
+        cachedRelationships,
+        currentSession,
+        registeredDeviceId
+      });
+      setApiSession(localState.apiSession);
+      setDeviceReady(localState.deviceReady);
+      setTrustedRelationships(localState.trustedRelationships);
 
       if (currentSession) {
         const [contactsResult, remoteInvitationsResult, relationshipsResult] = await Promise.allSettled([
@@ -171,45 +187,47 @@ export default function ContactsScreen() {
           apiClient.listTrustedContactRelationships()
         ]);
 
-        if (contactsResult.status === "fulfilled") {
-          setTrustedContacts(contactsResult.value);
+        const remoteOutcome = resolveTrustedAngelsRemoteRefreshOutcome({
+          cachedRelationshipsCount: cachedRelationships.length,
+          contactsResult,
+          relationshipsResult,
+          remoteInvitationsResult,
+          silent: refreshStart.silent
+        });
+        if (remoteOutcome.trustedContacts) {
+          setTrustedContacts(remoteOutcome.trustedContacts);
         }
-        if (remoteInvitationsResult.status === "fulfilled") {
-          setBackendInvitations(remoteInvitationsResult.value);
+        if (remoteOutcome.backendInvitations) {
+          setBackendInvitations(remoteOutcome.backendInvitations);
         }
-        if (relationshipsResult.status === "fulfilled") {
-          setTrustedRelationships(relationshipsResult.value);
-          await cacheTrustedContactRelationships(relationshipsResult.value);
-          if (!options.silent) {
-            setStatus("Anjos atualizados.");
-          }
-        } else if (cachedRelationships.length > 0) {
-          if (!options.silent) {
-            setStatus("Sem internet agora. Mostrando vínculos salvos neste aparelho.");
-          }
-        } else {
-          if (!options.silent) {
-            setStatus(
-              relationshipsResult.reason instanceof Error
-                ? relationshipsResult.reason.message
-                : "Nao foi possivel atualizar vinculos agora."
-            );
-          }
+        if (remoteOutcome.trustedRelationships) {
+          setTrustedRelationships(remoteOutcome.trustedRelationships);
+        }
+        if (remoteOutcome.cacheRelationships) {
+          await cacheTrustedContactRelationships(remoteOutcome.cacheRelationships);
+        }
+        if (remoteOutcome.status) {
+          setStatus(remoteOutcome.status);
         }
       } else {
-        setTrustedContacts([]);
-        setBackendInvitations([]);
-        setTrustedRelationships([]);
-        if (!options.silent) {
-          setStatus("Entre com sua conta para sincronizar anjos.");
+        const noSessionOutcome = resolveTrustedAngelsNoSessionRefresh({ silent: refreshStart.silent });
+        setTrustedContacts(noSessionOutcome.trustedContacts);
+        setBackendInvitations(noSessionOutcome.backendInvitations);
+        setTrustedRelationships(noSessionOutcome.trustedRelationships);
+        if (noSessionOutcome.status) {
+          setStatus(noSessionOutcome.status);
         }
       }
     } catch (error) {
-      if (!options.silent) {
-        setStatus(error instanceof Error ? error.message : "Não foi possível atualizar anjos agora.");
+      const failure = resolveTrustedAngelsRefreshFailure({
+        message: error instanceof Error ? error.message : "",
+        silent: refreshStart.silent
+      });
+      if (failure.status) {
+        setStatus(failure.status);
       }
     } finally {
-      if (!options.silent) {
+      if (refreshStart.clearBusy) {
         setBusy(false);
       }
       refreshInFlightRef.current = false;
@@ -219,8 +237,9 @@ export default function ContactsScreen() {
   useFocusEffect(
     useCallback(() => {
       void refreshAngels();
-      if (painel === "anjos" || painel === "sou_anjo" || painel === "convites") {
-        setPanel(painel);
+      const requestedPanel = resolveTrustedAngelsPanelParam(painel);
+      if (requestedPanel) {
+        setPanel(requestedPanel);
       }
       const refreshTimer = setInterval(() => {
         void refreshAngels({ silent: true });
