@@ -4674,3 +4674,43 @@ Validacoes:
 Checkpoint:
 
 - `docs/150_CHECKPOINT_ETAPA_1_78_OWNER_LIVE_VIDEO_PRESERVE_OUTCOME_POLICY_2026-05-20.md`.
+
+## 2026-05-20 - Etapa 1.79 acoes iniciais do handoff de midia owner
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `mediaHandoffStartActionsPolicy` para centralizar acoes iniciais da preparacao de midia para chamada owner.
+- `app/index.tsx` manteve refs, estado React, evidencia, auditoria, log e sinalizacao real de parada do recorder como efeitos do componente.
+- `test:media-handoff-start-actions` cobre status, evidencia, auditoria, log e flags derivadas do stage inicial.
+
+Validacoes:
+
+- `test:media-handoff-start-actions`, `test:media-handoff-release-actions`, `test:media-handoff`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/151_CHECKPOINT_ETAPA_1_79_MEDIA_HANDOFF_START_ACTIONS_POLICY_2026-05-20.md`.
+
+## 2026-05-20 - Etapa 1.80 acoes de liberacao do handoff de midia owner
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `mediaHandoffReleaseActionsPolicy` para centralizar espera, conclusao e limpeza da liberacao de camera/midia antes da chamada owner.
+- `app/index.tsx` manteve `signalMediaRecorderStop()`, `waitForMediaRecorderRelease()`, flags React, evidencia, auditoria e logs como efeitos do componente.
+- `test:media-handoff-release-actions` cobre ausencia de serial, espera, conclusao e limpeza.
+
+Validacoes:
+
+- `test:media-handoff-release-actions`, `test:media-handoff-start-actions`, `test:media-handoff`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/152_CHECKPOINT_ETAPA_1_80_MEDIA_HANDOFF_RELEASE_ACTIONS_POLICY_2026-05-20.md`.

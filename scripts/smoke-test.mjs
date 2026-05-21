@@ -54,6 +54,8 @@ const requiredFiles = [
   "src/features/emergency-home/finishOutcomePolicy.ts",
   "src/features/emergency-home/finishRequestPolicy.ts",
   "src/features/emergency-home/mediaHandoffPolicy.ts",
+  "src/features/emergency-home/mediaHandoffReleaseActionsPolicy.ts",
+  "src/features/emergency-home/mediaHandoffStartActionsPolicy.ts",
   "src/features/emergency-home/mediaProcessingStatusPolicy.ts",
   "src/features/emergency-home/mediaReleaseWaiterPolicy.ts",
   "src/features/emergency-home/mediaReleaseWaiterCompletionPolicy.ts",
@@ -173,6 +175,8 @@ const requiredFiles = [
   "scripts/protected-route-form-policy.test.ts",
   "scripts/protected-route-dialog-policy.test.ts",
   "scripts/home-navigation-policy.test.ts",
+  "scripts/media-handoff-release-actions-policy.test.ts",
+  "scripts/media-handoff-start-actions-policy.test.ts",
   "scripts/media-stop-pending-policy.test.ts",
   "scripts/media-stop-signal-policy.test.ts",
   "scripts/media-stop-settlement-request-policy.test.ts",
@@ -298,6 +302,8 @@ const finishConfirmationFormPolicy = await readFile("src/features/emergency-home
 const finishOutcomePolicy = await readFile("src/features/emergency-home/finishOutcomePolicy.ts", "utf8");
 const finishRequestPolicy = await readFile("src/features/emergency-home/finishRequestPolicy.ts", "utf8");
 const mediaHandoffPolicy = await readFile("src/features/emergency-home/mediaHandoffPolicy.ts", "utf8");
+const mediaHandoffReleaseActionsPolicy = await readFile("src/features/emergency-home/mediaHandoffReleaseActionsPolicy.ts", "utf8");
+const mediaHandoffStartActionsPolicy = await readFile("src/features/emergency-home/mediaHandoffStartActionsPolicy.ts", "utf8");
 const mediaProcessingStatusPolicy = await readFile("src/features/emergency-home/mediaProcessingStatusPolicy.ts", "utf8");
 const mediaReleaseWaiterPolicy = await readFile("src/features/emergency-home/mediaReleaseWaiterPolicy.ts", "utf8");
 const mediaReleaseWaiterCompletionPolicy = await readFile("src/features/emergency-home/mediaReleaseWaiterCompletionPolicy.ts", "utf8");
@@ -446,7 +452,8 @@ if (
   !homeScreen.includes("prepareMediaForOwnerLiveCall") ||
   !homeScreen.includes("const started = await liveAudioCall.startOwnerAudioCall") ||
   !homeScreen.includes("if (started)") ||
-  !homeScreen.includes("emergency_live_call_media_handoff_start") ||
+  !homeScreen.includes("resolveMediaHandoffStartActions") ||
+  !mediaHandoffStartActionsPolicy.includes("emergency_live_call_media_handoff_start") ||
   !homeScreen.includes("waitForMediaRecorderRelease") ||
   !homeScreen.includes("mediaReleaseForLiveCallWaitTimeoutMs = 12000") ||
   !homeScreen.includes("resolveMediaProcessingPresentation") ||
@@ -1089,11 +1096,21 @@ if (
 if (
   !homeScreen.includes("resolveMediaHandoffPolicy") ||
   !homeScreen.includes("mediaHandoff.shouldPrepare") ||
+  !homeScreen.includes("resolveMediaHandoffReleaseCompletionActions") ||
+  !homeScreen.includes("resolveMediaHandoffReleaseWaitActions") ||
+  !homeScreen.includes("resolveMediaHandoffStartActions") ||
   !mediaHandoffPolicy.includes("resolveMediaHandoffPolicy") ||
   !mediaHandoffPolicy.includes("owner_media_handoff_start") ||
   !mediaHandoffPolicy.includes("owner_media_handoff_complete") ||
   !mediaHandoffPolicy.includes("local_capture_not_requested") ||
-  !packageJson.scripts["test:media-handoff"]
+  !mediaHandoffReleaseActionsPolicy.includes("resolveMediaHandoffReleaseCompletionActions") ||
+  !mediaHandoffReleaseActionsPolicy.includes("emergency_live_call_media_handoff_camera_released") ||
+  !mediaHandoffReleaseActionsPolicy.includes("skip_missing_stop_serial") ||
+  !mediaHandoffStartActionsPolicy.includes("resolveMediaHandoffStartActions") ||
+  !mediaHandoffStartActionsPolicy.includes("live_call_handoff") ||
+  !packageJson.scripts["test:media-handoff"] ||
+  !packageJson.scripts["test:media-handoff-release-actions"] ||
+  !packageJson.scripts["test:media-handoff-start-actions"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para preparacao da midia antes da chamada ao vivo.");
 }

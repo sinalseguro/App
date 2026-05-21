@@ -973,3 +973,23 @@ Papel: seguranca, LGPD e QA.
 - Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
 - Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida; `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
 - Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-20 - Etapa 1.79 policy pura de acoes iniciais do handoff de midia owner
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido novo, backend, portal ou release.
+- Gate novo `npm run test:media-handoff-start-actions` cobre status, evidencia, auditoria, log e flags derivadas do stage inicial.
+- A policy nao sinaliza parada real, nao toca camera, nao chama backend e nao altera estado React; `app/index.tsx` continua responsavel pelos efeitos reais.
+- O log de inicio do handoff segue saneado e nao inclui path local, conteudo de midia, SDP/ICE, chave ou token.
+- Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida; `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-20 - Etapa 1.80 policy pura de liberacao do handoff de midia owner
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido novo, backend, portal ou release.
+- Gate novo `npm run test:media-handoff-release-actions` cobre ausencia de serial, espera por liberacao, conclusao e limpeza.
+- A policy nao aguarda recurso nativo, nao para camera, nao chama backend e nao altera estado React; `app/index.tsx` continua responsavel pelos efeitos reais.
+- O log de camera liberada segue saneado e nao inclui path local, conteudo de midia, SDP/ICE, chave ou token.
+- Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida; `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.

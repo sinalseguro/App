@@ -945,3 +945,17 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `app/index.tsx` continua responsavel por `stopOwnerLiveVideoRecording()`, `preserveLocalVideoAsset()`, evidencia, auditoria, status e logs reais.
 - Novo gate `npm run test:owner-live-video-preserve-outcome` cobre fonte ausente, fonte valida, conclusao protegida e erro.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em motor nativo, storage seguro real ou backend exige validacao proporcional.
+
+# Atualizacao - 2026-05-20 - Etapa 1.79 Home/SOS
+
+- `src/features/emergency-home/mediaHandoffStartActionsPolicy.ts` centraliza acoes iniciais da preparacao de midia antes da chamada owner.
+- `app/index.tsx` continua responsavel por refs, estados React, evidencia, auditoria, log e sinalizacao real de parada do recorder.
+- Novo gate `npm run test:media-handoff-start-actions` cobre status, evidencia, auditoria, log e flags derivadas do stage inicial.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em camera, recorder, WebRTC ou UX real exige validacao proporcional.
+
+# Atualizacao - 2026-05-20 - Etapa 1.80 Home/SOS
+
+- `src/features/emergency-home/mediaHandoffReleaseActionsPolicy.ts` centraliza espera, conclusao e limpeza da liberacao de camera/midia antes da chamada owner.
+- `app/index.tsx` continua responsavel por `signalMediaRecorderStop()`, `waitForMediaRecorderRelease()`, flags React, evidencia, auditoria e logs.
+- Novo gate `npm run test:media-handoff-release-actions` cobre ausencia de serial, espera, conclusao e limpeza.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em camera, recorder, WebRTC ou backend real exige validacao proporcional.

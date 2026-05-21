@@ -76,6 +76,12 @@ import {
 } from "@/features/emergency-home/interruptedRecoveryProgressPolicy";
 import { resolveMediaHandoffPolicy } from "@/features/emergency-home/mediaHandoffPolicy";
 import {
+  resolveMediaHandoffReleaseCleanupActions,
+  resolveMediaHandoffReleaseCompletionActions,
+  resolveMediaHandoffReleaseWaitActions
+} from "@/features/emergency-home/mediaHandoffReleaseActionsPolicy";
+import { resolveMediaHandoffStartActions } from "@/features/emergency-home/mediaHandoffStartActionsPolicy";
+import {
   resolveMediaProcessingPresentation,
   resolveMediaStopSettlementFinishProgress,
   shouldResolveMediaReleaseWaiter
@@ -916,56 +922,52 @@ export default function HomeScreen() {
     }
 
     const packageId = mediaHandoff.packageId;
-    const startPresentation = mediaHandoff.start;
-    const completePresentation = mediaHandoff.complete;
-    mediaStopPurposeRef.current = "live_call_handoff";
-    if (startPresentation.recordingStatus) {
-      setRecordingStatus(startPresentation.recordingStatus);
+    const startActions = resolveMediaHandoffStartActions({
+      packageId,
+      platform: Platform.OS,
+      stage: mediaHandoff.start
+    });
+    mediaStopPurposeRef.current = startActions.mediaStopPurpose;
+    if (startActions.recordingStatus) {
+      setRecordingStatus(startActions.recordingStatus);
     }
-    updateOwnerLiveEvidence(liveRemoteSessionId, {
-      localEvidenceStatus: startPresentation.localEvidenceStatus,
-      packageId,
-      status: startPresentation.liveEvidenceStatus
-    });
-    recordOwnerLiveAuditMarker(liveRemoteSessionId, startPresentation.auditMarker, {
-      connectionState: startPresentation.connectionState,
-      localEvidenceStatus: startPresentation.localEvidenceStatus
-    });
-    appendMediaOperationalLog("emergency_live_call_media_handoff_start", {
-      packageId,
-      platform: Platform.OS
-    });
+    updateOwnerLiveEvidence(liveRemoteSessionId, startActions.evidenceUpdate);
+    recordOwnerLiveAuditMarker(liveRemoteSessionId, startActions.auditMarker.event, startActions.auditMarker.options);
+    appendMediaOperationalLog(startActions.log.event, startActions.log.payload);
 
     const stopSerial = signalMediaRecorderStop();
-    setCaptureStopLocked(true);
-    setMediaRecorderPackageId(packageId);
+    setCaptureStopLocked(startActions.captureStopLocked);
+    setMediaRecorderPackageId(startActions.mediaRecorderPackageId);
 
-    if (!stopSerial) {
+    const releaseWaitActions = resolveMediaHandoffReleaseWaitActions({ stopSerial });
+    if (!releaseWaitActions.shouldWaitForRelease) {
       mediaStopPurposeRef.current = null;
       return;
     }
 
-    setMediaStopPendingFlag(true);
+    setMediaStopPendingFlag(releaseWaitActions.shouldSetPending);
     try {
       await waitForMediaRecorderRelease();
-      updateOwnerLiveEvidence(liveRemoteSessionId, {
-        localEvidenceStatus: completePresentation.localEvidenceStatus,
-        packageId,
-        status: completePresentation.liveEvidenceStatus
-      });
-      recordOwnerLiveAuditMarker(liveRemoteSessionId, completePresentation.auditMarker, {
-        connectionState: completePresentation.connectionState,
-        localEvidenceStatus: completePresentation.localEvidenceStatus
-      });
-      appendMediaOperationalLog("emergency_live_call_media_handoff_camera_released", {
+      const completionActions = resolveMediaHandoffReleaseCompletionActions({
         packageId,
         platform: Platform.OS,
-        stopRequestSerial: stopSerial
+        stage: mediaHandoff.complete,
+        stopSerial: releaseWaitActions.stopSerial
       });
+      updateOwnerLiveEvidence(liveRemoteSessionId, completionActions.evidenceUpdate);
+      recordOwnerLiveAuditMarker(
+        liveRemoteSessionId,
+        completionActions.auditMarker.event,
+        completionActions.auditMarker.options
+      );
+      appendMediaOperationalLog(completionActions.log.event, completionActions.log.payload);
     } finally {
-      setMediaStopPendingFlag(false);
-      setMediaRecorderPackageId(packageId);
-      mediaStopPurposeRef.current = null;
+      const cleanupActions = resolveMediaHandoffReleaseCleanupActions({ packageId });
+      setMediaStopPendingFlag(cleanupActions.mediaStopPending);
+      setMediaRecorderPackageId(cleanupActions.mediaRecorderPackageId);
+      if (cleanupActions.shouldClearPurpose) {
+        mediaStopPurposeRef.current = null;
+      }
     }
   }, [activePackageId, captureStopLocked, liveRemoteSessionId, preferences.localVideoCapture.requestOnSos]);
 
