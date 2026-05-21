@@ -76,8 +76,10 @@ const requiredFiles = [
   "src/features/emergency-home/finishMediaStopRequestActionsPolicy.ts",
   "src/features/emergency-home/finishMediaStopResultPolicy.ts",
   "src/features/emergency-home/finishRemoteSyncPolicy.ts",
+  "src/features/emergency-home/finishRemoteSyncRequestActionsPolicy.ts",
   "src/features/emergency-home/finishPackageResultPolicy.ts",
   "src/features/emergency-home/finishOutcomeInputPolicy.ts",
+  "src/features/emergency-home/finishPackageOutcomeActionsPolicy.ts",
   "src/features/emergency-home/finishOwnerLiveEvidencePolicy.ts",
   "src/features/emergency-home/finishOwnerLiveAuditPolicy.ts",
   "src/features/emergency-home/finishOwnerCompletionPolicy.ts",
@@ -209,8 +211,10 @@ const requiredFiles = [
   "scripts/finish-media-stop-request-actions-policy.test.ts",
   "scripts/finish-media-stop-result-policy.test.ts",
   "scripts/finish-remote-sync-policy.test.ts",
+  "scripts/finish-remote-sync-request-actions-policy.test.ts",
   "scripts/finish-package-result-policy.test.ts",
   "scripts/finish-outcome-input-policy.test.ts",
+  "scripts/finish-package-outcome-actions-policy.test.ts",
   "scripts/finish-owner-live-evidence-policy.test.ts",
   "scripts/finish-owner-live-audit-policy.test.ts",
   "scripts/finish-owner-completion-policy.test.ts",
@@ -344,8 +348,16 @@ const finishMediaStopStartPolicy = await readFile("src/features/emergency-home/f
 const finishMediaStopRequestActionsPolicy = await readFile("src/features/emergency-home/finishMediaStopRequestActionsPolicy.ts", "utf8");
 const finishMediaStopResultPolicy = await readFile("src/features/emergency-home/finishMediaStopResultPolicy.ts", "utf8");
 const finishRemoteSyncPolicy = await readFile("src/features/emergency-home/finishRemoteSyncPolicy.ts", "utf8");
+const finishRemoteSyncRequestActionsPolicy = await readFile(
+  "src/features/emergency-home/finishRemoteSyncRequestActionsPolicy.ts",
+  "utf8"
+);
 const finishPackageResultPolicy = await readFile("src/features/emergency-home/finishPackageResultPolicy.ts", "utf8");
 const finishOutcomeInputPolicy = await readFile("src/features/emergency-home/finishOutcomeInputPolicy.ts", "utf8");
+const finishPackageOutcomeActionsPolicy = await readFile(
+  "src/features/emergency-home/finishPackageOutcomeActionsPolicy.ts",
+  "utf8"
+);
 const finishOwnerLiveEvidencePolicy = await readFile("src/features/emergency-home/finishOwnerLiveEvidencePolicy.ts", "utf8");
 const finishOwnerLiveAuditPolicy = await readFile("src/features/emergency-home/finishOwnerLiveAuditPolicy.ts", "utf8");
 const finishOwnerCompletionPolicy = await readFile("src/features/emergency-home/finishOwnerCompletionPolicy.ts", "utf8");
@@ -940,7 +952,8 @@ if (
   !finishActiveCallRuntimeStartPolicy.includes("resolveFinishRequestedProgress") ||
   !finishMediaStopRequestActionsPolicy.includes("resolveFinishMediaStopStartActions") ||
   !homeScreen.includes("resolveFinishMediaStopResultActions") ||
-  !homeScreen.includes("resolveFinishRemoteSyncProgress") ||
+  !homeScreen.includes("resolveFinishRemoteSyncRequestActions") ||
+  !finishRemoteSyncRequestActionsPolicy.includes("resolveFinishRemoteSyncStartActions") ||
   !finishMediaStopStartPolicy.includes("resolveFinishMediaStopSignaledProgress") ||
   !finishMediaStopResultPolicy.includes("resolveFinishMediaStopSettledProgress") ||
   !finishFlowProgressPolicy.includes("resolveMediaProtectionInProgress") ||
@@ -1186,8 +1199,9 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishOutcomeInput") ||
-  !homeScreen.includes("resolveFinishOutcomePolicy") ||
+  !homeScreen.includes("resolveFinishPackageOutcomeActions") ||
+  !finishPackageOutcomeActionsPolicy.includes("resolveFinishOutcomeInput") ||
+  !finishPackageOutcomeActionsPolicy.includes("resolveFinishOutcomePolicy") ||
   !finishOutcomeInputPolicy.includes("attachedAssetsAfterFinish") ||
   !finishOutcomeInputPolicy.includes("remoteFinishFailed") ||
   !finishOutcomePolicy.includes("resolveFinishOutcomePolicy") ||
@@ -1196,6 +1210,7 @@ if (
   !finishOutcomePolicy.includes("Confirmacao pendente") ||
   !finishOutcomePolicy.includes("Video local pendente") ||
   !packageJson.scripts["test:finish-outcome-input"] ||
+  !packageJson.scripts["test:finish-package-outcome-actions"] ||
   !packageJson.scripts["test:finish-outcome"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para resultado final do encerramento do chamado.");
@@ -1269,33 +1284,38 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishRemoteSyncStartActions") ||
-  !homeScreen.includes("resolveFinishRemoteSyncMode") ||
+  !homeScreen.includes("resolveFinishRemoteSyncRequestActions") ||
   !homeScreen.includes("resolveRemoteFinishStateAfterDirect") ||
   !homeScreen.includes("resolveRemoteFinishStateFromSync") ||
   !homeScreen.includes("resolveRemoteFinishFailureLog") ||
+  !finishRemoteSyncRequestActionsPolicy.includes("resolveFinishRemoteSyncStartActions") ||
+  !finishRemoteSyncRequestActionsPolicy.includes("resolveFinishRemoteSyncMode") ||
   !finishRemoteSyncPolicy.includes("shouldQueueForRemoteSync") ||
   !finishRemoteSyncPolicy.includes("direct_finish") ||
   !finishRemoteSyncPolicy.includes("pending_sync") ||
   !finishRemoteSyncPolicy.includes("shouldRetryRemoteFinishAfterDirect") ||
   !finishRemoteSyncPolicy.includes("emergency_remote_finish_sync_error") ||
-  !packageJson.scripts["test:finish-remote-sync"]
+  !packageJson.scripts["test:finish-remote-sync"] ||
+  !packageJson.scripts["test:finish-remote-sync-request-actions"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para sincronizacao remota final do encerramento.");
 }
 
 if (
-  !homeScreen.includes("resolveFinishPackageResult") ||
+  !homeScreen.includes("resolveFinishPackageOutcomeActions") ||
+  !finishPackageOutcomeActionsPolicy.includes("resolveFinishPackageResult") ||
   !finishPackageResultPolicy.includes("attachedAssetsAfterFinish") ||
   !finishPackageResultPolicy.includes("emergency_finish_package_result") ||
   !finishPackageResultPolicy.includes("mediaRecorded") ||
-  !packageJson.scripts["test:finish-package-result"]
+  !packageJson.scripts["test:finish-package-result"] ||
+  !packageJson.scripts["test:finish-package-outcome-actions"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para resumo do pacote finalizado.");
 }
 
 if (
-  !homeScreen.includes("resolveFinishOwnerCompletionActions") ||
+  !homeScreen.includes("resolveFinishPackageOutcomeActions") ||
+  !finishPackageOutcomeActionsPolicy.includes("resolveFinishOwnerCompletionActions") ||
   !finishOwnerCompletionPolicy.includes("resolveFinishOwnerLiveEvidenceUpdate") ||
   !finishOwnerCompletionPolicy.includes("resolveFinishOwnerLiveAuditMarker") ||
   !finishOwnerLiveEvidencePolicy.includes("localEvidenceStatus") ||
@@ -1307,7 +1327,8 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishOwnerCompletionActions") ||
+  !homeScreen.includes("resolveFinishPackageOutcomeActions") ||
+  !finishPackageOutcomeActionsPolicy.includes("resolveFinishOwnerCompletionActions") ||
   !finishOwnerCompletionPolicy.includes("resolveFinishOwnerLiveAuditMarker") ||
   !finishOwnerLiveAuditPolicy.includes('connectionState: "ended"') ||
   !finishOwnerLiveAuditPolicy.includes("localEvidenceStatus") ||
@@ -1318,7 +1339,8 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishPostOutcomeActions") ||
+  !homeScreen.includes("resolveFinishPackageOutcomeActions") ||
+  !finishPackageOutcomeActionsPolicy.includes("resolveFinishPostOutcomeActions") ||
   !finishPostOutcomeActionsPolicy.includes("resolveFinishNoMediaDiagnosticRequest") ||
   !finishPostOutcomeActionsPolicy.includes("resolveFinishCompletionActions") ||
   !finishNoMediaDiagnosticPolicy.includes("shouldPersist") ||
@@ -1330,8 +1352,9 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishPostOutcomeActions") ||
+  !homeScreen.includes("resolveFinishPackageOutcomeActions") ||
   !homeScreen.includes("resolveFinishCompletionConfirmationFormPatch") ||
+  !finishPackageOutcomeActionsPolicy.includes("resolveFinishPostOutcomeActions") ||
   !finishPostOutcomeActionsPolicy.includes("resolveFinishCompletionActions") ||
   !finishConfirmationFormPolicy.includes("resolveFinishCompletionConfirmationFormPatch") ||
   !finishCompletionActionsPolicy.includes("shouldCloseFinishConfirmation") ||

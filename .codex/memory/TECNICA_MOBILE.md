@@ -1029,3 +1029,17 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `app/index.tsx` continua responsavel por `signalMediaRecorderStop()`, flags React, `waitForMediaRecorderStop()` e resultado real da parada.
 - Novo gate `npm run test:finish-media-stop-request-actions` cobre handoff para chamada ao vivo, parada local e serial presente/ausente.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em recorder, camera, storage, chamada ou UX real exige validacao proporcional.
+
+# Atualizacao - 2026-05-21 - Etapa 1.91 Home/SOS
+
+- `src/features/emergency-home/finishRemoteSyncRequestActionsPolicy.ts` centraliza o plano inicial da sincronizacao remota final do encerramento.
+- `app/index.tsx` continua responsavel por fila remota, chamada direta de encerramento remoto, retry de pendencias, progresso e logs reais.
+- Novo gate `npm run test:finish-remote-sync-request-actions` cobre `direct_finish` com sessao remota e `pending_sync` sem sessao.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em API/backend real, chamada, WebRTC ou UX real exige validacao proporcional.
+
+# Atualizacao - 2026-05-21 - Etapa 1.92 Home/SOS
+
+- `src/features/emergency-home/finishPackageOutcomeActionsPolicy.ts` consolida resumo do pacote, input/outcome final, evidencia/auditoria owner e acoes posteriores do encerramento.
+- `app/index.tsx` continua responsavel por log operacional, update de evidencia, marcador de auditoria, diagnostico sem midia, progresso e formulario.
+- Novo gate `npm run test:finish-package-outcome-actions` cobre resultado protegido e caso diagnostico quando a chamada ao vivo nao devolve video local.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em storage seguro real, recorder, chamada, backend ou UX real exige validacao proporcional.

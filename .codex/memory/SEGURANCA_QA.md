@@ -1094,3 +1094,23 @@ Papel: seguranca, LGPD e QA.
 - Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
 - Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida; `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
 - Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-21 - Etapa 1.91 policy pura de requisicao da sincronizacao remota final
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido novo, backend, portal ou release.
+- Gate novo `npm run test:finish-remote-sync-request-actions` cobre plano direto com sessao remota e plano de sincronizacao pendente.
+- A policy nao chama backend, nao fecha sessao remota, nao aplica estado remoto e nao manipula midia; `app/index.tsx` continua responsavel pelos efeitos reais.
+- Nao introduz log novo, token, chave, SDP/ICE, path local, coordenada ou conteudo de midia.
+- Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida; `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-21 - Etapa 1.92 policy pura de acoes consolidadas de resultado final
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido novo, backend, portal ou release.
+- Gate novo `npm run test:finish-package-outcome-actions` cobre resultado protegido e persistencia diagnostica quando a chamada ao vivo nao devolve video local.
+- A policy nao persiste diagnostico, nao atualiza backend, nao grava evidencia e nao manipula midia; `app/index.tsx` continua responsavel pelos efeitos reais.
+- Nao introduz log novo, token, chave, SDP/ICE, path local, coordenada ou conteudo de midia.
+- Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida; `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.

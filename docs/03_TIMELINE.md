@@ -4916,3 +4916,43 @@ Validacoes:
 Checkpoint:
 
 - `docs/162_CHECKPOINT_ETAPA_1_90_FINISH_MEDIA_STOP_REQUEST_ACTIONS_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapa 1.91 acoes de requisicao da sincronizacao remota final
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishRemoteSyncRequestActionsPolicy` para centralizar o plano inicial da sincronizacao remota final do encerramento.
+- `app/index.tsx` manteve fila remota, chamada direta de encerramento remoto, retry de pendencias, log e progresso como efeitos do componente.
+- `test:finish-remote-sync-request-actions` cobre modo direto com sessao remota e modo de sincronizacao pendente.
+
+Validacoes:
+
+- `test:finish-remote-sync-request-actions`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/163_CHECKPOINT_ETAPA_1_91_FINISH_REMOTE_SYNC_REQUEST_ACTIONS_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapa 1.92 acoes consolidadas de resultado final do pacote
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishPackageOutcomeActionsPolicy` para consolidar resumo do pacote, entrada do outcome, resultado final, evidencia/auditoria owner e acoes posteriores.
+- `app/index.tsx` manteve log operacional, update de evidencia, marcador de auditoria, persistencia diagnostica e estado React como efeitos do componente.
+- `test:finish-package-outcome-actions` cobre resultado protegido e persistencia diagnostica quando a chamada ao vivo nao devolve video local.
+
+Validacoes:
+
+- `test:finish-package-outcome-actions`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/164_CHECKPOINT_ETAPA_1_92_FINISH_PACKAGE_OUTCOME_ACTIONS_POLICY_2026-05-21.md`.
