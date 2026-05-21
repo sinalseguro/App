@@ -28,6 +28,7 @@ import {
   resolveFinishRemoteSyncProgress,
   resolveMediaProtectionInProgress
 } from "@/features/emergency-home/finishFlowProgressPolicy";
+import { resolveFinishCodeConfirmationActions } from "@/features/emergency-home/finishCodeConfirmationActionsPolicy";
 import { resolveFinishCodeConfirmationDecision } from "@/features/emergency-home/finishCodePolicy";
 import {
   resolveFinishCompletionConfirmationFormPatch,
@@ -107,12 +108,11 @@ import { resolveProtectedRouteAccessDecision } from "@/features/emergency-home/p
 import { resolveProtectedRouteCodeDecision } from "@/features/emergency-home/protectedRouteCodePolicy";
 import { resolveProtectedRouteDialogPresentation } from "@/features/emergency-home/protectedRouteDialogPolicy";
 import {
-  resolveProtectedRouteAcceptedFormPatch,
   resolveProtectedRouteClosedFormPatch,
-  resolveProtectedRouteErrorFormPatch,
   resolveProtectedRouteRequestFormPatch,
   type ProtectedRouteFormPatch
 } from "@/features/emergency-home/protectedRouteFormPolicy";
+import { resolveProtectedRouteUnlockActions } from "@/features/emergency-home/protectedRouteUnlockActionsPolicy";
 import { resolveRecordingConsentDialogPresentation } from "@/features/emergency-home/recordingConsentDialogPolicy";
 import { activeRemoteSyncRetryMessage, resolveActiveRemoteSyncStatus } from "@/features/emergency-home/remoteSyncStatusPolicy";
 import { EmergencyHomePanel, EmergencyHomeRoute } from "@/features/emergency-home/routes";
@@ -1618,8 +1618,12 @@ export default function HomeScreen() {
       verification
     });
 
-    if (finishCodeDecision.action === "show_error") {
-      applyFinishConfirmationFormPatch({ finishError: finishCodeDecision.errorMessage });
+    const finishCodeActions = resolveFinishCodeConfirmationActions(finishCodeDecision);
+    if (finishCodeActions.formPatch) {
+      applyFinishConfirmationFormPatch(finishCodeActions.formPatch);
+    }
+
+    if (!finishCodeActions.shouldFinishActiveCall) {
       return;
     }
 
@@ -1635,18 +1639,18 @@ export default function HomeScreen() {
       verification
     });
 
-    if (protectedRouteDecision.action === "ignore_missing_request") return;
-
-    if (protectedRouteDecision.action === "show_error") {
-      applyProtectedRouteFormPatch(resolveProtectedRouteErrorFormPatch(protectedRouteDecision.errorMessage));
-      return;
+    const protectedRouteActions = resolveProtectedRouteUnlockActions({
+      decision: protectedRouteDecision,
+      request: protectedRouteRequest
+    });
+    if (protectedRouteActions.formPatch) {
+      applyProtectedRouteFormPatch(protectedRouteActions.formPatch);
     }
 
-    if (!protectedRouteRequest) return;
-    const nextRequest = protectedRouteRequest;
-    applyProtectedRouteFormPatch(resolveProtectedRouteAcceptedFormPatch());
+    if (!protectedRouteActions.shouldUnlockProtectedAccess) return;
+
     await unlockProtectedAccess();
-    navigateRoute(nextRequest.route, nextRequest.panel);
+    navigateRoute(protectedRouteActions.navigationTarget.route, protectedRouteActions.navigationTarget.panel);
   }
 
   function closeProtectedRouteDialog() {

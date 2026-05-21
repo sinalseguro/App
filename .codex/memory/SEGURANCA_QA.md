@@ -881,3 +881,21 @@ Papel: seguranca, LGPD e QA.
 - Validacoes aprovadas: testes focados, `smoke-test`, `npm test`, `git diff --check` e varredura dirigida.
 - Git local tinha pack/refs antigos corrompidos; os itens afetados foram isolados em quarentena local antes de continuar. Nao houve alteracao de codigo por esse reparo.
 - Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-20 - Etapa 1.69 policy pura de acao de encerramento por codigo
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido novo, backend, portal ou release.
+- Gate novo `npm run test:finish-code-confirmation-actions` cobre erro de codigo e autorizacao explicita para finalizar.
+- A policy nao verifica codigo, nao encerra chamado e nao altera estado React; `app/index.tsx` continua responsavel pelos efeitos reais.
+- Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida; `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-20 - Etapa 1.70 policy pura de acao de desbloqueio de rota protegida
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido novo, backend, portal ou release.
+- Gate novo `npm run test:protected-route-unlock-actions` cobre pedido ausente, erro e desbloqueio somente com request valido.
+- A policy nao valida codigo, nao chama `unlockProtectedAccess()` e nao navega; `app/index.tsx` continua responsavel pelos efeitos reais.
+- Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida; `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.

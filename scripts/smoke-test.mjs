@@ -48,6 +48,7 @@ const requiredFiles = [
   "src/features/emergency-home/homeNavigationPolicy.ts",
   "src/features/emergency-home/emergencyStartPolicy.ts",
   "src/features/emergency-home/finishCodePolicy.ts",
+  "src/features/emergency-home/finishCodeConfirmationActionsPolicy.ts",
   "src/features/emergency-home/finishConfirmationDialogPolicy.ts",
   "src/features/emergency-home/finishConfirmationFormPolicy.ts",
   "src/features/emergency-home/finishOutcomePolicy.ts",
@@ -89,6 +90,7 @@ const requiredFiles = [
   "src/features/emergency-home/recordingConsentDialogPolicy.ts",
   "src/features/emergency-home/protectedRouteAccessPolicy.ts",
   "src/features/emergency-home/protectedRouteCodePolicy.ts",
+  "src/features/emergency-home/protectedRouteUnlockActionsPolicy.ts",
   "src/features/emergency-home/protectedRouteDialogPolicy.ts",
   "src/features/emergency-home/protectedRouteFormPolicy.ts",
   "src/features/emergency-home/remoteSyncStatusPolicy.ts",
@@ -148,8 +150,10 @@ const requiredFiles = [
   "scripts/finish-request-policy.test.ts",
   "scripts/finish-confirmation-form-policy.test.ts",
   "scripts/finish-code-policy.test.ts",
+  "scripts/finish-code-confirmation-actions-policy.test.ts",
   "scripts/finish-confirmation-dialog-policy.test.ts",
   "scripts/protected-route-code-policy.test.ts",
+  "scripts/protected-route-unlock-actions-policy.test.ts",
   "scripts/protected-route-form-policy.test.ts",
   "scripts/protected-route-dialog-policy.test.ts",
   "scripts/home-navigation-policy.test.ts",
@@ -272,6 +276,7 @@ const finishProgressStatePolicy = await readFile("src/features/emergency-home/fi
 const homeNavigationPolicy = await readFile("src/features/emergency-home/homeNavigationPolicy.ts", "utf8");
 const emergencyStartPolicy = await readFile("src/features/emergency-home/emergencyStartPolicy.ts", "utf8");
 const finishCodePolicy = await readFile("src/features/emergency-home/finishCodePolicy.ts", "utf8");
+const finishCodeConfirmationActionsPolicy = await readFile("src/features/emergency-home/finishCodeConfirmationActionsPolicy.ts", "utf8");
 const finishConfirmationDialogPolicy = await readFile("src/features/emergency-home/finishConfirmationDialogPolicy.ts", "utf8");
 const finishConfirmationFormPolicy = await readFile("src/features/emergency-home/finishConfirmationFormPolicy.ts", "utf8");
 const finishOutcomePolicy = await readFile("src/features/emergency-home/finishOutcomePolicy.ts", "utf8");
@@ -313,6 +318,7 @@ const panicTriggerPolicy = await readFile("src/features/emergency-home/panicTrig
 const recordingConsentDialogPolicy = await readFile("src/features/emergency-home/recordingConsentDialogPolicy.ts", "utf8");
 const protectedRouteAccessPolicy = await readFile("src/features/emergency-home/protectedRouteAccessPolicy.ts", "utf8");
 const protectedRouteCodePolicy = await readFile("src/features/emergency-home/protectedRouteCodePolicy.ts", "utf8");
+const protectedRouteUnlockActionsPolicy = await readFile("src/features/emergency-home/protectedRouteUnlockActionsPolicy.ts", "utf8");
 const protectedRouteDialogPolicy = await readFile("src/features/emergency-home/protectedRouteDialogPolicy.ts", "utf8");
 const protectedRouteFormPolicy = await readFile("src/features/emergency-home/protectedRouteFormPolicy.ts", "utf8");
 const remoteSyncStatusPolicy = await readFile("src/features/emergency-home/remoteSyncStatusPolicy.ts", "utf8");
@@ -1204,12 +1210,17 @@ if (
 
 if (
   !homeScreen.includes("resolveFinishCodeConfirmationDecision") ||
+  !homeScreen.includes("resolveFinishCodeConfirmationActions") ||
   !finishCodePolicy.includes("resolveFinishCodeConfirmationDecision") ||
   !finishCodePolicy.includes("Codigo de seguranca nao verificado.") ||
   !finishCodePolicy.includes("O chamado continua ativo.") ||
-  !packageJson.scripts["test:finish-code"]
+  !finishCodeConfirmationActionsPolicy.includes("resolveFinishCodeConfirmationActions") ||
+  !finishCodeConfirmationActionsPolicy.includes("shouldFinishActiveCall") ||
+  !finishCodeConfirmationActionsPolicy.includes("finishError") ||
+  !packageJson.scripts["test:finish-code"] ||
+  !packageJson.scripts["test:finish-code-confirmation-actions"]
 ) {
-  throw new Error("Home/SOS precisa manter politica pura testavel para confirmacao de encerramento por codigo.");
+  throw new Error("Home/SOS precisa manter politica pura testavel para confirmacao e acao de encerramento por codigo.");
 }
 
 if (
@@ -1232,22 +1243,26 @@ if (
 
 if (
   !homeScreen.includes("resolveProtectedRouteCodeDecision") ||
+  !homeScreen.includes("resolveProtectedRouteUnlockActions") ||
   !homeScreen.includes("resolveProtectedRouteRequestFormPatch") ||
-  !homeScreen.includes("resolveProtectedRouteAcceptedFormPatch") ||
   !homeScreen.includes("resolveProtectedRouteClosedFormPatch") ||
-  !homeScreen.includes("resolveProtectedRouteErrorFormPatch") ||
   !protectedRouteCodePolicy.includes("resolveProtectedRouteCodeDecision") ||
   !protectedRouteCodePolicy.includes("ignore_missing_request") ||
   !protectedRouteCodePolicy.includes("unlock_and_navigate") ||
   !protectedRouteCodePolicy.includes("Area protegida bloqueada.") ||
+  !protectedRouteUnlockActionsPolicy.includes("resolveProtectedRouteUnlockActions") ||
+  !protectedRouteUnlockActionsPolicy.includes("resolveProtectedRouteAcceptedFormPatch") ||
+  !protectedRouteUnlockActionsPolicy.includes("resolveProtectedRouteErrorFormPatch") ||
+  !protectedRouteUnlockActionsPolicy.includes("shouldUnlockProtectedAccess") ||
   !protectedRouteFormPolicy.includes("resolveProtectedRouteRequestFormPatch") ||
   !protectedRouteFormPolicy.includes("resolveProtectedRouteAcceptedFormPatch") ||
   !protectedRouteFormPolicy.includes("resolveProtectedRouteClosedFormPatch") ||
   !protectedRouteFormPolicy.includes("resolveProtectedRouteErrorFormPatch") ||
   !packageJson.scripts["test:protected-route-code"] ||
+  !packageJson.scripts["test:protected-route-unlock-actions"] ||
   !packageJson.scripts["test:protected-route-form"]
 ) {
-  throw new Error("Home/SOS precisa manter politica pura testavel para rotas protegidas por codigo.");
+  throw new Error("Home/SOS precisa manter politica pura testavel para decisao e acao de rotas protegidas por codigo.");
 }
 
 if (

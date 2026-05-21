@@ -4474,3 +4474,43 @@ Validacoes:
 Checkpoint:
 
 - `docs/140_CHECKPOINT_ETAPA_1_68_PROTECTED_ROUTE_FORM_POLICY_2026-05-20.md`.
+
+## 2026-05-20 - Etapa 1.69 acoes de confirmacao de encerramento por codigo
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishCodeConfirmationActionsPolicy` para transformar a decisao de codigo em patch de erro ou autorizacao explicita de encerramento.
+- `app/index.tsx` manteve `verifySecurityCodeStatus()`, `applyFinishConfirmationFormPatch()` e `handleFinishActiveCall()` como efeitos reais no componente.
+- `test:finish-code-confirmation-actions` cobre erro e caminho de encerramento autorizado.
+
+Validacoes:
+
+- `test:finish-code-confirmation-actions`, `test:finish-code`, `test:finish-confirmation-form`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/141_CHECKPOINT_ETAPA_1_69_FINISH_CODE_CONFIRMATION_ACTIONS_POLICY_2026-05-20.md`.
+
+## 2026-05-20 - Etapa 1.70 acoes de desbloqueio de rota protegida
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `protectedRouteUnlockActionsPolicy` para transformar a decisao de codigo em patch, autorizacao de desbloqueio e alvo de navegacao.
+- `app/index.tsx` manteve `verifySecurityCodeStatus()`, `applyProtectedRouteFormPatch()`, `unlockProtectedAccess()` e `navigateRoute()` como efeitos reais no componente.
+- `test:protected-route-unlock-actions` cobre pedido ausente, erro, desbloqueio sem request e desbloqueio com alvo valido.
+
+Validacoes:
+
+- `test:protected-route-unlock-actions`, `test:protected-route-code`, `test:protected-route-form`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/142_CHECKPOINT_ETAPA_1_70_PROTECTED_ROUTE_UNLOCK_ACTIONS_POLICY_2026-05-20.md`.

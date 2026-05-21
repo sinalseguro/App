@@ -875,3 +875,17 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:protected-route-form` cobre pedido, erro, aceite e fechamento.
 - Git local apresentou packs/refs antigos corrompidos; os objetos/refs afetados foram movidos para quarentena local e `git fetch --no-tags origin main` voltou a funcionar.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em permissao, navegacao real ou UX visual exige validacao proporcional.
+
+# Atualizacao - 2026-05-20 - Etapa 1.69 Home/SOS
+
+- `src/features/emergency-home/finishCodeConfirmationActionsPolicy.ts` centraliza a acao derivada da confirmacao de encerramento por codigo.
+- `app/index.tsx` continua responsavel por `verifySecurityCodeStatus()`, aplicar patch React e chamar `handleFinishActiveCall()`.
+- Novo gate `npm run test:finish-code-confirmation-actions` cobre erro de codigo e caminho autorizado de encerramento.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em encerramento real/camera/chamada exige validacao proporcional.
+
+# Atualizacao - 2026-05-20 - Etapa 1.70 Home/SOS
+
+- `src/features/emergency-home/protectedRouteUnlockActionsPolicy.ts` centraliza a acao derivada da confirmacao de rota protegida por codigo.
+- `app/index.tsx` continua responsavel por `verifySecurityCodeStatus()`, `unlockProtectedAccess()` e `navigateRoute()`.
+- Novo gate `npm run test:protected-route-unlock-actions` cobre pedido ausente, erro e desbloqueio com alvo valido.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em permissao, navegacao real ou UX visual exige validacao proporcional.
