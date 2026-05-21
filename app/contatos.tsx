@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useMemo, useRef, useState } from "react";
+import { Fragment, ReactNode, useCallback, useMemo, useRef, useState } from "react";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import { AppState, Pressable, ScrollView, Share, StyleSheet, Text, TextInput, View } from "react-native";
 import { Clock3, RefreshCw, ShieldCheck, UserCheck, UserPlus, UserRound, Users, WifiOff, XCircle } from "lucide-react-native";
@@ -28,6 +28,11 @@ import {
   mergeTrustedAngelInvitations,
   splitTrustedAngelInvitationSections
 } from "@/features/invitations/trustedAngelsListPolicy";
+import {
+  buildTrustedAngelsAngelPanelState,
+  buildTrustedAngelsInvitationPanelState,
+  buildTrustedAngelsOwnerPanelState
+} from "@/features/invitations/trustedAngelsPanelPolicy";
 import {
   buildTrustedAngelsDashboardSummary,
   buildTrustedAngelsReadinessState
@@ -175,6 +180,13 @@ export default function ContactsScreen() {
     apiEnabled: apiConfig.apiEnabled,
     apiSessionAvailable: Boolean(apiSession),
     deviceReady
+  });
+  const ownerPanelState = buildTrustedAngelsOwnerPanelState(linkedContacts);
+  const angelPanelState = buildTrustedAngelsAngelPanelState(angelLinks);
+  const invitationPanelState = buildTrustedAngelsInvitationPanelState({
+    backendValidatedInvitations,
+    invitationCount,
+    localPreInvitations
   });
   const dialogVisibility = buildTrustedAngelsDialogVisibility({
     dialogKind: dialog?.kind ?? null,
@@ -606,8 +618,8 @@ export default function ContactsScreen() {
           visible={dialogVisibility.ownerLinksPanel}
         >
           <View style={styles.dialogStack}>
-            {linkedContacts.length > 0 ? (
-              linkedContacts.map((contact) => (
+            {ownerPanelState.items.length > 0 ? (
+              ownerPanelState.items.map((contact) => (
                 <InviteCard
                   key={contact.id}
                   detail={trustedRelationshipDetail(contact)}
@@ -620,8 +632,8 @@ export default function ContactsScreen() {
             ) : (
               <View style={styles.emptyState}>
                 <Users size={26} color={theme.colors.primary} />
-                <Text style={styles.emptyTitle}>Nenhum anjo ativo ainda</Text>
-                <Text style={styles.emptyText}>O vínculo só nasce após aceite com conta própria.</Text>
+                <Text style={styles.emptyTitle}>{ownerPanelState.emptyState.title}</Text>
+                <Text style={styles.emptyText}>{ownerPanelState.emptyState.text}</Text>
               </View>
             )}
           </View>
@@ -635,8 +647,8 @@ export default function ContactsScreen() {
           visible={dialogVisibility.angelLinksPanel}
         >
           <View style={styles.dialogStack}>
-            {angelLinks.length > 0 ? (
-              angelLinks.map((contact) => (
+            {angelPanelState.items.length > 0 ? (
+              angelPanelState.items.map((contact) => (
                 <InviteCard
                   key={contact.id}
                   detail={trustedRelationshipDetail(contact)}
@@ -648,8 +660,8 @@ export default function ContactsScreen() {
             ) : (
               <View style={styles.emptyState}>
                 <UserCheck size={26} color={theme.colors.primary} />
-                <Text style={styles.emptyTitle}>Você ainda não é anjo</Text>
-                <Text style={styles.emptyText}>Quando aceitar um convite, o nome de quem convidou aparecerá aqui.</Text>
+                <Text style={styles.emptyTitle}>{angelPanelState.emptyState.title}</Text>
+                <Text style={styles.emptyText}>{angelPanelState.emptyState.text}</Text>
               </View>
             )}
           </View>
@@ -663,10 +675,18 @@ export default function ContactsScreen() {
           visible={dialogVisibility.invitationsPanel}
         >
           <View style={styles.dialogStack}>
-            {backendValidatedInvitations.length > 0 ? (
-              <>
-                <SectionTitle icon={<Clock3 size={18} color={theme.colors.primary} />} title="Convites validados" />
-                {backendValidatedInvitations.map((invitation) => (
+            {invitationPanelState.sections.map((section) => (
+              <Fragment key={section.key}>
+                <SectionTitle
+                  icon={
+                    <Clock3
+                      size={18}
+                      color={section.tone === "warning" ? theme.colors.warning : theme.colors.primary}
+                    />
+                  }
+                  title={section.title}
+                />
+                {section.invitations.map((invitation) => (
                   <InviteCard
                     key={buildTrustedAngelInvitationCardKey(invitation)}
                     detail={invitationDetail(invitation)}
@@ -680,32 +700,13 @@ export default function ContactsScreen() {
                     description={invitationDescription(invitation)}
                   />
                 ))}
-              </>
-            ) : null}
-            {localPreInvitations.length > 0 ? (
-              <>
-                <SectionTitle icon={<Clock3 size={18} color={theme.colors.warning} />} title="Convites antigos sem servidor" />
-                {localPreInvitations.map((invitation) => (
-                  <InviteCard
-                    key={buildTrustedAngelInvitationCardKey(invitation)}
-                    detail={invitationDetail(invitation)}
-                    name={invitation.displayLabel}
-                    onPress={
-                      canShowTrustedAngelInvitationRevocationAction(invitation.status)
-                        ? () => setDialog({ invitation, kind: "revoke_invitation" })
-                        : undefined
-                    }
-                    status={invitation.status}
-                    description={invitationDescription(invitation)}
-                  />
-                ))}
-              </>
-            ) : null}
-            {invitationCount === 0 ? (
+              </Fragment>
+            ))}
+            {invitationPanelState.emptyState ? (
               <View style={styles.emptyState}>
                 <Users size={26} color={theme.colors.primary} />
-                <Text style={styles.emptyTitle}>Nenhum convite criado</Text>
-                <Text style={styles.emptyText}>Crie um convite quando quiser preparar um anjo.</Text>
+                <Text style={styles.emptyTitle}>{invitationPanelState.emptyState.title}</Text>
+                <Text style={styles.emptyText}>{invitationPanelState.emptyState.text}</Text>
               </View>
             ) : null}
           </View>

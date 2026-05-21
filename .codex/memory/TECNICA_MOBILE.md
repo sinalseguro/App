@@ -1139,3 +1139,13 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:trusted-angels-dialog` foi adicionado ao `npm test`.
 - Validacoes aprovadas: `test:trusted-angels-dialog`, `test:trusted-angels-dashboard`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build Android nesta rodada por ser refatoracao pura sem runtime nativo.
+
+# Atualizacao - 2026-05-21 - Etapas 1.109 e 1.110 Anjos/Convites
+
+- `src/features/invitations/trustedAngelsPanelPolicy.ts` centraliza modelos puros dos paineis de vinculos e convites.
+- Etapa 1.109: itens e estados vazios dos paineis `Meus anjos` e `Sou anjo`.
+- Etapa 1.110: secoes de convites validados/locais e estado vazio do painel de convites.
+- `app/contatos.tsx` segue responsavel pelos efeitos reais: renderizacao, icones, clique, navegacao, estado React e handlers.
+- Novo gate `npm run test:trusted-angels-panel` foi adicionado ao `npm test`.
+- Validacoes aprovadas: `test:trusted-angels-panel`, `test:trusted-angels-dialog`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build Android nesta rodada por ser refatoracao pura sem runtime nativo.

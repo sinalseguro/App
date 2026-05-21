@@ -914,3 +914,11 @@ Proximas acoes atualizadas:
 - Novo gate `npm run test:trusted-angels-dialog` cobre visibilidade dos dialogs/paineis e acao de revogar apenas para convites `pendente` ou `compartilhado`.
 - Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
+
+## Memoria viva - 2026-05-21 - paineis Anjos/Convites sem build
+
+- Etapas 1.109 e 1.110 extraem modelos puros dos paineis de vinculos e convites para `trustedAngelsPanelPolicy`.
+- `app/contatos.tsx` ainda renderiza os mesmos componentes, icones, cards, cliques, handlers, navegacao e estado React.
+- Novo gate `npm run test:trusted-angels-panel` cobre estados vazios de vinculos, secoes de convites e estado vazio de convites.
+- Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.

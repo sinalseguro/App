@@ -5189,3 +5189,25 @@ Validacoes:
 Checkpoint:
 
 - `docs/175_CHECKPOINT_ETAPAS_1_107_1_108_TRUSTED_ANGELS_DIALOG_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapas 1.109 e 1.110 paineis de vinculos e convites
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `trustedAngelsPanelPolicy` para centralizar modelos puros de paineis da tela `Anjos de confianca`.
+- Etapa 1.109: extraidos itens e estados vazios dos paineis `Meus anjos` e `Sou anjo`.
+- Etapa 1.110: extraidas secoes do painel de convites validados/locais e estado vazio.
+- `app/contatos.tsx` continua responsavel por renderizacao, icones, cliques, navegacao, modais, estado React e efeitos reais.
+- Novo gate `npm run test:trusted-angels-panel` foi adicionado ao `npm test`.
+
+Validacoes:
+
+- `test:trusted-angels-panel`, `test:trusted-angels-dialog`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`: aprovados.
+- `typecheck` nao emitiu erro, mas ficou sem saida e sem CPU; foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser mudanca pura de apresentacao derivada sem runtime nativo.
+
+Checkpoint:
+
+- `docs/176_CHECKPOINT_ETAPAS_1_109_1_110_TRUSTED_ANGELS_PANEL_POLICY_2026-05-21.md`.

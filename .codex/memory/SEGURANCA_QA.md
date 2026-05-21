@@ -1219,3 +1219,13 @@ Papel: seguranca, LGPD e QA.
 - Validacoes aprovadas: teste focado, teste de dashboard, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e sem CPU; foi encerrado para nao deixar processo pendurado.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
+
+## QA/Security - 2026-05-21 - Etapas 1.109 e 1.110 panel policy de anjos
+
+- Mudanca restrita a regra pura/teste dos modelos de paineis da tela `Anjos de confianca`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- Gate novo `npm run test:trusted-angels-panel` cobre estados dos paineis de vinculo, secoes de convites e estado vazio.
+- A policy nao chama API, nao acessa cache real, nao compartilha convite e nao revoga vinculo; `app/contatos.tsx` continua responsavel pelos efeitos reais.
+- Nao introduz log novo, chave, sinalizacao tecnica de chamada, path local, coordenada ou conteudo de midia.
+- Validacoes aprovadas: teste focado, teste de dialog, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e sem CPU; foi encerrado para nao deixar processo pendurado.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
