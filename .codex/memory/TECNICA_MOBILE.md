@@ -1015,3 +1015,17 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `app/index.tsx` continua responsavel por `syncEmergencyPackageWithApi()`, `appendMediaOperationalLog()` e `applyRemoteSyncState()`.
 - Novo gate `npm run test:emergency-start-remote-sync-actions` cobre resultado com/sem sessao remota e erro controlado.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em API/backend real, chamada, WebRTC ou UX real exige validacao proporcional.
+
+# Atualizacao - 2026-05-21 - Etapa 1.89 Home/SOS
+
+- `src/features/emergency-home/finishActiveCallRuntimeStateActionsPolicy.ts` centraliza acoes locais aplicaveis ao inicio runtime do encerramento do chamado ativo.
+- `app/index.tsx` continua responsavel por `stopOwnerLiveVideoEvidence()`, reset da chamada, limpeza de refs, estado React, progresso e log real.
+- Novo gate `npm run test:finish-active-call-runtime-state-actions` cobre limpeza de sessao owner e motivo `finish` para parada da evidencia.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em chamada, WebRTC, camera, recorder ou UX real exige validacao proporcional.
+
+# Atualizacao - 2026-05-21 - Etapa 1.90 Home/SOS
+
+- `src/features/emergency-home/finishMediaStopRequestActionsPolicy.ts` centraliza a decisao de sinalizar parada do recorder e reaproveita `resolveFinishMediaStopStartActions()` quando ha serial.
+- `app/index.tsx` continua responsavel por `signalMediaRecorderStop()`, flags React, `waitForMediaRecorderStop()` e resultado real da parada.
+- Novo gate `npm run test:finish-media-stop-request-actions` cobre handoff para chamada ao vivo, parada local e serial presente/ausente.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em recorder, camera, storage, chamada ou UX real exige validacao proporcional.

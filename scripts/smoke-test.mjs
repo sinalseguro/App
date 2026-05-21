@@ -68,10 +68,12 @@ const requiredFiles = [
   "src/features/emergency-home/mediaStopWaiterPolicy.ts",
   "src/features/emergency-home/finishActiveCallStartPolicy.ts",
   "src/features/emergency-home/finishActiveCallRuntimeStartPolicy.ts",
+  "src/features/emergency-home/finishActiveCallRuntimeStateActionsPolicy.ts",
   "src/features/emergency-home/finishActiveCallCleanupPolicy.ts",
   "src/features/emergency-home/emergencyStartCreatedActionsPolicy.ts",
   "src/features/emergency-home/emergencyStartRemoteSyncActionsPolicy.ts",
   "src/features/emergency-home/finishMediaStopStartPolicy.ts",
+  "src/features/emergency-home/finishMediaStopRequestActionsPolicy.ts",
   "src/features/emergency-home/finishMediaStopResultPolicy.ts",
   "src/features/emergency-home/finishRemoteSyncPolicy.ts",
   "src/features/emergency-home/finishPackageResultPolicy.ts",
@@ -201,8 +203,10 @@ const requiredFiles = [
   "scripts/media-stop-waiter-policy.test.ts",
   "scripts/finish-active-call-start-policy.test.ts",
   "scripts/finish-active-call-runtime-start-policy.test.ts",
+  "scripts/finish-active-call-runtime-state-actions-policy.test.ts",
   "scripts/finish-active-call-cleanup-policy.test.ts",
   "scripts/finish-media-stop-start-policy.test.ts",
+  "scripts/finish-media-stop-request-actions-policy.test.ts",
   "scripts/finish-media-stop-result-policy.test.ts",
   "scripts/finish-remote-sync-policy.test.ts",
   "scripts/finish-package-result-policy.test.ts",
@@ -332,10 +336,12 @@ const mediaStopPendingRequestCompletionPolicy = await readFile("src/features/eme
 const mediaStopWaiterPolicy = await readFile("src/features/emergency-home/mediaStopWaiterPolicy.ts", "utf8");
 const finishActiveCallStartPolicy = await readFile("src/features/emergency-home/finishActiveCallStartPolicy.ts", "utf8");
 const finishActiveCallRuntimeStartPolicy = await readFile("src/features/emergency-home/finishActiveCallRuntimeStartPolicy.ts", "utf8");
+const finishActiveCallRuntimeStateActionsPolicy = await readFile("src/features/emergency-home/finishActiveCallRuntimeStateActionsPolicy.ts", "utf8");
 const finishActiveCallCleanupPolicy = await readFile("src/features/emergency-home/finishActiveCallCleanupPolicy.ts", "utf8");
 const emergencyStartCreatedActionsPolicy = await readFile("src/features/emergency-home/emergencyStartCreatedActionsPolicy.ts", "utf8");
 const emergencyStartRemoteSyncActionsPolicy = await readFile("src/features/emergency-home/emergencyStartRemoteSyncActionsPolicy.ts", "utf8");
 const finishMediaStopStartPolicy = await readFile("src/features/emergency-home/finishMediaStopStartPolicy.ts", "utf8");
+const finishMediaStopRequestActionsPolicy = await readFile("src/features/emergency-home/finishMediaStopRequestActionsPolicy.ts", "utf8");
 const finishMediaStopResultPolicy = await readFile("src/features/emergency-home/finishMediaStopResultPolicy.ts", "utf8");
 const finishRemoteSyncPolicy = await readFile("src/features/emergency-home/finishRemoteSyncPolicy.ts", "utf8");
 const finishPackageResultPolicy = await readFile("src/features/emergency-home/finishPackageResultPolicy.ts", "utf8");
@@ -932,7 +938,7 @@ if (
 
 if (
   !finishActiveCallRuntimeStartPolicy.includes("resolveFinishRequestedProgress") ||
-  !homeScreen.includes("resolveFinishMediaStopStartActions") ||
+  !finishMediaStopRequestActionsPolicy.includes("resolveFinishMediaStopStartActions") ||
   !homeScreen.includes("resolveFinishMediaStopResultActions") ||
   !homeScreen.includes("resolveFinishRemoteSyncProgress") ||
   !finishMediaStopStartPolicy.includes("resolveFinishMediaStopSignaledProgress") ||
@@ -1219,6 +1225,10 @@ if (
   !finishActiveCallStartPolicy.includes("mediaWasHandedToLiveCall") ||
   !finishActiveCallRuntimeStartPolicy.includes("shouldClearOwnerAutoCallSession") ||
   !finishActiveCallRuntimeStartPolicy.includes("emergency_finish_button_pressed") ||
+  !homeScreen.includes("resolveFinishActiveCallRuntimeStateActions") ||
+  !finishActiveCallRuntimeStateActionsPolicy.includes("ownerAutoCallSessionIdToClear") ||
+  !finishActiveCallRuntimeStateActionsPolicy.includes("stopOwnerLiveVideoEvidenceReason") ||
+  !packageJson.scripts["test:finish-active-call-runtime-state-actions"] ||
   !packageJson.scripts["test:finish-active-call-runtime-start"] ||
   !packageJson.scripts["test:finish-active-call-start"]
 ) {
@@ -1236,10 +1246,14 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishMediaStopStartActions") ||
+  !homeScreen.includes("resolveFinishMediaStopRequestActions") ||
+  !homeScreen.includes("resolveFinishMediaStopSignaledActions") ||
+  !finishMediaStopRequestActionsPolicy.includes("resolveFinishMediaStopStartActions") ||
+  !finishMediaStopRequestActionsPolicy.includes("shouldSignalMediaRecorderStop") ||
   !finishMediaStopStartPolicy.includes("shouldLockCaptureStop") ||
   !finishMediaStopStartPolicy.includes("shouldSetMediaStopPending") ||
   !finishMediaStopStartPolicy.includes("mediaRecorderPackageId") ||
+  !packageJson.scripts["test:finish-media-stop-request-actions"] ||
   !packageJson.scripts["test:finish-media-stop-start"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para inicio da parada de midia no encerramento.");

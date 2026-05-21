@@ -4876,3 +4876,43 @@ Validacoes:
 Checkpoint:
 
 - `docs/160_CHECKPOINT_ETAPA_1_88_EMERGENCY_START_REMOTE_SYNC_ACTIONS_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapa 1.89 acoes de estado runtime do encerramento
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishActiveCallRuntimeStateActionsPolicy` para centralizar acoes locais aplicaveis ao iniciar o encerramento do chamado ativo.
+- `app/index.tsx` manteve parada de video, reset da chamada, limpeza de refs, estado React, progresso e log real como efeitos do componente.
+- `test:finish-active-call-runtime-state-actions` cobre limpeza de sessao owner e motivo controlado para parada de evidencia.
+
+Validacoes:
+
+- `test:finish-active-call-runtime-state-actions`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/161_CHECKPOINT_ETAPA_1_89_FINISH_ACTIVE_CALL_RUNTIME_STATE_ACTIONS_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapa 1.90 acoes de requisicao de parada de midia no encerramento
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishMediaStopRequestActionsPolicy` para centralizar a decisao de sinalizar parada do recorder e as acoes iniciais quando existe serial.
+- `app/index.tsx` manteve `signalMediaRecorderStop()`, flags React, `waitForMediaRecorderStop()` e log/progresso real como efeitos do componente.
+- `test:finish-media-stop-request-actions` cobre chamada entregue ao vivo, parada local e serial de parada presente/ausente.
+
+Validacoes:
+
+- `test:finish-media-stop-request-actions`, `test:finish-media-stop-start`, `test:finish-media-stop-result`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/162_CHECKPOINT_ETAPA_1_90_FINISH_MEDIA_STOP_REQUEST_ACTIONS_POLICY_2026-05-21.md`.

@@ -27,6 +27,7 @@ import {
 } from "@/features/emergency-home/emergencyStartRemoteSyncActionsPolicy";
 import { resolveEmergencyStartRuntimeActions } from "@/features/emergency-home/emergencyStartRuntimePolicy";
 import { resolveFinishActiveCallCleanup } from "@/features/emergency-home/finishActiveCallCleanupPolicy";
+import { resolveFinishActiveCallRuntimeStateActions } from "@/features/emergency-home/finishActiveCallRuntimeStateActionsPolicy";
 import { resolveFinishActiveCallRuntimeStartActions } from "@/features/emergency-home/finishActiveCallRuntimeStartPolicy";
 import { resolveFinishActiveCallStart } from "@/features/emergency-home/finishActiveCallStartPolicy";
 import {
@@ -44,7 +45,10 @@ import {
 import { resolveFinishConfirmationDialogPresentation } from "@/features/emergency-home/finishConfirmationDialogPolicy";
 import { resolveFinishFailureActions } from "@/features/emergency-home/finishFailureActionsPolicy";
 import { resolveFinishMediaStopResultActions } from "@/features/emergency-home/finishMediaStopResultPolicy";
-import { resolveFinishMediaStopStartActions } from "@/features/emergency-home/finishMediaStopStartPolicy";
+import {
+  resolveFinishMediaStopRequestActions,
+  resolveFinishMediaStopSignaledActions
+} from "@/features/emergency-home/finishMediaStopRequestActionsPolicy";
 import { resolveFinishMissingPackageActions } from "@/features/emergency-home/finishMissingPackagePolicy";
 import { resolveFinishOutcomeInput } from "@/features/emergency-home/finishOutcomeInputPolicy";
 import { resolveFinishOutcomePolicy } from "@/features/emergency-home/finishOutcomePolicy";
@@ -1441,35 +1445,45 @@ export default function HomeScreen() {
       platform: Platform.OS,
       remoteSessionIdToFinish
     });
-    const liveVideoAttachedAsset = finishRuntimeStartActions.shouldStopOwnerLiveVideoEvidence
-      ? await stopOwnerLiveVideoEvidence("finish")
+    const finishRuntimeStateActions = resolveFinishActiveCallRuntimeStateActions({
+      remoteSessionIdToFinish,
+      runtimeStartActions: finishRuntimeStartActions
+    });
+    const liveVideoAttachedAsset = finishRuntimeStateActions.shouldStopOwnerLiveVideoEvidence &&
+      finishRuntimeStateActions.stopOwnerLiveVideoEvidenceReason
+      ? await stopOwnerLiveVideoEvidence(finishRuntimeStateActions.stopOwnerLiveVideoEvidenceReason)
       : null;
-    if (finishRuntimeStartActions.shouldResetLiveAudioCall) {
+    if (finishRuntimeStateActions.shouldResetLiveAudioCall) {
       liveAudioCall.resetLiveAudioCall();
     }
-    if (finishRuntimeStartActions.shouldClearOwnerAutoCallSession && remoteSessionIdToFinish) {
-      ownerAutoCallPausedSessionIdsRef.current.delete(remoteSessionIdToFinish);
-      ownerAutoCallStartedSessionIdsRef.current.delete(remoteSessionIdToFinish);
+    if (finishRuntimeStateActions.ownerAutoCallSessionIdToClear) {
+      ownerAutoCallPausedSessionIdsRef.current.delete(finishRuntimeStateActions.ownerAutoCallSessionIdToClear);
+      ownerAutoCallStartedSessionIdsRef.current.delete(finishRuntimeStateActions.ownerAutoCallSessionIdToClear);
     }
-    if (finishRuntimeStartActions.shouldClearLiveRemoteSession) {
+    if (finishRuntimeStateActions.shouldClearLiveRemoteSession) {
       setLiveRemoteSessionId(null);
     }
-    if (finishRuntimeStartActions.shouldMarkFinishInProgress) {
+    if (finishRuntimeStateActions.shouldMarkFinishInProgress) {
       finishInProgressRef.current = true;
       setFinishInProgress(true);
     }
-    setRecordingStatus(finishRuntimeStartActions.recordingStatus);
-    showFinishProgress(finishRuntimeStartActions.finishProgress);
-    appendMediaOperationalLog(finishRuntimeStartActions.logEvent, finishRuntimeStartActions.logPayload);
+    setRecordingStatus(finishRuntimeStateActions.recordingStatus);
+    showFinishProgress(finishRuntimeStateActions.finishProgress);
+    appendMediaOperationalLog(finishRuntimeStateActions.log.event, finishRuntimeStateActions.log.payload);
 
     try {
       mediaStopPurposeRef.current = "finish";
-      const stopSerial = mediaWasHandedToLiveCall ? null : signalMediaRecorderStop();
+      const mediaStopRequestActions = resolveFinishMediaStopRequestActions({
+        mediaWasHandedToLiveCall
+      });
+      const stopSerial = mediaStopRequestActions.shouldSignalMediaRecorderStop ? signalMediaRecorderStop() : null;
       let stopResult: MediaStopRequestResult | null = null;
-      if (stopSerial) {
-        const mediaStopStartActions = resolveFinishMediaStopStartActions({
-          packageId
-        });
+      const mediaStopSignaledActions = resolveFinishMediaStopSignaledActions({
+        packageId,
+        stopSerial
+      });
+      if (mediaStopSignaledActions.shouldApply) {
+        const mediaStopStartActions = mediaStopSignaledActions.startActions;
         if (mediaStopStartActions.shouldLockCaptureStop) {
           setCaptureStopLocked(true);
         }
@@ -1479,7 +1493,7 @@ export default function HomeScreen() {
         setActivePackageId(mediaStopStartActions.nextActivePackageId);
         setMediaRecorderPackageId(mediaStopStartActions.mediaRecorderPackageId);
         showFinishProgress(mediaStopStartActions.finishProgress);
-        stopResult = await waitForMediaRecorderStop(stopSerial);
+        stopResult = await waitForMediaRecorderStop(mediaStopSignaledActions.stopSerial);
         const mediaStopResultActions = resolveFinishMediaStopResultActions({
           attachedAssets: stopResult.attachedAssets,
           platform: Platform.OS,
