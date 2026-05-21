@@ -95,7 +95,7 @@ export function relationshipNamesSummary(relationships: ApiTrustedContactRelatio
   return `${names[0]} e mais ${names.length - 1}`;
 }
 
-export function invitationFromApi(invitation: ApiInvitation): LocalInvitation {
+export function invitationFromApi(invitation: ApiInvitation, nowMs = Date.now()): LocalInvitation {
   return {
     id: invitation.id,
     backendInvitationId: invitation.id,
@@ -112,7 +112,7 @@ export function invitationFromApi(invitation: ApiInvitation): LocalInvitation {
         ? "aceito"
         : invitation.status === "revoked"
           ? "revogado"
-          : new Date(invitation.expires_at).getTime() < Date.now()
+          : new Date(invitation.expires_at).getTime() < nowMs
             ? "expirado"
             : "pendente",
     syncStatus: "backend_validated"

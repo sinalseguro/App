@@ -874,3 +874,11 @@ Proximas acoes atualizadas:
 - `app/contatos.tsx` segue como orquestrador visual e operacional; API/cache/share/revogacao permanecem nele.
 - Novo gate `npm run test:trusted-angels-presentation` cobre convites e vinculos exibidos ao usuario e esta integrado ao `npm test`.
 - Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+
+## Memoria viva - 2026-05-21 - merge/listagem Anjos/Convites sem build
+
+- Etapas 1.99 e 1.100 extraem merge/listagem da tela `Anjos de confianca` para `trustedAngelsListPolicy`.
+- `mergeTrustedAngelInvitations()` preserva deduplicacao local/remota e oculta convites de contatos aceitos/revogados.
+- `buildTrustedAngelRelationshipLists()` preserva listas de meus anjos e sou anjo; `splitTrustedAngelInvitationSections()` preserva secoes e contador.
+- Novo gate `npm run test:trusted-angels-list` cobre as regras e esta integrado ao `npm test`.
+- ADB listou o Android `23129RA5FL` via Wi-Fi/mDNS duplicado, mas nao houve build/instalacao porque a fatia e pura.

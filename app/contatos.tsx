@@ -23,6 +23,11 @@ import {
   listCachedTrustedContactRelationships,
   removeCachedTrustedContactRelationship
 } from "@/features/invitations/trustedRelationshipStore";
+import {
+  buildTrustedAngelRelationshipLists,
+  mergeTrustedAngelInvitations,
+  splitTrustedAngelInvitationSections
+} from "@/features/invitations/trustedAngelsListPolicy";
 import { LocalInvitation } from "@/features/invitations/types";
 import {
   acceptedAngelSummary,
@@ -31,8 +36,6 @@ import {
   contactStatus,
   invitationDescription,
   invitationDetail,
-  invitationFromApi,
-  trustedContactFallbackRelationship,
   trustedRelationshipDescription,
   trustedRelationshipDetail,
   trustedRelationshipName
@@ -104,68 +107,22 @@ export default function ContactsScreen() {
   const refreshInFlightRef = useRef(false);
 
   const mergedInvitations = useMemo(() => {
-    const localByBackendId = new Set(invitations.map((invitation) => invitation.backendInvitationId).filter(Boolean));
-    const acceptedOrRevokedContactIds = new Set(
-      [
-        ...trustedContacts
-          .filter((contact) => contact.status === "accepted" || contact.status === "revoked")
-          .map((contact) => contact.id),
-        ...trustedRelationships
-          .filter(
-            (relationship) =>
-              relationship.relationship_role === "owner" &&
-              (relationship.status === "accepted" || relationship.status === "revoked")
-          )
-          .map((relationship) => relationship.id)
-      ]
-    );
-    const visibleLocalInvitations = invitations.filter(
-      (invitation) => !invitation.trustedContactId || !acceptedOrRevokedContactIds.has(invitation.trustedContactId)
-    );
-    const remoteOnly = backendInvitations
-      .filter(
-        (invitation) =>
-          !localByBackendId.has(invitation.id) && !acceptedOrRevokedContactIds.has(invitation.trusted_contact)
-      )
-      .map(invitationFromApi);
-
-    return [...visibleLocalInvitations, ...remoteOnly].sort(
-      (left, right) => new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime()
-    );
+    return mergeTrustedAngelInvitations({
+      backendInvitations,
+      localInvitations: invitations,
+      trustedContacts,
+      trustedRelationships
+    });
   }, [backendInvitations, invitations, trustedContacts, trustedRelationships]);
 
-  const linkedContacts = useMemo(() => {
-    const ownerRelationships = trustedRelationships.filter(
-        (contact) =>
-          contact.relationship_role === "owner" && (contact.status === "accepted" || contact.status === "revoked")
-    );
-    const relationshipIds = new Set(ownerRelationships.map((relationship) => relationship.id));
-    const contactFallbacks = trustedContacts
-      .filter(
-        (contact) =>
-          (contact.status === "accepted" || contact.status === "revoked") && !relationshipIds.has(contact.id)
-      )
-      .map(trustedContactFallbackRelationship);
-
-    return [...ownerRelationships, ...contactFallbacks];
-  }, [trustedContacts, trustedRelationships]);
-
-  const angelLinks = useMemo(
-    () =>
-      trustedRelationships.filter(
-        (contact) =>
-          contact.relationship_role === "angel" && (contact.status === "accepted" || contact.status === "revoked")
-      ),
-    [trustedRelationships]
+  const relationshipLists = useMemo(
+    () => buildTrustedAngelRelationshipLists({ trustedContacts, trustedRelationships }),
+    [trustedContacts, trustedRelationships]
   );
 
-  const backendValidatedInvitations = useMemo(
-    () => mergedInvitations.filter((invitation) => invitation.syncStatus === "backend_validated"),
-    [mergedInvitations]
-  );
-
-  const localPreInvitations = useMemo(
-    () => mergedInvitations.filter((invitation) => invitation.syncStatus !== "backend_validated"),
+  const { angelLinks, linkedContacts } = relationshipLists;
+  const { backendValidatedInvitations, invitationCount, localPreInvitations } = useMemo(
+    () => splitTrustedAngelInvitationSections(mergedInvitations),
     [mergedInvitations]
   );
 
@@ -354,8 +311,6 @@ export default function ContactsScreen() {
     }
     router.push(route);
   }
-
-  const invitationCount = backendValidatedInvitations.length + localPreInvitations.length;
 
   return (
     <SafeAreaView style={styles.safeArea}>

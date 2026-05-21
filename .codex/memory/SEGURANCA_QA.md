@@ -1173,3 +1173,12 @@ Papel: seguranca, LGPD e QA.
 - Nao introduz log novo, chave, sinalizacao tecnica de chamada, path local, coordenada ou conteudo de midia.
 - Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-21 - Etapas 1.99 e 1.100 list policy de anjos
+
+- Mudanca restrita a regra pura/teste de merge/listagem da tela `Anjos de confianca`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- Gate novo `npm run test:trusted-angels-list` cobre deduplicacao local/remota, ocultacao de contatos aceitos/revogados, expiracao deterministica e separacao de vinculos.
+- A policy nao chama API, nao acessa cache real, nao compartilha convite e nao revoga vinculo; `app/contatos.tsx` continua responsavel pelos efeitos reais.
+- Nao introduz log novo, chave, sinalizacao tecnica de chamada, path local, coordenada ou conteudo de midia.
+- Validacoes aprovadas: teste focado, teste de apresentacao, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Android foi apenas listado por ADB; sem build, instalacao, captura visual ou logcat por nao haver mudanca de runtime fisico.

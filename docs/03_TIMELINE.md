@@ -5083,3 +5083,25 @@ Validacoes:
 Checkpoint:
 
 - `docs/170_CHECKPOINT_ETAPAS_1_97_1_98_TRUSTED_ANGELS_PRESENTATION_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapas 1.99 e 1.100 merge/listas de anjos e convites
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `trustedAngelsListPolicy` para centralizar regras puras de merge/listagem da tela `Anjos de confianca`.
+- Etapa 1.99: extraido merge de convites locais/remotos, ocultando convites cujo contato ja foi aceito/revogado e preservando ordenacao por criacao.
+- Etapa 1.100: extraidas listas de `linkedContacts`, `angelLinks`, secoes de convites e contador de convites.
+- `app/contatos.tsx` continua responsavel por estado React, sincronizacao real, compartilhamento, revogacao e navegacao.
+- Novo gate `npm run test:trusted-angels-list` foi adicionado ao `npm test`.
+
+Validacoes:
+
+- `test:trusted-angels-list`, `test:trusted-angels-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`: aprovados.
+- `adb devices -l` listou Android `23129RA5FL` via Wi-Fi/mDNS em duas entradas do mesmo aparelho; sem build, instalacao ou teste fisico nesta rodada.
+- Sem build Android por ser mudanca pura de listagem/apresentacao sem runtime nativo.
+
+Checkpoint:
+
+- `docs/171_CHECKPOINT_ETAPAS_1_99_1_100_TRUSTED_ANGELS_LIST_POLICY_2026-05-21.md`.
