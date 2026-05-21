@@ -4554,3 +4554,43 @@ Validacoes:
 Checkpoint:
 
 - `docs/144_CHECKPOINT_ETAPA_1_72_MEDIA_RELEASE_TIMEOUT_ACTIONS_POLICY_2026-05-20.md`.
+
+## 2026-05-20 - Etapa 1.73 update de evidencia local owner
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `ownerLiveEvidenceUpdatePolicy` para centralizar a decisao de atualizar evidencia local owner somente com sessao remota valida.
+- `app/index.tsx` manteve `updateOwnerLiveCallEvidenceRecord()` como efeito real no componente.
+- `test:owner-live-evidence-update` cobre ausencia de sessao e update permitido.
+
+Validacoes:
+
+- `test:owner-live-evidence-update`, `test:owner-live-evidence`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/145_CHECKPOINT_ETAPA_1_73_OWNER_LIVE_EVIDENCE_UPDATE_POLICY_2026-05-20.md`.
+
+## 2026-05-20 - Etapa 1.74 acoes de marcador de auditoria owner
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `ownerLiveAuditMarkerActionsPolicy` para centralizar a decisao de registrar marcador de auditoria owner somente com sessao remota valida.
+- `app/index.tsx` manteve `deviceBindingService.getRegisteredApiDeviceId()`, `resolveOwnerLiveAuditMarkerInput()` e `recordLiveAuditMarker()` como efeitos reais no componente.
+- `test:owner-live-audit-marker-actions` cobre ausencia de sessao e marcador permitido.
+
+Validacoes:
+
+- `test:owner-live-audit-marker-actions`, `test:owner-live-audit-marker`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/146_CHECKPOINT_ETAPA_1_74_OWNER_LIVE_AUDIT_MARKER_ACTIONS_POLICY_2026-05-20.md`.

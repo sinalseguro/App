@@ -81,7 +81,9 @@ const requiredFiles = [
   "src/features/emergency-home/finishMissingPackagePolicy.ts",
   "src/features/emergency-home/finishFailureActionsPolicy.ts",
   "src/features/emergency-home/ownerAutoCallPolicy.ts",
+  "src/features/emergency-home/ownerLiveAuditMarkerActionsPolicy.ts",
   "src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts",
+  "src/features/emergency-home/ownerLiveEvidenceUpdatePolicy.ts",
   "src/features/emergency-home/ownerLiveEvidencePolicy.ts",
   "src/features/emergency-home/liveCallCleanupPolicy.ts",
   "src/features/emergency-home/liveCallPanelPolicy.ts",
@@ -144,7 +146,9 @@ const requiredFiles = [
   "scripts/remote-sync-status-policy.test.ts",
   "scripts/owner-auto-call-policy.test.ts",
   "scripts/live-call-waiting-dialog-policy.test.ts",
+  "scripts/owner-live-audit-marker-actions-policy.test.ts",
   "scripts/owner-live-audit-marker-policy.test.ts",
+  "scripts/owner-live-evidence-update-policy.test.ts",
   "scripts/live-call-cleanup-policy.test.ts",
   "scripts/finish-progress-dialog-policy.test.ts",
   "scripts/finish-progress-state-policy.test.ts",
@@ -313,7 +317,9 @@ const finishCompletionActionsPolicy = await readFile("src/features/emergency-hom
 const finishMissingPackagePolicy = await readFile("src/features/emergency-home/finishMissingPackagePolicy.ts", "utf8");
 const finishFailureActionsPolicy = await readFile("src/features/emergency-home/finishFailureActionsPolicy.ts", "utf8");
 const ownerAutoCallPolicy = await readFile("src/features/emergency-home/ownerAutoCallPolicy.ts", "utf8");
+const ownerLiveAuditMarkerActionsPolicy = await readFile("src/features/emergency-home/ownerLiveAuditMarkerActionsPolicy.ts", "utf8");
 const ownerLiveAuditMarkerPolicy = await readFile("src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts", "utf8");
+const ownerLiveEvidenceUpdatePolicy = await readFile("src/features/emergency-home/ownerLiveEvidenceUpdatePolicy.ts", "utf8");
 const ownerLiveEvidencePolicy = await readFile("src/features/emergency-home/ownerLiveEvidencePolicy.ts", "utf8");
 const liveCallCleanupPolicy = await readFile("src/features/emergency-home/liveCallCleanupPolicy.ts", "utf8");
 const liveCallPanelPolicy = await readFile("src/features/emergency-home/liveCallPanelPolicy.ts", "utf8");
@@ -971,27 +977,35 @@ if (
 }
 
 if (
+  !homeScreen.includes("resolveOwnerLiveAuditMarkerActions") ||
   !homeScreen.includes("resolveOwnerLiveAuditMarkerInput") ||
+  !ownerLiveAuditMarkerActionsPolicy.includes("resolveOwnerLiveAuditMarkerActions") ||
+  !ownerLiveAuditMarkerActionsPolicy.includes("shouldRecord") ||
   !ownerLiveAuditMarkerPolicy.includes("resolveOwnerLiveAuditMarkerInput") ||
   !ownerLiveAuditMarkerPolicy.includes("role: \"owner\"") ||
   !ownerLiveAuditMarkerPolicy.includes("localEvidenceStatus") ||
-  !packageJson.scripts["test:owner-live-audit-marker"]
+  !packageJson.scripts["test:owner-live-audit-marker"] ||
+  !packageJson.scripts["test:owner-live-audit-marker-actions"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para payload de auditoria local do solicitante.");
 }
 
 if (
+  !homeScreen.includes("resolveOwnerLiveEvidenceUpdate") ||
   !homeScreen.includes("resolveOwnerLiveVideoEvidenceStart") ||
   !homeScreen.includes("startDecision.startInput") ||
   !homeScreen.includes("resolveOwnerLiveCallLifecycle") ||
   !homeScreen.includes("lifecycleDecision.evidenceUpdate") ||
+  !ownerLiveEvidenceUpdatePolicy.includes("resolveOwnerLiveEvidenceUpdate") ||
+  !ownerLiveEvidenceUpdatePolicy.includes("shouldUpdate") ||
   !ownerLiveEvidencePolicy.includes("resolveOwnerLiveVideoEvidenceStart") ||
   !ownerLiveEvidencePolicy.includes("resolveOwnerLiveCallLifecycle") ||
   !ownerLiveEvidencePolicy.includes("missing_remote_session") ||
   !ownerLiveEvidencePolicy.includes("missing_stream_tag") ||
   !ownerLiveEvidencePolicy.includes("inactive_status") ||
   !ownerLiveEvidencePolicy.includes("status_not_actionable") ||
-  !packageJson.scripts["test:owner-live-evidence"]
+  !packageJson.scripts["test:owner-live-evidence"] ||
+  !packageJson.scripts["test:owner-live-evidence-update"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para evidencia local da chamada do solicitante.");
 }

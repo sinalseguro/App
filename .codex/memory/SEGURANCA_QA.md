@@ -917,3 +917,21 @@ Papel: seguranca, LGPD e QA.
 - Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
 - Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida; `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
 - Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-20 - Etapa 1.73 policy pura de update da evidencia owner
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido novo, backend, portal ou release.
+- Gate novo `npm run test:owner-live-evidence-update` cobre bloqueio sem sessao remota e update permitido.
+- A policy nao grava evidencia e nao altera storage seguro diretamente; `app/index.tsx` continua responsavel por `updateOwnerLiveCallEvidenceRecord()`.
+- Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida; `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-20 - Etapa 1.74 policy pura de acoes do marcador de auditoria owner
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido novo, backend, portal ou release.
+- Gate novo `npm run test:owner-live-audit-marker-actions` cobre bloqueio sem sessao remota e marcador permitido.
+- A policy nao busca device id e nao chama backend; `app/index.tsx` continua responsavel por device binding e `recordLiveAuditMarker()`.
+- Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida; `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.

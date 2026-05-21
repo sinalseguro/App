@@ -903,3 +903,17 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `app/index.tsx` continua responsavel por `setTimeout()`, ref pendente, `appendMediaOperationalLog()` e resolucao da promise.
 - Novo gate `npm run test:media-release-timeout-actions` cobre timeout com e sem request pendente.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em camera/WebRTC/chamada exige validacao proporcional.
+
+# Atualizacao - 2026-05-20 - Etapa 1.73 Home/SOS
+
+- `src/features/emergency-home/ownerLiveEvidenceUpdatePolicy.ts` centraliza a decisao de update da evidencia local owner apenas com `remoteSessionId` valido.
+- `app/index.tsx` continua responsavel por `updateOwnerLiveCallEvidenceRecord()` e pela promise.
+- Novo gate `npm run test:owner-live-evidence-update` cobre ausencia de sessao e update permitido.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em storage seguro real/camera/WebRTC exige validacao proporcional.
+
+# Atualizacao - 2026-05-20 - Etapa 1.74 Home/SOS
+
+- `src/features/emergency-home/ownerLiveAuditMarkerActionsPolicy.ts` centraliza a decisao de registrar marcador de auditoria owner apenas com `remoteSessionId` valido.
+- `app/index.tsx` continua responsavel por `deviceBindingService.getRegisteredApiDeviceId()`, `resolveOwnerLiveAuditMarkerInput()` e `recordLiveAuditMarker()`.
+- Novo gate `npm run test:owner-live-audit-marker-actions` cobre ausencia de sessao e marcador permitido.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em auditoria/backend real exige validacao proporcional.

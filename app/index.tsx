@@ -94,11 +94,16 @@ import { resolveMediaStopSignal } from "@/features/emergency-home/mediaStopSigna
 import { resolveMediaStopPendingRequestCompletion } from "@/features/emergency-home/mediaStopPendingRequestCompletionPolicy";
 import { resolveMediaStopSettledActions } from "@/features/emergency-home/mediaStopSettledActionsPolicy";
 import { ownerAutoCallAttemptMessage, ownerAutoCallRecipientStatus, shouldAttemptOwnerAutoCall } from "@/features/emergency-home/ownerAutoCallPolicy";
+import { resolveOwnerLiveAuditMarkerActions } from "@/features/emergency-home/ownerLiveAuditMarkerActionsPolicy";
 import {
   resolveOwnerLiveAuditMarkerInput,
   type OwnerLiveAuditMarkerEvent,
   type OwnerLiveAuditMarkerOptions
 } from "@/features/emergency-home/ownerLiveAuditMarkerPolicy";
+import {
+  resolveOwnerLiveEvidenceUpdate,
+  type OwnerLiveEvidenceUpdateOptions
+} from "@/features/emergency-home/ownerLiveEvidenceUpdatePolicy";
 import {
   resolveOwnerLiveCallLifecycle,
   resolveOwnerLiveVideoEvidenceStart
@@ -148,8 +153,6 @@ import { LiveAudioCallPanel } from "@/features/live-call/LiveAudioCallPanel";
 import {
   beginOwnerLiveCallEvidence,
   updateOwnerLiveCallEvidenceRecord,
-  type OwnerLocalEvidenceStatus,
-  type OwnerLiveEvidenceStatus
 } from "@/features/live-call/liveCallOperationalEvidence";
 import {
   startOwnerLiveVideoRecording,
@@ -654,16 +657,11 @@ export default function HomeScreen() {
 
   function updateOwnerLiveEvidence(
     remoteSessionId: string | null | undefined,
-    options: {
-      connectedAt?: string | null;
-      endedAt?: string | null;
-      localEvidenceStatus?: OwnerLocalEvidenceStatus;
-      packageId?: string;
-      status?: OwnerLiveEvidenceStatus;
-    }
+    options: OwnerLiveEvidenceUpdateOptions
   ) {
-    if (!remoteSessionId) return;
-    void updateOwnerLiveCallEvidenceRecord(remoteSessionId, options).catch(() => undefined);
+    const updateDecision = resolveOwnerLiveEvidenceUpdate({ options, remoteSessionId });
+    if (!updateDecision.shouldUpdate) return;
+    void updateOwnerLiveCallEvidenceRecord(updateDecision.remoteSessionId, updateDecision.options).catch(() => undefined);
   }
 
   function recordOwnerLiveAuditMarker(
@@ -671,9 +669,17 @@ export default function HomeScreen() {
     event: OwnerLiveAuditMarkerEvent,
     options?: OwnerLiveAuditMarkerOptions
   ) {
-    if (!remoteSessionId) return;
+    const auditMarkerActions = resolveOwnerLiveAuditMarkerActions({ event, options, remoteSessionId });
+    if (!auditMarkerActions.shouldRecord) return;
     void deviceBindingService.getRegisteredApiDeviceId().then((deviceId) =>
-      recordLiveAuditMarker(remoteSessionId, resolveOwnerLiveAuditMarkerInput({ deviceId, event, options }))
+      recordLiveAuditMarker(
+        auditMarkerActions.remoteSessionId,
+        resolveOwnerLiveAuditMarkerInput({
+          deviceId,
+          event: auditMarkerActions.event,
+          options: auditMarkerActions.options
+        })
+      )
     ).catch(() => undefined);
   }
 
