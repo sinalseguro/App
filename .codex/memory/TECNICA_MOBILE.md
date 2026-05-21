@@ -1071,3 +1071,11 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `app/index.tsx` continua responsavel por sincronizacao pendente, log real e resultado local do pacote.
 - Novo gate `npm run test:finish-remote-sync-completion-actions` cobre resultado pendente encontrado/ausente e falha remota saneada.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em API/backend real, chamada ou UX real exige validacao proporcional.
+
+# Atualizacao - 2026-05-21 - Validacao ampla local Home/SOS
+
+- `handleFinishActiveCall` foi revisado apos as fatias 1.81 a 1.96 e ficou majoritariamente como orquestrador de efeitos reais.
+- Validacoes locais aprovadas: `smoke-test`, `lint`, `npm test` e `private:android:readiness`.
+- `typecheck` continua sem erro emitido, mas preso sem CPU; foi encerrado para nao deixar processo pendurado.
+- `adb devices -l` nao listou Android conectado e o espaco livre local observado ficou em aproximadamente 5.3 GiB.
+- Proxima etapa tecnica: conectar Android, garantir espaco livre suficiente, executar build privado, instalar e validar fisicamente Home/SOS/encerramento. Build adiado para a proxima retomada.

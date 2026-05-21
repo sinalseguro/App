@@ -5036,3 +5036,29 @@ Validacoes:
 Checkpoint:
 
 - `docs/168_CHECKPOINT_ETAPA_1_96_FINISH_REMOTE_SYNC_COMPLETION_ACTIONS_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Validacao ampla local pos-refatoracao Home/SOS
+
+Status: validacao local ampla concluida; validacao Android fisica pendente por ambiente.
+
+Executado:
+
+- Revisado `handleFinishActiveCall` apos as fatias 1.81 a 1.96.
+- Confirmado que o metodo ficou majoritariamente como orquestrador de efeitos reais, com regras puras extraidas e testadas.
+- Nao foi identificada nova borda pura com ganho suficiente para justificar mais duas extracoes antes da validacao fisica.
+
+Validacoes:
+
+- `smoke-test`, `lint`, `npm test` e `private:android:readiness`: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- `adb devices -l` nao listou Android conectado.
+- Espaco livre local observado: aproximadamente 5.3 GiB.
+
+Decisao:
+
+- Nao iniciar build/instalacao Android nesta rodada; build adiado para a proxima retomada.
+- Proxima etapa recomendada: conectar Android, garantir espaco livre suficiente, executar build privado, instalar e validar fisicamente Home/SOS/encerramento.
+
+Checkpoint:
+
+- `docs/169_CHECKPOINT_VALIDACAO_AMPLA_LOCAL_POS_REFATORACAO_HOME_SOS_2026-05-21.md`.

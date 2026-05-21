@@ -1154,3 +1154,13 @@ Papel: seguranca, LGPD e QA.
 - Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
 - Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida; `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
 - Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-21 - Validacao ampla local Home/SOS
+
+- Rodada sem alteracao de codigo de produto; foco em revisar prontidao local para validacao Android ampla.
+- `smoke-test`, `lint`, `npm test` e `private:android:readiness` aprovados.
+- `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
+- `adb devices -l` nao listou Android conectado, entao build/instalacao/teste fisico nao foram executados.
+- Espaco livre local observado: aproximadamente 5.3 GiB, abaixo do ideal para build Android privado com margem.
+- Gate Cristine/Codex Security nesta rodada deve verificar apenas docs/memoria alterados, sem novos segredos, tokens, chaves, paths locais sensiveis ou payload de midia.
+- Proxima validacao deve ser fisica: Android conectado, espaco suficiente, build privado, instalacao e fluxo Home/SOS/encerramento.
