@@ -987,3 +987,17 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `app/index.tsx` continua responsavel por limpar refs, aplicar `setLiveRemoteSessionId(null)` e chamar `resetLiveAudioCall()` ou `stopLiveAudioCall()`.
 - Novo gate `npm run test:live-call-cleanup-actions` cobre ausencia de cleanup, reset idle e parada de chamada ativa.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em chamada, WebRTC, estado nativo ou UX real exige validacao proporcional.
+
+# Atualizacao - 2026-05-21 - Etapa 1.85 Home/SOS
+
+- `src/features/emergency-home/activeRemoteSyncAttemptActionsPolicy.ts` centraliza a decisao de tentar sincronizar o SOS ativo com a API e o log saneado da tentativa.
+- `app/index.tsx` continua responsavel por timer de retry, `activeRemoteSyncInFlightRef`, `getActiveEmergencyPackage()` e `syncEmergencyPackageWithApi()`.
+- Novo gate `npm run test:active-remote-sync-attempt-actions` cobre cancelamento, pacote ausente, in-flight, sessao remota existente e tentativa permitida.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em API/backend real, chamada, WebRTC ou UX real exige validacao proporcional.
+
+# Atualizacao - 2026-05-21 - Etapa 1.86 Home/SOS
+
+- `src/features/emergency-home/activeRemoteSyncCompletionActionsPolicy.ts` centraliza guardas de pacote, aplicacao de resultado, erro controlado e limpeza final da sincronizacao remota ativa.
+- `app/index.tsx` continua responsavel por buscar pacote, sincronizar com a API, aplicar estado remoto, atualizar status e limpar `activeRemoteSyncInFlightRef`.
+- Novo gate `npm run test:active-remote-sync-completion-actions` cobre pacote cancelado/ausente/alterado, resultado ausente, erro cancelado/aplicavel e finally.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em API/backend real, chamada, WebRTC ou UX real exige validacao proporcional.

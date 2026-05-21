@@ -82,6 +82,8 @@ const requiredFiles = [
   "src/features/emergency-home/finishCompletionActionsPolicy.ts",
   "src/features/emergency-home/finishMissingPackagePolicy.ts",
   "src/features/emergency-home/finishFailureActionsPolicy.ts",
+  "src/features/emergency-home/activeRemoteSyncAttemptActionsPolicy.ts",
+  "src/features/emergency-home/activeRemoteSyncCompletionActionsPolicy.ts",
   "src/features/emergency-home/ownerAutoCallAttemptActionsPolicy.ts",
   "src/features/emergency-home/ownerAutoCallPolicy.ts",
   "src/features/emergency-home/ownerAutoCallResultActionsPolicy.ts",
@@ -154,6 +156,8 @@ const requiredFiles = [
   "scripts/emergency-start-runtime-policy.test.ts",
   "scripts/emergency-start-failure-actions-policy.test.ts",
   "scripts/remote-sync-status-policy.test.ts",
+  "scripts/active-remote-sync-attempt-actions-policy.test.ts",
+  "scripts/active-remote-sync-completion-actions-policy.test.ts",
   "scripts/owner-auto-call-attempt-actions-policy.test.ts",
   "scripts/owner-auto-call-policy.test.ts",
   "scripts/owner-auto-call-result-actions-policy.test.ts",
@@ -338,6 +342,8 @@ const finishNoMediaDiagnosticPolicy = await readFile("src/features/emergency-hom
 const finishCompletionActionsPolicy = await readFile("src/features/emergency-home/finishCompletionActionsPolicy.ts", "utf8");
 const finishMissingPackagePolicy = await readFile("src/features/emergency-home/finishMissingPackagePolicy.ts", "utf8");
 const finishFailureActionsPolicy = await readFile("src/features/emergency-home/finishFailureActionsPolicy.ts", "utf8");
+const activeRemoteSyncAttemptActionsPolicy = await readFile("src/features/emergency-home/activeRemoteSyncAttemptActionsPolicy.ts", "utf8");
+const activeRemoteSyncCompletionActionsPolicy = await readFile("src/features/emergency-home/activeRemoteSyncCompletionActionsPolicy.ts", "utf8");
 const ownerAutoCallAttemptActionsPolicy = await readFile("src/features/emergency-home/ownerAutoCallAttemptActionsPolicy.ts", "utf8");
 const ownerAutoCallPolicy = await readFile("src/features/emergency-home/ownerAutoCallPolicy.ts", "utf8");
 const ownerAutoCallResultActionsPolicy = await readFile("src/features/emergency-home/ownerAutoCallResultActionsPolicy.ts", "utf8");
@@ -453,9 +459,12 @@ if (
   !homeScreen.includes("resolveLiveCallCleanupActions") ||
   !homeScreen.includes("resolveLiveCallCleanupDecision") ||
   !liveCallCleanupPolicy.includes('liveAudioCallStatus === "idle"') ||
-  !homeScreen.includes("emergency_active_remote_sync_attempt") ||
-  !homeScreen.includes("syncEmergencyPackageWithApi(activePackage)") ||
-  !homeScreen.includes("activeRemoteSyncRetryMessage") ||
+  !homeScreen.includes("resolveActiveRemoteSyncAttemptActions") ||
+  !homeScreen.includes("resolveActiveRemoteSyncPackageActions") ||
+  !homeScreen.includes("resolveActiveRemoteSyncFailureActions") ||
+  !homeScreen.includes("syncEmergencyPackageWithApi(packageActions.packageToSync)") ||
+  !activeRemoteSyncAttemptActionsPolicy.includes("emergency_active_remote_sync_attempt") ||
+  !activeRemoteSyncCompletionActionsPolicy.includes("activeRemoteSyncRetryMessage") ||
   !remoteSyncStatusPolicy.includes("Tentando avisar seus anjos pela internet") ||
   !homeScreen.includes("ownerAutoCallStartedSessionIdsRef") ||
   !homeScreen.includes("listAcceptedLiveRecipients") ||
@@ -991,11 +1000,15 @@ if (
 
 if (
   !homeScreen.includes("resolveActiveRemoteSyncStatus") ||
-  !homeScreen.includes("activeRemoteSyncRetryMessage") ||
+  !homeScreen.includes("resolveActiveRemoteSyncAttemptActions") ||
+  !homeScreen.includes("resolveActiveRemoteSyncResultActions") ||
+  !activeRemoteSyncCompletionActionsPolicy.includes("resolveActiveRemoteSyncFailureActions") ||
   !remoteSyncStatusPolicy.includes("activeRemoteSyncStatusMessage") ||
   !remoteSyncStatusPolicy.includes("beginLiveEvidence") ||
   !remoteSyncStatusPolicy.includes("Pedido enviado para") ||
-  !packageJson.scripts["test:remote-sync-status"]
+  !packageJson.scripts["test:remote-sync-status"] ||
+  !packageJson.scripts["test:active-remote-sync-attempt-actions"] ||
+  !packageJson.scripts["test:active-remote-sync-completion-actions"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para mensagens de sincronizacao remota do SOS ativo.");
 }

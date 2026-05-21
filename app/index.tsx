@@ -143,7 +143,14 @@ import {
 } from "@/features/emergency-home/protectedRouteFormPolicy";
 import { resolveProtectedRouteUnlockActions } from "@/features/emergency-home/protectedRouteUnlockActionsPolicy";
 import { resolveRecordingConsentDialogPresentation } from "@/features/emergency-home/recordingConsentDialogPolicy";
-import { activeRemoteSyncRetryMessage, resolveActiveRemoteSyncStatus } from "@/features/emergency-home/remoteSyncStatusPolicy";
+import { resolveActiveRemoteSyncStatus } from "@/features/emergency-home/remoteSyncStatusPolicy";
+import { resolveActiveRemoteSyncAttemptActions, type ActiveRemoteSyncAttemptSource } from "@/features/emergency-home/activeRemoteSyncAttemptActionsPolicy";
+import {
+  resolveActiveRemoteSyncFailureActions,
+  resolveActiveRemoteSyncFinallyActions,
+  resolveActiveRemoteSyncPackageActions,
+  resolveActiveRemoteSyncResultActions
+} from "@/features/emergency-home/activeRemoteSyncCompletionActionsPolicy";
 import { EmergencyHomePanel, EmergencyHomeRoute } from "@/features/emergency-home/routes";
 import { CameraCaptureResidueCleaner } from "@/features/emergency/CameraCaptureResidueCleaner";
 import { countPendingEmergencyPackages } from "@/features/emergency/emergencyOutbox";
@@ -1106,35 +1113,53 @@ export default function HomeScreen() {
 
     let cancelled = false;
 
-    const attemptActiveRemoteSync = (source: "retry" | "resume") => {
-      if (cancelled || activeRemoteSyncInFlightRef.current || liveRemoteSessionId) return;
-
-      activeRemoteSyncInFlightRef.current = true;
-      appendMediaOperationalLog("emergency_active_remote_sync_attempt", {
-        packageId: activePackageId,
+    const attemptActiveRemoteSync = (source: ActiveRemoteSyncAttemptSource) => {
+      const attemptActions = resolveActiveRemoteSyncAttemptActions({
+        activePackageId,
+        cancelled,
+        inFlight: activeRemoteSyncInFlightRef.current,
+        liveRemoteSessionId,
         platform: Platform.OS,
         source
       });
+      if (!attemptActions.shouldAttempt) return;
+
+      activeRemoteSyncInFlightRef.current = attemptActions.shouldSetInFlight;
+      appendMediaOperationalLog(attemptActions.log.event, attemptActions.log.payload);
       void getActiveEmergencyPackage()
         .then((activePackage) => {
-          if (cancelled || !activePackage || activePackage.id !== activePackageId) return null;
-          return syncEmergencyPackageWithApi(activePackage);
+          const packageActions = resolveActiveRemoteSyncPackageActions({
+            activePackage,
+            activePackageId,
+            cancelled
+          });
+          if (!packageActions.shouldSyncPackage) return null;
+          return syncEmergencyPackageWithApi(packageActions.packageToSync);
         })
         .then((syncState) => {
-          if (cancelled || !syncState) return;
+          const resultActions = resolveActiveRemoteSyncResultActions({
+            cancelled,
+            hasSyncState: Boolean(syncState)
+          });
+          if (!resultActions.shouldApplySyncState || !syncState) return;
           applyRemoteSyncState(syncState, { source });
         })
         .catch((error) => {
-          if (cancelled) return;
-          appendMediaOperationalLog("emergency_active_remote_sync_error", {
-            packageId: activePackageId,
+          const failureActions = resolveActiveRemoteSyncFailureActions({
+            activePackageId,
+            cancelled,
             platform: Platform.OS,
             source
-          }, error);
-          setRecordingStatus(activeRemoteSyncRetryMessage());
+          });
+          if (!failureActions.shouldApply) return;
+          appendMediaOperationalLog(failureActions.log.event, failureActions.log.payload, error);
+          setRecordingStatus(failureActions.recordingStatus);
         })
         .finally(() => {
-          activeRemoteSyncInFlightRef.current = false;
+          const finallyActions = resolveActiveRemoteSyncFinallyActions();
+          if (finallyActions.shouldClearInFlight) {
+            activeRemoteSyncInFlightRef.current = false;
+          }
         });
     };
 

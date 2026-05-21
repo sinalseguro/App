@@ -1033,3 +1033,23 @@ Papel: seguranca, LGPD e QA.
 - Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
 - Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida; `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
 - Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-21 - Etapa 1.85 policy pura de tentativa da sincronizacao remota ativa
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido novo, backend, portal ou release.
+- Gate novo `npm run test:active-remote-sync-attempt-actions` cobre bloqueios e caminho permitido da tentativa de retry/resume.
+- A policy nao chama API, nao acessa midia, nao altera refs e nao sincroniza dados; `app/index.tsx` continua responsavel pelos efeitos reais.
+- O log de tentativa contem apenas `packageId`, plataforma e origem; nao inclui SDP/ICE, chave, token, path local ou conteudo de midia.
+- Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida; `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-21 - Etapa 1.86 policy pura de conclusao da sincronizacao remota ativa
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido novo, backend, portal ou release.
+- Gate novo `npm run test:active-remote-sync-completion-actions` cobre guardas de pacote, aplicacao de resultado, erro controlado e finally.
+- A policy nao chama backend, nao aplica estado remoto, nao altera refs e nao manipula midia; `app/index.tsx` continua responsavel pelos efeitos reais.
+- O log de erro contem apenas `packageId`, plataforma e origem; nao inclui SDP/ICE, chave, token, path local ou conteudo de midia.
+- Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida; `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.

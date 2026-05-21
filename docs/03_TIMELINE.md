@@ -4796,3 +4796,43 @@ Validacoes:
 Checkpoint:
 
 - `docs/156_CHECKPOINT_ETAPA_1_84_LIVE_CALL_CLEANUP_ACTIONS_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapa 1.85 acoes de tentativa da sincronizacao remota ativa
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `activeRemoteSyncAttemptActionsPolicy` para centralizar bloqueios e log saneado da tentativa de sincronizacao remota ativa.
+- `app/index.tsx` manteve timers, refs, busca de pacote, chamada API e log real como efeitos do componente.
+- `test:active-remote-sync-attempt-actions` cobre cancelamento, pacote ausente, tentativa em andamento, sessao remota existente e caminho permitido.
+
+Validacoes:
+
+- `test:active-remote-sync-attempt-actions`, `test:remote-sync-status`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/157_CHECKPOINT_ETAPA_1_85_ACTIVE_REMOTE_SYNC_ATTEMPT_ACTIONS_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapa 1.86 acoes de conclusao da sincronizacao remota ativa
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `activeRemoteSyncCompletionActionsPolicy` para centralizar guardas de pacote, aplicacao de resultado, erro controlado e limpeza de in-flight.
+- `app/index.tsx` manteve `getActiveEmergencyPackage()`, `syncEmergencyPackageWithApi()`, `applyRemoteSyncState()`, `setRecordingStatus()` e log real como efeitos do componente.
+- `test:active-remote-sync-completion-actions` cobre pacote cancelado/ausente/alterado, resultado ausente, erro cancelado, erro aplicavel e finally.
+
+Validacoes:
+
+- `test:active-remote-sync-completion-actions`, `test:active-remote-sync-attempt-actions`, `test:remote-sync-status`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/158_CHECKPOINT_ETAPA_1_86_ACTIVE_REMOTE_SYNC_COMPLETION_ACTIONS_POLICY_2026-05-21.md`.
