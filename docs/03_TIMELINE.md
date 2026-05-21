@@ -5168,3 +5168,24 @@ Validacoes:
 Checkpoint:
 
 - `docs/174_CHECKPOINT_ETAPAS_1_105_1_106_TRUSTED_ANGELS_DASHBOARD_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapas 1.107 e 1.108 dialogs e acoes visuais de convites
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `trustedAngelsDialogPolicy` para centralizar decisoes puras de visibilidade da tela `Anjos de confianca`.
+- Etapa 1.107: extraidos booleans de dialogs e paineis de estado, prontidao, meus anjos, sou anjo e convites.
+- Etapa 1.108: extraida regra de exibicao da acao de revogar convite e chave visual de card por sincronizacao/origem.
+- `app/contatos.tsx` continua responsavel por renderizacao, clique, navegacao, modais, estado React e efeitos reais.
+- Novo gate `npm run test:trusted-angels-dialog` foi adicionado ao `npm test`.
+
+Validacoes:
+
+- `test:trusted-angels-dialog`, `test:trusted-angels-dashboard`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`: aprovados.
+- Sem build Android por ser mudanca pura de decisao visual sem runtime nativo.
+
+Checkpoint:
+
+- `docs/175_CHECKPOINT_ETAPAS_1_107_1_108_TRUSTED_ANGELS_DIALOG_POLICY_2026-05-21.md`.

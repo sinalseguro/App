@@ -906,3 +906,11 @@ Proximas acoes atualizadas:
 - Novo gate `npm run test:trusted-angels-dashboard` cobre convite bloqueado/API/local, busy/sync, contadores e prontidao conta/dispositivo/API.
 - Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
+
+## Memoria viva - 2026-05-21 - dialogs Anjos/Convites sem build
+
+- Etapas 1.107 e 1.108 extraem decisoes puras de visibilidade de dialogs/paineis e acao de convite para `trustedAngelsDialogPolicy`.
+- `app/contatos.tsx` ainda executa os mesmos cliques, handlers, revogacoes, navegacao e estado React.
+- Novo gate `npm run test:trusted-angels-dialog` cobre visibilidade dos dialogs/paineis e acao de revogar apenas para convites `pendente` ou `compartilhado`.
+- Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.

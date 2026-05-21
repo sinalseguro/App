@@ -33,6 +33,12 @@ import {
   buildTrustedAngelsReadinessState
 } from "@/features/invitations/trustedAngelsDashboardPolicy";
 import {
+  buildTrustedAngelInvitationCardKey,
+  buildTrustedAngelsDialogVisibility,
+  canShowTrustedAngelInvitationRevocationAction,
+  type TrustedAngelsDialogKind
+} from "@/features/invitations/trustedAngelsDialogPolicy";
+import {
   buildTrustedAngelsLocalRefreshState,
   resolveTrustedAngelsNoSessionRefresh,
   resolveTrustedAngelsPanelParam,
@@ -78,18 +84,18 @@ import { deviceBindingService } from "@/services/deviceBinding";
 
 type AngelsDialog =
   | {
-      kind: "invite";
+      kind: Extract<TrustedAngelsDialogKind, "invite">;
     }
   | {
       invitation: LocalInvitation;
-      kind: "revoke_invitation";
+      kind: Extract<TrustedAngelsDialogKind, "revoke_invitation">;
     }
   | {
       contact: ApiTrustedContact;
-      kind: "revoke_contact";
+      kind: Extract<TrustedAngelsDialogKind, "revoke_contact">;
     }
   | {
-      kind: "profile_block";
+      kind: Extract<TrustedAngelsDialogKind, "profile_block">;
     }
   | null;
 
@@ -169,6 +175,10 @@ export default function ContactsScreen() {
     apiEnabled: apiConfig.apiEnabled,
     apiSessionAvailable: Boolean(apiSession),
     deviceReady
+  });
+  const dialogVisibility = buildTrustedAngelsDialogVisibility({
+    dialogKind: dialog?.kind ?? null,
+    panel
   });
 
   async function refreshAngels(options: RefreshOptions = {}) {
@@ -475,7 +485,7 @@ export default function ContactsScreen() {
         message="A pessoa receberá apenas um convite. Evidências, localização e dados sensíveis não serão enviados."
         onClose={() => setDialog(null)}
         title="Convidar anjo de confiança?"
-        visible={dialog?.kind === "invite"}
+        visible={dialogVisibility.inviteDialog}
       >
         <View style={styles.fieldGroup}>
           <Text style={styles.fieldLabel}>Nome do convite</Text>
@@ -503,7 +513,7 @@ export default function ContactsScreen() {
         message={invitationGate.message}
         onClose={() => setDialog(null)}
         title={invitationGate.title}
-        visible={dialog?.kind === "profile_block"}
+        visible={dialogVisibility.profileBlockDialog}
       />
 
       <BrandedDialog
@@ -522,7 +532,7 @@ export default function ContactsScreen() {
         message="Este convite será removido deste aparelho. Se já foi enviado, gere um novo convite se necessário."
         onClose={() => setDialog(null)}
         title="Revogar convite?"
-        visible={dialog?.kind === "revoke_invitation"}
+        visible={dialogVisibility.revokeInvitationDialog}
       />
 
       <BrandedDialog
@@ -541,7 +551,7 @@ export default function ContactsScreen() {
         message="Esta pessoa deixará de receber novas entregas autorizadas nas próximas fases do SinalSeguro."
         onClose={() => setDialog(null)}
         title="Revogar anjo?"
-        visible={dialog?.kind === "revoke_contact"}
+        visible={dialogVisibility.revokeContactDialog}
       />
 
         <BrandedDialog
@@ -550,7 +560,7 @@ export default function ContactsScreen() {
           message={notice.text}
           onClose={() => setPanel(null)}
           title={notice.title}
-          visible={panel === "estado"}
+          visible={dialogVisibility.statePanel}
         >
           <StatusBanner tone={notice.tone} title="Resumo" text={status} />
         </BrandedDialog>
@@ -560,7 +570,7 @@ export default function ContactsScreen() {
           icon={<ShieldCheck size={18} color={theme.colors.primary} />}
           onClose={() => setPanel(null)}
           title="Prontidão"
-          visible={panel === "prontidao"}
+          visible={dialogVisibility.readinessPanel}
         >
           <View style={styles.dialogStack}>
             <View style={styles.readinessItem}>
@@ -593,7 +603,7 @@ export default function ContactsScreen() {
           icon={<Users size={18} color={theme.colors.primary} />}
           onClose={() => setPanel(null)}
           title="Meus anjos autorizados"
-          visible={panel === "anjos"}
+          visible={dialogVisibility.ownerLinksPanel}
         >
           <View style={styles.dialogStack}>
             {linkedContacts.length > 0 ? (
@@ -622,7 +632,7 @@ export default function ContactsScreen() {
           icon={<UserCheck size={18} color={theme.colors.primary} />}
           onClose={() => setPanel(null)}
           title="Sou anjo de"
-          visible={panel === "sou_anjo"}
+          visible={dialogVisibility.angelLinksPanel}
         >
           <View style={styles.dialogStack}>
             {angelLinks.length > 0 ? (
@@ -650,7 +660,7 @@ export default function ContactsScreen() {
           icon={<Clock3 size={18} color={theme.colors.primary} />}
           onClose={() => setPanel(null)}
           title="Convites"
-          visible={panel === "convites"}
+          visible={dialogVisibility.invitationsPanel}
         >
           <View style={styles.dialogStack}>
             {backendValidatedInvitations.length > 0 ? (
@@ -658,11 +668,11 @@ export default function ContactsScreen() {
                 <SectionTitle icon={<Clock3 size={18} color={theme.colors.primary} />} title="Convites validados" />
                 {backendValidatedInvitations.map((invitation) => (
                   <InviteCard
-                    key={`${invitation.syncStatus}-${invitation.id}`}
+                    key={buildTrustedAngelInvitationCardKey(invitation)}
                     detail={invitationDetail(invitation)}
                     name={invitation.displayLabel}
                     onPress={
-                      invitation.status === "pendente" || invitation.status === "compartilhado"
+                      canShowTrustedAngelInvitationRevocationAction(invitation.status)
                         ? () => setDialog({ invitation, kind: "revoke_invitation" })
                         : undefined
                     }
@@ -677,11 +687,11 @@ export default function ContactsScreen() {
                 <SectionTitle icon={<Clock3 size={18} color={theme.colors.warning} />} title="Convites antigos sem servidor" />
                 {localPreInvitations.map((invitation) => (
                   <InviteCard
-                    key={`${invitation.syncStatus}-${invitation.id}`}
+                    key={buildTrustedAngelInvitationCardKey(invitation)}
                     detail={invitationDetail(invitation)}
                     name={invitation.displayLabel}
                     onPress={
-                      invitation.status === "pendente" || invitation.status === "compartilhado"
+                      canShowTrustedAngelInvitationRevocationAction(invitation.status)
                         ? () => setDialog({ invitation, kind: "revoke_invitation" })
                         : undefined
                     }
