@@ -87,7 +87,9 @@ const requiredFiles = [
   "src/features/emergency-home/finishNoMediaDiagnosticPolicy.ts",
   "src/features/emergency-home/finishCompletionActionsPolicy.ts",
   "src/features/emergency-home/finishMissingPackagePolicy.ts",
+  "src/features/emergency-home/finishMissingPackageBranchActionsPolicy.ts",
   "src/features/emergency-home/finishFailureActionsPolicy.ts",
+  "src/features/emergency-home/finishFailureCleanupActionsPolicy.ts",
   "src/features/emergency-home/activeRemoteSyncAttemptActionsPolicy.ts",
   "src/features/emergency-home/activeRemoteSyncCompletionActionsPolicy.ts",
   "src/features/emergency-home/ownerAutoCallAttemptActionsPolicy.ts",
@@ -222,7 +224,9 @@ const requiredFiles = [
   "scripts/finish-no-media-diagnostic-policy.test.ts",
   "scripts/finish-completion-actions-policy.test.ts",
   "scripts/finish-missing-package-policy.test.ts",
+  "scripts/finish-missing-package-branch-actions-policy.test.ts",
   "scripts/finish-failure-actions-policy.test.ts",
+  "scripts/finish-failure-cleanup-actions-policy.test.ts",
   "scripts/live-call-history-policy.test.ts",
   "scripts/live-call-state-policy.test.ts",
   "scripts/live-webrtc-policy.test.ts",
@@ -365,7 +369,15 @@ const finishPostOutcomeActionsPolicy = await readFile("src/features/emergency-ho
 const finishNoMediaDiagnosticPolicy = await readFile("src/features/emergency-home/finishNoMediaDiagnosticPolicy.ts", "utf8");
 const finishCompletionActionsPolicy = await readFile("src/features/emergency-home/finishCompletionActionsPolicy.ts", "utf8");
 const finishMissingPackagePolicy = await readFile("src/features/emergency-home/finishMissingPackagePolicy.ts", "utf8");
+const finishMissingPackageBranchActionsPolicy = await readFile(
+  "src/features/emergency-home/finishMissingPackageBranchActionsPolicy.ts",
+  "utf8"
+);
 const finishFailureActionsPolicy = await readFile("src/features/emergency-home/finishFailureActionsPolicy.ts", "utf8");
+const finishFailureCleanupActionsPolicy = await readFile(
+  "src/features/emergency-home/finishFailureCleanupActionsPolicy.ts",
+  "utf8"
+);
 const activeRemoteSyncAttemptActionsPolicy = await readFile("src/features/emergency-home/activeRemoteSyncAttemptActionsPolicy.ts", "utf8");
 const activeRemoteSyncCompletionActionsPolicy = await readFile("src/features/emergency-home/activeRemoteSyncCompletionActionsPolicy.ts", "utf8");
 const ownerAutoCallAttemptActionsPolicy = await readFile("src/features/emergency-home/ownerAutoCallAttemptActionsPolicy.ts", "utf8");
@@ -1251,11 +1263,13 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishActiveCallCleanup") ||
+  !homeScreen.includes("resolveFinishFinallyCleanupActions") ||
+  !finishFailureCleanupActionsPolicy.includes("resolveFinishActiveCallCleanup") ||
   !finishActiveCallCleanupPolicy.includes("shouldClearMediaStopPurpose") ||
   !finishActiveCallCleanupPolicy.includes("shouldClearMediaStopPending") ||
   !finishActiveCallCleanupPolicy.includes("shouldReleaseFinishInProgress") ||
-  !packageJson.scripts["test:finish-active-call-cleanup"]
+  !packageJson.scripts["test:finish-active-call-cleanup"] ||
+  !packageJson.scripts["test:finish-failure-cleanup-actions"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para limpeza final do encerramento ativo.");
 }
@@ -1368,19 +1382,26 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishMissingPackageActions") ||
+  !homeScreen.includes("resolveFinishMissingPackageBranchActions") ||
+  !finishMissingPackageBranchActionsPolicy.includes("resolveFinishMissingPackageActions") ||
+  !finishMissingPackageBranchActionsPolicy.includes("shouldReturnAfterApply") ||
   !finishMissingPackagePolicy.includes("shouldShowMissingPackageProgress") ||
   !finishMissingPackagePolicy.includes("finish_missing_package") ||
-  !packageJson.scripts["test:finish-missing-package"]
+  !packageJson.scripts["test:finish-missing-package"] ||
+  !packageJson.scripts["test:finish-missing-package-branch-actions"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para pacote ausente no encerramento.");
 }
 
 if (
-  !homeScreen.includes("resolveFinishFailureActions") ||
+  !homeScreen.includes("resolveFinishFailureRuntimeActions") ||
+  !homeScreen.includes("resolveFinishFinallyCleanupActions") ||
+  !finishFailureCleanupActionsPolicy.includes("resolveFinishFailureActions") ||
+  !finishFailureCleanupActionsPolicy.includes("resolveFinishActiveCallCleanup") ||
   !finishFailureActionsPolicy.includes("emergency_finish_package_error") ||
   !finishFailureActionsPolicy.includes("finish_failed") ||
-  !packageJson.scripts["test:finish-failure-actions"]
+  !packageJson.scripts["test:finish-failure-actions"] ||
+  !packageJson.scripts["test:finish-failure-cleanup-actions"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para falha controlada no encerramento.");
 }

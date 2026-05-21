@@ -26,7 +26,6 @@ import {
   resolveEmergencyStartRemoteSyncResultActions
 } from "@/features/emergency-home/emergencyStartRemoteSyncActionsPolicy";
 import { resolveEmergencyStartRuntimeActions } from "@/features/emergency-home/emergencyStartRuntimePolicy";
-import { resolveFinishActiveCallCleanup } from "@/features/emergency-home/finishActiveCallCleanupPolicy";
 import { resolveFinishActiveCallRuntimeStateActions } from "@/features/emergency-home/finishActiveCallRuntimeStateActionsPolicy";
 import { resolveFinishActiveCallRuntimeStartActions } from "@/features/emergency-home/finishActiveCallRuntimeStartPolicy";
 import { resolveFinishActiveCallStart } from "@/features/emergency-home/finishActiveCallStartPolicy";
@@ -40,13 +39,16 @@ import {
   type FinishConfirmationFormPatch
 } from "@/features/emergency-home/finishConfirmationFormPolicy";
 import { resolveFinishConfirmationDialogPresentation } from "@/features/emergency-home/finishConfirmationDialogPolicy";
-import { resolveFinishFailureActions } from "@/features/emergency-home/finishFailureActionsPolicy";
+import {
+  resolveFinishFailureRuntimeActions,
+  resolveFinishFinallyCleanupActions
+} from "@/features/emergency-home/finishFailureCleanupActionsPolicy";
 import { resolveFinishMediaStopResultActions } from "@/features/emergency-home/finishMediaStopResultPolicy";
 import {
   resolveFinishMediaStopRequestActions,
   resolveFinishMediaStopSignaledActions
 } from "@/features/emergency-home/finishMediaStopRequestActionsPolicy";
-import { resolveFinishMissingPackageActions } from "@/features/emergency-home/finishMissingPackagePolicy";
+import { resolveFinishMissingPackageBranchActions } from "@/features/emergency-home/finishMissingPackageBranchActionsPolicy";
 import { resolveFinishPackageOutcomeActions } from "@/features/emergency-home/finishPackageOutcomeActionsPolicy";
 import { resolveFinishProgressDialogPresentation } from "@/features/emergency-home/finishProgressDialogPolicy";
 import {
@@ -1501,16 +1503,20 @@ export default function HomeScreen() {
       const result = await finishEmergencyPackage(packageId, "manual_finish");
       await refreshOutboxCount();
 
-      if (!result) {
-        const missingPackageActions = resolveFinishMissingPackageActions({
-          stopSerialPresent: Boolean(stopSerial)
-        });
+      const missingPackageActions = resolveFinishMissingPackageBranchActions({
+        resultPresent: Boolean(result),
+        stopSerialPresent: Boolean(stopSerial)
+      });
+      if (missingPackageActions.shouldApply) {
         setRecordingStatus(missingPackageActions.recordingStatus);
         if (missingPackageActions.shouldShowMissingPackageProgress && missingPackageActions.finishProgress) {
           showFinishProgress(missingPackageActions.finishProgress);
         }
-        return;
+        if (missingPackageActions.shouldReturnAfterApply) {
+          return;
+        }
       }
+      if (!result) return;
 
       const remoteSyncRequestActions = resolveFinishRemoteSyncRequestActions({
         remoteSessionIdToFinish
@@ -1580,14 +1586,14 @@ export default function HomeScreen() {
       showFinishProgress(finishCompletionActions.finishProgress);
       applyFinishConfirmationFormPatch(resolveFinishCompletionConfirmationFormPatch(finishCompletionActions));
     } catch (error) {
-      const finishFailureActions = resolveFinishFailureActions({
+      const finishFailureActions = resolveFinishFailureRuntimeActions({
         platform: Platform.OS
       });
-      appendMediaOperationalLog(finishFailureActions.logEvent, finishFailureActions.logPayload, error);
+      appendMediaOperationalLog(finishFailureActions.log.event, finishFailureActions.log.payload, error);
       setRecordingStatus(finishFailureActions.recordingStatus);
       showFinishProgress(finishFailureActions.finishProgress);
     } finally {
-      const finishCleanupDecision = resolveFinishActiveCallCleanup({
+      const finishCleanupDecision = resolveFinishFinallyCleanupActions({
         mediaStopPurpose: mediaStopPurposeRef.current
       });
       if (finishCleanupDecision.shouldClearMediaStopPurpose) {

@@ -1043,3 +1043,17 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `app/index.tsx` continua responsavel por log operacional, update de evidencia, marcador de auditoria, diagnostico sem midia, progresso e formulario.
 - Novo gate `npm run test:finish-package-outcome-actions` cobre resultado protegido e caso diagnostico quando a chamada ao vivo nao devolve video local.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em storage seguro real, recorder, chamada, backend ou UX real exige validacao proporcional.
+
+# Atualizacao - 2026-05-21 - Etapa 1.93 Home/SOS
+
+- `src/features/emergency-home/finishMissingPackageBranchActionsPolicy.ts` centraliza a decisao de aplicar o branch de pacote ausente no encerramento.
+- `app/index.tsx` continua responsavel por status, progresso e retorno controlado do fluxo.
+- Novo gate `npm run test:finish-missing-package-branch-actions` cobre resultado presente, pacote ausente sem serial e pacote ausente com serial.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em storage real, recorder ou backend exige validacao proporcional.
+
+# Atualizacao - 2026-05-21 - Etapa 1.94 Home/SOS
+
+- `src/features/emergency-home/finishFailureCleanupActionsPolicy.ts` centraliza falha runtime e cleanup final do encerramento.
+- `app/index.tsx` continua responsavel por log real, status, progresso, refs e estados React.
+- Novo gate `npm run test:finish-failure-cleanup-actions` cobre log/status de falha e cleanup final com/sem `mediaStopPurpose`.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em chamada, recorder, storage, backend ou UX real exige validacao proporcional.

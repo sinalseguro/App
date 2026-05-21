@@ -4956,3 +4956,43 @@ Validacoes:
 Checkpoint:
 
 - `docs/164_CHECKPOINT_ETAPA_1_92_FINISH_PACKAGE_OUTCOME_ACTIONS_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapa 1.93 acoes de branch de pacote ausente no encerramento
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishMissingPackageBranchActionsPolicy` para centralizar a decisao de aplicar o branch de pacote ausente e retornar apos status/progresso.
+- `app/index.tsx` manteve `setRecordingStatus()`, `showFinishProgress()` e retorno controlado como efeitos do componente.
+- `test:finish-missing-package-branch-actions` cobre resultado presente, pacote ausente sem serial e pacote ausente com serial.
+
+Validacoes:
+
+- `test:finish-missing-package-branch-actions`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/165_CHECKPOINT_ETAPA_1_93_FINISH_MISSING_PACKAGE_BRANCH_ACTIONS_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapa 1.94 acoes de falha e cleanup final do encerramento
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishFailureCleanupActionsPolicy` para centralizar acoes de falha runtime e cleanup final do encerramento.
+- `app/index.tsx` manteve log real, status, progresso, refs e estados React como efeitos do componente.
+- `test:finish-failure-cleanup-actions` cobre falha runtime e cleanup final com/sem `mediaStopPurpose`.
+
+Validacoes:
+
+- `test:finish-failure-cleanup-actions`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/166_CHECKPOINT_ETAPA_1_94_FINISH_FAILURE_CLEANUP_ACTIONS_POLICY_2026-05-21.md`.
