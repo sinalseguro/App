@@ -4756,3 +4756,43 @@ Validacoes:
 Checkpoint:
 
 - `docs/154_CHECKPOINT_ETAPA_1_82_OWNER_AUTO_CALL_RESULT_ACTIONS_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapa 1.83 acoes do lifecycle da chamada owner
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `ownerLiveCallLifecycleActionsPolicy` para centralizar timestamps, limpeza de sessao iniciada e motivo controlado para parada da evidencia owner.
+- `app/index.tsx` manteve refs, parada real de video e update real da evidencia como efeitos do componente.
+- `test:owner-live-call-lifecycle-actions` cobre decisao ignorada, chamada conectada e chamada encerrada/falha com limpeza.
+
+Validacoes:
+
+- `test:owner-live-call-lifecycle-actions`, `test:owner-live-evidence`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/155_CHECKPOINT_ETAPA_1_83_OWNER_LIVE_CALL_LIFECYCLE_ACTIONS_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapa 1.84 acoes de limpeza da chamada ao vivo
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `liveCallCleanupActionsPolicy` para centralizar reset/parada da chamada ao vivo e flags de limpeza local.
+- `app/index.tsx` manteve limpeza de refs, estado React e chamada real de reset/stop como efeitos do componente.
+- `test:live-call-cleanup-actions` cobre ausencia de cleanup, reset idle e parada de chamada ativa.
+
+Validacoes:
+
+- `test:live-call-cleanup-actions`, `test:live-call-cleanup`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/156_CHECKPOINT_ETAPA_1_84_LIVE_CALL_CLEANUP_ACTIONS_POLICY_2026-05-21.md`.

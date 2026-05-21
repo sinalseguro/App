@@ -1013,3 +1013,23 @@ Papel: seguranca, LGPD e QA.
 - Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
 - Validacoes aprovadas: testes focados, `smoke-test`, `npm test`, `private:android:readiness`, `git diff --check` dirigido, lint dirigido e varredura dirigida; `npm run lint` global travou sem CPU em duas tentativas; `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
 - Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-21 - Etapa 1.83 policy pura de acoes do lifecycle da chamada owner
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido novo, backend, portal ou release.
+- Gate novo `npm run test:owner-live-call-lifecycle-actions` cobre decisao ignorada, chamada conectada e chamada finalizada/falha com limpeza.
+- A policy nao para gravacao, nao grava midia, nao chama backend e nao altera refs; `app/index.tsx` continua responsavel pelos efeitos reais.
+- O motivo de parada fica restrito a `call_finished`; nao inclui SDP/ICE, chave, token, path local ou conteudo de midia.
+- Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida; `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-21 - Etapa 1.84 policy pura de acoes de limpeza da chamada ao vivo
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido novo, backend, portal ou release.
+- Gate novo `npm run test:live-call-cleanup-actions` cobre ausencia de cleanup, reset idle e parada de chamada ativa.
+- A policy nao para WebRTC diretamente, nao altera refs, nao chama backend e nao sincroniza dados; `app/index.tsx` continua responsavel pelos efeitos reais.
+- A limpeza declarada nao inclui SDP/ICE, chave, token, path local, conteudo de midia ou payload P2P novo.
+- Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida; `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.

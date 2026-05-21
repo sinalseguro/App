@@ -64,6 +64,7 @@ import {
   type FinishProgressStateSnapshot
 } from "@/features/emergency-home/finishProgressStatePolicy";
 import { resolveEmergencyHomeNavigationTarget } from "@/features/emergency-home/homeNavigationPolicy";
+import { resolveLiveCallCleanupActions } from "@/features/emergency-home/liveCallCleanupActionsPolicy";
 import { resolveLiveCallCleanupDecision } from "@/features/emergency-home/liveCallCleanupPolicy";
 import { resolveLiveCallPanelPolicy } from "@/features/emergency-home/liveCallPanelPolicy";
 import {
@@ -120,6 +121,7 @@ import {
   resolveOwnerLiveCallLifecycle,
   resolveOwnerLiveVideoEvidenceStart
 } from "@/features/emergency-home/ownerLiveEvidencePolicy";
+import { resolveOwnerLiveCallLifecycleActions } from "@/features/emergency-home/ownerLiveCallLifecycleActionsPolicy";
 import {
   resolveOwnerLiveVideoPreserveCompletionActions,
   resolveOwnerLiveVideoPreserveErrorActions,
@@ -1042,24 +1044,20 @@ export default function HomeScreen() {
       role: liveAudioCall.state.role,
       status: liveAudioCall.state.status
     });
-    if (!lifecycleDecision.shouldApply) return;
-
-    if (lifecycleDecision.clearStartedSession) {
-      ownerAutoCallStartedSessionIdsRef.current.delete(lifecycleDecision.remoteSessionId);
-    }
-    if (lifecycleDecision.shouldStopLiveVideoEvidence) {
-      void stopOwnerLiveVideoEvidence("call_finished");
-    }
-
-    const lifecycleTimestamp = new Date().toISOString();
-    updateOwnerLiveEvidence(lifecycleDecision.remoteSessionId, {
-      ...(lifecycleDecision.evidenceUpdate.timestampField === "connectedAt"
-        ? { connectedAt: lifecycleTimestamp }
-        : { endedAt: lifecycleTimestamp }),
-      localEvidenceStatus: lifecycleDecision.evidenceUpdate.localEvidenceStatus,
-      packageId: lifecycleDecision.evidenceUpdate.packageId,
-      status: lifecycleDecision.evidenceUpdate.status
+    const lifecycleActions = resolveOwnerLiveCallLifecycleActions({
+      decision: lifecycleDecision,
+      timestamp: new Date().toISOString()
     });
+    if (!lifecycleActions.shouldApply) return;
+
+    if (lifecycleActions.shouldClearStartedSession && lifecycleActions.clearStartedSessionId) {
+      ownerAutoCallStartedSessionIdsRef.current.delete(lifecycleActions.clearStartedSessionId);
+    }
+    if (lifecycleActions.shouldStopLiveVideoEvidence && lifecycleActions.stopLiveVideoEvidenceReason) {
+      void stopOwnerLiveVideoEvidence(lifecycleActions.stopLiveVideoEvidenceReason);
+    }
+
+    updateOwnerLiveEvidence(lifecycleActions.remoteSessionId, lifecycleActions.evidenceUpdate);
   }, [
     activePackageId,
     liveAudioCall.state.remoteSessionId,
@@ -1078,16 +1076,17 @@ export default function HomeScreen() {
       mediaStopPending,
       startInProgress
     });
-    if (!cleanupDecision.shouldCleanup) return;
+    const cleanupActions = resolveLiveCallCleanupActions(cleanupDecision);
+    if (!cleanupActions.shouldApply) return;
 
-    if (cleanupDecision.shouldClearAutoCallState) {
+    if (cleanupActions.shouldClearAutoCallState) {
       ownerAutoCallPausedSessionIdsRef.current.clear();
       ownerAutoCallStartedSessionIdsRef.current.clear();
     }
-    if (cleanupDecision.shouldClearLiveRemoteSession) {
+    if (cleanupActions.shouldClearLiveRemoteSession) {
       setLiveRemoteSessionId(null);
     }
-    if (cleanupDecision.liveCallAction === "reset_idle_call_state") {
+    if (cleanupActions.liveCallAction === "reset_idle_call_state") {
       liveAudioCall.resetLiveAudioCall();
     } else {
       liveAudioCall.stopLiveAudioCall();

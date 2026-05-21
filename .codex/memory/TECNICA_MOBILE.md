@@ -973,3 +973,17 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `app/index.tsx` continua responsavel por `prepareMediaForOwnerLiveCall()`, `liveAudioCall.startOwnerAudioCall()`, refs e log real.
 - Novo gate `npm run test:owner-auto-call-result-actions` cobre sem anjo, com anjo, chamada iniciada/falha, erro e finally.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em chamada, WebRTC, camera ou backend real exige validacao proporcional.
+
+# Atualizacao - 2026-05-21 - Etapa 1.83 Home/SOS
+
+- `src/features/emergency-home/ownerLiveCallLifecycleActionsPolicy.ts` centraliza timestamps, limpeza de sessao iniciada e motivo controlado de parada da evidencia owner.
+- `app/index.tsx` continua responsavel por `ownerAutoCallStartedSessionIdsRef`, `stopOwnerLiveVideoEvidence()` e `updateOwnerLiveEvidence()`.
+- Novo gate `npm run test:owner-live-call-lifecycle-actions` cobre lifecycle ignorado, conectado e finalizado/falho.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em chamada, recorder, WebRTC, storage ou UX real exige validacao proporcional.
+
+# Atualizacao - 2026-05-21 - Etapa 1.84 Home/SOS
+
+- `src/features/emergency-home/liveCallCleanupActionsPolicy.ts` centraliza acoes declarativas de reset/parada e limpeza da chamada ao vivo.
+- `app/index.tsx` continua responsavel por limpar refs, aplicar `setLiveRemoteSessionId(null)` e chamar `resetLiveAudioCall()` ou `stopLiveAudioCall()`.
+- Novo gate `npm run test:live-call-cleanup-actions` cobre ausencia de cleanup, reset idle e parada de chamada ativa.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em chamada, WebRTC, estado nativo ou UX real exige validacao proporcional.

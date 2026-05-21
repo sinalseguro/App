@@ -87,12 +87,14 @@ const requiredFiles = [
   "src/features/emergency-home/ownerAutoCallResultActionsPolicy.ts",
   "src/features/emergency-home/ownerLiveAuditMarkerActionsPolicy.ts",
   "src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts",
+  "src/features/emergency-home/ownerLiveCallLifecycleActionsPolicy.ts",
   "src/features/emergency-home/ownerLiveEvidenceUpdatePolicy.ts",
   "src/features/emergency-home/ownerLiveEvidencePolicy.ts",
   "src/features/emergency-home/ownerLiveVideoPreserveOutcomePolicy.ts",
   "src/features/emergency-home/ownerLiveVideoPreserveRequestPolicy.ts",
   "src/features/emergency-home/ownerLiveVideoStartOutcomePolicy.ts",
   "src/features/emergency-home/ownerLiveVideoStartRequestPolicy.ts",
+  "src/features/emergency-home/liveCallCleanupActionsPolicy.ts",
   "src/features/emergency-home/liveCallCleanupPolicy.ts",
   "src/features/emergency-home/liveCallPanelPolicy.ts",
   "src/features/emergency-home/localSosPackageStatusPolicy.ts",
@@ -158,11 +160,13 @@ const requiredFiles = [
   "scripts/live-call-waiting-dialog-policy.test.ts",
   "scripts/owner-live-audit-marker-actions-policy.test.ts",
   "scripts/owner-live-audit-marker-policy.test.ts",
+  "scripts/owner-live-call-lifecycle-actions-policy.test.ts",
   "scripts/owner-live-evidence-update-policy.test.ts",
   "scripts/owner-live-video-preserve-outcome-policy.test.ts",
   "scripts/owner-live-video-preserve-request-policy.test.ts",
   "scripts/owner-live-video-start-outcome-policy.test.ts",
   "scripts/owner-live-video-start-request-policy.test.ts",
+  "scripts/live-call-cleanup-actions-policy.test.ts",
   "scripts/live-call-cleanup-policy.test.ts",
   "scripts/finish-progress-dialog-policy.test.ts",
   "scripts/finish-progress-state-policy.test.ts",
@@ -339,12 +343,14 @@ const ownerAutoCallPolicy = await readFile("src/features/emergency-home/ownerAut
 const ownerAutoCallResultActionsPolicy = await readFile("src/features/emergency-home/ownerAutoCallResultActionsPolicy.ts", "utf8");
 const ownerLiveAuditMarkerActionsPolicy = await readFile("src/features/emergency-home/ownerLiveAuditMarkerActionsPolicy.ts", "utf8");
 const ownerLiveAuditMarkerPolicy = await readFile("src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts", "utf8");
+const ownerLiveCallLifecycleActionsPolicy = await readFile("src/features/emergency-home/ownerLiveCallLifecycleActionsPolicy.ts", "utf8");
 const ownerLiveEvidenceUpdatePolicy = await readFile("src/features/emergency-home/ownerLiveEvidenceUpdatePolicy.ts", "utf8");
 const ownerLiveEvidencePolicy = await readFile("src/features/emergency-home/ownerLiveEvidencePolicy.ts", "utf8");
 const ownerLiveVideoPreserveOutcomePolicy = await readFile("src/features/emergency-home/ownerLiveVideoPreserveOutcomePolicy.ts", "utf8");
 const ownerLiveVideoPreserveRequestPolicy = await readFile("src/features/emergency-home/ownerLiveVideoPreserveRequestPolicy.ts", "utf8");
 const ownerLiveVideoStartOutcomePolicy = await readFile("src/features/emergency-home/ownerLiveVideoStartOutcomePolicy.ts", "utf8");
 const ownerLiveVideoStartRequestPolicy = await readFile("src/features/emergency-home/ownerLiveVideoStartRequestPolicy.ts", "utf8");
+const liveCallCleanupActionsPolicy = await readFile("src/features/emergency-home/liveCallCleanupActionsPolicy.ts", "utf8");
 const liveCallCleanupPolicy = await readFile("src/features/emergency-home/liveCallCleanupPolicy.ts", "utf8");
 const liveCallPanelPolicy = await readFile("src/features/emergency-home/liveCallPanelPolicy.ts", "utf8");
 const localSosPackageStatusPolicy = await readFile("src/features/emergency-home/localSosPackageStatusPolicy.ts", "utf8");
@@ -444,6 +450,7 @@ if (
   !homeScreen.includes("activeRemoteSyncRetryMs") ||
   !homeScreen.includes("activeRemoteSyncInFlightRef") ||
   !homeScreen.includes("resolveLiveCallPanelPolicy") ||
+  !homeScreen.includes("resolveLiveCallCleanupActions") ||
   !homeScreen.includes("resolveLiveCallCleanupDecision") ||
   !liveCallCleanupPolicy.includes('liveAudioCallStatus === "idle"') ||
   !homeScreen.includes("emergency_active_remote_sync_attempt") ||
@@ -1039,8 +1046,11 @@ if (
   !homeScreen.includes("resolveOwnerLiveVideoStartRequest") ||
   !homeScreen.includes("resolveOwnerLiveVideoEvidenceStart") ||
   !homeScreen.includes("startDecision.startInput") ||
+  !homeScreen.includes("resolveOwnerLiveCallLifecycleActions") ||
   !homeScreen.includes("resolveOwnerLiveCallLifecycle") ||
-  !homeScreen.includes("lifecycleDecision.evidenceUpdate") ||
+  !homeScreen.includes("lifecycleActions.evidenceUpdate") ||
+  !ownerLiveCallLifecycleActionsPolicy.includes("resolveOwnerLiveCallLifecycleActions") ||
+  !ownerLiveCallLifecycleActionsPolicy.includes("stopLiveVideoEvidenceReason") ||
   !ownerLiveEvidenceUpdatePolicy.includes("resolveOwnerLiveEvidenceUpdate") ||
   !ownerLiveEvidenceUpdatePolicy.includes("shouldUpdate") ||
   !ownerLiveVideoPreserveOutcomePolicy.includes("resolveOwnerLiveVideoPreserveCompletionActions") ||
@@ -1059,6 +1069,7 @@ if (
   !ownerLiveEvidencePolicy.includes("inactive_status") ||
   !ownerLiveEvidencePolicy.includes("status_not_actionable") ||
   !packageJson.scripts["test:owner-live-evidence"] ||
+  !packageJson.scripts["test:owner-live-call-lifecycle-actions"] ||
   !packageJson.scripts["test:owner-live-evidence-update"] ||
   !packageJson.scripts["test:owner-live-video-preserve-request"] ||
   !packageJson.scripts["test:owner-live-video-preserve-outcome"] ||
@@ -1069,13 +1080,17 @@ if (
 }
 
 if (
+  !homeScreen.includes("resolveLiveCallCleanupActions") ||
   !homeScreen.includes("resolveLiveCallCleanupDecision") ||
-  !homeScreen.includes("cleanupDecision.liveCallAction") ||
+  !homeScreen.includes("cleanupActions.liveCallAction") ||
+  !liveCallCleanupActionsPolicy.includes("resolveLiveCallCleanupActions") ||
+  !liveCallCleanupActionsPolicy.includes("shouldClearAutoCallState") ||
   !liveCallCleanupPolicy.includes("resolveLiveCallCleanupDecision") ||
   !liveCallCleanupPolicy.includes("nothing_to_cleanup") ||
   !liveCallCleanupPolicy.includes("reset_idle_call_state") ||
   !liveCallCleanupPolicy.includes("stop_active_call") ||
-  !packageJson.scripts["test:live-call-cleanup"]
+  !packageJson.scripts["test:live-call-cleanup"] ||
+  !packageJson.scripts["test:live-call-cleanup-actions"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para limpeza de chamada ao vivo sem chamado ativo.");
 }
