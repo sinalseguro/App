@@ -1057,3 +1057,17 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `app/index.tsx` continua responsavel por log real, status, progresso, refs e estados React.
 - Novo gate `npm run test:finish-failure-cleanup-actions` cobre log/status de falha e cleanup final com/sem `mediaStopPurpose`.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em chamada, recorder, storage, backend ou UX real exige validacao proporcional.
+
+# Atualizacao - 2026-05-21 - Etapa 1.95 Home/SOS
+
+- `src/features/emergency-home/finishRemoteSyncDirectActionsPolicy.ts` centraliza retry apos encerramento remoto direto e resolucao do estado remoto final.
+- `app/index.tsx` continua responsavel por `finishRemoteEmergencySessionForPackage()` e `syncPendingEmergencyPackagesWithApi()`.
+- Novo gate `npm run test:finish-remote-sync-direct-actions` cobre tentativa direta finalizada, falha com retry e estado de retry do mesmo pacote.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em API/backend real, chamada ou UX real exige validacao proporcional.
+
+# Atualizacao - 2026-05-21 - Etapa 1.96 Home/SOS
+
+- `src/features/emergency-home/finishRemoteSyncCompletionActionsPolicy.ts` centraliza resultado pendente, log de falha remota e flag `remoteFinishFailed`.
+- `app/index.tsx` continua responsavel por sincronizacao pendente, log real e resultado local do pacote.
+- Novo gate `npm run test:finish-remote-sync-completion-actions` cobre resultado pendente encontrado/ausente e falha remota saneada.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em API/backend real, chamada ou UX real exige validacao proporcional.

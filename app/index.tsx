@@ -52,11 +52,13 @@ import { resolveFinishMissingPackageBranchActions } from "@/features/emergency-h
 import { resolveFinishPackageOutcomeActions } from "@/features/emergency-home/finishPackageOutcomeActionsPolicy";
 import { resolveFinishProgressDialogPresentation } from "@/features/emergency-home/finishProgressDialogPolicy";
 import {
-  resolveRemoteFinishFailureLog,
-  resolveRemoteFinishStateAfterDirect,
-  resolveRemoteFinishStateFromSync,
-  shouldRetryRemoteFinishAfterDirect
-} from "@/features/emergency-home/finishRemoteSyncPolicy";
+  resolveFinishRemoteSyncCompletionActions,
+  resolveFinishRemoteSyncPendingResultActions
+} from "@/features/emergency-home/finishRemoteSyncCompletionActionsPolicy";
+import {
+  resolveFinishRemoteSyncDirectResultActions,
+  resolveFinishRemoteSyncDirectRetryActions
+} from "@/features/emergency-home/finishRemoteSyncDirectActionsPolicy";
 import { resolveFinishRemoteSyncRequestActions } from "@/features/emergency-home/finishRemoteSyncRequestActionsPolicy";
 import { resolveFinishRequestDecision } from "@/features/emergency-home/finishRequestPolicy";
 import {
@@ -1533,31 +1535,35 @@ export default function HomeScreen() {
           result.packageRecord,
           remoteSyncMode.remoteSessionId
         );
-        const retryStates = shouldRetryRemoteFinishAfterDirect(directFinishState)
+        const directRetryActions = resolveFinishRemoteSyncDirectRetryActions({
+          directFinishState
+        });
+        const retryStates = directRetryActions.shouldSyncPendingAfterDirect
           ? await syncPendingEmergencyPackagesWithApi()
           : [];
-        remoteFinishState = resolveRemoteFinishStateAfterDirect({
+        remoteFinishState = resolveFinishRemoteSyncDirectResultActions({
           directFinishState,
           packageId,
           retryStates
-        });
+        }).remoteFinishState;
       } else {
         const syncStates = await syncPendingEmergencyPackagesWithApi();
-        remoteFinishState = resolveRemoteFinishStateFromSync({
+        remoteFinishState = resolveFinishRemoteSyncPendingResultActions({
           packageId,
           syncStates
-        });
+        }).remoteFinishState;
       }
-      const remoteFinishFailureLog = resolveRemoteFinishFailureLog({
+      const remoteFinishCompletionActions = resolveFinishRemoteSyncCompletionActions({
         packageId,
         platform: Platform.OS,
         remoteFinishState,
         remoteSessionIdToFinish
       });
+      const remoteFinishFailureLog = remoteFinishCompletionActions.failureLog;
       if (remoteFinishFailureLog.shouldLog) {
         appendMediaOperationalLog(remoteFinishFailureLog.logEvent, remoteFinishFailureLog.logPayload);
       }
-      const remoteFinishFailed = remoteFinishFailureLog.remoteFinishFailed;
+      const remoteFinishFailed = remoteFinishCompletionActions.remoteFinishFailed;
 
       const finishPackageOutcomeActions = resolveFinishPackageOutcomeActions({
         endedAt: new Date().toISOString(),

@@ -4996,3 +4996,43 @@ Validacoes:
 Checkpoint:
 
 - `docs/166_CHECKPOINT_ETAPA_1_94_FINISH_FAILURE_CLEANUP_ACTIONS_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapa 1.95 acoes de sincronizacao remota direta no encerramento
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishRemoteSyncDirectActionsPolicy` para centralizar retry apos tentativa direta e resolucao do estado remoto final.
+- `app/index.tsx` manteve chamadas reais de API e sincronizacao pendente como efeitos do componente.
+- `test:finish-remote-sync-direct-actions` cobre tentativa direta finalizada, falha com retry e preferencia pelo estado de retry do mesmo pacote.
+
+Validacoes:
+
+- `test:finish-remote-sync-direct-actions`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/167_CHECKPOINT_ETAPA_1_95_FINISH_REMOTE_SYNC_DIRECT_ACTIONS_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapa 1.96 acoes de conclusao da sincronizacao remota final
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `finishRemoteSyncCompletionActionsPolicy` para centralizar resultado pendente, log de falha remota e flag `remoteFinishFailed`.
+- `app/index.tsx` manteve sincronizacao pendente, log real e resultado local do pacote como efeitos do componente.
+- `test:finish-remote-sync-completion-actions` cobre resultado pendente encontrado/ausente e falha remota saneada.
+
+Validacoes:
+
+- `test:finish-remote-sync-completion-actions`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/168_CHECKPOINT_ETAPA_1_96_FINISH_REMOTE_SYNC_COMPLETION_ACTIONS_POLICY_2026-05-21.md`.

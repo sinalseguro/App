@@ -77,6 +77,8 @@ const requiredFiles = [
   "src/features/emergency-home/finishMediaStopResultPolicy.ts",
   "src/features/emergency-home/finishRemoteSyncPolicy.ts",
   "src/features/emergency-home/finishRemoteSyncRequestActionsPolicy.ts",
+  "src/features/emergency-home/finishRemoteSyncDirectActionsPolicy.ts",
+  "src/features/emergency-home/finishRemoteSyncCompletionActionsPolicy.ts",
   "src/features/emergency-home/finishPackageResultPolicy.ts",
   "src/features/emergency-home/finishOutcomeInputPolicy.ts",
   "src/features/emergency-home/finishPackageOutcomeActionsPolicy.ts",
@@ -214,6 +216,8 @@ const requiredFiles = [
   "scripts/finish-media-stop-result-policy.test.ts",
   "scripts/finish-remote-sync-policy.test.ts",
   "scripts/finish-remote-sync-request-actions-policy.test.ts",
+  "scripts/finish-remote-sync-direct-actions-policy.test.ts",
+  "scripts/finish-remote-sync-completion-actions-policy.test.ts",
   "scripts/finish-package-result-policy.test.ts",
   "scripts/finish-outcome-input-policy.test.ts",
   "scripts/finish-package-outcome-actions-policy.test.ts",
@@ -354,6 +358,14 @@ const finishMediaStopResultPolicy = await readFile("src/features/emergency-home/
 const finishRemoteSyncPolicy = await readFile("src/features/emergency-home/finishRemoteSyncPolicy.ts", "utf8");
 const finishRemoteSyncRequestActionsPolicy = await readFile(
   "src/features/emergency-home/finishRemoteSyncRequestActionsPolicy.ts",
+  "utf8"
+);
+const finishRemoteSyncDirectActionsPolicy = await readFile(
+  "src/features/emergency-home/finishRemoteSyncDirectActionsPolicy.ts",
+  "utf8"
+);
+const finishRemoteSyncCompletionActionsPolicy = await readFile(
+  "src/features/emergency-home/finishRemoteSyncCompletionActionsPolicy.ts",
   "utf8"
 );
 const finishPackageResultPolicy = await readFile("src/features/emergency-home/finishPackageResultPolicy.ts", "utf8");
@@ -1299,18 +1311,25 @@ if (
 
 if (
   !homeScreen.includes("resolveFinishRemoteSyncRequestActions") ||
-  !homeScreen.includes("resolveRemoteFinishStateAfterDirect") ||
-  !homeScreen.includes("resolveRemoteFinishStateFromSync") ||
-  !homeScreen.includes("resolveRemoteFinishFailureLog") ||
+  !homeScreen.includes("resolveFinishRemoteSyncDirectRetryActions") ||
+  !homeScreen.includes("resolveFinishRemoteSyncDirectResultActions") ||
+  !homeScreen.includes("resolveFinishRemoteSyncPendingResultActions") ||
+  !homeScreen.includes("resolveFinishRemoteSyncCompletionActions") ||
   !finishRemoteSyncRequestActionsPolicy.includes("resolveFinishRemoteSyncStartActions") ||
   !finishRemoteSyncRequestActionsPolicy.includes("resolveFinishRemoteSyncMode") ||
+  !finishRemoteSyncDirectActionsPolicy.includes("shouldRetryRemoteFinishAfterDirect") ||
+  !finishRemoteSyncDirectActionsPolicy.includes("resolveRemoteFinishStateAfterDirect") ||
+  !finishRemoteSyncCompletionActionsPolicy.includes("resolveRemoteFinishStateFromSync") ||
+  !finishRemoteSyncCompletionActionsPolicy.includes("resolveRemoteFinishFailureLog") ||
   !finishRemoteSyncPolicy.includes("shouldQueueForRemoteSync") ||
   !finishRemoteSyncPolicy.includes("direct_finish") ||
   !finishRemoteSyncPolicy.includes("pending_sync") ||
   !finishRemoteSyncPolicy.includes("shouldRetryRemoteFinishAfterDirect") ||
   !finishRemoteSyncPolicy.includes("emergency_remote_finish_sync_error") ||
   !packageJson.scripts["test:finish-remote-sync"] ||
-  !packageJson.scripts["test:finish-remote-sync-request-actions"]
+  !packageJson.scripts["test:finish-remote-sync-request-actions"] ||
+  !packageJson.scripts["test:finish-remote-sync-direct-actions"] ||
+  !packageJson.scripts["test:finish-remote-sync-completion-actions"]
 ) {
   throw new Error("Home/SOS precisa manter policy pura testavel para sincronizacao remota final do encerramento.");
 }
