@@ -993,3 +993,23 @@ Papel: seguranca, LGPD e QA.
 - Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
 - Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida; `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
 - Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-21 - Etapa 1.81 policy pura de tentativa da autochamada owner
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido novo, backend, portal ou release.
+- Gate novo `npm run test:owner-auto-call-attempt-actions` cobre bloqueios de tentativa e caminho permitido com status/log saneado.
+- A policy nao busca destinatarios, nao inicia WebRTC, nao altera refs e nao chama backend; `app/index.tsx` continua responsavel pelos efeitos reais.
+- O log de tentativa contem apenas plataforma e `remoteSessionId`; nao inclui SDP/ICE, chave, token, path local ou conteudo de midia.
+- Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: testes focados, `smoke-test`, `npm test`, `private:android:readiness`, `git diff --check` dirigido, lint dirigido e varredura dirigida; `npm run lint` global travou sem CPU em duas tentativas; `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-21 - Etapa 1.82 policy pura de resultado da autochamada owner
+
+- Mudanca restrita a regra pura/teste; sem novo storage, endpoint, permissao, rede, payload persistido novo, backend, portal ou release.
+- Gate novo `npm run test:owner-auto-call-result-actions` cobre status de destinatarios, marcacao de chamada iniciada, erro e limpeza do in-flight.
+- A policy nao prepara midia, nao inicia WebRTC, nao altera refs e nao chama backend; `app/index.tsx` continua responsavel pelos efeitos reais.
+- O log de erro contem apenas plataforma e `remoteSessionId`; nao inclui SDP/ICE, chave, token, path local ou conteudo de midia.
+- Varredura dirigida dos arquivos alterados nao encontrou token, `Authorization`, chave privada, `encrypted_key`, SDP/ICE, URI/path local de midia ou payload P2P novo.
+- Validacoes aprovadas: testes focados, `smoke-test`, `npm test`, `private:android:readiness`, `git diff --check` dirigido, lint dirigido e varredura dirigida; `npm run lint` global travou sem CPU em duas tentativas; `typecheck` nao emitiu erro, mas travou sem CPU e foi encerrado.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.

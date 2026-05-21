@@ -959,3 +959,17 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `app/index.tsx` continua responsavel por `signalMediaRecorderStop()`, `waitForMediaRecorderRelease()`, flags React, evidencia, auditoria e logs.
 - Novo gate `npm run test:media-handoff-release-actions` cobre ausencia de serial, espera, conclusao e limpeza.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em camera, recorder, WebRTC ou backend real exige validacao proporcional.
+
+# Atualizacao - 2026-05-21 - Etapa 1.81 Home/SOS
+
+- `src/features/emergency-home/ownerAutoCallAttemptActionsPolicy.ts` centraliza a decisao e as acoes iniciais da tentativa de autochamada owner.
+- `app/index.tsx` continua responsavel por timers, refs, status React, log real e `listAcceptedLiveRecipients()`.
+- Novo gate `npm run test:owner-auto-call-attempt-actions` cobre bloqueios de tentativa e caminho permitido.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em chamada, WebRTC, camera ou UX real exige validacao proporcional.
+
+# Atualizacao - 2026-05-21 - Etapa 1.82 Home/SOS
+
+- `src/features/emergency-home/ownerAutoCallResultActionsPolicy.ts` centraliza status de destinatarios, marcacao de chamada iniciada, erro controlado e limpeza de in-flight.
+- `app/index.tsx` continua responsavel por `prepareMediaForOwnerLiveCall()`, `liveAudioCall.startOwnerAudioCall()`, refs e log real.
+- Novo gate `npm run test:owner-auto-call-result-actions` cobre sem anjo, com anjo, chamada iniciada/falha, erro e finally.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em chamada, WebRTC, camera ou backend real exige validacao proporcional.

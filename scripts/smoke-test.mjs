@@ -82,7 +82,9 @@ const requiredFiles = [
   "src/features/emergency-home/finishCompletionActionsPolicy.ts",
   "src/features/emergency-home/finishMissingPackagePolicy.ts",
   "src/features/emergency-home/finishFailureActionsPolicy.ts",
+  "src/features/emergency-home/ownerAutoCallAttemptActionsPolicy.ts",
   "src/features/emergency-home/ownerAutoCallPolicy.ts",
+  "src/features/emergency-home/ownerAutoCallResultActionsPolicy.ts",
   "src/features/emergency-home/ownerLiveAuditMarkerActionsPolicy.ts",
   "src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts",
   "src/features/emergency-home/ownerLiveEvidenceUpdatePolicy.ts",
@@ -150,7 +152,9 @@ const requiredFiles = [
   "scripts/emergency-start-runtime-policy.test.ts",
   "scripts/emergency-start-failure-actions-policy.test.ts",
   "scripts/remote-sync-status-policy.test.ts",
+  "scripts/owner-auto-call-attempt-actions-policy.test.ts",
   "scripts/owner-auto-call-policy.test.ts",
+  "scripts/owner-auto-call-result-actions-policy.test.ts",
   "scripts/live-call-waiting-dialog-policy.test.ts",
   "scripts/owner-live-audit-marker-actions-policy.test.ts",
   "scripts/owner-live-audit-marker-policy.test.ts",
@@ -330,7 +334,9 @@ const finishNoMediaDiagnosticPolicy = await readFile("src/features/emergency-hom
 const finishCompletionActionsPolicy = await readFile("src/features/emergency-home/finishCompletionActionsPolicy.ts", "utf8");
 const finishMissingPackagePolicy = await readFile("src/features/emergency-home/finishMissingPackagePolicy.ts", "utf8");
 const finishFailureActionsPolicy = await readFile("src/features/emergency-home/finishFailureActionsPolicy.ts", "utf8");
+const ownerAutoCallAttemptActionsPolicy = await readFile("src/features/emergency-home/ownerAutoCallAttemptActionsPolicy.ts", "utf8");
 const ownerAutoCallPolicy = await readFile("src/features/emergency-home/ownerAutoCallPolicy.ts", "utf8");
+const ownerAutoCallResultActionsPolicy = await readFile("src/features/emergency-home/ownerAutoCallResultActionsPolicy.ts", "utf8");
 const ownerLiveAuditMarkerActionsPolicy = await readFile("src/features/emergency-home/ownerLiveAuditMarkerActionsPolicy.ts", "utf8");
 const ownerLiveAuditMarkerPolicy = await readFile("src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts", "utf8");
 const ownerLiveEvidenceUpdatePolicy = await readFile("src/features/emergency-home/ownerLiveEvidenceUpdatePolicy.ts", "utf8");
@@ -446,18 +452,20 @@ if (
   !remoteSyncStatusPolicy.includes("Tentando avisar seus anjos pela internet") ||
   !homeScreen.includes("ownerAutoCallStartedSessionIdsRef") ||
   !homeScreen.includes("listAcceptedLiveRecipients") ||
-  !homeScreen.includes("emergency_live_call_auto_start_attempt") ||
-  !homeScreen.includes("shouldAttemptOwnerAutoCall") ||
-  !homeScreen.includes("ownerAutoCallRecipientStatus") ||
+  !homeScreen.includes("resolveOwnerAutoCallAttemptActions") ||
+  !homeScreen.includes("resolveOwnerAutoCallRecipientActions") ||
+  !homeScreen.includes("resolveOwnerAutoCallStartResultActions") ||
   !homeScreen.includes("prepareMediaForOwnerLiveCall") ||
   !homeScreen.includes("const started = await liveAudioCall.startOwnerAudioCall") ||
-  !homeScreen.includes("if (started)") ||
+  !homeScreen.includes("startResultActions.shouldMarkStarted") ||
   !homeScreen.includes("resolveMediaHandoffStartActions") ||
   !mediaHandoffStartActionsPolicy.includes("emergency_live_call_media_handoff_start") ||
   !homeScreen.includes("waitForMediaRecorderRelease") ||
   !homeScreen.includes("mediaReleaseForLiveCallWaitTimeoutMs = 12000") ||
   !homeScreen.includes("resolveMediaProcessingPresentation") ||
   !mediaProcessingStatusPolicy.includes("Camera liberada. Abrindo video ao vivo para o anjo.") ||
+  !ownerAutoCallAttemptActionsPolicy.includes("emergency_live_call_auto_start_attempt") ||
+  !ownerAutoCallResultActionsPolicy.includes("resolveOwnerAutoCallStartResultActions") ||
   !ownerAutoCallPolicy.includes("Anjo entrou. Chamando agora.")
 ) {
   throw new Error("Tela SOS precisa sincronizar chamado ativo com EC2, liberar camera/microfone locais e conectar automaticamente uma unica chamada apos aceite do anjo.");
@@ -986,11 +994,23 @@ if (
 }
 
 if (
+  !homeScreen.includes("resolveOwnerAutoCallAttemptActions") ||
+  !homeScreen.includes("resolveOwnerAutoCallErrorActions") ||
+  !homeScreen.includes("resolveOwnerAutoCallFinallyActions") ||
+  !homeScreen.includes("resolveOwnerAutoCallRecipientActions") ||
   !ownerAutoCallPolicy.includes("shouldAttemptOwnerAutoCall") ||
   !ownerAutoCallPolicy.includes("ownerAutoCallRecipientStatus") ||
   !ownerAutoCallPolicy.includes("Anjo entrou. Chamando agora.") ||
   !ownerAutoCallPolicy.includes("Aguardando anjo") ||
-  !packageJson.scripts["test:owner-auto-call"]
+  !ownerAutoCallAttemptActionsPolicy.includes("resolveOwnerAutoCallAttemptActions") ||
+  !ownerAutoCallAttemptActionsPolicy.includes("ownerAutoCallAttemptMessage") ||
+  !ownerAutoCallAttemptActionsPolicy.includes("emergency_live_call_auto_start_attempt") ||
+  !ownerAutoCallResultActionsPolicy.includes("resolveOwnerAutoCallRecipientActions") ||
+  !ownerAutoCallResultActionsPolicy.includes("resolveOwnerAutoCallErrorActions") ||
+  !ownerAutoCallResultActionsPolicy.includes("emergency_live_call_auto_start_error") ||
+  !packageJson.scripts["test:owner-auto-call"] ||
+  !packageJson.scripts["test:owner-auto-call-attempt-actions"] ||
+  !packageJson.scripts["test:owner-auto-call-result-actions"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para autochamada do solicitante apos aceite do anjo.");
 }

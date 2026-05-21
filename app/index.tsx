@@ -99,7 +99,13 @@ import {
 import { resolveMediaStopSignal } from "@/features/emergency-home/mediaStopSignalPolicy";
 import { resolveMediaStopPendingRequestCompletion } from "@/features/emergency-home/mediaStopPendingRequestCompletionPolicy";
 import { resolveMediaStopSettledActions } from "@/features/emergency-home/mediaStopSettledActionsPolicy";
-import { ownerAutoCallAttemptMessage, ownerAutoCallRecipientStatus, shouldAttemptOwnerAutoCall } from "@/features/emergency-home/ownerAutoCallPolicy";
+import { resolveOwnerAutoCallAttemptActions } from "@/features/emergency-home/ownerAutoCallAttemptActionsPolicy";
+import {
+  resolveOwnerAutoCallErrorActions,
+  resolveOwnerAutoCallFinallyActions,
+  resolveOwnerAutoCallRecipientActions,
+  resolveOwnerAutoCallStartResultActions
+} from "@/features/emergency-home/ownerAutoCallResultActionsPolicy";
 import { resolveOwnerLiveAuditMarkerActions } from "@/features/emergency-home/ownerLiveAuditMarkerActionsPolicy";
 import {
   resolveOwnerLiveAuditMarkerInput,
@@ -1151,49 +1157,56 @@ export default function HomeScreen() {
     const attemptStartOwnerLiveCall = () => {
       const currentCallState = liveAudioCallStateRef.current;
       const alreadyStarted = ownerAutoCallStartedSessionIdsRef.current.has(liveRemoteSessionId);
-      if (
-        !shouldAttemptOwnerAutoCall({
-          alreadyStarted,
-          cancelled,
-          currentRemoteSessionId: currentCallState.remoteSessionId,
-          currentStatus: currentCallState.status,
-          inFlight: ownerAutoCallInFlightRef.current,
-          liveRemoteSessionId,
-          paused: false
-        })
-      ) {
+      const attemptActions = resolveOwnerAutoCallAttemptActions({
+        alreadyStarted,
+        cancelled,
+        currentRemoteSessionId: currentCallState.remoteSessionId,
+        currentStatus: currentCallState.status,
+        inFlight: ownerAutoCallInFlightRef.current,
+        liveRemoteSessionId,
+        paused: false,
+        platform: Platform.OS
+      });
+      if (!attemptActions.shouldAttempt) {
         return;
       }
 
-      ownerAutoCallInFlightRef.current = true;
-      setRecordingStatus(ownerAutoCallAttemptMessage());
-      appendMediaOperationalLog("emergency_live_call_auto_start_attempt", {
-        platform: Platform.OS,
-        remoteSessionId: liveRemoteSessionId
-      });
+      ownerAutoCallInFlightRef.current = attemptActions.shouldSetInFlight;
+      setRecordingStatus(attemptActions.statusMessage);
+      appendMediaOperationalLog(attemptActions.log.event, attemptActions.log.payload);
       void listAcceptedLiveRecipients(liveRemoteSessionId)
         .then((recipients) => {
-          const recipientStatus = ownerAutoCallRecipientStatus(recipients.length);
-          setRecordingStatus(recipientStatus.message);
-          if (!recipientStatus.shouldStartCall) {
+          const recipientActions = resolveOwnerAutoCallRecipientActions({
+            recipientCount: recipients.length
+          });
+          setRecordingStatus(recipientActions.statusMessage);
+          if (!recipientActions.shouldPrepareAndStartCall) {
             return;
           }
           return prepareMediaForOwnerLiveCall().then(async () => {
             const started = await liveAudioCall.startOwnerAudioCall(liveRemoteSessionId);
-            if (started) {
-              ownerAutoCallStartedSessionIdsRef.current.add(liveRemoteSessionId);
+            const startResultActions = resolveOwnerAutoCallStartResultActions({
+              remoteSessionId: liveRemoteSessionId,
+              started
+            });
+            if (startResultActions.shouldMarkStarted) {
+              ownerAutoCallStartedSessionIdsRef.current.add(startResultActions.remoteSessionId);
             }
             return started;
           });
         })
         .catch((error) => {
-          appendMediaOperationalLog("emergency_live_call_auto_start_error", {
+          const errorActions = resolveOwnerAutoCallErrorActions({
             platform: Platform.OS,
             remoteSessionId: liveRemoteSessionId
-          }, error);
+          });
+          appendMediaOperationalLog(errorActions.log.event, errorActions.log.payload, error);
         })
         .finally(() => {
-          ownerAutoCallInFlightRef.current = false;
+          const finallyActions = resolveOwnerAutoCallFinallyActions();
+          if (finallyActions.shouldClearInFlight) {
+            ownerAutoCallInFlightRef.current = false;
+          }
         });
     };
 

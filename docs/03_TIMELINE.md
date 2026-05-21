@@ -4714,3 +4714,45 @@ Validacoes:
 Checkpoint:
 
 - `docs/152_CHECKPOINT_ETAPA_1_80_MEDIA_HANDOFF_RELEASE_ACTIONS_POLICY_2026-05-20.md`.
+
+## 2026-05-21 - Etapa 1.81 acoes de tentativa da autochamada owner
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `ownerAutoCallAttemptActionsPolicy` para centralizar decisao e acoes iniciais da tentativa de autochamada owner.
+- `app/index.tsx` manteve timers, refs, status React, log real e consulta aos anjos aceitos como efeitos do componente.
+- `test:owner-auto-call-attempt-actions` cobre bloqueios de tentativa e caminho permitido com status/log saneado.
+
+Validacoes:
+
+- `test:owner-auto-call-attempt-actions`, `test:owner-auto-call-result-actions`, `test:owner-auto-call`, `smoke-test`, `npm test`, `private:android:readiness`, `git diff --check` dirigido, lint dirigido e varredura dirigida: aprovados.
+- `npm run lint` global travou sem CPU em duas tentativas e foi encerrado.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/153_CHECKPOINT_ETAPA_1_81_OWNER_AUTO_CALL_ATTEMPT_ACTIONS_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapa 1.82 acoes de resultado da autochamada owner
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `ownerAutoCallResultActionsPolicy` para centralizar status de destinatarios, marcacao de chamada iniciada, erro controlado e limpeza de in-flight.
+- `app/index.tsx` manteve preparacao de midia, chamada WebRTC, refs, log real e limpeza do ciclo como efeitos do componente.
+- `test:owner-auto-call-result-actions` cobre ausencia/presenca de anjo, resultado iniciado/falho, erro e finally.
+
+Validacoes:
+
+- `test:owner-auto-call-result-actions`, `test:owner-auto-call-attempt-actions`, `test:owner-auto-call`, `smoke-test`, `npm test`, `private:android:readiness`, `git diff --check` dirigido, lint dirigido e varredura dirigida: aprovados.
+- `npm run lint` global travou sem CPU em duas tentativas e foi encerrado.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/154_CHECKPOINT_ETAPA_1_82_OWNER_AUTO_CALL_RESULT_ACTIONS_POLICY_2026-05-21.md`.
