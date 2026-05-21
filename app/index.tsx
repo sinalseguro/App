@@ -108,6 +108,8 @@ import {
   resolveOwnerLiveCallLifecycle,
   resolveOwnerLiveVideoEvidenceStart
 } from "@/features/emergency-home/ownerLiveEvidencePolicy";
+import { resolveOwnerLiveVideoStartOutcomeActions } from "@/features/emergency-home/ownerLiveVideoStartOutcomePolicy";
+import { resolveOwnerLiveVideoStartRequest } from "@/features/emergency-home/ownerLiveVideoStartRequestPolicy";
 import { resolveLiveCallWaitingDialogPresentation } from "@/features/emergency-home/liveCallWaitingDialogPolicy";
 import { panicButtonLabel, resolvePanicTriggerDecision } from "@/features/emergency-home/panicTriggerPolicy";
 import { resolveProtectedRouteAccessDecision } from "@/features/emergency-home/protectedRouteAccessPolicy";
@@ -690,15 +692,19 @@ export default function HomeScreen() {
     streamReactTag: string;
   }) {
     const activeRecording = ownerLiveVideoRecordingRef.current;
-    if (activeRecording?.remoteSessionId === input.remoteSessionId) return activeRecording;
     const activeStartRequest = ownerLiveVideoStartRequestRef.current;
-    if (
-      activeStartRequest?.remoteSessionId === input.remoteSessionId &&
-      activeStartRequest.packageId === input.packageId
-    ) {
+    const startRequestDecision = resolveOwnerLiveVideoStartRequest({
+      activeRecordingRemoteSessionId: activeRecording?.remoteSessionId,
+      pendingStartPackageId: activeStartRequest?.packageId,
+      pendingStartRemoteSessionId: activeStartRequest?.remoteSessionId,
+      requestPackageId: input.packageId,
+      requestRemoteSessionId: input.remoteSessionId
+    });
+    if (activeRecording && startRequestDecision.shouldReturnActiveRecording) return activeRecording;
+    if (activeStartRequest && startRequestDecision.shouldReturnPendingStart) {
       return activeStartRequest.promise;
     }
-    if (activeRecording) {
+    if (activeRecording && startRequestDecision.shouldStopActiveRecording) {
       await stopOwnerLiveVideoEvidence("replace_recording");
     }
 
@@ -706,36 +712,42 @@ export default function HomeScreen() {
     startPromise = (async () => {
       try {
         const recording = await startOwnerLiveVideoRecording(input);
-        if (!recording) {
-          updateOwnerLiveEvidence(input.remoteSessionId, {
-            localEvidenceStatus: "metadata_only",
-            packageId: input.packageId,
-            status: "transmitting"
-          });
-          return null;
-        }
-        ownerLiveVideoRecordingRef.current = recording;
-        updateOwnerLiveEvidence(input.remoteSessionId, {
-          localEvidenceStatus: "recording",
+        const startOutcomeActions = resolveOwnerLiveVideoStartOutcomeActions({
+          outcome: recording ? "recording_started" : "metadata_only",
           packageId: input.packageId,
-          status: "recording"
-        });
-        recordOwnerLiveAuditMarker(input.remoteSessionId, "local_evidence_recording", {
-          connectionState: "connected",
-          localEvidenceStatus: "recording"
-        });
-        setRecordingStatus(resolveLocalSosPackageStatus({ event: "live_call_recording_started" }));
-        return recording;
-      } catch (error) {
-        appendMediaOperationalLog("live_video_recording_start_error", {
           platform: Platform.OS,
           remoteSessionId: input.remoteSessionId
-        }, error);
-        updateOwnerLiveEvidence(input.remoteSessionId, {
-          localEvidenceStatus: "metadata_only",
-          packageId: input.packageId,
-          status: "transmitting"
         });
+        if (!recording) {
+          updateOwnerLiveEvidence(input.remoteSessionId, startOutcomeActions.evidenceUpdate);
+          return null;
+        }
+        if (startOutcomeActions.shouldStoreActiveRecording) {
+          ownerLiveVideoRecordingRef.current = recording;
+        }
+        updateOwnerLiveEvidence(input.remoteSessionId, startOutcomeActions.evidenceUpdate);
+        if (startOutcomeActions.auditMarker) {
+          recordOwnerLiveAuditMarker(
+            input.remoteSessionId,
+            startOutcomeActions.auditMarker.event,
+            startOutcomeActions.auditMarker.options
+          );
+        }
+        if (startOutcomeActions.recordingStatusInput) {
+          setRecordingStatus(resolveLocalSosPackageStatus(startOutcomeActions.recordingStatusInput));
+        }
+        return recording;
+      } catch (error) {
+        const startErrorActions = resolveOwnerLiveVideoStartOutcomeActions({
+          outcome: "start_error",
+          packageId: input.packageId,
+          platform: Platform.OS,
+          remoteSessionId: input.remoteSessionId
+        });
+        if (startErrorActions.log) {
+          appendMediaOperationalLog(startErrorActions.log.event, startErrorActions.log.payload, error);
+        }
+        updateOwnerLiveEvidence(input.remoteSessionId, startErrorActions.evidenceUpdate);
         return null;
       } finally {
         if (ownerLiveVideoStartRequestRef.current?.promise === startPromise) {

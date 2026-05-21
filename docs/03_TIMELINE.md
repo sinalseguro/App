@@ -4594,3 +4594,43 @@ Validacoes:
 Checkpoint:
 
 - `docs/146_CHECKPOINT_ETAPA_1_74_OWNER_LIVE_AUDIT_MARKER_ACTIONS_POLICY_2026-05-20.md`.
+
+## 2026-05-20 - Etapa 1.75 pedido de inicio de video owner
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `ownerLiveVideoStartRequestPolicy` para centralizar a decisao de reutilizar gravacao ativa, reutilizar pedido pendente, substituir gravacao ativa ou iniciar nova gravacao owner.
+- `app/index.tsx` manteve retorno da gravacao/promise, parada da gravacao anterior e inicio real de gravacao como efeitos do componente.
+- `test:owner-live-video-start-request` cobre reutilizacao ativa, reutilizacao pendente, substituicao e inicio novo.
+
+Validacoes:
+
+- `test:owner-live-video-start-request`, `test:owner-live-evidence`, `test:owner-live-evidence-update`, `test:owner-live-audit-marker-actions`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/147_CHECKPOINT_ETAPA_1_75_OWNER_LIVE_VIDEO_START_REQUEST_POLICY_2026-05-20.md`.
+
+## 2026-05-20 - Etapa 1.76 resultado do inicio de video owner
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `ownerLiveVideoStartOutcomePolicy` para centralizar acoes derivadas de metadata-only, gravacao iniciada e erro controlado.
+- `app/index.tsx` manteve inicio real de gravacao, refs, update de evidencia, marcador de auditoria, status e log como efeitos do componente.
+- `test:owner-live-video-start-outcome` cobre gravacao iniciada, metadata-only e erro controlado.
+
+Validacoes:
+
+- `test:owner-live-video-start-outcome`, `test:owner-live-evidence`, `test:owner-live-evidence-update`, `test:owner-live-audit-marker-actions`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/148_CHECKPOINT_ETAPA_1_76_OWNER_LIVE_VIDEO_START_OUTCOME_POLICY_2026-05-20.md`.

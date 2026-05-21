@@ -85,6 +85,8 @@ const requiredFiles = [
   "src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts",
   "src/features/emergency-home/ownerLiveEvidenceUpdatePolicy.ts",
   "src/features/emergency-home/ownerLiveEvidencePolicy.ts",
+  "src/features/emergency-home/ownerLiveVideoStartOutcomePolicy.ts",
+  "src/features/emergency-home/ownerLiveVideoStartRequestPolicy.ts",
   "src/features/emergency-home/liveCallCleanupPolicy.ts",
   "src/features/emergency-home/liveCallPanelPolicy.ts",
   "src/features/emergency-home/localSosPackageStatusPolicy.ts",
@@ -149,6 +151,8 @@ const requiredFiles = [
   "scripts/owner-live-audit-marker-actions-policy.test.ts",
   "scripts/owner-live-audit-marker-policy.test.ts",
   "scripts/owner-live-evidence-update-policy.test.ts",
+  "scripts/owner-live-video-start-outcome-policy.test.ts",
+  "scripts/owner-live-video-start-request-policy.test.ts",
   "scripts/live-call-cleanup-policy.test.ts",
   "scripts/finish-progress-dialog-policy.test.ts",
   "scripts/finish-progress-state-policy.test.ts",
@@ -321,6 +325,8 @@ const ownerLiveAuditMarkerActionsPolicy = await readFile("src/features/emergency
 const ownerLiveAuditMarkerPolicy = await readFile("src/features/emergency-home/ownerLiveAuditMarkerPolicy.ts", "utf8");
 const ownerLiveEvidenceUpdatePolicy = await readFile("src/features/emergency-home/ownerLiveEvidenceUpdatePolicy.ts", "utf8");
 const ownerLiveEvidencePolicy = await readFile("src/features/emergency-home/ownerLiveEvidencePolicy.ts", "utf8");
+const ownerLiveVideoStartOutcomePolicy = await readFile("src/features/emergency-home/ownerLiveVideoStartOutcomePolicy.ts", "utf8");
+const ownerLiveVideoStartRequestPolicy = await readFile("src/features/emergency-home/ownerLiveVideoStartRequestPolicy.ts", "utf8");
 const liveCallCleanupPolicy = await readFile("src/features/emergency-home/liveCallCleanupPolicy.ts", "utf8");
 const liveCallPanelPolicy = await readFile("src/features/emergency-home/liveCallPanelPolicy.ts", "utf8");
 const localSosPackageStatusPolicy = await readFile("src/features/emergency-home/localSosPackageStatusPolicy.ts", "utf8");
@@ -992,12 +998,18 @@ if (
 
 if (
   !homeScreen.includes("resolveOwnerLiveEvidenceUpdate") ||
+  !homeScreen.includes("resolveOwnerLiveVideoStartOutcomeActions") ||
+  !homeScreen.includes("resolveOwnerLiveVideoStartRequest") ||
   !homeScreen.includes("resolveOwnerLiveVideoEvidenceStart") ||
   !homeScreen.includes("startDecision.startInput") ||
   !homeScreen.includes("resolveOwnerLiveCallLifecycle") ||
   !homeScreen.includes("lifecycleDecision.evidenceUpdate") ||
   !ownerLiveEvidenceUpdatePolicy.includes("resolveOwnerLiveEvidenceUpdate") ||
   !ownerLiveEvidenceUpdatePolicy.includes("shouldUpdate") ||
+  !ownerLiveVideoStartOutcomePolicy.includes("resolveOwnerLiveVideoStartOutcomeActions") ||
+  !ownerLiveVideoStartOutcomePolicy.includes("live_video_recording_start_error") ||
+  !ownerLiveVideoStartRequestPolicy.includes("resolveOwnerLiveVideoStartRequest") ||
+  !ownerLiveVideoStartRequestPolicy.includes("replace_active_recording") ||
   !ownerLiveEvidencePolicy.includes("resolveOwnerLiveVideoEvidenceStart") ||
   !ownerLiveEvidencePolicy.includes("resolveOwnerLiveCallLifecycle") ||
   !ownerLiveEvidencePolicy.includes("missing_remote_session") ||
@@ -1005,7 +1017,9 @@ if (
   !ownerLiveEvidencePolicy.includes("inactive_status") ||
   !ownerLiveEvidencePolicy.includes("status_not_actionable") ||
   !packageJson.scripts["test:owner-live-evidence"] ||
-  !packageJson.scripts["test:owner-live-evidence-update"]
+  !packageJson.scripts["test:owner-live-evidence-update"] ||
+  !packageJson.scripts["test:owner-live-video-start-request"] ||
+  !packageJson.scripts["test:owner-live-video-start-outcome"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para evidencia local da chamada do solicitante.");
 }

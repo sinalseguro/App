@@ -917,3 +917,17 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `app/index.tsx` continua responsavel por `deviceBindingService.getRegisteredApiDeviceId()`, `resolveOwnerLiveAuditMarkerInput()` e `recordLiveAuditMarker()`.
 - Novo gate `npm run test:owner-live-audit-marker-actions` cobre ausencia de sessao e marcador permitido.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em auditoria/backend real exige validacao proporcional.
+
+# Atualizacao - 2026-05-20 - Etapa 1.75 Home/SOS
+
+- `src/features/emergency-home/ownerLiveVideoStartRequestPolicy.ts` centraliza a decisao de reutilizar gravacao ativa, reutilizar inicio pendente, substituir gravacao ativa ou iniciar nova gravacao owner.
+- `app/index.tsx` continua responsavel por retornar gravacao/promise, chamar `stopOwnerLiveVideoEvidence("replace_recording")` e iniciar a gravacao real.
+- Novo gate `npm run test:owner-live-video-start-request` cobre os quatro caminhos de decisao.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em camera, recorder, WebRTC ou UX real exige validacao proporcional.
+
+# Atualizacao - 2026-05-20 - Etapa 1.76 Home/SOS
+
+- `src/features/emergency-home/ownerLiveVideoStartOutcomePolicy.ts` centraliza acoes derivadas de metadata-only, gravacao iniciada e erro controlado no inicio do video owner.
+- `app/index.tsx` continua responsavel por `startOwnerLiveVideoRecording()`, refs, update de evidencia, marcador de auditoria, status local e log operacional.
+- Novo gate `npm run test:owner-live-video-start-outcome` cobre gravacao iniciada, metadata-only e erro.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em camera, recorder, WebRTC ou backend real exige validacao proporcional.
