@@ -5147,3 +5147,24 @@ Validacoes:
 Checkpoint:
 
 - `docs/173_CHECKPOINT_ETAPAS_1_103_1_104_TRUSTED_ANGELS_REFRESH_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapas 1.105 e 1.106 resumo e prontidao de anjos
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `trustedAngelsDashboardPolicy` para centralizar decisoes puras de resumo visual da tela `Anjos de confianca`.
+- Etapa 1.105: extraidas descricoes dos cards principais de perfil, estado, convite, prontidao, meus anjos, sou anjo, convites e atualizacao.
+- Etapa 1.106: extraidos labels e flags de prontidao de conta, dispositivo e API.
+- `app/contatos.tsx` continua responsavel por renderizacao, navegacao, modais, estado React e efeitos reais.
+- Novo gate `npm run test:trusted-angels-dashboard` foi adicionado ao `npm test`.
+
+Validacoes:
+
+- `test:trusted-angels-dashboard`, `test:trusted-angels-refresh`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`: aprovados.
+- Sem build Android por ser mudanca pura de apresentacao derivada sem runtime nativo.
+
+Checkpoint:
+
+- `docs/174_CHECKPOINT_ETAPAS_1_105_1_106_TRUSTED_ANGELS_DASHBOARD_POLICY_2026-05-21.md`.

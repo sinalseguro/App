@@ -1200,3 +1200,12 @@ Papel: seguranca, LGPD e QA.
 - Nao introduz log novo, chave, sinalizacao tecnica de chamada, path local, coordenada ou conteudo de midia.
 - Validacoes aprovadas: teste focado, teste de acoes, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.
+
+## QA/Security - 2026-05-21 - Etapas 1.105 e 1.106 dashboard policy de anjos
+
+- Mudanca restrita a regra pura/teste de resumo visual e prontidao da tela `Anjos de confianca`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- Gate novo `npm run test:trusted-angels-dashboard` cobre descricoes dos cards, modo busy, convite bloqueado/API/local e prontidao conta/dispositivo/API.
+- A policy nao chama API, nao acessa cache real, nao compartilha convite e nao revoga vinculo; `app/contatos.tsx` continua responsavel pelos efeitos reais.
+- Nao introduz log novo, chave, sinalizacao tecnica de chamada, path local, coordenada ou conteudo de midia.
+- Validacoes aprovadas: teste focado, teste de refresh, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.

@@ -29,6 +29,10 @@ import {
   splitTrustedAngelInvitationSections
 } from "@/features/invitations/trustedAngelsListPolicy";
 import {
+  buildTrustedAngelsDashboardSummary,
+  buildTrustedAngelsReadinessState
+} from "@/features/invitations/trustedAngelsDashboardPolicy";
+import {
   buildTrustedAngelsLocalRefreshState,
   resolveTrustedAngelsNoSessionRefresh,
   resolveTrustedAngelsPanelParam,
@@ -47,8 +51,6 @@ import {
 } from "@/features/invitations/trustedAngelsActionPolicy";
 import { LocalInvitation } from "@/features/invitations/types";
 import {
-  acceptedAngelSummary,
-  acceptedOwnerSummary,
   buildNotice,
   contactStatus,
   invitationDescription,
@@ -150,6 +152,24 @@ export default function ContactsScreen() {
   });
   const profileSummary = getProfileSummary(activeProfile);
   const invitationGate = canCreateTrustedContactInvitation(activeProfile);
+  const acceptedOwnerCount = linkedContacts.filter((contact) => contact.status === "accepted").length;
+  const acceptedAngelCount = angelLinks.filter((contact) => contact.status === "accepted").length;
+  const dashboardSummary = buildTrustedAngelsDashboardSummary({
+    acceptedAngelCount,
+    acceptedOwnerCount,
+    apiSessionAvailable: Boolean(apiSession),
+    busy,
+    deviceReady,
+    invitationCount,
+    invitationGateAllowed: invitationGate.allowed,
+    noticeTitle: notice.title,
+    profileTitle: profileSummary.title
+  });
+  const readinessState = buildTrustedAngelsReadinessState({
+    apiEnabled: apiConfig.apiEnabled,
+    apiSessionAvailable: Boolean(apiSession),
+    deviceReady
+  });
 
   async function refreshAngels(options: RefreshOptions = {}) {
     const refreshStart = resolveTrustedAngelsRefreshStart({
@@ -386,13 +406,13 @@ export default function ContactsScreen() {
             <ResourceTile
               icon={<UserRound size={24} color={theme.colors.primary} />}
               label="Perfil"
-              description={profileSummary.title}
+              description={dashboardSummary.profileDescription}
               onPress={() => router.push("/perfis")}
             />
             <ResourceTile
               icon={<ShieldCheck size={24} color={theme.colors.primary} />}
               label="Estado"
-              description={notice.title}
+              description={dashboardSummary.stateDescription}
               onPress={() => setPanel("estado")}
             />
           </View>
@@ -400,13 +420,13 @@ export default function ContactsScreen() {
             <ResourceTile
               icon={<UserPlus size={24} color={theme.colors.primary} />}
               label="Criar convite"
-              description={invitationGate.allowed ? (apiSession ? "API" : "Local") : "Bloqueado"}
+              description={dashboardSummary.createInvitationDescription}
               onPress={() => setDialog(invitationGate.allowed ? { kind: "invite" } : { kind: "profile_block" })}
             />
             <ResourceTile
               icon={<ShieldCheck size={24} color={theme.colors.primary} />}
               label="Prontidão"
-              description={deviceReady ? "Dispositivo" : "Pendente"}
+              description={dashboardSummary.readinessDescription}
               onPress={() => setPanel("prontidao")}
             />
           </View>
@@ -414,13 +434,13 @@ export default function ContactsScreen() {
             <ResourceTile
               icon={<Users size={24} color={theme.colors.primary} />}
               label="Meus anjos"
-              description={acceptedOwnerSummary(linkedContacts.filter((contact) => contact.status === "accepted").length)}
+              description={dashboardSummary.acceptedOwnerDescription}
               onPress={() => setPanel("anjos")}
             />
             <ResourceTile
               icon={<UserCheck size={24} color={theme.colors.primary} />}
               label="Sou anjo"
-              description={acceptedAngelSummary(angelLinks.filter((contact) => contact.status === "accepted").length)}
+              description={dashboardSummary.acceptedAngelDescription}
               onPress={() => setPanel("sou_anjo")}
             />
           </View>
@@ -428,13 +448,13 @@ export default function ContactsScreen() {
             <ResourceTile
               icon={<Clock3 size={24} color={theme.colors.primary} />}
               label="Convites"
-              description={invitationCount ? `${invitationCount} item` : "Nenhum"}
+              description={dashboardSummary.invitationsDescription}
               onPress={() => setPanel("convites")}
             />
             <ResourceTile
               icon={<RefreshCw size={24} color={theme.colors.primary} />}
               label="Atualizar"
-              description={busy ? "Sincronizando" : "Sincronizar"}
+              description={dashboardSummary.syncDescription}
               onPress={() => void refreshAngels()}
             />
           </View>
@@ -544,20 +564,26 @@ export default function ContactsScreen() {
         >
           <View style={styles.dialogStack}>
             <View style={styles.readinessItem}>
-              <ShieldCheck size={18} color={apiSession ? theme.colors.secure : theme.colors.textMuted} />
-              <Text style={styles.readinessLabel}>{apiSession ? "Conta conectada" : "Conta local"}</Text>
+              <ShieldCheck
+                size={18}
+                color={readinessState.account.secure ? theme.colors.secure : theme.colors.textMuted}
+              />
+              <Text style={styles.readinessLabel}>{readinessState.account.label}</Text>
             </View>
             <View style={styles.readinessItem}>
-              <ShieldCheck size={18} color={deviceReady ? theme.colors.secure : theme.colors.textMuted} />
-              <Text style={styles.readinessLabel}>{deviceReady ? "Dispositivo registrado" : "Dispositivo pendente"}</Text>
+              <ShieldCheck
+                size={18}
+                color={readinessState.device.secure ? theme.colors.secure : theme.colors.textMuted}
+              />
+              <Text style={styles.readinessLabel}>{readinessState.device.label}</Text>
             </View>
             <View style={styles.readinessItem}>
-              {apiConfig.apiEnabled ? (
+              {readinessState.api.enabled ? (
                 <ShieldCheck size={18} color={theme.colors.secure} />
               ) : (
                 <WifiOff size={18} color={theme.colors.warning} />
               )}
-              <Text style={styles.readinessLabel}>{apiConfig.apiEnabled ? "API configurada" : "API desativada"}</Text>
+              <Text style={styles.readinessLabel}>{readinessState.api.label}</Text>
             </View>
           </View>
         </BrandedDialog>

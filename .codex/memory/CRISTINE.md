@@ -898,3 +898,11 @@ Proximas acoes atualizadas:
 - Novo gate `npm run test:trusted-angels-refresh` cobre refresh visivel/silencioso, cache offline, sessao ausente, falha local e painel por parametro.
 - Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
+
+## Memoria viva - 2026-05-21 - dashboard Anjos/Convites sem build
+
+- Etapas 1.105 e 1.106 extraem decisoes puras de resumo dos cards e prontidao para `trustedAngelsDashboardPolicy`.
+- `app/contatos.tsx` ainda renderiza os mesmos componentes, icones, modais, navegacao e handlers reais.
+- Novo gate `npm run test:trusted-angels-dashboard` cobre convite bloqueado/API/local, busy/sync, contadores e prontidao conta/dispositivo/API.
+- Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
