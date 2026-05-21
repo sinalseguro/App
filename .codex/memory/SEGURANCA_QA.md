@@ -1164,3 +1164,12 @@ Papel: seguranca, LGPD e QA.
 - Espaco livre local observado: aproximadamente 5.3 GiB, abaixo do ideal para build Android privado com margem.
 - Gate Cristine/Codex Security nesta rodada deve verificar apenas docs/memoria alterados, sem novos segredos, tokens, chaves, paths locais sensiveis ou payload de midia.
 - Proxima validacao deve ser fisica: Android conectado, espaco suficiente, build privado, instalacao e fluxo Home/SOS/encerramento.
+
+## QA/Security - 2026-05-21 - Etapas 1.97 e 1.98 presentation policy de anjos
+
+- Mudanca restrita a regra pura/teste da tela `Anjos de confianca`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- Gate novo `npm run test:trusted-angels-presentation` cobre convites e vinculos aceitos/revogados/pendentes.
+- A policy nao chama API, nao acessa cache real, nao compartilha convite e nao revoga vinculo; `app/contatos.tsx` continua responsavel pelos efeitos reais.
+- Nao introduz log novo, chave, sinalizacao tecnica de chamada, path local, coordenada ou conteudo de midia.
+- Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Performance Android nao foi coletada porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao ou loop de midia.

@@ -1079,3 +1079,13 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `typecheck` continua sem erro emitido, mas preso sem CPU; foi encerrado para nao deixar processo pendurado.
 - `adb devices -l` nao listou Android conectado e o espaco livre local observado ficou em aproximadamente 5.3 GiB.
 - Proxima etapa tecnica: conectar Android, garantir espaco livre suficiente, executar build privado, instalar e validar fisicamente Home/SOS/encerramento. Build adiado para a proxima retomada.
+
+# Atualizacao - 2026-05-21 - Etapas 1.97 e 1.98 Anjos/Convites
+
+- `src/features/invitations/trustedAngelsPresentationPolicy.ts` centraliza regras puras de apresentacao da tela `Anjos de confianca`.
+- Etapa 1.97: data curta, descricao, detalhe e normalizacao visual de convites.
+- Etapa 1.98: status, nomes, detalhes, descricoes, resumos e banner principal dos vinculos de anjos.
+- `app/contatos.tsx` continua responsavel por estado React, chamadas reais de API/cache, compartilhamento, revogacao e navegacao.
+- Novo gate `npm run test:trusted-angels-presentation` foi adicionado ao `npm test`.
+- Validacoes aprovadas: `test:trusted-angels-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build Android nesta rodada por pedido de pausa do build e por ser refatoracao pura sem runtime nativo.

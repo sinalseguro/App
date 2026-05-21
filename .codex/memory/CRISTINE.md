@@ -866,3 +866,11 @@ Proximas acoes atualizadas:
 - App Android sincroniza perfil local com `/api/profiles/me` antes de criar convite backend.
 - Checkpoint: `docs/39_CHECKPOINT_FRENTE_1_3_BACKEND_PERFIS_AUTORIZACOES_2026-05-13.md`.
 - Proximo passo: build/install Android privado e validacao visual/manual contra EC2 real.
+
+## Memoria viva - 2026-05-21 - refatoracao Anjos/Convites sem build
+
+- Build Android ficou pausado por orientacao de Roberto; nao compilar nem instalar ate nova retomada explicita.
+- Etapas 1.97 e 1.98 extraem regras puras de apresentacao da tela `Anjos de confianca` para `trustedAngelsPresentationPolicy`.
+- `app/contatos.tsx` segue como orquestrador visual e operacional; API/cache/share/revogacao permanecem nele.
+- Novo gate `npm run test:trusted-angels-presentation` cobre convites e vinculos exibidos ao usuario e esta integrado ao `npm test`.
+- Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.

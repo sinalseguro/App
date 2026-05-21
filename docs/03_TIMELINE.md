@@ -5062,3 +5062,24 @@ Decisao:
 Checkpoint:
 
 - `docs/169_CHECKPOINT_VALIDACAO_AMPLA_LOCAL_POS_REFATORACAO_HOME_SOS_2026-05-21.md`.
+
+## 2026-05-21 - Etapas 1.97 e 1.98 apresentacao de anjos e convites
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `trustedAngelsPresentationPolicy` para centralizar regras puras de apresentacao da tela `Anjos de confianca`.
+- Etapa 1.97: extraidas descricao, detalhe, data curta e normalizacao visual de convites.
+- Etapa 1.98: extraidos status, nomes, detalhes, descricoes, resumos e banner principal de vinculos de anjos.
+- `app/contatos.tsx` continua responsavel por estado React, sincronizacao real, compartilhamento, revogacao e navegacao.
+- Novo gate `npm run test:trusted-angels-presentation` foi adicionado ao `npm test`.
+
+Validacoes:
+
+- `test:trusted-angels-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`: aprovados.
+- Sem build Android por pedido de pausa do build e por ser mudanca pura de apresentacao sem runtime nativo.
+
+Checkpoint:
+
+- `docs/170_CHECKPOINT_ETAPAS_1_97_1_98_TRUSTED_ANGELS_PRESENTATION_POLICY_2026-05-21.md`.
