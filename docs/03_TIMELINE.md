@@ -4514,3 +4514,43 @@ Validacoes:
 Checkpoint:
 
 - `docs/142_CHECKPOINT_ETAPA_1_70_PROTECTED_ROUTE_UNLOCK_ACTIONS_POLICY_2026-05-20.md`.
+
+## 2026-05-20 - Etapa 1.71 conclusao do waiter de liberacao de midia
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `mediaReleaseWaiterCompletionPolicy` para centralizar a decisao de concluir o waiter de liberacao de midia antes da chamada ao vivo.
+- `app/index.tsx` manteve `clearTimeout()`, limpeza de ref e resolucao da promise como efeitos reais no componente.
+- `test:media-release-waiter-completion` cobre ausencia e presenca de request pendente.
+
+Validacoes:
+
+- `test:media-release-waiter-completion`, `test:media-release-waiter`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/143_CHECKPOINT_ETAPA_1_71_MEDIA_RELEASE_WAITER_COMPLETION_POLICY_2026-05-20.md`.
+
+## 2026-05-20 - Etapa 1.72 timeout do waiter de liberacao de midia
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `mediaReleaseTimeoutActionsPolicy` para centralizar a decisao de timeout do waiter de liberacao de midia antes da chamada ao vivo.
+- `app/index.tsx` manteve `setTimeout()`, limpeza de ref, `appendMediaOperationalLog()` e resolucao da promise como efeitos reais no componente.
+- `test:media-release-timeout-actions` cobre timeout com e sem request pendente.
+
+Validacoes:
+
+- `test:media-release-timeout-actions`, `test:media-release-waiter`, `smoke-test`, `lint`, `npm test`, `private:android:readiness`, `git diff --check` e varredura dirigida: aprovados.
+- `typecheck` nao emitiu erro, mas ficou preso sem CPU e foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser fatia pura sem mudanca operacional.
+
+Checkpoint:
+
+- `docs/144_CHECKPOINT_ETAPA_1_72_MEDIA_RELEASE_TIMEOUT_ACTIONS_POLICY_2026-05-20.md`.

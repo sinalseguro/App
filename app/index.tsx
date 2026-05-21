@@ -81,9 +81,10 @@ import {
   shouldResolveMediaReleaseWaiter
 } from "@/features/emergency-home/mediaProcessingStatusPolicy";
 import {
-  resolveMediaReleaseTimeout,
   resolveMediaReleaseWaiterStart
 } from "@/features/emergency-home/mediaReleaseWaiterPolicy";
+import { resolveMediaReleaseTimeoutActions } from "@/features/emergency-home/mediaReleaseTimeoutActionsPolicy";
+import { resolveMediaReleaseWaiterCompletion } from "@/features/emergency-home/mediaReleaseWaiterCompletionPolicy";
 import { resolveMediaStopPendingState } from "@/features/emergency-home/mediaStopPendingPolicy";
 import {
   resolveMediaStopTimeout,
@@ -572,11 +573,18 @@ export default function HomeScreen() {
 
   function resolveMediaReleaseWaiter() {
     const waiter = pendingMediaReleaseRequestRef.current;
-    if (!waiter) return;
+    const completionDecision = resolveMediaReleaseWaiterCompletion(Boolean(waiter));
+    if (!completionDecision.shouldResolvePendingRequest) return;
 
-    clearTimeout(waiter.timeout);
-    pendingMediaReleaseRequestRef.current = null;
-    waiter.resolve();
+    if (waiter && completionDecision.shouldClearTimeout) {
+      clearTimeout(waiter.timeout);
+    }
+    if (completionDecision.shouldClearPendingRequest) {
+      pendingMediaReleaseRequestRef.current = null;
+    }
+    if (waiter) {
+      waiter.resolve();
+    }
   }
 
   function waitForMediaRecorderRelease() {
@@ -589,15 +597,18 @@ export default function HomeScreen() {
 
     return new Promise<void>((resolve) => {
       const timeout = setTimeout(() => {
-        const timeoutDecision = resolveMediaReleaseTimeout({
+        const timeoutDecision = resolveMediaReleaseTimeoutActions({
+          hasPendingRequest: Boolean(pendingMediaReleaseRequestRef.current),
           platform: Platform.OS,
           timeoutMs: mediaReleaseForLiveCallWaitTimeoutMs
         });
-        if (timeoutDecision.shouldClearPendingRequest && pendingMediaReleaseRequestRef.current) {
+        if (timeoutDecision.shouldClearPendingRequest) {
           pendingMediaReleaseRequestRef.current = null;
         }
         appendMediaOperationalLog(timeoutDecision.logEvent, timeoutDecision.logPayload);
-        resolve();
+        if (timeoutDecision.shouldResolvePendingRequest) {
+          resolve();
+        }
       }, mediaReleaseForLiveCallWaitTimeoutMs);
 
       pendingMediaReleaseRequestRef.current = {

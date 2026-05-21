@@ -889,3 +889,17 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `app/index.tsx` continua responsavel por `verifySecurityCodeStatus()`, `unlockProtectedAccess()` e `navigateRoute()`.
 - Novo gate `npm run test:protected-route-unlock-actions` cobre pedido ausente, erro e desbloqueio com alvo valido.
 - Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em permissao, navegacao real ou UX visual exige validacao proporcional.
+
+# Atualizacao - 2026-05-20 - Etapa 1.71 Home/SOS
+
+- `src/features/emergency-home/mediaReleaseWaiterCompletionPolicy.ts` centraliza a decisao de concluir o waiter de liberacao de midia antes da chamada ao vivo.
+- `app/index.tsx` continua responsavel por `clearTimeout()`, ref pendente e resolucao da promise.
+- Novo gate `npm run test:media-release-waiter-completion` cobre ausencia e presenca de request pendente.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em camera/WebRTC/chamada exige validacao proporcional.
+
+# Atualizacao - 2026-05-20 - Etapa 1.72 Home/SOS
+
+- `src/features/emergency-home/mediaReleaseTimeoutActionsPolicy.ts` centraliza a decisao de timeout do waiter de liberacao de midia antes da chamada ao vivo.
+- `app/index.tsx` continua responsavel por `setTimeout()`, ref pendente, `appendMediaOperationalLog()` e resolucao da promise.
+- Novo gate `npm run test:media-release-timeout-actions` cobre timeout com e sem request pendente.
+- Sem build Android nesta fatia por ser refatoracao pura; mudanca operacional em camera/WebRTC/chamada exige validacao proporcional.

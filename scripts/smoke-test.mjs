@@ -56,6 +56,8 @@ const requiredFiles = [
   "src/features/emergency-home/mediaHandoffPolicy.ts",
   "src/features/emergency-home/mediaProcessingStatusPolicy.ts",
   "src/features/emergency-home/mediaReleaseWaiterPolicy.ts",
+  "src/features/emergency-home/mediaReleaseWaiterCompletionPolicy.ts",
+  "src/features/emergency-home/mediaReleaseTimeoutActionsPolicy.ts",
   "src/features/emergency-home/mediaStopPendingPolicy.ts",
   "src/features/emergency-home/mediaStopSignalPolicy.ts",
   "src/features/emergency-home/mediaStopSettlementRequestPolicy.ts",
@@ -147,6 +149,8 @@ const requiredFiles = [
   "scripts/finish-progress-dialog-policy.test.ts",
   "scripts/finish-progress-state-policy.test.ts",
   "scripts/media-release-waiter-policy.test.ts",
+  "scripts/media-release-waiter-completion-policy.test.ts",
+  "scripts/media-release-timeout-actions-policy.test.ts",
   "scripts/finish-request-policy.test.ts",
   "scripts/finish-confirmation-form-policy.test.ts",
   "scripts/finish-code-policy.test.ts",
@@ -284,6 +288,8 @@ const finishRequestPolicy = await readFile("src/features/emergency-home/finishRe
 const mediaHandoffPolicy = await readFile("src/features/emergency-home/mediaHandoffPolicy.ts", "utf8");
 const mediaProcessingStatusPolicy = await readFile("src/features/emergency-home/mediaProcessingStatusPolicy.ts", "utf8");
 const mediaReleaseWaiterPolicy = await readFile("src/features/emergency-home/mediaReleaseWaiterPolicy.ts", "utf8");
+const mediaReleaseWaiterCompletionPolicy = await readFile("src/features/emergency-home/mediaReleaseWaiterCompletionPolicy.ts", "utf8");
+const mediaReleaseTimeoutActionsPolicy = await readFile("src/features/emergency-home/mediaReleaseTimeoutActionsPolicy.ts", "utf8");
 const mediaStopPendingPolicy = await readFile("src/features/emergency-home/mediaStopPendingPolicy.ts", "utf8");
 const mediaStopSignalPolicy = await readFile("src/features/emergency-home/mediaStopSignalPolicy.ts", "utf8");
 const mediaStopSettlementRequestPolicy = await readFile("src/features/emergency-home/mediaStopSettlementRequestPolicy.ts", "utf8");
@@ -434,12 +440,20 @@ if (
 
 if (
   !homeScreen.includes("resolveMediaReleaseWaiterStart") ||
+  !homeScreen.includes("resolveMediaReleaseWaiterCompletion") ||
+  !homeScreen.includes("resolveMediaReleaseTimeoutActions") ||
   !homeScreen.includes("resolveMediaReleaseTimeout") ||
   !mediaReleaseWaiterPolicy.includes("resolveMediaReleaseWaiterStart") ||
   !mediaReleaseWaiterPolicy.includes("emergency_live_call_media_release_timeout") ||
-  !packageJson.scripts["test:media-release-waiter"]
+  !mediaReleaseWaiterCompletionPolicy.includes("resolveMediaReleaseWaiterCompletion") ||
+  !mediaReleaseWaiterCompletionPolicy.includes("shouldResolvePendingRequest") ||
+  !mediaReleaseTimeoutActionsPolicy.includes("resolveMediaReleaseTimeoutActions") ||
+  !mediaReleaseTimeoutActionsPolicy.includes("shouldResolvePendingRequest") ||
+  !packageJson.scripts["test:media-release-waiter"] ||
+  !packageJson.scripts["test:media-release-waiter-completion"] ||
+  !packageJson.scripts["test:media-release-timeout-actions"]
 ) {
-  throw new Error("Home/SOS precisa manter policy pura testavel para waiter de liberacao de midia da chamada ao vivo.");
+  throw new Error("Home/SOS precisa manter policy pura testavel para inicio, conclusao e timeout do waiter de liberacao de midia da chamada ao vivo.");
 }
 
 if (
