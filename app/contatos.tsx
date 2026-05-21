@@ -28,6 +28,14 @@ import {
   mergeTrustedAngelInvitations,
   splitTrustedAngelInvitationSections
 } from "@/features/invitations/trustedAngelsListPolicy";
+import {
+  buildTrustedAngelContactRevocationPlan,
+  buildTrustedAngelInvitationRevocationPlan,
+  resolveTrustedAngelActionFailure,
+  resolveTrustedAngelShareFailure,
+  resolveTrustedAngelShareStart,
+  trustedAngelActionMessages
+} from "@/features/invitations/trustedAngelsActionPolicy";
 import { LocalInvitation } from "@/features/invitations/types";
 import {
   acceptedAngelSummary,
@@ -230,74 +238,92 @@ export default function ContactsScreen() {
   );
 
   async function shareInvitation() {
-    const currentGate = canCreateTrustedContactInvitation(activeProfile);
-    if (!currentGate.allowed) {
-      setStatus(currentGate.message);
+    const shareStart = resolveTrustedAngelShareStart({
+      gate: canCreateTrustedContactInvitation(activeProfile),
+      inviteLabel
+    });
+    if (shareStart.kind === "blocked") {
+      setStatus(shareStart.status);
       setDialog({ kind: "profile_block" });
       return;
     }
 
-    const label = inviteLabel.trim() || "Anjo de confiança";
     setBusy(true);
-    setStatus("Gerando convite seguro no servidor...");
+    setStatus(shareStart.status);
 
     try {
-      const invitation = await createLocalInvitation(label);
+      const invitation = await createLocalInvitation(shareStart.label);
       await Share.share({ message: buildInvitationShareText(invitation), url: invitation.inviteUrl });
       await markInvitationShared(invitation.id);
       await refreshAngels();
-      setStatus("Convite seguro criado. Ele é único, validado no servidor e tem validade limitada.");
+      setStatus(trustedAngelActionMessages.createSuccess);
       setDialog(null);
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Não foi possível criar convite agora.";
-      if (error instanceof ApiRequestError && error.status === 401) {
+      const failure = resolveTrustedAngelShareFailure({
+        isUnauthorized: error instanceof ApiRequestError && error.status === 401,
+        message: error instanceof Error ? error.message : trustedAngelActionMessages.createUnknownFailure
+      });
+      if (failure.clearSession) {
         setApiSession(null);
-        setDialog(null);
-        setStatus("Sessao expirada. Entre com Google novamente para criar convite seguro.");
-        return;
       }
-      if (message.includes("Entre com Google")) {
+      if (failure.closeDialog) {
         setDialog(null);
       }
-      setStatus(message);
+      setStatus(failure.status);
     } finally {
       setBusy(false);
     }
   }
 
   async function revokeInvitation(invitation: LocalInvitation) {
+    const revocationPlan = buildTrustedAngelInvitationRevocationPlan({
+      apiSessionAvailable: Boolean(apiSession),
+      invitation,
+      localInvitationIds: invitations.map((item) => item.id)
+    });
     setBusy(true);
-    setStatus("Revogando convite...");
+    setStatus(revocationPlan.startStatus);
 
     try {
-      if (invitation.backendInvitationId && apiSession) {
-        await apiClient.revokeInvitation(invitation.backendInvitationId);
+      if (revocationPlan.shouldRevokeBackend && revocationPlan.backendInvitationId) {
+        await apiClient.revokeInvitation(revocationPlan.backendInvitationId);
       }
-      if (invitations.some((item) => item.id === invitation.id)) {
-        await revokeLocalInvitation(invitation.id);
+      if (revocationPlan.shouldRevokeLocal) {
+        await revokeLocalInvitation(revocationPlan.localInvitationId);
       }
       await refreshAngels();
-      setStatus("Convite revogado.");
+      setStatus(revocationPlan.successStatus);
       setDialog(null);
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Não foi possível revogar convite agora.");
+      setStatus(
+        resolveTrustedAngelActionFailure(
+          error instanceof Error ? error.message : "",
+          trustedAngelActionMessages.invitationRevokeFailure
+        )
+      );
     } finally {
       setBusy(false);
     }
   }
 
   async function revokeContact(contact: ApiTrustedContact) {
+    const revocationPlan = buildTrustedAngelContactRevocationPlan(contact);
     setBusy(true);
-    setStatus("Revogando vínculo...");
+    setStatus(revocationPlan.startStatus);
 
     try {
-      await apiClient.revokeTrustedContact(contact.id);
-      await removeCachedTrustedContactRelationship(contact.id);
+      await apiClient.revokeTrustedContact(revocationPlan.trustedContactId);
+      await removeCachedTrustedContactRelationship(revocationPlan.cacheRelationshipId);
       await refreshAngels();
-      setStatus("Vínculo revogado.");
+      setStatus(revocationPlan.successStatus);
       setDialog(null);
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : "Não foi possível revogar vínculo agora.");
+      setStatus(
+        resolveTrustedAngelActionFailure(
+          error instanceof Error ? error.message : "",
+          trustedAngelActionMessages.trustedContactRevokeFailure
+        )
+      );
     } finally {
       setBusy(false);
     }

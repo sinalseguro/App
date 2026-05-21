@@ -882,3 +882,11 @@ Proximas acoes atualizadas:
 - `buildTrustedAngelRelationshipLists()` preserva listas de meus anjos e sou anjo; `splitTrustedAngelInvitationSections()` preserva secoes e contador.
 - Novo gate `npm run test:trusted-angels-list` cobre as regras e esta integrado ao `npm test`.
 - ADB listou o Android `23129RA5FL` via Wi-Fi/mDNS duplicado, mas nao houve build/instalacao porque a fatia e pura.
+
+## Memoria viva - 2026-05-21 - acoes Anjos/Convites sem build
+
+- Etapas 1.101 e 1.102 extraem decisoes puras dos handlers de convite/revogacao para `trustedAngelsActionPolicy`.
+- `app/contatos.tsx` ainda executa API real, Share, storage local, cache, refresh e estado React.
+- Novo gate `npm run test:trusted-angels-action` cobre bloqueio por perfil, label saneado, sessao expirada e planos de revogacao.
+- Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.

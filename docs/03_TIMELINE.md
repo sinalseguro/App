@@ -5105,3 +5105,24 @@ Validacoes:
 Checkpoint:
 
 - `docs/171_CHECKPOINT_ETAPAS_1_99_1_100_TRUSTED_ANGELS_LIST_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapas 1.101 e 1.102 acoes de convite e revogacao de anjos
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `trustedAngelsActionPolicy` para centralizar decisoes puras dos handlers da tela `Anjos de confianca`.
+- Etapa 1.101: extraidos inicio do compartilhamento de convite, label saneado, bloqueio por perfil e tratamento de falha/sessao expirada.
+- Etapa 1.102: extraidos planos de revogacao de convite, revogacao de vinculo e fallback de falha.
+- `app/contatos.tsx` continua responsavel por API real, Share, storage local, cache, refresh e estado React.
+- Novo gate `npm run test:trusted-angels-action` foi adicionado ao `npm test`.
+
+Validacoes:
+
+- `test:trusted-angels-action`, `test:trusted-angels-list`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`: aprovados.
+- Sem build Android por ser mudanca pura de decisao/status sem runtime nativo.
+
+Checkpoint:
+
+- `docs/172_CHECKPOINT_ETAPAS_1_101_1_102_TRUSTED_ANGELS_ACTION_POLICY_2026-05-21.md`.
