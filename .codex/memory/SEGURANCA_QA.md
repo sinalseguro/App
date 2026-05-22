@@ -1268,3 +1268,13 @@ Papel: seguranca, LGPD e QA.
 - Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e sem CPU; foi encerrado para nao deixar processo pendurado.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
+
+## QA/Security - 2026-05-21 - Etapas 1.119 e 1.120 settings dashboard tile policy
+
+- Mudanca restrita a regra pura/teste do modelo dos cards e acoes da tela `Configuracoes`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `app/configuracoes.tsx` continua responsavel por renderizacao, icones reais, `setActivePanel`, login, API, permissao real, storage, camera, microfone, localizacao, navegacao e dialogs reais.
+- A policy apenas retorna labels publicos ja existentes, descricoes derivadas ja existentes e alvos de painel sem executar efeitos.
+- Nao introduz log novo, chave, token, sinalizacao tecnica de chamada, path local, coordenada ou conteudo de midia.
+- Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e sem CPU; foi encerrado para nao deixar processo pendurado.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.

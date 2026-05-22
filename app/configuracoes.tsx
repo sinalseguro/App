@@ -45,12 +45,15 @@ import {
 } from "@/features/emergency/emergencyPreferences";
 import { getLocationPermissionReadiness, prepareForegroundLocationPermission } from "@/features/emergency/locationCapture";
 import {
+  buildSettingsDashboardTileRows,
   buildSettingsPanelHelp,
   formatSettingsCameraModeLabel,
   formatSettingsTrustedContactStatus,
   resolveSettingsPermissionStatus,
   settingsLegalConsentItems,
   settingsPanelTitles,
+  type SettingsDashboardTileAction,
+  type SettingsDashboardTileIcon,
   type PermissionStatusText,
   type SettingsConcretePanel,
   type SettingsPanel
@@ -164,6 +167,12 @@ export default function SettingsScreen() {
   const [appleLoginAvailable, setAppleLoginAvailable] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [, setStatusText] = useState("Carregando preferencias de emergencia...");
+  const settingsDashboardTileRows = buildSettingsDashboardTileRows({
+    accountConnected: Boolean(apiSession?.user?.email),
+    foregroundStatus,
+    preferences,
+    updateAvailable: updateState?.status === "available"
+  });
 
   function showLoginFailureMessage(message: string, title = "Login nao concluido") {
     setLoginError(message);
@@ -700,6 +709,31 @@ export default function SettingsScreen() {
     router.push(route);
   }
 
+  function handleDashboardTileAction(action: SettingsDashboardTileAction) {
+    setActivePanel(action.panel);
+  }
+
+  function renderDashboardTileIcon(icon: SettingsDashboardTileIcon) {
+    switch (icon) {
+      case "angels":
+        return <MapPin size={24} color={theme.colors.primary} />;
+      case "duration":
+        return <Clock size={24} color={theme.colors.primary} />;
+      case "login":
+        return <UserCircle2 size={24} color={theme.colors.primary} />;
+      case "media":
+        return <Video size={24} color={theme.colors.primary} />;
+      case "permissions":
+        return <LocateFixed size={24} color={theme.colors.primary} />;
+      case "security-code":
+        return <LockKeyhole size={24} color={theme.colors.primary} />;
+      case "terms":
+        return <BookOpenCheck size={24} color={theme.colors.primary} />;
+      case "update":
+        return <Smartphone size={24} color={theme.colors.primary} />;
+    }
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.shell} testID="settings-screen">
@@ -724,66 +758,19 @@ export default function SettingsScreen() {
         ) : null}
 
         <View style={styles.content}>
-          <View style={styles.resourceGrid}>
-            <ResourceTile
-              icon={<BookOpenCheck size={24} color={theme.colors.primary} />}
-              label="Termos"
-              description={preferences?.legalConsent.termsAccepted ? "Aceito" : "Revisar"}
-              onPress={() => setActivePanel("termos")}
-            />
-            <ResourceTile
-              icon={<UserCircle2 size={24} color={theme.colors.primary} />}
-              label="Login"
-              description={apiSession?.user?.email ? "Conectado" : "Conta"}
-              onPress={() => setActivePanel("login")}
-            />
-          </View>
-          <View style={styles.resourceGrid}>
-            <ResourceTile
-              icon={<LocateFixed size={24} color={theme.colors.primary} />}
-              label="Permissoes"
-              description={foregroundStatus === "permitido" ? "Permitido" : foregroundStatus}
-              onPress={() => setActivePanel("localizacao")}
-            />
-            <ResourceTile
-              icon={<Clock size={24} color={theme.colors.primary} />}
-              label="Gravacao"
-              description={preferences ? formatDuration(preferences.defaultDurationSeconds) : "Carregando"}
-              onPress={() => setActivePanel("duracao")}
-            />
-          </View>
-          <View style={styles.resourceGrid}>
-            <ResourceTile
-              icon={<LockKeyhole size={24} color={theme.colors.primary} />}
-              label="Codigo de seguranca"
-              description={preferences?.finishSafety.requireCode ? "Ativo" : "Configurar"}
-              onPress={() => setActivePanel("encerramento")}
-            />
-            <ResourceTile
-              icon={<Video size={24} color={theme.colors.primary} />}
-              label="Midia"
-              description={
-                preferences?.localVideoCapture.requestOnSos
-                  ? formatSettingsCameraModeLabel(preferences.localVideoCapture.cameraMode)
-                  : "Desativada"
-              }
-              onPress={() => setActivePanel("video")}
-            />
-          </View>
-          <View style={styles.resourceGrid}>
-            <ResourceTile
-              icon={<MapPin size={24} color={theme.colors.primary} />}
-              label="Anjos"
-              description="Dados"
-              onPress={() => setActivePanel("compartilhamento")}
-            />
-            <ResourceTile
-              icon={<Smartphone size={24} color={theme.colors.primary} />}
-              label="Atualizacao"
-              description={updateState?.status === "available" ? "Disponivel" : "Verificar"}
-              onPress={() => setActivePanel("atualizacao")}
-            />
-          </View>
+          {settingsDashboardTileRows.map((row) => (
+            <View key={row.map((tile) => tile.key).join("-")} style={styles.resourceGrid}>
+              {row.map((tile) => (
+                <ResourceTile
+                  key={tile.key}
+                  icon={renderDashboardTileIcon(tile.icon)}
+                  label={tile.label}
+                  description={tile.description}
+                  onPress={() => handleDashboardTileAction(tile.action)}
+                />
+              ))}
+            </View>
+          ))}
         </View>
 
         <BrandedDialog

@@ -957,3 +957,12 @@ Proximas acoes atualizadas:
 - Gate focado: `npm run test:settings-presentation`.
 - Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
+
+## Memoria viva - 2026-05-21 - cards dashboard Configuracoes sem build
+
+- Etapas 1.119 e 1.120 extraem modelo e acoes dos 8 cards principais para `settingsPresentationPolicy`.
+- A policy nao executa `setActivePanel`, navegacao, login, API, permissoes, storage, camera, microfone, localizacao ou atualizacao real; apenas retorna alvos puros de painel.
+- Os textos publicos e icones visuais foram preservados; `app/configuracoes.tsx` ainda renderiza os icones reais.
+- Gate focado: `npm run test:settings-presentation`.
+- Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.

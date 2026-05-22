@@ -1186,3 +1186,12 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate `npm run test:settings-presentation` cobre a policy e esta integrado ao `npm test`.
 - Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build Android nesta rodada por ser refatoracao pura sem runtime nativo.
+
+# Atualizacao - 2026-05-21 - Etapas 1.119 e 1.120 Configuracoes
+
+- `settingsPresentationPolicy` agora centraliza tambem o modelo dos cards principais da tela `Configuracoes`.
+- Etapa 1.119: `buildSettingsDashboardTileRows()` define as linhas dos 8 cards com labels, descricoes, icones simbolicos e acoes.
+- Etapa 1.120: `buildSettingsDashboardTileAction()` centraliza o alvo puro de painel dos cards.
+- `app/configuracoes.tsx` segue responsavel pelos efeitos reais: renderizacao de `ResourceTile`, icones, `setActivePanel`, login, API, permissoes, storage, camera, microfone, localizacao e navegacao.
+- Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build Android nesta rodada por ser refatoracao pura sem runtime nativo.

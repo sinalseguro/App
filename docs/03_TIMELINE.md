@@ -5296,3 +5296,24 @@ Validacoes:
 Checkpoint:
 
 - `docs/180_CHECKPOINT_ETAPAS_1_117_1_118_SETTINGS_PRESENTATION_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapas 1.119 e 1.120 cards da tela Configuracoes
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- `settingsPresentationPolicy` passou a centralizar tambem o modelo dos 8 cards principais da tela `Configuracoes`.
+- Etapa 1.119: extraidas linhas puras de cards com `key`, `label`, `description`, `icon` simbolico e `action`.
+- Etapa 1.120: extraido alvo puro de painel dos cards com `buildSettingsDashboardTileAction()`.
+- `app/configuracoes.tsx` continua responsavel por renderizar `ResourceTile`, icones reais, `setActivePanel`, login/API/permissoes/storage/camera/microfone/localizacao/navegacao.
+
+Validacoes:
+
+- `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`: aprovados.
+- `typecheck` nao emitiu erro, mas ficou sem saida e sem CPU; foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser mudanca pura de policy sem runtime nativo.
+
+Checkpoint:
+
+- `docs/181_CHECKPOINT_ETAPAS_1_119_1_120_SETTINGS_DASHBOARD_TILE_POLICY_2026-05-21.md`.

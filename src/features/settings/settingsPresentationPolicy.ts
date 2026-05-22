@@ -1,4 +1,8 @@
-import type { LocalVideoCameraMode } from "@/features/emergency/emergencyPreferences";
+import {
+  formatDuration,
+  type EmergencyPreferences,
+  type LocalVideoCameraMode
+} from "@/features/emergency/emergencyPreferences";
 
 export type PermissionStatusText = "pendente" | "permitido" | "negado" | "bloqueado";
 
@@ -23,6 +27,39 @@ export type SettingsLegalConsentItem = {
 export type SettingsPanelHelp = {
   message: string;
   title: string;
+};
+
+export type SettingsDashboardTileIcon =
+  | "angels"
+  | "duration"
+  | "login"
+  | "media"
+  | "permissions"
+  | "security-code"
+  | "terms"
+  | "update";
+
+export type SettingsDashboardTileKey =
+  | "angels"
+  | "duration"
+  | "login"
+  | "media"
+  | "permissions"
+  | "security-code"
+  | "terms"
+  | "update";
+
+export type SettingsDashboardTileAction = {
+  kind: "panel";
+  panel: SettingsConcretePanel;
+};
+
+export type SettingsDashboardTile = {
+  action: SettingsDashboardTileAction;
+  description: string;
+  icon: SettingsDashboardTileIcon;
+  key: SettingsDashboardTileKey;
+  label: string;
 };
 
 export const settingsLegalConsentItems: SettingsLegalConsentItem[] = [
@@ -92,4 +129,92 @@ export function buildSettingsPanelHelp(panel: SettingsConcretePanel): SettingsPa
     message: settingsPanelHelpMessages[panel],
     title: `Ajuda: ${settingsPanelTitles[panel]}`
   };
+}
+
+export function buildSettingsDashboardTileAction(panel: SettingsConcretePanel): SettingsDashboardTileAction {
+  return {
+    kind: "panel",
+    panel
+  };
+}
+
+export function buildSettingsDashboardTileRows({
+  accountConnected,
+  foregroundStatus,
+  preferences,
+  updateAvailable
+}: {
+  accountConnected: boolean;
+  foregroundStatus: PermissionStatusText;
+  preferences: EmergencyPreferences | null;
+  updateAvailable: boolean;
+}): SettingsDashboardTile[][] {
+  return [
+    [
+      {
+        action: buildSettingsDashboardTileAction("termos"),
+        description: preferences?.legalConsent.termsAccepted ? "Aceito" : "Revisar",
+        icon: "terms",
+        key: "terms",
+        label: "Termos"
+      },
+      {
+        action: buildSettingsDashboardTileAction("login"),
+        description: accountConnected ? "Conectado" : "Conta",
+        icon: "login",
+        key: "login",
+        label: "Login"
+      }
+    ],
+    [
+      {
+        action: buildSettingsDashboardTileAction("localizacao"),
+        description: foregroundStatus === "permitido" ? "Permitido" : foregroundStatus,
+        icon: "permissions",
+        key: "permissions",
+        label: "Permissoes"
+      },
+      {
+        action: buildSettingsDashboardTileAction("duracao"),
+        description: preferences ? formatDuration(preferences.defaultDurationSeconds) : "Carregando",
+        icon: "duration",
+        key: "duration",
+        label: "Gravacao"
+      }
+    ],
+    [
+      {
+        action: buildSettingsDashboardTileAction("encerramento"),
+        description: preferences?.finishSafety.requireCode ? "Ativo" : "Configurar",
+        icon: "security-code",
+        key: "security-code",
+        label: "Codigo de seguranca"
+      },
+      {
+        action: buildSettingsDashboardTileAction("video"),
+        description: preferences?.localVideoCapture.requestOnSos
+          ? formatSettingsCameraModeLabel(preferences.localVideoCapture.cameraMode)
+          : "Desativada",
+        icon: "media",
+        key: "media",
+        label: "Midia"
+      }
+    ],
+    [
+      {
+        action: buildSettingsDashboardTileAction("compartilhamento"),
+        description: "Dados",
+        icon: "angels",
+        key: "angels",
+        label: "Anjos"
+      },
+      {
+        action: buildSettingsDashboardTileAction("atualizacao"),
+        description: updateAvailable ? "Disponivel" : "Verificar",
+        icon: "update",
+        key: "update",
+        label: "Atualizacao"
+      }
+    ]
+  ];
 }
