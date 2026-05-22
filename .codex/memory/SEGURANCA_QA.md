@@ -1344,6 +1344,18 @@ Papel: seguranca, LGPD e QA.
 - `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
 
+## QA/Security - 2026-05-22 - Etapas 1.141 e 1.142 received alert card components
+
+- Mudanca restrita a componentes locais de apresentacao da tela `Alertas recebidos`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `AlertScreen` continua responsavel por API, autoaceite, notificacao, WebRTC, storage seguro, refs mutaveis, reset de chamada, Share nativo, selecao de registro e estado React.
+- `ReceivedAlertCardView` e `ReceivedCallArchiveCardView` apenas renderizam dados e disparam callbacks injetados pela tela.
+- Contratos preservados: uma chamada ativa por vez, Share real no `AlertScreen`, texto de compartilhamento em `buildLiveCallShareText(record)`, e restricao legal exibida pelo modelo de apresentacao.
+- Nao introduz log novo, chave, token, hash, codigo, identity token, SDP, ICE, payload P2P, URI local, path de arquivo, coordenada ou conteudo de midia.
+- Inspecao sensivel nos arquivos tocados retornou apenas falsos positivos esperados: nomes de arquivos/anchors existentes no smoke e `apiClient`.
+- Validacoes aprovadas: `test:received-alert-presentation`, `test:received-alert-runtime`, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
+
 ## QA/Security - 2026-05-22 - Etapas 1.135 e 1.136 received alert runtime policy
 
 - Mudanca restrita a regras puras/teste de runtime local da tela `Alertas recebidos`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.

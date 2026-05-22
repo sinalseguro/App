@@ -5534,3 +5534,24 @@ Validacoes:
 Checkpoint:
 
 - `docs/191_CHECKPOINT_ETAPAS_1_139_1_140_RECEIVED_ALERT_ACTION_ARCHIVE_POLICY_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.141 e 1.142 componentes locais de Alertas recebidos
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.141: extraido `ReceivedAlertCardView` para renderizar o card de alerta recebido com dados e callbacks injetados pela tela.
+- Etapa 1.142: extraido `ReceivedCallArchiveCardView` para renderizar o card de historico/local archive com dados e callbacks injetados pela tela.
+- `AlertScreen` continua responsavel pelos efeitos reais: API, autoaceite, notificacao, WebRTC, storage seguro, refs mutaveis, reset de chamada, Share, selecao de registro e estado React.
+- `scripts/smoke-test.mjs` recebeu anchors para os novos helpers locais.
+
+Validacoes:
+
+- `test:received-alert-presentation`, `test:received-alert-runtime`, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`: aprovados.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/192_CHECKPOINT_ETAPAS_1_141_1_142_RECEIVED_ALERT_CARD_COMPONENTS_2026-05-22.md`.

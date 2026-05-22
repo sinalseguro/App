@@ -37,7 +37,12 @@ import {
   receivedAlertErrorMessage,
   receivedAlertResponseActionLabel,
   receivedAlertStatusMessage,
-  sortReceivedEmergencyAlerts
+  sortReceivedEmergencyAlerts,
+  type ReceivedAlertActionState,
+  type ReceivedAlertCardPresentation,
+  type ReceivedAlertIncomingCallPresentation,
+  type ReceivedAlertResponseAction,
+  type ReceivedCallArchiveCardPresentation
 } from "@/features/live-call/receivedAlertPresentationPolicy";
 import {
   buildReceivedAlertArchiveStatusUpdateDecision,
@@ -45,6 +50,7 @@ import {
   buildReceivedAlertRealtimeStartDecision
 } from "@/features/live-call/receivedAlertRuntimePolicy";
 import { useLiveAudioCall } from "@/features/live-call/useLiveAudioCall";
+import type { LiveAudioCallState } from "@/features/live-call/liveCallStatePolicy";
 import { ApiEmergencySession, apiClient } from "@/services/apiClient";
 
 type AlertDialog = {
@@ -358,111 +364,21 @@ export default function AlertScreen() {
               session
             });
             return (
-              <View key={session.id} style={[styles.alertCard, alertPresentation.isActive && styles.alertCardActive]}>
-                <View style={styles.alertHeader}>
-                  <View style={styles.alertIcon}>
-                    <ShieldAlert size={19} color={alertPresentation.isActive ? theme.colors.danger : theme.colors.secure} />
-                  </View>
-                  <View style={styles.alertTitleBlock}>
-                    <Text style={styles.alertTitle}>{alertPresentation.title}</Text>
-                    <Text style={styles.alertMeta}>{formatReceivedAlertDate(session.started_at)}</Text>
-                  </View>
-                </View>
-
-                <Text style={styles.alertStatus}>{alertPresentation.statusLabel}</Text>
-                <Text style={styles.alertBody}>{alertPresentation.body}</Text>
-
-                {alertPresentation.canReceiveCall && !alertActionState.isCallPanelSession ? (
-                  <View style={styles.incomingCallPanel}>
-                    <View style={styles.callPromptHeader}>
-                      <View style={styles.incomingCallIcon}>
-                        <PhoneIncoming size={19} color={theme.colors.textOnDark} />
-                      </View>
-                      <View style={styles.callPromptTextBlock}>
-                        <Text style={styles.incomingCallTitle}>{incomingCallPresentation.title}</Text>
-                        <Text style={styles.incomingCallText}>{incomingCallPresentation.text}</Text>
-                      </View>
-                    </View>
-                    <View style={styles.phoneActionRow}>
-                      <Pressable
-                        accessibilityLabel={incomingCallPresentation.actionAccessibilityLabel}
-                        accessibilityRole="button"
-                        disabled={alertActionState.incomingCallDisabled}
-                        onPress={() => {
-                          if (hasAccepted) {
-                            void openRealtimeCall(session, true);
-                            return;
-                          }
-                          void openRealtimeCall(session, false);
-                        }}
-                        style={({ pressed }) => [
-                          styles.answerCallAction,
-                          alertActionState.incomingCallDisabled && styles.actionDisabled,
-                          pressed && styles.actionPressed
-                        ]}
-                      >
-                        {hasAccepted ? (
-                          <Video size={18} color={theme.colors.textOnDark} />
-                        ) : (
-                          <PhoneCall size={18} color={theme.colors.textOnDark} />
-                        )}
-                        <Text style={styles.answerCallActionText}>
-                          {incomingCallPresentation.actionLabel}
-                        </Text>
-                      </Pressable>
-                    </View>
-                  </View>
-                ) : null}
-
-                {alertActionState.canShowCallPanel ? (
-                  <LiveAudioCallPanel
-                    actionLabel="Entrar como anjo"
-                    disabled={alertActionState.liveCallPanelDisabled}
-                    onPrimaryAction={() => {
-                      void openRealtimeCall(session, hasAccepted);
-                    }}
-                    onStop={() => {
-                      stopRealtimeCall();
-                    }}
-                    state={liveAudioCall.state}
-                    stopLabel="Sair da chamada"
-                  />
-                ) : null}
-
-                <View style={styles.actionRow}>
-                  <Pressable
-                    accessibilityLabel="Avisar que estou ciente"
-                    accessibilityRole="button"
-                    disabled={alertActionState.seenActionDisabled}
-                    onPress={() => {
-                      void respondToAlert(session, "seen");
-                    }}
-                    style={({ pressed }) => [
-                      styles.mutedAction,
-                      alertActionState.seenActionDisabled && styles.actionDisabled,
-                      pressed && styles.actionPressed
-                    ]}
-                  >
-                    <Text style={styles.mutedActionText}>Estou ciente</Text>
-                  </Pressable>
-                  <Pressable
-                    accessibilityLabel="Aceitar acompanhar"
-                    accessibilityRole="button"
-                    disabled={alertActionState.primaryActionDisabled}
-                    onPress={() => {
-                      void openRealtimeCall(session, hasAccepted);
-                    }}
-                    style={({ pressed }) => [
-                      styles.primaryAction,
-                      alertActionState.primaryActionDisabled && styles.actionDisabled,
-                      pressed && styles.actionPressed
-                    ]}
-                  >
-                    <CheckCircle2 size={18} color={theme.colors.textOnDark} />
-                    <Text style={styles.primaryActionText}>{alertPresentation.primaryActionLabel}</Text>
-                  </Pressable>
-                </View>
-              </View>
+              <ReceivedAlertCardView
+                key={session.id}
+                actionState={alertActionState}
+                alertPresentation={alertPresentation}
+                incomingCallPresentation={incomingCallPresentation}
+                liveCallState={liveAudioCall.state}
+                onOpenRealtimeCall={(targetSession, alreadyAccepted) => {
+                  void openRealtimeCall(targetSession, alreadyAccepted);
+                }}
+                onRespondToAlert={(targetSession, action) => {
+                  void respondToAlert(targetSession, action);
+                }}
+                onStopRealtimeCall={stopRealtimeCall}
+                session={session}
+              />
             );
           })}
         </View>
@@ -488,49 +404,15 @@ export default function AlertScreen() {
           {callArchiveRecords.map((record) => {
             const archivePresentation = buildReceivedCallArchiveCardPresentation(record);
             return (
-              <View key={record.id} style={styles.archiveCard}>
-                <View style={styles.archiveSnapshotRow}>
-                  <View style={styles.snapshotThumb}>
-                    <Text style={styles.snapshotThumbText}>{archivePresentation.snapshotLabel}</Text>
-                  </View>
-                  <View style={styles.alertTitleBlock}>
-                    <Text style={styles.archiveRecordTitle}>{archivePresentation.protectedDisplayName}</Text>
-                    <Text style={styles.archiveRecordMeta}>{archivePresentation.startedAtLabel}</Text>
-                  </View>
-                </View>
-                <View style={styles.archiveMetaGrid}>
-                  <View style={styles.archiveMetaItem}>
-                    <Clock3 size={15} color={theme.colors.textMuted} />
-                    <Text style={styles.archiveMetaText}>{archivePresentation.durationLabel}</Text>
-                  </View>
-                  <View style={styles.archiveMetaItem}>
-                    <Video size={15} color={theme.colors.textMuted} />
-                    <Text style={styles.archiveMetaText}>{archivePresentation.statusLabel}</Text>
-                  </View>
-                </View>
-                <Text style={styles.archiveLegalText}>{archivePresentation.shareRestriction}</Text>
-                <View style={styles.actionRow}>
-                  <Pressable
-                    accessibilityLabel="Abrir registro da chamada"
-                    accessibilityRole="button"
-                    onPress={() => setSelectedArchiveRecord(record)}
-                    style={({ pressed }) => [styles.mutedAction, pressed && styles.actionPressed]}
-                  >
-                    <Text style={styles.mutedActionText}>Abrir registro</Text>
-                  </Pressable>
-                  <Pressable
-                    accessibilityLabel="Compartilhar registro da chamada"
-                    accessibilityRole="button"
-                    onPress={() => {
-                      void shareArchiveRecord(record);
-                    }}
-                    style={({ pressed }) => [styles.primaryAction, pressed && styles.actionPressed]}
-                  >
-                    <Share2 size={17} color={theme.colors.textOnDark} />
-                    <Text style={styles.primaryActionText}>Compartilhar</Text>
-                  </Pressable>
-                </View>
-              </View>
+              <ReceivedCallArchiveCardView
+                key={record.id}
+                onOpenRecord={setSelectedArchiveRecord}
+                onShareRecord={(targetRecord) => {
+                  void shareArchiveRecord(targetRecord);
+                }}
+                presentation={archivePresentation}
+                record={record}
+              />
             );
           })}
         </View>
@@ -567,6 +449,190 @@ export default function AlertScreen() {
         visible={Boolean(selectedArchiveRecord)}
       />
     </SafeScreen>
+  );
+}
+
+type ReceivedAlertCardViewProps = {
+  actionState: ReceivedAlertActionState;
+  alertPresentation: ReceivedAlertCardPresentation;
+  incomingCallPresentation: ReceivedAlertIncomingCallPresentation;
+  liveCallState: LiveAudioCallState;
+  onOpenRealtimeCall: (session: ApiEmergencySession, alreadyAccepted: boolean) => void;
+  onRespondToAlert: (session: ApiEmergencySession, action: ReceivedAlertResponseAction) => void;
+  onStopRealtimeCall: () => void;
+  session: ApiEmergencySession;
+};
+
+function ReceivedAlertCardView({
+  actionState,
+  alertPresentation,
+  incomingCallPresentation,
+  liveCallState,
+  onOpenRealtimeCall,
+  onRespondToAlert,
+  onStopRealtimeCall,
+  session
+}: ReceivedAlertCardViewProps) {
+  const hasAccepted = actionState.hasAccepted;
+
+  return (
+    <View style={[styles.alertCard, alertPresentation.isActive && styles.alertCardActive]}>
+      <View style={styles.alertHeader}>
+        <View style={styles.alertIcon}>
+          <ShieldAlert size={19} color={alertPresentation.isActive ? theme.colors.danger : theme.colors.secure} />
+        </View>
+        <View style={styles.alertTitleBlock}>
+          <Text style={styles.alertTitle}>{alertPresentation.title}</Text>
+          <Text style={styles.alertMeta}>{formatReceivedAlertDate(session.started_at)}</Text>
+        </View>
+      </View>
+
+      <Text style={styles.alertStatus}>{alertPresentation.statusLabel}</Text>
+      <Text style={styles.alertBody}>{alertPresentation.body}</Text>
+
+      {alertPresentation.canReceiveCall && !actionState.isCallPanelSession ? (
+        <View style={styles.incomingCallPanel}>
+          <View style={styles.callPromptHeader}>
+            <View style={styles.incomingCallIcon}>
+              <PhoneIncoming size={19} color={theme.colors.textOnDark} />
+            </View>
+            <View style={styles.callPromptTextBlock}>
+              <Text style={styles.incomingCallTitle}>{incomingCallPresentation.title}</Text>
+              <Text style={styles.incomingCallText}>{incomingCallPresentation.text}</Text>
+            </View>
+          </View>
+          <View style={styles.phoneActionRow}>
+            <Pressable
+              accessibilityLabel={incomingCallPresentation.actionAccessibilityLabel}
+              accessibilityRole="button"
+              disabled={actionState.incomingCallDisabled}
+              onPress={() => {
+                onOpenRealtimeCall(session, hasAccepted);
+              }}
+              style={({ pressed }) => [
+                styles.answerCallAction,
+                actionState.incomingCallDisabled && styles.actionDisabled,
+                pressed && styles.actionPressed
+              ]}
+            >
+              {hasAccepted ? (
+                <Video size={18} color={theme.colors.textOnDark} />
+              ) : (
+                <PhoneCall size={18} color={theme.colors.textOnDark} />
+              )}
+              <Text style={styles.answerCallActionText}>{incomingCallPresentation.actionLabel}</Text>
+            </Pressable>
+          </View>
+        </View>
+      ) : null}
+
+      {actionState.canShowCallPanel ? (
+        <LiveAudioCallPanel
+          actionLabel="Entrar como anjo"
+          disabled={actionState.liveCallPanelDisabled}
+          onPrimaryAction={() => {
+            onOpenRealtimeCall(session, hasAccepted);
+          }}
+          onStop={onStopRealtimeCall}
+          state={liveCallState}
+          stopLabel="Sair da chamada"
+        />
+      ) : null}
+
+      <View style={styles.actionRow}>
+        <Pressable
+          accessibilityLabel="Avisar que estou ciente"
+          accessibilityRole="button"
+          disabled={actionState.seenActionDisabled}
+          onPress={() => {
+            onRespondToAlert(session, "seen");
+          }}
+          style={({ pressed }) => [
+            styles.mutedAction,
+            actionState.seenActionDisabled && styles.actionDisabled,
+            pressed && styles.actionPressed
+          ]}
+        >
+          <Text style={styles.mutedActionText}>Estou ciente</Text>
+        </Pressable>
+        <Pressable
+          accessibilityLabel="Aceitar acompanhar"
+          accessibilityRole="button"
+          disabled={actionState.primaryActionDisabled}
+          onPress={() => {
+            onOpenRealtimeCall(session, hasAccepted);
+          }}
+          style={({ pressed }) => [
+            styles.primaryAction,
+            actionState.primaryActionDisabled && styles.actionDisabled,
+            pressed && styles.actionPressed
+          ]}
+        >
+          <CheckCircle2 size={18} color={theme.colors.textOnDark} />
+          <Text style={styles.primaryActionText}>{alertPresentation.primaryActionLabel}</Text>
+        </Pressable>
+      </View>
+    </View>
+  );
+}
+
+type ReceivedCallArchiveCardViewProps = {
+  onOpenRecord: (record: LiveCallArchiveRecord) => void;
+  onShareRecord: (record: LiveCallArchiveRecord) => void;
+  presentation: ReceivedCallArchiveCardPresentation;
+  record: LiveCallArchiveRecord;
+};
+
+function ReceivedCallArchiveCardView({
+  onOpenRecord,
+  onShareRecord,
+  presentation,
+  record
+}: ReceivedCallArchiveCardViewProps) {
+  return (
+    <View style={styles.archiveCard}>
+      <View style={styles.archiveSnapshotRow}>
+        <View style={styles.snapshotThumb}>
+          <Text style={styles.snapshotThumbText}>{presentation.snapshotLabel}</Text>
+        </View>
+        <View style={styles.alertTitleBlock}>
+          <Text style={styles.archiveRecordTitle}>{presentation.protectedDisplayName}</Text>
+          <Text style={styles.archiveRecordMeta}>{presentation.startedAtLabel}</Text>
+        </View>
+      </View>
+      <View style={styles.archiveMetaGrid}>
+        <View style={styles.archiveMetaItem}>
+          <Clock3 size={15} color={theme.colors.textMuted} />
+          <Text style={styles.archiveMetaText}>{presentation.durationLabel}</Text>
+        </View>
+        <View style={styles.archiveMetaItem}>
+          <Video size={15} color={theme.colors.textMuted} />
+          <Text style={styles.archiveMetaText}>{presentation.statusLabel}</Text>
+        </View>
+      </View>
+      <Text style={styles.archiveLegalText}>{presentation.shareRestriction}</Text>
+      <View style={styles.actionRow}>
+        <Pressable
+          accessibilityLabel="Abrir registro da chamada"
+          accessibilityRole="button"
+          onPress={() => onOpenRecord(record)}
+          style={({ pressed }) => [styles.mutedAction, pressed && styles.actionPressed]}
+        >
+          <Text style={styles.mutedActionText}>Abrir registro</Text>
+        </Pressable>
+        <Pressable
+          accessibilityLabel="Compartilhar registro da chamada"
+          accessibilityRole="button"
+          onPress={() => {
+            onShareRecord(record);
+          }}
+          style={({ pressed }) => [styles.primaryAction, pressed && styles.actionPressed]}
+        >
+          <Share2 size={17} color={theme.colors.textOnDark} />
+          <Text style={styles.primaryActionText}>Compartilhar</Text>
+        </Pressable>
+      </View>
+    </View>
   );
 }
 

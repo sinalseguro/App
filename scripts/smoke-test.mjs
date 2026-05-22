@@ -485,6 +485,8 @@ if (
 if (
   !alertScreen.includes("listReceivedEmergencySessions") ||
   !alertScreen.includes("respondToEmergencySession") ||
+  !alertScreen.includes("function ReceivedAlertCardView") ||
+  !alertScreen.includes("function ReceivedCallArchiveCardView") ||
   !alertScreen.includes("buildReceivedAlertCardPresentation") ||
   !alertScreen.includes("buildReceivedAlertActionState") ||
   !receivedAlertPresentationPolicy.includes("buildReceivedAlertActionState") ||

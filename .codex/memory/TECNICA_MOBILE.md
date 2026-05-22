@@ -1299,3 +1299,14 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Validacoes aprovadas: teste focado, `test:received-alert-runtime`, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
 - Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
+
+# Atualizacao - 2026-05-22 - Etapas 1.141 e 1.142 Componentes locais de Alertas recebidos
+
+- `app/alerta.tsx` agora possui `ReceivedAlertCardView` e `ReceivedCallArchiveCardView` como componentes locais de apresentacao.
+- Etapa 1.141: o card de alerta recebido passou a receber estado/presentation/callbacks ja calculados pelo `AlertScreen`.
+- Etapa 1.142: o card de historico local passou a receber `record`, presentation e callbacks de abrir/compartilhar ja definidos pela tela.
+- `AlertScreen` segue responsavel por API, autoaceite, notificacao, WebRTC, storage seguro, refs mutaveis, reset de chamada, Share nativo, selecao de registro e estado React.
+- Gate focado: `npm run test:received-alert-presentation`.
+- Validacoes aprovadas: teste focado, `test:received-alert-runtime`, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
