@@ -939,3 +939,12 @@ Proximas acoes atualizadas:
 - Gates focados: `npm run test:trusted-angels-navigation` e `npm run test:trusted-angels-dialog`.
 - Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
+
+## Memoria viva - 2026-05-21 - cards dashboard Anjos/Convites sem build
+
+- Etapas 1.115 e 1.116 extraem modelo e acoes dos 8 cards principais para `trustedAngelsDashboardPolicy`.
+- A policy nao executa navegacao, dialog, painel ou refresh; apenas retorna alvos para `app/contatos.tsx` aplicar.
+- Os textos publicos e icones visuais foram preservados; `app/contatos.tsx` ainda renderiza os icones reais.
+- Gate focado: `npm run test:trusted-angels-dashboard`.
+- Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.

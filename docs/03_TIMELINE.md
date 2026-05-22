@@ -5253,3 +5253,24 @@ Validacoes:
 Checkpoint:
 
 - `docs/178_CHECKPOINT_ETAPAS_1_113_1_114_TRUSTED_ANGELS_NAVIGATION_DIALOG_LABELS_2026-05-21.md`.
+
+## 2026-05-21 - Etapas 1.115 e 1.116 cards do dashboard de anjos
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- `trustedAngelsDashboardPolicy` passou a centralizar o modelo dos 8 cards principais da tela `Anjos de confianca`.
+- Etapa 1.115: extraidas linhas puras de cards com `key`, `label`, `description`, `icon` e `action`.
+- Etapa 1.116: extraida decisao pura de acao dos cards: rota, painel, dialog e refresh.
+- `app/contatos.tsx` continua responsavel por renderizar `ResourceTile`, icones reais, `router.push`, `setPanel`, `setDialog` e `refreshAngels()`.
+
+Validacoes:
+
+- `test:trusted-angels-dashboard`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`: aprovados.
+- `typecheck` nao emitiu erro, mas ficou sem saida e sem CPU; foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser mudanca pura de policy sem runtime nativo.
+
+Checkpoint:
+
+- `docs/179_CHECKPOINT_ETAPAS_1_115_1_116_TRUSTED_ANGELS_DASHBOARD_TILE_POLICY_2026-05-21.md`.

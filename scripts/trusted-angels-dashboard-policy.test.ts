@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 import {
   buildTrustedAngelsAcceptedCounts,
   buildTrustedAngelsDashboardSummary,
+  buildTrustedAngelsDashboardTileAction,
+  buildTrustedAngelsDashboardTileRows,
   buildTrustedAngelsReadinessState
 } from "../src/features/invitations/trustedAngelsDashboardPolicy";
 import type { ApiTrustedContactRelationship } from "../src/services/apiClient";
@@ -108,6 +110,102 @@ assert.equal(
     profileTitle: "Responsável"
   }).createInvitationDescription,
   "Local"
+);
+
+const dashboardSummary = buildTrustedAngelsDashboardSummary({
+  acceptedAngelCount: 2,
+  acceptedOwnerCount: 1,
+  apiSessionAvailable: true,
+  busy: false,
+  deviceReady: true,
+  invitationCount: 3,
+  invitationGateAllowed: true,
+  noticeTitle: "Meus anjos",
+  profileTitle: "Pessoa adulta"
+});
+
+assert.deepEqual(
+  buildTrustedAngelsDashboardTileRows({
+    invitationGateAllowed: true,
+    summary: dashboardSummary
+  }),
+  [
+    [
+      {
+        action: { kind: "route", route: "/perfis" },
+        description: "Pessoa adulta",
+        icon: "profile",
+        key: "profile",
+        label: "Perfil"
+      },
+      {
+        action: { kind: "panel", panel: "estado" },
+        description: "Meus anjos",
+        icon: "state",
+        key: "state",
+        label: "Estado"
+      }
+    ],
+    [
+      {
+        action: { dialogKind: "invite", kind: "dialog" },
+        description: "API",
+        icon: "invite",
+        key: "invite",
+        label: "Criar convite"
+      },
+      {
+        action: { kind: "panel", panel: "prontidao" },
+        description: "Dispositivo",
+        icon: "readiness",
+        key: "readiness",
+        label: "Prontidão"
+      }
+    ],
+    [
+      {
+        action: { kind: "panel", panel: "anjos" },
+        description: "1 aceitou",
+        icon: "owner-links",
+        key: "owner-links",
+        label: "Meus anjos"
+      },
+      {
+        action: { kind: "panel", panel: "sou_anjo" },
+        description: "2 pessoas",
+        icon: "angel-links",
+        key: "angel-links",
+        label: "Sou anjo"
+      }
+    ],
+    [
+      {
+        action: { kind: "panel", panel: "convites" },
+        description: "3 item",
+        icon: "invitations",
+        key: "invitations",
+        label: "Convites"
+      },
+      {
+        action: { kind: "refresh" },
+        description: "Sincronizar",
+        icon: "refresh",
+        key: "refresh",
+        label: "Atualizar"
+      }
+    ]
+  ]
+);
+
+assert.deepEqual(
+  buildTrustedAngelsDashboardTileAction({
+    invitationGateAllowed: false,
+    tileKey: "invite"
+  }),
+  {
+    dialogKind: "profile_block",
+    kind: "dialog"
+  }
 );
 
 assert.deepEqual(

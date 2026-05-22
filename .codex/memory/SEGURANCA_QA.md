@@ -1247,3 +1247,13 @@ Papel: seguranca, LGPD e QA.
 - Validacoes aprovadas: `test:trusted-angels-navigation`, `test:trusted-angels-dialog`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e sem CPU; foi encerrado para nao deixar processo pendurado.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
+
+## QA/Security - 2026-05-21 - Etapas 1.115 e 1.116 dashboard tile policy de anjos
+
+- Mudanca restrita a regra pura/teste do modelo dos cards e acoes do dashboard da tela `Anjos de confianca`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `app/contatos.tsx` continua responsavel por renderizacao, icones reais, `router.push`, `setPanel`, `setDialog`, `refreshAngels`, Share, API e cache real.
+- A policy apenas retorna labels publicos ja existentes, descricoes derivadas ja existentes e alvos de acao sem executar efeitos.
+- Nao introduz log novo, chave, sinalizacao tecnica de chamada, path local, coordenada ou conteudo de midia.
+- Validacoes aprovadas: `test:trusted-angels-dashboard`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e sem CPU; foi encerrado para nao deixar processo pendurado.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.

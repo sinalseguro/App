@@ -36,7 +36,10 @@ import {
 import {
   buildTrustedAngelsAcceptedCounts,
   buildTrustedAngelsDashboardSummary,
-  buildTrustedAngelsReadinessState
+  buildTrustedAngelsDashboardTileRows,
+  buildTrustedAngelsReadinessState,
+  type TrustedAngelsDashboardTileAction,
+  type TrustedAngelsDashboardTileIcon
 } from "@/features/invitations/trustedAngelsDashboardPolicy";
 import {
   buildTrustedAngelsDialogActionLabels,
@@ -182,6 +185,10 @@ export default function ContactsScreen() {
     invitationGateAllowed: invitationGate.allowed,
     noticeTitle: notice.title,
     profileTitle: profileSummary.title
+  });
+  const dashboardTileRows = buildTrustedAngelsDashboardTileRows({
+    invitationGateAllowed: invitationGate.allowed,
+    summary: dashboardSummary
   });
   const readinessState = buildTrustedAngelsReadinessState({
     apiEnabled: apiConfig.apiEnabled,
@@ -408,6 +415,46 @@ export default function ContactsScreen() {
     router.push(target.route);
   }
 
+  function handleDashboardTileAction(action: TrustedAngelsDashboardTileAction) {
+    switch (action.kind) {
+      case "dialog":
+        if (action.dialogKind === "invite") {
+          setDialog({ kind: "invite" });
+        } else {
+          setDialog({ kind: "profile_block" });
+        }
+        return;
+      case "panel":
+        setPanel(action.panel);
+        return;
+      case "refresh":
+        void refreshAngels();
+        return;
+      case "route":
+        router.push(action.route);
+    }
+  }
+
+  function renderDashboardTileIcon(icon: TrustedAngelsDashboardTileIcon) {
+    switch (icon) {
+      case "angel-links":
+        return <UserCheck size={24} color={theme.colors.primary} />;
+      case "invite":
+        return <UserPlus size={24} color={theme.colors.primary} />;
+      case "invitations":
+        return <Clock3 size={24} color={theme.colors.primary} />;
+      case "owner-links":
+        return <Users size={24} color={theme.colors.primary} />;
+      case "profile":
+        return <UserRound size={24} color={theme.colors.primary} />;
+      case "readiness":
+      case "state":
+        return <ShieldCheck size={24} color={theme.colors.primary} />;
+      case "refresh":
+        return <RefreshCw size={24} color={theme.colors.primary} />;
+    }
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.shell} testID="trusted-angels-screen">
@@ -433,62 +480,19 @@ export default function ContactsScreen() {
 
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} style={styles.contentScroll}>
           <StatusBanner tone={notice.tone} title={notice.title} text={notice.text} />
-          <View style={styles.resourceGrid}>
-            <ResourceTile
-              icon={<UserRound size={24} color={theme.colors.primary} />}
-              label="Perfil"
-              description={dashboardSummary.profileDescription}
-              onPress={() => router.push("/perfis")}
-            />
-            <ResourceTile
-              icon={<ShieldCheck size={24} color={theme.colors.primary} />}
-              label="Estado"
-              description={dashboardSummary.stateDescription}
-              onPress={() => setPanel("estado")}
-            />
-          </View>
-          <View style={styles.resourceGrid}>
-            <ResourceTile
-              icon={<UserPlus size={24} color={theme.colors.primary} />}
-              label="Criar convite"
-              description={dashboardSummary.createInvitationDescription}
-              onPress={() => setDialog(invitationGate.allowed ? { kind: "invite" } : { kind: "profile_block" })}
-            />
-            <ResourceTile
-              icon={<ShieldCheck size={24} color={theme.colors.primary} />}
-              label="Prontidão"
-              description={dashboardSummary.readinessDescription}
-              onPress={() => setPanel("prontidao")}
-            />
-          </View>
-          <View style={styles.resourceGrid}>
-            <ResourceTile
-              icon={<Users size={24} color={theme.colors.primary} />}
-              label="Meus anjos"
-              description={dashboardSummary.acceptedOwnerDescription}
-              onPress={() => setPanel("anjos")}
-            />
-            <ResourceTile
-              icon={<UserCheck size={24} color={theme.colors.primary} />}
-              label="Sou anjo"
-              description={dashboardSummary.acceptedAngelDescription}
-              onPress={() => setPanel("sou_anjo")}
-            />
-          </View>
-          <View style={styles.resourceGrid}>
-            <ResourceTile
-              icon={<Clock3 size={24} color={theme.colors.primary} />}
-              label="Convites"
-              description={dashboardSummary.invitationsDescription}
-              onPress={() => setPanel("convites")}
-            />
-            <ResourceTile
-              icon={<RefreshCw size={24} color={theme.colors.primary} />}
-              label="Atualizar"
-              description={dashboardSummary.syncDescription}
-              onPress={() => void refreshAngels()}
-            />
-          </View>
+          {dashboardTileRows.map((row) => (
+            <View key={row.map((tile) => tile.key).join("-")} style={styles.resourceGrid}>
+              {row.map((tile) => (
+                <ResourceTile
+                  key={tile.key}
+                  icon={renderDashboardTileIcon(tile.icon)}
+                  label={tile.label}
+                  description={tile.description}
+                  onPress={() => handleDashboardTileAction(tile.action)}
+                />
+              ))}
+            </View>
+          ))}
         </ScrollView>
 
         <Text style={styles.statusText}>{status}</Text>
