@@ -19,35 +19,30 @@ import { LiveAudioCallPanel } from "@/features/live-call/LiveAudioCallPanel";
 import {
   beginReceivedLiveCallArchive,
   buildLiveCallShareText,
-  formatLiveCallDate,
-  formatLiveCallDuration,
   listReceivedLiveCallArchives,
   updateReceivedLiveCallArchive,
   type LiveCallArchiveRecord
 } from "@/features/live-call/liveCallHistory";
 import { notifyIncomingEmergency } from "@/features/live-call/incomingEmergencyNotification";
+import { canAngelAutoAcceptIncomingEmergency } from "@/features/live-call/liveCallRolePolicy";
 import {
-  canAngelAutoAcceptIncomingEmergency,
-  currentEmergencyRecipientStatus
-} from "@/features/live-call/liveCallRolePolicy";
-import {
+  buildReceivedAlertActionState,
   buildReceivedAlertFailureDialog,
   buildReceivedAlertRefreshFailureStatus,
   buildReceivedAlertRefreshStatus,
   buildReceivedAlertCardPresentation,
   buildReceivedAlertIncomingCallPresentation,
+  buildReceivedCallArchiveCardPresentation,
   formatReceivedAlertDate,
   receivedAlertErrorMessage,
   receivedAlertResponseActionLabel,
   receivedAlertStatusMessage,
-  receivedCallArchiveStatusLabel,
   sortReceivedEmergencyAlerts
 } from "@/features/live-call/receivedAlertPresentationPolicy";
 import {
   buildReceivedAlertArchiveStatusUpdateDecision,
   buildReceivedAlertArchiveSyncDecision,
-  buildReceivedAlertRealtimeStartDecision,
-  isReceivedAlertLiveCallStatusActive
+  buildReceivedAlertRealtimeStartDecision
 } from "@/features/live-call/receivedAlertRuntimePolicy";
 import { useLiveAudioCall } from "@/features/live-call/useLiveAudioCall";
 import { ApiEmergencySession, apiClient } from "@/services/apiClient";
@@ -347,23 +342,21 @@ export default function AlertScreen() {
       {sortedAlerts.length ? (
         <View style={styles.alertStack}>
           {sortedAlerts.map((session) => {
-            const recipientStatus = currentEmergencyRecipientStatus(session);
-            const hasAccepted = recipientStatus === "accepted" || locallyAcceptedSessionIds.has(session.id);
+            const alertActionState = buildReceivedAlertActionState({
+              currentCallState: liveAudioCall.state,
+              locallyAcceptedSessionIds,
+              session
+            });
+            const hasAccepted = alertActionState.hasAccepted;
             const alertPresentation = buildReceivedAlertCardPresentation({
               hasAccepted,
-              recipientStatus,
+              recipientStatus: alertActionState.recipientStatus,
               session
             });
             const incomingCallPresentation = buildReceivedAlertIncomingCallPresentation({
               hasAccepted,
               session
             });
-            const isCallPanelSession = liveAudioCall.state.remoteSessionId === session.id;
-            const canShowCallPanel = alertPresentation.isActive && isCallPanelSession;
-            const hasActiveRealtimeSession =
-              Boolean(liveAudioCall.state.remoteSessionId) &&
-              isReceivedAlertLiveCallStatusActive(liveAudioCall.state.status);
-            const hasOtherCallSession = hasActiveRealtimeSession && !isCallPanelSession;
             return (
               <View key={session.id} style={[styles.alertCard, alertPresentation.isActive && styles.alertCardActive]}>
                 <View style={styles.alertHeader}>
@@ -379,7 +372,7 @@ export default function AlertScreen() {
                 <Text style={styles.alertStatus}>{alertPresentation.statusLabel}</Text>
                 <Text style={styles.alertBody}>{alertPresentation.body}</Text>
 
-                {alertPresentation.canReceiveCall && !isCallPanelSession ? (
+                {alertPresentation.canReceiveCall && !alertActionState.isCallPanelSession ? (
                   <View style={styles.incomingCallPanel}>
                     <View style={styles.callPromptHeader}>
                       <View style={styles.incomingCallIcon}>
@@ -394,7 +387,7 @@ export default function AlertScreen() {
                       <Pressable
                         accessibilityLabel={incomingCallPresentation.actionAccessibilityLabel}
                         accessibilityRole="button"
-                        disabled={hasOtherCallSession}
+                        disabled={alertActionState.incomingCallDisabled}
                         onPress={() => {
                           if (hasAccepted) {
                             void openRealtimeCall(session, true);
@@ -404,7 +397,7 @@ export default function AlertScreen() {
                         }}
                         style={({ pressed }) => [
                           styles.answerCallAction,
-                          hasOtherCallSession && styles.actionDisabled,
+                          alertActionState.incomingCallDisabled && styles.actionDisabled,
                           pressed && styles.actionPressed
                         ]}
                       >
@@ -421,10 +414,10 @@ export default function AlertScreen() {
                   </View>
                 ) : null}
 
-                {canShowCallPanel ? (
+                {alertActionState.canShowCallPanel ? (
                   <LiveAudioCallPanel
                     actionLabel="Entrar como anjo"
-                    disabled={!alertPresentation.canEnterCall || hasOtherCallSession}
+                    disabled={alertActionState.liveCallPanelDisabled}
                     onPrimaryAction={() => {
                       void openRealtimeCall(session, hasAccepted);
                     }}
@@ -440,13 +433,13 @@ export default function AlertScreen() {
                   <Pressable
                     accessibilityLabel="Avisar que estou ciente"
                     accessibilityRole="button"
-                    disabled={!alertPresentation.isActive || hasAccepted}
+                    disabled={alertActionState.seenActionDisabled}
                     onPress={() => {
                       void respondToAlert(session, "seen");
                     }}
                     style={({ pressed }) => [
                       styles.mutedAction,
-                      (!alertPresentation.isActive || hasAccepted) && styles.actionDisabled,
+                      alertActionState.seenActionDisabled && styles.actionDisabled,
                       pressed && styles.actionPressed
                     ]}
                   >
@@ -455,13 +448,13 @@ export default function AlertScreen() {
                   <Pressable
                     accessibilityLabel="Aceitar acompanhar"
                     accessibilityRole="button"
-                    disabled={!alertPresentation.isActive || hasAccepted}
+                    disabled={alertActionState.primaryActionDisabled}
                     onPress={() => {
                       void openRealtimeCall(session, hasAccepted);
                     }}
                     style={({ pressed }) => [
                       styles.primaryAction,
-                      (!alertPresentation.isActive || hasAccepted) && styles.actionDisabled,
+                      alertActionState.primaryActionDisabled && styles.actionDisabled,
                       pressed && styles.actionPressed
                     ]}
                   >
@@ -492,51 +485,54 @@ export default function AlertScreen() {
               <Text style={styles.archiveSubtitle}>Registros locais por pessoa protegida, com snapshot e duração.</Text>
             </View>
           </View>
-          {callArchiveRecords.map((record) => (
-            <View key={record.id} style={styles.archiveCard}>
-              <View style={styles.archiveSnapshotRow}>
-                <View style={styles.snapshotThumb}>
-                  <Text style={styles.snapshotThumbText}>{record.snapshot.label}</Text>
+          {callArchiveRecords.map((record) => {
+            const archivePresentation = buildReceivedCallArchiveCardPresentation(record);
+            return (
+              <View key={record.id} style={styles.archiveCard}>
+                <View style={styles.archiveSnapshotRow}>
+                  <View style={styles.snapshotThumb}>
+                    <Text style={styles.snapshotThumbText}>{archivePresentation.snapshotLabel}</Text>
+                  </View>
+                  <View style={styles.alertTitleBlock}>
+                    <Text style={styles.archiveRecordTitle}>{archivePresentation.protectedDisplayName}</Text>
+                    <Text style={styles.archiveRecordMeta}>{archivePresentation.startedAtLabel}</Text>
+                  </View>
                 </View>
-                <View style={styles.alertTitleBlock}>
-                  <Text style={styles.archiveRecordTitle}>{record.protectedDisplayName}</Text>
-                  <Text style={styles.archiveRecordMeta}>{formatLiveCallDate(record.startedAt)}</Text>
+                <View style={styles.archiveMetaGrid}>
+                  <View style={styles.archiveMetaItem}>
+                    <Clock3 size={15} color={theme.colors.textMuted} />
+                    <Text style={styles.archiveMetaText}>{archivePresentation.durationLabel}</Text>
+                  </View>
+                  <View style={styles.archiveMetaItem}>
+                    <Video size={15} color={theme.colors.textMuted} />
+                    <Text style={styles.archiveMetaText}>{archivePresentation.statusLabel}</Text>
+                  </View>
+                </View>
+                <Text style={styles.archiveLegalText}>{archivePresentation.shareRestriction}</Text>
+                <View style={styles.actionRow}>
+                  <Pressable
+                    accessibilityLabel="Abrir registro da chamada"
+                    accessibilityRole="button"
+                    onPress={() => setSelectedArchiveRecord(record)}
+                    style={({ pressed }) => [styles.mutedAction, pressed && styles.actionPressed]}
+                  >
+                    <Text style={styles.mutedActionText}>Abrir registro</Text>
+                  </Pressable>
+                  <Pressable
+                    accessibilityLabel="Compartilhar registro da chamada"
+                    accessibilityRole="button"
+                    onPress={() => {
+                      void shareArchiveRecord(record);
+                    }}
+                    style={({ pressed }) => [styles.primaryAction, pressed && styles.actionPressed]}
+                  >
+                    <Share2 size={17} color={theme.colors.textOnDark} />
+                    <Text style={styles.primaryActionText}>Compartilhar</Text>
+                  </Pressable>
                 </View>
               </View>
-              <View style={styles.archiveMetaGrid}>
-                <View style={styles.archiveMetaItem}>
-                  <Clock3 size={15} color={theme.colors.textMuted} />
-                  <Text style={styles.archiveMetaText}>{formatLiveCallDuration(record.durationSeconds)}</Text>
-                </View>
-                <View style={styles.archiveMetaItem}>
-                  <Video size={15} color={theme.colors.textMuted} />
-                  <Text style={styles.archiveMetaText}>{receivedCallArchiveStatusLabel(record.status)}</Text>
-                </View>
-              </View>
-              <Text style={styles.archiveLegalText}>{record.legal.shareRestriction}</Text>
-              <View style={styles.actionRow}>
-                <Pressable
-                  accessibilityLabel="Abrir registro da chamada"
-                  accessibilityRole="button"
-                  onPress={() => setSelectedArchiveRecord(record)}
-                  style={({ pressed }) => [styles.mutedAction, pressed && styles.actionPressed]}
-                >
-                  <Text style={styles.mutedActionText}>Abrir registro</Text>
-                </Pressable>
-                <Pressable
-                  accessibilityLabel="Compartilhar registro da chamada"
-                  accessibilityRole="button"
-                  onPress={() => {
-                    void shareArchiveRecord(record);
-                  }}
-                  style={({ pressed }) => [styles.primaryAction, pressed && styles.actionPressed]}
-                >
-                  <Share2 size={17} color={theme.colors.textOnDark} />
-                  <Text style={styles.primaryActionText}>Compartilhar</Text>
-                </Pressable>
-              </View>
-            </View>
-          ))}
+            );
+          })}
         </View>
       ) : null}
 

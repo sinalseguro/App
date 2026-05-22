@@ -1,5 +1,12 @@
 import type { ApiEmergencySession } from "@/services/apiClient";
-import type { LiveCallArchiveRecord } from "@/features/live-call/liveCallHistoryPolicy";
+import { currentEmergencyRecipientStatus } from "@/features/live-call/liveCallRolePolicy";
+import { isReceivedAlertLiveCallStatusActive } from "@/features/live-call/receivedAlertRuntimePolicy";
+import {
+  formatLiveCallDate,
+  formatLiveCallDuration,
+  type LiveCallArchiveRecord
+} from "@/features/live-call/liveCallHistoryPolicy";
+import type { LiveAudioCallState } from "@/features/live-call/liveCallStatePolicy";
 
 export type ReceivedAlertCardPresentation = {
   body: string;
@@ -16,6 +23,28 @@ export type ReceivedAlertIncomingCallPresentation = {
   actionLabel: string;
   text: string;
   title: string;
+};
+
+export type ReceivedAlertActionState = {
+  canShowCallPanel: boolean;
+  hasAccepted: boolean;
+  hasActiveRealtimeSession: boolean;
+  hasOtherCallSession: boolean;
+  incomingCallDisabled: boolean;
+  isCallPanelSession: boolean;
+  liveCallPanelDisabled: boolean;
+  primaryActionDisabled: boolean;
+  recipientStatus?: string;
+  seenActionDisabled: boolean;
+};
+
+export type ReceivedCallArchiveCardPresentation = {
+  durationLabel: string;
+  protectedDisplayName: string;
+  shareRestriction: string;
+  snapshotLabel: string;
+  startedAtLabel: string;
+  statusLabel: string;
 };
 
 export type ReceivedAlertResponseAction = "accept" | "decline" | "seen";
@@ -156,6 +185,39 @@ export function buildReceivedAlertCardPresentation({
   };
 }
 
+export function buildReceivedAlertActionState({
+  currentCallState,
+  locallyAcceptedSessionIds,
+  session
+}: {
+  currentCallState: LiveAudioCallState;
+  locallyAcceptedSessionIds: ReadonlySet<string>;
+  session: ApiEmergencySession;
+}): ReceivedAlertActionState {
+  const recipientStatus = currentEmergencyRecipientStatus(session);
+  const hasAccepted = recipientStatus === "accepted" || locallyAcceptedSessionIds.has(session.id);
+  const isActive = session.status === "active" && session.phase !== "ended";
+  const isCallPanelSession = currentCallState.remoteSessionId === session.id;
+  const hasActiveRealtimeSession =
+    Boolean(currentCallState.remoteSessionId) &&
+    isReceivedAlertLiveCallStatusActive(currentCallState.status);
+  const hasOtherCallSession = hasActiveRealtimeSession && !isCallPanelSession;
+  const canShowCallPanel = isActive && isCallPanelSession;
+
+  return {
+    canShowCallPanel,
+    hasAccepted,
+    hasActiveRealtimeSession,
+    hasOtherCallSession,
+    incomingCallDisabled: hasOtherCallSession,
+    isCallPanelSession,
+    liveCallPanelDisabled: hasOtherCallSession || !hasAccepted || !isActive,
+    primaryActionDisabled: !isActive || hasAccepted,
+    recipientStatus,
+    seenActionDisabled: !isActive || hasAccepted
+  };
+}
+
 export function buildReceivedAlertIncomingCallPresentation({
   hasAccepted,
   session
@@ -176,6 +238,19 @@ export function receivedCallArchiveStatusLabel(status: LiveCallArchiveRecord["st
   if (status === "ended") return "finalizado";
   if (status === "failed") return "chamada indisponível";
   return "registro ativo";
+}
+
+export function buildReceivedCallArchiveCardPresentation(
+  record: LiveCallArchiveRecord
+): ReceivedCallArchiveCardPresentation {
+  return {
+    durationLabel: formatLiveCallDuration(record.durationSeconds),
+    protectedDisplayName: record.protectedDisplayName,
+    shareRestriction: record.legal.shareRestriction,
+    snapshotLabel: record.snapshot.label,
+    startedAtLabel: formatLiveCallDate(record.startedAt),
+    statusLabel: receivedCallArchiveStatusLabel(record.status)
+  };
 }
 
 export function receivedAlertErrorMessage(error: unknown, fallback: string) {

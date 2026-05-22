@@ -486,6 +486,9 @@ if (
   !alertScreen.includes("listReceivedEmergencySessions") ||
   !alertScreen.includes("respondToEmergencySession") ||
   !alertScreen.includes("buildReceivedAlertCardPresentation") ||
+  !alertScreen.includes("buildReceivedAlertActionState") ||
+  !receivedAlertPresentationPolicy.includes("buildReceivedAlertActionState") ||
+  !receivedAlertPresentationPolicy.includes("buildReceivedCallArchiveCardPresentation") ||
   !receivedAlertPresentationPolicy.includes("Você é anjo de") ||
   !receivedAlertPresentationPolicy.includes("Atender como anjo")
 ) {

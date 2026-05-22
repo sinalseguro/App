@@ -1332,6 +1332,18 @@ Papel: seguranca, LGPD e QA.
 - `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
 
+## QA/Security - 2026-05-22 - Etapas 1.139 e 1.140 received alert action/archive policy
+
+- Mudanca restrita a regras puras/teste de estado visual e apresentacao de historico da tela `Alertas recebidos`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `app/alerta.tsx` continua responsavel por API, autoaceite, notificacao, WebRTC, storage seguro, refs mutaveis, reset de chamada, Share nativo, selecao de registro e estado React.
+- A policy apenas retorna estado derivado de botoes/painel e labels de card de historico local.
+- Contratos preservados: aceite local/remoto segue igual, outra chamada ativa continua bloqueando entrada, card `declined` segue bloqueado por `canReceiveCall`, e texto compartilhado permanece em `buildLiveCallShareText(record)`.
+- Nao introduz log novo, chave, token, hash, codigo, identity token, SDP, ICE, payload P2P, URI local, path de arquivo, coordenada ou conteudo de midia.
+- Inspecao sensivel nos arquivos tocados retornou apenas falsos positivos esperados: nomes de tipos/imports, anchors de smoke e `console.log` final de teste.
+- Validacoes aprovadas: `test:received-alert-presentation`, `test:received-alert-runtime`, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
+
 ## QA/Security - 2026-05-22 - Etapas 1.135 e 1.136 received alert runtime policy
 
 - Mudanca restrita a regras puras/teste de runtime local da tela `Alertas recebidos`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.

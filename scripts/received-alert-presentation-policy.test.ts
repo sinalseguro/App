@@ -1,11 +1,13 @@
 import assert from "node:assert/strict";
 
 import {
+  buildReceivedAlertActionState,
   buildReceivedAlertFailureDialog,
   buildReceivedAlertCardPresentation,
   buildReceivedAlertIncomingCallPresentation,
   buildReceivedAlertRefreshFailureStatus,
   buildReceivedAlertRefreshStatus,
+  buildReceivedCallArchiveCardPresentation,
   receivedAlertErrorMessage,
   receivedAlertPhaseLabel,
   receivedAlertResponseActionLabel,
@@ -13,6 +15,11 @@ import {
   receivedCallArchiveStatusLabel,
   sortReceivedEmergencyAlerts
 } from "../src/features/live-call/receivedAlertPresentationPolicy";
+import {
+  formatLiveCallDate,
+  formatLiveCallDuration,
+  type LiveCallArchiveRecord
+} from "../src/features/live-call/liveCallHistoryPolicy";
 import type { ApiEmergencySession } from "../src/services/apiClient";
 
 function emergencySession(overrides: Partial<ApiEmergencySession> = {}): ApiEmergencySession {
@@ -50,6 +57,11 @@ const endedSession = emergencySession({
   phase: "ended",
   status: "ended"
 });
+
+const idleCallState = {
+  message: "Chamada disponivel.",
+  status: "idle" as const
+};
 
 assert.equal(receivedAlertPhaseLabel(queuedSession), "Pedido de ajuda");
 assert.equal(receivedAlertPhaseLabel(acceptedSession, "accepted"), "Você está atendendo como anjo");
@@ -128,6 +140,73 @@ assert.deepEqual(
   }
 );
 
+const pendingActionState = buildReceivedAlertActionState({
+  currentCallState: idleCallState,
+  locallyAcceptedSessionIds: new Set(),
+  session: queuedSession
+});
+assert.equal(pendingActionState.hasAccepted, false);
+assert.equal(pendingActionState.primaryActionDisabled, false);
+assert.equal(pendingActionState.seenActionDisabled, false);
+assert.equal(pendingActionState.incomingCallDisabled, false);
+assert.equal(pendingActionState.canShowCallPanel, false);
+
+const acceptedActionState = buildReceivedAlertActionState({
+  currentCallState: idleCallState,
+  locallyAcceptedSessionIds: new Set(),
+  session: acceptedSession
+});
+assert.equal(acceptedActionState.hasAccepted, true);
+assert.equal(acceptedActionState.primaryActionDisabled, true);
+assert.equal(acceptedActionState.seenActionDisabled, true);
+assert.equal(acceptedActionState.liveCallPanelDisabled, false);
+
+const locallyAcceptedIds = new Set(["session-1"]);
+const locallyAcceptedActionState = buildReceivedAlertActionState({
+  currentCallState: idleCallState,
+  locallyAcceptedSessionIds: locallyAcceptedIds,
+  session: queuedSession
+});
+assert.equal(locallyAcceptedActionState.hasAccepted, true);
+assert.deepEqual([...locallyAcceptedIds], ["session-1"]);
+
+const endedActionState = buildReceivedAlertActionState({
+  currentCallState: idleCallState,
+  locallyAcceptedSessionIds: new Set(),
+  session: endedSession
+});
+assert.equal(endedActionState.primaryActionDisabled, true);
+assert.equal(endedActionState.seenActionDisabled, true);
+assert.equal(endedActionState.canShowCallPanel, false);
+
+const otherCallActionState = buildReceivedAlertActionState({
+  currentCallState: {
+    message: "Em chamada.",
+    remoteSessionId: "outra-sessao",
+    status: "connected"
+  },
+  locallyAcceptedSessionIds: new Set(),
+  session: queuedSession
+});
+assert.equal(otherCallActionState.hasActiveRealtimeSession, true);
+assert.equal(otherCallActionState.hasOtherCallSession, true);
+assert.equal(otherCallActionState.incomingCallDisabled, true);
+assert.equal(otherCallActionState.liveCallPanelDisabled, true);
+
+const sameCallActionState = buildReceivedAlertActionState({
+  currentCallState: {
+    message: "Em chamada.",
+    remoteSessionId: "session-1",
+    status: "connected"
+  },
+  locallyAcceptedSessionIds: new Set(["session-1"]),
+  session: queuedSession
+});
+assert.equal(sameCallActionState.hasActiveRealtimeSession, true);
+assert.equal(sameCallActionState.hasOtherCallSession, false);
+assert.equal(sameCallActionState.canShowCallPanel, true);
+assert.equal(sameCallActionState.liveCallPanelDisabled, false);
+
 assert.deepEqual(
   buildReceivedAlertIncomingCallPresentation({
     hasAccepted: false,
@@ -158,6 +237,43 @@ assert.equal(receivedCallArchiveStatusLabel("connected"), "ao vivo conectado");
 assert.equal(receivedCallArchiveStatusLabel("ended"), "finalizado");
 assert.equal(receivedCallArchiveStatusLabel("failed"), "chamada indisponível");
 assert.equal(receivedCallArchiveStatusLabel("recording"), "registro ativo");
+
+const archiveRecord: LiveCallArchiveRecord = {
+  durationSeconds: 74,
+  id: "archive-1",
+  legal: {
+    allowedTargets: ["autoridade", "usuario_protegido"],
+    shareAllowed: true,
+    shareRestriction: "Compartilhe somente com pessoa autorizada."
+  },
+  protectedDisplayName: "Maria Protegida",
+  remoteSessionId: "session-1",
+  role: "angel",
+  snapshot: {
+    capturedAt: "2026-05-22T10:00:00.000Z",
+    label: "MP",
+    mediaSummary: "Midia segue local.",
+    recipientScope: "Anjo autorizado",
+    subtitle: "Pedido recebido"
+  },
+  startedAt: "2026-05-22T10:00:00.000Z",
+  status: "connected",
+  updatedAt: "2026-05-22T10:01:14.000Z"
+};
+
+assert.deepEqual(buildReceivedCallArchiveCardPresentation(archiveRecord), {
+  durationLabel: formatLiveCallDuration(archiveRecord.durationSeconds),
+  protectedDisplayName: "Maria Protegida",
+  shareRestriction: "Compartilhe somente com pessoa autorizada.",
+  snapshotLabel: "MP",
+  startedAtLabel: formatLiveCallDate(archiveRecord.startedAt),
+  statusLabel: "ao vivo conectado"
+});
+assert.equal(buildReceivedCallArchiveCardPresentation({ ...archiveRecord, status: "ended" }).statusLabel, "finalizado");
+assert.equal(
+  buildReceivedCallArchiveCardPresentation({ ...archiveRecord, status: "failed" }).statusLabel,
+  "chamada indisponível"
+);
 
 assert.equal(buildReceivedAlertRefreshStatus({ receivedAlertCount: 1 }), "Pedidos atualizados.");
 assert.equal(buildReceivedAlertRefreshStatus({ receivedAlertCount: 0 }), "Nenhum pedido recebido agora.");

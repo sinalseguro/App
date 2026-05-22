@@ -1055,3 +1055,13 @@ Proximas acoes atualizadas:
 - Inspecao sensivel nos arquivos tocados retornou apenas falsos positivos esperados.
 - Validacoes aprovadas: `test:received-alert-presentation`, `test:received-alert-runtime`, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
+
+## Memoria viva - 2026-05-22 - acoes e historico de Alertas recebidos sem build
+
+- Etapas 1.139 e 1.140 extraem somente estado/apresentacao puros para `receivedAlertPresentationPolicy`: acoes do alerta, bloqueios de chamada e card de historico local.
+- Efeitos de risco permanecem na tela: API, autoaceite, notificacao, WebRTC, arquivo local, refs mutaveis, reset de chamada, Share, selecao de registro e estado React.
+- Contratos de seguranca preservados: outra chamada ativa bloqueia entrada, `Set` local nao e mutado pela policy, historico nao duplica texto de compartilhamento e restricao legal aparece literalmente no card.
+- Nao houve novo segredo, token, credencial, SDP, ICE, payload P2P, path local, coordenada ou conteudo de midia.
+- Inspecao sensivel nos arquivos tocados retornou apenas falsos positivos esperados.
+- Validacoes aprovadas: `test:received-alert-presentation`, `test:received-alert-runtime`, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
