@@ -5747,3 +5747,25 @@ Validacoes:
 Checkpoint:
 
 - `docs/201_CHECKPOINT_ETAPAS_1_159_1_160_PROFILE_PRESENTATIONAL_COMPONENTS_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.161 e 1.162 policy visual de Como funciona
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.161: extraido o catalogo de passos para `src/features/onboarding/howItWorksPresentationPolicy.ts`, com `id`, `iconKey`, `title` e `text`.
+- Etapa 1.162: adicionado `test:how-it-works-presentation` e anchors no `smoke-test` para proteger a policy.
+- `app/funcionamento.tsx` continua responsavel por `SafeScreen`, titulo/subtitulo, grid, cards, estilos e renderizacao dos icones Lucide.
+- A policy permanece apenas como dados publicos de apresentacao, sem JSX, tema, API, Share, storage, permissoes ou navegacao.
+- Revisao Cristine/Eliane confirmou que a tela deve parar neste ponto; continuar extraindo cards ou estilos teria ganho baixo.
+
+Validacoes:
+
+- `test:how-it-works-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`: aprovados.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/202_CHECKPOINT_ETAPAS_1_161_1_162_HOW_IT_WORKS_PRESENTATION_POLICY_2026-05-22.md`.

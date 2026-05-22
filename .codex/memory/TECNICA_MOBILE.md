@@ -1411,3 +1411,15 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
 - Proxima recomendacao tecnica: avaliar primeiro `app/funcionamento.tsx` como menor risco; depois `app/convite.tsx` para policy apresentacional do aceite. Nao continuar extraindo `app/perfis.tsx` por estetica.
+
+# Atualizacao - 2026-05-22 - Etapas 1.161 e 1.162 Policy visual de Como funciona
+
+- `src/features/onboarding/howItWorksPresentationPolicy.ts` agora centraliza `howItWorksSteps` com `id`, `iconKey`, `title` e `text`.
+- Etapa 1.161: o catalogo de passos saiu de `app/funcionamento.tsx` e virou dados puros.
+- Etapa 1.162: adicionado `npm run test:how-it-works-presentation` e smoke para bloquear JSX, tema, API, Share, storage e navegacao dentro da policy.
+- `app/funcionamento.tsx` segue responsavel por `SafeScreen`, titulo/subtitulo, grid, cards, estilos e renderizacao dos icones Lucide.
+- Gate focado: `npm run test:how-it-works-presentation`.
+- Validacoes aprovadas: `test:how-it-works-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+- Proxima recomendacao tecnica: avaliar `app/convite.tsx` para policy apresentacional do aceite; nao continuar extraindo `app/funcionamento.tsx` por estetica.

@@ -124,6 +124,7 @@ const requiredFiles = [
   "src/features/invitations/trustedRelationshipStore.ts",
   "src/features/profiles/profilePolicy.ts",
   "src/features/profiles/profileStore.ts",
+  "src/features/onboarding/howItWorksPresentationPolicy.ts",
   "src/features/settings/settingsPresentationPolicy.ts",
   "src/features/evidence/evidencePolicy.ts",
   "src/features/emergency/packagePresentation.ts",
@@ -438,6 +439,11 @@ const liveWebRtcSession = await readFile("src/services/liveWebRtcSession.ts", "u
 const localFilesScreen = await readFile("app/arquivos.tsx", "utf8");
 const settingsScreen = await readFile("app/configuracoes.tsx", "utf8");
 const settingsPresentationPolicy = await readFile("src/features/settings/settingsPresentationPolicy.ts", "utf8");
+const funcionamentoScreen = await readFile("app/funcionamento.tsx", "utf8");
+const howItWorksPresentationPolicy = await readFile(
+  "src/features/onboarding/howItWorksPresentationPolicy.ts",
+  "utf8"
+);
 const contactsScreen = await readFile("app/contatos.tsx", "utf8");
 const invitationScreen = await readFile("app/convite.tsx", "utf8");
 const accessGate = await readFile("src/features/access/AccessGate.tsx", "utf8");
@@ -919,6 +925,28 @@ if (
   !settingsPresentationPolicy.includes("status: \"enabled_local\"")
 ) {
   throw new Error("Video local precisa manter decisoes puras na policy e efeitos reais no painel Configuracoes.");
+}
+
+if (
+  !funcionamentoScreen.includes("howItWorksSteps") ||
+  !funcionamentoScreen.includes("renderHowItWorksIcon") ||
+  funcionamentoScreen.includes("const steps =") ||
+  !howItWorksPresentationPolicy.includes("howItWorksSteps") ||
+  !howItWorksPresentationPolicy.includes("iconKey: \"radio\"") ||
+  !howItWorksPresentationPolicy.includes("iconKey: \"location\"") ||
+  !howItWorksPresentationPolicy.includes("iconKey: \"archive\"") ||
+  !howItWorksPresentationPolicy.includes("iconKey: \"key\"") ||
+  !howItWorksPresentationPolicy.includes("iconKey: \"video\"") ||
+  !howItWorksPresentationPolicy.includes("iconKey: \"shield\"") ||
+  howItWorksPresentationPolicy.includes("<Radio") ||
+  howItWorksPresentationPolicy.includes("theme.colors") ||
+  howItWorksPresentationPolicy.includes("router.push") ||
+  howItWorksPresentationPolicy.includes("apiClient") ||
+  howItWorksPresentationPolicy.includes("Share.share") ||
+  howItWorksPresentationPolicy.includes("SecureStore") ||
+  howItWorksPresentationPolicy.includes("AsyncStorage")
+) {
+  throw new Error("Como funciona deve manter catalogo em policy pura e renderizacao visual na tela.");
 }
 
 if (

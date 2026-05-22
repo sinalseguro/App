@@ -1513,3 +1513,15 @@ Papel: seguranca, LGPD e QA.
 - Validacoes aprovadas: `test:profiles`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.
+
+## QA/Security - 2026-05-22 - Etapas 1.161 e 1.162 how it works presentation policy
+
+- Mudanca restrita a catalogo publico de apresentacao da tela `Como funciona`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `app/funcionamento.tsx` continua responsavel por `SafeScreen`, titulo/subtitulo, grid, cards, estilos e renderizacao dos icones Lucide.
+- `howItWorksPresentationPolicy` expoe apenas `id`, `iconKey`, `title` e `text`, sem JSX, tema, API, Share, storage, permissao, localizacao, camera, microfone ou navegacao.
+- Contratos preservados: textos continuam conservadores e nao prometem resposta policial, protecao garantida, prova judicial, integracao oficial, envio automatico ou gravacao oculta.
+- O smoke bloqueia retorno do catalogo inline na tela e bloqueia JSX/tema/API/Share/storage/navegacao dentro da policy.
+- Nao introduz log novo, chave, token, hash, codigo, identity token, SDP, ICE, payload P2P, URI local, path de arquivo, coordenada, telefone, nome real novo ou conteudo de midia.
+- Validacoes aprovadas: `test:how-it-works-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.

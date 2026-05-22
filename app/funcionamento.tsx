@@ -2,39 +2,27 @@ import { StyleSheet, Text, View } from "react-native";
 import { Archive, KeyRound, MapPin, Radio, ShieldCheck, Video } from "lucide-react-native";
 import { SafeScreen } from "@/components/SafeScreen";
 import { theme } from "@/design/theme";
+import {
+  howItWorksSteps,
+  type HowItWorksStepIconKey
+} from "@/features/onboarding/howItWorksPresentationPolicy";
 
-const steps = [
-  {
-    icon: <Radio size={20} color={theme.colors.primary} />,
-    title: "Acionamento",
-    text: "O SOS exige pressao longa para evitar toque acidental. Atalhos fisicos entram quando forem seguros no aparelho."
-  },
-  {
-    icon: <MapPin size={20} color={theme.colors.primary} />,
-    title: "Localizacao",
-    text: "A localizacao pontual pode ser pre-autorizada para reduzir atrito no momento do chamado."
-  },
-  {
-    icon: <Archive size={20} color={theme.colors.primary} />,
-    title: "Cofre local",
-    text: "O pacote e o video autorizado ficam preservados no dispositivo para revisao local segura."
-  },
-  {
-    icon: <KeyRound size={20} color={theme.colors.primary} />,
-    title: "Protecao dos arquivos",
-    text: "Arquivos e localizacao ficam protegidos no app e so devem sair com autorizacao."
-  },
-  {
-    icon: <Video size={20} color={theme.colors.primary} />,
-    title: "Midia",
-    text: "Video local autorizado pode ficar salvo no aparelho para revisao privada."
-  },
-  {
-    icon: <ShieldCheck size={20} color={theme.colors.primary} />,
-    title: "Privacidade",
-    text: "Dados devem ser usados apenas para protecao, orientacao e entrega autorizada."
+function renderHowItWorksIcon(iconKey: HowItWorksStepIconKey) {
+  switch (iconKey) {
+    case "archive":
+      return <Archive size={20} color={theme.colors.primary} />;
+    case "key":
+      return <KeyRound size={20} color={theme.colors.primary} />;
+    case "location":
+      return <MapPin size={20} color={theme.colors.primary} />;
+    case "radio":
+      return <Radio size={20} color={theme.colors.primary} />;
+    case "shield":
+      return <ShieldCheck size={20} color={theme.colors.primary} />;
+    case "video":
+      return <Video size={20} color={theme.colors.primary} />;
   }
-];
+}
 
 export default function FuncionamentoScreen() {
   return (
@@ -43,9 +31,9 @@ export default function FuncionamentoScreen() {
       subtitle="Resumo simples dos recursos principais, privacidade e limites atuais do app."
     >
       <View style={styles.grid}>
-        {steps.map((step) => (
-          <View key={step.title} style={styles.card}>
-            <View style={styles.icon}>{step.icon}</View>
+        {howItWorksSteps.map((step) => (
+          <View key={step.id} style={styles.card}>
+            <View style={styles.icon}>{renderHowItWorksIcon(step.iconKey)}</View>
             <View style={styles.copy}>
               <Text style={styles.title}>{step.title}</Text>
               <Text style={styles.text}>{step.text}</Text>

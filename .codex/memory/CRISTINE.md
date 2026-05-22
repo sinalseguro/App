@@ -1173,3 +1173,15 @@ Proximas acoes atualizadas:
 - Validacoes aprovadas: `test:profiles`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Proxima retomada recomendada: avaliar primeiro `app/funcionamento.tsx`, depois `app/convite.tsx`; nao continuar extraindo `app/perfis.tsx` por estetica.
+
+## Memoria viva - 2026-05-22 - policy visual de Como funciona sem build
+
+- Etapas 1.161 e 1.162 movem o catalogo de `Como funciona` para policy pura e adicionam teste/smoke focado.
+- `app/funcionamento.tsx` permanece responsavel por tela, grid, card, estilos e renderizacao dos icones.
+- `howItWorksPresentationPolicy` permanece apenas como dados publicos: `id`, `iconKey`, `title` e `text`.
+- O smoke bloqueia JSX, tema, API, Share, storage, permissoes e navegacao dentro da policy.
+- Contratos LGPD preservados: nao houve novo dado coletado, promessa oficial, envio automatico, gravacao oculta, coordenada, telefone, nome real novo ou conteudo de midia.
+- Nao houve novo segredo, token, credencial, SDP, ICE, payload P2P, path local, coordenada, telefone, nome real novo ou conteudo de midia.
+- Validacoes aprovadas: `test:how-it-works-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Proxima retomada recomendada: avaliar `app/convite.tsx`; nao continuar extraindo `app/funcionamento.tsx` por estetica.
