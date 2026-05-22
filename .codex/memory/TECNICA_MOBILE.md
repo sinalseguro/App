@@ -1387,3 +1387,15 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `typecheck`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+
+# Atualizacao - 2026-05-22 - Etapas 1.157 e 1.158 Cabecalho e Dialog de Convites de Anjos
+
+- `app/contatos.tsx` agora possui `TrustedAngelsHeaderMenu` e `TrustedAngelsInvitationsDialog` como wrappers locais de apresentacao.
+- Etapa 1.157: o cabecalho/menu recebe `menuOpen`, callbacks de fechar/toggle e callback de navegacao ja preparado pelo `ContactsScreen`.
+- Etapa 1.158: o dialog `Convites` recebe `state`, `visible`, `onClose` e callback de revogacao ja preparado pela tela.
+- `ContactsScreen` segue responsavel por gate de perfil, refresh, API, cache local, device binding, AppState, Share, criacao de convite, revogacoes reais, `router.push`, `openMenuRoute`, `setDialog`, `setPanel`, `setMenuOpen`, navegacao e estado React.
+- Gate focado: `npm run test:trusted-angels-panel`, `test:trusted-angels-dialog` e `test:trusted-angels-action`.
+- Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `typecheck`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Recomendacao tecnica: parar `app/contatos.tsx` por enquanto; proximas extracoes apresentacionais teriam baixo ganho e aumentariam prop drilling/fragilidade do smoke.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.

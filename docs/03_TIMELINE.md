@@ -5704,3 +5704,25 @@ Validacoes:
 Checkpoint:
 
 - `docs/199_CHECKPOINT_ETAPAS_1_155_1_156_TRUSTED_ANGELS_RELATIONSHIP_DIALOGS_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.157 e 1.158 cabecalho e Dialog de Convites de Anjos
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.157: extraido `TrustedAngelsHeaderMenu` para encapsular `AppTopBar`, backdrop e drawer lateral.
+- Etapa 1.158: extraido `TrustedAngelsInvitationsDialog` para renderizar o dialog `Convites`.
+- `ContactsScreen` continua responsavel pelos efeitos reais: gate de perfil, refresh, API, cache local, device binding, AppState, Share, criacao de convite, revogacoes reais, `router.push`, `openMenuRoute`, `setDialog`, `setPanel`, `setMenuOpen`, navegacao e estado React.
+- `scripts/smoke-test.mjs` recebeu anchors para proteger que os novos wrappers permanencam apresentacionais, sem API, Share nativo, AppState, storage, device binding, refresh, navegacao real, criacao/revogacao real ou setters de estado.
+- Revisao Cristine/Eliane confirmou que as duas fatias estao corretas e recomendou parar a tela de Anjos por enquanto, porque novas extracoes teriam ganho baixo e aumentariam fragilidade.
+
+Validacoes:
+
+- `test:trusted-angels-panel`, `test:trusted-angels-dialog`, `test:trusted-angels-action`, `smoke-test`, `lint`, `typecheck`, `private:android:readiness`, `npm test` e `git diff --check`: aprovados.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/200_CHECKPOINT_ETAPAS_1_157_1_158_TRUSTED_ANGELS_HEADER_INVITATIONS_DIALOG_2026-05-22.md`.

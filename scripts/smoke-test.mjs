@@ -446,6 +446,13 @@ const deviceBinding = await readFile("src/services/deviceBinding.ts", "utf8");
 const deviceKeyProof = await readFile("src/services/deviceKeyProof.ts", "utf8");
 const profilePolicy = await readFile("src/features/profiles/profilePolicy.ts", "utf8");
 const profileSurface = `${profilesScreen}\n${profilePolicy}`;
+const trustedAngelsHeaderMenuStartIndex = contactsScreen.indexOf("function TrustedAngelsHeaderMenu");
+const trustedAngelsHeaderMenuEndIndex = contactsScreen.indexOf("type TrustedAngelsDashboardGridProps");
+const trustedAngelsHeaderMenuBlock =
+  trustedAngelsHeaderMenuStartIndex >= 0 &&
+  trustedAngelsHeaderMenuEndIndex > trustedAngelsHeaderMenuStartIndex
+    ? contactsScreen.slice(trustedAngelsHeaderMenuStartIndex, trustedAngelsHeaderMenuEndIndex)
+    : "";
 const trustedAngelsDashboardGridStartIndex = contactsScreen.indexOf("function TrustedAngelsDashboardGrid");
 const trustedAngelsDashboardGridEndIndex = contactsScreen.indexOf("type TrustedAngelsReadinessPanelContentProps");
 const trustedAngelsDashboardGridBlock =
@@ -487,11 +494,18 @@ const trustedAngelsStateDialogsBlock =
     ? contactsScreen.slice(trustedAngelsStateDialogsStartIndex, trustedAngelsStateDialogsEndIndex)
     : "";
 const trustedAngelsRelationshipDialogsStartIndex = contactsScreen.indexOf("function TrustedAngelsOwnerLinksDialog");
-const trustedAngelsRelationshipDialogsEndIndex = contactsScreen.indexOf("export default function ContactsScreen");
+const trustedAngelsRelationshipDialogsEndIndex = contactsScreen.indexOf("type TrustedAngelsInvitationsDialogProps");
 const trustedAngelsRelationshipDialogsBlock =
   trustedAngelsRelationshipDialogsStartIndex >= 0 &&
   trustedAngelsRelationshipDialogsEndIndex > trustedAngelsRelationshipDialogsStartIndex
     ? contactsScreen.slice(trustedAngelsRelationshipDialogsStartIndex, trustedAngelsRelationshipDialogsEndIndex)
+    : "";
+const trustedAngelsInvitationsDialogStartIndex = contactsScreen.indexOf("function TrustedAngelsInvitationsDialog");
+const trustedAngelsInvitationsDialogEndIndex = contactsScreen.indexOf("export default function ContactsScreen");
+const trustedAngelsInvitationsDialogBlock =
+  trustedAngelsInvitationsDialogStartIndex >= 0 &&
+  trustedAngelsInvitationsDialogEndIndex > trustedAngelsInvitationsDialogStartIndex
+    ? contactsScreen.slice(trustedAngelsInvitationsDialogStartIndex, trustedAngelsInvitationsDialogEndIndex)
     : "";
 const receivedAlertsListStartIndex = alertScreen.indexOf("function ReceivedAlertsList");
 const receivedAlertsListEndIndex = alertScreen.indexOf("function ReceivedAlertsEmptyState");
@@ -911,6 +925,8 @@ if (
   !contactsScreen.includes("getActiveProtectionProfile") ||
   !contactsScreen.includes("profile_block") ||
   !contactsScreen.includes("router.push(\"/perfis\")") ||
+  !contactsScreen.includes("type TrustedAngelsHeaderMenuProps") ||
+  !contactsScreen.includes("function TrustedAngelsHeaderMenu") ||
   !contactsScreen.includes("type TrustedAngelsDashboardGridProps") ||
   !contactsScreen.includes("function TrustedAngelsDashboardGrid") ||
   !contactsScreen.includes("function TrustedAngelsReadinessPanelContent") ||
@@ -933,9 +949,30 @@ if (
   !contactsScreen.includes("function TrustedAngelsOwnerLinksDialog") ||
   !contactsScreen.includes("type TrustedAngelsAngelLinksDialogProps") ||
   !contactsScreen.includes("function TrustedAngelsAngelLinksDialog") ||
+  !contactsScreen.includes("type TrustedAngelsInvitationsDialogProps") ||
+  !contactsScreen.includes("function TrustedAngelsInvitationsDialog") ||
   !contactsScreen.includes("renderTrustedAngelsDashboardTileIcon")
 ) {
   throw new Error("Tela de anjos precisa passar pelo gate de perfil antes de criar convite.");
+}
+
+if (
+  !trustedAngelsHeaderMenuBlock ||
+  trustedAngelsHeaderMenuBlock.includes("apiClient") ||
+  trustedAngelsHeaderMenuBlock.includes("Share.share") ||
+  trustedAngelsHeaderMenuBlock.includes("useFocusEffect") ||
+  trustedAngelsHeaderMenuBlock.includes("AppState") ||
+  trustedAngelsHeaderMenuBlock.includes("listLocalInvitations") ||
+  trustedAngelsHeaderMenuBlock.includes("createLocalInvitation") ||
+  trustedAngelsHeaderMenuBlock.includes("revokeLocalInvitation") ||
+  trustedAngelsHeaderMenuBlock.includes("deviceBindingService") ||
+  trustedAngelsHeaderMenuBlock.includes("refreshAngels") ||
+  trustedAngelsHeaderMenuBlock.includes("router.push") ||
+  trustedAngelsHeaderMenuBlock.includes("setDialog") ||
+  trustedAngelsHeaderMenuBlock.includes("setPanel") ||
+  trustedAngelsHeaderMenuBlock.includes("setMenuOpen")
+) {
+  throw new Error("Cabecalho/menu de anjos deve permanecer apresentacional, sem efeitos, API, Share, storage, navegacao real ou estado real.");
 }
 
 if (
@@ -1036,6 +1073,24 @@ if (
   trustedAngelsRelationshipDialogsBlock.includes("setPanel")
 ) {
   throw new Error("Dialogs de vinculos de anjos devem permanecer apresentacionais, sem efeitos, API, Share, storage, navegacao ou estado real.");
+}
+
+if (
+  !trustedAngelsInvitationsDialogBlock ||
+  trustedAngelsInvitationsDialogBlock.includes("apiClient") ||
+  trustedAngelsInvitationsDialogBlock.includes("Share.share") ||
+  trustedAngelsInvitationsDialogBlock.includes("AppState") ||
+  trustedAngelsInvitationsDialogBlock.includes("deviceBindingService") ||
+  trustedAngelsInvitationsDialogBlock.includes("refreshAngels") ||
+  trustedAngelsInvitationsDialogBlock.includes("router.push") ||
+  trustedAngelsInvitationsDialogBlock.includes("createLocalInvitation") ||
+  trustedAngelsInvitationsDialogBlock.includes("revokeLocalInvitation") ||
+  trustedAngelsInvitationsDialogBlock.includes("revokeInvitation(") ||
+  trustedAngelsInvitationsDialogBlock.includes("revokeContact(") ||
+  trustedAngelsInvitationsDialogBlock.includes("setDialog") ||
+  trustedAngelsInvitationsDialogBlock.includes("setPanel")
+) {
+  throw new Error("Dialog de convites de anjos deve permanecer apresentacional, sem efeitos, API, Share, storage, navegacao ou estado real.");
 }
 
 if (

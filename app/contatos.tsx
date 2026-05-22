@@ -130,6 +130,44 @@ function SectionTitle({ icon, title }: { icon: ReactNode; title: string }) {
   );
 }
 
+type TrustedAngelsHeaderMenuProps = {
+  menuOpen: boolean;
+  onCloseMenu: () => void;
+  onNavigate: (route: EmergencyHomeRoute, panelRoute?: EmergencyHomePanel) => void;
+  onToggleMenu: () => void;
+};
+
+function TrustedAngelsHeaderMenu({
+  menuOpen,
+  onCloseMenu,
+  onNavigate,
+  onToggleMenu
+}: TrustedAngelsHeaderMenuProps) {
+  return (
+    <>
+      <AppTopBar
+        contextLabel="Anjos de confiança"
+        menuIcon="settings"
+        menuOpen={menuOpen}
+        onMenuPress={onToggleMenu}
+        showBack
+        showMenu
+      />
+
+      {menuOpen ? (
+        <>
+          <Pressable
+            accessibilityLabel="Fechar menu"
+            onPress={onCloseMenu}
+            style={styles.menuBackdrop}
+          />
+          <EmergencySettingsDrawer onNavigate={onNavigate} />
+        </>
+      ) : null}
+    </>
+  );
+}
+
 type TrustedAngelsDashboardGridProps = {
   onAction: (action: TrustedAngelsDashboardTileAction) => void;
   rows: TrustedAngelsDashboardTile[][];
@@ -543,6 +581,35 @@ function TrustedAngelsAngelLinksDialog({
   );
 }
 
+type TrustedAngelsInvitationsDialogProps = {
+  state: TrustedAngelsInvitationPanelState;
+  visible: boolean;
+  onClose: () => void;
+  onRevokeInvitation: (invitation: LocalInvitation) => void;
+};
+
+function TrustedAngelsInvitationsDialog({
+  onClose,
+  onRevokeInvitation,
+  state,
+  visible
+}: TrustedAngelsInvitationsDialogProps) {
+  return (
+    <BrandedDialog
+      actions={[{ label: "Fechar", tone: "muted" }]}
+      icon={<Clock3 size={18} color={theme.colors.primary} />}
+      onClose={onClose}
+      title="Convites"
+      visible={visible}
+    >
+      <TrustedAngelsInvitationPanelContent
+        state={state}
+        onRevokeInvitation={onRevokeInvitation}
+      />
+    </BrandedDialog>
+  );
+}
+
 export default function ContactsScreen() {
   const { painel } = useLocalSearchParams<{ painel?: string }>();
   const [apiSession, setApiSession] = useState<ApiSession | null>(null);
@@ -856,25 +923,12 @@ export default function ContactsScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.shell} testID="trusted-angels-screen">
-        <AppTopBar
-          contextLabel="Anjos de confiança"
-          menuIcon="settings"
+        <TrustedAngelsHeaderMenu
           menuOpen={menuOpen}
-          onMenuPress={() => setMenuOpen((current) => !current)}
-          showBack
-          showMenu
+          onCloseMenu={() => setMenuOpen(false)}
+          onNavigate={openMenuRoute}
+          onToggleMenu={() => setMenuOpen((current) => !current)}
         />
-
-        {menuOpen ? (
-          <>
-            <Pressable
-              accessibilityLabel="Fechar menu"
-              onPress={() => setMenuOpen(false)}
-              style={styles.menuBackdrop}
-            />
-            <EmergencySettingsDrawer onNavigate={openMenuRoute} />
-          </>
-        ) : null}
 
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} style={styles.contentScroll}>
           <StatusBanner tone={notice.tone} title={notice.title} text={notice.text} />
@@ -944,18 +998,12 @@ export default function ContactsScreen() {
           visible={dialogVisibility.angelLinksPanel}
         />
 
-        <BrandedDialog
-          actions={[{ label: "Fechar", tone: "muted" }]}
-          icon={<Clock3 size={18} color={theme.colors.primary} />}
+        <TrustedAngelsInvitationsDialog
           onClose={() => setPanel(null)}
-          title="Convites"
+          onRevokeInvitation={(invitation) => setDialog({ invitation, kind: "revoke_invitation" })}
+          state={invitationPanelState}
           visible={dialogVisibility.invitationsPanel}
-        >
-          <TrustedAngelsInvitationPanelContent
-            state={invitationPanelState}
-            onRevokeInvitation={(invitation) => setDialog({ invitation, kind: "revoke_invitation" })}
-          />
-        </BrandedDialog>
+        />
       </View>
     </SafeAreaView>
   );
