@@ -444,6 +444,52 @@ function TrustedAngelsRevokeContactDialog({
   );
 }
 
+type TrustedAngelsStateDialogProps = {
+  notice: ReturnType<typeof buildNotice>;
+  status: string;
+  visible: boolean;
+  onClose: () => void;
+};
+
+function TrustedAngelsStateDialog({ notice, onClose, status, visible }: TrustedAngelsStateDialogProps) {
+  return (
+    <BrandedDialog
+      actions={[{ label: "Fechar", tone: "muted" }]}
+      icon={<ShieldCheck size={18} color={theme.colors.primary} />}
+      message={notice.text}
+      onClose={onClose}
+      title={notice.title}
+      visible={visible}
+    >
+      <StatusBanner tone={notice.tone} title="Resumo" text={status} />
+    </BrandedDialog>
+  );
+}
+
+type TrustedAngelsReadinessDialogProps = {
+  readinessState: TrustedAngelsReadinessState;
+  visible: boolean;
+  onClose: () => void;
+};
+
+function TrustedAngelsReadinessDialog({
+  onClose,
+  readinessState,
+  visible
+}: TrustedAngelsReadinessDialogProps) {
+  return (
+    <BrandedDialog
+      actions={[{ label: "Fechar", tone: "muted" }]}
+      icon={<ShieldCheck size={18} color={theme.colors.primary} />}
+      onClose={onClose}
+      title="Prontidão"
+      visible={visible}
+    >
+      <TrustedAngelsReadinessPanelContent readinessState={readinessState} />
+    </BrandedDialog>
+  );
+}
+
 export default function ContactsScreen() {
   const { painel } = useLocalSearchParams<{ painel?: string }>();
   const [apiSession, setApiSession] = useState<ApiSession | null>(null);
@@ -819,26 +865,18 @@ export default function ContactsScreen() {
           visible={dialogVisibility.revokeContactDialog}
         />
 
-        <BrandedDialog
-          actions={[{ label: "Fechar", tone: "muted" }]}
-          icon={<ShieldCheck size={18} color={theme.colors.primary} />}
-          message={notice.text}
+        <TrustedAngelsStateDialog
+          notice={notice}
           onClose={() => setPanel(null)}
-          title={notice.title}
+          status={status}
           visible={dialogVisibility.statePanel}
-        >
-          <StatusBanner tone={notice.tone} title="Resumo" text={status} />
-        </BrandedDialog>
+        />
 
-        <BrandedDialog
-          actions={[{ label: "Fechar", tone: "muted" }]}
-          icon={<ShieldCheck size={18} color={theme.colors.primary} />}
+        <TrustedAngelsReadinessDialog
           onClose={() => setPanel(null)}
-          title="Prontidão"
+          readinessState={readinessState}
           visible={dialogVisibility.readinessPanel}
-        >
-          <TrustedAngelsReadinessPanelContent readinessState={readinessState} />
-        </BrandedDialog>
+        />
 
         <BrandedDialog
           actions={[{ label: "Fechar", tone: "muted" }]}

@@ -1129,3 +1129,14 @@ Proximas acoes atualizadas:
 - Inspecao sensivel nos arquivos tocados retornou apenas falsos positivos esperados.
 - Validacoes aprovadas: `test:trusted-angels-dialog`, `test:trusted-angels-action`, `test:trusted-angels-panel`, `smoke-test`, `lint`, `typecheck`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+
+## Memoria viva - 2026-05-22 - dialogs de Estado e Prontidao de Anjos sem build
+
+- Etapas 1.153 e 1.154 extraem somente wrappers locais de apresentacao: `TrustedAngelsStateDialog` e `TrustedAngelsReadinessDialog`.
+- Efeitos de risco permanecem na tela: gate de perfil, refresh, API, cache local, device binding, AppState, Share, criacao de convite, revogacoes reais, `setDialog`, `setPanel`, navegacao e estado React.
+- O smoke agora bloqueia regressao arquitetural nos novos dialogs: sem API, Share, AppState, storage, device binding, refresh, router, criacao de convite, revogacao real, `setDialog` ou `setPanel`.
+- Contratos LGPD preservados: nao houve novo payload, status tecnico sensivel, coordenada, telefone, nome real novo ou conteudo de midia nos dialogs.
+- Nao houve novo segredo, token, credencial, SDP, ICE, payload P2P, path local, coordenada, telefone, nome real novo ou conteudo de midia.
+- Inspecao sensivel nos arquivos tocados retornou apenas falsos positivos esperados.
+- Validacoes aprovadas: `test:trusted-angels-dialog`, `test:trusted-angels-panel`, `test:trusted-angels-dashboard`, `smoke-test`, `lint`, `typecheck`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.

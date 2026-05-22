@@ -1365,3 +1365,14 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `typecheck`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+
+# Atualizacao - 2026-05-22 - Etapas 1.153 e 1.154 Dialogs de Estado e Prontidao de Anjos
+
+- `app/contatos.tsx` agora possui `TrustedAngelsStateDialog` e `TrustedAngelsReadinessDialog` como wrappers locais de apresentacao.
+- Etapa 1.153: o dialog de estado/resumo recebe `notice`, `status`, `visible` e callback de fechamento ja preparados pelo `ContactsScreen`.
+- Etapa 1.154: o dialog de prontidao recebe `readinessState`, `visible` e callback de fechamento ja preparados pela tela.
+- `ContactsScreen` segue responsavel por gate de perfil, API, cache local, device binding, AppState, Share, criacao de convite, revogacoes reais, `setDialog`, `setPanel`, navegacao e estado React.
+- Gate focado: `npm run test:trusted-angels-dialog`, `test:trusted-angels-panel` e `test:trusted-angels-dashboard`.
+- Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `typecheck`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
