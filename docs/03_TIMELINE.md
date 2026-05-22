@@ -5231,3 +5231,25 @@ Validacoes:
 Checkpoint:
 
 - `docs/177_CHECKPOINT_ETAPAS_1_111_1_112_TRUSTED_ANGELS_DERIVED_REFRESH_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapas 1.113 e 1.114 navegacao e labels de dialogs
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `trustedAngelsNavigationPolicy` para centralizar decisao pura de rota do menu da tela `Anjos de confianca`.
+- Etapa 1.113: extraida regra especial que abre `/arquivos` com parametro de painel quando a navegacao exige esse contexto.
+- Etapa 1.114: extraidos labels de acoes dos dialogs para `buildTrustedAngelsDialogActionLabels()` em `trustedAngelsDialogPolicy`.
+- `app/contatos.tsx` continua responsavel por renderizacao, `router.push`, modais, estado React e handlers reais.
+- Novo gate `npm run test:trusted-angels-navigation` foi adicionado ao `npm test`.
+
+Validacoes:
+
+- `test:trusted-angels-navigation`, `test:trusted-angels-dialog`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`: aprovados.
+- `typecheck` nao emitiu erro, mas ficou sem saida e sem CPU; foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser mudanca pura de policy sem runtime nativo.
+
+Checkpoint:
+
+- `docs/178_CHECKPOINT_ETAPAS_1_113_1_114_TRUSTED_ANGELS_NAVIGATION_DIALOG_LABELS_2026-05-21.md`.

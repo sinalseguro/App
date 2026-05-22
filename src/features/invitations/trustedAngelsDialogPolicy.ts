@@ -15,6 +15,12 @@ export type TrustedAngelsDialogVisibility = {
   statePanel: boolean;
 };
 
+export type TrustedAngelsDialogActionLabels = {
+  revokeContactLabel: string;
+  revokeInvitationLabel: string;
+  shareInviteLabel: string;
+};
+
 export function buildTrustedAngelsDialogVisibility({
   dialogKind,
   panel
@@ -47,4 +53,12 @@ export function buildTrustedAngelInvitationCardKey({
   syncStatus: InvitationSyncStatus;
 }) {
   return `${syncStatus}-${id}`;
+}
+
+export function buildTrustedAngelsDialogActionLabels({ busy }: { busy: boolean }): TrustedAngelsDialogActionLabels {
+  return {
+    revokeContactLabel: busy ? "Revogando..." : "Revogar vínculo",
+    revokeInvitationLabel: busy ? "Revogando..." : "Revogar convite",
+    shareInviteLabel: busy ? "Criando..." : "Compartilhar convite"
+  };
 }

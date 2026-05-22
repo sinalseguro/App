@@ -39,11 +39,13 @@ import {
   buildTrustedAngelsReadinessState
 } from "@/features/invitations/trustedAngelsDashboardPolicy";
 import {
+  buildTrustedAngelsDialogActionLabels,
   buildTrustedAngelInvitationCardKey,
   buildTrustedAngelsDialogVisibility,
   canShowTrustedAngelInvitationRevocationAction,
   type TrustedAngelsDialogKind
 } from "@/features/invitations/trustedAngelsDialogPolicy";
+import { resolveTrustedAngelsMenuRouteTarget } from "@/features/invitations/trustedAngelsNavigationPolicy";
 import {
   buildTrustedAngelsLocalRefreshState,
   resolveTrustedAngelsNoSessionRefresh,
@@ -197,6 +199,7 @@ export default function ContactsScreen() {
     dialogKind: dialog?.kind ?? null,
     panel
   });
+  const dialogActionLabels = buildTrustedAngelsDialogActionLabels({ busy });
 
   async function refreshAngels(options: RefreshOptions = {}) {
     const refreshStart = resolveTrustedAngelsRefreshStart({
@@ -397,11 +400,12 @@ export default function ContactsScreen() {
 
   function openMenuRoute(route: EmergencyHomeRoute, panelRoute?: EmergencyHomePanel) {
     setMenuOpen(false);
-    if (route === "/arquivos" && panelRoute) {
-      router.push({ pathname: "/arquivos", params: { painel: panelRoute } });
+    const target = resolveTrustedAngelsMenuRouteTarget({ panelRoute, route });
+    if (target.kind === "archives-panel") {
+      router.push({ pathname: target.pathname, params: target.params });
       return;
     }
-    router.push(route);
+    router.push(target.route);
   }
 
   return (
@@ -494,7 +498,7 @@ export default function ContactsScreen() {
           { label: "Cancelar", tone: "muted" },
           {
             autoClose: false,
-            label: busy ? "Criando..." : "Compartilhar convite",
+            label: dialogActionLabels.shareInviteLabel,
             onPress: shareInvitation
           }
         ]}
@@ -538,7 +542,7 @@ export default function ContactsScreen() {
           { label: "Cancelar", tone: "muted" },
           {
             autoClose: false,
-            label: busy ? "Revogando..." : "Revogar convite",
+            label: dialogActionLabels.revokeInvitationLabel,
             onPress: () => {
               if (dialog?.kind === "revoke_invitation") void revokeInvitation(dialog.invitation);
             },
@@ -557,7 +561,7 @@ export default function ContactsScreen() {
           { label: "Cancelar", tone: "muted" },
           {
             autoClose: false,
-            label: busy ? "Revogando..." : "Revogar vínculo",
+            label: dialogActionLabels.revokeContactLabel,
             onPress: () => {
               if (dialog?.kind === "revoke_contact") void revokeContact(dialog.contact);
             },

@@ -930,3 +930,12 @@ Proximas acoes atualizadas:
 - Gates focados: `npm run test:trusted-angels-dashboard` e `npm run test:trusted-angels-refresh`.
 - Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
+
+## Memoria viva - 2026-05-21 - navegacao e dialog labels Anjos/Convites sem build
+
+- Etapas 1.113 e 1.114 extraem decisao de navegacao do menu e labels de acoes dos dialogs para policies puras.
+- `trustedAngelsNavigationPolicy` nao executa navegacao real; apenas retorna o alvo que `app/contatos.tsx` aplica com `router.push`.
+- `trustedAngelsDialogPolicy` preserva os mesmos textos publicos dos botoes de criar convite, revogar convite e revogar vinculo.
+- Gates focados: `npm run test:trusted-angels-navigation` e `npm run test:trusted-angels-dialog`.
+- Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.

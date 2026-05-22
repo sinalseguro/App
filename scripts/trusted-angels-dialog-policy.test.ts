@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 
 import {
   buildTrustedAngelInvitationCardKey,
+  buildTrustedAngelsDialogActionLabels,
   buildTrustedAngelsDialogVisibility,
   canShowTrustedAngelInvitationRevocationAction
 } from "../src/features/invitations/trustedAngelsDialogPolicy";
@@ -79,5 +80,17 @@ assert.equal(
   }),
   "backend_validated-invite-1"
 );
+
+assert.deepEqual(buildTrustedAngelsDialogActionLabels({ busy: false }), {
+  revokeContactLabel: "Revogar vínculo",
+  revokeInvitationLabel: "Revogar convite",
+  shareInviteLabel: "Compartilhar convite"
+});
+
+assert.deepEqual(buildTrustedAngelsDialogActionLabels({ busy: true }), {
+  revokeContactLabel: "Revogando...",
+  revokeInvitationLabel: "Revogando...",
+  shareInviteLabel: "Criando..."
+});
 
 console.log("trusted angels dialog policy ok");

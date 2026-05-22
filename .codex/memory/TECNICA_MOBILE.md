@@ -1157,3 +1157,13 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `app/contatos.tsx` segue responsavel pelos efeitos reais: timers, AppState, refresh real, renderizacao, navegacao, estado React e handlers.
 - Validacoes aprovadas: `test:trusted-angels-dashboard`, `test:trusted-angels-refresh`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build Android nesta rodada por ser refatoracao pura sem runtime nativo.
+
+# Atualizacao - 2026-05-21 - Etapas 1.113 e 1.114 Anjos/Convites
+
+- `trustedAngelsNavigationPolicy` centraliza a decisao pura de navegacao do menu da tela `Anjos de confianca`.
+- `resolveTrustedAngelsMenuRouteTarget()` preserva a rota normal e o caso especial de `/arquivos` com parametro de painel.
+- `buildTrustedAngelsDialogActionLabels()` em `trustedAngelsDialogPolicy` centraliza labels de criar convite, revogar convite e revogar vinculo durante estado ocupado.
+- `app/contatos.tsx` segue responsavel pelos efeitos reais: `router.push`, renderizacao, cliques, modais, Share/API/cache e estado React.
+- Novo gate `npm run test:trusted-angels-navigation` cobre a navegacao e esta integrado ao `npm test`.
+- Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build Android nesta rodada por ser refatoracao pura sem runtime nativo.

@@ -1238,3 +1238,12 @@ Papel: seguranca, LGPD e QA.
 - Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e sem CPU; foi encerrado para nao deixar processo pendurado.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
+
+## QA/Security - 2026-05-21 - Etapas 1.113 e 1.114 navigation/dialog labels de anjos
+
+- Mudanca restrita a regra pura/teste de navegacao do menu e labels de acoes dos dialogs da tela `Anjos de confianca`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `app/contatos.tsx` continua responsavel por `router.push`, Share, API, cache real, estado React e handlers; policies apenas retornam alvos de rota e labels publicos ja existentes.
+- Nao introduz log novo, chave, sinalizacao tecnica de chamada, path local, coordenada ou conteudo de midia.
+- Validacoes aprovadas: `test:trusted-angels-navigation`, `test:trusted-angels-dialog`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e sem CPU; foi encerrado para nao deixar processo pendurado.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
