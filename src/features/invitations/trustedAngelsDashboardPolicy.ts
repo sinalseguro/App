@@ -1,4 +1,5 @@
 import { acceptedAngelSummary, acceptedOwnerSummary } from "@/features/invitations/trustedAngelsPresentationPolicy";
+import type { ApiTrustedContactRelationship } from "@/services/apiClient";
 
 export type TrustedAngelsDashboardSummary = {
   acceptedAngelDescription: string;
@@ -9,6 +10,11 @@ export type TrustedAngelsDashboardSummary = {
   stateDescription: string;
   syncDescription: string;
   invitationsDescription: string;
+};
+
+export type TrustedAngelsAcceptedCounts = {
+  acceptedAngelCount: number;
+  acceptedOwnerCount: number;
 };
 
 export type TrustedAngelsReadinessState = {
@@ -25,6 +31,19 @@ export type TrustedAngelsReadinessState = {
     label: string;
   };
 };
+
+export function buildTrustedAngelsAcceptedCounts({
+  angelLinks,
+  ownerLinks
+}: {
+  angelLinks: ApiTrustedContactRelationship[];
+  ownerLinks: ApiTrustedContactRelationship[];
+}): TrustedAngelsAcceptedCounts {
+  return {
+    acceptedAngelCount: angelLinks.filter((contact) => contact.status === "accepted").length,
+    acceptedOwnerCount: ownerLinks.filter((contact) => contact.status === "accepted").length
+  };
+}
 
 export function buildTrustedAngelsDashboardSummary({
   acceptedAngelCount,

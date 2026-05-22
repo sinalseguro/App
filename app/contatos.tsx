@@ -34,6 +34,7 @@ import {
   buildTrustedAngelsOwnerPanelState
 } from "@/features/invitations/trustedAngelsPanelPolicy";
 import {
+  buildTrustedAngelsAcceptedCounts,
   buildTrustedAngelsDashboardSummary,
   buildTrustedAngelsReadinessState
 } from "@/features/invitations/trustedAngelsDashboardPolicy";
@@ -50,6 +51,8 @@ import {
   resolveTrustedAngelsRefreshFailure,
   resolveTrustedAngelsRefreshStart,
   resolveTrustedAngelsRemoteRefreshOutcome,
+  shouldRefreshTrustedAngelsOnAppState,
+  TRUSTED_ANGELS_REFRESH_INTERVAL_MS,
   type TrustedAngelsPanel
 } from "@/features/invitations/trustedAngelsRefreshPolicy";
 import {
@@ -163,11 +166,13 @@ export default function ContactsScreen() {
   });
   const profileSummary = getProfileSummary(activeProfile);
   const invitationGate = canCreateTrustedContactInvitation(activeProfile);
-  const acceptedOwnerCount = linkedContacts.filter((contact) => contact.status === "accepted").length;
-  const acceptedAngelCount = angelLinks.filter((contact) => contact.status === "accepted").length;
+  const acceptedCounts = buildTrustedAngelsAcceptedCounts({
+    angelLinks,
+    ownerLinks: linkedContacts
+  });
   const dashboardSummary = buildTrustedAngelsDashboardSummary({
-    acceptedAngelCount,
-    acceptedOwnerCount,
+    acceptedAngelCount: acceptedCounts.acceptedAngelCount,
+    acceptedOwnerCount: acceptedCounts.acceptedOwnerCount,
     apiSessionAvailable: Boolean(apiSession),
     busy,
     deviceReady,
@@ -285,9 +290,9 @@ export default function ContactsScreen() {
       }
       const refreshTimer = setInterval(() => {
         void refreshAngels({ silent: true });
-      }, 15000);
+      }, TRUSTED_ANGELS_REFRESH_INTERVAL_MS);
       const appStateSubscription = AppState.addEventListener("change", (state) => {
-        if (state === "active") {
+        if (shouldRefreshTrustedAngelsOnAppState(state)) {
           void refreshAngels({ silent: true });
         }
       });

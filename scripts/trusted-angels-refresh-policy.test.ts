@@ -6,7 +6,9 @@ import {
   resolveTrustedAngelsPanelParam,
   resolveTrustedAngelsRefreshFailure,
   resolveTrustedAngelsRefreshStart,
-  resolveTrustedAngelsRemoteRefreshOutcome
+  resolveTrustedAngelsRemoteRefreshOutcome,
+  shouldRefreshTrustedAngelsOnAppState,
+  TRUSTED_ANGELS_REFRESH_INTERVAL_MS
 } from "../src/features/invitations/trustedAngelsRefreshPolicy";
 import type { ApiInvitation, ApiSession, ApiTrustedContact, ApiTrustedContactRelationship } from "../src/services/apiClient";
 
@@ -60,6 +62,11 @@ assert.deepEqual(resolveTrustedAngelsRefreshStart({ inFlight: false, silent: tru
   shouldRefresh: true,
   silent: true
 });
+
+assert.equal(TRUSTED_ANGELS_REFRESH_INTERVAL_MS, 15000);
+assert.equal(shouldRefreshTrustedAngelsOnAppState("active"), true);
+assert.equal(shouldRefreshTrustedAngelsOnAppState("background"), false);
+assert.equal(shouldRefreshTrustedAngelsOnAppState("inactive"), false);
 
 assert.deepEqual(
   buildTrustedAngelsLocalRefreshState({

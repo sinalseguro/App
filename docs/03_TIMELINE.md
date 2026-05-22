@@ -5211,3 +5211,23 @@ Validacoes:
 Checkpoint:
 
 - `docs/176_CHECKPOINT_ETAPAS_1_109_1_110_TRUSTED_ANGELS_PANEL_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapas 1.111 e 1.112 contadores e ciclo de refresh
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Extraida `buildTrustedAngelsAcceptedCounts()` para centralizar contadores aceitos de `Meus anjos` e `Sou anjo`.
+- Extraidas `TRUSTED_ANGELS_REFRESH_INTERVAL_MS` e `shouldRefreshTrustedAngelsOnAppState()` para centralizar o intervalo de 15 segundos e a regra de refresh quando o app volta para `active`.
+- `app/contatos.tsx` continua responsavel por timers, AppState, refresh real, renderizacao, navegacao, modais, estado React e efeitos reais.
+
+Validacoes:
+
+- `test:trusted-angels-dashboard`, `test:trusted-angels-refresh`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`: aprovados.
+- `typecheck` nao emitiu erro, mas ficou sem saida e sem CPU; foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser mudanca pura de policy sem runtime nativo.
+
+Checkpoint:
+
+- `docs/177_CHECKPOINT_ETAPAS_1_111_1_112_TRUSTED_ANGELS_DERIVED_REFRESH_POLICY_2026-05-21.md`.

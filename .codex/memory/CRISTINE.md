@@ -922,3 +922,11 @@ Proximas acoes atualizadas:
 - Novo gate `npm run test:trusted-angels-panel` cobre estados vazios de vinculos, secoes de convites e estado vazio de convites.
 - Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
+
+## Memoria viva - 2026-05-21 - contadores e refresh Anjos/Convites sem build
+
+- Etapas 1.111 e 1.112 extraem contadores aceitos e decisao de refresh por AppState para policies puras.
+- `app/contatos.tsx` ainda controla timers, AppState, refresh real, estado React, renderizacao e handlers.
+- Gates focados: `npm run test:trusted-angels-dashboard` e `npm run test:trusted-angels-refresh`.
+- Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.

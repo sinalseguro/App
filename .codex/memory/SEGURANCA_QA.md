@@ -1229,3 +1229,12 @@ Papel: seguranca, LGPD e QA.
 - Validacoes aprovadas: teste focado, teste de dialog, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e sem CPU; foi encerrado para nao deixar processo pendurado.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
+
+## QA/Security - 2026-05-21 - Etapas 1.111 e 1.112 contadores e refresh policy de anjos
+
+- Mudanca restrita a regra pura/teste de contadores aceitos e ciclo de refresh da tela `Anjos de confianca`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `app/contatos.tsx` continua responsavel por timers, AppState, chamada real de refresh e estado React; policies apenas retornam contadores, intervalo e decisao booleana de AppState.
+- Nao introduz log novo, chave, sinalizacao tecnica de chamada, path local, coordenada ou conteudo de midia.
+- Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e sem CPU; foi encerrado para nao deixar processo pendurado.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.

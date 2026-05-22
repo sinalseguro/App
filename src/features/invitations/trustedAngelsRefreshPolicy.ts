@@ -2,6 +2,8 @@ import type { ApiInvitation, ApiSession, ApiTrustedContact, ApiTrustedContactRel
 
 export type TrustedAngelsPanel = "estado" | "prontidao" | "anjos" | "sou_anjo" | "convites" | null;
 
+export const TRUSTED_ANGELS_REFRESH_INTERVAL_MS = 15000;
+
 export function resolveTrustedAngelsRefreshStart({
   inFlight,
   silent
@@ -102,6 +104,10 @@ export function resolveTrustedAngelsRefreshFailure({
   return {
     status: silent ? undefined : message || "Não foi possível atualizar anjos agora."
   };
+}
+
+export function shouldRefreshTrustedAngelsOnAppState(state: string) {
+  return state === "active";
 }
 
 export function resolveTrustedAngelsPanelParam(panel?: string): TrustedAngelsPanel {
