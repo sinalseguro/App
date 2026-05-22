@@ -32,6 +32,7 @@ const requiredFiles = [
   "src/components/ResourceTile.tsx",
   "src/design/tokens.ts",
   "src/components/PanicButton.tsx",
+  "src/features/local-files/LocalFilesResourceGrid.tsx",
   "src/features/emergency-home/EmergencyCallDock.tsx",
   "src/features/emergency-home/EmergencyCallTarget.ts",
   "src/features/emergency-home/emergencyCallHeroPolicy.ts",
@@ -128,6 +129,7 @@ const requiredFiles = [
   "src/features/onboarding/howItWorksPresentationPolicy.ts",
   "src/features/settings/settingsPresentationPolicy.ts",
   "src/features/evidence/evidencePolicy.ts",
+  "src/features/emergency/localFilesPresentationPolicy.ts",
   "src/features/emergency/packagePresentation.ts",
   "src/features/emergency/mediaInterfacePresentation.ts",
   "src/features/emergency/emergencyPreferences.ts",
@@ -240,6 +242,7 @@ const requiredFiles = [
   "scripts/received-alert-presentation-policy.test.ts",
   "scripts/received-alert-runtime-policy.test.ts",
   "scripts/invitation-acceptance-presentation-policy.test.ts",
+  "scripts/local-files-presentation-policy.test.ts",
   "scripts/live-call-state-policy.test.ts",
   "scripts/live-webrtc-policy.test.ts",
   "scripts/live-call-sensitive-logging.test.ts",
@@ -439,6 +442,8 @@ const liveCallControl = await readFile("src/services/liveCallControl.ts", "utf8"
 const useLiveAudioCall = await readFile("src/features/live-call/useLiveAudioCall.ts", "utf8");
 const liveWebRtcSession = await readFile("src/services/liveWebRtcSession.ts", "utf8");
 const localFilesScreen = await readFile("app/arquivos.tsx", "utf8");
+const localFilesResourceGrid = await readFile("src/features/local-files/LocalFilesResourceGrid.tsx", "utf8");
+const localFilesPresentationPolicy = await readFile("src/features/emergency/localFilesPresentationPolicy.ts", "utf8");
 const settingsScreen = await readFile("app/configuracoes.tsx", "utf8");
 const settingsPresentationPolicy = await readFile("src/features/settings/settingsPresentationPolicy.ts", "utf8");
 const funcionamentoScreen = await readFile("app/funcionamento.tsx", "utf8");
@@ -878,9 +883,12 @@ if (
 }
 
 if (
-  !localFilesScreen.includes("Excluir arquivo local?") ||
-  !localFilesScreen.includes("Finalize o chamado antes") ||
-  !localFilesScreen.includes("topBarContextLabel")
+  !localFilesScreen.includes("confirmDeleteLocalPackage") ||
+  !localFilesScreen.includes("deleteEmergencyPackage") ||
+  !localFilesScreen.includes("topBarContextLabel") ||
+  !localFilesScreen.includes("buildLocalFilesTopBarContextLabel") ||
+  !localFilesPresentationPolicy.includes("Excluir arquivo local?") ||
+  !localFilesPresentationPolicy.includes("Finalize o chamado antes")
 ) {
   throw new Error("Exclusao local de pacote precisa confirmar acao destrutiva e bloquear chamado ativo.");
 }
@@ -888,9 +896,28 @@ if (
 if (
   !localFilesScreen.includes("Linking.canOpenURL") ||
   !localFilesScreen.includes("Google Maps") ||
-  !localFilesScreen.includes("localizacao exata deste registro")
+  !localFilesPresentationPolicy.includes("localizacao exata deste registro")
 ) {
   throw new Error("Abertura de mapa precisa validar plataforma e avisar envio de localizacao a app externo.");
+}
+
+if (
+  !localFilesScreen.includes("LocalFilesResourceGrid") ||
+  !localFilesScreen.includes("checkForAppUpdates") ||
+  !localFilesResourceGrid.includes("ResourceTile") ||
+  !localFilesResourceGrid.includes("localFilesResourceTiles") ||
+  !localFilesResourceGrid.includes("onOpenPlayer") ||
+  !localFilesResourceGrid.includes("onOpenVault") ||
+  !localFilesResourceGrid.includes("onOpenHowItWorks") ||
+  !localFilesResourceGrid.includes("onCheckUpdates") ||
+  localFilesResourceGrid.includes("router.push") ||
+  localFilesResourceGrid.includes("checkAppUpdate") ||
+  localFilesResourceGrid.includes("Linking.") ||
+  localFilesResourceGrid.includes("deleteEmergencyPackage") ||
+  localFilesResourceGrid.includes("finishEmergencyPackage") ||
+  localFilesResourceGrid.includes("listEmergencyPackages")
+) {
+  throw new Error("Grade de atalhos de Arquivos deve ser visual e receber callbacks sem efeitos reais.");
 }
 
 if (

@@ -5791,3 +5791,26 @@ Validacoes:
 Checkpoint:
 
 - `docs/203_CHECKPOINT_ETAPAS_1_163_1_164_INVITATION_ACCEPTANCE_PRESENTATION_POLICY_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.165 e 1.166 apresentacao da tela Arquivos
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.165: extraida `src/features/emergency/localFilesPresentationPolicy.ts` para concentrar textos, status, labels, mensagens de mapa/update/ajuda/exclusao e catalogo dos atalhos da tela `Arquivos`.
+- Etapa 1.166: extraido `src/features/local-files/LocalFilesResourceGrid.tsx` para renderizar a grade de quatro atalhos com callbacks injetados pela tela.
+- `app/arquivos.tsx` continua responsavel por carregamento do cofre, limpeza de residuos, gate protegido, player, mapa externo, update check, exclusao local, encerramento de chamado, navegacao e estado React.
+- `EvidencePlayerCard` e `LocalEvidenceRail` nao foram alterados.
+- `scripts/smoke-test.mjs` recebeu anchors para impedir que a grade visual chame router, update real, Linking, exclusao, finalizacao ou listagem de arquivos.
+- Revisao Cristine/Eliane/Lina confirmou que a extracao segura e apenas textual/visual; cofre real, player, criptografia, Share, exclusao e mapa permanecem fora da policy.
+
+Validacoes:
+
+- `test:local-files-presentation`, `smoke-test`, `typecheck`, `lint`, `test:crypto`, `test:protected-route-access`, `test:finish-code`, `test:finish-confirmation-dialog`, `private:android:readiness`, `npm test` e `git diff --check`: aprovados.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/204_CHECKPOINT_ETAPAS_1_165_1_166_LOCAL_FILES_PRESENTATION_2026-05-22.md`.

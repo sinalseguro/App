@@ -1198,3 +1198,14 @@ Proximas acoes atualizadas:
 - Revisao Cristine/Eliane/Lina recomendou parar `app/convite.tsx` neste ponto; mover efeitos reais para policy aumentaria risco.
 - Validacoes aprovadas: `test:invitation-acceptance-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+
+## Memoria viva - 2026-05-22 - apresentacao da tela Arquivos sem build
+
+- Etapas 1.165 e 1.166 extraem apenas apresentacao: `localFilesPresentationPolicy` e `LocalFilesResourceGrid`.
+- Efeitos de risco permanecem na tela: listagem do cofre, limpeza de residuos, gate protegido, player, mapa externo, update check, exclusao local, encerramento de chamado, navegacao e estado React.
+- `LocalFilesResourceGrid` recebe callbacks para abrir player, abrir cofre, navegar para funcionamento e checar update; nao importa router, update service, Linking, storage, cofre ou finalizacao.
+- `localFilesPresentationPolicy` centraliza textos/status, inclusive confirmacao de exclusao e aviso de localizacao exata ao abrir mapa externo.
+- Contratos LGPD preservados: sem novo dado coletado, sem log sensivel, sem path local real, sem coordenada real e sem conteudo de midia.
+- Revisao Cristine/Eliane/Lina recomendou parar `app/arquivos.tsx` neste ponto; nao mover `deleteLocalPackage`, `finishPackageNow`, `Linking.openURL`, `EvidencePlayerCard`, `LocalEvidenceRail`, storage, paths locais, criptografia, loopback/player ou limpeza de residuos.
+- Validacoes aprovadas: `test:local-files-presentation`, `smoke-test`, `typecheck`, `lint`, `test:crypto`, `test:protected-route-access`, `test:finish-code`, `test:finish-confirmation-dialog`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.

@@ -2,18 +2,27 @@ import { ReactNode, useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import { Linking, Platform, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Archive, BookOpen, CirclePlay, HelpCircle, LockKeyhole, MapPinned, RefreshCw, Share2, Trash2 } from "lucide-react-native";
+import { Archive, CirclePlay, HelpCircle, LockKeyhole, MapPinned, RefreshCw, Share2, Trash2 } from "lucide-react-native";
 import { AppTopBar } from "@/components/AppTopBar";
 import { BrandedDialog, BrandedDialogAction } from "@/components/BrandedDialog";
 import { EvidencePlayerCard } from "@/components/EvidencePlayerCard";
 import { LocalEvidenceRail } from "@/components/LocalEvidenceRail";
 import { ProtectedAccessGate } from "@/components/ProtectedAccessGate";
-import { ResourceTile } from "@/components/ResourceTile";
 import { theme } from "@/design/theme";
 import { EmergencySettingsDrawer } from "@/features/emergency-home/EmergencySettingsDrawer";
 import { EmergencyHomePanel, EmergencyHomeRoute } from "@/features/emergency-home/routes";
 import { deleteEmergencyPackage, listEmergencyPackages } from "@/features/emergency/emergencyOutbox";
 import { buildPackageMapLinks, buildTelemetrySummary } from "@/features/emergency/packagePresentation";
+import { LocalFilesResourceGrid } from "@/features/local-files/LocalFilesResourceGrid";
+import {
+  buildLocalFilesMaintenanceStatus,
+  buildLocalFilesMapDialogMessage,
+  buildLocalFilesRefreshStatus,
+  buildLocalFilesTopBarContextLabel,
+  buildLocalFilesUpdateDialogMessage,
+  localFilesScreenCopy,
+  LocalFilesDialog
+} from "@/features/emergency/localFilesPresentationPolicy";
 import {
   defaultEmergencyPreferences,
   EmergencyPreferences,
@@ -27,7 +36,6 @@ import { isProtectedAccessUnlocked, verifySecurityCodeStatus } from "@/security/
 import { formatAppVersion } from "@/services/appUpdate";
 import { checkAppUpdate } from "@/services/appUpdateService";
 
-type VaultDialog = "player" | "cofre" | null;
 type MapChoice = "platform" | "google";
 
 type LocalDialog = {
@@ -43,9 +51,9 @@ export default function LocalFilesScreen() {
   const [packagesRefreshing, setPackagesRefreshing] = useState(false);
   const [selectedPackageId, setSelectedPackageId] = useState<string | undefined>();
   const [expandedPackageId, setExpandedPackageId] = useState<string | undefined>();
-  const [activeDialog, setActiveDialog] = useState<VaultDialog>(null);
+  const [activeDialog, setActiveDialog] = useState<LocalFilesDialog>(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [status, setStatus] = useState("Carregando arquivos locais...");
+  const [status, setStatus] = useState<string>(localFilesScreenCopy.initialStatus);
   const [dialog, setDialog] = useState<LocalDialog | null>(null);
   const [preferences, setPreferences] = useState<EmergencyPreferences>(defaultEmergencyPreferences);
   const [finishPackageId, setFinishPackageId] = useState<string | null>(null);
@@ -70,7 +78,7 @@ export default function LocalFilesScreen() {
         if (currentExpandedId && records.some((record) => record.id === currentExpandedId)) return currentExpandedId;
         return undefined;
       });
-      setStatus(nextStatus ?? (records.length ? "Arquivos carregados." : "Nenhum arquivo local neste dispositivo."));
+      setStatus(buildLocalFilesRefreshStatus(records.length, nextStatus));
     } finally {
       setPackagesRefreshing(false);
     }
@@ -87,21 +95,20 @@ export default function LocalFilesScreen() {
 
       setAccessReady(true);
       const activePackage = await getActiveEmergencyPackage();
-      setStatus(activePackage ? "Chamado ativo detectado. Volte ao SOS para finalizar a recuperacao." : "Verificando residuos de midia local...");
+      setStatus(activePackage ? localFilesScreenCopy.activePackageStatus : localFilesScreenCopy.verifyingResiduesStatus);
       const maintenance = activePackage
         ? null
         : await cleanupNativeMediaResidues()
             .then(() => runPlaintextMediaStorageMaintenance())
             .catch(() => null);
-      const maintenanceStatus = maintenance
-        ? maintenance.migrationBlockedCount > 0 || maintenance.blockedReferencedCount > 0
-          ? "Arquivos carregados. Ha midia clara legada referenciada que exige nova tentativa de migracao."
-          : maintenance.migratedReferencedCount > 0 || maintenance.deletedCount > 0
-            ? "Arquivos carregados. Midia legada foi protegida ou removida."
-            : undefined
-        : activePackage
-          ? "Volte ao SOS para recuperar o chamado ativo antes da limpeza."
-          : "Arquivos carregados. Nao foi possivel concluir a verificacao de residuos.";
+      const maintenanceStatus = buildLocalFilesMaintenanceStatus({
+        activePackageDetected: Boolean(activePackage),
+        blockedReferencedCount: maintenance?.blockedReferencedCount,
+        deletedCount: maintenance?.deletedCount,
+        maintenanceAvailable: Boolean(maintenance),
+        migratedReferencedCount: maintenance?.migratedReferencedCount,
+        migrationBlockedCount: maintenance?.migrationBlockedCount
+      });
       await refreshPackages(maintenanceStatus);
     }
 
@@ -125,11 +132,11 @@ export default function LocalFilesScreen() {
     await refreshPackages();
 
     if (!result) {
-      setStatus("Nenhum chamado ativo encontrado para finalizar.");
+      setStatus(localFilesScreenCopy.finishMissingStatus);
       return;
     }
 
-    setStatus("Chamado finalizado e preservado no cofre local.");
+    setStatus(localFilesScreenCopy.finishSuccessStatus);
   }
 
   function requestFinishPackage(packageId: string) {
@@ -164,7 +171,7 @@ export default function LocalFilesScreen() {
 
   function selectPackage(packageRecord: EmergencyPackage) {
     setSelectedPackageId(packageRecord.id);
-    setStatus("Arquivo selecionado.");
+    setStatus(localFilesScreenCopy.selectedStatus);
   }
 
   function openMenuRoute(route: EmergencyHomeRoute, panel?: EmergencyHomePanel) {
@@ -182,14 +189,18 @@ export default function LocalFilesScreen() {
   }
 
   async function checkForAppUpdates() {
-    setStatus("Consultando atualizacoes no servico SinalSeguro...");
+    setStatus(localFilesScreenCopy.refreshStatus);
     const result = await checkAppUpdate();
     setStatus(result.message);
     setDialog({
       title: "Atualizacoes do app",
-      message: result.latestVersion
-        ? `${result.message}\n\nInstalada: ${formatAppVersion(result.currentVersion, result.currentVersionCode)}\nDisponivel: ${formatAppVersion(result.latestVersion, result.latestVersionCode)}`
-        : `${result.message}\n\nInstalada: ${formatAppVersion(result.currentVersion, result.currentVersionCode)}`,
+      message: buildLocalFilesUpdateDialogMessage({
+        currentVersionLabel: formatAppVersion(result.currentVersion, result.currentVersionCode),
+        latestVersionLabel: result.latestVersion
+          ? formatAppVersion(result.latestVersion, result.latestVersionCode)
+          : null,
+        message: result.message
+      }),
       icon: <RefreshCw size={18} color={theme.colors.primary} />,
       actions: [{ label: "Entendi" }]
     });
@@ -201,8 +212,8 @@ export default function LocalFilesScreen() {
 
   function showShareBlocked(packageRecord: EmergencyPackage) {
     setDialog({
-      title: "Compartilhar pelo app",
-      message: "O compartilhamento protegido sera liberado apenas para pessoas autorizadas dentro do SinalSeguro.",
+      title: localFilesScreenCopy.shareBlockedTitle,
+      message: localFilesScreenCopy.shareBlockedMessage,
       icon: <Share2 size={18} color={theme.colors.primary} />,
       actions: [{ label: "Entendi" }]
     });
@@ -210,9 +221,8 @@ export default function LocalFilesScreen() {
 
   function showVaultHelp() {
     setHelpDialog({
-      title: "Cofre local",
-      message:
-        "O cofre guarda arquivos deste aparelho. Toque em um item para visualizar, abrir mapa, compartilhar pelo app quando liberado ou excluir localmente.",
+      title: localFilesScreenCopy.vaultHelpTitle,
+      message: localFilesScreenCopy.vaultHelpMessage,
       icon: <HelpCircle size={18} color={theme.colors.primary} />,
       actions: [{ label: "Entendi" }]
     });
@@ -220,9 +230,8 @@ export default function LocalFilesScreen() {
 
   function showPlayerHelp() {
     setHelpDialog({
-      title: "Player seguro",
-      message:
-        "O player mostra a midia do arquivo selecionado e seus dados principais. Quando ainda nao houver video, abra o cofre e escolha outro item.",
+      title: localFilesScreenCopy.playerHelpTitle,
+      message: localFilesScreenCopy.playerHelpMessage,
       icon: <HelpCircle size={18} color={theme.colors.primary} />,
       actions: [{ label: "Entendi" }]
     });
@@ -233,8 +242,8 @@ export default function LocalFilesScreen() {
 
     if (!links) {
       setDialog({
-        title: "Sem localizacao",
-        message: "Este arquivo nao possui localizacao preservada para abrir no mapa.",
+        title: localFilesScreenCopy.mapMissingTitle,
+        message: localFilesScreenCopy.mapMissingMessage,
         icon: <MapPinned size={18} color={theme.colors.primary} />,
         actions: [{ label: "Entendi" }]
       });
@@ -266,8 +275,8 @@ export default function LocalFilesScreen() {
     }
 
     setDialog({
-      title: "Mapa indisponivel",
-      message: "Nao foi possivel abrir o aplicativo de mapa neste dispositivo.",
+      title: localFilesScreenCopy.mapUnavailableTitle,
+      message: localFilesScreenCopy.mapUnavailableMessage,
       icon: <MapPinned size={18} color={theme.colors.primary} />,
       actions: [{ label: "Entendi" }]
     });
@@ -291,14 +300,14 @@ export default function LocalFilesScreen() {
         currentExpandedId === packageRecord.id ? undefined : currentExpandedId
       );
       await refreshPackages();
-      setStatus("Arquivo removido deste dispositivo.");
+      setStatus(localFilesScreenCopy.deleteSuccessStatus);
     } catch (error) {
       const message =
         error instanceof Error
           ? error.message
           : "Nao foi possivel excluir o arquivo. Revise o cofre e tente novamente.";
       setDialog({
-        title: "Exclusao nao concluida",
+        title: localFilesScreenCopy.deleteFailureTitle,
         message,
         icon: <LockKeyhole size={18} color={theme.colors.primary} />,
         actions: [{ label: "Entendi" }]
@@ -310,8 +319,8 @@ export default function LocalFilesScreen() {
   function confirmDeleteLocalPackage(packageRecord: EmergencyPackage) {
     if (packageRecord.status === "recording_local") {
       setDialog({
-        title: "Finalize o chamado antes",
-        message: "Finalize o chamado antes de excluir o arquivo.",
+        title: localFilesScreenCopy.deleteActiveBlockedTitle,
+        message: localFilesScreenCopy.deleteActiveBlockedMessage,
         icon: <LockKeyhole size={18} color={theme.colors.primary} />,
         actions: [{ label: "Entendi" }]
       });
@@ -319,8 +328,8 @@ export default function LocalFilesScreen() {
     }
 
     setDialog({
-      title: "Excluir arquivo local?",
-      message: "O arquivo sera removido apenas deste dispositivo. Esta acao nao pode ser desfeita.",
+      title: localFilesScreenCopy.deleteConfirmTitle,
+      message: localFilesScreenCopy.deleteConfirmMessage,
       icon: <Trash2 size={18} color={theme.colors.danger} />,
       actions: [
         { label: "Cancelar", tone: "muted" },
@@ -336,11 +345,9 @@ export default function LocalFilesScreen() {
   }
 
   const selectedPackage = packages.find((packageRecord) => packageRecord.id === selectedPackageId);
-  const topBarContextLabel = activeDialog === "player" ? "Player seguro" : "Cofre local";
+  const topBarContextLabel = buildLocalFilesTopBarContextLabel(activeDialog);
   const platformMapLabel = Platform.OS === "ios" ? "Maps" : Platform.OS === "android" ? "Maps" : "Mapa";
-  const mapDialogMessage = mapPackage
-    ? `${buildTelemetrySummary(mapPackage).join("\n")}\n\nAo abrir um mapa externo, a localizacao exata deste registro sera enviada ao app ou servico escolhido.`
-    : "";
+  const mapDialogMessage = mapPackage ? buildLocalFilesMapDialogMessage(buildTelemetrySummary(mapPackage)) : "";
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.shell} testID="local-files-screen">
@@ -365,34 +372,12 @@ export default function LocalFilesScreen() {
         ) : null}
 
         <View style={styles.content}>
-          <View style={styles.resourceGrid}>
-            <ResourceTile
-              icon={<CirclePlay size={24} color={theme.colors.primary} />}
-              label="Player"
-              description="Rever"
-              onPress={() => setActiveDialog("player")}
-            />
-            <ResourceTile
-              icon={<Archive size={24} color={theme.colors.primary} />}
-              label="Cofre"
-              description="Arquivos"
-              onPress={() => setActiveDialog("cofre")}
-            />
-          </View>
-          <View style={styles.resourceGrid}>
-            <ResourceTile
-              icon={<BookOpen size={24} color={theme.colors.primary} />}
-              label="Funcionamento"
-              description="Privacidade"
-              onPress={() => router.push("/funcionamento")}
-            />
-            <ResourceTile
-              icon={<RefreshCw size={24} color={theme.colors.primary} />}
-              label="Atualizar app"
-              description="Atualizacoes"
-              onPress={checkForAppUpdates}
-            />
-          </View>
+          <LocalFilesResourceGrid
+            onCheckUpdates={checkForAppUpdates}
+            onOpenHowItWorks={() => router.push("/funcionamento")}
+            onOpenPlayer={() => setActiveDialog("player")}
+            onOpenVault={() => setActiveDialog("cofre")}
+          />
         </View>
 
         <BrandedDialog
@@ -450,20 +435,19 @@ export default function LocalFilesScreen() {
           helpLabel="Ajuda para encerrar"
           onHelpPress={() =>
             setHelpDialog({
-              title: "Encerrar chamado",
-              message:
-                "Encerrar finaliza apenas o chamado ativo. Os arquivos ja salvos continuam no cofre local, a menos que voce exclua depois.",
+              title: localFilesScreenCopy.finishActiveHelpTitle,
+              message: localFilesScreenCopy.finishActiveHelpMessage,
               icon: <LockKeyhole size={18} color={theme.colors.primary} />,
               actions: [{ label: "Entendi" }]
             })
           }
           message={
             preferences.finishSafety.requireCode
-              ? "Informe o codigo de encerramento configurado para impedir que outra pessoa finalize o chamado sem autorizacao."
-              : "O pacote sera encerrado e preservado no cofre local. Nenhuma evidencia sera apagada."
+              ? localFilesScreenCopy.finishActiveMessageWithCode
+              : localFilesScreenCopy.finishActiveMessageNoCode
           }
           onClose={closeFinishDialog}
-          title="Encerrar chamado ativo?"
+          title={localFilesScreenCopy.finishActiveTitle}
           visible={Boolean(finishPackageId)}
         >
           {preferences.finishSafety.requireCode ? (
@@ -564,10 +548,6 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: "transparent",
     zIndex: 20
-  },
-  resourceGrid: {
-    flexDirection: "row",
-    gap: theme.spacing.md
   },
   safeArea: {
     backgroundColor: theme.colors.background,

@@ -1435,3 +1435,16 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
 - Proxima recomendacao tecnica: parar `app/convite.tsx` neste ponto e escolher outra tela pequena de baixo risco para a proxima dupla de fatias.
+
+# Atualizacao - 2026-05-22 - Etapas 1.165 e 1.166 Apresentacao da tela Arquivos
+
+- `src/features/emergency/localFilesPresentationPolicy.ts` concentra textos/status de apresentacao, catalogo de atalhos, label do topo, status de manutencao, mensagem de update e aviso de mapa externo.
+- `src/features/local-files/LocalFilesResourceGrid.tsx` renderiza a grade de quatro atalhos (`Player`, `Cofre`, `Funcionamento`, `Atualizar app`) e apenas chama callbacks recebidos da tela.
+- `app/arquivos.tsx` segue responsavel por `listEmergencyPackages`, `cleanupNativeMediaResidues`, `runPlaintextMediaStorageMaintenance`, `finishEmergencyPackage`, `deleteEmergencyPackage`, `Linking.canOpenURL`, `Linking.openURL`, `checkAppUpdate`, `router.push`, gate protegido e estado React.
+- `EvidencePlayerCard` e `LocalEvidenceRail` nao foram alterados nesta rodada.
+- O smoke bloqueia regressao arquitetural na grade: sem router, update real, Linking, exclusao, finalizacao ou listagem de arquivos dentro do componente visual.
+- Gate focado: `npm run test:local-files-presentation`.
+- Validacoes aprovadas: `test:local-files-presentation`, `smoke-test`, `typecheck`, `lint`, `test:crypto`, `test:protected-route-access`, `test:finish-code`, `test:finish-confirmation-dialog`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+- Proxima recomendacao tecnica: parar `app/arquivos.tsx` neste ponto; antes de tocar SOS/WebRTC/cofre real, fazer nova avaliacao de risco e ganho.

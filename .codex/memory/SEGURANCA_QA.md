@@ -1537,3 +1537,16 @@ Papel: seguranca, LGPD e QA.
 - Validacoes aprovadas: `test:invitation-acceptance-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.
+
+## QA/Security - 2026-05-22 - Etapas 1.165 e 1.166 local files presentation
+
+- Mudanca restrita a policy pura e componente visual da tela `Arquivos`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `app/arquivos.tsx` continua responsavel por cofre real, limpeza de residuos, gate protegido, player, mapa externo, update check, exclusao local, encerramento de chamado, navegacao e estado React.
+- `localFilesPresentationPolicy` apenas resolve textos/status/labels e nao executa API, storage, Linking, router, player, cofre, exclusao, finalizacao, Share ou logs.
+- `LocalFilesResourceGrid` apenas renderiza `ResourceTile` e chama callbacks injetados pela tela.
+- Contratos preservados: exclusao local segue confirmada e bloqueada para pacote em gravacao; abertura de mapa segue avisando envio de localizacao exata a app/servico externo; encerramento segue condicionado ao codigo quando configurado.
+- O smoke bloqueia efeitos reais dentro da grade visual e ancora a confirmacao destrutiva/externalizacao de localizacao na policy.
+- Nao introduz log novo, chave, token, hash, codigo, identity token, SDP, ICE, payload P2P, URI local, path de arquivo, coordenada, telefone, nome real novo ou conteudo de midia.
+- Validacoes aprovadas: `test:local-files-presentation`, `smoke-test`, `typecheck`, `lint`, `test:crypto`, `test:protected-route-access`, `test:finish-code`, `test:finish-confirmation-dialog`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.
