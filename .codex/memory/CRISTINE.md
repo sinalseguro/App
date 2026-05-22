@@ -1185,3 +1185,16 @@ Proximas acoes atualizadas:
 - Validacoes aprovadas: `test:how-it-works-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Proxima retomada recomendada: avaliar `app/convite.tsx`; nao continuar extraindo `app/funcionamento.tsx` por estetica.
+
+## Memoria viva - 2026-05-22 - policy visual de Aceite de Convite sem build
+
+- Etapas 1.163 e 1.164 extraem somente policy pura de apresentacao: `invitationAcceptancePresentationPolicy`.
+- Efeitos de risco permanecem na tela: deeplink, token pendente, validacao no servidor, aceite no servidor, cache local de vinculo, limpeza de token, `router.push`, `useFocusEffect` e estado React.
+- A policy recebe estado ja calculado e decide apenas copy, banners, labels, `canAcceptInvitation` visual, disabled do botao e visibilidade de acoes.
+- `canAcceptInvitation` nao e guard de seguranca; os guards reais continuam em `handleAcceptInvitation`, incluindo ausencia de token, convite nao pronto, perfil bloqueado e revalidacao remota antes de aceitar.
+- O smoke agora bloqueia regressao arquitetural na policy: sem API, aceite real, cache, token store, roteamento, Expo linking ou efeito React.
+- Contratos LGPD preservados: o aceite continua condicionado a conta propria, dispositivo ativo, autorizacao de quem convidou e servidor; nao houve novo dado coletado.
+- Nao houve novo segredo, token, credencial, SDP, ICE, payload P2P, path local, coordenada, telefone, nome real novo ou conteudo de midia.
+- Revisao Cristine/Eliane/Lina recomendou parar `app/convite.tsx` neste ponto; mover efeitos reais para policy aumentaria risco.
+- Validacoes aprovadas: `test:invitation-acceptance-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.

@@ -1423,3 +1423,15 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
 - Proxima recomendacao tecnica: avaliar `app/convite.tsx` para policy apresentacional do aceite; nao continuar extraindo `app/funcionamento.tsx` por estetica.
+
+# Atualizacao - 2026-05-22 - Etapas 1.163 e 1.164 Policy visual de Aceite de Convite
+
+- `src/features/invitations/invitationAcceptancePresentationPolicy.ts` concentra copy publica, status inicial, banners, label do CTA, visibilidade de botoes e habilitacao visual da tela `Convite recebido`.
+- `app/convite.tsx` segue responsavel por deeplink, token pendente, validacao remota, aceite remoto, cache local de vinculo, limpeza de token, navegacao e estado React.
+- `canAcceptInvitation` permanece decisao de UI; os guards reais continuam no `handleAcceptInvitation`.
+- O smoke bloqueia regressao arquitetural: a policy nao pode importar/chamar API, storage, roteamento, Expo, React, Share, device binding ou efeitos reais.
+- Gate focado: `npm run test:invitation-acceptance-presentation`.
+- Validacoes aprovadas: `test:invitation-acceptance-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+- Proxima recomendacao tecnica: parar `app/convite.tsx` neste ponto e escolher outra tela pequena de baixo risco para a proxima dupla de fatias.

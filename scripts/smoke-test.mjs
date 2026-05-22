@@ -121,6 +121,7 @@ const requiredFiles = [
   "src/features/emergency-home/protectedRouteFormPolicy.ts",
   "src/features/emergency-home/remoteSyncStatusPolicy.ts",
   "src/features/invitations/invitationService.ts",
+  "src/features/invitations/invitationAcceptancePresentationPolicy.ts",
   "src/features/invitations/trustedRelationshipStore.ts",
   "src/features/profiles/profilePolicy.ts",
   "src/features/profiles/profileStore.ts",
@@ -238,6 +239,7 @@ const requiredFiles = [
   "scripts/live-call-history-policy.test.ts",
   "scripts/received-alert-presentation-policy.test.ts",
   "scripts/received-alert-runtime-policy.test.ts",
+  "scripts/invitation-acceptance-presentation-policy.test.ts",
   "scripts/live-call-state-policy.test.ts",
   "scripts/live-webrtc-policy.test.ts",
   "scripts/live-call-sensitive-logging.test.ts",
@@ -446,6 +448,10 @@ const howItWorksPresentationPolicy = await readFile(
 );
 const contactsScreen = await readFile("app/contatos.tsx", "utf8");
 const invitationScreen = await readFile("app/convite.tsx", "utf8");
+const invitationAcceptancePresentationPolicy = await readFile(
+  "src/features/invitations/invitationAcceptancePresentationPolicy.ts",
+  "utf8"
+);
 const accessGate = await readFile("src/features/access/AccessGate.tsx", "utf8");
 const profilesScreen = await readFile("app/perfis.tsx", "utf8");
 const deviceBinding = await readFile("src/services/deviceBinding.ts", "utf8");
@@ -1172,9 +1178,27 @@ if (
   !invitationScreen.includes("canAcceptAngelInvitation") ||
   !invitationScreen.includes("getActiveProtectionProfile") ||
   !invitationScreen.includes("validateBackendInvitationToken") ||
-  !invitationScreen.includes("Configurar perfil")
+  !invitationScreen.includes("acceptBackendInvitation") ||
+  !invitationScreen.includes("cacheTrustedContactRelationship") ||
+  !invitationScreen.includes("clearPendingInvitationToken") ||
+  !invitationScreen.includes("router.push") ||
+  !invitationScreen.includes("buildInvitationAcceptancePresentation") ||
+  !invitationAcceptancePresentationPolicy.includes("buildInvitationAcceptancePresentation") ||
+  !invitationAcceptancePresentationPolicy.includes("buildInvitationAcceptanceInitialStatus") ||
+  !invitationAcceptancePresentationPolicy.includes("profileButtonLabel: \"Configurar perfil\"") ||
+  !invitationAcceptancePresentationPolicy.includes("acceptedLinksButtonLabel: \"Ver meus vínculos\"") ||
+  !invitationAcceptancePresentationPolicy.includes("Limite de seguranca") ||
+  !invitationAcceptancePresentationPolicy.includes("Convite valido") ||
+  invitationAcceptancePresentationPolicy.includes("validateBackendInvitationToken") ||
+  invitationAcceptancePresentationPolicy.includes("acceptBackendInvitation") ||
+  invitationAcceptancePresentationPolicy.includes("cacheTrustedContactRelationship") ||
+  invitationAcceptancePresentationPolicy.includes("clearPendingInvitationToken") ||
+  invitationAcceptancePresentationPolicy.includes("savePendingInvitationToken") ||
+  invitationAcceptancePresentationPolicy.includes("router.push") ||
+  invitationAcceptancePresentationPolicy.includes("useFocusEffect") ||
+  invitationAcceptancePresentationPolicy.includes("Linking.useURL")
 ) {
-  throw new Error("Aceite de convite precisa bloquear menor e perfil ausente antes de atuar como anjo.");
+  throw new Error("Aceite de convite precisa manter policy visual pura e guards reais na tela antes de atuar como anjo.");
 }
 
 if (

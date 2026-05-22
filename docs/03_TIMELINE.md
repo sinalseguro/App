@@ -5769,3 +5769,25 @@ Validacoes:
 Checkpoint:
 
 - `docs/202_CHECKPOINT_ETAPAS_1_161_1_162_HOW_IT_WORKS_PRESENTATION_POLICY_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.163 e 1.164 policy visual de Aceite de Convite
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.163: extraida `src/features/invitations/invitationAcceptancePresentationPolicy.ts` para concentrar copy publica, banners, labels, habilitacao visual do botao principal e visibilidade de acoes da tela `Convite recebido`.
+- Etapa 1.164: adicionado `test:invitation-acceptance-presentation` e anchors no `smoke-test` para garantir que a policy permaneca pura.
+- `app/convite.tsx` continua responsavel por `useFocusEffect`, deeplink, token pendente, validacao no backend, aceite no backend, cache local do relacionamento, limpeza do token, navegacao e estado React.
+- A policy permanece apenas como decisao visual deterministica, sem API, storage, router, Expo, React, Share, device binding, componentes ou tema.
+- Revisao Cristine/Eliane/Lina confirmou que `canAcceptInvitation` pode controlar o botao, mas nao substitui os guards reais do `handleAcceptInvitation`.
+
+Validacoes:
+
+- `test:invitation-acceptance-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`: aprovados.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/203_CHECKPOINT_ETAPAS_1_163_1_164_INVITATION_ACCEPTANCE_PRESENTATION_POLICY_2026-05-22.md`.

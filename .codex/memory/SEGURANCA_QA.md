@@ -1525,3 +1525,15 @@ Papel: seguranca, LGPD e QA.
 - Validacoes aprovadas: `test:how-it-works-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.
+
+## QA/Security - 2026-05-22 - Etapas 1.163 e 1.164 invitation acceptance presentation policy
+
+- Mudanca restrita a policy pura de apresentacao da tela `Convite recebido`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `app/convite.tsx` continua responsavel por `useFocusEffect`, deeplink, token pendente, validacao remota, aceite remoto, cache local, limpeza de token, navegacao e estado React.
+- A policy apenas retorna copy publica, status inicial, banners, labels, habilitacao visual do CTA e visibilidade de acoes; nao executa API, storage, Expo, React, router, Share, device binding ou logs.
+- Contratos preservados: token e revalidado no backend antes do aceite; perfil ausente/menor segue bloqueado pela policy de perfil; aceite so ocorre com conta propria, dispositivo ativo e retorno do backend.
+- O smoke bloqueia API, aceite real, cache, limpeza/salvamento de token, roteamento, `useFocusEffect` e `Linking.useURL` dentro da policy.
+- Nao introduz log novo, chave, token, hash, codigo, identity token, SDP, ICE, payload P2P, URI local, path de arquivo, coordenada, telefone, nome real novo ou conteudo de midia.
+- Validacoes aprovadas: `test:invitation-acceptance-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.
