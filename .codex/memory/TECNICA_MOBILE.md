@@ -1487,3 +1487,16 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
 - Proxima recomendacao tecnica: nao tocar em `AppTopBar`, `BrandedDialog`, `_layout`, `app/index.tsx`, SOS/WebRTC, cofre, backend ou publicacao sem nova avaliacao de risco.
+
+# Atualizacao - 2026-05-22 - Etapas 1.173 e 1.174 Policies visuais de marca e carregamento
+
+- `src/components/appLaunchPresentationPolicy.ts` centraliza nome da marca, label de acessibilidade e parametros da barra de carregamento do `AppLaunchScreen`.
+- `src/components/brandLockupPresentationPolicy.ts` centraliza label, role de acessibilidade e tamanho do logo do `BrandLockup`.
+- `AppLaunchScreen` segue responsavel por `Animated`, asset do simbolo, montagem da tela e renderizacao da barra de carregamento.
+- `BrandLockup` segue responsavel por renderizar o asset aprovado da marca.
+- O smoke foi ajustado para reconhecer o label de carregamento na policy e continuar bloqueando efeitos decorativos indevidos.
+- Gate focado: `npm run test:brand-components-presentation`.
+- Validacoes aprovadas: `test:brand-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+- Proxima recomendacao tecnica: nova microtriagem antes da proxima dupla; manter fora de escopo `AppTopBar`, `BrandedDialog`, `_layout`, `app/index.tsx`, SOS/WebRTC, cofre, backend e publicacao sem plano proprio.

@@ -1250,3 +1250,12 @@ Proximas acoes atualizadas:
 - Validacoes aprovadas: `test:presentation-components`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.
+
+## QA/Security - 2026-05-22 - Etapas 1.173 e 1.174 brand launch policies
+
+- Mudanca restrita a helpers puros de apresentacao/acessibilidade de `AppLaunchScreen` e `BrandLockup`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `AppLaunchScreen` continua renderizando `Animated`, asset do simbolo e barra de carregamento; a policy expoe somente nome da marca, label de acessibilidade e parametros visuais.
+- `BrandLockup` continua renderizando o asset aprovado da marca; a policy expoe somente label, role e dimensoes do logo.
+- Sem alteracao de SOS, WebRTC, cofre, player, convites reais, permissao real, login, backend, portal, publicacao, criptografia, chaves ou armazenamento local.
+- Validacoes aprovadas: `test:brand-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.

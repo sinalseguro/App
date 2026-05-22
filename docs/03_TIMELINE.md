@@ -5883,3 +5883,26 @@ Validacoes:
 Checkpoint:
 
 - `docs/207_CHECKPOINT_ETAPAS_1_171_1_172_PRESENTATION_COMPONENTS_POLICY_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.173 e 1.174 policies visuais de marca e carregamento
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.173: extraida `src/components/appLaunchPresentationPolicy.ts` para concentrar nome da marca, label de acessibilidade e parametros da barra de carregamento do `AppLaunchScreen`.
+- Etapa 1.174: extraida `src/components/brandLockupPresentationPolicy.ts` para concentrar label, role de acessibilidade e tamanho do logo do `BrandLockup`.
+- `AppLaunchScreen` continua responsavel por `Animated`, asset do simbolo, montagem da tela e renderizacao da barra de carregamento.
+- `BrandLockup` continua responsavel por renderizar o asset aprovado da marca.
+- `scripts/smoke-test.mjs` recebeu guardrails para impedir efeitos reais nas policies e para reconhecer a nova policy do splash.
+- Revisao Cristine/Eliane/Lina/Tarcila confirmou que a mudanca deve permanecer visual/acessibilidade; nao houve alteracao de UX real, LGPD, runtime nativo, SOS/WebRTC, cofre, player, backend, portal ou release.
+
+Validacoes:
+
+- `test:brand-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`: aprovados.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/208_CHECKPOINT_ETAPAS_1_173_1_174_BRAND_LAUNCH_PRESENTATION_POLICY_2026-05-22.md`.

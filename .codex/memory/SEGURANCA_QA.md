@@ -1586,3 +1586,16 @@ Papel: seguranca, LGPD e QA.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.
+
+## Memoria viva - 2026-05-22 - policies visuais de marca e carregamento sem build
+
+- Etapas 1.173 e 1.174 extraem apenas apresentacao/acessibilidade: `appLaunchPresentationPolicy` e `brandLockupPresentationPolicy`.
+- `AppLaunchScreen` permanece responsavel por animacao, asset do simbolo, montagem da tela e barra de carregamento.
+- `BrandLockup` permanece responsavel por renderizar o asset aprovado da marca.
+- O smoke bloqueia API, Share, storage, navegacao, icones, animacao e efeitos reais dentro das policies puras.
+- Contratos preservados: nome da marca, label de acessibilidade, duracao/progresso do loading e dimensoes do logo permanecem equivalentes aos anteriores.
+- Nao houve novo segredo, credencial, SDP, ICE, payload P2P, path local, coordenada, telefone, nome real novo ou conteudo de midia.
+- Validacoes aprovadas: `test:brand-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.

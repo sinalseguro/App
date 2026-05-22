@@ -26,6 +26,9 @@ const requiredFiles = [
   "app/onboarding.tsx",
   "src/components/AppTopBar.tsx",
   "src/components/AppLaunchScreen.tsx",
+  "src/components/appLaunchPresentationPolicy.ts",
+  "src/components/BrandLockup.tsx",
+  "src/components/brandLockupPresentationPolicy.ts",
   "src/components/BrandedDialog.tsx",
   "src/components/consentCardPresentationPolicy.ts",
   "src/components/inviteCardPresentationPolicy.ts",
@@ -180,6 +183,7 @@ const requiredFiles = [
   "scripts/onboarding-presentation-policy.test.ts",
   "scripts/status-components-presentation-policy.test.ts",
   "scripts/presentation-components-policy.test.ts",
+  "scripts/brand-components-presentation-policy.test.ts",
   "scripts/emergency-home-activity-policy.test.ts",
   "scripts/emergency-call-hero-policy.test.ts",
   "scripts/emergency-start-policy.test.ts",
@@ -330,8 +334,14 @@ if (!appConfig.includes("./plugins/with-sinalseguro-media-engine")) {
 }
 
 const launchScreen = await readFile("src/components/AppLaunchScreen.tsx", "utf8");
+const launchPresentationPolicySource = await readFile("src/components/appLaunchPresentationPolicy.ts", "utf8");
 
-if (!launchScreen.includes("Carregando SinalSeguro") || launchScreen.includes("glow")) {
+if (
+  !launchScreen.includes("presentation.progressAccessibilityLabel") ||
+  !launchPresentationPolicySource.includes("Carregando SinalSeguro") ||
+  launchScreen.includes("glow") ||
+  launchPresentationPolicySource.includes("glow")
+) {
   throw new Error("Splash custom precisa ter barra de loading e nao usar efeitos glow ornamentais.");
 }
 
@@ -479,6 +489,10 @@ const resourceTile = await readFile("src/components/ResourceTile.tsx", "utf8");
 const resourceTilePresentationPolicy = await readFile("src/components/resourceTilePresentationPolicy.ts", "utf8");
 const statusBanner = await readFile("src/components/StatusBanner.tsx", "utf8");
 const statusBannerPresentationPolicy = await readFile("src/components/statusBannerPresentationPolicy.ts", "utf8");
+const appLaunchScreen = await readFile("src/components/AppLaunchScreen.tsx", "utf8");
+const appLaunchPresentationPolicy = await readFile("src/components/appLaunchPresentationPolicy.ts", "utf8");
+const brandLockup = await readFile("src/components/BrandLockup.tsx", "utf8");
+const brandLockupPresentationPolicy = await readFile("src/components/brandLockupPresentationPolicy.ts", "utf8");
 const contactsScreen = await readFile("app/contatos.tsx", "utf8");
 const invitationScreen = await readFile("app/convite.tsx", "utf8");
 const invitationAcceptancePresentationPolicy = await readFile(
@@ -1097,6 +1111,38 @@ if (
   )
 ) {
   throw new Error("Componentes genericos de apresentacao precisam manter policies puras sem efeitos reais.");
+}
+
+if (
+  !appLaunchScreen.includes("resolveAppLaunchPresentation()") ||
+  !appLaunchScreen.includes("presentation.progressInitialValue") ||
+  !appLaunchScreen.includes("presentation.progressAccessibilityLabel") ||
+  !appLaunchPresentationPolicy.includes("brandName: \"SinalSeguro\"") ||
+  !appLaunchPresentationPolicy.includes("progressAccessibilityLabel: \"Carregando SinalSeguro\"") ||
+  !appLaunchPresentationPolicy.includes("progressInitialValue: 0.18") ||
+  !appLaunchPresentationPolicy.includes("progressFinalValue: 1") ||
+  !appLaunchPresentationPolicy.includes("progressDurationMs: 900") ||
+  !brandLockup.includes("resolveBrandLockupPresentation()") ||
+  !brandLockup.includes("presentation.accessibilityLabel") ||
+  !brandLockup.includes("presentation.logoSize") ||
+  !brandLockupPresentationPolicy.includes("accessibilityLabel: \"SinalSeguro\"") ||
+  !brandLockupPresentationPolicy.includes("accessibilityRole: \"image\"") ||
+  !brandLockupPresentationPolicy.includes("height: 72") ||
+  !brandLockupPresentationPolicy.includes("width: 245") ||
+  [appLaunchPresentationPolicy, brandLockupPresentationPolicy].some(
+    (policySource) =>
+      policySource.includes("router.push") ||
+      policySource.includes("apiClient") ||
+      policySource.includes("Share.share") ||
+      policySource.includes("SecureStore") ||
+      policySource.includes("AsyncStorage") ||
+      policySource.includes("theme.colors") ||
+      policySource.includes("lucide-react-native") ||
+      policySource.includes("useEffect") ||
+      policySource.includes("Animated")
+  )
+) {
+  throw new Error("Componentes de marca e carregamento precisam manter policies puras sem efeitos reais.");
 }
 
 if (

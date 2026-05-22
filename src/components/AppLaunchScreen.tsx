@@ -1,30 +1,32 @@
 import { useEffect, useRef } from "react";
 import { Animated, Image, StyleSheet, Text, View } from "react-native";
+import { resolveAppLaunchPresentation } from "@/components/appLaunchPresentationPolicy";
 import { theme } from "@/design/theme";
 
 export function AppLaunchScreen() {
-  const progress = useRef(new Animated.Value(0.18)).current;
+  const presentation = resolveAppLaunchPresentation();
+  const progress = useRef(new Animated.Value(presentation.progressInitialValue)).current;
 
   useEffect(() => {
     Animated.timing(progress, {
-      duration: 900,
-      toValue: 1,
+      duration: presentation.progressDurationMs,
+      toValue: presentation.progressFinalValue,
       useNativeDriver: false
     }).start();
-  }, [progress]);
+  }, [presentation.progressDurationMs, presentation.progressFinalValue, progress]);
 
   const progressWidth = progress.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["18%", "100%"]
+    inputRange: presentation.progressInputRange,
+    outputRange: presentation.progressOutputRange
   });
 
   return (
     <View style={styles.screen}>
       <View style={styles.brand}>
         <Image source={require("../../assets/brand/sinalseguro-symbol.png")} style={styles.symbol} />
-        <Text style={styles.name}>SinalSeguro</Text>
+        <Text style={styles.name}>{presentation.brandName}</Text>
       </View>
-      <View accessibilityRole="progressbar" accessibilityLabel="Carregando SinalSeguro" style={styles.loadingTrack}>
+      <View accessibilityRole="progressbar" accessibilityLabel={presentation.progressAccessibilityLabel} style={styles.loadingTrack}>
         <Animated.View style={[styles.loadingFill, { width: progressWidth }]} />
       </View>
     </View>
