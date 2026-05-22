@@ -768,7 +768,11 @@ if (
   throw new Error("Termos e privacidade precisam exibir resumo visivel antes do aceite local.");
 }
 
-if (!settingsScreen.includes("Atalho de anjo desativado") || !settingsScreen.includes("Anjo 190 bloqueado ate aceite")) {
+if (
+  !settingsScreen.includes("buildSettingsSharingPanelState") ||
+  !settingsPresentationPolicy.includes("Atalho de anjo desativado") ||
+  !settingsPresentationPolicy.includes("Anjo 190 bloqueado ate aceite")
+) {
   throw new Error("Atalho de anjo precisa permanecer desativado ate gestao, aceite e contrato futuros.");
 }
 

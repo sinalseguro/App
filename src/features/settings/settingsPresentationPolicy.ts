@@ -48,6 +48,59 @@ export type SettingsSecurityCodePanelState = {
   statusLabel: string;
 };
 
+export type SettingsPanelActionIcon =
+  | "camera"
+  | "location"
+  | "lock"
+  | "microphone"
+  | "phone"
+  | "shield"
+  | "switch-camera"
+  | "video";
+
+export type SettingsSharingPanelActionKey =
+  | "call-190"
+  | "police-home"
+  | "receiver-call-190"
+  | "receiver-save"
+  | "stream-audio"
+  | "stream-location"
+  | "stream-video"
+  | "trusted-contact-call";
+
+export type SettingsSharingPanelAction = {
+  disabled: boolean;
+  icon: SettingsPanelActionIcon;
+  key: SettingsSharingPanelActionKey;
+  label: string;
+  selected: boolean;
+  streamScope?: keyof EmergencyPreferences["trustedStream"]["requestedMedia"];
+};
+
+export type SettingsSharingPanelState = {
+  actions: SettingsSharingPanelAction[];
+  contactSummary: string;
+};
+
+export type SettingsVideoPanelActionKey =
+  | "authorize-media"
+  | "camera-back"
+  | "camera-both"
+  | "camera-front"
+  | "toggle-local-video";
+
+export type SettingsVideoPanelAction = {
+  cameraMode?: LocalVideoCameraMode;
+  icon: SettingsPanelActionIcon;
+  key: SettingsVideoPanelActionKey;
+  label: string;
+  selected: boolean;
+};
+
+export type SettingsVideoPanelState = {
+  actions: SettingsVideoPanelAction[];
+};
+
 export type SettingsDashboardTileIcon =
   | "angels"
   | "duration"
@@ -182,6 +235,135 @@ export function buildSettingsSecurityCodePanelState(securityCodeRequired: boolea
     enableActionLabel: "Ativar codigo",
     isEnabled: securityCodeRequired,
     statusLabel: securityCodeRequired ? "Codigo habilitado" : "Sem codigo"
+  };
+}
+
+export function buildSettingsSharingPanelState({
+  preferences,
+  trustedContactName,
+  trustedContactStatus
+}: {
+  preferences: EmergencyPreferences | null;
+  trustedContactName: string;
+  trustedContactStatus: string;
+}): SettingsSharingPanelState {
+  return {
+    actions: [
+      {
+        disabled: true,
+        icon: "phone",
+        key: "police-home",
+        label: "Policia sempre na Home",
+        selected: true
+      },
+      {
+        disabled: false,
+        icon: "phone",
+        key: "call-190",
+        label: preferences?.emergencyPhoneCall.call190OnSosEnabled
+          ? "190 junto com SOS ativo"
+          : "Ligar 190 junto com SOS",
+        selected: Boolean(preferences?.emergencyPhoneCall.call190OnSosEnabled)
+      },
+      {
+        disabled: true,
+        icon: "phone",
+        key: "trusted-contact-call",
+        label: preferences?.emergencyPhoneCall.callTrustedContactOnAlert
+          ? "Videochamada ao anjo aguardando gestao"
+          : "Atalho de anjo desativado",
+        selected: false
+      },
+      {
+        disabled: true,
+        icon: "shield",
+        key: "receiver-call-190",
+        label: preferences?.emergencyPhoneCall.allowReceiverCall190
+          ? "Anjo 190 aguardando contrato"
+          : "Anjo 190 bloqueado ate aceite",
+        selected: false
+      },
+      {
+        disabled: false,
+        icon: "video",
+        key: "stream-video",
+        label: preferences?.trustedStream.requestedMedia.video
+          ? "Video para anjos solicitado"
+          : "Preparar video para anjos",
+        selected: false,
+        streamScope: "video"
+      },
+      {
+        disabled: false,
+        icon: "microphone",
+        key: "stream-audio",
+        label: preferences?.trustedStream.requestedMedia.audio
+          ? "Audio para anjos solicitado"
+          : "Preparar audio para anjos",
+        selected: false,
+        streamScope: "audio"
+      },
+      {
+        disabled: false,
+        icon: "location",
+        key: "stream-location",
+        label: preferences?.trustedStream.requestedMedia.locationLive
+          ? "Localizacao ao vivo solicitada"
+          : "Solicitar localizacao ao vivo",
+        selected: false,
+        streamScope: "locationLive"
+      },
+      {
+        disabled: false,
+        icon: "lock",
+        key: "receiver-save",
+        label: preferences?.trustedStream.allowReceiverEncryptedSave
+          ? "Salvamento no app do anjo solicitado"
+          : "Preparar salvamento no app do anjo",
+        selected: false
+      }
+    ],
+    contactSummary: `Anjo convidado: ${trustedContactName}. ${formatSettingsTrustedContactStatus(trustedContactStatus)}.`
+  };
+}
+
+export function buildSettingsVideoPanelState(preferences: EmergencyPreferences | null): SettingsVideoPanelState {
+  return {
+    actions: [
+      {
+        icon: "video",
+        key: "toggle-local-video",
+        label: preferences?.localVideoCapture.requestOnSos ? "Video local ativo no SOS" : "Ativar video local no SOS",
+        selected: false
+      },
+      {
+        icon: "microphone",
+        key: "authorize-media",
+        label: "Autorizar camera e microfone",
+        selected: false
+      },
+      {
+        cameraMode: "front",
+        icon: "camera",
+        key: "camera-front",
+        label: "Usar camera frontal",
+        selected: preferences?.localVideoCapture.cameraMode === "front"
+      },
+      {
+        cameraMode: "back",
+        icon: "camera",
+        key: "camera-back",
+        label: "Usar camera traseira",
+        selected: preferences?.localVideoCapture.cameraMode === "back"
+      },
+      {
+        cameraMode: "both",
+        icon: "switch-camera",
+        key: "camera-both",
+        label: "Usar duas cameras",
+        selected: preferences?.localVideoCapture.cameraMode === "both"
+      }
+    ]
   };
 }
 

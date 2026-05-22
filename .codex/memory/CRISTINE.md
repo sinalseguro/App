@@ -975,3 +975,12 @@ Proximas acoes atualizadas:
 - Gate focado: `npm run test:settings-presentation`.
 - Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
+
+## Memoria viva - 2026-05-22 - compartilhamento e video Configuracoes sem build
+
+- Etapas 1.123 e 1.124 extraem modelos de apresentacao dos paineis `Compartilhamento` e `Video local` para `settingsPresentationPolicy`.
+- A policy nao liga 190, nao alterna stream para anjos, nao salva midia, nao solicita camera/microfone, nao troca camera e nao persiste preferencias; apenas retorna labels, bloqueios e chaves de acao.
+- Os bloqueios publicos de atalho de anjo e 190 pelo anjo foram preservados e agora validados no smoke pela policy.
+- Gate focado: `npm run test:settings-presentation`.
+- Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.

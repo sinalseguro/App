@@ -49,16 +49,20 @@ import {
   buildSettingsLocationPanelState,
   buildSettingsPanelHelp,
   buildSettingsSecurityCodePanelState,
+  buildSettingsSharingPanelState,
+  buildSettingsVideoPanelState,
   formatSettingsCameraModeLabel,
-  formatSettingsTrustedContactStatus,
   resolveSettingsPermissionStatus,
   settingsLegalConsentItems,
   settingsPanelTitles,
   type SettingsDashboardTileAction,
   type SettingsDashboardTileIcon,
+  type SettingsPanelActionIcon,
   type PermissionStatusText,
   type SettingsConcretePanel,
-  type SettingsPanel
+  type SettingsPanel,
+  type SettingsSharingPanelAction,
+  type SettingsVideoPanelAction
 } from "@/features/settings/settingsPresentationPolicy";
 import {
   clearProtectedAccess,
@@ -169,6 +173,7 @@ export default function SettingsScreen() {
   const [appleLoginAvailable, setAppleLoginAvailable] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [, setStatusText] = useState("Carregando preferencias de emergencia...");
+  const trustedContactPreview = trustedContactsMock[0];
   const settingsDashboardTileRows = buildSettingsDashboardTileRows({
     accountConnected: Boolean(apiSession?.user?.email),
     foregroundStatus,
@@ -183,6 +188,12 @@ export default function SettingsScreen() {
   const settingsSecurityCodePanelState = buildSettingsSecurityCodePanelState(
     Boolean(preferences?.finishSafety.requireCode)
   );
+  const settingsSharingPanelState = buildSettingsSharingPanelState({
+    preferences,
+    trustedContactName: trustedContactPreview.name,
+    trustedContactStatus: trustedContactPreview.status
+  });
+  const settingsVideoPanelState = buildSettingsVideoPanelState(preferences);
 
   function showLoginFailureMessage(message: string, title = "Login nao concluido") {
     setLoginError(message);
@@ -744,6 +755,61 @@ export default function SettingsScreen() {
     }
   }
 
+  function renderSettingsPanelActionIcon(icon: SettingsPanelActionIcon) {
+    switch (icon) {
+      case "camera":
+        return <Camera size={18} color={theme.colors.primary} />;
+      case "location":
+        return <MapPin size={18} color={theme.colors.primary} />;
+      case "lock":
+        return <LockKeyhole size={18} color={theme.colors.primary} />;
+      case "microphone":
+        return <Mic size={18} color={theme.colors.primary} />;
+      case "phone":
+        return <PhoneCall size={18} color={theme.colors.primary} />;
+      case "shield":
+        return <ShieldCheck size={18} color={theme.colors.primary} />;
+      case "switch-camera":
+        return <SwitchCamera size={18} color={theme.colors.primary} />;
+      case "video":
+        return <Video size={18} color={theme.colors.primary} />;
+    }
+  }
+
+  function handleSharingPanelAction(action: SettingsSharingPanelAction) {
+    if (action.disabled) return;
+
+    if (action.key === "call-190") {
+      void toggleCall190OnSos();
+      return;
+    }
+
+    if (action.streamScope) {
+      void toggleStreamScope(action.streamScope);
+      return;
+    }
+
+    if (action.key === "receiver-save") {
+      void toggleReceiverEncryptedSave();
+    }
+  }
+
+  function handleVideoPanelAction(action: SettingsVideoPanelAction) {
+    if (action.key === "toggle-local-video") {
+      void toggleLocalVideoRequest();
+      return;
+    }
+
+    if (action.key === "authorize-media") {
+      void authorizeMediaPermissions();
+      return;
+    }
+
+    if (action.cameraMode) {
+      void updateCameraMode(action.cameraMode);
+    }
+  }
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.shell} testID="settings-screen">
@@ -1022,105 +1088,32 @@ export default function SettingsScreen() {
             <View style={styles.dialogStack}>
               <View style={styles.inlineInfo}>
                 <MapPin size={18} color={theme.colors.secure} />
-                <Text style={styles.inlineInfoText}>
-                  Anjo convidado: {trustedContactsMock[0].name}. {formatSettingsTrustedContactStatus(trustedContactsMock[0].status)}.
-                </Text>
+                <Text style={styles.inlineInfoText}>{settingsSharingPanelState.contactSummary}</Text>
               </View>
-              <ButtonIcon
-                disabled
-                icon={<PhoneCall size={18} color={theme.colors.primary} />}
-                label="Policia sempre na Home"
-                style={styles.selectedOption}
-              />
-              <ButtonIcon
-                icon={<PhoneCall size={18} color={theme.colors.primary} />}
-                label={
-                  preferences?.emergencyPhoneCall.call190OnSosEnabled
-                    ? "190 junto com SOS ativo"
-                    : "Ligar 190 junto com SOS"
-                }
-                onPress={toggleCall190OnSos}
-                style={preferences?.emergencyPhoneCall.call190OnSosEnabled ? styles.selectedOption : undefined}
-              />
-              <ButtonIcon
-                disabled
-                icon={<PhoneCall size={18} color={theme.colors.primary} />}
-                label={
-                  preferences?.emergencyPhoneCall.callTrustedContactOnAlert
-                    ? "Videochamada ao anjo aguardando gestao"
-                    : "Atalho de anjo desativado"
-                }
-              />
-              <ButtonIcon
-                disabled
-                icon={<ShieldCheck size={18} color={theme.colors.primary} />}
-                label={
-                  preferences?.emergencyPhoneCall.allowReceiverCall190
-                    ? "Anjo 190 aguardando contrato"
-                    : "Anjo 190 bloqueado ate aceite"
-                }
-              />
-              <ButtonIcon
-                icon={<Video size={18} color={theme.colors.primary} />}
-                label={preferences?.trustedStream.requestedMedia.video ? "Video para anjos solicitado" : "Preparar video para anjos"}
-                onPress={() => toggleStreamScope("video")}
-              />
-              <ButtonIcon
-                icon={<Mic size={18} color={theme.colors.primary} />}
-                label={preferences?.trustedStream.requestedMedia.audio ? "Audio para anjos solicitado" : "Preparar audio para anjos"}
-                onPress={() => toggleStreamScope("audio")}
-              />
-              <ButtonIcon
-                icon={<MapPin size={18} color={theme.colors.primary} />}
-                label={
-                  preferences?.trustedStream.requestedMedia.locationLive
-                    ? "Localizacao ao vivo solicitada"
-                    : "Solicitar localizacao ao vivo"
-                }
-                onPress={() => toggleStreamScope("locationLive")}
-              />
-              <ButtonIcon
-                icon={<LockKeyhole size={18} color={theme.colors.primary} />}
-                label={
-                  preferences?.trustedStream.allowReceiverEncryptedSave
-                    ? "Salvamento no app do anjo solicitado"
-                    : "Preparar salvamento no app do anjo"
-                }
-                onPress={toggleReceiverEncryptedSave}
-              />
+              {settingsSharingPanelState.actions.map((action) => (
+                <ButtonIcon
+                  key={action.key}
+                  disabled={action.disabled}
+                  icon={renderSettingsPanelActionIcon(action.icon)}
+                  label={action.label}
+                  onPress={() => handleSharingPanelAction(action)}
+                  style={action.selected ? styles.selectedOption : undefined}
+                />
+              ))}
             </View>
           ) : null}
 
           {activePanel === "video" ? (
             <View style={styles.dialogStack}>
-              <ButtonIcon
-                icon={<Video size={18} color={theme.colors.primary} />}
-                label={preferences?.localVideoCapture.requestOnSos ? "Video local ativo no SOS" : "Ativar video local no SOS"}
-                onPress={toggleLocalVideoRequest}
-              />
-              <ButtonIcon
-                icon={<Mic size={18} color={theme.colors.primary} />}
-                label="Autorizar camera e microfone"
-                onPress={authorizeMediaPermissions}
-              />
-              <ButtonIcon
-                icon={<Camera size={18} color={theme.colors.primary} />}
-                label="Usar camera frontal"
-                onPress={() => updateCameraMode("front")}
-                style={preferences?.localVideoCapture.cameraMode === "front" ? styles.selectedOption : undefined}
-              />
-              <ButtonIcon
-                icon={<Camera size={18} color={theme.colors.primary} />}
-                label="Usar camera traseira"
-                onPress={() => updateCameraMode("back")}
-                style={preferences?.localVideoCapture.cameraMode === "back" ? styles.selectedOption : undefined}
-              />
-              <ButtonIcon
-                icon={<SwitchCamera size={18} color={theme.colors.primary} />}
-                label="Usar duas cameras"
-                onPress={() => updateCameraMode("both")}
-                style={preferences?.localVideoCapture.cameraMode === "both" ? styles.selectedOption : undefined}
-              />
+              {settingsVideoPanelState.actions.map((action) => (
+                <ButtonIcon
+                  key={action.key}
+                  icon={renderSettingsPanelActionIcon(action.icon)}
+                  label={action.label}
+                  onPress={() => handleVideoPanelAction(action)}
+                  style={action.selected ? styles.selectedOption : undefined}
+                />
+              ))}
             </View>
           ) : null}
 

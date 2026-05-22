@@ -6,6 +6,8 @@ import {
   buildSettingsLocationPanelState,
   buildSettingsPanelHelp,
   buildSettingsSecurityCodePanelState,
+  buildSettingsSharingPanelState,
+  buildSettingsVideoPanelState,
   formatSettingsCameraModeLabel,
   formatSettingsTrustedContactStatus,
   resolveSettingsPermissionStatus,
@@ -99,6 +101,164 @@ assert.deepEqual(buildSettingsSecurityCodePanelState(false), {
   isEnabled: false,
   statusLabel: "Sem codigo"
 });
+
+assert.deepEqual(
+  buildSettingsSharingPanelState({
+    preferences: {
+      ...defaultEmergencyPreferences,
+      emergencyPhoneCall: {
+        ...defaultEmergencyPreferences.emergencyPhoneCall,
+        allowReceiverCall190: true,
+        call190OnSosEnabled: true,
+        callTrustedContactOnAlert: true
+      },
+      trustedStream: {
+        ...defaultEmergencyPreferences.trustedStream,
+        allowReceiverEncryptedSave: true,
+        requestedMedia: {
+          ...defaultEmergencyPreferences.trustedStream.requestedMedia,
+          audio: true,
+          locationLive: true,
+          video: true
+        }
+      }
+    },
+    trustedContactName: "Maria",
+    trustedContactStatus: "accepted"
+  }),
+  {
+    actions: [
+      {
+        disabled: true,
+        icon: "phone",
+        key: "police-home",
+        label: "Policia sempre na Home",
+        selected: true
+      },
+      {
+        disabled: false,
+        icon: "phone",
+        key: "call-190",
+        label: "190 junto com SOS ativo",
+        selected: true
+      },
+      {
+        disabled: true,
+        icon: "phone",
+        key: "trusted-contact-call",
+        label: "Videochamada ao anjo aguardando gestao",
+        selected: false
+      },
+      {
+        disabled: true,
+        icon: "shield",
+        key: "receiver-call-190",
+        label: "Anjo 190 aguardando contrato",
+        selected: false
+      },
+      {
+        disabled: false,
+        icon: "video",
+        key: "stream-video",
+        label: "Video para anjos solicitado",
+        selected: false,
+        streamScope: "video"
+      },
+      {
+        disabled: false,
+        icon: "microphone",
+        key: "stream-audio",
+        label: "Audio para anjos solicitado",
+        selected: false,
+        streamScope: "audio"
+      },
+      {
+        disabled: false,
+        icon: "location",
+        key: "stream-location",
+        label: "Localizacao ao vivo solicitada",
+        selected: false,
+        streamScope: "locationLive"
+      },
+      {
+        disabled: false,
+        icon: "lock",
+        key: "receiver-save",
+        label: "Salvamento no app do anjo solicitado",
+        selected: false
+      }
+    ],
+    contactSummary: "Anjo convidado: Maria. Autorizado."
+  }
+);
+
+const fallbackSharingPanel = buildSettingsSharingPanelState({
+  preferences: null,
+  trustedContactName: "Contato de confianca",
+  trustedContactStatus: "pendente"
+});
+assert.equal(fallbackSharingPanel.contactSummary, "Anjo convidado: Contato de confianca. Aguardando aceite.");
+assert.equal(fallbackSharingPanel.actions[1].label, "Ligar 190 junto com SOS");
+assert.equal(fallbackSharingPanel.actions[2].label, "Atalho de anjo desativado");
+assert.equal(fallbackSharingPanel.actions[3].label, "Anjo 190 bloqueado ate aceite");
+assert.equal(fallbackSharingPanel.actions[4].label, "Preparar video para anjos");
+assert.equal(fallbackSharingPanel.actions[5].label, "Preparar audio para anjos");
+assert.equal(fallbackSharingPanel.actions[6].label, "Solicitar localizacao ao vivo");
+assert.equal(fallbackSharingPanel.actions[7].label, "Preparar salvamento no app do anjo");
+
+assert.deepEqual(
+  buildSettingsVideoPanelState({
+    ...defaultEmergencyPreferences,
+    localVideoCapture: {
+      ...defaultEmergencyPreferences.localVideoCapture,
+      cameraMode: "both",
+      requestOnSos: true
+    }
+  }),
+  {
+    actions: [
+      {
+        icon: "video",
+        key: "toggle-local-video",
+        label: "Video local ativo no SOS",
+        selected: false
+      },
+      {
+        icon: "microphone",
+        key: "authorize-media",
+        label: "Autorizar camera e microfone",
+        selected: false
+      },
+      {
+        cameraMode: "front",
+        icon: "camera",
+        key: "camera-front",
+        label: "Usar camera frontal",
+        selected: false
+      },
+      {
+        cameraMode: "back",
+        icon: "camera",
+        key: "camera-back",
+        label: "Usar camera traseira",
+        selected: false
+      },
+      {
+        cameraMode: "both",
+        icon: "switch-camera",
+        key: "camera-both",
+        label: "Usar duas cameras",
+        selected: true
+      }
+    ]
+  }
+);
+
+const fallbackVideoPanel = buildSettingsVideoPanelState(null);
+assert.equal(fallbackVideoPanel.actions[0].label, "Ativar video local no SOS");
+assert.equal(fallbackVideoPanel.actions[2].selected, false);
+assert.equal(fallbackVideoPanel.actions[3].selected, false);
+assert.equal(fallbackVideoPanel.actions[4].selected, false);
 
 assert.deepEqual(buildSettingsDashboardTileAction("video"), {
   kind: "panel",

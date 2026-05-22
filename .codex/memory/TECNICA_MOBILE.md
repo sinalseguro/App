@@ -1204,3 +1204,13 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `app/configuracoes.tsx` segue responsavel pelos efeitos reais: permissao real, ajustes do sistema, validacao/hash de codigo, acesso protegido, persistencia, login, API, storage e navegacao.
 - Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build Android nesta rodada por ser refatoracao pura sem runtime nativo.
+
+# Atualizacao - 2026-05-22 - Etapas 1.123 e 1.124 Configuracoes
+
+- `settingsPresentationPolicy` agora centraliza modelos puros dos paineis de compartilhamento e video local.
+- Etapa 1.123: `buildSettingsSharingPanelState()` define resumo de anjo convidado, labels, bloqueios e chaves de acoes do compartilhamento.
+- Etapa 1.124: `buildSettingsVideoPanelState()` define labels e selecao dos botoes de video/camera.
+- `app/configuracoes.tsx` segue responsavel pelos efeitos reais: ligar 190, alternar stream para anjos, salvamento protegido, permissoes reais de camera/microfone, troca de camera, persistencia e handlers.
+- Smoke sincronizado para validar os textos contratuais de anjo/190 na policy.
+- Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build Android nesta rodada por ser refatoracao pura sem runtime nativo.

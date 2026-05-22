@@ -1288,3 +1288,13 @@ Papel: seguranca, LGPD e QA.
 - Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e com 0% CPU; foi encerrado para nao deixar processo pendurado.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
+
+## QA/Security - 2026-05-22 - Etapas 1.123 e 1.124 settings sharing/video policy
+
+- Mudanca restrita a regra pura/teste dos paineis de compartilhamento e video local; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `app/configuracoes.tsx` continua responsavel por ligar 190, alternar midia para anjos, salvamento protegido, permissao real de camera/microfone, troca de camera, persistencia local e estado React.
+- A policy apenas retorna textos publicos ja existentes, bloqueios contratuais, labels de botoes, chaves de acao e selecao visual sem executar efeitos.
+- Nao introduz log novo, chave, token, hash, codigo, sinalizacao tecnica de chamada, path local, coordenada ou conteudo de midia.
+- Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e com 0% CPU; foi encerrado para nao deixar processo pendurado.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.

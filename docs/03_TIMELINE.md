@@ -5338,3 +5338,25 @@ Validacoes:
 Checkpoint:
 
 - `docs/182_CHECKPOINT_ETAPAS_1_121_1_122_SETTINGS_LOCATION_SECURITY_POLICY_2026-05-21.md`.
+
+## 2026-05-22 - Etapas 1.123 e 1.124 compartilhamento e video em Configuracoes
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- `settingsPresentationPolicy` passou a centralizar tambem modelos puros dos paineis de compartilhamento e video local.
+- Etapa 1.123: extraido `buildSettingsSharingPanelState()` com resumo de anjo convidado, labels, bloqueios e chaves das acoes de compartilhamento.
+- Etapa 1.124: extraido `buildSettingsVideoPanelState()` com labels e selecao dos botoes de video/camera.
+- `app/configuracoes.tsx` continua responsavel por efeitos reais: ligar 190 junto com SOS, alternar stream para anjos, salvamento protegido pelo anjo, permissoes reais de camera/microfone, trocar camera, persistir preferencias e executar handlers.
+- `scripts/smoke-test.mjs` foi sincronizado para validar os textos contratuais de anjo/190 na policy em vez de exigir texto hard-coded na tela.
+
+Validacoes:
+
+- `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`: aprovados.
+- `typecheck` nao emitiu erro, mas ficou sem saida e com 0% CPU; foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser mudanca pura de policy sem runtime nativo.
+
+Checkpoint:
+
+- `docs/183_CHECKPOINT_ETAPAS_1_123_1_124_SETTINGS_SHARING_VIDEO_POLICY_2026-05-22.md`.
