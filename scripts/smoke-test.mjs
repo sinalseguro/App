@@ -446,6 +446,12 @@ const deviceBinding = await readFile("src/services/deviceBinding.ts", "utf8");
 const deviceKeyProof = await readFile("src/services/deviceKeyProof.ts", "utf8");
 const profilePolicy = await readFile("src/features/profiles/profilePolicy.ts", "utf8");
 const profileSurface = `${profilesScreen}\n${profilePolicy}`;
+const receivedAlertsListStartIndex = alertScreen.indexOf("function ReceivedAlertsList");
+const receivedAlertsListEndIndex = alertScreen.indexOf("function ReceivedAlertsEmptyState");
+const receivedAlertsListBlock =
+  receivedAlertsListStartIndex >= 0 && receivedAlertsListEndIndex > receivedAlertsListStartIndex
+    ? alertScreen.slice(receivedAlertsListStartIndex, receivedAlertsListEndIndex)
+    : "";
 const ownerLiveCallStartIndex = useLiveAudioCall.indexOf("const startOwnerAudioCall");
 const angelLiveCallStartIndex = useLiveAudioCall.indexOf("const startAngelAudioCall");
 const ownerLiveCallBlock =
@@ -485,6 +491,11 @@ if (
 if (
   !alertScreen.includes("listReceivedEmergencySessions") ||
   !alertScreen.includes("respondToEmergencySession") ||
+  !alertScreen.includes("type ReceivedAlertListItem") ||
+  !alertScreen.includes("const receivedAlertItems = useMemo<ReceivedAlertListItem[]>") ||
+  !alertScreen.includes("type ReceivedAlertsListProps") ||
+  !alertScreen.includes("function ReceivedAlertsList") ||
+  !alertScreen.includes("function ReceivedAlertsEmptyState") ||
   !alertScreen.includes("function ReceivedAlertsStatusBar") ||
   !alertScreen.includes("function ReceivedAlertCardView") ||
   !alertScreen.includes("function ReceivedCallArchiveSection") ||
@@ -500,6 +511,22 @@ if (
   !receivedAlertPresentationPolicy.includes("Atender como anjo")
 ) {
   throw new Error("Tela de alertas recebidos precisa listar pedidos roteados e permitir resposta do anjo.");
+}
+
+if (
+  !receivedAlertsListBlock ||
+  receivedAlertsListBlock.includes("apiClient") ||
+  receivedAlertsListBlock.includes("Share.share") ||
+  receivedAlertsListBlock.includes("useEffect") ||
+  receivedAlertsListBlock.includes("useLiveAudioCall") ||
+  receivedAlertsListBlock.includes("notifyIncomingEmergency") ||
+  receivedAlertsListBlock.includes("beginReceivedLiveCallArchive") ||
+  receivedAlertsListBlock.includes("updateReceivedLiveCallArchive") ||
+  receivedAlertsListBlock.includes("buildReceivedAlertActionState") ||
+  receivedAlertsListBlock.includes("buildReceivedAlertCardPresentation") ||
+  receivedAlertsListBlock.includes("buildReceivedAlertIncomingCallPresentation")
+) {
+  throw new Error("Lista de alertas recebidos deve permanecer apresentacional, sem efeitos, API, storage ou WebRTC.");
 }
 
 if (

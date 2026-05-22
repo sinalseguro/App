@@ -1085,3 +1085,14 @@ Proximas acoes atualizadas:
 - Inspecao sensivel nos arquivos tocados retornou apenas falsos positivos esperados.
 - Validacoes aprovadas: `test:received-alert-presentation`, `test:received-alert-runtime`, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
+
+## Memoria viva - 2026-05-22 - lista e ponto seguro de Alertas recebidos sem build
+
+- Etapas 1.145 e 1.146 extraem somente componentes locais de apresentacao: `ReceivedAlertsList` e `ReceivedAlertsEmptyState`.
+- Efeitos de risco permanecem na tela: calculo de policy, refresh, API, autoaceite, notificacao, WebRTC, arquivo local, refs mutaveis, reset de chamada, Share, selecao de registro e estado React.
+- O smoke agora bloqueia regressao arquitetural em `ReceivedAlertsList`: sem API, Share, `useEffect`, `useLiveAudioCall`, notificacao, arquivo local, WebRTC ou builders de policy.
+- `app/alerta.tsx` esta em ponto de parada seguro; Cristine/Eliane recomendam nao espalhar a orquestracao sensivel restante sem ganho claro.
+- Nao houve novo segredo, token, credencial, SDP, ICE, payload P2P, path local, coordenada ou conteudo de midia.
+- Inspecao sensivel nos arquivos tocados retornou apenas falsos positivos esperados.
+- Validacoes aprovadas: `test:received-alert-presentation`, `test:received-alert-runtime`, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.

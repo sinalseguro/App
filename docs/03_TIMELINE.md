@@ -5576,3 +5576,24 @@ Validacoes:
 Checkpoint:
 
 - `docs/193_CHECKPOINT_ETAPAS_1_143_1_144_RECEIVED_ALERT_STATUS_ARCHIVE_SECTION_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.145 e 1.146 lista e ponto seguro de Alertas recebidos
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.145: extraido `ReceivedAlertsList` para renderizar a lista de pedidos recebidos com itens ja calculados pelo `AlertScreen`.
+- Etapa 1.146: extraido `ReceivedAlertsEmptyState` e registrado ponto de parada seguro da tela.
+- `AlertScreen` continua responsavel pelos efeitos reais: API, autoaceite, notificacao, WebRTC, storage seguro, refs mutaveis, reset de chamada, Share, selecao de registro, refresh, estado React e calculo de policy por item.
+- `scripts/smoke-test.mjs` recebeu anchors para proteger que `ReceivedAlertsList` permaneca apresentacional, sem API, storage, WebRTC, Share, efeitos ou builders de policy.
+
+Validacoes:
+
+- `test:received-alert-presentation`, `test:received-alert-runtime`, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`: aprovados.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/194_CHECKPOINT_ETAPAS_1_145_1_146_RECEIVED_ALERT_LIST_SAFE_STOP_2026-05-22.md`.

@@ -1368,6 +1368,18 @@ Papel: seguranca, LGPD e QA.
 - `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
 
+## QA/Security - 2026-05-22 - Etapas 1.145 e 1.146 received alert list/safe stop
+
+- Mudanca restrita a componentes locais de apresentacao da tela `Alertas recebidos`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `AlertScreen` continua responsavel por API, autoaceite, notificacao, WebRTC, storage seguro, refs mutaveis, reset de chamada, Share nativo, selecao de registro, refresh, estado React e calculo de policy por item.
+- `ReceivedAlertsList` e `ReceivedAlertsEmptyState` apenas renderizam dados e disparam callbacks injetados pela tela.
+- Contratos preservados: itens da lista sao calculados na tela, handlers reais ficam na tela, e o smoke bloqueia API, Share, efeitos, WebRTC, notificacao, storage e builders de policy dentro de `ReceivedAlertsList`.
+- Nao introduz log novo, chave, token, hash, codigo, identity token, SDP, ICE, payload P2P, URI local, path de arquivo, coordenada ou conteudo de midia.
+- Inspecao sensivel nos arquivos tocados retornou apenas falsos positivos esperados: nomes de arquivos/anchors existentes no smoke e `apiClient`.
+- Validacoes aprovadas: `test:received-alert-presentation`, `test:received-alert-runtime`, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
+
 ## QA/Security - 2026-05-22 - Etapas 1.135 e 1.136 received alert runtime policy
 
 - Mudanca restrita a regras puras/teste de runtime local da tela `Alertas recebidos`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.

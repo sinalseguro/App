@@ -59,6 +59,13 @@ type AlertDialog = {
   title: string;
 };
 
+type ReceivedAlertListItem = {
+  actionState: ReceivedAlertActionState;
+  alertPresentation: ReceivedAlertCardPresentation;
+  incomingCallPresentation: ReceivedAlertIncomingCallPresentation;
+  session: ApiEmergencySession;
+};
+
 export default function AlertScreen() {
   const [alerts, setAlerts] = useState<ApiEmergencySession[]>([]);
   const [status, setStatus] = useState("Carregando pedidos recebidos...");
@@ -76,6 +83,32 @@ export default function AlertScreen() {
   const liveAudioCallStateRef = useRef(liveAudioCall.state);
 
   const sortedAlerts = useMemo(() => sortReceivedEmergencyAlerts(alerts), [alerts]);
+  const receivedAlertItems = useMemo<ReceivedAlertListItem[]>(
+    () =>
+      sortedAlerts.map((session) => {
+        const actionState = buildReceivedAlertActionState({
+          currentCallState: liveAudioCall.state,
+          locallyAcceptedSessionIds,
+          session
+        });
+        const hasAccepted = actionState.hasAccepted;
+
+        return {
+          actionState,
+          alertPresentation: buildReceivedAlertCardPresentation({
+            hasAccepted,
+            recipientStatus: actionState.recipientStatus,
+            session
+          }),
+          incomingCallPresentation: buildReceivedAlertIncomingCallPresentation({
+            hasAccepted,
+            session
+          }),
+          session
+        };
+      }),
+    [liveAudioCall.state, locallyAcceptedSessionIds, sortedAlerts]
+  );
 
   const loadCallArchives = useCallback(async () => {
     const records = await listReceivedLiveCallArchives();
@@ -335,49 +368,20 @@ export default function AlertScreen() {
         status={status}
       />
 
-      {sortedAlerts.length ? (
-        <View style={styles.alertStack}>
-          {sortedAlerts.map((session) => {
-            const alertActionState = buildReceivedAlertActionState({
-              currentCallState: liveAudioCall.state,
-              locallyAcceptedSessionIds,
-              session
-            });
-            const hasAccepted = alertActionState.hasAccepted;
-            const alertPresentation = buildReceivedAlertCardPresentation({
-              hasAccepted,
-              recipientStatus: alertActionState.recipientStatus,
-              session
-            });
-            const incomingCallPresentation = buildReceivedAlertIncomingCallPresentation({
-              hasAccepted,
-              session
-            });
-            return (
-              <ReceivedAlertCardView
-                key={session.id}
-                actionState={alertActionState}
-                alertPresentation={alertPresentation}
-                incomingCallPresentation={incomingCallPresentation}
-                liveCallState={liveAudioCall.state}
-                onOpenRealtimeCall={(targetSession, alreadyAccepted) => {
-                  void openRealtimeCall(targetSession, alreadyAccepted);
-                }}
-                onRespondToAlert={(targetSession, action) => {
-                  void respondToAlert(targetSession, action);
-                }}
-                onStopRealtimeCall={stopRealtimeCall}
-                session={session}
-              />
-            );
-          })}
-        </View>
+      {receivedAlertItems.length ? (
+        <ReceivedAlertsList
+          items={receivedAlertItems}
+          liveCallState={liveAudioCall.state}
+          onOpenRealtimeCall={(targetSession, alreadyAccepted) => {
+            void openRealtimeCall(targetSession, alreadyAccepted);
+          }}
+          onRespondToAlert={(targetSession, action) => {
+            void respondToAlert(targetSession, action);
+          }}
+          onStopRealtimeCall={stopRealtimeCall}
+        />
       ) : (
-        <View style={styles.emptyCard}>
-          <ShieldAlert size={22} color={theme.colors.primary} />
-          <Text style={styles.emptyTitle}>Sem pedidos recebidos</Text>
-          <Text style={styles.emptyText}>Quando alguém que autorizou você acionar SOS, o pedido aparecerá aqui.</Text>
-        </View>
+        <ReceivedAlertsEmptyState />
       )}
 
       {callArchiveRecords.length ? (
@@ -446,6 +450,50 @@ function ReceivedAlertsStatusBar({ onRefresh, refreshing, status }: ReceivedAler
       >
         <RefreshCw size={18} color={theme.colors.textOnDark} />
       </Pressable>
+    </View>
+  );
+}
+
+type ReceivedAlertsListProps = {
+  items: ReceivedAlertListItem[];
+  liveCallState: LiveAudioCallState;
+  onOpenRealtimeCall: (session: ApiEmergencySession, alreadyAccepted: boolean) => void;
+  onRespondToAlert: (session: ApiEmergencySession, action: ReceivedAlertResponseAction) => void;
+  onStopRealtimeCall: () => void;
+};
+
+function ReceivedAlertsList({
+  items,
+  liveCallState,
+  onOpenRealtimeCall,
+  onRespondToAlert,
+  onStopRealtimeCall
+}: ReceivedAlertsListProps) {
+  return (
+    <View style={styles.alertStack}>
+      {items.map((item) => (
+        <ReceivedAlertCardView
+          key={item.session.id}
+          actionState={item.actionState}
+          alertPresentation={item.alertPresentation}
+          incomingCallPresentation={item.incomingCallPresentation}
+          liveCallState={liveCallState}
+          onOpenRealtimeCall={onOpenRealtimeCall}
+          onRespondToAlert={onRespondToAlert}
+          onStopRealtimeCall={onStopRealtimeCall}
+          session={item.session}
+        />
+      ))}
+    </View>
+  );
+}
+
+function ReceivedAlertsEmptyState() {
+  return (
+    <View style={styles.emptyCard}>
+      <ShieldAlert size={22} color={theme.colors.primary} />
+      <Text style={styles.emptyTitle}>Sem pedidos recebidos</Text>
+      <Text style={styles.emptyText}>Quando alguém que autorizou você acionar SOS, o pedido aparecerá aqui.</Text>
     </View>
   );
 }
