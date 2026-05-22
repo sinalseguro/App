@@ -3,6 +3,9 @@ import { readFile } from "node:fs/promises";
 
 import {
   buildInviteCardPresentation,
+  inviteCardDetailTextFit,
+  inviteCardIconSize,
+  inviteCardNameTextFit,
   inviteCardStatusPresentation
 } from "../src/components/inviteCardPresentationPolicy";
 import {
@@ -53,6 +56,19 @@ assert.equal(buildInviteCardPresentation("compartilhado").iconKey, "check-circle
 assert.equal(buildInviteCardPresentation("expirado").tone, "warning");
 assert.equal(buildInviteCardPresentation("pendente").iconKey, "clock");
 assert.equal(buildInviteCardPresentation("revogado").tone, "danger");
+assert.equal(buildInviteCardPresentation("aceito").iconSize, 20);
+assert.equal(buildInviteCardPresentation("aceito").pressableAccessibilityRole, "button");
+assert.deepEqual(buildInviteCardPresentation("aceito").nameTextFit, inviteCardNameTextFit);
+assert.deepEqual(buildInviteCardPresentation("aceito").detailTextFit, inviteCardDetailTextFit);
+assert.deepEqual(inviteCardNameTextFit, {
+  maxFontSizeMultiplier: 1.2,
+  numberOfLines: 1
+});
+assert.deepEqual(inviteCardDetailTextFit, {
+  maxFontSizeMultiplier: 1.2,
+  numberOfLines: 1
+});
+assert.equal(inviteCardIconSize, 20);
 
 async function main() {
   const inviteCardSource = await readFile("src/components/InviteCard.tsx", "utf8");
@@ -61,7 +77,10 @@ async function main() {
   const permissionGatePolicySource = await readFile("src/components/permissionGatePresentationPolicy.ts", "utf8");
 
   assert.ok(inviteCardSource.includes("buildInviteCardPresentation(status)"));
-  assert.ok(inviteCardSource.includes("defaultIcon(presentation.iconKey, color)"));
+  assert.ok(inviteCardSource.includes("defaultIcon(presentation.iconKey, color, presentation.iconSize)"));
+  assert.ok(inviteCardSource.includes("presentation.nameTextFit"));
+  assert.ok(inviteCardSource.includes("presentation.detailTextFit"));
+  assert.ok(inviteCardSource.includes("presentation.pressableAccessibilityRole"));
   assert.ok(!inviteCardSource.includes("statusLabel"));
   assert.ok(permissionGateSource.includes("buildPermissionGatePresentation(status)"));
   assert.ok(permissionGateSource.includes("presentation.statusLabel"));

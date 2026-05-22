@@ -1268,3 +1268,12 @@ Proximas acoes atualizadas:
 - Sem alteracao de SOS, WebRTC, cofre, player, convites reais, permissao real, login, backend, portal, publicacao, criptografia, chaves ou armazenamento local.
 - Validacoes aprovadas: `test:action-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+
+## QA/Security - 2026-05-22 - Etapas 1.177 e 1.178 brand background invite policies
+
+- Mudanca restrita a helpers puros de apresentacao/acessibilidade de `BrandBackground` e `InviteCard`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `BrandBackground` continua renderizando `Animated`, hooks, asset, JSX, tema e interpolations reais; a policy expoe somente dados/ranges/configs puros.
+- `InviteCard` continua renderizando tema, icones Lucide, `Pressable`, callbacks e JSX; a policy expoe somente status, label, tone, text-fit, role e tamanho visual.
+- Sem alteracao de SOS, WebRTC, cofre, player, convites reais, permissao real, login, backend, portal, publicacao, criptografia, chaves ou armazenamento local.
+- Validacoes aprovadas: `test:brand-components-presentation`, `test:status-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.

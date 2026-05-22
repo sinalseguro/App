@@ -1513,3 +1513,16 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
 - Proxima recomendacao tecnica: apos worktree limpo, avaliar `BrandBackground` e `InviteCard` como proximos alvos visuais, sem mover `Animated`, `useEffect`, assets, JSX/Lucide, `theme.colors`, fluxo real ou backend para policies.
+
+# Atualizacao - 2026-05-22 - Etapas 1.177 e 1.178 Policies visuais de BrandBackground e InviteCard
+
+- `src/components/brandBackgroundPresentationPolicy.ts` centraliza dados puros de apresentacao/animação do `BrandBackground`: particulas, delays, duracoes, ranges de opacidade/escala, reset e pulso de watermark.
+- `src/components/inviteCardPresentationPolicy.ts` agora tambem centraliza `textFit`, tamanho do icone e role de acessibilidade do `InviteCard` clicavel.
+- `BrandBackground` segue responsavel por `Animated`, `useEffect`, `useMemo`, `useRef`, asset `require(...)`, `Image`, JSX, `StyleSheet`, tema e interpolations reais.
+- `InviteCard` segue responsavel por `toneColor`, `theme.colors`, icones Lucide, `defaultIcon`, `Pressable`, callbacks e JSX.
+- A policy do `BrandBackground` usa objetos estaveis para evitar recriar configs/ranges a cada render.
+- O smoke bloqueia regressao arquitetural: sem API, Share, storage, navegacao, `Animated`, `useEffect`, assets, tema, icones, permissao real ou efeitos reais nas policies puras.
+- Validacoes aprovadas: `test:brand-components-presentation`, `test:status-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+- Proxima acao tecnica: nova microtriagem antes da proxima dupla, evitando runtime real, media, chamada, storage, backend ou publicacao.

@@ -9,6 +9,10 @@ import {
   brandLockupPresentation,
   resolveBrandLockupPresentation
 } from "../src/components/brandLockupPresentationPolicy";
+import {
+  brandBackgroundParticleConfigs,
+  resolveBrandBackgroundPresentation
+} from "../src/components/brandBackgroundPresentationPolicy";
 
 assert.deepEqual(resolveAppLaunchPresentation(), appLaunchPresentation);
 assert.equal(appLaunchPresentation.brandName, "SinalSeguro");
@@ -27,11 +31,29 @@ assert.deepEqual(brandLockupPresentation.logoSize, {
   width: 245
 });
 
+assert.equal(brandBackgroundParticleConfigs.length, 12);
+assert.deepEqual(brandBackgroundParticleConfigs[0], {
+  delay: 0,
+  driftX: 14,
+  driftY: -28,
+  duration: 5200,
+  left: 12,
+  size: 10,
+  top: 20
+});
+assert.deepEqual(resolveBrandBackgroundPresentation(false).watermarkOpacity.outputRange, [0.08, 0.12]);
+assert.deepEqual(resolveBrandBackgroundPresentation(true).watermarkOpacity.outputRange, [0.1, 0.14]);
+assert.deepEqual(resolveBrandBackgroundPresentation(true).particleOpacity.inputRange, [0, 0.25, 0.75, 1]);
+assert.deepEqual(resolveBrandBackgroundPresentation(true).particleScale.outputRange, [0.72, 1.08, 0.84]);
+assert.equal(resolveBrandBackgroundPresentation(true).watermarkPulse.duration, 5200);
+
 async function main() {
   const appLaunchSource = await readFile("src/components/AppLaunchScreen.tsx", "utf8");
   const appLaunchPolicySource = await readFile("src/components/appLaunchPresentationPolicy.ts", "utf8");
   const brandLockupSource = await readFile("src/components/BrandLockup.tsx", "utf8");
   const brandLockupPolicySource = await readFile("src/components/brandLockupPresentationPolicy.ts", "utf8");
+  const brandBackgroundSource = await readFile("src/components/BrandBackground.tsx", "utf8");
+  const brandBackgroundPolicySource = await readFile("src/components/brandBackgroundPresentationPolicy.ts", "utf8");
 
   assert.ok(appLaunchSource.includes("resolveAppLaunchPresentation()"));
   assert.ok(appLaunchSource.includes("presentation.progressInitialValue"));
@@ -39,10 +61,14 @@ async function main() {
   assert.ok(brandLockupSource.includes("resolveBrandLockupPresentation()"));
   assert.ok(brandLockupSource.includes("presentation.accessibilityLabel"));
   assert.ok(brandLockupSource.includes("presentation.logoSize"));
+  assert.ok(brandBackgroundSource.includes("resolveBrandBackgroundPresentation(active)"));
+  assert.ok(brandBackgroundSource.includes("presentation.particleConfigs"));
+  assert.ok(brandBackgroundSource.includes("presentation.watermarkPulse.duration"));
+  assert.ok(brandBackgroundSource.includes("motion={{"));
 
-  for (const source of [appLaunchPolicySource, brandLockupPolicySource]) {
+  for (const source of [appLaunchPolicySource, brandLockupPolicySource, brandBackgroundPolicySource]) {
     assert.ok(
-      !/from "react|from "react-native|lucide-react-native|theme\.colors|router\.push|apiClient|Share\.share|SecureStore|AsyncStorage|useEffect|Animated/.test(
+      !/from "react|from "react-native|require\(|lucide-react-native|theme\.colors|router\.push|apiClient|Share\.share|SecureStore|AsyncStorage|useEffect|Animated/.test(
         source
       )
     );

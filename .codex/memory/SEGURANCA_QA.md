@@ -1612,3 +1612,16 @@ Papel: seguranca, LGPD e QA.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.
+
+## Memoria viva - 2026-05-22 - policies visuais de BrandBackground e InviteCard sem build
+
+- Etapas 1.177 e 1.178 extraem apenas apresentacao/acessibilidade: `brandBackgroundPresentationPolicy` e expansao de `inviteCardPresentationPolicy`.
+- `BrandBackground` permanece responsavel por animacao real, hooks, asset, JSX, tema e interpolations.
+- `InviteCard` permanece responsavel por cores do tema, icones Lucide, `Pressable`, callback e renderizacao.
+- O smoke bloqueia API, Share, storage, navegacao, `Animated`, `useEffect`, assets, tema, icones, permissao real e efeitos reais dentro das policies puras.
+- Contratos preservados: particulas, watermark, tons, labels, icones, role de botao clicavel e ajuste de texto permanecem equivalentes aos anteriores.
+- Nao houve novo segredo, credencial, SDP, ICE, payload P2P, path local, coordenada, telefone novo, nome real novo ou conteudo de midia.
+- Validacoes aprovadas: `test:brand-components-presentation`, `test:status-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.

@@ -5929,3 +5929,27 @@ Validacoes:
 Checkpoint:
 
 - `docs/209_CHECKPOINT_ETAPAS_1_175_1_176_ACTION_COMPONENTS_PRESENTATION_POLICY_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.177 e 1.178 policies visuais de BrandBackground e InviteCard
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.177: extraida `src/components/brandBackgroundPresentationPolicy.ts` para concentrar dados puros de apresentacao/animação do `BrandBackground`.
+- Etapa 1.178: expandida `src/components/inviteCardPresentationPolicy.ts` para concentrar `textFit`, tamanho do icone e role de acessibilidade do `InviteCard` clicavel.
+- `BrandBackground` continua responsavel por `Animated`, hooks, asset `require(...)`, `Image`, JSX, `StyleSheet`, tema e interpolations reais.
+- `InviteCard` continua responsavel por `toneColor`, `theme.colors`, icones Lucide, `defaultIcon`, `Pressable`, callbacks e JSX.
+- A policy do `BrandBackground` usa objetos estaveis para evitar recriar configs/ranges a cada render.
+- `scripts/smoke-test.mjs` recebeu guardrails para impedir efeitos reais nas policies.
+- Revisao Cristine/Eliane/Lina/Tarcila confirmou que a mudanca deve permanecer visual/acessibilidade; nao houve alteracao de UX real, LGPD, runtime nativo, SOS/WebRTC, cofre, player, backend, portal ou release.
+
+Validacoes:
+
+- `test:brand-components-presentation`, `test:status-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`: aprovados.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/210_CHECKPOINT_ETAPAS_1_177_1_178_BRAND_BACKGROUND_INVITE_CARD_POLICY_2026-05-22.md`.

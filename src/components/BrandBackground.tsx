@@ -1,49 +1,41 @@
 import { useEffect, useMemo, useRef } from "react";
 import { Animated, Image, StyleSheet, View } from "react-native";
+import {
+  resolveBrandBackgroundPresentation,
+  type BrandBackgroundInterpolation,
+  type BrandBackgroundTraceConfig
+} from "@/components/brandBackgroundPresentationPolicy";
 import { theme } from "@/design/theme";
-
-type TraceConfig = {
-  delay: number;
-  duration: number;
-  left: number;
-  top: number;
-  driftX: number;
-  driftY: number;
-  size: number;
-};
 
 const brandSymbol = require("../../assets/brand/sinalseguro-symbol.png");
 
-const particleConfigs: TraceConfig[] = [
-  { delay: 0, duration: 5200, left: 12, top: 20, driftX: 14, driftY: -28, size: 10 },
-  { delay: 360, duration: 6400, left: 74, top: 22, driftX: -16, driftY: 24, size: 8 },
-  { delay: 720, duration: 5900, left: 28, top: 68, driftX: 20, driftY: -22, size: 7 },
-  { delay: 1080, duration: 7200, left: 82, top: 66, driftX: -24, driftY: -26, size: 9 },
-  { delay: 1440, duration: 6600, left: 50, top: 16, driftX: -12, driftY: 30, size: 6 },
-  { delay: 1800, duration: 6100, left: 18, top: 84, driftX: 26, driftY: -16, size: 5 },
-  { delay: 2160, duration: 7600, left: 66, top: 82, driftX: -22, driftY: -24, size: 7 },
-  { delay: 2520, duration: 6800, left: 42, top: 54, driftX: 13, driftY: -34, size: 6 },
-  { delay: 2880, duration: 7000, left: 8, top: 52, driftX: 26, driftY: 18, size: 6 },
-  { delay: 3240, duration: 7400, left: 90, top: 42, driftX: -28, driftY: 20, size: 7 },
-  { delay: 3600, duration: 6200, left: 34, top: 32, driftX: 18, driftY: 24, size: 4 },
-  { delay: 3960, duration: 7800, left: 58, top: 72, driftX: -18, driftY: -30, size: 5 }
-];
-
-function AnimatedBrandParticle({ config, value }: { config: TraceConfig; value: Animated.Value }) {
+function AnimatedBrandParticle({
+  config,
+  motion,
+  value
+}: {
+  config: BrandBackgroundTraceConfig;
+  motion: {
+    opacity: BrandBackgroundInterpolation;
+    scale: BrandBackgroundInterpolation;
+    translationInputRange: number[];
+  };
+  value: Animated.Value;
+}) {
   const opacity = value.interpolate({
-    inputRange: [0, 0.25, 0.75, 1],
-    outputRange: [0.08, 0.34, 0.22, 0.08]
+    inputRange: motion.opacity.inputRange,
+    outputRange: motion.opacity.outputRange
   });
   const scale = value.interpolate({
-    inputRange: [0, 0.5, 1],
-    outputRange: [0.72, 1.08, 0.84]
+    inputRange: motion.scale.inputRange,
+    outputRange: motion.scale.outputRange
   });
   const translateX = value.interpolate({
-    inputRange: [0, 1],
+    inputRange: motion.translationInputRange,
     outputRange: [0, config.driftX]
   });
   const translateY = value.interpolate({
-    inputRange: [0, 1],
+    inputRange: motion.translationInputRange,
     outputRange: [0, config.driftY]
   });
 
@@ -70,20 +62,21 @@ type BrandBackgroundProps = {
 };
 
 export function BrandBackground({ active = false }: BrandBackgroundProps) {
-  const values = useMemo(() => particleConfigs.map(() => new Animated.Value(0)), []);
+  const presentation = resolveBrandBackgroundPresentation(active);
+  const values = useMemo(() => presentation.particleConfigs.map(() => new Animated.Value(0)), [presentation.particleConfigs]);
   const watermarkPulse = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     const watermarkLoop = Animated.loop(
       Animated.sequence([
         Animated.timing(watermarkPulse, {
-          duration: 5200,
-          toValue: 1,
+          duration: presentation.watermarkPulse.duration,
+          toValue: presentation.watermarkPulse.endValue,
           useNativeDriver: true
         }),
         Animated.timing(watermarkPulse, {
-          duration: 5200,
-          toValue: 0,
+          duration: presentation.watermarkPulse.duration,
+          toValue: presentation.watermarkPulse.startValue,
           useNativeDriver: true
         })
       ])
@@ -91,7 +84,7 @@ export function BrandBackground({ active = false }: BrandBackgroundProps) {
     watermarkLoop.start();
 
     const loops = values.map((value, index) => {
-      const config = particleConfigs[index];
+      const config = presentation.particleConfigs[index];
       const loop = Animated.loop(
         Animated.sequence([
           Animated.delay(config.delay),
@@ -101,8 +94,8 @@ export function BrandBackground({ active = false }: BrandBackgroundProps) {
             useNativeDriver: true
           }),
           Animated.timing(value, {
-            duration: 1,
-            toValue: 0,
+            duration: presentation.particleResetDuration,
+            toValue: presentation.watermarkPulse.startValue,
             useNativeDriver: true
           })
         ])
@@ -115,23 +108,31 @@ export function BrandBackground({ active = false }: BrandBackgroundProps) {
       watermarkLoop.stop();
       loops.forEach((loop) => loop.stop());
     };
-  }, [values, watermarkPulse]);
+  }, [
+    presentation.particleConfigs,
+    presentation.particleResetDuration,
+    presentation.watermarkPulse.duration,
+    presentation.watermarkPulse.endValue,
+    presentation.watermarkPulse.startValue,
+    values,
+    watermarkPulse
+  ]);
 
   const watermarkOpacity = watermarkPulse.interpolate({
-    inputRange: [0, 1],
-    outputRange: active ? [0.1, 0.14] : [0.08, 0.12]
+    inputRange: presentation.watermarkOpacity.inputRange,
+    outputRange: presentation.watermarkOpacity.outputRange
   });
   const watermarkScale = watermarkPulse.interpolate({
-    inputRange: [0, 1],
-    outputRange: active ? [1.05, 1.09] : [1.04, 1.08]
+    inputRange: presentation.watermarkScale.inputRange,
+    outputRange: presentation.watermarkScale.outputRange
   });
   const activeHaloOpacity = watermarkPulse.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.1, 0.28]
+    inputRange: presentation.activeHaloOpacity.inputRange,
+    outputRange: presentation.activeHaloOpacity.outputRange
   });
   const activeHaloScale = watermarkPulse.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0.94, 1.04]
+    inputRange: presentation.activeHaloScale.inputRange,
+    outputRange: presentation.activeHaloScale.outputRange
   });
 
   return (
@@ -159,7 +160,16 @@ export function BrandBackground({ active = false }: BrandBackgroundProps) {
         <Image accessibilityIgnoresInvertColors source={brandSymbol} style={styles.watermarkImage} />
       </Animated.View>
       {values.map((value, index) => (
-        <AnimatedBrandParticle key={index} config={particleConfigs[index]} value={value} />
+        <AnimatedBrandParticle
+          key={index}
+          config={presentation.particleConfigs[index]}
+          motion={{
+            opacity: presentation.particleOpacity,
+            scale: presentation.particleScale,
+            translationInputRange: presentation.particleTranslation.inputRange
+          }}
+          value={value}
+        />
       ))}
     </View>
   );

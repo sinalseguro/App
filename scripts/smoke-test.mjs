@@ -29,6 +29,8 @@ const requiredFiles = [
   "src/components/appLaunchPresentationPolicy.ts",
   "src/components/BrandLockup.tsx",
   "src/components/brandLockupPresentationPolicy.ts",
+  "src/components/BrandBackground.tsx",
+  "src/components/brandBackgroundPresentationPolicy.ts",
   "src/components/BrandedDialog.tsx",
   "src/components/ButtonIcon.tsx",
   "src/components/buttonIconPresentationPolicy.ts",
@@ -497,6 +499,8 @@ const appLaunchScreen = await readFile("src/components/AppLaunchScreen.tsx", "ut
 const appLaunchPresentationPolicy = await readFile("src/components/appLaunchPresentationPolicy.ts", "utf8");
 const brandLockup = await readFile("src/components/BrandLockup.tsx", "utf8");
 const brandLockupPresentationPolicy = await readFile("src/components/brandLockupPresentationPolicy.ts", "utf8");
+const brandBackground = await readFile("src/components/BrandBackground.tsx", "utf8");
+const brandBackgroundPresentationPolicy = await readFile("src/components/brandBackgroundPresentationPolicy.ts", "utf8");
 const buttonIcon = await readFile("src/components/ButtonIcon.tsx", "utf8");
 const buttonIconPresentationPolicy = await readFile("src/components/buttonIconPresentationPolicy.ts", "utf8");
 const emergencyCallDock = await readFile("src/features/emergency-home/EmergencyCallDock.tsx", "utf8");
@@ -1071,7 +1075,6 @@ if (
   !permissionGatePresentationPolicy.includes("negado: \"negado\"") ||
   !permissionGatePresentationPolicy.includes("bloqueado: \"bloqueado\"") ||
   !inviteCard.includes("buildInviteCardPresentation(status)") ||
-  !inviteCard.includes("defaultIcon(presentation.iconKey, color)") ||
   !inviteCardPresentationPolicy.includes("inviteCardStatusPresentation") ||
   !inviteCardPresentationPolicy.includes("label: \"Autorizado\"") ||
   !inviteCardPresentationPolicy.includes("label: \"Compartilhado\"") ||
@@ -1080,6 +1083,12 @@ if (
   !inviteCardPresentationPolicy.includes("label: \"Expirado\"") ||
   !inviteCardPresentationPolicy.includes("iconKey: \"shield-check\"") ||
   !inviteCardPresentationPolicy.includes("iconKey: \"clock\"") ||
+  !inviteCardPresentationPolicy.includes("inviteCardIconSize = 20") ||
+  !inviteCardPresentationPolicy.includes("inviteCardNameTextFit") ||
+  !inviteCardPresentationPolicy.includes("pressableAccessibilityRole: \"button\"") ||
+  !inviteCard.includes("defaultIcon(presentation.iconKey, color, presentation.iconSize)") ||
+  !inviteCard.includes("presentation.nameTextFit") ||
+  !inviteCard.includes("presentation.detailTextFit") ||
   [permissionGatePresentationPolicy, inviteCardPresentationPolicy].some(
     (policySource) =>
       policySource.includes("router.push") ||
@@ -1140,7 +1149,17 @@ if (
   !brandLockupPresentationPolicy.includes("accessibilityRole: \"image\"") ||
   !brandLockupPresentationPolicy.includes("height: 72") ||
   !brandLockupPresentationPolicy.includes("width: 245") ||
-  [appLaunchPresentationPolicy, brandLockupPresentationPolicy].some(
+  !brandBackground.includes("resolveBrandBackgroundPresentation(active)") ||
+  !brandBackground.includes("presentation.particleConfigs") ||
+  !brandBackground.includes("presentation.watermarkPulse.duration") ||
+  !brandBackgroundPresentationPolicy.includes("brandBackgroundParticleConfigs") ||
+  !brandBackgroundPresentationPolicy.includes("duration: 5200") ||
+  !brandBackgroundPresentationPolicy.includes("activeBrandBackgroundPresentation") ||
+  !brandBackgroundPresentationPolicy.includes("inactiveBrandBackgroundPresentation") ||
+  !brandBackgroundPresentationPolicy.includes("outputRange: [0.1, 0.14]") ||
+  !brandBackgroundPresentationPolicy.includes("outputRange: [0.08, 0.12]") ||
+  !brandBackgroundPresentationPolicy.includes("particleResetDuration: 1") ||
+  [appLaunchPresentationPolicy, brandLockupPresentationPolicy, brandBackgroundPresentationPolicy].some(
     (policySource) =>
       policySource.includes("router.push") ||
       policySource.includes("apiClient") ||
@@ -1150,7 +1169,8 @@ if (
       policySource.includes("theme.colors") ||
       policySource.includes("lucide-react-native") ||
       policySource.includes("useEffect") ||
-      policySource.includes("Animated")
+      policySource.includes("Animated") ||
+      policySource.includes("require(")
   )
 ) {
   throw new Error("Componentes de marca e carregamento precisam manter policies puras sem efeitos reais.");

@@ -25,12 +25,12 @@ const toneColor: Record<InviteCardTone, string> = {
   warning: theme.colors.warning
 };
 
-function defaultIcon(iconKey: InviteCardIconKey, color: string) {
-  if (iconKey === "shield-check") return <ShieldCheck size={20} color={color} />;
-  if (iconKey === "x-circle") return <XCircle size={20} color={color} />;
-  if (iconKey === "shield-alert") return <ShieldAlert size={20} color={color} />;
-  if (iconKey === "check-circle") return <CheckCircle2 size={20} color={color} />;
-  return <Clock3 size={20} color={color} />;
+function defaultIcon(iconKey: InviteCardIconKey, color: string, size: number) {
+  if (iconKey === "shield-check") return <ShieldCheck size={size} color={color} />;
+  if (iconKey === "x-circle") return <XCircle size={size} color={color} />;
+  if (iconKey === "shield-alert") return <ShieldAlert size={size} color={color} />;
+  if (iconKey === "check-circle") return <CheckCircle2 size={size} color={color} />;
+  return <Clock3 size={size} color={color} />;
 }
 
 export function InviteCard({ detail, icon, name, onPress, status, description }: InviteCardProps) {
@@ -40,12 +40,12 @@ export function InviteCard({ detail, icon, name, onPress, status, description }:
     <>
       <View style={styles.header}>
         <View style={styles.identity}>
-          <View style={styles.iconSlot}>{icon ?? defaultIcon(presentation.iconKey, color)}</View>
+          <View style={styles.iconSlot}>{icon ?? defaultIcon(presentation.iconKey, color, presentation.iconSize)}</View>
           <View style={styles.titleBlock}>
-            <Text numberOfLines={1} style={styles.name}>
+            <Text {...presentation.nameTextFit} style={styles.name}>
               {name}
             </Text>
-            {detail ? <Text numberOfLines={1} style={styles.detail}>{detail}</Text> : null}
+            {detail ? <Text {...presentation.detailTextFit} style={styles.detail}>{detail}</Text> : null}
           </View>
         </View>
         <Text style={[styles.status, { color }]}>{presentation.label}</Text>
@@ -56,7 +56,11 @@ export function InviteCard({ detail, icon, name, onPress, status, description }:
 
   if (onPress) {
     return (
-      <Pressable accessibilityRole="button" onPress={onPress} style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}>
+      <Pressable
+        accessibilityRole={presentation.pressableAccessibilityRole}
+        onPress={onPress}
+        style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
+      >
         {content}
       </Pressable>
     );
