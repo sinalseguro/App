@@ -47,9 +47,11 @@ import { getLocationPermissionReadiness, prepareForegroundLocationPermission } f
 import {
   buildSettingsDashboardTileRows,
   buildSettingsLocationPanelState,
+  buildSettingsLoginPanelState,
   buildSettingsPanelHelp,
   buildSettingsSecurityCodePanelState,
   buildSettingsSharingPanelState,
+  buildSettingsUpdatePanelState,
   buildSettingsVideoPanelState,
   formatSettingsCameraModeLabel,
   resolveSettingsPermissionStatus,
@@ -76,7 +78,6 @@ import { ApiRequestError, ApiSession, apiClient, apiConfig } from "@/services/ap
 import {
   AppUpdateState,
   checkForAppUpdate,
-  formatAppVersion,
   openAppUpdateDownload
 } from "@/services/appUpdate";
 import { AppleIdentityCancelledError, appleIdentityService } from "@/services/appleIdentity";
@@ -194,6 +195,21 @@ export default function SettingsScreen() {
     trustedContactStatus: trustedContactPreview.status
   });
   const settingsVideoPanelState = buildSettingsVideoPanelState(preferences);
+  const settingsUpdatePanelState = buildSettingsUpdatePanelState({
+    updateBusy,
+    updateState
+  });
+  const settingsLoginPanelState = buildSettingsLoginPanelState({
+    accountEmail: apiSession?.user?.email,
+    apiBaseUrl: apiConfig.apiBaseUrl,
+    apiEnabled: apiConfig.apiEnabled,
+    appleLoginAvailable,
+    googleLoginConfigured,
+    googleNativePlatform,
+    loginBusy,
+    platform: Platform.OS,
+    registeredDeviceId
+  });
 
   function showLoginFailureMessage(message: string, title = "Login nao concluido") {
     setLoginError(message);
@@ -879,51 +895,48 @@ export default function SettingsScreen() {
 
           {activePanel === "login" ? (
             <View style={styles.dialogStack}>
-              <View style={[styles.statusPill, apiSession?.user && styles.statusPillActive]}>
-                <KeyRound size={18} color={apiSession?.user ? theme.colors.textOnDark : theme.colors.primary} />
-                <Text style={[styles.statusPillText, apiSession?.user && styles.statusPillTextActive]}>
-                  {apiSession?.user?.email ?? "Conta SinalSeguro desconectada"}
+              <View style={[styles.statusPill, settingsLoginPanelState.accountActive && styles.statusPillActive]}>
+                <KeyRound
+                  size={18}
+                  color={settingsLoginPanelState.accountActive ? theme.colors.textOnDark : theme.colors.primary}
+                />
+                <Text
+                  style={[styles.statusPillText, settingsLoginPanelState.accountActive && styles.statusPillTextActive]}
+                >
+                  {settingsLoginPanelState.accountLabel}
                 </Text>
               </View>
               <View style={styles.inlineInfo}>
-                <ShieldCheck size={18} color={apiConfig.apiEnabled ? theme.colors.secure : theme.colors.textMuted} />
-                <Text style={styles.inlineInfoText}>
-                  {apiConfig.apiEnabled && apiConfig.apiBaseUrl
-                    ? `API configurada em ${apiConfig.apiBaseUrl}.`
-                    : "API SinalSeguro desabilitada neste build."}
-                </Text>
+                <ShieldCheck
+                  size={18}
+                  color={settingsLoginPanelState.apiActive ? theme.colors.secure : theme.colors.textMuted}
+                />
+                <Text style={styles.inlineInfoText}>{settingsLoginPanelState.apiText}</Text>
               </View>
               <View style={styles.inlineInfo}>
-                <LockKeyhole size={18} color={registeredDeviceId ? theme.colors.secure : theme.colors.textMuted} />
-                <Text style={styles.inlineInfoText}>
-                  {registeredDeviceId
-                    ? "Dispositivo autenticado registrado para esta conta."
-                    : "Dispositivo sera registrado apos login validado."}
-                </Text>
+                <LockKeyhole
+                  size={18}
+                  color={settingsLoginPanelState.deviceActive ? theme.colors.secure : theme.colors.textMuted}
+                />
+                <Text style={styles.inlineInfoText}>{settingsLoginPanelState.deviceText}</Text>
               </View>
               <View style={styles.inlineInfo}>
                 <KeyRound
                   size={18}
-                  color={googleLoginConfigured ? theme.colors.secure : theme.colors.textMuted}
+                  color={settingsLoginPanelState.googleActive ? theme.colors.secure : theme.colors.textMuted}
                 />
-                <Text style={styles.inlineInfoText}>
-                  {googleLoginConfigured
-                    ? googleNativePlatform
-                      ? `Google Sign-In nativo configurado para ${Platform.OS === "ios" ? "iOS" : "Android"}.`
-                      : "Google OIDC configurado para esta plataforma."
-                    : "Google ainda nao configurado para esta plataforma."}
-                </Text>
+                <Text style={styles.inlineInfoText}>{settingsLoginPanelState.googleText}</Text>
               </View>
-              {apiSession?.user ? (
+              {settingsLoginPanelState.accountActive ? (
                 <>
                   <ButtonIcon
-                    disabled={loginBusy}
+                    disabled={settingsLoginPanelState.sessionActionDisabled}
                     icon={<RefreshCw size={18} color={theme.colors.primary} />}
                     label="Validar sessao"
                     onPress={refreshApiSession}
                   />
                   <ButtonIcon
-                    disabled={loginBusy}
+                    disabled={settingsLoginPanelState.sessionActionDisabled}
                     icon={<LockKeyhole size={18} color={theme.colors.danger} />}
                     label="Sair desta conta"
                     onPress={logoutApiSession}
@@ -965,32 +978,32 @@ export default function SettingsScreen() {
                     />
                   </View>
                   <ButtonIcon
-                    disabled={loginBusy}
+                    disabled={settingsLoginPanelState.sessionActionDisabled}
                     icon={<KeyRound size={18} color={theme.colors.primary} />}
-                    label={loginBusy ? "Conectando..." : "Entrar com e-mail"}
+                    label={settingsLoginPanelState.emailLoginButtonLabel}
                     onPress={loginWithEmailPassword}
                   />
                 </>
               )}
               <ButtonIcon
-                disabled={loginBusy}
+                disabled={settingsLoginPanelState.testApiButtonDisabled}
                 icon={<RefreshCw size={18} color={theme.colors.primary} />}
                 label="Testar API"
                 onPress={checkApiConnection}
               />
               <ButtonIcon
-                disabled={loginBusy}
+                disabled={settingsLoginPanelState.googleButtonDisabled}
                 icon={<KeyRound size={18} color={theme.colors.primary} />}
                 label="Entrar com Google"
                 onPress={loginWithGoogle}
-                style={googleLoginConfigured ? undefined : styles.disabledOidcOption}
+                style={settingsLoginPanelState.googleButtonMuted ? styles.disabledOidcOption : undefined}
               />
               <ButtonIcon
-                disabled={loginBusy || !appleLoginAvailable}
+                disabled={settingsLoginPanelState.appleButtonDisabled}
                 icon={<KeyRound size={18} color={theme.colors.primary} />}
                 label="Entrar com Apple/iCloud"
                 onPress={loginWithApple}
-                style={appleLoginAvailable ? undefined : styles.disabledOidcOption}
+                style={settingsLoginPanelState.appleButtonMuted ? styles.disabledOidcOption : undefined}
               />
               {loginError ? <Text style={styles.errorText}>{loginError}</Text> : null}
               {loginNotice ? <Text style={styles.noticeText}>{loginNotice}</Text> : null}
@@ -1119,49 +1132,45 @@ export default function SettingsScreen() {
 
           {activePanel === "atualizacao" ? (
             <View style={styles.dialogStack}>
-              <View style={[styles.statusPill, updateState?.status === "current" && styles.statusPillActive]}>
+              <View style={[styles.statusPill, settingsUpdatePanelState.installedActive && styles.statusPillActive]}>
                 <Smartphone
                   size={18}
-                  color={updateState?.status === "current" ? theme.colors.textOnDark : theme.colors.primary}
+                  color={settingsUpdatePanelState.installedActive ? theme.colors.textOnDark : theme.colors.primary}
                 />
-                <Text style={[styles.statusPillText, updateState?.status === "current" && styles.statusPillTextActive]}>
-                  Instalada {formatAppVersion(updateState?.currentVersion, updateState?.currentVersionCode)}
+                <Text
+                  style={[styles.statusPillText, settingsUpdatePanelState.installedActive && styles.statusPillTextActive]}
+                >
+                  {settingsUpdatePanelState.installedVersionLabel}
                 </Text>
               </View>
-              {updateState?.status === "available" && updateState.latestVersion ? (
-                <View style={[styles.statusPill, updateState.status === "available" && styles.availableVersionPill]}>
+              {settingsUpdatePanelState.availableVersionLabel ? (
+                <View style={[styles.statusPill, styles.availableVersionPill]}>
                   <Download size={18} color={theme.colors.primary} />
-                  <Text style={styles.statusPillText}>
-                    Disponivel {formatAppVersion(updateState.latestVersion, updateState.latestVersionCode)}
-                  </Text>
+                  <Text style={styles.statusPillText}>{settingsUpdatePanelState.availableVersionLabel}</Text>
                 </View>
               ) : null}
               <View style={styles.inlineInfo}>
                 <ShieldCheck
                   size={18}
-                  color={updateState?.status === "available" ? theme.colors.secure : theme.colors.textMuted}
+                  color={settingsUpdatePanelState.infoActive ? theme.colors.secure : theme.colors.textMuted}
                 />
-                <Text style={styles.inlineInfoText}>
-                  {updateState?.message ?? "Toque em verificar para consultar a versao Android disponivel."}
-                </Text>
+                <Text style={styles.inlineInfoText}>{settingsUpdatePanelState.infoText}</Text>
               </View>
-              {updateState?.checkedAt ? (
-                <Text style={styles.noticeText}>
-                  Ultima verificacao: {new Date(updateState.checkedAt).toLocaleDateString("pt-BR")}
-                </Text>
+              {settingsUpdatePanelState.checkedAtLabel ? (
+                <Text style={styles.noticeText}>{settingsUpdatePanelState.checkedAtLabel}</Text>
               ) : null}
               <ButtonIcon
-                disabled={updateBusy}
+                disabled={settingsUpdatePanelState.verifyButtonDisabled}
                 icon={<RefreshCw size={18} color={theme.colors.primary} />}
-                label={updateBusy ? "Verificando..." : "Verificar atualizacao"}
+                label={settingsUpdatePanelState.verifyButtonLabel}
                 onPress={verifyAppUpdate}
               />
               <ButtonIcon
-                disabled={!updateState?.downloadUrl}
+                disabled={settingsUpdatePanelState.downloadButtonDisabled}
                 icon={<Smartphone size={18} color={theme.colors.primary} />}
-                label="Baixar versao Android"
+                label={settingsUpdatePanelState.downloadButtonLabel}
                 onPress={downloadAppUpdate}
-                style={updateState?.status === "available" ? styles.selectedOption : undefined}
+                style={settingsUpdatePanelState.downloadButtonSelected ? styles.selectedOption : undefined}
               />
             </View>
           ) : null}

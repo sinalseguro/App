@@ -1298,3 +1298,13 @@ Papel: seguranca, LGPD e QA.
 - Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e com 0% CPU; foi encerrado para nao deixar processo pendurado.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
+
+## QA/Security - 2026-05-22 - Etapas 1.125 e 1.126 settings update/login policy
+
+- Mudanca restrita a regra pura/teste dos paineis de atualizacao e login; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `app/configuracoes.tsx` continua responsavel por login real, logout, bootstrap de dispositivo, limpeza de sessao, chamadas de API, provedores externos, verificacao de update e abertura do portal.
+- A policy apenas retorna textos publicos ja existentes, labels, estados visuais e bloqueios de botoes sem executar efeitos.
+- Nao introduz log novo, chave, token, hash, codigo, sinalizacao tecnica de chamada, path local, coordenada ou conteudo de midia.
+- Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e praticamente ocioso; foi encerrado para nao deixar processo pendurado.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.

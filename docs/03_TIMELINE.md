@@ -5360,3 +5360,25 @@ Validacoes:
 Checkpoint:
 
 - `docs/183_CHECKPOINT_ETAPAS_1_123_1_124_SETTINGS_SHARING_VIDEO_POLICY_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.125 e 1.126 atualizacao e login em Configuracoes
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- `settingsPresentationPolicy` passou a centralizar tambem modelos puros dos paineis de atualizacao e login.
+- Etapa 1.125: extraido `buildSettingsUpdatePanelState()` com labels, estados visuais e bloqueios dos botoes de atualizacao.
+- Etapa 1.126: extraido `buildSettingsLoginPanelState()` com status da conta, API, dispositivo, Google, Apple e labels/bloqueios de botoes.
+- `app/configuracoes.tsx` continua responsavel por efeitos reais: validar sessao, login/logout, bootstrap autenticado, limpeza de sessao, consulta de API, Google/Apple, verificacao de atualizacao, abertura do portal e estado React.
+- `scripts/smoke-test.mjs` foi sincronizado para validar texto de dispositivo autenticado na policy sem perder o contrato de bootstrap/logout na tela.
+
+Validacoes:
+
+- `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`: aprovados.
+- `typecheck` nao emitiu erro, mas ficou sem saida e praticamente ocioso; foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser mudanca pura de policy sem runtime nativo.
+
+Checkpoint:
+
+- `docs/184_CHECKPOINT_ETAPAS_1_125_1_126_SETTINGS_UPDATE_LOGIN_POLICY_2026-05-22.md`.

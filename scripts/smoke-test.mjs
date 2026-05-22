@@ -1699,7 +1699,8 @@ if (
 
 if (
   !settingsScreen.includes("completeDeviceBootstrap") ||
-  !settingsScreen.includes("Dispositivo autenticado registrado") ||
+  !settingsScreen.includes("buildSettingsLoginPanelState") ||
+  !settingsPresentationPolicy.includes("Dispositivo autenticado registrado") ||
   !settingsScreen.includes("clearRegisteredDeviceSession")
 ) {
   throw new Error("Login precisa registrar dispositivo, sincronizar consentimentos e limpar vinculo remoto no logout.");

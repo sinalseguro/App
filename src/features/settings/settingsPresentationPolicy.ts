@@ -101,6 +101,49 @@ export type SettingsVideoPanelState = {
   actions: SettingsVideoPanelAction[];
 };
 
+export type SettingsUpdatePanelSourceState = {
+  checkedAt?: string;
+  currentVersion?: string;
+  currentVersionCode?: number;
+  downloadUrl?: string;
+  latestVersion?: string;
+  latestVersionCode?: number;
+  message?: string;
+  status?: string;
+};
+
+export type SettingsUpdatePanelState = {
+  availableVersionLabel?: string;
+  checkedAtLabel?: string;
+  downloadButtonDisabled: boolean;
+  downloadButtonLabel: string;
+  downloadButtonSelected: boolean;
+  infoActive: boolean;
+  infoText: string;
+  installedActive: boolean;
+  installedVersionLabel: string;
+  verifyButtonDisabled: boolean;
+  verifyButtonLabel: string;
+};
+
+export type SettingsLoginPanelState = {
+  accountActive: boolean;
+  accountLabel: string;
+  apiActive: boolean;
+  apiText: string;
+  appleButtonDisabled: boolean;
+  appleButtonMuted: boolean;
+  deviceActive: boolean;
+  deviceText: string;
+  emailLoginButtonLabel: string;
+  googleActive: boolean;
+  googleButtonDisabled: boolean;
+  googleButtonMuted: boolean;
+  googleText: string;
+  sessionActionDisabled: boolean;
+  testApiButtonDisabled: boolean;
+};
+
 export type SettingsDashboardTileIcon =
   | "angels"
   | "duration"
@@ -364,6 +407,95 @@ export function buildSettingsVideoPanelState(preferences: EmergencyPreferences |
         selected: preferences?.localVideoCapture.cameraMode === "both"
       }
     ]
+  };
+}
+
+function formatSettingsAppVersion(version?: string, versionCode?: number) {
+  const readableVersion = version && version.trim().length > 0 ? version : "nao identificada";
+  return typeof versionCode === "number" ? `${readableVersion} (codigo ${versionCode})` : readableVersion;
+}
+
+export function buildSettingsUpdatePanelState({
+  updateBusy,
+  updateState
+}: {
+  updateBusy: boolean;
+  updateState: SettingsUpdatePanelSourceState | null;
+}): SettingsUpdatePanelState {
+  const updateAvailable = updateState?.status === "available";
+  const latestVersionKnown = updateAvailable && Boolean(updateState?.latestVersion);
+
+  return {
+    availableVersionLabel: latestVersionKnown
+      ? `Disponivel ${formatSettingsAppVersion(updateState?.latestVersion, updateState?.latestVersionCode)}`
+      : undefined,
+    checkedAtLabel: updateState?.checkedAt
+      ? `Ultima verificacao: ${new Date(updateState.checkedAt).toLocaleDateString("pt-BR")}`
+      : undefined,
+    downloadButtonDisabled: !updateState?.downloadUrl,
+    downloadButtonLabel: "Baixar versao Android",
+    downloadButtonSelected: updateAvailable,
+    infoActive: updateAvailable,
+    infoText: updateState?.message ?? "Toque em verificar para consultar a versao Android disponivel.",
+    installedActive: updateState?.status === "current",
+    installedVersionLabel: `Instalada ${formatSettingsAppVersion(
+      updateState?.currentVersion,
+      updateState?.currentVersionCode
+    )}`,
+    verifyButtonDisabled: updateBusy,
+    verifyButtonLabel: updateBusy ? "Verificando..." : "Verificar atualizacao"
+  };
+}
+
+export function buildSettingsLoginPanelState({
+  accountEmail,
+  apiBaseUrl,
+  apiEnabled,
+  appleLoginAvailable,
+  googleLoginConfigured,
+  googleNativePlatform,
+  loginBusy,
+  platform,
+  registeredDeviceId
+}: {
+  accountEmail?: string | null;
+  apiBaseUrl?: string | null;
+  apiEnabled: boolean;
+  appleLoginAvailable: boolean;
+  googleLoginConfigured: boolean;
+  googleNativePlatform: boolean;
+  loginBusy: boolean;
+  platform: string;
+} & {
+  registeredDeviceId?: string | null;
+}): SettingsLoginPanelState {
+  const accountActive = Boolean(accountEmail);
+  const apiActive = apiEnabled && Boolean(apiBaseUrl);
+  const deviceActive = Boolean(registeredDeviceId);
+  const googleText = googleLoginConfigured
+    ? googleNativePlatform
+      ? `Google Sign-In nativo configurado para ${platform === "ios" ? "iOS" : "Android"}.`
+      : "Google OIDC configurado para esta plataforma."
+    : "Google ainda nao configurado para esta plataforma.";
+
+  return {
+    accountActive,
+    accountLabel: accountEmail ?? "Conta SinalSeguro desconectada",
+    apiActive,
+    apiText: apiActive ? `API configurada em ${apiBaseUrl}.` : "API SinalSeguro desabilitada neste build.",
+    appleButtonDisabled: loginBusy || !appleLoginAvailable,
+    appleButtonMuted: !appleLoginAvailable,
+    deviceActive,
+    deviceText: deviceActive
+      ? "Dispositivo autenticado registrado para esta conta."
+      : "Dispositivo sera registrado apos login validado.",
+    emailLoginButtonLabel: loginBusy ? "Conectando..." : "Entrar com e-mail",
+    googleActive: googleLoginConfigured,
+    googleButtonDisabled: loginBusy,
+    googleButtonMuted: !googleLoginConfigured,
+    googleText,
+    sessionActionDisabled: loginBusy,
+    testApiButtonDisabled: loginBusy
   };
 }
 

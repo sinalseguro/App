@@ -4,9 +4,11 @@ import {
   buildSettingsDashboardTileAction,
   buildSettingsDashboardTileRows,
   buildSettingsLocationPanelState,
+  buildSettingsLoginPanelState,
   buildSettingsPanelHelp,
   buildSettingsSecurityCodePanelState,
   buildSettingsSharingPanelState,
+  buildSettingsUpdatePanelState,
   buildSettingsVideoPanelState,
   formatSettingsCameraModeLabel,
   formatSettingsTrustedContactStatus,
@@ -259,6 +261,116 @@ assert.equal(fallbackVideoPanel.actions[0].label, "Ativar video local no SOS");
 assert.equal(fallbackVideoPanel.actions[2].selected, false);
 assert.equal(fallbackVideoPanel.actions[3].selected, false);
 assert.equal(fallbackVideoPanel.actions[4].selected, false);
+
+assert.deepEqual(
+  buildSettingsUpdatePanelState({
+    updateBusy: false,
+    updateState: {
+      checkedAt: "2026-05-22T12:00:00.000Z",
+      currentVersion: "0.1.15",
+      currentVersionCode: 15,
+      downloadUrl: "https://www.sinalseguro.com.br/downloads/private/android/sinalseguro_android.apk",
+      latestVersion: "0.1.16",
+      latestVersionCode: 16,
+      message: "Atualizacao disponivel pelo portal oficial SinalSeguro.",
+      status: "available"
+    }
+  }),
+  {
+    availableVersionLabel: "Disponivel 0.1.16 (codigo 16)",
+    checkedAtLabel: "Ultima verificacao: 22/05/2026",
+    downloadButtonDisabled: false,
+    downloadButtonLabel: "Baixar versao Android",
+    downloadButtonSelected: true,
+    infoActive: true,
+    infoText: "Atualizacao disponivel pelo portal oficial SinalSeguro.",
+    installedActive: false,
+    installedVersionLabel: "Instalada 0.1.15 (codigo 15)",
+    verifyButtonDisabled: false,
+    verifyButtonLabel: "Verificar atualizacao"
+  }
+);
+
+assert.deepEqual(
+  buildSettingsUpdatePanelState({
+    updateBusy: true,
+    updateState: null
+  }),
+  {
+    availableVersionLabel: undefined,
+    checkedAtLabel: undefined,
+    downloadButtonDisabled: true,
+    downloadButtonLabel: "Baixar versao Android",
+    downloadButtonSelected: false,
+    infoActive: false,
+    infoText: "Toque em verificar para consultar a versao Android disponivel.",
+    installedActive: false,
+    installedVersionLabel: "Instalada nao identificada",
+    verifyButtonDisabled: true,
+    verifyButtonLabel: "Verificando..."
+  }
+);
+
+assert.deepEqual(
+  buildSettingsLoginPanelState({
+    accountEmail: "usuaria@sinalseguro.test",
+    apiBaseUrl: "https://api.sinalseguro.test",
+    apiEnabled: true,
+    appleLoginAvailable: true,
+    googleLoginConfigured: true,
+    googleNativePlatform: true,
+    loginBusy: false,
+    platform: "android",
+    registeredDeviceId: "device-1"
+  }),
+  {
+    accountActive: true,
+    accountLabel: "usuaria@sinalseguro.test",
+    apiActive: true,
+    apiText: "API configurada em https://api.sinalseguro.test.",
+    appleButtonDisabled: false,
+    appleButtonMuted: false,
+    deviceActive: true,
+    deviceText: "Dispositivo autenticado registrado para esta conta.",
+    emailLoginButtonLabel: "Entrar com e-mail",
+    googleActive: true,
+    googleButtonDisabled: false,
+    googleButtonMuted: false,
+    googleText: "Google Sign-In nativo configurado para Android.",
+    sessionActionDisabled: false,
+    testApiButtonDisabled: false
+  }
+);
+
+assert.deepEqual(
+  buildSettingsLoginPanelState({
+    accountEmail: null,
+    apiEnabled: false,
+    appleLoginAvailable: false,
+    googleLoginConfigured: false,
+    googleNativePlatform: false,
+    loginBusy: true,
+    platform: "web",
+    registeredDeviceId: null
+  }),
+  {
+    accountActive: false,
+    accountLabel: "Conta SinalSeguro desconectada",
+    apiActive: false,
+    apiText: "API SinalSeguro desabilitada neste build.",
+    appleButtonDisabled: true,
+    appleButtonMuted: true,
+    deviceActive: false,
+    deviceText: "Dispositivo sera registrado apos login validado.",
+    emailLoginButtonLabel: "Conectando...",
+    googleActive: false,
+    googleButtonDisabled: true,
+    googleButtonMuted: true,
+    googleText: "Google ainda nao configurado para esta plataforma.",
+    sessionActionDisabled: true,
+    testApiButtonDisabled: true
+  }
+);
 
 assert.deepEqual(buildSettingsDashboardTileAction("video"), {
   kind: "panel",

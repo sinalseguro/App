@@ -984,3 +984,12 @@ Proximas acoes atualizadas:
 - Gate focado: `npm run test:settings-presentation`.
 - Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
+
+## Memoria viva - 2026-05-22 - atualizacao e login Configuracoes sem build
+
+- Etapas 1.125 e 1.126 extraem modelos de apresentacao dos paineis `Atualizacao` e `Login` para `settingsPresentationPolicy`.
+- A policy nao valida sessao, nao autentica, nao faz logout, nao chama API, nao abre portal, nao acessa storage e nao altera dispositivo; apenas retorna labels, estados visuais e bloqueios de botoes.
+- O contrato de bootstrap/logout permanece na tela e o texto de dispositivo autenticado agora e validado no smoke pela policy.
+- Gate focado: `npm run test:settings-presentation`.
+- Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
