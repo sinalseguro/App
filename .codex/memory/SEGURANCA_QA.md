@@ -1320,6 +1320,17 @@ Papel: seguranca, LGPD e QA.
 - `typecheck` nao emitiu erro, mas ficou sem saida e ocioso; foi encerrado para nao deixar processo pendurado.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
 
+## QA/Security - 2026-05-22 - Etapas 1.133 e 1.134 received alert presentation policy
+
+- Mudanca restrita a regra pura/teste de apresentacao da tela `Alertas recebidos`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `app/alerta.tsx` continua responsavel por listar sessoes recebidas, responder pedido, iniciar chamada em tempo real, notificar, arquivar registro local, compartilhar registro e sincronizar estado.
+- A policy apenas retorna textos publicos, ordenacao, labels, acessibilidade e gates visuais derivados; nao executa API, storage, permissao, WebRTC, camera, microfone, notificacao, Share nativo ou logs.
+- Contratos preservados: pedido `declined` nao permite entrada, pedido encerrado fica apenas para consulta, `locallyAcceptedSessionIds` permanece estado local/otimista e uma chamada ativa por vez continua bloqueada na tela.
+- Nao introduz log novo, chave, token, hash, codigo, identity token, sinalizacao tecnica de chamada, path local, coordenada ou conteudo de midia.
+- Validacoes aprovadas: `test:received-alert-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
+
 ## QA/Security - 2026-05-22 - Etapas 1.129 e 1.130 settings preferences policy
 
 - Mudanca restrita a regra pura/teste de preferencias locais de compartilhamento e video; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.

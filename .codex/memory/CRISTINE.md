@@ -1024,3 +1024,14 @@ Proximas acoes atualizadas:
 - Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
 - Tela `Configuracoes` encerrada nesta fase principal da refatoracao.
+
+## Memoria viva - 2026-05-22 - apresentacao de Alertas recebidos sem build
+
+- Etapas 1.133 e 1.134 iniciam `app/alerta.tsx` extraindo apresentacao pura para `receivedAlertPresentationPolicy`.
+- A policy nao consulta API, nao aceita/recusa pedido, nao inicia WebRTC, nao dispara notificacao, nao grava, nao compartilha e nao persiste registro; apenas calcula textos, labels, ordenacao e gates visuais derivados.
+- `app/alerta.tsx` manteve os efeitos reais e o bloqueio de uma chamada ativa por vez.
+- O smoke passou a aceitar os textos contratuais de anjo/chamada na policy e continua exigindo API, autoaceite autorizado, notificacao, arquivo local e tempo real na tela.
+- Gate focado: `npm run test:received-alert-presentation`.
+- Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
+- Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.

@@ -30,6 +30,13 @@ import {
   canAngelAutoAcceptIncomingEmergency,
   currentEmergencyRecipientStatus
 } from "@/features/live-call/liveCallRolePolicy";
+import {
+  buildReceivedAlertCardPresentation,
+  buildReceivedAlertIncomingCallPresentation,
+  formatReceivedAlertDate,
+  receivedCallArchiveStatusLabel,
+  sortReceivedEmergencyAlerts
+} from "@/features/live-call/receivedAlertPresentationPolicy";
 import { useLiveAudioCall } from "@/features/live-call/useLiveAudioCall";
 import { ApiEmergencySession, apiClient } from "@/services/apiClient";
 
@@ -38,42 +45,6 @@ type AlertDialog = {
   message: string;
   title: string;
 };
-
-function formatAlertDate(value: string) {
-  return new Intl.DateTimeFormat("pt-BR", {
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    month: "2-digit"
-  }).format(new Date(value));
-}
-
-function phaseLabel(session: ApiEmergencySession, recipientStatus?: string, acceptedByCurrentUser = false) {
-  if (recipientStatus === "ended") return "Encerrado";
-  if (session.phase === "ended" || session.status !== "active") return "Encerrado";
-  if (acceptedByCurrentUser) return "Você está atendendo como anjo";
-  if (recipientStatus === "accepted") return "Você está atendendo como anjo";
-  if (recipientStatus === "declined") return "Você recusou";
-  if (recipientStatus === "seen") return "Visualizado";
-  if (session.phase === "accepted") return "Atendimento em andamento";
-  return "Pedido de ajuda";
-}
-
-function sortAlerts(alerts: ApiEmergencySession[]) {
-  return [...alerts].sort((left, right) => {
-    const leftActive = left.status === "active" && left.phase !== "ended";
-    const rightActive = right.status === "active" && right.phase !== "ended";
-    if (leftActive !== rightActive) return leftActive ? -1 : 1;
-    return new Date(right.started_at).getTime() - new Date(left.started_at).getTime();
-  });
-}
-
-function archiveStatusLabel(status: LiveCallArchiveRecord["status"]) {
-  if (status === "connected") return "ao vivo conectado";
-  if (status === "ended") return "finalizado";
-  if (status === "failed") return "chamada indisponível";
-  return "registro ativo";
-}
 
 export default function AlertScreen() {
   const [alerts, setAlerts] = useState<ApiEmergencySession[]>([]);
@@ -91,7 +62,7 @@ export default function AlertScreen() {
   const liveAudioCall = useLiveAudioCall();
   const liveAudioCallStateRef = useRef(liveAudioCall.state);
 
-  const sortedAlerts = useMemo(() => sortAlerts(alerts), [alerts]);
+  const sortedAlerts = useMemo(() => sortReceivedEmergencyAlerts(alerts), [alerts]);
 
   const loadCallArchives = useCallback(async () => {
     const records = await listReceivedLiveCallArchives();
@@ -385,58 +356,54 @@ export default function AlertScreen() {
       {sortedAlerts.length ? (
         <View style={styles.alertStack}>
           {sortedAlerts.map((session) => {
-            const isActive = session.status === "active" && session.phase !== "ended";
             const recipientStatus = currentEmergencyRecipientStatus(session);
             const hasAccepted = recipientStatus === "accepted" || locallyAcceptedSessionIds.has(session.id);
-            const canEnterCall = isActive && hasAccepted;
-            const canReceiveCall = isActive && recipientStatus !== "declined";
+            const alertPresentation = buildReceivedAlertCardPresentation({
+              hasAccepted,
+              recipientStatus,
+              session
+            });
+            const incomingCallPresentation = buildReceivedAlertIncomingCallPresentation({
+              hasAccepted,
+              session
+            });
             const isCallPanelSession = liveAudioCall.state.remoteSessionId === session.id;
-            const canShowCallPanel = isActive && isCallPanelSession;
+            const canShowCallPanel = alertPresentation.isActive && isCallPanelSession;
             const hasActiveRealtimeSession =
               Boolean(liveAudioCall.state.remoteSessionId) &&
               (liveAudioCall.state.status === "waiting" ||
                 liveAudioCall.state.status === "connecting" ||
                 liveAudioCall.state.status === "connected");
             const hasOtherCallSession = hasActiveRealtimeSession && !isCallPanelSession;
-            const alertBody = !isActive
-              ? "Este pedido foi encerrado. O registro fica apenas para consulta."
-              : hasAccepted
-                ? "Você já está atendendo. Acompanhe enquanto o pedido estiver ativo."
-                : "Toque em Atender para entrar como anjo. Você só fala quando entrar.";
-            const primaryActionLabel = !isActive ? "Encerrado" : hasAccepted ? "Atendendo" : "Atender agora";
             return (
-              <View key={session.id} style={[styles.alertCard, isActive && styles.alertCardActive]}>
+              <View key={session.id} style={[styles.alertCard, alertPresentation.isActive && styles.alertCardActive]}>
                 <View style={styles.alertHeader}>
                   <View style={styles.alertIcon}>
-                    <ShieldAlert size={19} color={isActive ? theme.colors.danger : theme.colors.secure} />
+                    <ShieldAlert size={19} color={alertPresentation.isActive ? theme.colors.danger : theme.colors.secure} />
                   </View>
                   <View style={styles.alertTitleBlock}>
-                    <Text style={styles.alertTitle}>Você é anjo de {session.owner_display_name ?? "pessoa protegida"}</Text>
-                    <Text style={styles.alertMeta}>{formatAlertDate(session.started_at)}</Text>
+                    <Text style={styles.alertTitle}>{alertPresentation.title}</Text>
+                    <Text style={styles.alertMeta}>{formatReceivedAlertDate(session.started_at)}</Text>
                   </View>
                 </View>
 
-                <Text style={styles.alertStatus}>{phaseLabel(session, recipientStatus, hasAccepted)}</Text>
-                <Text style={styles.alertBody}>{alertBody}</Text>
+                <Text style={styles.alertStatus}>{alertPresentation.statusLabel}</Text>
+                <Text style={styles.alertBody}>{alertPresentation.body}</Text>
 
-                {canReceiveCall && !isCallPanelSession ? (
+                {alertPresentation.canReceiveCall && !isCallPanelSession ? (
                   <View style={styles.incomingCallPanel}>
                     <View style={styles.callPromptHeader}>
                       <View style={styles.incomingCallIcon}>
                         <PhoneIncoming size={19} color={theme.colors.textOnDark} />
                       </View>
                       <View style={styles.callPromptTextBlock}>
-                        <Text style={styles.incomingCallTitle}>{hasAccepted ? "Você é o anjo" : "Atender como anjo"}</Text>
-                        <Text style={styles.incomingCallText}>
-                          {hasAccepted
-                            ? "Entre na chamada se puder acompanhar agora."
-                            : `${session.owner_display_name ?? "Pessoa protegida"} pediu ajuda.`}
-                        </Text>
+                        <Text style={styles.incomingCallTitle}>{incomingCallPresentation.title}</Text>
+                        <Text style={styles.incomingCallText}>{incomingCallPresentation.text}</Text>
                       </View>
                     </View>
                     <View style={styles.phoneActionRow}>
                       <Pressable
-                        accessibilityLabel={hasAccepted ? "Entrar na chamada" : "Atender como anjo"}
+                        accessibilityLabel={incomingCallPresentation.actionAccessibilityLabel}
                         accessibilityRole="button"
                         disabled={hasOtherCallSession}
                         onPress={() => {
@@ -458,7 +425,7 @@ export default function AlertScreen() {
                           <PhoneCall size={18} color={theme.colors.textOnDark} />
                         )}
                         <Text style={styles.answerCallActionText}>
-                          {hasAccepted ? "Entrar na chamada" : "Atender como anjo"}
+                          {incomingCallPresentation.actionLabel}
                         </Text>
                       </Pressable>
                     </View>
@@ -468,7 +435,7 @@ export default function AlertScreen() {
                 {canShowCallPanel ? (
                   <LiveAudioCallPanel
                     actionLabel="Entrar como anjo"
-                    disabled={!canEnterCall || hasOtherCallSession}
+                    disabled={!alertPresentation.canEnterCall || hasOtherCallSession}
                     onPrimaryAction={() => {
                       void openRealtimeCall(session, hasAccepted);
                     }}
@@ -484,13 +451,13 @@ export default function AlertScreen() {
                   <Pressable
                     accessibilityLabel="Avisar que estou ciente"
                     accessibilityRole="button"
-                    disabled={!isActive || hasAccepted}
+                    disabled={!alertPresentation.isActive || hasAccepted}
                     onPress={() => {
                       void respondToAlert(session, "seen");
                     }}
                     style={({ pressed }) => [
                       styles.mutedAction,
-                      (!isActive || hasAccepted) && styles.actionDisabled,
+                      (!alertPresentation.isActive || hasAccepted) && styles.actionDisabled,
                       pressed && styles.actionPressed
                     ]}
                   >
@@ -499,18 +466,18 @@ export default function AlertScreen() {
                   <Pressable
                     accessibilityLabel="Aceitar acompanhar"
                     accessibilityRole="button"
-                    disabled={!isActive || hasAccepted}
+                    disabled={!alertPresentation.isActive || hasAccepted}
                     onPress={() => {
                       void openRealtimeCall(session, hasAccepted);
                     }}
                     style={({ pressed }) => [
                       styles.primaryAction,
-                      (!isActive || hasAccepted) && styles.actionDisabled,
+                      (!alertPresentation.isActive || hasAccepted) && styles.actionDisabled,
                       pressed && styles.actionPressed
                     ]}
                   >
                     <CheckCircle2 size={18} color={theme.colors.textOnDark} />
-                    <Text style={styles.primaryActionText}>{primaryActionLabel}</Text>
+                    <Text style={styles.primaryActionText}>{alertPresentation.primaryActionLabel}</Text>
                   </Pressable>
                 </View>
               </View>
@@ -554,7 +521,7 @@ export default function AlertScreen() {
                 </View>
                 <View style={styles.archiveMetaItem}>
                   <Video size={15} color={theme.colors.textMuted} />
-                  <Text style={styles.archiveMetaText}>{archiveStatusLabel(record.status)}</Text>
+                  <Text style={styles.archiveMetaText}>{receivedCallArchiveStatusLabel(record.status)}</Text>
                 </View>
               </View>
               <Text style={styles.archiveLegalText}>{record.legal.shareRestriction}</Text>

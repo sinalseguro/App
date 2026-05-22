@@ -149,6 +149,7 @@ const requiredFiles = [
   "src/features/live-call/incomingEmergencyNotification.ts",
   "src/features/live-call/liveCallHistory.ts",
   "src/features/live-call/liveCallHistoryPolicy.ts",
+  "src/features/live-call/receivedAlertPresentationPolicy.ts",
   "src/features/live-call/liveCallRolePolicy.ts",
   "src/features/live-call/liveCallStatePolicy.ts",
   "src/features/live-call/liveWebRtcPolicy.ts",
@@ -233,6 +234,7 @@ const requiredFiles = [
   "scripts/finish-failure-actions-policy.test.ts",
   "scripts/finish-failure-cleanup-actions-policy.test.ts",
   "scripts/live-call-history-policy.test.ts",
+  "scripts/received-alert-presentation-policy.test.ts",
   "scripts/live-call-state-policy.test.ts",
   "scripts/live-webrtc-policy.test.ts",
   "scripts/live-call-sensitive-logging.test.ts",
@@ -423,6 +425,7 @@ const alertScreen = await readFile("app/alerta.tsx", "utf8");
 const incomingEmergencyNotification = await readFile("src/features/live-call/incomingEmergencyNotification.ts", "utf8");
 const liveCallHistory = await readFile("src/features/live-call/liveCallHistory.ts", "utf8");
 const liveCallHistoryPolicy = await readFile("src/features/live-call/liveCallHistoryPolicy.ts", "utf8");
+const receivedAlertPresentationPolicy = await readFile("src/features/live-call/receivedAlertPresentationPolicy.ts", "utf8");
 const liveCallRolePolicy = await readFile("src/features/live-call/liveCallRolePolicy.ts", "utf8");
 const liveCallStatePolicy = await readFile("src/features/live-call/liveCallStatePolicy.ts", "utf8");
 const liveWebRtcPolicy = await readFile("src/features/live-call/liveWebRtcPolicy.ts", "utf8");
@@ -479,8 +482,9 @@ if (
 if (
   !alertScreen.includes("listReceivedEmergencySessions") ||
   !alertScreen.includes("respondToEmergencySession") ||
-  !alertScreen.includes("Você é anjo de") ||
-  !alertScreen.includes("Atender como anjo")
+  !alertScreen.includes("buildReceivedAlertCardPresentation") ||
+  !receivedAlertPresentationPolicy.includes("Você é anjo de") ||
+  !receivedAlertPresentationPolicy.includes("Atender como anjo")
 ) {
   throw new Error("Tela de alertas recebidos precisa listar pedidos roteados e permitir resposta do anjo.");
 }
@@ -492,8 +496,8 @@ if (
   !alertScreen.includes("autoRealtimeSessionIdsRef") ||
   !alertScreen.includes("activeLiveCall") ||
   !alertScreen.includes("notifyIncomingEmergency") ||
-  !alertScreen.includes("Entrar na chamada") ||
-  !alertScreen.includes("Você é o anjo") ||
+  !receivedAlertPresentationPolicy.includes("Entrar na chamada") ||
+  !receivedAlertPresentationPolicy.includes("Você é o anjo") ||
   !alertScreen.includes("Share.share") ||
   !alertScreen.includes("openRealtimeCall")
 ) {
@@ -609,9 +613,9 @@ if (
   !deviceBinding.includes("requireRegisteredApiDeviceId") ||
   !homeScreen.includes("Chamar anjo") ||
   !emergencyStartPolicy.includes("Você pediu ajuda") ||
-  !alertScreen.includes("Você é anjo de") ||
-  !alertScreen.includes("Atender como anjo") ||
-  !alertScreen.includes("Entrar na chamada")
+  !receivedAlertPresentationPolicy.includes("Você é anjo de") ||
+  !receivedAlertPresentationPolicy.includes("Atender como anjo") ||
+  !receivedAlertPresentationPolicy.includes("Entrar na chamada")
 ) {
   throw new Error("Chamada com anjo precisa ter rota por dispositivo/papel e UX clara de solicitante versus anjo.");
 }

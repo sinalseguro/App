@@ -5448,3 +5448,25 @@ Validacoes:
 Checkpoint:
 
 - `docs/187_CHECKPOINT_ETAPAS_1_131_1_132_SETTINGS_LEGAL_DURATION_POLICY_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.133 e 1.134 apresentacao de Alertas recebidos
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Iniciada a proxima area apos `Configuracoes`: `app/alerta.tsx`.
+- Etapa 1.133: criada `src/features/live-call/receivedAlertPresentationPolicy.ts` para centralizar data, ordenacao de pedidos recebidos, label de fase e label de status do arquivo local.
+- Etapa 1.134: extraida a apresentacao pura do card de pedido recebido e do bloco de chamada recebida: titulo, corpo, status, labels, acessibilidade e gates visuais derivados.
+- `app/alerta.tsx` continua responsavel pelos efeitos reais: API, aceite/recusa/visualizacao, notificacao, chamada em tempo real, arquivo local, Share e sincronizacao.
+- `scripts/smoke-test.mjs` foi sincronizado para validar os textos contratuais na policy e manter checks de API/tempo real na tela.
+
+Validacoes:
+
+- `test:received-alert-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`: aprovados.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser mudanca pura de policy sem runtime nativo.
+
+Checkpoint:
+
+- `docs/188_CHECKPOINT_ETAPAS_1_133_1_134_RECEIVED_ALERT_PRESENTATION_POLICY_2026-05-22.md`.

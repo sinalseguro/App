@@ -1255,3 +1255,14 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build Android nesta rodada por ser refatoracao pura sem runtime nativo.
 - Tela `Configuracoes` encerrada nesta fase principal da refatoracao.
+
+# Atualizacao - 2026-05-22 - Etapas 1.133 e 1.134 Alertas recebidos
+
+- Iniciada a refatoracao segura de `app/alerta.tsx` apos encerramento da tela `Configuracoes`.
+- Nova `src/features/live-call/receivedAlertPresentationPolicy.ts` centraliza regras puras de apresentacao: data, ordenacao de pedidos, label de fase, label de status de arquivo, card de pedido recebido e bloco de chamada recebida.
+- `app/alerta.tsx` segue responsavel por efeitos reais: API, responder pedido, autoaceite autorizado, notificacao, chamada em tempo real, arquivo local, Share nativo, sincronizacao e estado React.
+- Smoke atualizado para validar que textos contratuais de anjo e chamada agora podem viver na policy sem perder os checks de API e tempo real na tela.
+- Gate focado: `npm run test:received-alert-presentation`.
+- Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
+- Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
