@@ -446,6 +446,13 @@ const deviceBinding = await readFile("src/services/deviceBinding.ts", "utf8");
 const deviceKeyProof = await readFile("src/services/deviceKeyProof.ts", "utf8");
 const profilePolicy = await readFile("src/features/profiles/profilePolicy.ts", "utf8");
 const profileSurface = `${profilesScreen}\n${profilePolicy}`;
+const trustedAngelsDashboardGridStartIndex = contactsScreen.indexOf("function TrustedAngelsDashboardGrid");
+const trustedAngelsDashboardGridEndIndex = contactsScreen.indexOf("type TrustedAngelsReadinessPanelContentProps");
+const trustedAngelsDashboardGridBlock =
+  trustedAngelsDashboardGridStartIndex >= 0 &&
+  trustedAngelsDashboardGridEndIndex > trustedAngelsDashboardGridStartIndex
+    ? contactsScreen.slice(trustedAngelsDashboardGridStartIndex, trustedAngelsDashboardGridEndIndex)
+    : "";
 const receivedAlertsListStartIndex = alertScreen.indexOf("function ReceivedAlertsList");
 const receivedAlertsListEndIndex = alertScreen.indexOf("function ReceivedAlertsEmptyState");
 const receivedAlertsListBlock =
@@ -863,9 +870,27 @@ if (
   !contactsScreen.includes("canCreateTrustedContactInvitation") ||
   !contactsScreen.includes("getActiveProtectionProfile") ||
   !contactsScreen.includes("profile_block") ||
-  !contactsScreen.includes("router.push(\"/perfis\")")
+  !contactsScreen.includes("router.push(\"/perfis\")") ||
+  !contactsScreen.includes("type TrustedAngelsDashboardGridProps") ||
+  !contactsScreen.includes("function TrustedAngelsDashboardGrid") ||
+  !contactsScreen.includes("function TrustedAngelsReadinessPanelContent") ||
+  !contactsScreen.includes("renderTrustedAngelsDashboardTileIcon")
 ) {
   throw new Error("Tela de anjos precisa passar pelo gate de perfil antes de criar convite.");
+}
+
+if (
+  !trustedAngelsDashboardGridBlock ||
+  trustedAngelsDashboardGridBlock.includes("apiClient") ||
+  trustedAngelsDashboardGridBlock.includes("Share.share") ||
+  trustedAngelsDashboardGridBlock.includes("useFocusEffect") ||
+  trustedAngelsDashboardGridBlock.includes("AppState") ||
+  trustedAngelsDashboardGridBlock.includes("listLocalInvitations") ||
+  trustedAngelsDashboardGridBlock.includes("createLocalInvitation") ||
+  trustedAngelsDashboardGridBlock.includes("revokeLocalInvitation") ||
+  trustedAngelsDashboardGridBlock.includes("deviceBindingService")
+) {
+  throw new Error("Dashboard de anjos deve permanecer apresentacional, sem efeitos, API, Share ou storage.");
 }
 
 if (

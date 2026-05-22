@@ -1332,3 +1332,14 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Validacoes aprovadas: teste focado, `test:received-alert-runtime`, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+
+# Atualizacao - 2026-05-22 - Etapas 1.147 e 1.148 Dashboard e prontidao de Anjos
+
+- Iniciada a refatoracao presentational de `app/contatos.tsx`, alvo recomendado por menor risco que SOS, cofre, player, WebRTC e midia.
+- Etapa 1.147: extraido `TrustedAngelsDashboardGrid`, mantendo `handleDashboardTileAction()` e navegacao real no `ContactsScreen`.
+- Etapa 1.148: extraido `TrustedAngelsReadinessPanelContent`, recebendo apenas `readinessState` ja calculado.
+- `ContactsScreen` segue responsavel por gate de perfil, refresh, API, cache local, device binding, AppState, Share, revogacoes, dialogs, navegacao e estado React.
+- Gate focado: `npm run test:trusted-angels-dashboard` e `npm run test:trusted-angels-panel`.
+- Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por cerca de 1 minuto; foi encerrado para nao deixar processo pendurado.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.

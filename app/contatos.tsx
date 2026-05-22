@@ -39,7 +39,9 @@ import {
   buildTrustedAngelsDashboardTileRows,
   buildTrustedAngelsReadinessState,
   type TrustedAngelsDashboardTileAction,
-  type TrustedAngelsDashboardTileIcon
+  type TrustedAngelsDashboardTile,
+  type TrustedAngelsDashboardTileIcon,
+  type TrustedAngelsReadinessState
 } from "@/features/invitations/trustedAngelsDashboardPolicy";
 import {
   buildTrustedAngelsDialogActionLabels,
@@ -121,6 +123,84 @@ function SectionTitle({ icon, title }: { icon: ReactNode; title: string }) {
     <View style={styles.sectionHeader}>
       <View style={styles.sectionIcon}>{icon}</View>
       <Text style={styles.sectionTitle}>{title}</Text>
+    </View>
+  );
+}
+
+type TrustedAngelsDashboardGridProps = {
+  onAction: (action: TrustedAngelsDashboardTileAction) => void;
+  rows: TrustedAngelsDashboardTile[][];
+};
+
+function renderTrustedAngelsDashboardTileIcon(icon: TrustedAngelsDashboardTileIcon) {
+  switch (icon) {
+    case "angel-links":
+      return <UserCheck size={24} color={theme.colors.primary} />;
+    case "invite":
+      return <UserPlus size={24} color={theme.colors.primary} />;
+    case "invitations":
+      return <Clock3 size={24} color={theme.colors.primary} />;
+    case "owner-links":
+      return <Users size={24} color={theme.colors.primary} />;
+    case "profile":
+      return <UserRound size={24} color={theme.colors.primary} />;
+    case "readiness":
+    case "state":
+      return <ShieldCheck size={24} color={theme.colors.primary} />;
+    case "refresh":
+      return <RefreshCw size={24} color={theme.colors.primary} />;
+  }
+}
+
+function TrustedAngelsDashboardGrid({ onAction, rows }: TrustedAngelsDashboardGridProps) {
+  return (
+    <>
+      {rows.map((row) => (
+        <View key={row.map((tile) => tile.key).join("-")} style={styles.resourceGrid}>
+          {row.map((tile) => (
+            <ResourceTile
+              key={tile.key}
+              icon={renderTrustedAngelsDashboardTileIcon(tile.icon)}
+              label={tile.label}
+              description={tile.description}
+              onPress={() => onAction(tile.action)}
+            />
+          ))}
+        </View>
+      ))}
+    </>
+  );
+}
+
+type TrustedAngelsReadinessPanelContentProps = {
+  readinessState: TrustedAngelsReadinessState;
+};
+
+function TrustedAngelsReadinessPanelContent({ readinessState }: TrustedAngelsReadinessPanelContentProps) {
+  return (
+    <View style={styles.dialogStack}>
+      <View style={styles.readinessItem}>
+        <ShieldCheck
+          size={18}
+          color={readinessState.account.secure ? theme.colors.secure : theme.colors.textMuted}
+        />
+        <Text style={styles.readinessLabel}>{readinessState.account.label}</Text>
+      </View>
+      <View style={styles.readinessItem}>
+        <ShieldCheck
+          size={18}
+          color={readinessState.device.secure ? theme.colors.secure : theme.colors.textMuted}
+        />
+        <Text style={styles.readinessLabel}>{readinessState.device.label}</Text>
+      </View>
+      <View style={styles.readinessItem}>
+        {readinessState.api.enabled ? (
+          <ShieldCheck size={18} color={theme.colors.secure} />
+        ) : (
+          <WifiOff size={18} color={theme.colors.warning} />
+        )}
+        <Text style={styles.readinessLabel}>{readinessState.api.label}</Text>
+      </View>
     </View>
   );
 }
@@ -435,26 +515,6 @@ export default function ContactsScreen() {
     }
   }
 
-  function renderDashboardTileIcon(icon: TrustedAngelsDashboardTileIcon) {
-    switch (icon) {
-      case "angel-links":
-        return <UserCheck size={24} color={theme.colors.primary} />;
-      case "invite":
-        return <UserPlus size={24} color={theme.colors.primary} />;
-      case "invitations":
-        return <Clock3 size={24} color={theme.colors.primary} />;
-      case "owner-links":
-        return <Users size={24} color={theme.colors.primary} />;
-      case "profile":
-        return <UserRound size={24} color={theme.colors.primary} />;
-      case "readiness":
-      case "state":
-        return <ShieldCheck size={24} color={theme.colors.primary} />;
-      case "refresh":
-        return <RefreshCw size={24} color={theme.colors.primary} />;
-    }
-  }
-
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.shell} testID="trusted-angels-screen">
@@ -480,19 +540,7 @@ export default function ContactsScreen() {
 
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false} style={styles.contentScroll}>
           <StatusBanner tone={notice.tone} title={notice.title} text={notice.text} />
-          {dashboardTileRows.map((row) => (
-            <View key={row.map((tile) => tile.key).join("-")} style={styles.resourceGrid}>
-              {row.map((tile) => (
-                <ResourceTile
-                  key={tile.key}
-                  icon={renderDashboardTileIcon(tile.icon)}
-                  label={tile.label}
-                  description={tile.description}
-                  onPress={() => handleDashboardTileAction(tile.action)}
-                />
-              ))}
-            </View>
-          ))}
+          <TrustedAngelsDashboardGrid rows={dashboardTileRows} onAction={handleDashboardTileAction} />
         </ScrollView>
 
         <Text style={styles.statusText}>{status}</Text>
@@ -597,30 +645,7 @@ export default function ContactsScreen() {
           title="Prontidão"
           visible={dialogVisibility.readinessPanel}
         >
-          <View style={styles.dialogStack}>
-            <View style={styles.readinessItem}>
-              <ShieldCheck
-                size={18}
-                color={readinessState.account.secure ? theme.colors.secure : theme.colors.textMuted}
-              />
-              <Text style={styles.readinessLabel}>{readinessState.account.label}</Text>
-            </View>
-            <View style={styles.readinessItem}>
-              <ShieldCheck
-                size={18}
-                color={readinessState.device.secure ? theme.colors.secure : theme.colors.textMuted}
-              />
-              <Text style={styles.readinessLabel}>{readinessState.device.label}</Text>
-            </View>
-            <View style={styles.readinessItem}>
-              {readinessState.api.enabled ? (
-                <ShieldCheck size={18} color={theme.colors.secure} />
-              ) : (
-                <WifiOff size={18} color={theme.colors.warning} />
-              )}
-              <Text style={styles.readinessLabel}>{readinessState.api.label}</Text>
-            </View>
-          </View>
+          <TrustedAngelsReadinessPanelContent readinessState={readinessState} />
         </BrandedDialog>
 
         <BrandedDialog

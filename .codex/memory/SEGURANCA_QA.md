@@ -1380,6 +1380,19 @@ Papel: seguranca, LGPD e QA.
 - `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
 
+## QA/Security - 2026-05-22 - Etapas 1.147 e 1.148 trusted angels dashboard/readiness
+
+- Mudanca restrita a componentes locais de apresentacao da tela `Anjos de confianca`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `ContactsScreen` continua responsavel por gate de perfil, refresh, API, cache local, device binding, AppState, Share nativo, revogacoes, dialogs, navegacao e estado React.
+- `TrustedAngelsDashboardGrid` e `TrustedAngelsReadinessPanelContent` apenas renderizam dados e disparam callback injetado pela tela.
+- Contratos preservados: convite segue bloqueado por perfil, menor continua bloqueado pelas policies, Share real fica no handler da tela, e cache offline de vinculos segue no refresh.
+- O smoke bloqueia API, Share, AppState, storage, convite, revogacao e device binding dentro de `TrustedAngelsDashboardGrid`.
+- Nao introduz log novo, chave, token, hash, codigo, identity token, SDP, ICE, payload P2P, URI local, path de arquivo, coordenada, telefone, nome real novo ou conteudo de midia.
+- Inspecao sensivel nos arquivos tocados retornou apenas falsos positivos esperados: imports/handlers ja existentes no `ContactsScreen` e anchors do smoke.
+- Validacoes aprovadas: `test:trusted-angels-dashboard`, `test:trusted-angels-panel`, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por cerca de 1 minuto; foi encerrado para nao deixar processo pendurado.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.
+
 ## QA/Security - 2026-05-22 - Etapas 1.135 e 1.136 received alert runtime policy
 
 - Mudanca restrita a regras puras/teste de runtime local da tela `Alertas recebidos`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.

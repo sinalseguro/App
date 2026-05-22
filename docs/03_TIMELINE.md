@@ -5597,3 +5597,25 @@ Validacoes:
 Checkpoint:
 
 - `docs/194_CHECKPOINT_ETAPAS_1_145_1_146_RECEIVED_ALERT_LIST_SAFE_STOP_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.147 e 1.148 dashboard e prontidao de Anjos
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.147: extraido `TrustedAngelsDashboardGrid` para renderizar a grade visual de cards do dashboard de anjos.
+- Etapa 1.148: extraido `TrustedAngelsReadinessPanelContent` para renderizar o conteudo visual do painel de prontidao.
+- `ContactsScreen` continua responsavel pelos efeitos reais: gate de perfil, refresh, API, cache local, device binding, AppState, Share, revogacao, dialogs, navegacao e estado React.
+- `scripts/smoke-test.mjs` recebeu anchors para proteger que `TrustedAngelsDashboardGrid` permaneca apresentacional, sem API, storage, Share, AppState, convite, revogacao ou device binding.
+
+Validacoes:
+
+- `test:trusted-angels-dashboard`, `test:trusted-angels-panel`, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`: aprovados.
+- `npm test` tambem cobriu `trusted-angels-dialog`, `trusted-angels-action` e `trusted-angels-refresh`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por cerca de 1 minuto; foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/195_CHECKPOINT_ETAPAS_1_147_1_148_TRUSTED_ANGELS_DASHBOARD_READINESS_2026-05-22.md`.
