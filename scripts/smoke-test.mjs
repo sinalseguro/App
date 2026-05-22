@@ -485,8 +485,13 @@ if (
 if (
   !alertScreen.includes("listReceivedEmergencySessions") ||
   !alertScreen.includes("respondToEmergencySession") ||
+  !alertScreen.includes("function ReceivedAlertsStatusBar") ||
   !alertScreen.includes("function ReceivedAlertCardView") ||
+  !alertScreen.includes("function ReceivedCallArchiveSection") ||
   !alertScreen.includes("function ReceivedCallArchiveCardView") ||
+  !alertScreen.includes("accessibilityLabel=\"Atualizar alertas recebidos\"") ||
+  !alertScreen.includes("setSelectedArchiveRecord") ||
+  !alertScreen.includes("buildLiveCallShareText") ||
   !alertScreen.includes("buildReceivedAlertCardPresentation") ||
   !alertScreen.includes("buildReceivedAlertActionState") ||
   !receivedAlertPresentationPolicy.includes("buildReceivedAlertActionState") ||

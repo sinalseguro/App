@@ -5555,3 +5555,24 @@ Validacoes:
 Checkpoint:
 
 - `docs/192_CHECKPOINT_ETAPAS_1_141_1_142_RECEIVED_ALERT_CARD_COMPONENTS_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.143 e 1.144 status e secao de historico de Alertas recebidos
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.143: extraido `ReceivedAlertsStatusBar` para renderizar a barra de status/refresh com callback injetado pela tela.
+- Etapa 1.144: extraido `ReceivedCallArchiveSection` para renderizar o cabecalho e a lista de historico/local archive com callbacks injetados pela tela.
+- `AlertScreen` continua responsavel pelos efeitos reais: API, autoaceite, notificacao, WebRTC, storage seguro, refs mutaveis, reset de chamada, Share, selecao de registro, refresh e estado React.
+- `scripts/smoke-test.mjs` recebeu anchors extras para proteger os novos helpers e a permanencia de `setSelectedArchiveRecord`, `buildLiveCallShareText` e acessibilidade do refresh.
+
+Validacoes:
+
+- `test:received-alert-presentation`, `test:received-alert-runtime`, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`: aprovados.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/193_CHECKPOINT_ETAPAS_1_143_1_144_RECEIVED_ALERT_STATUS_ARCHIVE_SECTION_2026-05-22.md`.

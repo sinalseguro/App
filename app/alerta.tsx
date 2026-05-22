@@ -327,23 +327,13 @@ export default function AlertScreen() {
       subtitle="Quando você for anjo de alguém, os pedidos aparecem aqui."
       showBack
     >
-      <View style={styles.statusRow}>
-        <View style={styles.statusIcon}>
-          <BellRing size={18} color={theme.colors.primary} />
-        </View>
-        <Text style={styles.statusText}>{status}</Text>
-        <Pressable
-          accessibilityLabel="Atualizar alertas recebidos"
-          accessibilityRole="button"
-          disabled={refreshing}
-          onPress={() => {
-            void refreshAlerts();
-          }}
-          style={({ pressed }) => [styles.refreshButton, pressed && styles.refreshButtonPressed]}
-        >
-          <RefreshCw size={18} color={theme.colors.textOnDark} />
-        </Pressable>
-      </View>
+      <ReceivedAlertsStatusBar
+        onRefresh={() => {
+          void refreshAlerts();
+        }}
+        refreshing={refreshing}
+        status={status}
+      />
 
       {sortedAlerts.length ? (
         <View style={styles.alertStack}>
@@ -391,31 +381,13 @@ export default function AlertScreen() {
       )}
 
       {callArchiveRecords.length ? (
-        <View style={styles.archiveSection}>
-          <View style={styles.archiveHeader}>
-            <View style={styles.statusIcon}>
-              <FileText size={18} color={theme.colors.primary} />
-            </View>
-            <View style={styles.alertTitleBlock}>
-              <Text style={styles.archiveTitle}>Registros de chamados</Text>
-              <Text style={styles.archiveSubtitle}>Registros locais por pessoa protegida, com snapshot e duração.</Text>
-            </View>
-          </View>
-          {callArchiveRecords.map((record) => {
-            const archivePresentation = buildReceivedCallArchiveCardPresentation(record);
-            return (
-              <ReceivedCallArchiveCardView
-                key={record.id}
-                onOpenRecord={setSelectedArchiveRecord}
-                onShareRecord={(targetRecord) => {
-                  void shareArchiveRecord(targetRecord);
-                }}
-                presentation={archivePresentation}
-                record={record}
-              />
-            );
-          })}
-        </View>
+        <ReceivedCallArchiveSection
+          onOpenRecord={setSelectedArchiveRecord}
+          onShareRecord={(targetRecord) => {
+            void shareArchiveRecord(targetRecord);
+          }}
+          records={callArchiveRecords}
+        />
       ) : null}
 
       <BrandedDialog
@@ -449,6 +421,32 @@ export default function AlertScreen() {
         visible={Boolean(selectedArchiveRecord)}
       />
     </SafeScreen>
+  );
+}
+
+type ReceivedAlertsStatusBarProps = {
+  onRefresh: () => void;
+  refreshing: boolean;
+  status: string;
+};
+
+function ReceivedAlertsStatusBar({ onRefresh, refreshing, status }: ReceivedAlertsStatusBarProps) {
+  return (
+    <View style={styles.statusRow}>
+      <View style={styles.statusIcon}>
+        <BellRing size={18} color={theme.colors.primary} />
+      </View>
+      <Text style={styles.statusText}>{status}</Text>
+      <Pressable
+        accessibilityLabel="Atualizar alertas recebidos"
+        accessibilityRole="button"
+        disabled={refreshing}
+        onPress={onRefresh}
+        style={({ pressed }) => [styles.refreshButton, pressed && styles.refreshButtonPressed]}
+      >
+        <RefreshCw size={18} color={theme.colors.textOnDark} />
+      </Pressable>
+    </View>
   );
 }
 
@@ -572,6 +570,41 @@ function ReceivedAlertCardView({
           <Text style={styles.primaryActionText}>{alertPresentation.primaryActionLabel}</Text>
         </Pressable>
       </View>
+    </View>
+  );
+}
+
+type ReceivedCallArchiveSectionProps = {
+  onOpenRecord: (record: LiveCallArchiveRecord) => void;
+  onShareRecord: (record: LiveCallArchiveRecord) => void;
+  records: LiveCallArchiveRecord[];
+};
+
+function ReceivedCallArchiveSection({
+  onOpenRecord,
+  onShareRecord,
+  records
+}: ReceivedCallArchiveSectionProps) {
+  return (
+    <View style={styles.archiveSection}>
+      <View style={styles.archiveHeader}>
+        <View style={styles.statusIcon}>
+          <FileText size={18} color={theme.colors.primary} />
+        </View>
+        <View style={styles.alertTitleBlock}>
+          <Text style={styles.archiveTitle}>Registros de chamados</Text>
+          <Text style={styles.archiveSubtitle}>Registros locais por pessoa protegida, com snapshot e duração.</Text>
+        </View>
+      </View>
+      {records.map((record) => (
+        <ReceivedCallArchiveCardView
+          key={record.id}
+          onOpenRecord={onOpenRecord}
+          onShareRecord={onShareRecord}
+          presentation={buildReceivedCallArchiveCardPresentation(record)}
+          record={record}
+        />
+      ))}
     </View>
   );
 }
