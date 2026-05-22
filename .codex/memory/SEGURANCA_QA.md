@@ -1475,3 +1475,16 @@ Papel: seguranca, LGPD e QA.
 - Validacoes aprovadas: `test:trusted-angels-dialog`, `test:trusted-angels-panel`, `test:trusted-angels-dashboard`, `smoke-test`, `lint`, `typecheck`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.
+
+## QA/Security - 2026-05-22 - Etapas 1.155 e 1.156 trusted angels relationship dialogs
+
+- Mudanca restrita a dialogs locais de apresentacao da tela `Anjos de confianca`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `ContactsScreen` continua responsavel por gate de perfil, API, cache local, device binding, AppState, Share nativo, criacao de convite, revogacoes reais, `setDialog`, `setPanel`, navegacao e estado React.
+- `TrustedAngelsOwnerLinksDialog` e `TrustedAngelsAngelLinksDialog` apenas encapsulam `BrandedDialog`, icones, titulo, visibilidade e `TrustedAngelsRelationshipPanelContent`.
+- Contratos preservados: a revogacao real de vinculo continua passando por `setDialog({ contact, kind: "revoke_contact" })`; o dialog `Sou anjo de` permanece informativo.
+- O smoke bloqueia API, Share, AppState, device binding, refresh, router, criacao de convite, revogacao real, `setDialog` e `setPanel` dentro dos novos dialogs.
+- Nao introduz log novo, chave, token, hash, codigo, identity token, SDP, ICE, payload P2P, URI local, path de arquivo, coordenada, telefone, nome real novo ou conteudo de midia.
+- Revisao Cristine/Eliane confirmou que a extracao e segura enquanto permanecer puramente apresentacional.
+- Validacoes aprovadas: `test:trusted-angels-panel`, `test:trusted-angels-dialog`, `test:trusted-angels-action`, `smoke-test`, `lint`, `typecheck`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.

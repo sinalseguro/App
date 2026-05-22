@@ -490,6 +490,59 @@ function TrustedAngelsReadinessDialog({
   );
 }
 
+type TrustedAngelsOwnerLinksDialogProps = {
+  state: TrustedAngelsRelationshipPanelState;
+  visible: boolean;
+  onClose: () => void;
+  onRevokeContact: (contact: ApiTrustedContactRelationship) => void;
+};
+
+function TrustedAngelsOwnerLinksDialog({
+  onClose,
+  onRevokeContact,
+  state,
+  visible
+}: TrustedAngelsOwnerLinksDialogProps) {
+  return (
+    <BrandedDialog
+      actions={[{ label: "Fechar", tone: "muted" }]}
+      icon={<Users size={18} color={theme.colors.primary} />}
+      onClose={onClose}
+      title="Meus anjos autorizados"
+      visible={visible}
+    >
+      <TrustedAngelsRelationshipPanelContent
+        state={state}
+        onRevokeContact={onRevokeContact}
+      />
+    </BrandedDialog>
+  );
+}
+
+type TrustedAngelsAngelLinksDialogProps = {
+  state: TrustedAngelsRelationshipPanelState;
+  visible: boolean;
+  onClose: () => void;
+};
+
+function TrustedAngelsAngelLinksDialog({
+  onClose,
+  state,
+  visible
+}: TrustedAngelsAngelLinksDialogProps) {
+  return (
+    <BrandedDialog
+      actions={[{ label: "Fechar", tone: "muted" }]}
+      icon={<UserCheck size={18} color={theme.colors.primary} />}
+      onClose={onClose}
+      title="Sou anjo de"
+      visible={visible}
+    >
+      <TrustedAngelsRelationshipPanelContent state={state} />
+    </BrandedDialog>
+  );
+}
+
 export default function ContactsScreen() {
   const { painel } = useLocalSearchParams<{ painel?: string }>();
   const [apiSession, setApiSession] = useState<ApiSession | null>(null);
@@ -878,28 +931,18 @@ export default function ContactsScreen() {
           visible={dialogVisibility.readinessPanel}
         />
 
-        <BrandedDialog
-          actions={[{ label: "Fechar", tone: "muted" }]}
-          icon={<Users size={18} color={theme.colors.primary} />}
+        <TrustedAngelsOwnerLinksDialog
           onClose={() => setPanel(null)}
-          title="Meus anjos autorizados"
+          onRevokeContact={(contact) => setDialog({ contact, kind: "revoke_contact" })}
+          state={ownerPanelState}
           visible={dialogVisibility.ownerLinksPanel}
-        >
-          <TrustedAngelsRelationshipPanelContent
-            state={ownerPanelState}
-            onRevokeContact={(contact) => setDialog({ contact, kind: "revoke_contact" })}
-          />
-        </BrandedDialog>
+        />
 
-        <BrandedDialog
-          actions={[{ label: "Fechar", tone: "muted" }]}
-          icon={<UserCheck size={18} color={theme.colors.primary} />}
+        <TrustedAngelsAngelLinksDialog
           onClose={() => setPanel(null)}
-          title="Sou anjo de"
+          state={angelPanelState}
           visible={dialogVisibility.angelLinksPanel}
-        >
-          <TrustedAngelsRelationshipPanelContent state={angelPanelState} />
-        </BrandedDialog>
+        />
 
         <BrandedDialog
           actions={[{ label: "Fechar", tone: "muted" }]}
