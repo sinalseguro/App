@@ -1003,3 +1003,13 @@ Proximas acoes atualizadas:
 - Gate focado: `npm run test:settings-presentation`.
 - Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
+
+## Memoria viva - 2026-05-22 - preferencias compartilhamento/video Configuracoes sem build
+
+- Etapas 1.129 e 1.130 extraem decisoes puras de preferencias de `Compartilhamento` e `Video local` para `settingsPresentationPolicy`.
+- A policy nao persiste, nao solicita permissao, nao ativa camera/microfone e nao chama API; apenas monta `nextPreferences` e `message`.
+- `app/configuracoes.tsx` manteve `updatePreferences()` e permissoes reais como efeitos do componente.
+- O smoke passou a exigir `homologation_blocked` para stream de anjos e `enabled_local` para video local.
+- Gate focado: `npm run test:settings-presentation`.
+- Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.

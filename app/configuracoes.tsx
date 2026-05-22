@@ -45,15 +45,19 @@ import {
 } from "@/features/emergency/emergencyPreferences";
 import { getLocationPermissionReadiness, prepareForegroundLocationPermission } from "@/features/emergency/locationCapture";
 import {
+  buildSettingsCall190PreferenceUpdate,
+  buildSettingsCameraModePreferenceUpdate,
   buildSettingsDashboardTileRows,
+  buildSettingsLocalVideoRequestPreferenceUpdate,
   buildSettingsLocationPanelState,
   buildSettingsLoginPanelState,
   buildSettingsPanelHelp,
+  buildSettingsReceiverEncryptedSavePreferenceUpdate,
   buildSettingsSecurityCodePanelState,
   buildSettingsSharingPanelState,
+  buildSettingsStreamScopePreferenceUpdate,
   buildSettingsUpdatePanelState,
   buildSettingsVideoPanelState,
-  formatSettingsCameraModeLabel,
   resolveSettingsPermissionStatus,
   settingsLegalConsentItems,
   settingsPanelTitles,
@@ -290,17 +294,8 @@ export default function SettingsScreen() {
   async function toggleCall190OnSos() {
     if (!preferences) return;
 
-    const enabled = !preferences.emergencyPhoneCall.call190OnSosEnabled;
-    await updatePreferences(
-      {
-        ...preferences,
-        emergencyPhoneCall: {
-          ...preferences.emergencyPhoneCall,
-          call190OnSosEnabled: enabled
-        }
-      },
-      enabled ? "Ligacao 190 junto com SOS ativada." : "Ligacao 190 junto com SOS desativada."
-    );
+    const update = buildSettingsCall190PreferenceUpdate(preferences);
+    await updatePreferences(update.nextPreferences, update.message);
   }
 
   function resetSecurityCodeFields() {
@@ -591,78 +586,29 @@ export default function SettingsScreen() {
   async function toggleStreamScope(scope: keyof EmergencyPreferences["trustedStream"]["requestedMedia"]) {
     if (!preferences) return;
 
-    const enabled = !preferences.trustedStream.requestedMedia[scope];
-    await updatePreferences(
-      {
-        ...preferences,
-        trustedStream: {
-          ...preferences.trustedStream,
-          status: "homologation_blocked",
-          requestedMedia: {
-            ...preferences.trustedStream.requestedMedia,
-            [scope]: enabled
-          }
-        }
-      },
-      enabled ? "Preferencia ativada para anjos autorizados." : "Preferencia removida."
-    );
+    const update = buildSettingsStreamScopePreferenceUpdate({ preferences, scope });
+    await updatePreferences(update.nextPreferences, update.message);
   }
 
   async function toggleReceiverEncryptedSave() {
     if (!preferences) return;
 
-    const enabled = !preferences.trustedStream.allowReceiverEncryptedSave;
-    await updatePreferences(
-      {
-        ...preferences,
-        trustedStream: {
-          ...preferences.trustedStream,
-          allowReceiverEncryptedSave: enabled
-        }
-      },
-      enabled
-        ? "Anjo autorizado podera salvar copia protegida dentro do app."
-        : "Salvamento pelo anjo foi desmarcado."
-    );
+    const update = buildSettingsReceiverEncryptedSavePreferenceUpdate(preferences);
+    await updatePreferences(update.nextPreferences, update.message);
   }
 
   async function updateCameraMode(cameraMode: LocalVideoCameraMode) {
     if (!preferences) return;
 
-    const cameraLabel = formatSettingsCameraModeLabel(cameraMode).toLowerCase();
-
-    await updatePreferences(
-      {
-        ...preferences,
-        localVideoCapture: {
-          ...preferences.localVideoCapture,
-          cameraMode,
-          status: "enabled_local"
-        }
-      },
-      cameraMode === "both"
-        ? "Duas cameras selecionadas para a proxima gravacao local."
-        : `Camera ${cameraLabel} definida para a proxima gravacao local.`
-    );
+    const update = buildSettingsCameraModePreferenceUpdate({ cameraMode, preferences });
+    await updatePreferences(update.nextPreferences, update.message);
   }
 
   async function toggleLocalVideoRequest() {
     if (!preferences) return;
 
-    const requestOnSos = !preferences.localVideoCapture.requestOnSos;
-    await updatePreferences(
-      {
-        ...preferences,
-        localVideoCapture: {
-          ...preferences.localVideoCapture,
-          requestOnSos,
-          status: "enabled_local"
-        }
-      },
-      requestOnSos
-        ? "Video local sera solicitado quando o SOS iniciar."
-        : "Video local desativado para o proximo SOS."
-    );
+    const update = buildSettingsLocalVideoRequestPreferenceUpdate(preferences);
+    await updatePreferences(update.nextPreferences, update.message);
   }
 
   async function authorizeMediaPermissions() {

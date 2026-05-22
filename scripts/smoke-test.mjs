@@ -770,10 +770,22 @@ if (
 
 if (
   !settingsScreen.includes("buildSettingsSharingPanelState") ||
+  !settingsScreen.includes("buildSettingsStreamScopePreferenceUpdate") ||
+  !settingsPresentationPolicy.includes("buildSettingsCall190PreferenceUpdate") ||
+  !settingsPresentationPolicy.includes("status: \"homologation_blocked\"") ||
   !settingsPresentationPolicy.includes("Atalho de anjo desativado") ||
   !settingsPresentationPolicy.includes("Anjo 190 bloqueado ate aceite")
 ) {
   throw new Error("Atalho de anjo precisa permanecer desativado ate gestao, aceite e contrato futuros.");
+}
+
+if (
+  !settingsScreen.includes("buildSettingsCameraModePreferenceUpdate") ||
+  !settingsScreen.includes("buildSettingsLocalVideoRequestPreferenceUpdate") ||
+  !settingsPresentationPolicy.includes("buildSettingsLocalVideoRequestPreferenceUpdate") ||
+  !settingsPresentationPolicy.includes("status: \"enabled_local\"")
+) {
+  throw new Error("Video local precisa manter decisoes puras na policy e efeitos reais no painel Configuracoes.");
 }
 
 if (

@@ -1,13 +1,18 @@
 import assert from "node:assert/strict";
 
 import {
+  buildSettingsCall190PreferenceUpdate,
+  buildSettingsCameraModePreferenceUpdate,
   buildSettingsDashboardTileAction,
   buildSettingsDashboardTileRows,
+  buildSettingsLocalVideoRequestPreferenceUpdate,
   buildSettingsLocationPanelState,
   buildSettingsLoginPanelState,
   buildSettingsPanelHelp,
+  buildSettingsReceiverEncryptedSavePreferenceUpdate,
   buildSettingsSecurityCodePanelState,
   buildSettingsSharingPanelState,
+  buildSettingsStreamScopePreferenceUpdate,
   buildSettingsUpdatePanelState,
   buildSettingsVideoPanelState,
   formatSettingsCameraModeLabel,
@@ -208,6 +213,49 @@ assert.equal(fallbackSharingPanel.actions[5].label, "Preparar audio para anjos")
 assert.equal(fallbackSharingPanel.actions[6].label, "Solicitar localizacao ao vivo");
 assert.equal(fallbackSharingPanel.actions[7].label, "Preparar salvamento no app do anjo");
 
+const call190Update = buildSettingsCall190PreferenceUpdate(defaultEmergencyPreferences);
+assert.equal(call190Update.nextPreferences.emergencyPhoneCall.call190OnSosEnabled, true);
+assert.equal(call190Update.message, "Ligacao 190 junto com SOS ativada.");
+
+const call190DisableUpdate = buildSettingsCall190PreferenceUpdate({
+  ...defaultEmergencyPreferences,
+  emergencyPhoneCall: {
+    ...defaultEmergencyPreferences.emergencyPhoneCall,
+    call190OnSosEnabled: true
+  }
+});
+assert.equal(call190DisableUpdate.nextPreferences.emergencyPhoneCall.call190OnSosEnabled, false);
+assert.equal(call190DisableUpdate.message, "Ligacao 190 junto com SOS desativada.");
+
+const streamVideoUpdate = buildSettingsStreamScopePreferenceUpdate({
+  preferences: defaultEmergencyPreferences,
+  scope: "video"
+});
+assert.equal(streamVideoUpdate.nextPreferences.trustedStream.status, "homologation_blocked");
+assert.equal(streamVideoUpdate.nextPreferences.trustedStream.requestedMedia.video, true);
+assert.equal(streamVideoUpdate.message, "Preferencia ativada para anjos autorizados.");
+
+const streamLocationDisableUpdate = buildSettingsStreamScopePreferenceUpdate({
+  preferences: {
+    ...defaultEmergencyPreferences,
+    trustedStream: {
+      ...defaultEmergencyPreferences.trustedStream,
+      requestedMedia: {
+        ...defaultEmergencyPreferences.trustedStream.requestedMedia,
+        locationLive: true
+      }
+    }
+  },
+  scope: "locationLive"
+});
+assert.equal(streamLocationDisableUpdate.nextPreferences.trustedStream.status, "homologation_blocked");
+assert.equal(streamLocationDisableUpdate.nextPreferences.trustedStream.requestedMedia.locationLive, false);
+assert.equal(streamLocationDisableUpdate.message, "Preferencia removida.");
+
+const receiverSaveUpdate = buildSettingsReceiverEncryptedSavePreferenceUpdate(defaultEmergencyPreferences);
+assert.equal(receiverSaveUpdate.nextPreferences.trustedStream.allowReceiverEncryptedSave, true);
+assert.equal(receiverSaveUpdate.message, "Anjo autorizado podera salvar copia protegida dentro do app.");
+
 assert.deepEqual(
   buildSettingsVideoPanelState({
     ...defaultEmergencyPreferences,
@@ -261,6 +309,43 @@ assert.equal(fallbackVideoPanel.actions[0].label, "Ativar video local no SOS");
 assert.equal(fallbackVideoPanel.actions[2].selected, false);
 assert.equal(fallbackVideoPanel.actions[3].selected, false);
 assert.equal(fallbackVideoPanel.actions[4].selected, false);
+
+const localVideoUpdate = buildSettingsLocalVideoRequestPreferenceUpdate({
+  ...defaultEmergencyPreferences,
+  localVideoCapture: {
+    ...defaultEmergencyPreferences.localVideoCapture,
+    requestOnSos: false
+  }
+});
+assert.equal(localVideoUpdate.nextPreferences.localVideoCapture.requestOnSos, true);
+assert.equal(localVideoUpdate.nextPreferences.localVideoCapture.status, "enabled_local");
+assert.equal(localVideoUpdate.message, "Video local sera solicitado quando o SOS iniciar.");
+
+const localVideoDisableUpdate = buildSettingsLocalVideoRequestPreferenceUpdate({
+  ...defaultEmergencyPreferences,
+  localVideoCapture: {
+    ...defaultEmergencyPreferences.localVideoCapture,
+    requestOnSos: true
+  }
+});
+assert.equal(localVideoDisableUpdate.nextPreferences.localVideoCapture.requestOnSos, false);
+assert.equal(localVideoDisableUpdate.nextPreferences.localVideoCapture.status, "enabled_local");
+assert.equal(localVideoDisableUpdate.message, "Video local desativado para o proximo SOS.");
+
+const cameraBothUpdate = buildSettingsCameraModePreferenceUpdate({
+  cameraMode: "both",
+  preferences: defaultEmergencyPreferences
+});
+assert.equal(cameraBothUpdate.nextPreferences.localVideoCapture.cameraMode, "both");
+assert.equal(cameraBothUpdate.nextPreferences.localVideoCapture.status, "enabled_local");
+assert.equal(cameraBothUpdate.message, "Duas cameras selecionadas para a proxima gravacao local.");
+
+const cameraFrontUpdate = buildSettingsCameraModePreferenceUpdate({
+  cameraMode: "front",
+  preferences: defaultEmergencyPreferences
+});
+assert.equal(cameraFrontUpdate.nextPreferences.localVideoCapture.cameraMode, "front");
+assert.equal(cameraFrontUpdate.message, "Camera frontal definida para a proxima gravacao local.");
 
 assert.deepEqual(
   buildSettingsUpdatePanelState({

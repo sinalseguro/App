@@ -106,6 +106,11 @@ export type SettingsVideoPanelState = {
   actions: SettingsVideoPanelAction[];
 };
 
+export type SettingsPreferenceUpdateResult = {
+  message: string;
+  nextPreferences: EmergencyPreferences;
+};
+
 export type SettingsUpdatePanelSourceState = {
   checkedAt?: string;
   currentVersion?: string;
@@ -442,6 +447,112 @@ export function buildSettingsVideoPanelState(preferences: EmergencyPreferences |
         selected: preferences?.localVideoCapture.cameraMode === "both"
       }
     ]
+  };
+}
+
+export function buildSettingsCall190PreferenceUpdate(
+  preferences: EmergencyPreferences
+): SettingsPreferenceUpdateResult {
+  const enabled = !preferences.emergencyPhoneCall.call190OnSosEnabled;
+
+  return {
+    message: enabled ? "Ligacao 190 junto com SOS ativada." : "Ligacao 190 junto com SOS desativada.",
+    nextPreferences: {
+      ...preferences,
+      emergencyPhoneCall: {
+        ...preferences.emergencyPhoneCall,
+        call190OnSosEnabled: enabled
+      }
+    }
+  };
+}
+
+export function buildSettingsStreamScopePreferenceUpdate({
+  preferences,
+  scope
+}: {
+  preferences: EmergencyPreferences;
+  scope: keyof EmergencyPreferences["trustedStream"]["requestedMedia"];
+}): SettingsPreferenceUpdateResult {
+  const enabled = !preferences.trustedStream.requestedMedia[scope];
+
+  return {
+    message: enabled ? "Preferencia ativada para anjos autorizados." : "Preferencia removida.",
+    nextPreferences: {
+      ...preferences,
+      trustedStream: {
+        ...preferences.trustedStream,
+        status: "homologation_blocked",
+        requestedMedia: {
+          ...preferences.trustedStream.requestedMedia,
+          [scope]: enabled
+        }
+      }
+    }
+  };
+}
+
+export function buildSettingsReceiverEncryptedSavePreferenceUpdate(
+  preferences: EmergencyPreferences
+): SettingsPreferenceUpdateResult {
+  const enabled = !preferences.trustedStream.allowReceiverEncryptedSave;
+
+  return {
+    message: enabled
+      ? "Anjo autorizado podera salvar copia protegida dentro do app."
+      : "Salvamento pelo anjo foi desmarcado.",
+    nextPreferences: {
+      ...preferences,
+      trustedStream: {
+        ...preferences.trustedStream,
+        allowReceiverEncryptedSave: enabled
+      }
+    }
+  };
+}
+
+export function buildSettingsCameraModePreferenceUpdate({
+  cameraMode,
+  preferences
+}: {
+  cameraMode: LocalVideoCameraMode;
+  preferences: EmergencyPreferences;
+}): SettingsPreferenceUpdateResult {
+  const cameraLabel = formatSettingsCameraModeLabel(cameraMode).toLowerCase();
+
+  return {
+    message:
+      cameraMode === "both"
+        ? "Duas cameras selecionadas para a proxima gravacao local."
+        : `Camera ${cameraLabel} definida para a proxima gravacao local.`,
+    nextPreferences: {
+      ...preferences,
+      localVideoCapture: {
+        ...preferences.localVideoCapture,
+        cameraMode,
+        status: "enabled_local"
+      }
+    }
+  };
+}
+
+export function buildSettingsLocalVideoRequestPreferenceUpdate(
+  preferences: EmergencyPreferences
+): SettingsPreferenceUpdateResult {
+  const requestOnSos = !preferences.localVideoCapture.requestOnSos;
+
+  return {
+    message: requestOnSos
+      ? "Video local sera solicitado quando o SOS iniciar."
+      : "Video local desativado para o proximo SOS.",
+    nextPreferences: {
+      ...preferences,
+      localVideoCapture: {
+        ...preferences.localVideoCapture,
+        requestOnSos,
+        status: "enabled_local"
+      }
+    }
   };
 }
 

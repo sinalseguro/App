@@ -1234,3 +1234,13 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Smoke sincronizado para validar as chaves tipadas e manter login/bootstrap/logout/update reais fora da policy.
 - Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build Android nesta rodada por ser refatoracao pura sem runtime nativo.
+
+# Atualizacao - 2026-05-22 - Etapas 1.129 e 1.130 Configuracoes
+
+- `settingsPresentationPolicy` agora centraliza decisoes puras para gerar `nextPreferences` e `message` em preferencias de compartilhamento e video local.
+- Etapa 1.129: extraidas funcoes para 190 junto com SOS, escopos futuros de anjos autorizados e salvamento protegido no app do anjo.
+- Etapa 1.130: extraidas funcoes para alternar video local no SOS e modo de camera local.
+- `app/configuracoes.tsx` segue responsavel por persistir via `updatePreferences()` e por solicitar permissoes reais de camera/microfone.
+- Smoke sincronizado para validar `homologation_blocked` em stream de anjos e `enabled_local` em video local.
+- Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build Android nesta rodada por ser refatoracao pura sem runtime nativo.

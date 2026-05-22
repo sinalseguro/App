@@ -5404,3 +5404,25 @@ Validacoes:
 Checkpoint:
 
 - `docs/185_CHECKPOINT_ETAPAS_1_127_1_128_SETTINGS_ACTIONS_POLICY_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.129 e 1.130 preferencias de compartilhamento e video em Configuracoes
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- `settingsPresentationPolicy` passou a centralizar decisoes puras de preferencias sensiveis da tela `Configuracoes`.
+- Etapa 1.129: extraidas funcoes puras para 190 junto com SOS, escopos futuros de anjos autorizados e salvamento protegido no app do anjo.
+- Etapa 1.130: extraidas funcoes puras para ativar/desativar video local no SOS e trocar modo de camera local.
+- `app/configuracoes.tsx` continua responsavel por executar `updatePreferences()`, solicitar permissoes reais de camera/microfone, estado React e handlers.
+- `scripts/smoke-test.mjs` foi sincronizado para validar `trustedStream.status = "homologation_blocked"` e `localVideoCapture.status = "enabled_local"` na policy.
+
+Validacoes:
+
+- `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`: aprovados.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso; foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser mudanca pura de policy sem runtime nativo.
+
+Checkpoint:
+
+- `docs/186_CHECKPOINT_ETAPAS_1_129_1_130_SETTINGS_PREFERENCES_POLICY_2026-05-22.md`.
