@@ -1244,3 +1244,14 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Smoke sincronizado para validar `homologation_blocked` em stream de anjos e `enabled_local` em video local.
 - Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build Android nesta rodada por ser refatoracao pura sem runtime nativo.
+
+# Atualizacao - 2026-05-22 - Etapas 1.131 e 1.132 Configuracoes
+
+- `settingsPresentationPolicy` agora centraliza estado/acao visual de `Termos e privacidade` e acoes tipadas de `Tempo de gravacao`.
+- Etapa 1.131: `buildSettingsLegalPanelState()` retorna itens de resumo e acao de aceite sem registrar consentimento.
+- Etapa 1.132: `buildSettingsDurationPanelState()` transforma `durationOptions` em acoes tipadas com `formatDuration()` e estilo selecionado.
+- `app/configuracoes.tsx` segue responsavel por `acceptLegalConsent()`, `acceptedAt`, `updateDuration()`, `updatePreferences()` e estado React.
+- Smoke sincronizado para validar os handlers finos de termos e duracao.
+- Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build Android nesta rodada por ser refatoracao pura sem runtime nativo.
+- Tela `Configuracoes` encerrada nesta fase principal da refatoracao.

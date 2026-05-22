@@ -1013,3 +1013,14 @@ Proximas acoes atualizadas:
 - Gate focado: `npm run test:settings-presentation`.
 - Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
+
+## Memoria viva - 2026-05-22 - termos/duracao Configuracoes sem build
+
+- Etapas 1.131 e 1.132 extraem estado/acao visual de `Termos e privacidade` e acoes tipadas de `Tempo de gravacao` para `settingsPresentationPolicy`.
+- A policy nao aceita termos, nao registra data, nao persiste duracao e nao acessa storage; apenas retorna itens, labels, chaves e estilo selecionado.
+- `app/configuracoes.tsx` manteve `acceptLegalConsent()`, `acceptedAt`, `updateDuration()` e `updatePreferences()` como efeitos reais.
+- O smoke passou a exigir `buildSettingsLegalPanelState`, `handleLegalPanelAction`, `buildSettingsDurationPanelState` e `handleDurationPanelAction`.
+- Gate focado: `npm run test:settings-presentation`.
+- Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
+- Tela `Configuracoes` encerrada nesta fase principal da refatoracao.

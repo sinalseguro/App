@@ -5426,3 +5426,25 @@ Validacoes:
 Checkpoint:
 
 - `docs/186_CHECKPOINT_ETAPAS_1_129_1_130_SETTINGS_PREFERENCES_POLICY_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.131 e 1.132 termos e duracao em Configuracoes
+
+Status: refatoracao pura implementada e validada; tela `Configuracoes` encerrada nesta fase.
+
+Executado:
+
+- `settingsPresentationPolicy` passou a centralizar tambem estado/acao visual do painel `Termos e privacidade`.
+- Etapa 1.131: extraido `buildSettingsLegalPanelState()` com itens de resumo e acao de aceite local.
+- Etapa 1.132: extraido `buildSettingsDurationPanelState()` com acoes tipadas de duracao, labels por `formatDuration()` e estilo selecionado.
+- `app/configuracoes.tsx` continua responsavel por `acceptLegalConsent()`, `acceptedAt`, persistencia de duracao, `updatePreferences()`, estado React e handlers reais.
+- `scripts/smoke-test.mjs` foi sincronizado para validar os novos contratos de policy e handlers finos.
+
+Validacoes:
+
+- `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`: aprovados.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso; foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser mudanca pura de policy sem runtime nativo.
+
+Checkpoint:
+
+- `docs/187_CHECKPOINT_ETAPAS_1_131_1_132_SETTINGS_LEGAL_DURATION_POLICY_2026-05-22.md`.

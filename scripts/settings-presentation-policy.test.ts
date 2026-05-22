@@ -5,6 +5,8 @@ import {
   buildSettingsCameraModePreferenceUpdate,
   buildSettingsDashboardTileAction,
   buildSettingsDashboardTileRows,
+  buildSettingsDurationPanelState,
+  buildSettingsLegalPanelState,
   buildSettingsLocalVideoRequestPreferenceUpdate,
   buildSettingsLocationPanelState,
   buildSettingsLoginPanelState,
@@ -21,7 +23,7 @@ import {
   settingsLegalConsentItems,
   settingsPanelTitles
 } from "../src/features/settings/settingsPresentationPolicy";
-import { defaultEmergencyPreferences } from "../src/features/emergency/emergencyPreferences";
+import { defaultEmergencyPreferences, durationOptions } from "../src/features/emergency/emergencyPreferences";
 
 assert.equal(resolveSettingsPermissionStatus("granted"), "permitido");
 assert.equal(resolveSettingsPermissionStatus("denied"), "negado");
@@ -44,6 +46,42 @@ assert.equal(formatSettingsTrustedContactStatus("unknown"), "Em revisao");
 assert.equal(settingsPanelTitles.login, "Login");
 assert.equal(settingsPanelTitles.video, "Video local");
 assert.equal(settingsLegalConsentItems.length, 3);
+assert.deepEqual(buildSettingsLegalPanelState({ privacyAccepted: false }), {
+  actions: [
+    {
+      icon: "shield",
+      key: "accept-legal-consent",
+      label: "Aceitar termos locais"
+    }
+  ],
+  items: settingsLegalConsentItems
+});
+assert.equal(
+  buildSettingsLegalPanelState({ privacyAccepted: true }).actions[0].label,
+  "Privacidade aceita localmente"
+);
+assert.deepEqual(buildSettingsDurationPanelState({ defaultDurationSeconds: 60, options: [0, 60] }), {
+  actions: [
+    {
+      durationSeconds: 0,
+      icon: "clock",
+      key: "duration-0",
+      label: "Ilimitado",
+      style: undefined
+    },
+    {
+      durationSeconds: 60,
+      icon: "clock",
+      key: "duration-60",
+      label: "1min",
+      style: "selected"
+    }
+  ]
+});
+assert.equal(
+  buildSettingsDurationPanelState({ defaultDurationSeconds: defaultEmergencyPreferences.defaultDurationSeconds, options: durationOptions }).actions.length,
+  durationOptions.length
+);
 assert.deepEqual(buildSettingsPanelHelp("duracao"), {
   title: "Ajuda: Tempo de gravacao",
   message: "Este tempo controla apenas a gravacao local. O chamado de emergencia continua ativo ate a usuaria encerrar pelo botao SOS."

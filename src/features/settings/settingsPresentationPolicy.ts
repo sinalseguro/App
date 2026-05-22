@@ -1,5 +1,6 @@
 import {
   formatDuration,
+  type EmergencyDurationSeconds,
   type EmergencyPreferences,
   type LocalVideoCameraMode
 } from "@/features/emergency/emergencyPreferences";
@@ -22,6 +23,19 @@ export type SettingsConcretePanel = Exclude<SettingsPanel, null>;
 export type SettingsLegalConsentItem = {
   text: string;
   title: string;
+};
+
+export type SettingsLegalPanelActionKey = "accept-legal-consent";
+
+export type SettingsLegalPanelAction = {
+  icon: SettingsPanelActionIcon;
+  key: SettingsLegalPanelActionKey;
+  label: string;
+};
+
+export type SettingsLegalPanelState = {
+  actions: SettingsLegalPanelAction[];
+  items: SettingsLegalConsentItem[];
 };
 
 export type SettingsPanelHelp = {
@@ -50,6 +64,7 @@ export type SettingsSecurityCodePanelState = {
 
 export type SettingsPanelActionIcon =
   | "camera"
+  | "clock"
   | "key"
   | "location"
   | "lock"
@@ -62,6 +77,20 @@ export type SettingsPanelActionIcon =
   | "video";
 
 export type SettingsPanelActionStyle = "danger" | "muted" | "selected";
+
+export type SettingsDurationPanelActionKey = `duration-${EmergencyDurationSeconds}`;
+
+export type SettingsDurationPanelAction = {
+  durationSeconds: EmergencyDurationSeconds;
+  icon: SettingsPanelActionIcon;
+  key: SettingsDurationPanelActionKey;
+  label: string;
+  style?: SettingsPanelActionStyle;
+};
+
+export type SettingsDurationPanelState = {
+  actions: SettingsDurationPanelAction[];
+};
 
 export type SettingsSharingPanelActionKey =
   | "call-190"
@@ -283,6 +312,41 @@ export function buildSettingsPanelHelp(panel: SettingsConcretePanel): SettingsPa
   return {
     message: settingsPanelHelpMessages[panel],
     title: `Ajuda: ${settingsPanelTitles[panel]}`
+  };
+}
+
+export function buildSettingsLegalPanelState({
+  privacyAccepted
+}: {
+  privacyAccepted: boolean;
+}): SettingsLegalPanelState {
+  return {
+    actions: [
+      {
+        icon: "shield",
+        key: "accept-legal-consent",
+        label: privacyAccepted ? "Privacidade aceita localmente" : "Aceitar termos locais"
+      }
+    ],
+    items: settingsLegalConsentItems
+  };
+}
+
+export function buildSettingsDurationPanelState({
+  defaultDurationSeconds,
+  options
+}: {
+  defaultDurationSeconds?: EmergencyDurationSeconds;
+  options: EmergencyDurationSeconds[];
+}): SettingsDurationPanelState {
+  return {
+    actions: options.map((duration) => ({
+      durationSeconds: duration,
+      icon: "clock",
+      key: `duration-${duration}` as SettingsDurationPanelActionKey,
+      label: formatDuration(duration),
+      style: defaultDurationSeconds === duration ? "selected" : undefined
+    }))
   };
 }
 

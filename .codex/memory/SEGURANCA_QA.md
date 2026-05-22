@@ -1330,3 +1330,14 @@ Papel: seguranca, LGPD e QA.
 - Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e ocioso; foi encerrado para nao deixar processo pendurado.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
+
+## QA/Security - 2026-05-22 - Etapas 1.131 e 1.132 settings legal/duration policy
+
+- Mudanca restrita a regra pura/teste dos paineis de termos e duracao; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `app/configuracoes.tsx` continua responsavel por registrar aceite real com `acceptedAt`, preservar versao de termos, persistir duracao e executar `updatePreferences()`.
+- A policy apenas retorna itens, labels, chaves de acao, duracoes tipadas e estilo selecionado; nao executa `new Date()`, API, storage, permissao, camera, microfone, localizacao ou logs.
+- Contratos preservados: consentimento nao e aceito automaticamente; duracao usa somente opcoes tipadas de `durationOptions`/`EmergencyDurationSeconds`.
+- Nao introduz log novo, chave, token, hash, codigo, identity token, sinalizacao tecnica de chamada, path local, coordenada ou conteudo de midia.
+- Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso; foi encerrado para nao deixar processo pendurado.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.

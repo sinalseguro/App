@@ -48,6 +48,8 @@ import {
   buildSettingsCall190PreferenceUpdate,
   buildSettingsCameraModePreferenceUpdate,
   buildSettingsDashboardTileRows,
+  buildSettingsDurationPanelState,
+  buildSettingsLegalPanelState,
   buildSettingsLocalVideoRequestPreferenceUpdate,
   buildSettingsLocationPanelState,
   buildSettingsLoginPanelState,
@@ -59,10 +61,11 @@ import {
   buildSettingsUpdatePanelState,
   buildSettingsVideoPanelState,
   resolveSettingsPermissionStatus,
-  settingsLegalConsentItems,
   settingsPanelTitles,
   type SettingsDashboardTileAction,
   type SettingsDashboardTileIcon,
+  type SettingsDurationPanelAction,
+  type SettingsLegalPanelAction,
   type SettingsPanelActionIcon,
   type PermissionStatusText,
   type SettingsConcretePanel,
@@ -187,6 +190,13 @@ export default function SettingsScreen() {
     foregroundStatus,
     preferences,
     updateAvailable: updateState?.status === "available"
+  });
+  const settingsLegalPanelState = buildSettingsLegalPanelState({
+    privacyAccepted: Boolean(preferences?.legalConsent.privacyAccepted)
+  });
+  const settingsDurationPanelState = buildSettingsDurationPanelState({
+    defaultDurationSeconds: preferences?.defaultDurationSeconds,
+    options: durationOptions
   });
   const settingsLocationPanelState = buildSettingsLocationPanelState({
     backgroundStatus,
@@ -699,6 +709,16 @@ export default function SettingsScreen() {
     setActivePanel(action.panel);
   }
 
+  function handleLegalPanelAction(action: SettingsLegalPanelAction) {
+    if (action.key === "accept-legal-consent") {
+      void acceptLegalConsent();
+    }
+  }
+
+  function handleDurationPanelAction(action: SettingsDurationPanelAction) {
+    void updateDuration(action.durationSeconds);
+  }
+
   function renderDashboardTileIcon(icon: SettingsDashboardTileIcon) {
     switch (icon) {
       case "angels":
@@ -726,6 +746,8 @@ export default function SettingsScreen() {
     switch (icon) {
       case "camera":
         return <Camera size={18} color={color} />;
+      case "clock":
+        return <Clock size={18} color={color} />;
       case "key":
         return <KeyRound size={18} color={color} />;
       case "location":
@@ -886,7 +908,7 @@ export default function SettingsScreen() {
         >
           {activePanel === "termos" ? (
             <View style={styles.dialogStack}>
-              {settingsLegalConsentItems.map((item) => (
+              {settingsLegalPanelState.items.map((item) => (
                 <View key={item.title} style={styles.consentSummaryItem}>
                   <BookOpenCheck size={18} color={theme.colors.primary} />
                   <View style={styles.consentSummaryText}>
@@ -895,11 +917,14 @@ export default function SettingsScreen() {
                   </View>
                 </View>
               ))}
-              <ButtonIcon
-                icon={<ShieldCheck size={18} color={theme.colors.primary} />}
-                label={preferences?.legalConsent.privacyAccepted ? "Privacidade aceita localmente" : "Aceitar termos locais"}
-                onPress={acceptLegalConsent}
-              />
+              {settingsLegalPanelState.actions.map((action) => (
+                <ButtonIcon
+                  key={action.key}
+                  icon={renderSettingsPanelActionIcon(action.icon)}
+                  label={action.label}
+                  onPress={() => handleLegalPanelAction(action)}
+                />
+              ))}
             </View>
           ) : null}
 
@@ -1038,13 +1063,13 @@ export default function SettingsScreen() {
 
           {activePanel === "duracao" ? (
             <View style={styles.dialogStack}>
-              {durationOptions.map((duration) => (
+              {settingsDurationPanelState.actions.map((action) => (
                 <ButtonIcon
-                  key={duration}
-                  icon={<Clock size={18} color={theme.colors.primary} />}
-                  label={formatDuration(duration)}
-                  onPress={() => updateDuration(duration)}
-                  style={preferences?.defaultDurationSeconds === duration ? styles.selectedOption : undefined}
+                  key={action.key}
+                  icon={renderSettingsPanelActionIcon(action.icon, action.style)}
+                  label={action.label}
+                  onPress={() => handleDurationPanelAction(action)}
+                  style={resolveSettingsPanelActionStyle(action.style)}
                 />
               ))}
             </View>

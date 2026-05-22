@@ -760,12 +760,23 @@ if (
 }
 
 if (
-  !settingsScreen.includes("settingsLegalConsentItems") ||
+  !settingsScreen.includes("buildSettingsLegalPanelState") ||
+  !settingsScreen.includes("handleLegalPanelAction") ||
+  !settingsPresentationPolicy.includes("\"accept-legal-consent\"") ||
   !settingsPresentationPolicy.includes("Uso emergencial") ||
   !settingsPresentationPolicy.includes("Privacidade") ||
   !settingsPresentationPolicy.includes("Arquivos locais")
 ) {
   throw new Error("Termos e privacidade precisam exibir resumo visivel antes do aceite local.");
+}
+
+if (
+  !settingsScreen.includes("buildSettingsDurationPanelState") ||
+  !settingsScreen.includes("handleDurationPanelAction") ||
+  !settingsPresentationPolicy.includes("durationSeconds") ||
+  !settingsPresentationPolicy.includes("formatDuration(duration)")
+) {
+  throw new Error("Duracao precisa manter labels e selecao em policy pura com persistencia real na tela.");
 }
 
 if (
