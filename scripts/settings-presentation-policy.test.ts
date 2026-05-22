@@ -277,6 +277,21 @@ assert.deepEqual(
     }
   }),
   {
+    actions: [
+      {
+        disabled: false,
+        icon: "refresh",
+        key: "verify-update",
+        label: "Verificar atualizacao"
+      },
+      {
+        disabled: false,
+        icon: "smartphone",
+        key: "download-update",
+        label: "Baixar versao Android",
+        style: "selected"
+      }
+    ],
     availableVersionLabel: "Disponivel 0.1.16 (codigo 16)",
     checkedAtLabel: "Ultima verificacao: 22/05/2026",
     downloadButtonDisabled: false,
@@ -297,6 +312,21 @@ assert.deepEqual(
     updateState: null
   }),
   {
+    actions: [
+      {
+        disabled: true,
+        icon: "refresh",
+        key: "verify-update",
+        label: "Verificando..."
+      },
+      {
+        disabled: true,
+        icon: "smartphone",
+        key: "download-update",
+        label: "Baixar versao Android",
+        style: undefined
+      }
+    ],
     availableVersionLabel: undefined,
     checkedAtLabel: undefined,
     downloadButtonDisabled: true,
@@ -325,6 +355,21 @@ assert.deepEqual(
   }),
   {
     accountActive: true,
+    accountActions: [
+      {
+        disabled: false,
+        icon: "refresh",
+        key: "validate-session",
+        label: "Validar sessao"
+      },
+      {
+        disabled: false,
+        icon: "lock",
+        key: "logout",
+        label: "Sair desta conta",
+        style: "danger"
+      }
+    ],
     accountLabel: "usuaria@sinalseguro.test",
     apiActive: true,
     apiText: "API configurada em https://api.sinalseguro.test.",
@@ -332,11 +377,34 @@ assert.deepEqual(
     appleButtonMuted: false,
     deviceActive: true,
     deviceText: "Dispositivo autenticado registrado para esta conta.",
+    emailActions: [],
     emailLoginButtonLabel: "Entrar com e-mail",
     googleActive: true,
     googleButtonDisabled: false,
     googleButtonMuted: false,
     googleText: "Google Sign-In nativo configurado para Android.",
+    providerActions: [
+      {
+        disabled: false,
+        icon: "refresh",
+        key: "test-api",
+        label: "Testar API"
+      },
+      {
+        disabled: false,
+        icon: "key",
+        key: "google-login",
+        label: "Entrar com Google",
+        style: undefined
+      },
+      {
+        disabled: false,
+        icon: "key",
+        key: "apple-login",
+        label: "Entrar com Apple/iCloud",
+        style: undefined
+      }
+    ],
     sessionActionDisabled: false,
     testApiButtonDisabled: false
   }
@@ -355,6 +423,7 @@ assert.deepEqual(
   }),
   {
     accountActive: false,
+    accountActions: [],
     accountLabel: "Conta SinalSeguro desconectada",
     apiActive: false,
     apiText: "API SinalSeguro desabilitada neste build.",
@@ -362,11 +431,41 @@ assert.deepEqual(
     appleButtonMuted: true,
     deviceActive: false,
     deviceText: "Dispositivo sera registrado apos login validado.",
+    emailActions: [
+      {
+        disabled: true,
+        icon: "key",
+        key: "email-login",
+        label: "Conectando..."
+      }
+    ],
     emailLoginButtonLabel: "Conectando...",
     googleActive: false,
     googleButtonDisabled: true,
     googleButtonMuted: true,
     googleText: "Google ainda nao configurado para esta plataforma.",
+    providerActions: [
+      {
+        disabled: true,
+        icon: "refresh",
+        key: "test-api",
+        label: "Testar API"
+      },
+      {
+        disabled: true,
+        icon: "key",
+        key: "google-login",
+        label: "Entrar com Google",
+        style: "muted"
+      },
+      {
+        disabled: true,
+        icon: "key",
+        key: "apple-login",
+        label: "Entrar com Apple/iCloud",
+        style: "muted"
+      }
+    ],
     sessionActionDisabled: true,
     testApiButtonDisabled: true
   }

@@ -62,8 +62,11 @@ import {
   type SettingsPanelActionIcon,
   type PermissionStatusText,
   type SettingsConcretePanel,
+  type SettingsLoginPanelAction,
   type SettingsPanel,
   type SettingsSharingPanelAction,
+  type SettingsPanelActionStyle,
+  type SettingsUpdatePanelAction,
   type SettingsVideoPanelAction
 } from "@/features/settings/settingsPresentationPolicy";
 import {
@@ -771,24 +774,85 @@ export default function SettingsScreen() {
     }
   }
 
-  function renderSettingsPanelActionIcon(icon: SettingsPanelActionIcon) {
+  function renderSettingsPanelActionIcon(icon: SettingsPanelActionIcon, style?: SettingsPanelActionStyle) {
+    const color = style === "danger" ? theme.colors.danger : theme.colors.primary;
+
     switch (icon) {
       case "camera":
-        return <Camera size={18} color={theme.colors.primary} />;
+        return <Camera size={18} color={color} />;
+      case "key":
+        return <KeyRound size={18} color={color} />;
       case "location":
-        return <MapPin size={18} color={theme.colors.primary} />;
+        return <MapPin size={18} color={color} />;
       case "lock":
-        return <LockKeyhole size={18} color={theme.colors.primary} />;
+        return <LockKeyhole size={18} color={color} />;
       case "microphone":
-        return <Mic size={18} color={theme.colors.primary} />;
+        return <Mic size={18} color={color} />;
       case "phone":
-        return <PhoneCall size={18} color={theme.colors.primary} />;
+        return <PhoneCall size={18} color={color} />;
+      case "refresh":
+        return <RefreshCw size={18} color={color} />;
       case "shield":
-        return <ShieldCheck size={18} color={theme.colors.primary} />;
+        return <ShieldCheck size={18} color={color} />;
+      case "smartphone":
+        return <Smartphone size={18} color={color} />;
       case "switch-camera":
-        return <SwitchCamera size={18} color={theme.colors.primary} />;
+        return <SwitchCamera size={18} color={color} />;
       case "video":
-        return <Video size={18} color={theme.colors.primary} />;
+        return <Video size={18} color={color} />;
+    }
+  }
+
+  function resolveSettingsPanelActionStyle(style?: SettingsPanelActionStyle) {
+    if (style === "danger") return styles.dangerOption;
+    if (style === "muted") return styles.disabledOidcOption;
+    if (style === "selected") return styles.selectedOption;
+    return undefined;
+  }
+
+  function handleLoginPanelAction(action: SettingsLoginPanelAction) {
+    if (action.disabled) return;
+
+    if (action.key === "validate-session") {
+      void refreshApiSession();
+      return;
+    }
+
+    if (action.key === "logout") {
+      void logoutApiSession();
+      return;
+    }
+
+    if (action.key === "email-login") {
+      void loginWithEmailPassword();
+      return;
+    }
+
+    if (action.key === "test-api") {
+      void checkApiConnection();
+      return;
+    }
+
+    if (action.key === "google-login") {
+      void loginWithGoogle();
+      return;
+    }
+
+    if (action.key === "apple-login") {
+      void loginWithApple();
+    }
+  }
+
+  function handleUpdatePanelAction(action: SettingsUpdatePanelAction) {
+    if (action.disabled) return;
+
+    if (action.key === "verify-update") {
+      void verifyAppUpdate();
+      return;
+    }
+
+    if (action.key === "download-update") {
+      void downloadAppUpdate();
     }
   }
 
@@ -929,19 +993,16 @@ export default function SettingsScreen() {
               </View>
               {settingsLoginPanelState.accountActive ? (
                 <>
-                  <ButtonIcon
-                    disabled={settingsLoginPanelState.sessionActionDisabled}
-                    icon={<RefreshCw size={18} color={theme.colors.primary} />}
-                    label="Validar sessao"
-                    onPress={refreshApiSession}
-                  />
-                  <ButtonIcon
-                    disabled={settingsLoginPanelState.sessionActionDisabled}
-                    icon={<LockKeyhole size={18} color={theme.colors.danger} />}
-                    label="Sair desta conta"
-                    onPress={logoutApiSession}
-                    style={styles.dangerOption}
-                  />
+                  {settingsLoginPanelState.accountActions.map((action) => (
+                    <ButtonIcon
+                      key={action.key}
+                      disabled={action.disabled}
+                      icon={renderSettingsPanelActionIcon(action.icon, action.style)}
+                      label={action.label}
+                      onPress={() => handleLoginPanelAction(action)}
+                      style={resolveSettingsPanelActionStyle(action.style)}
+                    />
+                  ))}
                 </>
               ) : (
                 <>
@@ -977,34 +1038,28 @@ export default function SettingsScreen() {
                       value={loginPassword}
                     />
                   </View>
-                  <ButtonIcon
-                    disabled={settingsLoginPanelState.sessionActionDisabled}
-                    icon={<KeyRound size={18} color={theme.colors.primary} />}
-                    label={settingsLoginPanelState.emailLoginButtonLabel}
-                    onPress={loginWithEmailPassword}
-                  />
+                  {settingsLoginPanelState.emailActions.map((action) => (
+                    <ButtonIcon
+                      key={action.key}
+                      disabled={action.disabled}
+                      icon={renderSettingsPanelActionIcon(action.icon, action.style)}
+                      label={action.label}
+                      onPress={() => handleLoginPanelAction(action)}
+                      style={resolveSettingsPanelActionStyle(action.style)}
+                    />
+                  ))}
                 </>
               )}
-              <ButtonIcon
-                disabled={settingsLoginPanelState.testApiButtonDisabled}
-                icon={<RefreshCw size={18} color={theme.colors.primary} />}
-                label="Testar API"
-                onPress={checkApiConnection}
-              />
-              <ButtonIcon
-                disabled={settingsLoginPanelState.googleButtonDisabled}
-                icon={<KeyRound size={18} color={theme.colors.primary} />}
-                label="Entrar com Google"
-                onPress={loginWithGoogle}
-                style={settingsLoginPanelState.googleButtonMuted ? styles.disabledOidcOption : undefined}
-              />
-              <ButtonIcon
-                disabled={settingsLoginPanelState.appleButtonDisabled}
-                icon={<KeyRound size={18} color={theme.colors.primary} />}
-                label="Entrar com Apple/iCloud"
-                onPress={loginWithApple}
-                style={settingsLoginPanelState.appleButtonMuted ? styles.disabledOidcOption : undefined}
-              />
+              {settingsLoginPanelState.providerActions.map((action) => (
+                <ButtonIcon
+                  key={action.key}
+                  disabled={action.disabled}
+                  icon={renderSettingsPanelActionIcon(action.icon, action.style)}
+                  label={action.label}
+                  onPress={() => handleLoginPanelAction(action)}
+                  style={resolveSettingsPanelActionStyle(action.style)}
+                />
+              ))}
               {loginError ? <Text style={styles.errorText}>{loginError}</Text> : null}
               {loginNotice ? <Text style={styles.noticeText}>{loginNotice}</Text> : null}
             </View>
@@ -1159,19 +1214,16 @@ export default function SettingsScreen() {
               {settingsUpdatePanelState.checkedAtLabel ? (
                 <Text style={styles.noticeText}>{settingsUpdatePanelState.checkedAtLabel}</Text>
               ) : null}
-              <ButtonIcon
-                disabled={settingsUpdatePanelState.verifyButtonDisabled}
-                icon={<RefreshCw size={18} color={theme.colors.primary} />}
-                label={settingsUpdatePanelState.verifyButtonLabel}
-                onPress={verifyAppUpdate}
-              />
-              <ButtonIcon
-                disabled={settingsUpdatePanelState.downloadButtonDisabled}
-                icon={<Smartphone size={18} color={theme.colors.primary} />}
-                label={settingsUpdatePanelState.downloadButtonLabel}
-                onPress={downloadAppUpdate}
-                style={settingsUpdatePanelState.downloadButtonSelected ? styles.selectedOption : undefined}
-              />
+              {settingsUpdatePanelState.actions.map((action) => (
+                <ButtonIcon
+                  key={action.key}
+                  disabled={action.disabled}
+                  icon={renderSettingsPanelActionIcon(action.icon, action.style)}
+                  label={action.label}
+                  onPress={() => handleUpdatePanelAction(action)}
+                  style={resolveSettingsPanelActionStyle(action.style)}
+                />
+              ))}
             </View>
           ) : null}
         </BrandedDialog>

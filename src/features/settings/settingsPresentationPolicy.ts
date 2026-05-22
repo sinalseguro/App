@@ -50,13 +50,18 @@ export type SettingsSecurityCodePanelState = {
 
 export type SettingsPanelActionIcon =
   | "camera"
+  | "key"
   | "location"
   | "lock"
   | "microphone"
   | "phone"
+  | "refresh"
   | "shield"
+  | "smartphone"
   | "switch-camera"
   | "video";
+
+export type SettingsPanelActionStyle = "danger" | "muted" | "selected";
 
 export type SettingsSharingPanelActionKey =
   | "call-190"
@@ -113,6 +118,7 @@ export type SettingsUpdatePanelSourceState = {
 };
 
 export type SettingsUpdatePanelState = {
+  actions: SettingsUpdatePanelAction[];
   availableVersionLabel?: string;
   checkedAtLabel?: string;
   downloadButtonDisabled: boolean;
@@ -126,8 +132,19 @@ export type SettingsUpdatePanelState = {
   verifyButtonLabel: string;
 };
 
+export type SettingsUpdatePanelActionKey = "download-update" | "verify-update";
+
+export type SettingsUpdatePanelAction = {
+  disabled: boolean;
+  icon: SettingsPanelActionIcon;
+  key: SettingsUpdatePanelActionKey;
+  label: string;
+  style?: SettingsPanelActionStyle;
+};
+
 export type SettingsLoginPanelState = {
   accountActive: boolean;
+  accountActions: SettingsLoginPanelAction[];
   accountLabel: string;
   apiActive: boolean;
   apiText: string;
@@ -135,13 +152,31 @@ export type SettingsLoginPanelState = {
   appleButtonMuted: boolean;
   deviceActive: boolean;
   deviceText: string;
+  emailActions: SettingsLoginPanelAction[];
   emailLoginButtonLabel: string;
   googleActive: boolean;
   googleButtonDisabled: boolean;
   googleButtonMuted: boolean;
   googleText: string;
+  providerActions: SettingsLoginPanelAction[];
   sessionActionDisabled: boolean;
   testApiButtonDisabled: boolean;
+};
+
+export type SettingsLoginPanelActionKey =
+  | "apple-login"
+  | "email-login"
+  | "google-login"
+  | "logout"
+  | "test-api"
+  | "validate-session";
+
+export type SettingsLoginPanelAction = {
+  disabled: boolean;
+  icon: SettingsPanelActionIcon;
+  key: SettingsLoginPanelActionKey;
+  label: string;
+  style?: SettingsPanelActionStyle;
 };
 
 export type SettingsDashboardTileIcon =
@@ -424,17 +459,37 @@ export function buildSettingsUpdatePanelState({
 }): SettingsUpdatePanelState {
   const updateAvailable = updateState?.status === "available";
   const latestVersionKnown = updateAvailable && Boolean(updateState?.latestVersion);
+  const downloadButtonDisabled = !updateState?.downloadUrl;
+  const downloadButtonSelected = updateAvailable;
+  const downloadButtonLabel = "Baixar versao Android";
+  const verifyButtonDisabled = updateBusy;
+  const verifyButtonLabel = updateBusy ? "Verificando..." : "Verificar atualizacao";
 
   return {
+    actions: [
+      {
+        disabled: verifyButtonDisabled,
+        icon: "refresh",
+        key: "verify-update",
+        label: verifyButtonLabel
+      },
+      {
+        disabled: downloadButtonDisabled,
+        icon: "smartphone",
+        key: "download-update",
+        label: downloadButtonLabel,
+        style: downloadButtonSelected ? "selected" : undefined
+      }
+    ],
     availableVersionLabel: latestVersionKnown
       ? `Disponivel ${formatSettingsAppVersion(updateState?.latestVersion, updateState?.latestVersionCode)}`
       : undefined,
     checkedAtLabel: updateState?.checkedAt
       ? `Ultima verificacao: ${new Date(updateState.checkedAt).toLocaleDateString("pt-BR")}`
       : undefined,
-    downloadButtonDisabled: !updateState?.downloadUrl,
-    downloadButtonLabel: "Baixar versao Android",
-    downloadButtonSelected: updateAvailable,
+    downloadButtonDisabled,
+    downloadButtonLabel,
+    downloadButtonSelected,
     infoActive: updateAvailable,
     infoText: updateState?.message ?? "Toque em verificar para consultar a versao Android disponivel.",
     installedActive: updateState?.status === "current",
@@ -442,8 +497,8 @@ export function buildSettingsUpdatePanelState({
       updateState?.currentVersion,
       updateState?.currentVersionCode
     )}`,
-    verifyButtonDisabled: updateBusy,
-    verifyButtonLabel: updateBusy ? "Verificando..." : "Verificar atualizacao"
+    verifyButtonDisabled,
+    verifyButtonLabel
   };
 }
 
@@ -472,6 +527,13 @@ export function buildSettingsLoginPanelState({
   const accountActive = Boolean(accountEmail);
   const apiActive = apiEnabled && Boolean(apiBaseUrl);
   const deviceActive = Boolean(registeredDeviceId);
+  const appleButtonDisabled = loginBusy || !appleLoginAvailable;
+  const appleButtonMuted = !appleLoginAvailable;
+  const emailLoginButtonLabel = loginBusy ? "Conectando..." : "Entrar com e-mail";
+  const googleButtonDisabled = loginBusy;
+  const googleButtonMuted = !googleLoginConfigured;
+  const sessionActionDisabled = loginBusy;
+  const testApiButtonDisabled = loginBusy;
   const googleText = googleLoginConfigured
     ? googleNativePlatform
       ? `Google Sign-In nativo configurado para ${platform === "ios" ? "iOS" : "Android"}.`
@@ -480,22 +542,71 @@ export function buildSettingsLoginPanelState({
 
   return {
     accountActive,
+    accountActions: accountActive
+      ? [
+          {
+            disabled: sessionActionDisabled,
+            icon: "refresh",
+            key: "validate-session",
+            label: "Validar sessao"
+          },
+          {
+            disabled: sessionActionDisabled,
+            icon: "lock",
+            key: "logout",
+            label: "Sair desta conta",
+            style: "danger"
+          }
+        ]
+      : [],
     accountLabel: accountEmail ?? "Conta SinalSeguro desconectada",
     apiActive,
     apiText: apiActive ? `API configurada em ${apiBaseUrl}.` : "API SinalSeguro desabilitada neste build.",
-    appleButtonDisabled: loginBusy || !appleLoginAvailable,
-    appleButtonMuted: !appleLoginAvailable,
+    appleButtonDisabled,
+    appleButtonMuted,
     deviceActive,
     deviceText: deviceActive
       ? "Dispositivo autenticado registrado para esta conta."
       : "Dispositivo sera registrado apos login validado.",
-    emailLoginButtonLabel: loginBusy ? "Conectando..." : "Entrar com e-mail",
+    emailActions: accountActive
+      ? []
+      : [
+          {
+            disabled: sessionActionDisabled,
+            icon: "key",
+            key: "email-login",
+            label: emailLoginButtonLabel
+          }
+        ],
+    emailLoginButtonLabel,
     googleActive: googleLoginConfigured,
-    googleButtonDisabled: loginBusy,
-    googleButtonMuted: !googleLoginConfigured,
+    googleButtonDisabled,
+    googleButtonMuted,
     googleText,
-    sessionActionDisabled: loginBusy,
-    testApiButtonDisabled: loginBusy
+    providerActions: [
+      {
+        disabled: testApiButtonDisabled,
+        icon: "refresh",
+        key: "test-api",
+        label: "Testar API"
+      },
+      {
+        disabled: googleButtonDisabled,
+        icon: "key",
+        key: "google-login",
+        label: "Entrar com Google",
+        style: googleButtonMuted ? "muted" : undefined
+      },
+      {
+        disabled: appleButtonDisabled,
+        icon: "key",
+        key: "apple-login",
+        label: "Entrar com Apple/iCloud",
+        style: appleButtonMuted ? "muted" : undefined
+      }
+    ],
+    sessionActionDisabled,
+    testApiButtonDisabled
   };
 }
 

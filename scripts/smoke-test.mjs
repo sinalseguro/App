@@ -1700,10 +1700,21 @@ if (
 if (
   !settingsScreen.includes("completeDeviceBootstrap") ||
   !settingsScreen.includes("buildSettingsLoginPanelState") ||
+  !settingsScreen.includes("handleLoginPanelAction") ||
   !settingsPresentationPolicy.includes("Dispositivo autenticado registrado") ||
+  !settingsPresentationPolicy.includes("\"validate-session\"") ||
   !settingsScreen.includes("clearRegisteredDeviceSession")
 ) {
   throw new Error("Login precisa registrar dispositivo, sincronizar consentimentos e limpar vinculo remoto no logout.");
+}
+
+if (
+  !settingsScreen.includes("buildSettingsUpdatePanelState") ||
+  !settingsScreen.includes("handleUpdatePanelAction") ||
+  !settingsPresentationPolicy.includes("\"verify-update\"") ||
+  !settingsPresentationPolicy.includes("\"download-update\"")
+) {
+  throw new Error("Atualizacao precisa manter a policy de acoes e os handlers reais no painel Configuracoes.");
 }
 
 if (

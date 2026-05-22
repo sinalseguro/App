@@ -993,3 +993,13 @@ Proximas acoes atualizadas:
 - Gate focado: `npm run test:settings-presentation`.
 - Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
+
+## Memoria viva - 2026-05-22 - acoes update/login Configuracoes sem build
+
+- Etapas 1.127 e 1.128 extraem acoes tipadas dos paineis `Atualizacao` e `Login` para `settingsPresentationPolicy`.
+- A policy nao executa rede, autenticacao, logout, bootstrap, storage, portal ou provedores externos; apenas retorna chaves, labels, icones simbolicos, estilos e bloqueios.
+- `app/configuracoes.tsx` manteve os handlers reais e passou a rotear as intencoes por `handleUpdatePanelAction()` e `handleLoginPanelAction()`.
+- O smoke passou a exigir as chaves `verify-update`, `download-update` e `validate-session` para evitar regressao de contrato.
+- Gate focado: `npm run test:settings-presentation`.
+- Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.

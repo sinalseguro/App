@@ -1308,3 +1308,14 @@ Papel: seguranca, LGPD e QA.
 - Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e praticamente ocioso; foi encerrado para nao deixar processo pendurado.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
+
+## QA/Security - 2026-05-22 - Etapas 1.127 e 1.128 settings action policy
+
+- Mudanca restrita a regra pura/teste das acoes tipadas dos paineis de atualizacao e login; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `app/configuracoes.tsx` continua responsavel por autenticacao real, bootstrap de dispositivo, logout, limpeza de sessao, API health, Google/Apple, verificacao de update e abertura do portal.
+- A policy apenas retorna chaves de acao, labels, icones simbolicos, estilos visuais e bloqueios sem executar efeitos.
+- `handleLoginPanelAction()` e `handleUpdatePanelAction()` roteiam intencoes tipadas para handlers reais existentes e preservam bloqueio de clique quando a acao vem desabilitada.
+- Nao introduz log novo, chave, token, hash, codigo, identity token, sinalizacao tecnica de chamada, path local, coordenada ou conteudo de midia.
+- Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso; foi encerrado para nao deixar processo pendurado.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.

@@ -1224,3 +1224,13 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Smoke sincronizado para validar texto de dispositivo autenticado na policy e manter bootstrap/logout na tela.
 - Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build Android nesta rodada por ser refatoracao pura sem runtime nativo.
+
+# Atualizacao - 2026-05-22 - Etapas 1.127 e 1.128 Configuracoes
+
+- `settingsPresentationPolicy` agora centraliza tambem acoes tipadas dos paineis de atualizacao e login.
+- Etapa 1.127: `buildSettingsUpdatePanelState()` retorna as acoes `verify-update` e `download-update`.
+- Etapa 1.128: `buildSettingsLoginPanelState()` retorna acoes de validar sessao, sair, entrar por e-mail, testar API, Google e Apple.
+- `app/configuracoes.tsx` segue responsavel por executar os efeitos reais; `handleUpdatePanelAction()` e `handleLoginPanelAction()` apenas roteiam intencoes tipadas para handlers existentes.
+- Smoke sincronizado para validar as chaves tipadas e manter login/bootstrap/logout/update reais fora da policy.
+- Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build Android nesta rodada por ser refatoracao pura sem runtime nativo.

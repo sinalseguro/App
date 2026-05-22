@@ -5382,3 +5382,25 @@ Validacoes:
 Checkpoint:
 
 - `docs/184_CHECKPOINT_ETAPAS_1_125_1_126_SETTINGS_UPDATE_LOGIN_POLICY_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.127 e 1.128 acoes de atualizacao e login em Configuracoes
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- `settingsPresentationPolicy` passou a centralizar tambem as acoes tipadas dos paineis de atualizacao e login.
+- Etapa 1.127: `buildSettingsUpdatePanelState()` agora retorna acoes `verify-update` e `download-update`, mantendo os efeitos reais em `app/configuracoes.tsx`.
+- Etapa 1.128: `buildSettingsLoginPanelState()` agora retorna acoes de validar sessao, sair, e-mail, API, Google e Apple, mantendo autenticacao, bootstrap, logout, API e provedores externos na tela.
+- `app/configuracoes.tsx` ganhou `handleUpdatePanelAction()` e `handleLoginPanelAction()` apenas como roteadores das intencoes tipadas para handlers reais ja existentes.
+- `scripts/smoke-test.mjs` foi sincronizado para validar as chaves tipadas e impedir regressao para botoes hard-coded sem contrato.
+
+Validacoes:
+
+- `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`: aprovados.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso; foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser mudanca pura de policy/action routing sem runtime nativo.
+
+Checkpoint:
+
+- `docs/185_CHECKPOINT_ETAPAS_1_127_1_128_SETTINGS_ACTIONS_POLICY_2026-05-22.md`.
