@@ -1474,3 +1474,16 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
 - Proxima recomendacao tecnica: seguir com outra superficie pequena; avaliar risco antes de tocar `AppTopBar`, `_layout`, `configuracoes`, `contatos`, SOS/WebRTC ou cofre real.
+
+# Atualizacao - 2026-05-22 - Etapas 1.171 e 1.172 Policies visuais de componentes genericos
+
+- `src/components/statusBannerPresentationPolicy.ts` centraliza o mapeamento de tom visual do `StatusBanner`.
+- `src/components/resourceTilePresentationPolicy.ts` centraliza ajustes de texto e decisao visual de exibir descricao do `ResourceTile`.
+- `StatusBanner` segue visual; nao altera textos, status de prontidao, perfil, convite, permissao ou backend.
+- `ResourceTile` segue visual; nao altera callbacks, grade, navegacao, update real, mapa, cofre, contatos ou configuracoes.
+- O smoke bloqueia regressao arquitetural: sem API, Share, storage, navegacao, tema, icones, permissao real ou efeitos reais nas policies puras.
+- Gate focado: `npm run test:presentation-components`.
+- Validacoes aprovadas: `test:presentation-components`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+- Proxima recomendacao tecnica: nao tocar em `AppTopBar`, `BrandedDialog`, `_layout`, `app/index.tsx`, SOS/WebRTC, cofre, backend ou publicacao sem nova avaliacao de risco.

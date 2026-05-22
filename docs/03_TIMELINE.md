@@ -5860,3 +5860,26 @@ Validacoes:
 Checkpoint:
 
 - `docs/206_CHECKPOINT_ETAPAS_1_169_1_170_STATUS_COMPONENTS_PRESENTATION_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.171 e 1.172 policies visuais de componentes genericos
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.171: extraida `src/components/statusBannerPresentationPolicy.ts` para concentrar o mapeamento de tom visual do `StatusBanner`.
+- Etapa 1.172: extraida `src/components/resourceTilePresentationPolicy.ts` para concentrar os ajustes de texto e a decisao visual de exibir descricao no `ResourceTile`.
+- `StatusBanner` continua componente visual; nao altera textos, status de prontidao, perfil, convite, permissao ou backend.
+- `ResourceTile` continua componente visual; nao altera callbacks, grade, navegacao, update real, mapa, cofre, contatos ou configuracoes.
+- `scripts/smoke-test.mjs` recebeu anchors para impedir API, Share, storage, navegacao, tema, icones e efeitos reais nas policies.
+- Revisao Cristine/Eliane/Lina confirmou que a mudanca deve permanecer em tom visual e text fit; nao houve alteracao de fluxo real, LGPD, permissao real, runtime nativo, SOS/WebRTC, cofre, player, backend, portal ou release.
+
+Validacoes:
+
+- `test:presentation-components`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`: aprovados.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/207_CHECKPOINT_ETAPAS_1_171_1_172_PRESENTATION_COMPONENTS_POLICY_2026-05-22.md`.

@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { theme } from "@/design/theme";
+import { buildResourceTilePresentation } from "@/components/resourceTilePresentationPolicy";
 
 type ResourceTileProps = {
   icon: ReactNode;
@@ -10,6 +11,8 @@ type ResourceTileProps = {
 };
 
 export function ResourceTile({ icon, label, description, onPress }: ResourceTileProps) {
+  const presentation = buildResourceTilePresentation(description);
+
   return (
     <Pressable
       accessibilityRole="button"
@@ -18,20 +21,20 @@ export function ResourceTile({ icon, label, description, onPress }: ResourceTile
     >
       <View style={styles.iconSlot}>{icon}</View>
       <Text
-        adjustsFontSizeToFit
-        maxFontSizeMultiplier={1.2}
-        minimumFontScale={0.82}
-        numberOfLines={2}
+        adjustsFontSizeToFit={presentation.labelTextFit.adjustsFontSizeToFit}
+        maxFontSizeMultiplier={presentation.labelTextFit.maxFontSizeMultiplier}
+        minimumFontScale={presentation.labelTextFit.minimumFontScale}
+        numberOfLines={presentation.labelTextFit.numberOfLines}
         style={styles.label}
       >
         {label}
       </Text>
-      {description ? (
+      {presentation.shouldRenderDescription ? (
         <Text
-          adjustsFontSizeToFit
-          maxFontSizeMultiplier={1.2}
-          minimumFontScale={0.84}
-          numberOfLines={2}
+          adjustsFontSizeToFit={presentation.descriptionTextFit.adjustsFontSizeToFit}
+          maxFontSizeMultiplier={presentation.descriptionTextFit.maxFontSizeMultiplier}
+          minimumFontScale={presentation.descriptionTextFit.minimumFontScale}
+          numberOfLines={presentation.descriptionTextFit.numberOfLines}
           style={styles.description}
         >
           {description}

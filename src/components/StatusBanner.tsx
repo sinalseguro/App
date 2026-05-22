@@ -1,21 +1,18 @@
 import { StyleSheet, Text, View } from "react-native";
 import { theme } from "@/design/theme";
+import { buildStatusBannerPresentation, type StatusBannerTone } from "@/components/statusBannerPresentationPolicy";
 
 type StatusBannerProps = {
-  tone: "secure" | "warning" | "danger";
+  tone: StatusBannerTone;
   title: string;
   text: string;
 };
 
-const toneColor = {
-  secure: theme.colors.secure,
-  warning: theme.colors.warning,
-  danger: theme.colors.danger
-};
-
 export function StatusBanner({ tone, title, text }: StatusBannerProps) {
+  const presentation = buildStatusBannerPresentation(tone);
+
   return (
-    <View style={[styles.banner, { borderLeftColor: toneColor[tone] }]}>
+    <View style={[styles.banner, { borderLeftColor: theme.colors[presentation.borderColorToken] }]}>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.text}>{text}</Text>
     </View>

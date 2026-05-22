@@ -36,6 +36,9 @@ const requiredFiles = [
   "src/components/PermissionGate.tsx",
   "src/components/permissionGatePresentationPolicy.ts",
   "src/components/ResourceTile.tsx",
+  "src/components/resourceTilePresentationPolicy.ts",
+  "src/components/StatusBanner.tsx",
+  "src/components/statusBannerPresentationPolicy.ts",
   "src/design/tokens.ts",
   "src/components/PanicButton.tsx",
   "src/features/local-files/LocalFilesResourceGrid.tsx",
@@ -176,6 +179,7 @@ const requiredFiles = [
   "scripts/panic-trigger-policy.test.ts",
   "scripts/onboarding-presentation-policy.test.ts",
   "scripts/status-components-presentation-policy.test.ts",
+  "scripts/presentation-components-policy.test.ts",
   "scripts/emergency-home-activity-policy.test.ts",
   "scripts/emergency-call-hero-policy.test.ts",
   "scripts/emergency-start-policy.test.ts",
@@ -471,6 +475,10 @@ const inviteCard = await readFile("src/components/InviteCard.tsx", "utf8");
 const inviteCardPresentationPolicy = await readFile("src/components/inviteCardPresentationPolicy.ts", "utf8");
 const permissionGate = await readFile("src/components/PermissionGate.tsx", "utf8");
 const permissionGatePresentationPolicy = await readFile("src/components/permissionGatePresentationPolicy.ts", "utf8");
+const resourceTile = await readFile("src/components/ResourceTile.tsx", "utf8");
+const resourceTilePresentationPolicy = await readFile("src/components/resourceTilePresentationPolicy.ts", "utf8");
+const statusBanner = await readFile("src/components/StatusBanner.tsx", "utf8");
+const statusBannerPresentationPolicy = await readFile("src/components/statusBannerPresentationPolicy.ts", "utf8");
 const contactsScreen = await readFile("app/contatos.tsx", "utf8");
 const invitationScreen = await readFile("app/convite.tsx", "utf8");
 const invitationAcceptancePresentationPolicy = await readFile(
@@ -1060,6 +1068,35 @@ if (
   )
 ) {
   throw new Error("Componentes de status precisam manter labels e icones em policies puras sem efeitos reais.");
+}
+
+if (
+  !statusBanner.includes("buildStatusBannerPresentation(tone)") ||
+  !statusBanner.includes("theme.colors[presentation.borderColorToken]") ||
+  !statusBannerPresentationPolicy.includes("statusBannerTonePresentation") ||
+  !statusBannerPresentationPolicy.includes("borderColorToken: \"secure\"") ||
+  !statusBannerPresentationPolicy.includes("borderColorToken: \"warning\"") ||
+  !statusBannerPresentationPolicy.includes("borderColorToken: \"danger\"") ||
+  !resourceTile.includes("buildResourceTilePresentation(description)") ||
+  !resourceTile.includes("presentation.labelTextFit") ||
+  !resourceTile.includes("presentation.descriptionTextFit") ||
+  !resourceTilePresentationPolicy.includes("resourceTileLabelTextFit") ||
+  !resourceTilePresentationPolicy.includes("minimumFontScale: 0.82") ||
+  !resourceTilePresentationPolicy.includes("minimumFontScale: 0.84") ||
+  !resourceTilePresentationPolicy.includes("shouldRenderDescription") ||
+  [statusBannerPresentationPolicy, resourceTilePresentationPolicy].some(
+    (policySource) =>
+      policySource.includes("router.push") ||
+      policySource.includes("apiClient") ||
+      policySource.includes("Share.share") ||
+      policySource.includes("SecureStore") ||
+      policySource.includes("AsyncStorage") ||
+      policySource.includes("theme.colors") ||
+      policySource.includes("lucide-react-native") ||
+      policySource.includes("useEffect")
+  )
+) {
+  throw new Error("Componentes genericos de apresentacao precisam manter policies puras sem efeitos reais.");
 }
 
 if (
