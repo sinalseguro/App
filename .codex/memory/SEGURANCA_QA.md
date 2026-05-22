@@ -1449,3 +1449,16 @@ Papel: seguranca, LGPD e QA.
 - Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e ocioso; foi encerrado para nao deixar processo pendurado.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
+
+## QA/Security - 2026-05-22 - Etapas 1.151 e 1.152 trusted angels dialogs
+
+- Mudanca restrita a dialogs locais de apresentacao da tela `Anjos de confianca`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `ContactsScreen` continua responsavel por gate de perfil, API, cache local, device binding, AppState, Share nativo, criacao de convite, revogacoes reais, `setDialog`, navegacao e estado React.
+- `TrustedAngelsInviteDialog`, `TrustedAngelsProfileBlockDialog`, `TrustedAngelsRevokeInvitationDialog` e `TrustedAngelsRevokeContactDialog` apenas renderizam textos/labels e disparam callbacks injetados pela tela.
+- Contratos preservados: convite segue com `maxLength={60}`, mensagem de minimizacao de dados, bloqueio de perfil antes de convidar, `autoClose: false` em acoes reais e `tone: "danger"` nas revogacoes.
+- O smoke bloqueia API, Share, AppState, storage, device binding, refresh, router direto, `setDialog`, criacao de convite e revogacao real dentro dos novos dialogs.
+- Nao introduz log novo, chave, token, hash, codigo, identity token, SDP, ICE, payload P2P, URI local, path de arquivo, coordenada, telefone, nome real novo ou conteudo de midia.
+- Inspecao sensivel nos arquivos tocados retornou apenas falsos positivos esperados: imports/handlers ja existentes no `ContactsScreen` e anchors do smoke.
+- Validacoes aprovadas: `test:trusted-angels-dialog`, `test:trusted-angels-action`, `test:trusted-angels-panel`, `smoke-test`, `lint`, `typecheck`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.

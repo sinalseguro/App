@@ -5640,3 +5640,24 @@ Validacoes:
 Checkpoint:
 
 - `docs/196_CHECKPOINT_ETAPAS_1_149_1_150_TRUSTED_ANGELS_PANELS_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.151 e 1.152 dialogs visuais de Anjos
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.151: extraidos `TrustedAngelsInviteDialog` e `TrustedAngelsProfileBlockDialog` para renderizar os dialogs de convite e bloqueio de perfil.
+- Etapa 1.152: extraidos `TrustedAngelsRevokeInvitationDialog` e `TrustedAngelsRevokeContactDialog` para renderizar os dialogs de confirmacao de revogacao.
+- `ContactsScreen` continua responsavel pelos efeitos reais: gate de perfil, API, cache local, device binding, AppState, Share, criacao de convite, revogacoes reais, `setDialog`, navegacao e estado React.
+- `scripts/smoke-test.mjs` recebeu anchors para proteger que os novos dialogs permanencam apresentacionais, sem API, Share nativo, AppState, storage, device binding, refresh, roteamento direto, criacao de convite, revogacao real ou `setDialog`.
+
+Validacoes:
+
+- `test:trusted-angels-dialog`, `test:trusted-angels-action`, `test:trusted-angels-panel`, `smoke-test`, `lint`, `typecheck`, `private:android:readiness`, `npm test` e `git diff --check`: aprovados.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/197_CHECKPOINT_ETAPAS_1_151_1_152_TRUSTED_ANGELS_DIALOGS_2026-05-22.md`.

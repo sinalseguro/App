@@ -1354,3 +1354,14 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `typecheck`, `private:android:readiness`, `npm test` e `git diff --check`.
 - A primeira execucao dos testes focados no sandbox falhou por `EPERM` no pipe temporario do `tsx`; os mesmos testes passaram fora do sandbox.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+
+# Atualizacao - 2026-05-22 - Etapas 1.151 e 1.152 Dialogs visuais de Anjos
+
+- `app/contatos.tsx` agora possui dialogs locais de apresentacao: `TrustedAngelsInviteDialog`, `TrustedAngelsProfileBlockDialog`, `TrustedAngelsRevokeInvitationDialog` e `TrustedAngelsRevokeContactDialog`.
+- Etapa 1.151: os dialogs de convite e bloqueio de perfil recebem labels, mensagem, valor do campo e callbacks ja preparados pelo `ContactsScreen`.
+- Etapa 1.152: os dialogs de revogacao recebem label e callback de confirmacao ja definidos pela tela.
+- `ContactsScreen` segue responsavel por gate de perfil, API, cache local, device binding, AppState, Share, criacao de convite, revogacoes reais, `setDialog`, navegacao e estado React.
+- Gate focado: `npm run test:trusted-angels-dialog`, `test:trusted-angels-action` e `test:trusted-angels-panel`.
+- Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `typecheck`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.

@@ -461,11 +461,24 @@ const trustedAngelsRelationshipPanelBlock =
     ? contactsScreen.slice(trustedAngelsRelationshipPanelStartIndex, trustedAngelsRelationshipPanelEndIndex)
     : "";
 const trustedAngelsInvitationPanelStartIndex = contactsScreen.indexOf("function TrustedAngelsInvitationPanelContent");
-const trustedAngelsInvitationPanelEndIndex = contactsScreen.indexOf("export default function ContactsScreen");
+const trustedAngelsInvitationPanelEndIndex = contactsScreen.indexOf("type TrustedAngelsInviteDialogProps");
 const trustedAngelsInvitationPanelBlock =
   trustedAngelsInvitationPanelStartIndex >= 0 &&
   trustedAngelsInvitationPanelEndIndex > trustedAngelsInvitationPanelStartIndex
     ? contactsScreen.slice(trustedAngelsInvitationPanelStartIndex, trustedAngelsInvitationPanelEndIndex)
+    : "";
+const trustedAngelsInviteDialogsStartIndex = contactsScreen.indexOf("function TrustedAngelsInviteDialog");
+const trustedAngelsInviteDialogsEndIndex = contactsScreen.indexOf("type TrustedAngelsRevokeDialogProps");
+const trustedAngelsInviteDialogsBlock =
+  trustedAngelsInviteDialogsStartIndex >= 0 &&
+  trustedAngelsInviteDialogsEndIndex > trustedAngelsInviteDialogsStartIndex
+    ? contactsScreen.slice(trustedAngelsInviteDialogsStartIndex, trustedAngelsInviteDialogsEndIndex)
+    : "";
+const trustedAngelsRevokeDialogsStartIndex = contactsScreen.indexOf("function TrustedAngelsRevokeInvitationDialog");
+const trustedAngelsRevokeDialogsEndIndex = contactsScreen.indexOf("export default function ContactsScreen");
+const trustedAngelsRevokeDialogsBlock =
+  trustedAngelsRevokeDialogsStartIndex >= 0 && trustedAngelsRevokeDialogsEndIndex > trustedAngelsRevokeDialogsStartIndex
+    ? contactsScreen.slice(trustedAngelsRevokeDialogsStartIndex, trustedAngelsRevokeDialogsEndIndex)
     : "";
 const receivedAlertsListStartIndex = alertScreen.indexOf("function ReceivedAlertsList");
 const receivedAlertsListEndIndex = alertScreen.indexOf("function ReceivedAlertsEmptyState");
@@ -893,6 +906,12 @@ if (
   !contactsScreen.includes("function TrustedAngelsRelationshipPanelContent") ||
   !contactsScreen.includes("type TrustedAngelsInvitationPanelContentProps") ||
   !contactsScreen.includes("function TrustedAngelsInvitationPanelContent") ||
+  !contactsScreen.includes("type TrustedAngelsInviteDialogProps") ||
+  !contactsScreen.includes("function TrustedAngelsInviteDialog") ||
+  !contactsScreen.includes("function TrustedAngelsProfileBlockDialog") ||
+  !contactsScreen.includes("type TrustedAngelsRevokeDialogProps") ||
+  !contactsScreen.includes("function TrustedAngelsRevokeInvitationDialog") ||
+  !contactsScreen.includes("function TrustedAngelsRevokeContactDialog") ||
   !contactsScreen.includes("renderTrustedAngelsDashboardTileIcon")
 ) {
   throw new Error("Tela de anjos precisa passar pelo gate de perfil antes de criar convite.");
@@ -935,6 +954,31 @@ if (
   trustedAngelsInvitationPanelBlock.includes("listLocalInvitations")
 ) {
   throw new Error("Paineis de anjos e convites devem permanecer apresentacionais, sem efeitos, API, Share, storage ou revogacao real.");
+}
+
+if (
+  !trustedAngelsInviteDialogsBlock ||
+  trustedAngelsInviteDialogsBlock.includes("apiClient") ||
+  trustedAngelsInviteDialogsBlock.includes("Share.share") ||
+  trustedAngelsInviteDialogsBlock.includes("AppState") ||
+  trustedAngelsInviteDialogsBlock.includes("deviceBindingService") ||
+  trustedAngelsInviteDialogsBlock.includes("refreshAngels") ||
+  trustedAngelsInviteDialogsBlock.includes("router.push") ||
+  trustedAngelsInviteDialogsBlock.includes("createLocalInvitation") ||
+  trustedAngelsInviteDialogsBlock.includes("listLocalInvitations") ||
+  trustedAngelsInviteDialogsBlock.includes("setDialog") ||
+  !trustedAngelsRevokeDialogsBlock ||
+  trustedAngelsRevokeDialogsBlock.includes("apiClient") ||
+  trustedAngelsRevokeDialogsBlock.includes("Share.share") ||
+  trustedAngelsRevokeDialogsBlock.includes("AppState") ||
+  trustedAngelsRevokeDialogsBlock.includes("deviceBindingService") ||
+  trustedAngelsRevokeDialogsBlock.includes("refreshAngels") ||
+  trustedAngelsRevokeDialogsBlock.includes("router.push") ||
+  trustedAngelsRevokeDialogsBlock.includes("revokeInvitation(") ||
+  trustedAngelsRevokeDialogsBlock.includes("revokeContact(") ||
+  trustedAngelsRevokeDialogsBlock.includes("setDialog")
+) {
+  throw new Error("Dialogs visuais de anjos devem permanecer apresentacionais, sem API, Share, navegacao, storage ou revogacao real.");
 }
 
 if (

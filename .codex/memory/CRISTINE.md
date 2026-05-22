@@ -1118,3 +1118,14 @@ Proximas acoes atualizadas:
 - Inspecao sensivel nos arquivos tocados retornou apenas falsos positivos esperados.
 - Validacoes aprovadas: `test:trusted-angels-panel`, `test:trusted-angels-dialog`, `test:trusted-angels-action`, `test:trusted-angels-refresh`, `smoke-test`, `lint`, `typecheck`, `private:android:readiness`, `npm test` e `git diff --check`.
 - A primeira execucao dos testes focados no sandbox falhou por `EPERM` no pipe temporario do `tsx`; os mesmos testes passaram fora do sandbox.
+
+## Memoria viva - 2026-05-22 - dialogs visuais de Anjos sem build
+
+- Etapas 1.151 e 1.152 extraem somente dialogs locais de apresentacao: `TrustedAngelsInviteDialog`, `TrustedAngelsProfileBlockDialog`, `TrustedAngelsRevokeInvitationDialog` e `TrustedAngelsRevokeContactDialog`.
+- Efeitos de risco permanecem na tela: gate de perfil, refresh, API, cache local, device binding, AppState, Share, criacao de convite, revogacoes reais, `setDialog`, navegacao e estado React.
+- O smoke agora bloqueia regressao arquitetural nos novos dialogs: sem API, Share, AppState, storage, device binding, refresh, router direto, `setDialog`, criacao de convite ou revogacao real.
+- Contratos LGPD preservados: convite nao envia evidencia/midia/localizacao, texto de minimizacao foi preservado e menor/perfil ausente seguem bloqueados por policy.
+- Nao houve novo segredo, token, credencial, SDP, ICE, payload P2P, path local, coordenada, telefone, nome real novo ou conteudo de midia.
+- Inspecao sensivel nos arquivos tocados retornou apenas falsos positivos esperados.
+- Validacoes aprovadas: `test:trusted-angels-dialog`, `test:trusted-angels-action`, `test:trusted-angels-panel`, `smoke-test`, `lint`, `typecheck`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.

@@ -303,6 +303,147 @@ function TrustedAngelsInvitationPanelContent({
   );
 }
 
+type TrustedAngelsInviteDialogProps = {
+  inviteLabel: string;
+  shareLabel: string;
+  visible: boolean;
+  onChangeInviteLabel: (value: string) => void;
+  onClose: () => void;
+  onShare: () => void;
+};
+
+function TrustedAngelsInviteDialog({
+  inviteLabel,
+  onChangeInviteLabel,
+  onClose,
+  onShare,
+  shareLabel,
+  visible
+}: TrustedAngelsInviteDialogProps) {
+  return (
+    <BrandedDialog
+      actions={[
+        { label: "Cancelar", tone: "muted" },
+        {
+          autoClose: false,
+          label: shareLabel,
+          onPress: onShare
+        }
+      ]}
+      icon={<UserPlus size={18} color={theme.colors.primary} />}
+      message="A pessoa receberá apenas um convite. Evidências, localização e dados sensíveis não serão enviados."
+      onClose={onClose}
+      title="Convidar anjo de confiança?"
+      visible={visible}
+    >
+      <View style={styles.fieldGroup}>
+        <Text style={styles.fieldLabel}>Nome do convite</Text>
+        <TextInput
+          accessibilityLabel="Nome do convite"
+          maxLength={60}
+          onChangeText={onChangeInviteLabel}
+          placeholder="Anjo de confiança"
+          placeholderTextColor={theme.colors.textMuted}
+          style={styles.textInput}
+          value={inviteLabel}
+        />
+      </View>
+    </BrandedDialog>
+  );
+}
+
+type TrustedAngelsProfileBlockDialogProps = {
+  message: string;
+  title: string;
+  visible: boolean;
+  onClose: () => void;
+  onOpenProfiles: () => void;
+};
+
+function TrustedAngelsProfileBlockDialog({
+  message,
+  onClose,
+  onOpenProfiles,
+  title,
+  visible
+}: TrustedAngelsProfileBlockDialogProps) {
+  return (
+    <BrandedDialog
+      actions={[
+        { label: "Fechar", tone: "muted" },
+        {
+          label: "Configurar perfil",
+          onPress: onOpenProfiles
+        }
+      ]}
+      icon={<UserRound size={18} color={theme.colors.warning} />}
+      message={message}
+      onClose={onClose}
+      title={title}
+      visible={visible}
+    />
+  );
+}
+
+type TrustedAngelsRevokeDialogProps = {
+  label: string;
+  visible: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+};
+
+function TrustedAngelsRevokeInvitationDialog({
+  label,
+  onClose,
+  onConfirm,
+  visible
+}: TrustedAngelsRevokeDialogProps) {
+  return (
+    <BrandedDialog
+      actions={[
+        { label: "Cancelar", tone: "muted" },
+        {
+          autoClose: false,
+          label,
+          onPress: onConfirm,
+          tone: "danger"
+        }
+      ]}
+      icon={<XCircle size={18} color={theme.colors.danger} />}
+      message="Este convite será removido deste aparelho. Se já foi enviado, gere um novo convite se necessário."
+      onClose={onClose}
+      title="Revogar convite?"
+      visible={visible}
+    />
+  );
+}
+
+function TrustedAngelsRevokeContactDialog({
+  label,
+  onClose,
+  onConfirm,
+  visible
+}: TrustedAngelsRevokeDialogProps) {
+  return (
+    <BrandedDialog
+      actions={[
+        { label: "Cancelar", tone: "muted" },
+        {
+          autoClose: false,
+          label,
+          onPress: onConfirm,
+          tone: "danger"
+        }
+      ]}
+      icon={<XCircle size={18} color={theme.colors.danger} />}
+      message="Esta pessoa deixará de receber novas entregas autorizadas nas próximas fases do SinalSeguro."
+      onClose={onClose}
+      title="Revogar anjo?"
+      visible={visible}
+    />
+  );
+}
+
 export default function ContactsScreen() {
   const { painel } = useLocalSearchParams<{ painel?: string }>();
   const [apiSession, setApiSession] = useState<ApiSession | null>(null);
@@ -643,87 +784,40 @@ export default function ContactsScreen() {
 
         <Text style={styles.statusText}>{status}</Text>
 
-      <BrandedDialog
-        actions={[
-          { label: "Cancelar", tone: "muted" },
-          {
-            autoClose: false,
-            label: dialogActionLabels.shareInviteLabel,
-            onPress: shareInvitation
-          }
-        ]}
-        icon={<UserPlus size={18} color={theme.colors.primary} />}
-        message="A pessoa receberá apenas um convite. Evidências, localização e dados sensíveis não serão enviados."
-        onClose={() => setDialog(null)}
-        title="Convidar anjo de confiança?"
-        visible={dialogVisibility.inviteDialog}
-      >
-        <View style={styles.fieldGroup}>
-          <Text style={styles.fieldLabel}>Nome do convite</Text>
-          <TextInput
-            accessibilityLabel="Nome do convite"
-            maxLength={60}
-            onChangeText={setInviteLabel}
-            placeholder="Anjo de confiança"
-            placeholderTextColor={theme.colors.textMuted}
-            style={styles.textInput}
-            value={inviteLabel}
-          />
-        </View>
-      </BrandedDialog>
+        <TrustedAngelsInviteDialog
+          inviteLabel={inviteLabel}
+          onChangeInviteLabel={setInviteLabel}
+          onClose={() => setDialog(null)}
+          onShare={shareInvitation}
+          shareLabel={dialogActionLabels.shareInviteLabel}
+          visible={dialogVisibility.inviteDialog}
+        />
 
-      <BrandedDialog
-        actions={[
-          { label: "Fechar", tone: "muted" },
-          {
-            label: "Configurar perfil",
-            onPress: () => router.push("/perfis")
-          }
-        ]}
-        icon={<UserRound size={18} color={theme.colors.warning} />}
-        message={invitationGate.message}
-        onClose={() => setDialog(null)}
-        title={invitationGate.title}
-        visible={dialogVisibility.profileBlockDialog}
-      />
+        <TrustedAngelsProfileBlockDialog
+          message={invitationGate.message}
+          onClose={() => setDialog(null)}
+          onOpenProfiles={() => router.push("/perfis")}
+          title={invitationGate.title}
+          visible={dialogVisibility.profileBlockDialog}
+        />
 
-      <BrandedDialog
-        actions={[
-          { label: "Cancelar", tone: "muted" },
-          {
-            autoClose: false,
-            label: dialogActionLabels.revokeInvitationLabel,
-            onPress: () => {
-              if (dialog?.kind === "revoke_invitation") void revokeInvitation(dialog.invitation);
-            },
-            tone: "danger"
-          }
-        ]}
-        icon={<XCircle size={18} color={theme.colors.danger} />}
-        message="Este convite será removido deste aparelho. Se já foi enviado, gere um novo convite se necessário."
-        onClose={() => setDialog(null)}
-        title="Revogar convite?"
-        visible={dialogVisibility.revokeInvitationDialog}
-      />
+        <TrustedAngelsRevokeInvitationDialog
+          label={dialogActionLabels.revokeInvitationLabel}
+          onClose={() => setDialog(null)}
+          onConfirm={() => {
+            if (dialog?.kind === "revoke_invitation") void revokeInvitation(dialog.invitation);
+          }}
+          visible={dialogVisibility.revokeInvitationDialog}
+        />
 
-      <BrandedDialog
-        actions={[
-          { label: "Cancelar", tone: "muted" },
-          {
-            autoClose: false,
-            label: dialogActionLabels.revokeContactLabel,
-            onPress: () => {
-              if (dialog?.kind === "revoke_contact") void revokeContact(dialog.contact);
-            },
-            tone: "danger"
-          }
-        ]}
-        icon={<XCircle size={18} color={theme.colors.danger} />}
-        message="Esta pessoa deixará de receber novas entregas autorizadas nas próximas fases do SinalSeguro."
-        onClose={() => setDialog(null)}
-        title="Revogar anjo?"
-        visible={dialogVisibility.revokeContactDialog}
-      />
+        <TrustedAngelsRevokeContactDialog
+          label={dialogActionLabels.revokeContactLabel}
+          onClose={() => setDialog(null)}
+          onConfirm={() => {
+            if (dialog?.kind === "revoke_contact") void revokeContact(dialog.contact);
+          }}
+          visible={dialogVisibility.revokeContactDialog}
+        />
 
         <BrandedDialog
           actions={[{ label: "Fechar", tone: "muted" }]}
