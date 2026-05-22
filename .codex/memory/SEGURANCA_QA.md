@@ -1561,4 +1561,16 @@ Papel: seguranca, LGPD e QA.
 - Validacoes aprovadas: `test:onboarding-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+
+## Memoria viva - 2026-05-22 - policies visuais de componentes de status sem build
+
+- Etapas 1.169 e 1.170 extraem apenas apresentacao: `permissionGatePresentationPolicy` e `inviteCardPresentationPolicy`.
+- `PermissionGate` permanece visual; nao solicita permissao, nao chama storage, nao abre configuracoes e nao altera o ciclo real de localizacao.
+- `InviteCard` permanece visual; nao cria convite, nao aceita, nao revoga, nao chama backend, nao compartilha e nao altera vinculos de anjos.
+- O smoke bloqueia API, Share, storage, navegacao, tema, icones, permissao real e efeitos reais dentro das policies puras.
+- Contratos preservados: labels, tons e icones de status permanecem iguais aos anteriores; telas consumidoras continuam responsaveis pelos efeitos reais.
+- Nao houve novo segredo, token, credencial, SDP, ICE, payload P2P, path local, coordenada, telefone, nome real novo ou conteudo de midia.
+- Validacoes aprovadas: `test:status-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.

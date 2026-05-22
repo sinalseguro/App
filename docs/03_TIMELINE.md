@@ -5837,3 +5837,26 @@ Validacoes:
 Checkpoint:
 
 - `docs/205_CHECKPOINT_ETAPAS_1_167_1_168_ONBOARDING_PRESENTATION_POLICY_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.169 e 1.170 policies visuais de componentes de status
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.169: extraida `src/components/permissionGatePresentationPolicy.ts` para concentrar labels de status do `PermissionGate`.
+- Etapa 1.170: extraida `src/components/inviteCardPresentationPolicy.ts` para concentrar labels, tons e chaves de icone do `InviteCard`.
+- `PermissionGate` continua componente visual; nao solicita permissao, nao chama storage, nao abre configuracoes e nao altera `app/configuracoes.tsx`.
+- `InviteCard` continua componente visual; nao cria convite, nao aceita, nao revoga, nao chama backend, nao compartilha e nao altera `app/contatos.tsx`.
+- `scripts/smoke-test.mjs` recebeu anchors para impedir API, Share, storage, navegacao, tema, icones e efeitos reais nas policies.
+- Revisao Cristine/Eliane/Lina confirmou que a mudanca deve permanecer em labels/tons/icones de status; nao houve alteracao de fluxo real, LGPD, permissao real, runtime nativo, SOS/WebRTC, cofre, player, backend, portal ou release.
+
+Validacoes:
+
+- `test:status-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`: aprovados.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/206_CHECKPOINT_ETAPAS_1_169_1_170_STATUS_COMPONENTS_PRESENTATION_2026-05-22.md`.

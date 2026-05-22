@@ -28,9 +28,13 @@ const requiredFiles = [
   "src/components/AppLaunchScreen.tsx",
   "src/components/BrandedDialog.tsx",
   "src/components/consentCardPresentationPolicy.ts",
+  "src/components/inviteCardPresentationPolicy.ts",
   "src/components/EmergencyCallButton.tsx",
   "src/components/EvidencePlayerCard.tsx",
+  "src/components/InviteCard.tsx",
   "src/components/LocalEvidenceRail.tsx",
+  "src/components/PermissionGate.tsx",
+  "src/components/permissionGatePresentationPolicy.ts",
   "src/components/ResourceTile.tsx",
   "src/design/tokens.ts",
   "src/components/PanicButton.tsx",
@@ -171,6 +175,7 @@ const requiredFiles = [
   "scripts/profile-policy.test.ts",
   "scripts/panic-trigger-policy.test.ts",
   "scripts/onboarding-presentation-policy.test.ts",
+  "scripts/status-components-presentation-policy.test.ts",
   "scripts/emergency-home-activity-policy.test.ts",
   "scripts/emergency-call-hero-policy.test.ts",
   "scripts/emergency-start-policy.test.ts",
@@ -462,6 +467,10 @@ const onboardingPresentationPolicy = await readFile(
 );
 const consentCard = await readFile("src/components/ConsentCard.tsx", "utf8");
 const consentCardPresentationPolicy = await readFile("src/components/consentCardPresentationPolicy.ts", "utf8");
+const inviteCard = await readFile("src/components/InviteCard.tsx", "utf8");
+const inviteCardPresentationPolicy = await readFile("src/components/inviteCardPresentationPolicy.ts", "utf8");
+const permissionGate = await readFile("src/components/PermissionGate.tsx", "utf8");
+const permissionGatePresentationPolicy = await readFile("src/components/permissionGatePresentationPolicy.ts", "utf8");
 const contactsScreen = await readFile("app/contatos.tsx", "utf8");
 const invitationScreen = await readFile("app/convite.tsx", "utf8");
 const invitationAcceptancePresentationPolicy = await readFile(
@@ -1018,6 +1027,39 @@ if (
   consentCardPresentationPolicy.includes("AsyncStorage")
 ) {
   throw new Error("Onboarding precisa manter copy e status em policies puras sem efeitos reais.");
+}
+
+if (
+  !permissionGate.includes("buildPermissionGatePresentation(status)") ||
+  !permissionGate.includes("presentation.statusLabel") ||
+  !permissionGatePresentationPolicy.includes("permissionGateStatusLabels") ||
+  !permissionGatePresentationPolicy.includes("pendente: \"pendente\"") ||
+  !permissionGatePresentationPolicy.includes("permitido: \"permitido\"") ||
+  !permissionGatePresentationPolicy.includes("negado: \"negado\"") ||
+  !permissionGatePresentationPolicy.includes("bloqueado: \"bloqueado\"") ||
+  !inviteCard.includes("buildInviteCardPresentation(status)") ||
+  !inviteCard.includes("defaultIcon(presentation.iconKey, color)") ||
+  !inviteCardPresentationPolicy.includes("inviteCardStatusPresentation") ||
+  !inviteCardPresentationPolicy.includes("label: \"Autorizado\"") ||
+  !inviteCardPresentationPolicy.includes("label: \"Compartilhado\"") ||
+  !inviteCardPresentationPolicy.includes("label: \"Pendente\"") ||
+  !inviteCardPresentationPolicy.includes("label: \"Revogado\"") ||
+  !inviteCardPresentationPolicy.includes("label: \"Expirado\"") ||
+  !inviteCardPresentationPolicy.includes("iconKey: \"shield-check\"") ||
+  !inviteCardPresentationPolicy.includes("iconKey: \"clock\"") ||
+  [permissionGatePresentationPolicy, inviteCardPresentationPolicy].some(
+    (policySource) =>
+      policySource.includes("router.push") ||
+      policySource.includes("apiClient") ||
+      policySource.includes("Share.share") ||
+      policySource.includes("SecureStore") ||
+      policySource.includes("AsyncStorage") ||
+      policySource.includes("theme.colors") ||
+      policySource.includes("lucide-react-native") ||
+      policySource.includes("useEffect")
+  )
+) {
+  throw new Error("Componentes de status precisam manter labels e icones em policies puras sem efeitos reais.");
 }
 
 if (

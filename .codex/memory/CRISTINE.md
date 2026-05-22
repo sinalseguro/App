@@ -1222,3 +1222,17 @@ Proximas acoes atualizadas:
 - Validacoes aprovadas: `test:onboarding-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.
+
+## QA/Security - 2026-05-22 - Etapas 1.169 e 1.170 status components presentation policies
+
+- Mudanca restrita a helpers puros de apresentacao de `PermissionGate` e `InviteCard`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `PermissionGate` continua renderizando somente titulo, texto e status; permissoes reais seguem em `app/configuracoes.tsx`.
+- `InviteCard` continua renderizando card e callback injetado; convite, aceite, revogacao, backend, Share e vinculos reais seguem em `app/contatos.tsx` e services existentes.
+- `permissionGatePresentationPolicy` expoe apenas labels de status e `buildPermissionGatePresentation(status)`.
+- `inviteCardPresentationPolicy` expoe apenas labels, tons, chaves de icone e `buildInviteCardPresentation(status)`.
+- Contratos preservados: labels, tons e icones de status permanecem equivalentes aos anteriores; nenhuma promessa nova ou status tecnico sensivel foi exposto.
+- O smoke bloqueia API, Share, storage, navegacao, tema, icones, permissao real e efeitos reais dentro das policies.
+- Nao introduz log novo, chave, token, hash, codigo, identity token, SDP, ICE, payload P2P, URI local, path de arquivo, coordenada, telefone, nome real novo ou conteudo de midia.
+- Validacoes aprovadas: `test:status-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.

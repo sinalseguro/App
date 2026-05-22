@@ -1461,3 +1461,16 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
 - Proxima recomendacao tecnica: continuar com outra superficie pequena e isolada; evitar SOS/WebRTC/cofre/backend sem rodada dedicada de risco e validacao fisica.
+
+# Atualizacao - 2026-05-22 - Etapas 1.169 e 1.170 Policies visuais de componentes de status
+
+- `src/components/permissionGatePresentationPolicy.ts` centraliza labels de status do `PermissionGate`.
+- `src/components/inviteCardPresentationPolicy.ts` centraliza labels, tons e chaves de icone do `InviteCard`.
+- `PermissionGate` segue visual; nao solicita permissao, nao chama storage, nao abre configuracoes e nao altera `app/configuracoes.tsx`.
+- `InviteCard` segue visual; nao cria convite, nao aceita, nao revoga, nao chama backend, nao compartilha e nao altera `app/contatos.tsx`.
+- O smoke bloqueia regressao arquitetural: sem API, Share, storage, navegacao, tema, icones, permissao real ou efeitos reais nas policies puras.
+- Gate focado: `npm run test:status-components-presentation`.
+- Validacoes aprovadas: `test:status-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+- Proxima recomendacao tecnica: seguir com outra superficie pequena; avaliar risco antes de tocar `AppTopBar`, `_layout`, `configuracoes`, `contatos`, SOS/WebRTC ou cofre real.

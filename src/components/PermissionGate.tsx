@@ -1,16 +1,19 @@
 import { StyleSheet, Text, View } from "react-native";
 import { theme } from "@/design/theme";
+import { buildPermissionGatePresentation, type PermissionGateStatus } from "@/components/permissionGatePresentationPolicy";
 
 type PermissionGateProps = {
   title: string;
   text: string;
-  status: "pendente" | "permitido" | "negado" | "bloqueado";
+  status: PermissionGateStatus;
 };
 
 export function PermissionGate({ title, text, status }: PermissionGateProps) {
+  const presentation = buildPermissionGatePresentation(status);
+
   return (
     <View style={styles.card}>
-      <Text style={styles.status}>{status}</Text>
+      <Text style={styles.status}>{presentation.statusLabel}</Text>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.text}>{text}</Text>
     </View>

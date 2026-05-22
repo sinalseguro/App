@@ -2,47 +2,45 @@ import { ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { CheckCircle2, Clock3, ShieldAlert, ShieldCheck, XCircle } from "lucide-react-native";
 import { theme } from "@/design/theme";
+import {
+  buildInviteCardPresentation,
+  type InviteCardIconKey,
+  type InviteCardStatus,
+  type InviteCardTone
+} from "@/components/inviteCardPresentationPolicy";
 
 type InviteCardProps = {
   detail?: string;
   icon?: ReactNode;
   name: string;
   onPress?: () => void;
-  status: "pendente" | "compartilhado" | "aceito" | "revogado" | "expirado";
+  status: InviteCardStatus;
   description: string;
 };
 
-const statusLabel = {
-  aceito: "Autorizado",
-  compartilhado: "Compartilhado",
-  expirado: "Expirado",
-  pendente: "Pendente",
-  revogado: "Revogado"
+const toneColor: Record<InviteCardTone, string> = {
+  danger: theme.colors.danger,
+  primary: theme.colors.primary,
+  secure: theme.colors.secure,
+  warning: theme.colors.warning
 };
 
-const statusTone = {
-  aceito: theme.colors.secure,
-  compartilhado: theme.colors.primary,
-  expirado: theme.colors.warning,
-  pendente: theme.colors.warning,
-  revogado: theme.colors.danger
-};
-
-function defaultIcon(status: InviteCardProps["status"]) {
-  const color = statusTone[status];
-  if (status === "aceito") return <ShieldCheck size={20} color={color} />;
-  if (status === "revogado") return <XCircle size={20} color={color} />;
-  if (status === "expirado") return <ShieldAlert size={20} color={color} />;
-  if (status === "compartilhado") return <CheckCircle2 size={20} color={color} />;
+function defaultIcon(iconKey: InviteCardIconKey, color: string) {
+  if (iconKey === "shield-check") return <ShieldCheck size={20} color={color} />;
+  if (iconKey === "x-circle") return <XCircle size={20} color={color} />;
+  if (iconKey === "shield-alert") return <ShieldAlert size={20} color={color} />;
+  if (iconKey === "check-circle") return <CheckCircle2 size={20} color={color} />;
   return <Clock3 size={20} color={color} />;
 }
 
 export function InviteCard({ detail, icon, name, onPress, status, description }: InviteCardProps) {
+  const presentation = buildInviteCardPresentation(status);
+  const color = toneColor[presentation.tone];
   const content = (
     <>
       <View style={styles.header}>
         <View style={styles.identity}>
-          <View style={styles.iconSlot}>{icon ?? defaultIcon(status)}</View>
+          <View style={styles.iconSlot}>{icon ?? defaultIcon(presentation.iconKey, color)}</View>
           <View style={styles.titleBlock}>
             <Text numberOfLines={1} style={styles.name}>
               {name}
@@ -50,7 +48,7 @@ export function InviteCard({ detail, icon, name, onPress, status, description }:
             {detail ? <Text numberOfLines={1} style={styles.detail}>{detail}</Text> : null}
           </View>
         </View>
-        <Text style={[styles.status, { color: statusTone[status] }]}>{statusLabel[status]}</Text>
+        <Text style={[styles.status, { color }]}>{presentation.label}</Text>
       </View>
       <Text style={styles.description}>{description}</Text>
     </>
