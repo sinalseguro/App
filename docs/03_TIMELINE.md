@@ -5470,3 +5470,25 @@ Validacoes:
 Checkpoint:
 
 - `docs/188_CHECKPOINT_ETAPAS_1_133_1_134_RECEIVED_ALERT_PRESENTATION_POLICY_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.135 e 1.136 runtime de Alertas recebidos
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `src/features/live-call/receivedAlertRuntimePolicy.ts` para regras puras do runtime de alertas recebidos.
+- Etapa 1.135: extraidos guardas puros de chamada ativa, preservando bloqueio contra iniciar a mesma sessao novamente ou outra sessao enquanto uma chamada segue ativa.
+- Etapa 1.136: extraidas decisoes puras de arquivo local: status `connected`/`failed`, registro existente, registro ausente e encerramento de registro.
+- `app/alerta.tsx` continua responsavel pelos efeitos reais: autoaceite, notificacao, API, WebRTC, storage seguro, refs mutaveis, reset de chamada, Share e estado React.
+- `scripts/smoke-test.mjs` foi sincronizado para validar a nova policy sem enfraquecer os checks de autoaceite autorizado, arquivo local e tempo real.
+
+Validacoes:
+
+- `test:received-alert-runtime`, `test:received-alert-presentation`, `test:live-call-history`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`: aprovados.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser mudanca pura de policy sem runtime nativo.
+
+Checkpoint:
+
+- `docs/189_CHECKPOINT_ETAPAS_1_135_1_136_RECEIVED_ALERT_RUNTIME_POLICY_2026-05-22.md`.

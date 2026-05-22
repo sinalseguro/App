@@ -1035,3 +1035,14 @@ Proximas acoes atualizadas:
 - Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
 - Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
+
+## Memoria viva - 2026-05-22 - runtime de Alertas recebidos sem build
+
+- Etapas 1.135 e 1.136 extraem guardas puros e decisoes de arquivo local para `receivedAlertRuntimePolicy`.
+- A policy nao autoaceita, nao notifica, nao chama API, nao inicia WebRTC, nao grava, nao compartilha, nao persiste e nao reseta chamada; apenas calcula decisoes para a tela executar.
+- `app/alerta.tsx` manteve autoaceite/notificacao explicitamente na tela, seguindo o limite recomendado por Cristine/Eliane.
+- O smoke passou a exigir a nova policy e os checks de arquivo local/tempo real continuam ancorados na tela.
+- Gate focado: `npm run test:received-alert-runtime`.
+- Validacoes aprovadas: teste focado, `test:received-alert-presentation`, `test:live-call-history`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
+- Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.

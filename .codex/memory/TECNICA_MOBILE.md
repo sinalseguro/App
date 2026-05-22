@@ -1266,3 +1266,14 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
 - Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
+
+# Atualizacao - 2026-05-22 - Etapas 1.135 e 1.136 Runtime de Alertas recebidos
+
+- Nova `src/features/live-call/receivedAlertRuntimePolicy.ts` centraliza guardas puros de chamada ativa e decisoes puras de arquivo local da tela `Alertas recebidos`.
+- Etapa 1.135: `buildReceivedAlertRealtimeStartDecision()` e `isReceivedAlertLiveCallStatusActive()` preservam o bloqueio de uma chamada ativa por vez.
+- Etapa 1.136: `buildReceivedAlertArchiveStatusUpdateDecision()` e `buildReceivedAlertArchiveSyncDecision()` decidem status `connected`/`failed`, start com registro existente, criacao de registro ausente e encerramento.
+- `app/alerta.tsx` segue responsavel por efeitos reais: autoaceite, notificacao, API, WebRTC, storage seguro, refs mutaveis, reset de chamada, Share nativo e estado React.
+- Gate focado: `npm run test:received-alert-runtime`.
+- Validacoes aprovadas: teste focado, `test:received-alert-presentation`, `test:live-call-history`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
+- Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.

@@ -150,6 +150,7 @@ const requiredFiles = [
   "src/features/live-call/liveCallHistory.ts",
   "src/features/live-call/liveCallHistoryPolicy.ts",
   "src/features/live-call/receivedAlertPresentationPolicy.ts",
+  "src/features/live-call/receivedAlertRuntimePolicy.ts",
   "src/features/live-call/liveCallRolePolicy.ts",
   "src/features/live-call/liveCallStatePolicy.ts",
   "src/features/live-call/liveWebRtcPolicy.ts",
@@ -235,6 +236,7 @@ const requiredFiles = [
   "scripts/finish-failure-cleanup-actions-policy.test.ts",
   "scripts/live-call-history-policy.test.ts",
   "scripts/received-alert-presentation-policy.test.ts",
+  "scripts/received-alert-runtime-policy.test.ts",
   "scripts/live-call-state-policy.test.ts",
   "scripts/live-webrtc-policy.test.ts",
   "scripts/live-call-sensitive-logging.test.ts",
@@ -426,6 +428,7 @@ const incomingEmergencyNotification = await readFile("src/features/live-call/inc
 const liveCallHistory = await readFile("src/features/live-call/liveCallHistory.ts", "utf8");
 const liveCallHistoryPolicy = await readFile("src/features/live-call/liveCallHistoryPolicy.ts", "utf8");
 const receivedAlertPresentationPolicy = await readFile("src/features/live-call/receivedAlertPresentationPolicy.ts", "utf8");
+const receivedAlertRuntimePolicy = await readFile("src/features/live-call/receivedAlertRuntimePolicy.ts", "utf8");
 const liveCallRolePolicy = await readFile("src/features/live-call/liveCallRolePolicy.ts", "utf8");
 const liveCallStatePolicy = await readFile("src/features/live-call/liveCallStatePolicy.ts", "utf8");
 const liveWebRtcPolicy = await readFile("src/features/live-call/liveWebRtcPolicy.ts", "utf8");
@@ -494,6 +497,11 @@ if (
   !alertScreen.includes("listReceivedLiveCallArchives") ||
   !alertScreen.includes("autoAcceptingSessionIdsRef") ||
   !alertScreen.includes("autoRealtimeSessionIdsRef") ||
+  !alertScreen.includes("buildReceivedAlertArchiveStatusUpdateDecision") ||
+  !alertScreen.includes("buildReceivedAlertArchiveSyncDecision") ||
+  !receivedAlertRuntimePolicy.includes("buildReceivedAlertRealtimeStartDecision") ||
+  !receivedAlertRuntimePolicy.includes("shouldStartRealtimeForExistingRecord") ||
+  !receivedAlertRuntimePolicy.includes("shouldEndArchive") ||
   !alertScreen.includes("activeLiveCall") ||
   !alertScreen.includes("notifyIncomingEmergency") ||
   !receivedAlertPresentationPolicy.includes("Entrar na chamada") ||

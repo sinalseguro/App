@@ -1320,6 +1320,17 @@ Papel: seguranca, LGPD e QA.
 - `typecheck` nao emitiu erro, mas ficou sem saida e ocioso; foi encerrado para nao deixar processo pendurado.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
 
+## QA/Security - 2026-05-22 - Etapas 1.135 e 1.136 received alert runtime policy
+
+- Mudanca restrita a regras puras/teste de runtime local da tela `Alertas recebidos`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `app/alerta.tsx` continua responsavel por autoaceite, notificacao, API, WebRTC, storage seguro, refs mutaveis, reset de chamada, Share nativo e estado React.
+- A policy apenas retorna decisoes: chamada ja ativa, outra chamada ativa, atualizar status de arquivo, criar registro, iniciar com registro existente e encerrar registro.
+- Contratos preservados: `locallyAcceptedSessionIds` segue local/otimista, `autoRealtimeSessionIdsRef` ainda impede duplicidade, e `endedAt` continua usando `finished_at ?? updated_at ?? now`.
+- Nao introduz log novo, chave, token, hash, codigo, identity token, SDP, ICE, payload P2P, URI local, path de arquivo, coordenada ou conteudo de midia.
+- Validacoes aprovadas: `test:received-alert-runtime`, `test:received-alert-presentation`, `test:live-call-history`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
+
 ## QA/Security - 2026-05-22 - Etapas 1.133 e 1.134 received alert presentation policy
 
 - Mudanca restrita a regra pura/teste de apresentacao da tela `Alertas recebidos`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.

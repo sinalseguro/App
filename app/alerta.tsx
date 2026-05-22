@@ -37,6 +37,12 @@ import {
   receivedCallArchiveStatusLabel,
   sortReceivedEmergencyAlerts
 } from "@/features/live-call/receivedAlertPresentationPolicy";
+import {
+  buildReceivedAlertArchiveStatusUpdateDecision,
+  buildReceivedAlertArchiveSyncDecision,
+  buildReceivedAlertRealtimeStartDecision,
+  isReceivedAlertLiveCallStatusActive
+} from "@/features/live-call/receivedAlertRuntimePolicy";
 import { useLiveAudioCall } from "@/features/live-call/useLiveAudioCall";
 import { ApiEmergencySession, apiClient } from "@/services/apiClient";
 
@@ -157,18 +163,11 @@ export default function AlertScreen() {
 
   async function startRealtimeForAcceptedCall(session: ApiEmergencySession, archiveRecord: LiveCallArchiveRecord) {
     const currentCallState = liveAudioCallStateRef.current;
-    const sameSessionActive =
-      currentCallState.remoteSessionId === session.id &&
-      (currentCallState.status === "waiting" ||
-        currentCallState.status === "connecting" ||
-        currentCallState.status === "connected");
-    const otherSessionActive =
-      Boolean(currentCallState.remoteSessionId) &&
-      currentCallState.remoteSessionId !== session.id &&
-      currentCallState.status !== "ended" &&
-      currentCallState.status !== "failed";
-
-    if (sameSessionActive || otherSessionActive) return;
+    const realtimeStartDecision = buildReceivedAlertRealtimeStartDecision({
+      currentCallState,
+      sessionId: session.id
+    });
+    if (!realtimeStartDecision.canStart) return;
 
     activeCallArchiveIdRef.current = archiveRecord.id;
     lastArchivedCallStatusRef.current = archiveRecord.status;
@@ -217,32 +216,32 @@ export default function AlertScreen() {
   }, [loadCallArchives, refreshAlerts]);
 
   useEffect(() => {
-    const archiveId = activeCallArchiveIdRef.current;
-    if (!archiveId || liveAudioCall.state.role !== "angel") return;
-    if (lastArchivedCallStatusRef.current === liveAudioCall.state.status) return;
+    const archiveStatusDecision = buildReceivedAlertArchiveStatusUpdateDecision({
+      activeArchiveId: activeCallArchiveIdRef.current,
+      currentCallState: liveAudioCall.state,
+      lastArchivedCallStatus: lastArchivedCallStatusRef.current,
+      now: new Date().toISOString()
+    });
+    if (!archiveStatusDecision.nextArchivedCallStatus) return;
 
-    lastArchivedCallStatusRef.current = liveAudioCall.state.status;
+    lastArchivedCallStatusRef.current = archiveStatusDecision.nextArchivedCallStatus;
 
-    if (liveAudioCall.state.status === "connected") {
-      void updateReceivedLiveCallArchive(archiveId, {
-        connectedAt: new Date().toISOString(),
-        status: "connected"
-      }).then(() => loadCallArchives());
-    }
-
-    if (liveAudioCall.state.status === "failed") {
-      const failedSessionId = liveAudioCall.state.remoteSessionId;
-      if (failedSessionId) {
-        autoRealtimeSessionIdsRef.current.delete(failedSessionId);
-      }
-      void updateReceivedLiveCallArchive(archiveId, {
-        status: "failed"
+    if (archiveStatusDecision.shouldUpdateArchive && archiveStatusDecision.archiveId) {
+      void updateReceivedLiveCallArchive(archiveStatusDecision.archiveId, {
+        connectedAt: archiveStatusDecision.connectedAt,
+        status: archiveStatusDecision.status
       }).then(() => {
-        activeCallArchiveIdRef.current = null;
+        if (archiveStatusDecision.shouldClearActiveArchive) {
+          activeCallArchiveIdRef.current = null;
+        }
         void loadCallArchives();
       });
     }
-  }, [liveAudioCall.state.role, liveAudioCall.state.status, loadCallArchives]);
+
+    if (archiveStatusDecision.shouldClearAutoRealtimeSession && archiveStatusDecision.failedSessionId) {
+      autoRealtimeSessionIdsRef.current.delete(archiveStatusDecision.failedSessionId);
+    }
+  }, [liveAudioCall.state.remoteSessionId, liveAudioCall.state.role, liveAudioCall.state.status, loadCallArchives]);
 
   useEffect(() => {
     let cancelled = false;
@@ -251,14 +250,18 @@ export default function AlertScreen() {
       let changed = false;
 
       for (const session of alerts) {
-        const recipientStatus = currentEmergencyRecipientStatus(session);
-        const hasAccepted = recipientStatus === "accepted" || locallyAcceptedSessionIds.has(session.id);
-        const isActive = session.status === "active" && session.phase !== "ended";
         const existingRecord = callArchiveRecords.find((record) => record.remoteSessionId === session.id);
+        const syncDecision = buildReceivedAlertArchiveSyncDecision({
+          archivedSessionIds: archivedSessionIdsRef.current,
+          autoRealtimeSessionIds: autoRealtimeSessionIdsRef.current,
+          existingRecord,
+          locallyAcceptedSessionIds,
+          session
+        });
 
         if (
           canAngelAutoAcceptIncomingEmergency(session) &&
-          !hasAccepted &&
+          !syncDecision.hasAccepted &&
           !autoAcceptingSessionIdsRef.current.has(session.id)
         ) {
           autoAcceptingSessionIdsRef.current.add(session.id);
@@ -272,34 +275,24 @@ export default function AlertScreen() {
           continue;
         }
 
-        if (
-          hasAccepted &&
-          isActive &&
-          existingRecord &&
-          !autoRealtimeSessionIdsRef.current.has(session.id)
-        ) {
+        if (syncDecision.shouldStartRealtimeForExistingRecord && existingRecord) {
           autoRealtimeSessionIdsRef.current.add(session.id);
           await startRealtimeForAcceptedCall(session, existingRecord);
         }
 
-        if (
-          hasAccepted &&
-          isActive &&
-          !existingRecord &&
-          !archivedSessionIdsRef.current.has(session.id)
-        ) {
+        if (syncDecision.shouldCreateArchive) {
           const archiveRecord = await beginReceivedLiveCallArchive(session);
           archivedSessionIdsRef.current.add(session.id);
           changed = true;
-          if (!autoRealtimeSessionIdsRef.current.has(session.id)) {
+          if (syncDecision.shouldStartRealtimeAfterCreate) {
             autoRealtimeSessionIdsRef.current.add(session.id);
             await startRealtimeForAcceptedCall(session, archiveRecord);
           }
         }
 
-        if (existingRecord && !isActive && existingRecord.status !== "ended") {
+        if (syncDecision.shouldEndArchive && existingRecord) {
           await updateReceivedLiveCallArchive(existingRecord.id, {
-            endedAt: session.finished_at ?? session.updated_at ?? new Date().toISOString(),
+            endedAt: syncDecision.endedAt ?? new Date().toISOString(),
             status: "ended"
           });
           const currentCallState = liveAudioCallStateRef.current;
@@ -371,9 +364,7 @@ export default function AlertScreen() {
             const canShowCallPanel = alertPresentation.isActive && isCallPanelSession;
             const hasActiveRealtimeSession =
               Boolean(liveAudioCall.state.remoteSessionId) &&
-              (liveAudioCall.state.status === "waiting" ||
-                liveAudioCall.state.status === "connecting" ||
-                liveAudioCall.state.status === "connected");
+              isReceivedAlertLiveCallStatusActive(liveAudioCall.state.status);
             const hasOtherCallSession = hasActiveRealtimeSession && !isCallPanelSession;
             return (
               <View key={session.id} style={[styles.alertCard, alertPresentation.isActive && styles.alertCardActive]}>
