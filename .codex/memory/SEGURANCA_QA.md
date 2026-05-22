@@ -1501,3 +1501,15 @@ Papel: seguranca, LGPD e QA.
 - Validacoes aprovadas: `test:trusted-angels-panel`, `test:trusted-angels-dialog`, `test:trusted-angels-action`, `smoke-test`, `lint`, `typecheck`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.
+
+## QA/Security - 2026-05-22 - Etapas 1.159 e 1.160 profile presentational components
+
+- Mudanca restrita a componentes locais de apresentacao da tela `Perfis e papeis`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `ProfilesScreen` continua responsavel por carregar perfil local, salvar perfil local, atualizar status, `setProfile`, `setStatus`, `router.push("/contatos")` e estado React.
+- `ProfileOptionCard` apenas renderiza opcao de perfil/papel e dispara callback injetado; `ProfilesContinueButton` apenas renderiza CTA e dispara callback injetado.
+- Contratos preservados: menor continua bloqueado como anjo/convite pela policy existente; a tela continua sem coletar documento, data de nascimento completa, endereco, agenda ou relato sensivel.
+- O smoke bloqueia storage real, navegacao real, API, Share, `useEffect`, `setProfile` e `setStatus` dentro dos novos componentes visuais.
+- Nao introduz log novo, chave, token, hash, codigo, identity token, SDP, ICE, payload P2P, URI local, path de arquivo, coordenada, telefone, nome real novo ou conteudo de midia.
+- Validacoes aprovadas: `test:profiles`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.

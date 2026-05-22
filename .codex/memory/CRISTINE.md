@@ -1162,3 +1162,14 @@ Proximas acoes atualizadas:
 - Revisao Cristine/Eliane confirmou a extracao e recomendou parar `app/contatos.tsx` por enquanto.
 - Validacoes aprovadas: `test:trusted-angels-panel`, `test:trusted-angels-dialog`, `test:trusted-angels-action`, `smoke-test`, `lint`, `typecheck`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+
+## Memoria viva - 2026-05-22 - componentes visuais de Perfis sem build
+
+- Etapas 1.159 e 1.160 extraem somente componentes locais de apresentacao: `ProfileOptionCard` e `ProfilesContinueButton`.
+- Efeitos de risco permanecem na tela: carregar perfil local, salvar perfil local, atualizar status, `setProfile`, `setStatus`, `router.push("/contatos")` e estado React.
+- O smoke agora bloqueia regressao arquitetural nos novos componentes: sem storage real, navegacao real, API, Share, `useEffect` ou setters reais de estado.
+- Contratos LGPD preservados: nao houve novo dado coletado; a tela segue sem documento, data de nascimento completa, endereco, agenda ou relato sensivel.
+- Nao houve novo segredo, token, credencial, SDP, ICE, payload P2P, path local, coordenada, telefone, nome real novo ou conteudo de midia.
+- Validacoes aprovadas: `test:profiles`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Proxima retomada recomendada: avaliar primeiro `app/funcionamento.tsx`, depois `app/convite.tsx`; nao continuar extraindo `app/perfis.tsx` por estetica.

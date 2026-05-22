@@ -22,6 +22,52 @@ function optionIcon(kind: ProtectionProfileKind, selected: boolean) {
   return <UserRound size={22} color={color} />;
 }
 
+type ProfileOptionCardProps = {
+  option: (typeof profileOptions)[number];
+  selected: boolean;
+  onSelect: (kind: ProtectionProfileKind) => void;
+};
+
+function ProfileOptionCard({ onSelect, option, selected }: ProfileOptionCardProps) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityState={{ selected }}
+      onPress={() => onSelect(option.kind)}
+      style={({ pressed }) => [
+        styles.option,
+        selected && styles.optionSelected,
+        pressed && styles.optionPressed
+      ]}
+    >
+      <View style={[styles.optionIcon, selected && styles.optionIconSelected]}>
+        {optionIcon(option.kind, selected)}
+      </View>
+      <View style={styles.optionTextBlock}>
+        <Text style={styles.optionTitle}>{option.label}</Text>
+        <Text style={styles.optionDescription}>{option.description}</Text>
+      </View>
+    </Pressable>
+  );
+}
+
+type ProfilesContinueButtonProps = {
+  onPress: () => void;
+};
+
+function ProfilesContinueButton({ onPress }: ProfilesContinueButtonProps) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      onPress={onPress}
+      style={({ pressed }) => [styles.continueButton, pressed && styles.optionPressed]}
+    >
+      <ShieldCheck size={20} color={theme.colors.textOnDark} />
+      <Text style={styles.continueText}>Voltar para anjos</Text>
+    </Pressable>
+  );
+}
+
 export default function ProfilesScreen() {
   const [profile, setProfile] = useState<ProtectionProfile | null>(null);
   const [status, setStatus] = useState("Carregando perfil local...");
@@ -52,30 +98,14 @@ export default function ProfilesScreen() {
       <StatusBanner tone={summary.tone} title={summary.title} text={summary.text} />
 
       <View style={styles.optionStack}>
-        {profileOptions.map((option) => {
-          const selected = profile?.kind === option.kind;
-          return (
-            <Pressable
-              accessibilityRole="button"
-              accessibilityState={{ selected }}
-              key={option.kind}
-              onPress={() => void selectProfile(option.kind)}
-              style={({ pressed }) => [
-                styles.option,
-                selected && styles.optionSelected,
-                pressed && styles.optionPressed
-              ]}
-            >
-              <View style={[styles.optionIcon, selected && styles.optionIconSelected]}>
-                {optionIcon(option.kind, selected)}
-              </View>
-              <View style={styles.optionTextBlock}>
-                <Text style={styles.optionTitle}>{option.label}</Text>
-                <Text style={styles.optionDescription}>{option.description}</Text>
-              </View>
-            </Pressable>
-          );
-        })}
+        {profileOptions.map((option) => (
+          <ProfileOptionCard
+            key={option.kind}
+            option={option}
+            selected={profile?.kind === option.kind}
+            onSelect={(kind) => void selectProfile(kind)}
+          />
+        ))}
       </View>
 
       <StatusBanner
@@ -84,14 +114,7 @@ export default function ProfilesScreen() {
         text="Menor não cria anjo nem atua como anjo. Videochamada, localização ao vivo, envio externo e instituições conveniadas ainda não estão disponíveis."
       />
 
-      <Pressable
-        accessibilityRole="button"
-        onPress={() => router.push("/contatos")}
-        style={({ pressed }) => [styles.continueButton, pressed && styles.optionPressed]}
-      >
-        <ShieldCheck size={20} color={theme.colors.textOnDark} />
-        <Text style={styles.continueText}>Voltar para anjos</Text>
-      </Pressable>
+      <ProfilesContinueButton onPress={() => router.push("/contatos")} />
 
       <Text style={styles.statusText}>{status}</Text>
     </SafeScreen>

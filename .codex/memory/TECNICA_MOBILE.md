@@ -1399,3 +1399,15 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Recomendacao tecnica: parar `app/contatos.tsx` por enquanto; proximas extracoes apresentacionais teriam baixo ganho e aumentariam prop drilling/fragilidade do smoke.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+
+# Atualizacao - 2026-05-22 - Etapas 1.159 e 1.160 Componentes visuais de Perfis
+
+- `app/perfis.tsx` agora possui `ProfileOptionCard` e `ProfilesContinueButton` como componentes locais de apresentacao.
+- Etapa 1.159: o card de perfil recebe `option`, `selected` e callback de selecao ja preparado pela tela.
+- Etapa 1.160: o botao `Voltar para anjos` recebe callback de navegacao ja preparado pelo `ProfilesScreen`.
+- `ProfilesScreen` segue responsavel por carregar perfil local, salvar perfil local, atualizar status, `setProfile`, `setStatus`, `router.push("/contatos")` e estado React.
+- Gate focado: `npm run test:profiles`.
+- Validacoes aprovadas: `test:profiles`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+- Proxima recomendacao tecnica: avaliar primeiro `app/funcionamento.tsx` como menor risco; depois `app/convite.tsx` para policy apresentacional do aceite. Nao continuar extraindo `app/perfis.tsx` por estetica.

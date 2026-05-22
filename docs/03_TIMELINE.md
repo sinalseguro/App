@@ -5726,3 +5726,24 @@ Validacoes:
 Checkpoint:
 
 - `docs/200_CHECKPOINT_ETAPAS_1_157_1_158_TRUSTED_ANGELS_HEADER_INVITATIONS_DIALOG_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.159 e 1.160 componentes visuais de Perfis
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.159: extraido `ProfileOptionCard` para renderizar opcao de perfil/papel.
+- Etapa 1.160: extraido `ProfilesContinueButton` para renderizar o CTA `Voltar para anjos`.
+- `ProfilesScreen` continua responsavel pelos efeitos reais: carregar perfil local, salvar perfil local, atualizar status, `setProfile`, `setStatus`, `router.push("/contatos")` e estado React.
+- `scripts/smoke-test.mjs` recebeu anchors para proteger que os novos componentes visuais permanencam apresentacionais, sem storage real, navegacao real, API, Share, `useEffect` ou setters reais de estado.
+
+Validacoes:
+
+- `test:profiles`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`: aprovados.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/201_CHECKPOINT_ETAPAS_1_159_1_160_PROFILE_PRESENTATIONAL_COMPONENTS_2026-05-22.md`.

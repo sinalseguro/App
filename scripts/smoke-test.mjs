@@ -446,6 +446,18 @@ const deviceBinding = await readFile("src/services/deviceBinding.ts", "utf8");
 const deviceKeyProof = await readFile("src/services/deviceKeyProof.ts", "utf8");
 const profilePolicy = await readFile("src/features/profiles/profilePolicy.ts", "utf8");
 const profileSurface = `${profilesScreen}\n${profilePolicy}`;
+const profilesOptionCardStartIndex = profilesScreen.indexOf("function ProfileOptionCard");
+const profilesOptionCardEndIndex = profilesScreen.indexOf("type ProfilesContinueButtonProps");
+const profilesOptionCardBlock =
+  profilesOptionCardStartIndex >= 0 && profilesOptionCardEndIndex > profilesOptionCardStartIndex
+    ? profilesScreen.slice(profilesOptionCardStartIndex, profilesOptionCardEndIndex)
+    : "";
+const profilesContinueButtonStartIndex = profilesScreen.indexOf("function ProfilesContinueButton");
+const profilesContinueButtonEndIndex = profilesScreen.indexOf("export default function ProfilesScreen");
+const profilesContinueButtonBlock =
+  profilesContinueButtonStartIndex >= 0 && profilesContinueButtonEndIndex > profilesContinueButtonStartIndex
+    ? profilesScreen.slice(profilesContinueButtonStartIndex, profilesContinueButtonEndIndex)
+    : "";
 const trustedAngelsHeaderMenuStartIndex = contactsScreen.indexOf("function TrustedAngelsHeaderMenu");
 const trustedAngelsHeaderMenuEndIndex = contactsScreen.indexOf("type TrustedAngelsDashboardGridProps");
 const trustedAngelsHeaderMenuBlock =
@@ -918,6 +930,41 @@ if (
   !profilePolicy.includes("contactStatus === \"accepted\"")
 ) {
   throw new Error("Politica de perfis precisa bloquear menor como anjo/convite e exigir autorizacao vigente.");
+}
+
+if (
+  !profilesScreen.includes("getActiveProtectionProfile") ||
+  !profilesScreen.includes("saveActiveProtectionProfile") ||
+  !profilesScreen.includes("router.push(\"/contatos\")") ||
+  !profilesScreen.includes("type ProfileOptionCardProps") ||
+  !profilesScreen.includes("function ProfileOptionCard") ||
+  !profilesScreen.includes("type ProfilesContinueButtonProps") ||
+  !profilesScreen.includes("function ProfilesContinueButton")
+) {
+  throw new Error("Tela de perfis precisa manter carregamento/salvamento real na tela e componentes visuais locais.");
+}
+
+if (
+  !profilesOptionCardBlock ||
+  profilesOptionCardBlock.includes("getActiveProtectionProfile") ||
+  profilesOptionCardBlock.includes("saveActiveProtectionProfile") ||
+  profilesOptionCardBlock.includes("router.push") ||
+  profilesOptionCardBlock.includes("setProfile") ||
+  profilesOptionCardBlock.includes("setStatus") ||
+  profilesOptionCardBlock.includes("useEffect") ||
+  profilesOptionCardBlock.includes("apiClient") ||
+  profilesOptionCardBlock.includes("Share.share") ||
+  !profilesContinueButtonBlock ||
+  profilesContinueButtonBlock.includes("getActiveProtectionProfile") ||
+  profilesContinueButtonBlock.includes("saveActiveProtectionProfile") ||
+  profilesContinueButtonBlock.includes("router.push") ||
+  profilesContinueButtonBlock.includes("setProfile") ||
+  profilesContinueButtonBlock.includes("setStatus") ||
+  profilesContinueButtonBlock.includes("useEffect") ||
+  profilesContinueButtonBlock.includes("apiClient") ||
+  profilesContinueButtonBlock.includes("Share.share")
+) {
+  throw new Error("Componentes visuais de perfis devem permanecer apresentacionais, sem storage, navegacao real, API, Share ou estado real.");
 }
 
 if (
