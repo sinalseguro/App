@@ -1,16 +1,19 @@
 import { StyleSheet, Text, View } from "react-native";
+import { buildConsentCardPresentation, type ConsentCardStatus } from "@/components/consentCardPresentationPolicy";
 import { theme } from "@/design/theme";
 
 type ConsentCardProps = {
   title: string;
   text: string;
-  status: "obrigatorio" | "opcional" | "bloqueado";
+  status: ConsentCardStatus;
 };
 
 export function ConsentCard({ title, text, status }: ConsentCardProps) {
+  const presentation = buildConsentCardPresentation(status);
+
   return (
     <View style={styles.card}>
-      <Text style={styles.meta}>{status}</Text>
+      <Text style={styles.meta}>{presentation.statusLabel}</Text>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.text}>{text}</Text>
     </View>

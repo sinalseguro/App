@@ -1448,3 +1448,16 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
 - Proxima recomendacao tecnica: parar `app/arquivos.tsx` neste ponto; antes de tocar SOS/WebRTC/cofre real, fazer nova avaliacao de risco e ganho.
+
+# Atualizacao - 2026-05-22 - Etapas 1.167 e 1.168 Policy visual de Onboarding
+
+- `src/features/onboarding/onboardingPresentationPolicy.ts` centraliza `onboardingScreenCopy`, `onboardingSteps` e tipos da tela `Boas-vindas`.
+- `src/components/consentCardPresentationPolicy.ts` centraliza o label de status do `ConsentCard`.
+- `app/onboarding.tsx` segue responsavel por montar `SafeScreen` e renderizar `ConsentCard`; nao ganhou API, storage, navegacao, aceite real ou efeito React.
+- `ConsentCard` segue visual; apenas chama `buildConsentCardPresentation(status)` para resolver o label.
+- O smoke bloqueia regressao arquitetural: sem copy inline de tela, API, Share, storage, navegacao ou efeitos reais nas policies puras.
+- Gate focado: `npm run test:onboarding-presentation`.
+- Validacoes aprovadas: `test:onboarding-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+- Proxima recomendacao tecnica: continuar com outra superficie pequena e isolada; evitar SOS/WebRTC/cofre/backend sem rodada dedicada de risco e validacao fisica.

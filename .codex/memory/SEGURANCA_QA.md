@@ -1549,4 +1549,16 @@ Papel: seguranca, LGPD e QA.
 - Nao introduz log novo, chave, token, hash, codigo, identity token, SDP, ICE, payload P2P, URI local, path de arquivo, coordenada, telefone, nome real novo ou conteudo de midia.
 - Validacoes aprovadas: `test:local-files-presentation`, `smoke-test`, `typecheck`, `lint`, `test:crypto`, `test:protected-route-access`, `test:finish-code`, `test:finish-confirmation-dialog`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+
+## Memoria viva - 2026-05-22 - policy visual de Onboarding sem build
+
+- Etapas 1.167 e 1.168 extraem apenas apresentacao: `onboardingPresentationPolicy` e `consentCardPresentationPolicy`.
+- `app/onboarding.tsx` permanece responsavel por montar `SafeScreen` e renderizar `ConsentCard`; a tela nao ganhou API, storage, navegacao, aceite real ou efeito React.
+- `ConsentCard` permanece visual; o label de status agora vem de `buildConsentCardPresentation(status)`.
+- O smoke bloqueia retorno de copy inline na tela e bloqueia API, Share, storage e navegacao nas policies puras.
+- Contratos preservados: textos continuam conservadores e nao prometem resposta oficial, protecao garantida, prova judicial, envio automatico ou gravacao oculta.
+- Nao houve novo segredo, token, credencial, SDP, ICE, payload P2P, path local, coordenada, telefone, nome real novo ou conteudo de midia.
+- Validacoes aprovadas: `test:onboarding-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.

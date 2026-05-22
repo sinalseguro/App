@@ -23,9 +23,11 @@ const requiredFiles = [
   "app/convite.tsx",
   "app/perfis.tsx",
   "app/funcionamento.tsx",
+  "app/onboarding.tsx",
   "src/components/AppTopBar.tsx",
   "src/components/AppLaunchScreen.tsx",
   "src/components/BrandedDialog.tsx",
+  "src/components/consentCardPresentationPolicy.ts",
   "src/components/EmergencyCallButton.tsx",
   "src/components/EvidencePlayerCard.tsx",
   "src/components/LocalEvidenceRail.tsx",
@@ -127,6 +129,7 @@ const requiredFiles = [
   "src/features/profiles/profilePolicy.ts",
   "src/features/profiles/profileStore.ts",
   "src/features/onboarding/howItWorksPresentationPolicy.ts",
+  "src/features/onboarding/onboardingPresentationPolicy.ts",
   "src/features/settings/settingsPresentationPolicy.ts",
   "src/features/evidence/evidencePolicy.ts",
   "src/features/emergency/localFilesPresentationPolicy.ts",
@@ -167,6 +170,7 @@ const requiredFiles = [
   "scripts/device-key-proof.test.ts",
   "scripts/profile-policy.test.ts",
   "scripts/panic-trigger-policy.test.ts",
+  "scripts/onboarding-presentation-policy.test.ts",
   "scripts/emergency-home-activity-policy.test.ts",
   "scripts/emergency-call-hero-policy.test.ts",
   "scripts/emergency-start-policy.test.ts",
@@ -451,6 +455,13 @@ const howItWorksPresentationPolicy = await readFile(
   "src/features/onboarding/howItWorksPresentationPolicy.ts",
   "utf8"
 );
+const onboardingScreen = await readFile("app/onboarding.tsx", "utf8");
+const onboardingPresentationPolicy = await readFile(
+  "src/features/onboarding/onboardingPresentationPolicy.ts",
+  "utf8"
+);
+const consentCard = await readFile("src/components/ConsentCard.tsx", "utf8");
+const consentCardPresentationPolicy = await readFile("src/components/consentCardPresentationPolicy.ts", "utf8");
 const contactsScreen = await readFile("app/contatos.tsx", "utf8");
 const invitationScreen = await readFile("app/convite.tsx", "utf8");
 const invitationAcceptancePresentationPolicy = await readFile(
@@ -980,6 +991,33 @@ if (
   howItWorksPresentationPolicy.includes("AsyncStorage")
 ) {
   throw new Error("Como funciona deve manter catalogo em policy pura e renderizacao visual na tela.");
+}
+
+if (
+  !onboardingScreen.includes("onboardingScreenCopy") ||
+  !onboardingScreen.includes("onboardingSteps.map") ||
+  onboardingScreen.includes('title="Boas-vindas"') ||
+  !onboardingPresentationPolicy.includes("onboardingScreenCopy") ||
+  !onboardingPresentationPolicy.includes("onboardingSteps") ||
+  !onboardingPresentationPolicy.includes("Limites do servico") ||
+  !onboardingPresentationPolicy.includes("Privacidade") ||
+  onboardingPresentationPolicy.includes("router.push") ||
+  onboardingPresentationPolicy.includes("apiClient") ||
+  onboardingPresentationPolicy.includes("Share.share") ||
+  onboardingPresentationPolicy.includes("SecureStore") ||
+  onboardingPresentationPolicy.includes("AsyncStorage") ||
+  !consentCard.includes("buildConsentCardPresentation(status)") ||
+  !consentCardPresentationPolicy.includes("consentCardStatusLabels") ||
+  !consentCardPresentationPolicy.includes("obrigatorio: \"obrigatorio\"") ||
+  !consentCardPresentationPolicy.includes("opcional: \"opcional\"") ||
+  !consentCardPresentationPolicy.includes("bloqueado: \"bloqueado\"") ||
+  consentCardPresentationPolicy.includes("router.push") ||
+  consentCardPresentationPolicy.includes("apiClient") ||
+  consentCardPresentationPolicy.includes("Share.share") ||
+  consentCardPresentationPolicy.includes("SecureStore") ||
+  consentCardPresentationPolicy.includes("AsyncStorage")
+) {
+  throw new Error("Onboarding precisa manter copy e status em policies puras sem efeitos reais.");
 }
 
 if (

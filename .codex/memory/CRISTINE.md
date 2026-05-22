@@ -1209,3 +1209,16 @@ Proximas acoes atualizadas:
 - Revisao Cristine/Eliane/Lina recomendou parar `app/arquivos.tsx` neste ponto; nao mover `deleteLocalPackage`, `finishPackageNow`, `Linking.openURL`, `EvidencePlayerCard`, `LocalEvidenceRail`, storage, paths locais, criptografia, loopback/player ou limpeza de residuos.
 - Validacoes aprovadas: `test:local-files-presentation`, `smoke-test`, `typecheck`, `lint`, `test:crypto`, `test:protected-route-access`, `test:finish-code`, `test:finish-confirmation-dialog`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+
+## QA/Security - 2026-05-22 - Etapas 1.167 e 1.168 onboarding presentation policy
+
+- Mudanca restrita a policy pura de apresentacao da tela `Boas-vindas` e helper puro de status do `ConsentCard`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `app/onboarding.tsx` continua responsavel por `SafeScreen` e composicao dos cards; `ConsentCard` continua componente visual.
+- `onboardingPresentationPolicy` expoe apenas copy publica e catalogo de passos, sem JSX, tema, API, Share, storage, permissao, localizacao, camera, microfone ou navegacao.
+- `consentCardPresentationPolicy` expoe apenas labels de status e `buildConsentCardPresentation(status)`.
+- Contratos preservados: textos continuam conservadores e nao prometem resposta oficial, protecao garantida, prova judicial, envio automatico ou gravacao oculta.
+- O smoke bloqueia copy inline de onboarding e bloqueia API, Share, storage e navegacao nas policies.
+- Nao introduz log novo, chave, token, hash, codigo, identity token, SDP, ICE, payload P2P, URI local, path de arquivo, coordenada, telefone, nome real novo ou conteudo de midia.
+- Validacoes aprovadas: `test:onboarding-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.

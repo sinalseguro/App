@@ -5814,3 +5814,26 @@ Validacoes:
 Checkpoint:
 
 - `docs/204_CHECKPOINT_ETAPAS_1_165_1_166_LOCAL_FILES_PRESENTATION_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.167 e 1.168 policy visual de Onboarding
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.167: extraida `src/features/onboarding/onboardingPresentationPolicy.ts` para concentrar `onboardingScreenCopy`, `onboardingSteps` e tipos da tela `Boas-vindas`.
+- Etapa 1.168: extraida `src/components/consentCardPresentationPolicy.ts` para normalizar a apresentacao do status do `ConsentCard`.
+- `app/onboarding.tsx` continua responsavel por montar `SafeScreen` e renderizar os cards.
+- `ConsentCard` continua componente visual; apenas chama helper puro para resolver o label do status.
+- `scripts/smoke-test.mjs` recebeu anchors para impedir copy inline na tela e impedir API, Share, storage, navegacao ou efeitos reais nas policies.
+- Revisao Cristine/Eliane/Lina confirmou que a mudanca deve permanecer textual/visual; nao houve alteracao de fluxo, aceite real, LGPD, runtime nativo, SOS/WebRTC, cofre, player, backend, portal ou release.
+
+Validacoes:
+
+- `test:onboarding-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`: aprovados.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/205_CHECKPOINT_ETAPAS_1_167_1_168_ONBOARDING_PRESENTATION_POLICY_2026-05-22.md`.
