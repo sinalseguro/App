@@ -453,6 +453,20 @@ const trustedAngelsDashboardGridBlock =
   trustedAngelsDashboardGridEndIndex > trustedAngelsDashboardGridStartIndex
     ? contactsScreen.slice(trustedAngelsDashboardGridStartIndex, trustedAngelsDashboardGridEndIndex)
     : "";
+const trustedAngelsRelationshipPanelStartIndex = contactsScreen.indexOf("function TrustedAngelsRelationshipPanelContent");
+const trustedAngelsRelationshipPanelEndIndex = contactsScreen.indexOf("type TrustedAngelsInvitationPanelContentProps");
+const trustedAngelsRelationshipPanelBlock =
+  trustedAngelsRelationshipPanelStartIndex >= 0 &&
+  trustedAngelsRelationshipPanelEndIndex > trustedAngelsRelationshipPanelStartIndex
+    ? contactsScreen.slice(trustedAngelsRelationshipPanelStartIndex, trustedAngelsRelationshipPanelEndIndex)
+    : "";
+const trustedAngelsInvitationPanelStartIndex = contactsScreen.indexOf("function TrustedAngelsInvitationPanelContent");
+const trustedAngelsInvitationPanelEndIndex = contactsScreen.indexOf("export default function ContactsScreen");
+const trustedAngelsInvitationPanelBlock =
+  trustedAngelsInvitationPanelStartIndex >= 0 &&
+  trustedAngelsInvitationPanelEndIndex > trustedAngelsInvitationPanelStartIndex
+    ? contactsScreen.slice(trustedAngelsInvitationPanelStartIndex, trustedAngelsInvitationPanelEndIndex)
+    : "";
 const receivedAlertsListStartIndex = alertScreen.indexOf("function ReceivedAlertsList");
 const receivedAlertsListEndIndex = alertScreen.indexOf("function ReceivedAlertsEmptyState");
 const receivedAlertsListBlock =
@@ -874,6 +888,11 @@ if (
   !contactsScreen.includes("type TrustedAngelsDashboardGridProps") ||
   !contactsScreen.includes("function TrustedAngelsDashboardGrid") ||
   !contactsScreen.includes("function TrustedAngelsReadinessPanelContent") ||
+  !contactsScreen.includes("function TrustedAngelsEmptyStateView") ||
+  !contactsScreen.includes("type TrustedAngelsRelationshipPanelContentProps") ||
+  !contactsScreen.includes("function TrustedAngelsRelationshipPanelContent") ||
+  !contactsScreen.includes("type TrustedAngelsInvitationPanelContentProps") ||
+  !contactsScreen.includes("function TrustedAngelsInvitationPanelContent") ||
   !contactsScreen.includes("renderTrustedAngelsDashboardTileIcon")
 ) {
   throw new Error("Tela de anjos precisa passar pelo gate de perfil antes de criar convite.");
@@ -891,6 +910,31 @@ if (
   trustedAngelsDashboardGridBlock.includes("deviceBindingService")
 ) {
   throw new Error("Dashboard de anjos deve permanecer apresentacional, sem efeitos, API, Share ou storage.");
+}
+
+if (
+  !trustedAngelsRelationshipPanelBlock ||
+  !trustedAngelsInvitationPanelBlock ||
+  trustedAngelsRelationshipPanelBlock.includes("apiClient") ||
+  trustedAngelsRelationshipPanelBlock.includes("Share.share") ||
+  trustedAngelsRelationshipPanelBlock.includes("AppState") ||
+  trustedAngelsRelationshipPanelBlock.includes("deviceBindingService") ||
+  trustedAngelsRelationshipPanelBlock.includes("refreshAngels") ||
+  trustedAngelsRelationshipPanelBlock.includes("router.push") ||
+  trustedAngelsRelationshipPanelBlock.includes("revokeContact") ||
+  trustedAngelsRelationshipPanelBlock.includes("setDialog") ||
+  trustedAngelsInvitationPanelBlock.includes("apiClient") ||
+  trustedAngelsInvitationPanelBlock.includes("Share.share") ||
+  trustedAngelsInvitationPanelBlock.includes("AppState") ||
+  trustedAngelsInvitationPanelBlock.includes("deviceBindingService") ||
+  trustedAngelsInvitationPanelBlock.includes("refreshAngels") ||
+  trustedAngelsInvitationPanelBlock.includes("router.push") ||
+  trustedAngelsInvitationPanelBlock.includes("revokeInvitation") ||
+  trustedAngelsInvitationPanelBlock.includes("setDialog") ||
+  trustedAngelsInvitationPanelBlock.includes("createLocalInvitation") ||
+  trustedAngelsInvitationPanelBlock.includes("listLocalInvitations")
+) {
+  throw new Error("Paineis de anjos e convites devem permanecer apresentacionais, sem efeitos, API, Share, storage ou revogacao real.");
 }
 
 if (

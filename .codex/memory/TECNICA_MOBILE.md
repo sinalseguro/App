@@ -1343,3 +1343,14 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por cerca de 1 minuto; foi encerrado para nao deixar processo pendurado.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+
+# Atualizacao - 2026-05-22 - Etapas 1.149 e 1.150 Paineis de Anjos e Convites
+
+- `app/contatos.tsx` agora possui `TrustedAngelsRelationshipPanelContent`, `TrustedAngelsInvitationPanelContent` e `TrustedAngelsEmptyStateView` como componentes locais de apresentacao.
+- Etapa 1.149: os paineis `Meus anjos` e `Sou anjo` renderizam vinculos com estado pronto e callback opcional de revogacao injetado pela tela.
+- Etapa 1.150: o painel `Convites` renderiza secoes, cards e estado vazio com callback de revogacao injetado pela tela.
+- `ContactsScreen` segue responsavel por gate de perfil, refresh, API, cache local, device binding, AppState, Share, revogacoes reais, `setDialog`, dialogs, navegacao e estado React.
+- Gate focado: `npm run test:trusted-angels-panel`, `test:trusted-angels-dialog`, `test:trusted-angels-action` e `test:trusted-angels-refresh`.
+- Validacoes aprovadas: testes focados, `smoke-test`, `lint`, `typecheck`, `private:android:readiness`, `npm test` e `git diff --check`.
+- A primeira execucao dos testes focados no sandbox falhou por `EPERM` no pipe temporario do `tsx`; os mesmos testes passaram fora do sandbox.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.

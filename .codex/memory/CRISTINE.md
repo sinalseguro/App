@@ -1107,3 +1107,14 @@ Proximas acoes atualizadas:
 - Inspecao sensivel nos arquivos tocados retornou apenas falsos positivos esperados.
 - Validacoes aprovadas: `test:trusted-angels-dashboard`, `test:trusted-angels-panel`, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por cerca de 1 minuto; foi encerrado para nao deixar processo pendurado.
+
+## Memoria viva - 2026-05-22 - paineis de Anjos e Convites sem build
+
+- Etapas 1.149 e 1.150 extraem somente componentes locais de apresentacao: `TrustedAngelsRelationshipPanelContent`, `TrustedAngelsInvitationPanelContent` e `TrustedAngelsEmptyStateView`.
+- Efeitos de risco permanecem na tela: gate de perfil, refresh, API, cache local, device binding, AppState, Share, revogacoes reais, dialogs, `setDialog`, navegacao e estado React.
+- O smoke agora bloqueia regressao arquitetural nos novos paineis: sem API, Share, AppState, storage, device binding, refresh, router, `setDialog`, criacao de convite ou revogacao real.
+- Contratos LGPD preservados: convite nao envia evidencia/midia/localizacao, menor permanece bloqueado por policy, e pre-convite local nao vira vinculo aceito.
+- Nao houve novo segredo, token, credencial, SDP, ICE, payload P2P, path local, coordenada, telefone, nome real novo ou conteudo de midia.
+- Inspecao sensivel nos arquivos tocados retornou apenas falsos positivos esperados.
+- Validacoes aprovadas: `test:trusted-angels-panel`, `test:trusted-angels-dialog`, `test:trusted-angels-action`, `test:trusted-angels-refresh`, `smoke-test`, `lint`, `typecheck`, `private:android:readiness`, `npm test` e `git diff --check`.
+- A primeira execucao dos testes focados no sandbox falhou por `EPERM` no pipe temporario do `tsx`; os mesmos testes passaram fora do sandbox.

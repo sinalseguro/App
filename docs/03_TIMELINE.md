@@ -5619,3 +5619,24 @@ Validacoes:
 Checkpoint:
 
 - `docs/195_CHECKPOINT_ETAPAS_1_147_1_148_TRUSTED_ANGELS_DASHBOARD_READINESS_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.149 e 1.150 paineis de Anjos e Convites
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.149: extraido `TrustedAngelsRelationshipPanelContent` para renderizar os paineis `Meus anjos` e `Sou anjo`.
+- Etapa 1.150: extraido `TrustedAngelsInvitationPanelContent` para renderizar secoes e cards do painel `Convites`.
+- `ContactsScreen` continua responsavel pelos efeitos reais: gate de perfil, refresh, API, cache local, device binding, AppState, Share, revogacao, dialogs, `setDialog`, navegacao e estado React.
+- `scripts/smoke-test.mjs` recebeu anchors para proteger que os novos paineis permanencam apresentacionais, sem API, storage, Share, AppState, router, device binding, refresh, criacao de convite ou revogacao real.
+
+Validacoes:
+
+- `test:trusted-angels-panel`, `test:trusted-angels-dialog`, `test:trusted-angels-action`, `test:trusted-angels-refresh`, `smoke-test`, `lint`, `typecheck`, `private:android:readiness`, `npm test` e `git diff --check`: aprovados.
+- A primeira execucao dos testes focados no sandbox falhou por `EPERM` no pipe temporario do `tsx`; os mesmos testes passaram fora do sandbox.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/196_CHECKPOINT_ETAPAS_1_149_1_150_TRUSTED_ANGELS_PANELS_2026-05-22.md`.

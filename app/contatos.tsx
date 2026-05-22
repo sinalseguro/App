@@ -31,7 +31,10 @@ import {
 import {
   buildTrustedAngelsAngelPanelState,
   buildTrustedAngelsInvitationPanelState,
-  buildTrustedAngelsOwnerPanelState
+  buildTrustedAngelsOwnerPanelState,
+  type TrustedAngelsEmptyState,
+  type TrustedAngelsInvitationPanelState,
+  type TrustedAngelsRelationshipPanelState
 } from "@/features/invitations/trustedAngelsPanelPolicy";
 import {
   buildTrustedAngelsAcceptedCounts,
@@ -201,6 +204,101 @@ function TrustedAngelsReadinessPanelContent({ readinessState }: TrustedAngelsRea
         )}
         <Text style={styles.readinessLabel}>{readinessState.api.label}</Text>
       </View>
+    </View>
+  );
+}
+
+function renderTrustedAngelsEmptyIcon(icon: TrustedAngelsEmptyState["icon"]) {
+  switch (icon) {
+    case "userCheck":
+      return <UserCheck size={26} color={theme.colors.primary} />;
+    case "users":
+      return <Users size={26} color={theme.colors.primary} />;
+  }
+}
+
+function TrustedAngelsEmptyStateView({ emptyState }: { emptyState: TrustedAngelsEmptyState }) {
+  return (
+    <View style={styles.emptyState}>
+      {renderTrustedAngelsEmptyIcon(emptyState.icon)}
+      <Text style={styles.emptyTitle}>{emptyState.title}</Text>
+      <Text style={styles.emptyText}>{emptyState.text}</Text>
+    </View>
+  );
+}
+
+type TrustedAngelsRelationshipPanelContentProps = {
+  onRevokeContact?: (contact: ApiTrustedContactRelationship) => void;
+  state: TrustedAngelsRelationshipPanelState;
+};
+
+function TrustedAngelsRelationshipPanelContent({
+  onRevokeContact,
+  state
+}: TrustedAngelsRelationshipPanelContentProps) {
+  return (
+    <View style={styles.dialogStack}>
+      {state.items.length > 0 ? (
+        state.items.map((contact) => (
+          <InviteCard
+            key={contact.id}
+            detail={trustedRelationshipDetail(contact)}
+            name={trustedRelationshipName(contact)}
+            onPress={
+              onRevokeContact && contact.status === "accepted"
+                ? () => onRevokeContact(contact)
+                : undefined
+            }
+            status={contactStatus(contact)}
+            description={trustedRelationshipDescription(contact)}
+          />
+        ))
+      ) : (
+        <TrustedAngelsEmptyStateView emptyState={state.emptyState} />
+      )}
+    </View>
+  );
+}
+
+type TrustedAngelsInvitationPanelContentProps = {
+  onRevokeInvitation: (invitation: LocalInvitation) => void;
+  state: TrustedAngelsInvitationPanelState;
+};
+
+function TrustedAngelsInvitationPanelContent({
+  onRevokeInvitation,
+  state
+}: TrustedAngelsInvitationPanelContentProps) {
+  return (
+    <View style={styles.dialogStack}>
+      {state.sections.map((section) => (
+        <Fragment key={section.key}>
+          <SectionTitle
+            icon={
+              <Clock3
+                size={18}
+                color={section.tone === "warning" ? theme.colors.warning : theme.colors.primary}
+              />
+            }
+            title={section.title}
+          />
+          {section.invitations.map((invitation) => (
+            <InviteCard
+              key={buildTrustedAngelInvitationCardKey(invitation)}
+              detail={invitationDetail(invitation)}
+              name={invitation.displayLabel}
+              onPress={
+                canShowTrustedAngelInvitationRevocationAction(invitation.status)
+                  ? () => onRevokeInvitation(invitation)
+                  : undefined
+              }
+              status={invitation.status}
+              description={invitationDescription(invitation)}
+            />
+          ))}
+        </Fragment>
+      ))}
+      {state.emptyState ? <TrustedAngelsEmptyStateView emptyState={state.emptyState} /> : null}
     </View>
   );
 }
@@ -655,26 +753,10 @@ export default function ContactsScreen() {
           title="Meus anjos autorizados"
           visible={dialogVisibility.ownerLinksPanel}
         >
-          <View style={styles.dialogStack}>
-            {ownerPanelState.items.length > 0 ? (
-              ownerPanelState.items.map((contact) => (
-                <InviteCard
-                  key={contact.id}
-                  detail={trustedRelationshipDetail(contact)}
-                  name={trustedRelationshipName(contact)}
-                  onPress={contact.status === "accepted" ? () => setDialog({ contact, kind: "revoke_contact" }) : undefined}
-                  status={contactStatus(contact)}
-                  description={trustedRelationshipDescription(contact)}
-                />
-              ))
-            ) : (
-              <View style={styles.emptyState}>
-                <Users size={26} color={theme.colors.primary} />
-                <Text style={styles.emptyTitle}>{ownerPanelState.emptyState.title}</Text>
-                <Text style={styles.emptyText}>{ownerPanelState.emptyState.text}</Text>
-              </View>
-            )}
-          </View>
+          <TrustedAngelsRelationshipPanelContent
+            state={ownerPanelState}
+            onRevokeContact={(contact) => setDialog({ contact, kind: "revoke_contact" })}
+          />
         </BrandedDialog>
 
         <BrandedDialog
@@ -684,25 +766,7 @@ export default function ContactsScreen() {
           title="Sou anjo de"
           visible={dialogVisibility.angelLinksPanel}
         >
-          <View style={styles.dialogStack}>
-            {angelPanelState.items.length > 0 ? (
-              angelPanelState.items.map((contact) => (
-                <InviteCard
-                  key={contact.id}
-                  detail={trustedRelationshipDetail(contact)}
-                  name={trustedRelationshipName(contact)}
-                  status={contactStatus(contact)}
-                  description={trustedRelationshipDescription(contact)}
-                />
-              ))
-            ) : (
-              <View style={styles.emptyState}>
-                <UserCheck size={26} color={theme.colors.primary} />
-                <Text style={styles.emptyTitle}>{angelPanelState.emptyState.title}</Text>
-                <Text style={styles.emptyText}>{angelPanelState.emptyState.text}</Text>
-              </View>
-            )}
-          </View>
+          <TrustedAngelsRelationshipPanelContent state={angelPanelState} />
         </BrandedDialog>
 
         <BrandedDialog
@@ -712,42 +776,10 @@ export default function ContactsScreen() {
           title="Convites"
           visible={dialogVisibility.invitationsPanel}
         >
-          <View style={styles.dialogStack}>
-            {invitationPanelState.sections.map((section) => (
-              <Fragment key={section.key}>
-                <SectionTitle
-                  icon={
-                    <Clock3
-                      size={18}
-                      color={section.tone === "warning" ? theme.colors.warning : theme.colors.primary}
-                    />
-                  }
-                  title={section.title}
-                />
-                {section.invitations.map((invitation) => (
-                  <InviteCard
-                    key={buildTrustedAngelInvitationCardKey(invitation)}
-                    detail={invitationDetail(invitation)}
-                    name={invitation.displayLabel}
-                    onPress={
-                      canShowTrustedAngelInvitationRevocationAction(invitation.status)
-                        ? () => setDialog({ invitation, kind: "revoke_invitation" })
-                        : undefined
-                    }
-                    status={invitation.status}
-                    description={invitationDescription(invitation)}
-                  />
-                ))}
-              </Fragment>
-            ))}
-            {invitationPanelState.emptyState ? (
-              <View style={styles.emptyState}>
-                <Users size={26} color={theme.colors.primary} />
-                <Text style={styles.emptyTitle}>{invitationPanelState.emptyState.title}</Text>
-                <Text style={styles.emptyText}>{invitationPanelState.emptyState.text}</Text>
-              </View>
-            ) : null}
-          </View>
+          <TrustedAngelsInvitationPanelContent
+            state={invitationPanelState}
+            onRevokeInvitation={(invitation) => setDialog({ invitation, kind: "revoke_invitation" })}
+          />
         </BrandedDialog>
       </View>
     </SafeAreaView>

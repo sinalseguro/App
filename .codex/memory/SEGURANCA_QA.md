@@ -1393,6 +1393,19 @@ Papel: seguranca, LGPD e QA.
 - `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por cerca de 1 minuto; foi encerrado para nao deixar processo pendurado.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.
 
+## QA/Security - 2026-05-22 - Etapas 1.149 e 1.150 trusted angels relationship/invitation panels
+
+- Mudanca restrita a componentes locais de apresentacao da tela `Anjos de confianca`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `ContactsScreen` continua responsavel por gate de perfil, refresh, API, cache local, device binding, AppState, Share nativo, revogacoes reais, dialogs, `setDialog`, navegacao e estado React.
+- `TrustedAngelsRelationshipPanelContent`, `TrustedAngelsInvitationPanelContent` e `TrustedAngelsEmptyStateView` apenas renderizam dados e disparam callbacks injetados pela tela.
+- Contratos preservados: `Meus anjos` segue revogando apenas contato `accepted`; `Sou anjo` nao ganhou acao de revogacao; `Convites` segue respeitando `canShowTrustedAngelInvitationRevocationAction()`.
+- O smoke bloqueia API, Share, AppState, storage, device binding, refresh, router, `setDialog`, criacao de convite e revogacao real dentro dos novos paineis.
+- Nao introduz log novo, chave, token, hash, codigo, identity token, SDP, ICE, payload P2P, URI local, path de arquivo, coordenada, telefone, nome real novo ou conteudo de midia.
+- Inspecao sensivel nos arquivos tocados retornou apenas falsos positivos esperados: imports/handlers ja existentes no `ContactsScreen` e anchors do smoke.
+- Validacoes aprovadas: `test:trusted-angels-panel`, `test:trusted-angels-dialog`, `test:trusted-angels-action`, `test:trusted-angels-refresh`, `smoke-test`, `lint`, `typecheck`, `private:android:readiness`, `npm test` e `git diff --check`.
+- A primeira execucao dos testes focados no sandbox falhou por `EPERM` no pipe temporario do `tsx`; os mesmos testes passaram fora do sandbox.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.
+
 ## QA/Security - 2026-05-22 - Etapas 1.135 e 1.136 received alert runtime policy
 
 - Mudanca restrita a regras puras/teste de runtime local da tela `Alertas recebidos`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
