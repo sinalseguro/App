@@ -1599,3 +1599,16 @@ Papel: seguranca, LGPD e QA.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.
+
+## Memoria viva - 2026-05-22 - policies visuais de componentes de acao sem build
+
+- Etapas 1.175 e 1.176 extraem apenas apresentacao/acessibilidade: `buttonIconPresentationPolicy` e `emergencyCallDockPresentationPolicy`.
+- `ButtonIcon` permanece responsavel por callbacks, pressed/disabled style e renderizacao do icone recebido.
+- `EmergencyCallDock` permanece responsavel por mapear alvos de chamada e encaminhar `onCallTarget(target)`.
+- O smoke bloqueia API, Share, storage, navegacao, `Linking.openURL`, tema, icones, permissao real e efeitos reais dentro das policies puras.
+- Contratos preservados: labels, hints, role de botao, tamanho dos icones e ajuste de texto permanecem equivalentes aos anteriores.
+- Nao houve novo segredo, credencial, SDP, ICE, payload P2P, path local, coordenada, telefone novo, nome real novo ou conteudo de midia.
+- Validacoes aprovadas: `test:action-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.

@@ -1500,3 +1500,16 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
 - Proxima recomendacao tecnica: nova microtriagem antes da proxima dupla; manter fora de escopo `AppTopBar`, `BrandedDialog`, `_layout`, `app/index.tsx`, SOS/WebRTC, cofre, backend e publicacao sem plano proprio.
+
+# Atualizacao - 2026-05-22 - Etapas 1.175 e 1.176 Policies visuais de componentes de acao
+
+- `src/components/buttonIconPresentationPolicy.ts` centraliza role de acessibilidade, estado desabilitado, tamanho do icone e ajuste de texto do `ButtonIcon`.
+- `src/features/emergency-home/emergencyCallDockPresentationPolicy.ts` centraliza label/hint de acessibilidade, role, tamanho do icone e ajuste de texto dos botoes de chamada do `EmergencyCallDock`.
+- `ButtonIcon` segue responsavel por renderizar `Pressable`, icone recebido, texto, pressed/disabled style e callbacks injetados.
+- `EmergencyCallDock` segue responsavel por renderizar icones Lucide, mapear `emergencyCallTargets` e chamar `onCallTarget(target)`.
+- O smoke bloqueia regressao arquitetural: sem API, Share, storage, navegacao, `Linking.openURL`, tema, icones, permissao real ou efeitos reais nas policies puras.
+- Gate focado: `npm run test:action-components-presentation`.
+- Validacoes aprovadas: `test:action-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+- Proxima recomendacao tecnica: apos worktree limpo, avaliar `BrandBackground` e `InviteCard` como proximos alvos visuais, sem mover `Animated`, `useEffect`, assets, JSX/Lucide, `theme.colors`, fluxo real ou backend para policies.

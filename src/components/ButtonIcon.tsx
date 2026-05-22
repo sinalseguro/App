@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { Pressable, PressableProps, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
+import { buildButtonIconPresentation } from "@/components/buttonIconPresentationPolicy";
 import { theme } from "@/design/theme";
 
 type ButtonIconProps = Omit<PressableProps, "style"> & {
@@ -10,11 +11,12 @@ type ButtonIconProps = Omit<PressableProps, "style"> & {
 
 export function ButtonIcon({ icon, label, style, accessibilityState, ...props }: ButtonIconProps) {
   const disabled = Boolean(props.disabled);
+  const presentation = buildButtonIconPresentation(disabled);
 
   return (
     <Pressable
-      accessibilityRole="button"
-      accessibilityState={{ ...accessibilityState, disabled }}
+      accessibilityRole={presentation.accessibilityRole}
+      accessibilityState={{ ...accessibilityState, disabled: presentation.disabled }}
       style={({ pressed }) => [
         styles.button,
         pressed && !disabled && styles.buttonPressed,
@@ -23,8 +25,8 @@ export function ButtonIcon({ icon, label, style, accessibilityState, ...props }:
       ]}
       {...props}
     >
-      <View style={styles.icon}>{icon}</View>
-      <Text adjustsFontSizeToFit numberOfLines={1} style={styles.label}>
+      <View style={[styles.icon, presentation.iconSize]}>{icon}</View>
+      <Text {...presentation.labelTextFit} style={styles.label}>
         {label}
       </Text>
     </Pressable>
@@ -49,9 +51,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     alignItems: "center",
-    height: 28,
     justifyContent: "center",
-    width: 28
   },
   label: {
     color: theme.colors.text,

@@ -5906,3 +5906,26 @@ Validacoes:
 Checkpoint:
 
 - `docs/208_CHECKPOINT_ETAPAS_1_173_1_174_BRAND_LAUNCH_PRESENTATION_POLICY_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.175 e 1.176 policies visuais de componentes de acao
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.175: extraida `src/components/buttonIconPresentationPolicy.ts` para concentrar role de acessibilidade, estado desabilitado, tamanho do icone e ajuste de texto do `ButtonIcon`.
+- Etapa 1.176: extraida `src/features/emergency-home/emergencyCallDockPresentationPolicy.ts` para concentrar label/hint de acessibilidade, role, tamanho do icone e ajuste de texto dos botoes de chamada do `EmergencyCallDock`.
+- `ButtonIcon` continua responsavel por renderizar `Pressable`, icone recebido, texto, pressed/disabled style e callbacks injetados.
+- `EmergencyCallDock` continua responsavel por renderizar icones Lucide, mapear `emergencyCallTargets` e chamar `onCallTarget(target)`.
+- `scripts/smoke-test.mjs` recebeu guardrails para impedir efeitos reais nas policies de acao.
+- Revisao Cristine/Eliane/Lina/Tarcila confirmou que a mudanca deve permanecer visual/acessibilidade; nao houve alteracao de UX real, LGPD, runtime nativo, SOS/WebRTC, cofre, player, backend, portal ou release.
+
+Validacoes:
+
+- `test:action-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`: aprovados.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/209_CHECKPOINT_ETAPAS_1_175_1_176_ACTION_COMPONENTS_PRESENTATION_POLICY_2026-05-22.md`.

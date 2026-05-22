@@ -1259,3 +1259,12 @@ Proximas acoes atualizadas:
 - Sem alteracao de SOS, WebRTC, cofre, player, convites reais, permissao real, login, backend, portal, publicacao, criptografia, chaves ou armazenamento local.
 - Validacoes aprovadas: `test:brand-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+
+## QA/Security - 2026-05-22 - Etapas 1.175 e 1.176 action component policies
+
+- Mudanca restrita a helpers puros de apresentacao/acessibilidade de `ButtonIcon` e `EmergencyCallDock`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `ButtonIcon` continua renderizando `Pressable`, icone recebido, label e estados pressed/disabled; a policy expoe somente role, estado desabilitado, tamanho visual e text fit.
+- `EmergencyCallDock` continua renderizando icones Lucide, lista de alvos e callback `onCallTarget(target)`; a policy expoe somente hint/label/role, tamanho visual e text fit.
+- Sem alteracao de SOS, WebRTC, cofre, player, convites reais, permissao real, login, backend, portal, publicacao, criptografia, chaves ou armazenamento local.
+- Validacoes aprovadas: `test:action-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.

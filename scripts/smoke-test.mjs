@@ -30,6 +30,8 @@ const requiredFiles = [
   "src/components/BrandLockup.tsx",
   "src/components/brandLockupPresentationPolicy.ts",
   "src/components/BrandedDialog.tsx",
+  "src/components/ButtonIcon.tsx",
+  "src/components/buttonIconPresentationPolicy.ts",
   "src/components/consentCardPresentationPolicy.ts",
   "src/components/inviteCardPresentationPolicy.ts",
   "src/components/EmergencyCallButton.tsx",
@@ -46,6 +48,7 @@ const requiredFiles = [
   "src/components/PanicButton.tsx",
   "src/features/local-files/LocalFilesResourceGrid.tsx",
   "src/features/emergency-home/EmergencyCallDock.tsx",
+  "src/features/emergency-home/emergencyCallDockPresentationPolicy.ts",
   "src/features/emergency-home/EmergencyCallTarget.ts",
   "src/features/emergency-home/emergencyCallHeroPolicy.ts",
   "src/features/emergency-home/EmergencySettingsDrawer.tsx",
@@ -184,6 +187,7 @@ const requiredFiles = [
   "scripts/status-components-presentation-policy.test.ts",
   "scripts/presentation-components-policy.test.ts",
   "scripts/brand-components-presentation-policy.test.ts",
+  "scripts/action-components-presentation-policy.test.ts",
   "scripts/emergency-home-activity-policy.test.ts",
   "scripts/emergency-call-hero-policy.test.ts",
   "scripts/emergency-start-policy.test.ts",
@@ -493,6 +497,13 @@ const appLaunchScreen = await readFile("src/components/AppLaunchScreen.tsx", "ut
 const appLaunchPresentationPolicy = await readFile("src/components/appLaunchPresentationPolicy.ts", "utf8");
 const brandLockup = await readFile("src/components/BrandLockup.tsx", "utf8");
 const brandLockupPresentationPolicy = await readFile("src/components/brandLockupPresentationPolicy.ts", "utf8");
+const buttonIcon = await readFile("src/components/ButtonIcon.tsx", "utf8");
+const buttonIconPresentationPolicy = await readFile("src/components/buttonIconPresentationPolicy.ts", "utf8");
+const emergencyCallDock = await readFile("src/features/emergency-home/EmergencyCallDock.tsx", "utf8");
+const emergencyCallDockPresentationPolicy = await readFile(
+  "src/features/emergency-home/emergencyCallDockPresentationPolicy.ts",
+  "utf8"
+);
 const contactsScreen = await readFile("app/contatos.tsx", "utf8");
 const invitationScreen = await readFile("app/convite.tsx", "utf8");
 const invitationAcceptancePresentationPolicy = await readFile(
@@ -1146,6 +1157,36 @@ if (
 }
 
 if (
+  !buttonIcon.includes("buildButtonIconPresentation(disabled)") ||
+  !buttonIcon.includes("presentation.labelTextFit") ||
+  !buttonIcon.includes("presentation.iconSize") ||
+  !buttonIconPresentationPolicy.includes("buttonIconLabelTextFit") ||
+  !buttonIconPresentationPolicy.includes("minimumFontScale: 0.82") ||
+  !buttonIconPresentationPolicy.includes("accessibilityRole: \"button\"") ||
+  !emergencyCallDock.includes("buildEmergencyCallDockTargetPresentation(target)") ||
+  !emergencyCallDock.includes("presentation.accessibilityHint") ||
+  !emergencyCallDock.includes("renderEmergencyIcon(target.icon, presentation.iconSize)") ||
+  !emergencyCallDockPresentationPolicy.includes("emergencyCallDockIconSize = 24") ||
+  !emergencyCallDockPresentationPolicy.includes("Abre confirmacao para ligar") ||
+  !emergencyCallDockPresentationPolicy.includes("accessibilityRole: \"button\"") ||
+  [buttonIconPresentationPolicy, emergencyCallDockPresentationPolicy].some(
+    (policySource) =>
+      policySource.includes("router.push") ||
+      policySource.includes("apiClient") ||
+      policySource.includes("Share.share") ||
+      policySource.includes("SecureStore") ||
+      policySource.includes("AsyncStorage") ||
+      policySource.includes("Linking.openURL") ||
+      policySource.includes("theme.colors") ||
+      policySource.includes("lucide-react-native") ||
+      policySource.includes("useEffect") ||
+      policySource.includes("Animated")
+  )
+) {
+  throw new Error("Componentes de acao precisam manter policies puras sem efeitos reais.");
+}
+
+if (
   !profilePolicy.includes("minor_cannot_invite") ||
   !profilePolicy.includes("minor_cannot_act_as_angel") ||
   !profilePolicy.includes("responsible_minor_allowed") ||
@@ -1482,7 +1523,6 @@ if (
 const emergencyTopBar = await readFile("src/features/emergency-home/EmergencyTopBar.tsx", "utf8");
 const emergencyDrawer = await readFile("src/features/emergency-home/EmergencySettingsDrawer.tsx", "utf8");
 const emergencyCallTarget = await readFile("src/features/emergency-home/EmergencyCallTarget.ts", "utf8");
-const emergencyCallDock = await readFile("src/features/emergency-home/EmergencyCallDock.tsx", "utf8");
 const appTopBar = await readFile("src/components/AppTopBar.tsx", "utf8");
 
 if (
