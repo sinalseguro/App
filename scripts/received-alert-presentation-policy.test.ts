@@ -1,9 +1,15 @@
 import assert from "node:assert/strict";
 
 import {
+  buildReceivedAlertFailureDialog,
   buildReceivedAlertCardPresentation,
   buildReceivedAlertIncomingCallPresentation,
+  buildReceivedAlertRefreshFailureStatus,
+  buildReceivedAlertRefreshStatus,
+  receivedAlertErrorMessage,
   receivedAlertPhaseLabel,
+  receivedAlertResponseActionLabel,
+  receivedAlertStatusMessage,
   receivedCallArchiveStatusLabel,
   sortReceivedEmergencyAlerts
 } from "../src/features/live-call/receivedAlertPresentationPolicy";
@@ -152,5 +158,71 @@ assert.equal(receivedCallArchiveStatusLabel("connected"), "ao vivo conectado");
 assert.equal(receivedCallArchiveStatusLabel("ended"), "finalizado");
 assert.equal(receivedCallArchiveStatusLabel("failed"), "chamada indisponível");
 assert.equal(receivedCallArchiveStatusLabel("recording"), "registro ativo");
+
+assert.equal(buildReceivedAlertRefreshStatus({ receivedAlertCount: 1 }), "Pedidos atualizados.");
+assert.equal(buildReceivedAlertRefreshStatus({ receivedAlertCount: 0 }), "Nenhum pedido recebido agora.");
+assert.equal(
+  buildReceivedAlertRefreshStatus({ nextStatus: "Status manual.", receivedAlertCount: 0 }),
+  "Status manual."
+);
+assert.equal(
+  buildReceivedAlertRefreshFailureStatus({
+    activeLiveCall: true,
+    error: new Error("sem rede")
+  }),
+  "Você está atendendo como anjo."
+);
+assert.equal(
+  buildReceivedAlertRefreshFailureStatus({
+    activeLiveCall: false,
+    error: new Error("sem rede")
+  }),
+  "sem rede"
+);
+assert.equal(receivedAlertResponseActionLabel("accept"), "aceito");
+assert.equal(receivedAlertResponseActionLabel("decline"), "recusado");
+assert.equal(receivedAlertResponseActionLabel("seen"), "visualizado");
+assert.equal(receivedAlertStatusMessage("attending"), "Você está atendendo como anjo.");
+assert.equal(receivedAlertStatusMessage("entering-call"), "Você é o anjo. Entrando na chamada.");
+assert.equal(receivedAlertStatusMessage("waiting-call"), "Você é o anjo. Aguardando chamada.");
+assert.equal(receivedAlertStatusMessage("left-call"), "Você saiu da chamada. O pedido continua na tela ate o fim.");
+assert.equal(receivedAlertErrorMessage(new Error("falhou"), "fallback"), "falhou");
+assert.equal(receivedAlertErrorMessage("falhou", "fallback"), "fallback");
+
+assert.deepEqual(
+  buildReceivedAlertFailureDialog({
+    error: new Error("Sem conexão."),
+    kind: "request"
+  }),
+  {
+    actions: [{ label: "Entendi" }],
+    message: "Sem conexão.",
+    title: "Pedido não atualizado"
+  }
+);
+
+assert.deepEqual(
+  buildReceivedAlertFailureDialog({
+    error: "erro",
+    kind: "archive"
+  }),
+  {
+    actions: [{ label: "Entendi" }],
+    message: "Não foi possível salvar o registro local agora.",
+    title: "Chamada não registrada"
+  }
+);
+
+assert.deepEqual(
+  buildReceivedAlertFailureDialog({
+    error: "erro",
+    kind: "realtime"
+  }),
+  {
+    actions: [{ label: "Entendi" }],
+    message: "Não foi possível abrir a videochamada agora. O registro local permanece salvo.",
+    title: "Tempo real indisponível"
+  }
+);
 
 console.log("Received alert presentation policy test aprovado.");

@@ -31,9 +31,15 @@ import {
   currentEmergencyRecipientStatus
 } from "@/features/live-call/liveCallRolePolicy";
 import {
+  buildReceivedAlertFailureDialog,
+  buildReceivedAlertRefreshFailureStatus,
+  buildReceivedAlertRefreshStatus,
   buildReceivedAlertCardPresentation,
   buildReceivedAlertIncomingCallPresentation,
   formatReceivedAlertDate,
+  receivedAlertErrorMessage,
+  receivedAlertResponseActionLabel,
+  receivedAlertStatusMessage,
   receivedCallArchiveStatusLabel,
   sortReceivedEmergencyAlerts
 } from "@/features/live-call/receivedAlertPresentationPolicy";
@@ -82,7 +88,12 @@ export default function AlertScreen() {
     try {
       const receivedAlerts = await apiClient.listReceivedEmergencySessions();
       setAlerts(receivedAlerts);
-      setStatus(nextStatus ?? (receivedAlerts.length ? "Pedidos atualizados." : "Nenhum pedido recebido agora."));
+      setStatus(
+        buildReceivedAlertRefreshStatus({
+          nextStatus,
+          receivedAlertCount: receivedAlerts.length
+        })
+      );
     } catch (error) {
       const currentCallState = liveAudioCallStateRef.current;
       const activeLiveCall =
@@ -92,11 +103,10 @@ export default function AlertScreen() {
           currentCallState.status === "connected");
 
       setStatus(
-        activeLiveCall
-          ? "Você está atendendo como anjo."
-          : error instanceof Error
-            ? error.message
-            : "Não foi possível atualizar os pedidos."
+        buildReceivedAlertRefreshFailureStatus({
+          activeLiveCall,
+          error
+        })
       );
     } finally {
       if (!options?.silent) {
@@ -106,7 +116,7 @@ export default function AlertScreen() {
   }, []);
 
   async function respondToAlert(session: ApiEmergencySession, action: "accept" | "decline" | "seen") {
-    const actionLabel = action === "accept" ? "aceito" : action === "decline" ? "recusado" : "visualizado";
+    const actionLabel = receivedAlertResponseActionLabel(action);
     try {
       const updatedSession = await apiClient.respondToEmergencySession(session.id, action);
       setAlerts((currentAlerts) =>
@@ -124,11 +134,7 @@ export default function AlertScreen() {
       setStatus(`Pedido ${actionLabel}.`);
       return updatedSession;
     } catch (error) {
-      setDialog({
-        title: "Pedido não atualizado",
-        message: error instanceof Error ? error.message : "Tente novamente quando houver conexão.",
-        actions: [{ label: "Entendi" }]
-      });
+      setDialog(buildReceivedAlertFailureDialog({ error, kind: "request" }));
       return null;
     }
   }
@@ -145,18 +151,14 @@ export default function AlertScreen() {
       const archiveRecord = await beginReceivedLiveCallArchive(acceptedSession);
       archivedSessionIdsRef.current.add(acceptedSession.id);
       await loadCallArchives();
-      setStatus("Você está atendendo como anjo.");
+      setStatus(receivedAlertStatusMessage("attending"));
       return { archiveRecord, session: acceptedSession };
     } catch (error) {
       if (options?.silentFailure) {
-        setStatus(error instanceof Error ? error.message : "Não foi possível registrar chamada recebida agora.");
+        setStatus(receivedAlertErrorMessage(error, "Não foi possível registrar chamada recebida agora."));
         return null;
       }
-      setDialog({
-        title: "Chamada não registrada",
-        message: error instanceof Error ? error.message : "Não foi possível salvar o registro local agora.",
-        actions: [{ label: "Entendi" }]
-      });
+      setDialog(buildReceivedAlertFailureDialog({ error, kind: "archive" }));
       return null;
     }
   }
@@ -171,7 +173,7 @@ export default function AlertScreen() {
 
     activeCallArchiveIdRef.current = archiveRecord.id;
     lastArchivedCallStatusRef.current = archiveRecord.status;
-    setStatus("Você é o anjo. Aguardando chamada.");
+    setStatus(receivedAlertStatusMessage("waiting-call"));
     await liveAudioCall.startAngelAudioCall(session);
   }
 
@@ -180,14 +182,10 @@ export default function AlertScreen() {
       const acceptedCall = await acceptAndSaveIncomingCall(session, alreadyAccepted);
       if (!acceptedCall) return;
 
-      setStatus("Você é o anjo. Entrando na chamada.");
+      setStatus(receivedAlertStatusMessage("entering-call"));
       await startRealtimeForAcceptedCall(acceptedCall.session, acceptedCall.archiveRecord);
     } catch (error) {
-      setDialog({
-        title: "Tempo real indisponível",
-        message: error instanceof Error ? error.message : "Não foi possível abrir a videochamada agora. O registro local permanece salvo.",
-        actions: [{ label: "Entendi" }]
-      });
+      setDialog(buildReceivedAlertFailureDialog({ error, kind: "realtime" }));
     }
   }
 
@@ -195,7 +193,7 @@ export default function AlertScreen() {
     liveAudioCall.stopLiveAudioCall();
     activeCallArchiveIdRef.current = null;
     lastArchivedCallStatusRef.current = null;
-    setStatus("Você saiu da chamada. O pedido continua na tela ate o fim.");
+    setStatus(receivedAlertStatusMessage("left-call"));
   }
 
   async function shareArchiveRecord(record: LiveCallArchiveRecord) {

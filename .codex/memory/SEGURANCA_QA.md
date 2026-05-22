@@ -1320,6 +1320,18 @@ Papel: seguranca, LGPD e QA.
 - `typecheck` nao emitiu erro, mas ficou sem saida e ocioso; foi encerrado para nao deixar processo pendurado.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
 
+## QA/Security - 2026-05-22 - Etapas 1.137 e 1.138 received alert feedback policy
+
+- Mudanca restrita a regras puras/teste de feedback visual da tela `Alertas recebidos`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `app/alerta.tsx` continua responsavel por API, autoaceite, notificacao, WebRTC, storage seguro, refs mutaveis, reset de chamada, Share nativo e estado React.
+- A policy apenas retorna status, labels de acao, dialogs de falha e fallback de erro para a tela aplicar.
+- Contratos preservados: falha durante chamada ativa segue mostrando atendimento em andamento, erro real continua sendo exibido quando existe, e fallbacks permanecem restritos a mensagens publicas.
+- Nao introduz log novo, chave, token, hash, codigo, identity token, SDP, ICE, payload P2P, URI local, path de arquivo, coordenada ou conteudo de midia.
+- Inspecao sensivel nos arquivos tocados retornou apenas falsos positivos esperados: nomes de tipos/imports e `console.log` final de teste.
+- Validacoes aprovadas: `test:received-alert-presentation`, `test:received-alert-runtime`, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
+
 ## QA/Security - 2026-05-22 - Etapas 1.135 e 1.136 received alert runtime policy
 
 - Mudanca restrita a regras puras/teste de runtime local da tela `Alertas recebidos`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.

@@ -1046,3 +1046,12 @@ Proximas acoes atualizadas:
 - Validacoes aprovadas: teste focado, `test:received-alert-presentation`, `test:live-call-history`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
 - Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
+
+## Memoria viva - 2026-05-22 - feedback de Alertas recebidos sem build
+
+- Etapas 1.137 e 1.138 extraem somente feedback puro para `receivedAlertPresentationPolicy`: status, labels de resposta, dialogs de erro e fallback de mensagem.
+- Efeitos de risco permanecem na tela: API, autoaceite, notificacao, WebRTC, arquivo local, refs mutaveis, reset de chamada, Share e estado React.
+- Nao houve novo segredo, token, credencial, SDP, ICE, payload P2P, path local, coordenada ou conteudo de midia.
+- Inspecao sensivel nos arquivos tocados retornou apenas falsos positivos esperados.
+- Validacoes aprovadas: `test:received-alert-presentation`, `test:received-alert-runtime`, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.

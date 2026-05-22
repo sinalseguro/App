@@ -1277,3 +1277,14 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Validacoes aprovadas: teste focado, `test:received-alert-presentation`, `test:live-call-history`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
 - Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
+
+# Atualizacao - 2026-05-22 - Etapas 1.137 e 1.138 Feedback de Alertas recebidos
+
+- `receivedAlertPresentationPolicy` agora centraliza status, labels e dialogs puros de feedback da tela `Alertas recebidos`.
+- Etapa 1.137: extraidos status de refresh, labels de resposta ao pedido e mensagens de estado da chamada recebida.
+- Etapa 1.138: extraidos dialogs de falha e fallback de erro para pedido, arquivo local e tempo real.
+- `app/alerta.tsx` segue responsavel por efeitos reais: API, autoaceite, notificacao, WebRTC, storage seguro, refs mutaveis, reset de chamada, Share nativo e estado React.
+- Gate focado: `npm run test:received-alert-presentation`.
+- Validacoes aprovadas: teste focado, `test:received-alert-runtime`, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
+- Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.

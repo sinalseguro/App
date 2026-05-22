@@ -18,6 +18,19 @@ export type ReceivedAlertIncomingCallPresentation = {
   title: string;
 };
 
+export type ReceivedAlertResponseAction = "accept" | "decline" | "seen";
+export type ReceivedAlertFailureDialogKind = "archive" | "realtime" | "request";
+
+export type ReceivedAlertFailureDialog = {
+  actions: {
+    label: string;
+  }[];
+  message: string;
+  title: string;
+};
+
+export type ReceivedAlertStatusKind = "attending" | "entering-call" | "left-call" | "waiting-call";
+
 export function formatReceivedAlertDate(value: string) {
   return new Intl.DateTimeFormat("pt-BR", {
     day: "2-digit",
@@ -49,6 +62,76 @@ export function sortReceivedEmergencyAlerts(alerts: ApiEmergencySession[]) {
     if (leftActive !== rightActive) return leftActive ? -1 : 1;
     return new Date(right.started_at).getTime() - new Date(left.started_at).getTime();
   });
+}
+
+export function buildReceivedAlertRefreshStatus({
+  nextStatus,
+  receivedAlertCount
+}: {
+  nextStatus?: string;
+  receivedAlertCount: number;
+}) {
+  return nextStatus ?? (receivedAlertCount ? "Pedidos atualizados." : "Nenhum pedido recebido agora.");
+}
+
+export function buildReceivedAlertRefreshFailureStatus({
+  activeLiveCall,
+  error
+}: {
+  activeLiveCall: boolean;
+  error: unknown;
+}) {
+  if (activeLiveCall) return receivedAlertStatusMessage("attending");
+  return receivedAlertErrorMessage(error, "Não foi possível atualizar os pedidos.");
+}
+
+export function receivedAlertResponseActionLabel(action: ReceivedAlertResponseAction) {
+  if (action === "accept") return "aceito";
+  if (action === "decline") return "recusado";
+  return "visualizado";
+}
+
+export function receivedAlertStatusMessage(kind: ReceivedAlertStatusKind) {
+  switch (kind) {
+    case "attending":
+      return "Você está atendendo como anjo.";
+    case "entering-call":
+      return "Você é o anjo. Entrando na chamada.";
+    case "left-call":
+      return "Você saiu da chamada. O pedido continua na tela ate o fim.";
+    case "waiting-call":
+      return "Você é o anjo. Aguardando chamada.";
+  }
+}
+
+export function buildReceivedAlertFailureDialog({
+  error,
+  kind
+}: {
+  error: unknown;
+  kind: ReceivedAlertFailureDialogKind;
+}): ReceivedAlertFailureDialog {
+  const fallbackByKind: Record<ReceivedAlertFailureDialogKind, { message: string; title: string }> = {
+    archive: {
+      message: "Não foi possível salvar o registro local agora.",
+      title: "Chamada não registrada"
+    },
+    realtime: {
+      message: "Não foi possível abrir a videochamada agora. O registro local permanece salvo.",
+      title: "Tempo real indisponível"
+    },
+    request: {
+      message: "Tente novamente quando houver conexão.",
+      title: "Pedido não atualizado"
+    }
+  };
+  const feedback = fallbackByKind[kind];
+
+  return {
+    actions: [{ label: "Entendi" }],
+    message: receivedAlertErrorMessage(error, feedback.message),
+    title: feedback.title
+  };
 }
 
 export function buildReceivedAlertCardPresentation({
@@ -93,6 +176,10 @@ export function receivedCallArchiveStatusLabel(status: LiveCallArchiveRecord["st
   if (status === "ended") return "finalizado";
   if (status === "failed") return "chamada indisponível";
   return "registro ativo";
+}
+
+export function receivedAlertErrorMessage(error: unknown, fallback: string) {
+  return error instanceof Error ? error.message : fallback;
 }
 
 function buildReceivedAlertBody({ hasAccepted, isActive }: { hasAccepted: boolean; isActive: boolean }) {

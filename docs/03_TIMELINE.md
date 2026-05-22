@@ -5492,3 +5492,24 @@ Validacoes:
 Checkpoint:
 
 - `docs/189_CHECKPOINT_ETAPAS_1_135_1_136_RECEIVED_ALERT_RUNTIME_POLICY_2026-05-22.md`.
+
+## 2026-05-22 - Etapas 1.137 e 1.138 feedback de Alertas recebidos
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Etapa 1.137: extraidos builders puros de status/feedback de atualizacao, resposta ao pedido e estados de chamada recebida para `receivedAlertPresentationPolicy`.
+- Etapa 1.138: extraidos builders puros de dialog de falha e fallback de erro para pedido, arquivo local e tempo real.
+- `app/alerta.tsx` continua responsavel pelos efeitos reais: API, autoaceite, notificacao, WebRTC, storage seguro, refs mutaveis, reset de chamada, Share e estado React.
+- `scripts/received-alert-presentation-policy.test.ts` foi ampliado para cobrir status, labels e dialogs da policy.
+
+Validacoes:
+
+- `test:received-alert-presentation`, `test:received-alert-runtime`, `smoke-test`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`: aprovados.
+- `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por mais de 1 minuto; foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser mudanca pura de policy sem runtime nativo.
+
+Checkpoint:
+
+- `docs/190_CHECKPOINT_ETAPAS_1_137_1_138_RECEIVED_ALERT_FEEDBACK_POLICY_2026-05-22.md`.
