@@ -1257,3 +1257,14 @@ Papel: seguranca, LGPD e QA.
 - Validacoes aprovadas: `test:trusted-angels-dashboard`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e sem CPU; foi encerrado para nao deixar processo pendurado.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
+
+## QA/Security - 2026-05-21 - Etapas 1.117 e 1.118 settings presentation policy
+
+- Mudanca restrita a regra pura/teste de apresentacao da tela `Configuracoes`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `app/configuracoes.tsx` continua responsavel por login, API, permissao real, storage, camera, microfone, localizacao, navegacao e dialogs reais.
+- A policy apenas retorna status/labels, titulos, termos e textos de ajuda ja existentes.
+- O smoke valida que termos e privacidade seguem exibindo resumo visivel antes do aceite local.
+- Nao introduz log novo, chave, token, sinalizacao tecnica de chamada, path local, coordenada ou conteudo de midia.
+- Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e sem CPU; foi encerrado para nao deixar processo pendurado.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.

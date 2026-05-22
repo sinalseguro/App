@@ -1176,3 +1176,13 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `app/contatos.tsx` segue responsavel pelos efeitos reais: renderizacao de `ResourceTile`, icones, `router.push`, `setPanel`, `setDialog` e `refreshAngels()`.
 - Validacoes aprovadas: `test:trusted-angels-dashboard`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build Android nesta rodada por ser refatoracao pura sem runtime nativo.
+
+# Atualizacao - 2026-05-21 - Etapas 1.117 e 1.118 Configuracoes
+
+- Iniciada a refatoracao segura de `app/configuracoes.tsx` com `src/features/settings/settingsPresentationPolicy.ts`.
+- Etapa 1.117: `resolveSettingsPermissionStatus()`, `formatSettingsCameraModeLabel()` e `formatSettingsTrustedContactStatus()` centralizam status e labels puros.
+- Etapa 1.118: `SettingsPanel`, `settingsPanelTitles`, `settingsLegalConsentItems` e `buildSettingsPanelHelp()` centralizam titulos, termos e ajuda.
+- `app/configuracoes.tsx` segue responsavel pelos efeitos reais: login, API, permissoes, storage, camera, microfone, localizacao e navegacao.
+- Novo gate `npm run test:settings-presentation` cobre a policy e esta integrado ao `npm test`.
+- Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build Android nesta rodada por ser refatoracao pura sem runtime nativo.

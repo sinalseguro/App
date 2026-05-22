@@ -40,10 +40,21 @@ import {
   EmergencyPreferences,
   formatDuration,
   getEmergencyPreferences,
-  LocalVideoCameraMode,
+  type LocalVideoCameraMode,
   saveEmergencyPreferences
 } from "@/features/emergency/emergencyPreferences";
 import { getLocationPermissionReadiness, prepareForegroundLocationPermission } from "@/features/emergency/locationCapture";
+import {
+  buildSettingsPanelHelp,
+  formatSettingsCameraModeLabel,
+  formatSettingsTrustedContactStatus,
+  resolveSettingsPermissionStatus,
+  settingsLegalConsentItems,
+  settingsPanelTitles,
+  type PermissionStatusText,
+  type SettingsConcretePanel,
+  type SettingsPanel
+} from "@/features/settings/settingsPresentationPolicy";
 import {
   clearProtectedAccess,
   hashSecurityCode,
@@ -70,18 +81,6 @@ import {
   signOutNativeGoogleIfAvailable
 } from "@/services/googleSignIn";
 
-type PermissionStatusText = "pendente" | "permitido" | "negado" | "bloqueado";
-type SettingsPanel =
-  | "duracao"
-  | "encerramento"
-  | "localizacao"
-  | "compartilhamento"
-  | "video"
-  | "atualizacao"
-  | "termos"
-  | "login"
-  | null;
-
 type InfoDialog = {
   title: string;
   message: string;
@@ -101,40 +100,6 @@ function isActiveDeviceLoginBlocked(error: unknown) {
   const details = error.details as { code?: unknown };
   return details.code === "active_device_login_blocked";
 }
-
-function toPermissionStatus(status: Location.PermissionStatus): PermissionStatusText {
-  if (status === Location.PermissionStatus.GRANTED) return "permitido";
-  if (status === Location.PermissionStatus.DENIED) return "negado";
-  return "pendente";
-}
-
-function formatCameraModeLabel(cameraMode: LocalVideoCameraMode) {
-  if (cameraMode === "back") return "Traseira";
-  if (cameraMode === "both") return "Duas cameras";
-  return "Frontal";
-}
-
-function formatTrustedContactStatus(status: string) {
-  if (status === "accepted" || status === "ativo" || status === "validado") return "Autorizado";
-  if (status === "pending" || status === "pendente") return "Aguardando aceite";
-  if (status === "revoked" || status === "revogado") return "Revogado";
-  return "Em revisao";
-}
-
-const legalConsentItems = [
-  {
-    title: "Uso emergencial",
-    text: "O SinalSeguro apoia um pedido de ajuda e guarda arquivos locais autorizados. Ele nao substitui 190, 193, 192 nem atendimento publico."
-  },
-  {
-    title: "Privacidade",
-    text: "Localizacao, video e audio so devem ser usados para protecao, orientacao e entrega autorizada dentro do fluxo SinalSeguro."
-  },
-  {
-    title: "Arquivos locais",
-    text: "Os arquivos ficam neste aparelho ate exclusao local ou envio futuro com backend, chaves, auditoria, termos completos e revisao juridica."
-  }
-];
 
 function SecurityCodeInput({
   label,
@@ -219,8 +184,8 @@ export default function SettingsScreen() {
 
   async function refreshReadiness() {
     const readiness = await getLocationPermissionReadiness();
-    setForegroundStatus(toPermissionStatus(readiness.foreground));
-    setBackgroundStatus(toPermissionStatus(readiness.background));
+    setForegroundStatus(resolveSettingsPermissionStatus(readiness.foreground));
+    setBackgroundStatus(resolveSettingsPermissionStatus(readiness.background));
     setServicesEnabled(readiness.servicesEnabled);
   }
 
@@ -615,7 +580,7 @@ export default function SettingsScreen() {
   async function updateCameraMode(cameraMode: LocalVideoCameraMode) {
     if (!preferences) return;
 
-    const cameraLabel = formatCameraModeLabel(cameraMode).toLowerCase();
+    const cameraLabel = formatSettingsCameraModeLabel(cameraMode).toLowerCase();
 
     await updatePreferences(
       {
@@ -716,44 +681,15 @@ export default function SettingsScreen() {
     await Linking.openSettings();
   }
 
-  function showPanelHelp(panel: Exclude<SettingsPanel, null>) {
-    const helpByPanel = {
-      compartilhamento:
-        "Os anjos recebem dados somente quando houver convite aceito, autorizacao da usuaria e contrato de privacidade. A opcao de ligar 190 junto com o SOS vem desativada por padrao.",
-      duracao:
-        "Este tempo controla apenas a gravacao local. O chamado de emergencia continua ativo ate a usuaria encerrar pelo botao SOS.",
-      encerramento:
-        "Quando ativo, o codigo protege o encerramento do SOS e o acesso as areas privadas do app.",
-      localizacao:
-        "Autorizar localizacao antes da emergencia reduz etapas no momento do acionamento. A permissao pode ser revogada no sistema.",
-      login:
-        "Use sua conta para proteger convites, anjos e acesso aos arquivos autorizados.",
-      atualizacao:
-        "A verificacao usa o canal oficial de download do SinalSeguro e informa quando houver uma versao Android mais recente.",
-      termos:
-        "Termos e privacidade registram consentimento para uso emergencial, anjos autorizados e preservacao dos arquivos.",
-      video:
-        "O SOS pode gravar video local no aparelho autorizado. A opcao padrao tenta usar as duas cameras; se o aparelho bloquear, o app preserva a camera disponivel."
-    } satisfies Record<Exclude<SettingsPanel, null>, string>;
-
+  function showPanelHelp(panel: SettingsConcretePanel) {
+    const help = buildSettingsPanelHelp(panel);
     setInfoDialog({
-      title: `Ajuda: ${panelTitle[panel]}`,
-      message: helpByPanel[panel],
+      title: help.title,
+      message: help.message,
       icon: <SettingsIcon size={18} color={theme.colors.primary} />,
       actions: [{ label: "Entendi" }]
     });
   }
-
-  const panelTitle = {
-    compartilhamento: "Compartilhamento",
-    duracao: "Tempo de gravacao",
-    encerramento: "Codigo de seguranca",
-    localizacao: "Localizacao",
-    login: "Login",
-    atualizacao: "Atualizacao",
-    termos: "Termos e privacidade",
-    video: "Video local"
-  } satisfies Record<Exclude<SettingsPanel, null>, string>;
 
   function openMenuRoute(route: EmergencyHomeRoute, panel?: EmergencyHomePanel) {
     setMenuOpen(false);
@@ -828,7 +764,7 @@ export default function SettingsScreen() {
               label="Midia"
               description={
                 preferences?.localVideoCapture.requestOnSos
-                  ? formatCameraModeLabel(preferences.localVideoCapture.cameraMode)
+                  ? formatSettingsCameraModeLabel(preferences.localVideoCapture.cameraMode)
                   : "Desativada"
               }
               onPress={() => setActivePanel("video")}
@@ -856,12 +792,12 @@ export default function SettingsScreen() {
           helpLabel="Explicar recurso"
           onHelpPress={activePanel ? () => showPanelHelp(activePanel) : undefined}
           onClose={() => setActivePanel(null)}
-          title={activePanel ? panelTitle[activePanel] : ""}
+          title={activePanel ? settingsPanelTitles[activePanel] : ""}
           visible={Boolean(activePanel)}
         >
           {activePanel === "termos" ? (
             <View style={styles.dialogStack}>
-              {legalConsentItems.map((item) => (
+              {settingsLegalConsentItems.map((item) => (
                 <View key={item.title} style={styles.consentSummaryItem}>
                   <BookOpenCheck size={18} color={theme.colors.primary} />
                   <View style={styles.consentSummaryText}>
@@ -1089,7 +1025,7 @@ export default function SettingsScreen() {
               <View style={styles.inlineInfo}>
                 <MapPin size={18} color={theme.colors.secure} />
                 <Text style={styles.inlineInfoText}>
-                  Anjo convidado: {trustedContactsMock[0].name}. {formatTrustedContactStatus(trustedContactsMock[0].status)}.
+                  Anjo convidado: {trustedContactsMock[0].name}. {formatSettingsTrustedContactStatus(trustedContactsMock[0].status)}.
                 </Text>
               </View>
               <ButtonIcon

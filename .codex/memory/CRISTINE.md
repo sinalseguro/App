@@ -948,3 +948,12 @@ Proximas acoes atualizadas:
 - Gate focado: `npm run test:trusted-angels-dashboard`.
 - Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
+
+## Memoria viva - 2026-05-21 - presentation policy Configuracoes sem build
+
+- Etapas 1.117 e 1.118 iniciam a refatoracao de `Configuracoes` extraindo status/labels, paineis, termos e ajuda para `settingsPresentationPolicy`.
+- A policy nao executa login, API, permissoes, storage, camera, microfone, localizacao ou navegacao; apenas preserva textos e decisoes de apresentacao.
+- Smoke atualizado para validar `settingsLegalConsentItems` como fonte do resumo visivel de termos antes do aceite local.
+- Gate focado: `npm run test:settings-presentation`.
+- Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.

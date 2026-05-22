@@ -5274,3 +5274,25 @@ Validacoes:
 Checkpoint:
 
 - `docs/179_CHECKPOINT_ETAPAS_1_115_1_116_TRUSTED_ANGELS_DASHBOARD_TILE_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapas 1.117 e 1.118 apresentacao da tela Configuracoes
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- Criada `settingsPresentationPolicy` para iniciar a extracao segura da tela `Configuracoes`.
+- Etapa 1.117: extraidos status de permissao, label de camera local e status visual de contato/anjo.
+- Etapa 1.118: extraidos titulos de paineis, resumo de termos/privacidade e mensagens de ajuda.
+- `app/configuracoes.tsx` continua responsavel por efeitos reais: login, API, permissoes, storage, camera, microfone, localizacao e navegacao.
+- Novo gate `npm run test:settings-presentation` foi adicionado ao `npm test`.
+
+Validacoes:
+
+- `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`: aprovados.
+- `typecheck` nao emitiu erro, mas ficou sem saida e sem CPU; foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser mudanca pura de policy sem runtime nativo.
+
+Checkpoint:
+
+- `docs/180_CHECKPOINT_ETAPAS_1_117_1_118_SETTINGS_PRESENTATION_POLICY_2026-05-21.md`.

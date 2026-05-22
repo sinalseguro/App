@@ -124,6 +124,7 @@ const requiredFiles = [
   "src/features/invitations/trustedRelationshipStore.ts",
   "src/features/profiles/profilePolicy.ts",
   "src/features/profiles/profileStore.ts",
+  "src/features/settings/settingsPresentationPolicy.ts",
   "src/features/evidence/evidencePolicy.ts",
   "src/features/emergency/packagePresentation.ts",
   "src/features/emergency/mediaInterfacePresentation.ts",
@@ -430,6 +431,7 @@ const useLiveAudioCall = await readFile("src/features/live-call/useLiveAudioCall
 const liveWebRtcSession = await readFile("src/services/liveWebRtcSession.ts", "utf8");
 const localFilesScreen = await readFile("app/arquivos.tsx", "utf8");
 const settingsScreen = await readFile("app/configuracoes.tsx", "utf8");
+const settingsPresentationPolicy = await readFile("src/features/settings/settingsPresentationPolicy.ts", "utf8");
 const contactsScreen = await readFile("app/contatos.tsx", "utf8");
 const invitationScreen = await readFile("app/convite.tsx", "utf8");
 const accessGate = await readFile("src/features/access/AccessGate.tsx", "utf8");
@@ -758,10 +760,10 @@ if (
 }
 
 if (
-  !settingsScreen.includes("legalConsentItems") ||
-  !settingsScreen.includes("Uso emergencial") ||
-  !settingsScreen.includes("Privacidade") ||
-  !settingsScreen.includes("Arquivos locais")
+  !settingsScreen.includes("settingsLegalConsentItems") ||
+  !settingsPresentationPolicy.includes("Uso emergencial") ||
+  !settingsPresentationPolicy.includes("Privacidade") ||
+  !settingsPresentationPolicy.includes("Arquivos locais")
 ) {
   throw new Error("Termos e privacidade precisam exibir resumo visivel antes do aceite local.");
 }
