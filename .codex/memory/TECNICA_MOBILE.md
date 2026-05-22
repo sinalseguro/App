@@ -1195,3 +1195,12 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `app/configuracoes.tsx` segue responsavel pelos efeitos reais: renderizacao de `ResourceTile`, icones, `setActivePanel`, login, API, permissoes, storage, camera, microfone, localizacao e navegacao.
 - Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build Android nesta rodada por ser refatoracao pura sem runtime nativo.
+
+# Atualizacao - 2026-05-21 - Etapas 1.121 e 1.122 Configuracoes
+
+- `settingsPresentationPolicy` agora centraliza modelos puros dos paineis de localizacao e codigo de seguranca.
+- Etapa 1.121: `buildSettingsLocationPanelState()` define textos/status dos gates de primeiro plano e segundo plano.
+- Etapa 1.122: `buildSettingsSecurityCodePanelState()` define status e labels publicos de ativar, alterar e desativar codigo.
+- `app/configuracoes.tsx` segue responsavel pelos efeitos reais: permissao real, ajustes do sistema, validacao/hash de codigo, acesso protegido, persistencia, login, API, storage e navegacao.
+- Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build Android nesta rodada por ser refatoracao pura sem runtime nativo.

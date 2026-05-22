@@ -3,7 +3,9 @@ import assert from "node:assert/strict";
 import {
   buildSettingsDashboardTileAction,
   buildSettingsDashboardTileRows,
+  buildSettingsLocationPanelState,
   buildSettingsPanelHelp,
+  buildSettingsSecurityCodePanelState,
   formatSettingsCameraModeLabel,
   formatSettingsTrustedContactStatus,
   resolveSettingsPermissionStatus,
@@ -41,6 +43,61 @@ assert.deepEqual(buildSettingsPanelHelp("compartilhamento"), {
   title: "Ajuda: Compartilhamento",
   message:
     "Os anjos recebem dados somente quando houver convite aceito, autorizacao da usuaria e contrato de privacidade. A opcao de ligar 190 junto com o SOS vem desativada por padrao."
+});
+
+assert.deepEqual(
+  buildSettingsLocationPanelState({
+    backgroundStatus: "permitido",
+    foregroundStatus: "permitido",
+    servicesEnabled: true
+  }),
+  {
+    backgroundGate: {
+      status: "permitido",
+      text: "Mantem a localizacao do chamado enquanto a emergencia estiver ativa, quando essa permissao estiver disponivel.",
+      title: "Segundo plano"
+    },
+    foregroundGate: {
+      status: "permitido",
+      text: "Pode ser pre-autorizada aqui para reduzir atrito no momento do chamado.",
+      title: "Localizacao do chamado"
+    }
+  }
+);
+
+assert.deepEqual(
+  buildSettingsLocationPanelState({
+    backgroundStatus: "negado",
+    foregroundStatus: "negado",
+    servicesEnabled: false
+  }),
+  {
+    backgroundGate: {
+      status: "bloqueado",
+      text: "Mantem a localizacao do chamado enquanto a emergencia estiver ativa, quando essa permissao estiver disponivel.",
+      title: "Segundo plano"
+    },
+    foregroundGate: {
+      status: "negado",
+      text: "O GPS/localizacao do aparelho esta desativado no sistema.",
+      title: "Localizacao do chamado"
+    }
+  }
+);
+
+assert.deepEqual(buildSettingsSecurityCodePanelState(true), {
+  changeActionLabel: "Alterar codigo",
+  disableActionLabel: "Desativar codigo",
+  enableActionLabel: "Ativar codigo",
+  isEnabled: true,
+  statusLabel: "Codigo habilitado"
+});
+assert.deepEqual(buildSettingsSecurityCodePanelState(false), {
+  changeActionLabel: "Alterar codigo",
+  disableActionLabel: "Desativar codigo",
+  enableActionLabel: "Ativar codigo",
+  isEnabled: false,
+  statusLabel: "Sem codigo"
 });
 
 assert.deepEqual(buildSettingsDashboardTileAction("video"), {

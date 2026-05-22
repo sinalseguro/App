@@ -29,6 +29,25 @@ export type SettingsPanelHelp = {
   title: string;
 };
 
+export type SettingsPermissionGateState = {
+  status: PermissionStatusText;
+  text: string;
+  title: string;
+};
+
+export type SettingsLocationPanelState = {
+  backgroundGate: SettingsPermissionGateState;
+  foregroundGate: SettingsPermissionGateState;
+};
+
+export type SettingsSecurityCodePanelState = {
+  changeActionLabel: string;
+  disableActionLabel: string;
+  enableActionLabel: string;
+  isEnabled: boolean;
+  statusLabel: string;
+};
+
 export type SettingsDashboardTileIcon =
   | "angels"
   | "duration"
@@ -128,6 +147,41 @@ export function buildSettingsPanelHelp(panel: SettingsConcretePanel): SettingsPa
   return {
     message: settingsPanelHelpMessages[panel],
     title: `Ajuda: ${settingsPanelTitles[panel]}`
+  };
+}
+
+export function buildSettingsLocationPanelState({
+  backgroundStatus,
+  foregroundStatus,
+  servicesEnabled
+}: {
+  backgroundStatus: PermissionStatusText;
+  foregroundStatus: PermissionStatusText;
+  servicesEnabled: boolean;
+}): SettingsLocationPanelState {
+  return {
+    backgroundGate: {
+      status: backgroundStatus === "permitido" ? "permitido" : "bloqueado",
+      text: "Mantem a localizacao do chamado enquanto a emergencia estiver ativa, quando essa permissao estiver disponivel.",
+      title: "Segundo plano"
+    },
+    foregroundGate: {
+      status: foregroundStatus,
+      text: servicesEnabled
+        ? "Pode ser pre-autorizada aqui para reduzir atrito no momento do chamado."
+        : "O GPS/localizacao do aparelho esta desativado no sistema.",
+      title: "Localizacao do chamado"
+    }
+  };
+}
+
+export function buildSettingsSecurityCodePanelState(securityCodeRequired: boolean): SettingsSecurityCodePanelState {
+  return {
+    changeActionLabel: "Alterar codigo",
+    disableActionLabel: "Desativar codigo",
+    enableActionLabel: "Ativar codigo",
+    isEnabled: securityCodeRequired,
+    statusLabel: securityCodeRequired ? "Codigo habilitado" : "Sem codigo"
   };
 }
 

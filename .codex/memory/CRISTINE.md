@@ -966,3 +966,12 @@ Proximas acoes atualizadas:
 - Gate focado: `npm run test:settings-presentation`.
 - Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.
+
+## Memoria viva - 2026-05-21 - localizacao e codigo Configuracoes sem build
+
+- Etapas 1.121 e 1.122 extraem textos/status de localizacao e codigo de seguranca para `settingsPresentationPolicy`.
+- A policy nao solicita permissao, nao abre ajustes do sistema, nao valida codigo, nao gera hash, nao limpa acesso protegido e nao persiste preferencias; apenas retorna apresentacao pura.
+- Os textos publicos e fluxos de botoes foram preservados; `app/configuracoes.tsx` ainda executa todos os efeitos reais.
+- Gate focado: `npm run test:settings-presentation`.
+- Validacoes aprovadas: teste focado, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- Sem build/instalacao Android porque a fatia e pura e nao altera runtime fisico.

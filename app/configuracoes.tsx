@@ -46,7 +46,9 @@ import {
 import { getLocationPermissionReadiness, prepareForegroundLocationPermission } from "@/features/emergency/locationCapture";
 import {
   buildSettingsDashboardTileRows,
+  buildSettingsLocationPanelState,
   buildSettingsPanelHelp,
+  buildSettingsSecurityCodePanelState,
   formatSettingsCameraModeLabel,
   formatSettingsTrustedContactStatus,
   resolveSettingsPermissionStatus,
@@ -173,6 +175,14 @@ export default function SettingsScreen() {
     preferences,
     updateAvailable: updateState?.status === "available"
   });
+  const settingsLocationPanelState = buildSettingsLocationPanelState({
+    backgroundStatus,
+    foregroundStatus,
+    servicesEnabled
+  });
+  const settingsSecurityCodePanelState = buildSettingsSecurityCodePanelState(
+    Boolean(preferences?.finishSafety.requireCode)
+  );
 
   function showLoginFailureMessage(message: string, title = "Login nao concluido") {
     setLoginError(message);
@@ -924,18 +934,14 @@ export default function SettingsScreen() {
           {activePanel === "localizacao" ? (
             <View style={styles.dialogStack}>
               <PermissionGate
-                title="Localizacao do chamado"
-                text={
-                  servicesEnabled
-                    ? "Pode ser pre-autorizada aqui para reduzir atrito no momento do chamado."
-                    : "O GPS/localizacao do aparelho esta desativado no sistema."
-                }
-                status={foregroundStatus}
+                title={settingsLocationPanelState.foregroundGate.title}
+                text={settingsLocationPanelState.foregroundGate.text}
+                status={settingsLocationPanelState.foregroundGate.status}
               />
               <PermissionGate
-                title="Segundo plano"
-                text="Mantem a localizacao do chamado enquanto a emergencia estiver ativa, quando essa permissao estiver disponivel."
-                status={backgroundStatus === "permitido" ? "permitido" : "bloqueado"}
+                title={settingsLocationPanelState.backgroundGate.title}
+                text={settingsLocationPanelState.backgroundGate.text}
+                status={settingsLocationPanelState.backgroundGate.status}
               />
               <ButtonIcon
                 icon={<LocateFixed size={18} color={theme.colors.primary} />}
@@ -966,13 +972,18 @@ export default function SettingsScreen() {
 
           {activePanel === "encerramento" ? (
             <View style={styles.dialogStack}>
-              <View style={[styles.statusPill, preferences?.finishSafety.requireCode && styles.statusPillActive]}>
-                <LockKeyhole size={18} color={preferences?.finishSafety.requireCode ? theme.colors.textOnDark : theme.colors.primary} />
-                <Text style={[styles.statusPillText, preferences?.finishSafety.requireCode && styles.statusPillTextActive]}>
-                  {preferences?.finishSafety.requireCode ? "Codigo habilitado" : "Sem codigo"}
+              <View style={[styles.statusPill, settingsSecurityCodePanelState.isEnabled && styles.statusPillActive]}>
+                <LockKeyhole
+                  size={18}
+                  color={settingsSecurityCodePanelState.isEnabled ? theme.colors.textOnDark : theme.colors.primary}
+                />
+                <Text
+                  style={[styles.statusPillText, settingsSecurityCodePanelState.isEnabled && styles.statusPillTextActive]}
+                >
+                  {settingsSecurityCodePanelState.statusLabel}
                 </Text>
               </View>
-              {preferences?.finishSafety.requireCode ? (
+              {settingsSecurityCodePanelState.isEnabled ? (
                 <>
                   <SecurityCodeInput label="Codigo atual" onChangeText={setCurrentFinishCode} value={currentFinishCode} />
                   <SecurityCodeInput label="Novo codigo" onChangeText={setNewFinishCode} value={newFinishCode} />
@@ -981,12 +992,12 @@ export default function SettingsScreen() {
                   {securityCodeNotice ? <Text style={styles.noticeText}>{securityCodeNotice}</Text> : null}
                   <ButtonIcon
                     icon={<LockKeyhole size={18} color={theme.colors.primary} />}
-                    label="Alterar codigo"
+                    label={settingsSecurityCodePanelState.changeActionLabel}
                     onPress={changeSecurityCode}
                   />
                   <ButtonIcon
                     icon={<LockKeyhole size={18} color={theme.colors.danger} />}
-                    label="Desativar codigo"
+                    label={settingsSecurityCodePanelState.disableActionLabel}
                     onPress={disableSecurityCode}
                     style={styles.dangerOption}
                   />
@@ -999,7 +1010,7 @@ export default function SettingsScreen() {
                   {securityCodeNotice ? <Text style={styles.noticeText}>{securityCodeNotice}</Text> : null}
                   <ButtonIcon
                     icon={<LockKeyhole size={18} color={theme.colors.primary} />}
-                    label="Ativar codigo"
+                    label={settingsSecurityCodePanelState.enableActionLabel}
                     onPress={saveNewSecurityCode}
                   />
                 </>

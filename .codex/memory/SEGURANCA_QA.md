@@ -1278,3 +1278,13 @@ Papel: seguranca, LGPD e QA.
 - Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
 - `typecheck` nao emitiu erro, mas ficou sem saida e sem CPU; foi encerrado para nao deixar processo pendurado.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.
+
+## QA/Security - 2026-05-21 - Etapas 1.121 e 1.122 settings location/security policy
+
+- Mudanca restrita a regra pura/teste dos paineis de localizacao e codigo de seguranca; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.
+- `app/configuracoes.tsx` continua responsavel por permissao real, abertura dos ajustes do sistema, validacao do codigo, hash, limpeza de acesso protegido, persistencia local e estado React.
+- A policy apenas retorna textos publicos ja existentes, status derivados e labels de botoes sem executar efeitos.
+- Nao introduz log novo, chave, token, hash, codigo, sinalizacao tecnica de chamada, path local, coordenada ou conteudo de midia.
+- Validacoes aprovadas: `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`.
+- `typecheck` nao emitiu erro, mas ficou sem saida e com 0% CPU; foi encerrado para nao deixar processo pendurado.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real ou loop de midia.

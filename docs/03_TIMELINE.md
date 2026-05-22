@@ -5317,3 +5317,24 @@ Validacoes:
 Checkpoint:
 
 - `docs/181_CHECKPOINT_ETAPAS_1_119_1_120_SETTINGS_DASHBOARD_TILE_POLICY_2026-05-21.md`.
+
+## 2026-05-21 - Etapas 1.121 e 1.122 localizacao e codigo em Configuracoes
+
+Status: refatoracao pura implementada e validada.
+
+Executado:
+
+- `settingsPresentationPolicy` passou a centralizar tambem modelos puros dos paineis de localizacao e codigo de seguranca.
+- Etapa 1.121: extraido `buildSettingsLocationPanelState()` com textos/status dos gates de permissao.
+- Etapa 1.122: extraido `buildSettingsSecurityCodePanelState()` com status e labels publicos do codigo de seguranca.
+- `app/configuracoes.tsx` continua responsavel por efeitos reais: pedir permissao, abrir ajustes do sistema, validar/hash de codigo, limpar acesso protegido, persistir preferencias, login/API/storage/camera/microfone/localizacao/navegacao.
+
+Validacoes:
+
+- `test:settings-presentation`, `smoke-test`, `lint`, `private:android:readiness` e `npm test`: aprovados.
+- `typecheck` nao emitiu erro, mas ficou sem saida e com 0% CPU; foi encerrado para nao deixar processo pendurado.
+- Sem build Android por ser mudanca pura de policy sem runtime nativo.
+
+Checkpoint:
+
+- `docs/182_CHECKPOINT_ETAPAS_1_121_1_122_SETTINGS_LOCATION_SECURITY_POLICY_2026-05-21.md`.
