@@ -37,6 +37,7 @@ const requiredFiles = [
   "src/components/consentCardPresentationPolicy.ts",
   "src/components/inviteCardPresentationPolicy.ts",
   "src/components/EmergencyCallButton.tsx",
+  "src/components/emergencyCallButtonPresentationPolicy.ts",
   "src/components/EvidencePlayerCard.tsx",
   "src/components/InviteCard.tsx",
   "src/components/LocalEvidenceRail.tsx",
@@ -44,6 +45,8 @@ const requiredFiles = [
   "src/components/permissionGatePresentationPolicy.ts",
   "src/components/ResourceTile.tsx",
   "src/components/resourceTilePresentationPolicy.ts",
+  "src/components/SafeScreen.tsx",
+  "src/components/safeScreenPresentationPolicy.ts",
   "src/components/StatusBanner.tsx",
   "src/components/statusBannerPresentationPolicy.ts",
   "src/design/tokens.ts",
@@ -495,6 +498,13 @@ const resourceTile = await readFile("src/components/ResourceTile.tsx", "utf8");
 const resourceTilePresentationPolicy = await readFile("src/components/resourceTilePresentationPolicy.ts", "utf8");
 const statusBanner = await readFile("src/components/StatusBanner.tsx", "utf8");
 const statusBannerPresentationPolicy = await readFile("src/components/statusBannerPresentationPolicy.ts", "utf8");
+const safeScreen = await readFile("src/components/SafeScreen.tsx", "utf8");
+const safeScreenPresentationPolicy = await readFile("src/components/safeScreenPresentationPolicy.ts", "utf8");
+const emergencyCallButton = await readFile("src/components/EmergencyCallButton.tsx", "utf8");
+const emergencyCallButtonPresentationPolicy = await readFile(
+  "src/components/emergencyCallButtonPresentationPolicy.ts",
+  "utf8"
+);
 const appLaunchScreen = await readFile("src/components/AppLaunchScreen.tsx", "utf8");
 const appLaunchPresentationPolicy = await readFile("src/components/appLaunchPresentationPolicy.ts", "utf8");
 const brandLockup = await readFile("src/components/BrandLockup.tsx", "utf8");
@@ -1131,6 +1141,39 @@ if (
   )
 ) {
   throw new Error("Componentes genericos de apresentacao precisam manter policies puras sem efeitos reais.");
+}
+
+if (
+  !safeScreen.includes("resolveSafeScreenPresentation({ footer, showBack, showBrand, subtitle })") ||
+  !safeScreen.includes("presentation.shouldRenderBrand") ||
+  !safeScreen.includes("presentation.titleTextFit") ||
+  !safeScreen.includes("presentation.footerTextFit") ||
+  !safeScreenPresentationPolicy.includes("safeScreenTitleTextFit") ||
+  !safeScreenPresentationPolicy.includes("shouldRenderBrand: showBrand") ||
+  !safeScreenPresentationPolicy.includes("showBack") ||
+  !emergencyCallButton.includes("resolveEmergencyCallButtonPresentation(compact)") ||
+  !emergencyCallButton.includes("presentation.buttonIconSize") ||
+  !emergencyCallButton.includes("presentation.dialogMessage") ||
+  !emergencyCallButton.includes('Linking.openURL("tel:190")') ||
+  !emergencyCallButtonPresentationPolicy.includes("buttonLabel: \"Ligar 190\"") ||
+  !emergencyCallButtonPresentationPolicy.includes("dialogTitle: \"Ligar para 190?\"") ||
+  emergencyCallButtonPresentationPolicy.includes("tel:190") ||
+  [safeScreenPresentationPolicy, emergencyCallButtonPresentationPolicy].some(
+    (policySource) =>
+      policySource.includes("router.push") ||
+      policySource.includes("apiClient") ||
+      policySource.includes("Share.share") ||
+      policySource.includes("SecureStore") ||
+      policySource.includes("AsyncStorage") ||
+      policySource.includes("Linking.openURL") ||
+      policySource.includes("theme.colors") ||
+      policySource.includes("lucide-react-native") ||
+      policySource.includes("useEffect") ||
+      policySource.includes("Animated") ||
+      policySource.includes("require(")
+  )
+) {
+  throw new Error("Componentes de tela/chamada publica precisam manter policies puras e telefone 190 fixo no componente.");
 }
 
 if (

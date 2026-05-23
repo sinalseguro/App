@@ -1625,3 +1625,17 @@ Papel: seguranca, LGPD e QA.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.
+
+## Memoria viva - 2026-05-23 - policies visuais de SafeScreen e EmergencyCallButton sem build
+
+- Etapas 1.179 e 1.180 extraem apenas apresentacao/acessibilidade: `safeScreenPresentationPolicy` e `emergencyCallButtonPresentationPolicy`.
+- `SafeScreen` permanece responsavel por container seguro, topo, marca opcional, scroll, filhos, estilos e tema.
+- `EmergencyCallButton` permanece responsavel por estado React, modal, botao, icone Lucide, tema, callbacks e `Linking.openURL("tel:190")`.
+- A policy de chamada publica nao contem `tel:190`; isso preserva o telefone real fixo no componente.
+- O smoke bloqueia API, Share, storage, navegacao, `Linking.openURL`, tema, icones, React, assets e efeitos reais dentro das policies puras.
+- Contratos preservados: labels publicos do 190, mensagem conservadora, tamanhos dos icones, defaults de SafeScreen e text-fit permanecem equivalentes aos anteriores.
+- Nao houve novo segredo, credencial, SDP, ICE, payload P2P, path local, coordenada, telefone novo, nome real novo ou conteudo de midia.
+- Validacoes aprovadas: `test:screen-components-presentation`, `test:presentation-components`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.

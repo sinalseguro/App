@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { BrandLockup } from "@/components/BrandLockup";
 import { AppTopBar } from "@/components/AppTopBar";
 import { theme } from "@/design/theme";
+import { resolveSafeScreenPresentation } from "@/components/safeScreenPresentationPolicy";
 
 type SafeScreenProps = PropsWithChildren<{
   title: string;
@@ -14,17 +15,27 @@ type SafeScreenProps = PropsWithChildren<{
 }>;
 
 export function SafeScreen({ title, subtitle, footer, showBrand = false, showBack = true, children }: SafeScreenProps) {
+  const presentation = resolveSafeScreenPresentation({ footer, showBack, showBrand, subtitle });
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <AppTopBar contextLabel={title} showBack={showBack} />
+      <AppTopBar contextLabel={title} showBack={presentation.showBack} />
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
-          {showBrand ? <BrandLockup /> : null}
-          <Text style={styles.title}>{title}</Text>
-          {subtitle ? <Text style={styles.subtitle}>{subtitle}</Text> : null}
+          {presentation.shouldRenderBrand ? <BrandLockup /> : null}
+          <Text {...presentation.titleTextFit} style={styles.title}>
+            {title}
+          </Text>
+          {presentation.shouldRenderSubtitle ? (
+            <Text {...presentation.subtitleTextFit} style={styles.subtitle}>{subtitle}</Text>
+          ) : null}
         </View>
         <View style={styles.stack}>{children}</View>
-        {footer ? <Text style={styles.footer}>{footer}</Text> : null}
+        {presentation.shouldRenderFooter ? (
+          <Text {...presentation.footerTextFit} style={styles.footer}>
+            {footer}
+          </Text>
+        ) : null}
       </ScrollView>
     </SafeAreaView>
   );

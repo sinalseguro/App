@@ -1526,3 +1526,17 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
 - Proxima acao tecnica: nova microtriagem antes da proxima dupla, evitando runtime real, media, chamada, storage, backend ou publicacao.
+
+# Atualizacao - 2026-05-23 - Etapas 1.179 e 1.180 Policies visuais de SafeScreen e EmergencyCallButton
+
+- `src/components/safeScreenPresentationPolicy.ts` centraliza defaults de exibicao e text-fit de `SafeScreen`.
+- `src/components/emergencyCallButtonPresentationPolicy.ts` centraliza copy publica, labels e tamanhos de icone de `EmergencyCallButton`.
+- `SafeScreen` segue responsavel por `SafeAreaView`, `ScrollView`, `AppTopBar`, `BrandLockup`, JSX, estilos e tema.
+- `EmergencyCallButton` segue responsavel por estado React, `BrandedDialog`, `ButtonIcon`, icone Lucide, tema, callbacks e `Linking.openURL("tel:190")`.
+- A policy de chamada publica nao contem `tel:190`; o telefone real permanece fixo no componente.
+- `PanicButton` foi mantido intacto por recomendacao de risco; SOS visual fica para rodada propria se necessario.
+- O smoke bloqueia regressao arquitetural: sem API, Share, storage, navegacao, `Linking.openURL`, tema, icones, React, assets ou efeitos reais nas policies puras.
+- Validacoes aprovadas: `test:screen-components-presentation`, `test:presentation-components`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+- Proxima acao tecnica: nova microtriagem antes da proxima dupla, evitando `PanicButton`, `AppTopBar`, `BrandedDialog`, gate protegido, cofre, player, SOS/WebRTC, backend ou storage sem plano proprio.

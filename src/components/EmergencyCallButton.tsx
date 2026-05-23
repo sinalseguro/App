@@ -4,6 +4,7 @@ import { PhoneCall } from "lucide-react-native";
 import { BrandedDialog } from "@/components/BrandedDialog";
 import { ButtonIcon } from "@/components/ButtonIcon";
 import { theme } from "@/design/theme";
+import { resolveEmergencyCallButtonPresentation } from "@/components/emergencyCallButtonPresentationPolicy";
 
 type EmergencyCallButtonProps = {
   compact?: boolean;
@@ -12,6 +13,7 @@ type EmergencyCallButtonProps = {
 
 export function EmergencyCallButton({ compact = false, style }: EmergencyCallButtonProps) {
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const presentation = resolveEmergencyCallButtonPresentation(compact);
 
   function confirmCall() {
     setConfirmOpen(true);
@@ -20,25 +22,25 @@ export function EmergencyCallButton({ compact = false, style }: EmergencyCallBut
   return (
     <>
       <ButtonIcon
-        icon={<PhoneCall size={compact ? 18 : 20} color={theme.colors.primary} />}
-        label="Ligar 190"
+        icon={<PhoneCall size={presentation.buttonIconSize} color={theme.colors.primary} />}
+        label={presentation.buttonLabel}
         onPress={confirmCall}
         style={style}
       />
       <BrandedDialog
         actions={[
-          { label: "Cancelar", tone: "muted" },
+          { label: presentation.cancelLabel, tone: "muted" },
           {
-            label: "Ligar",
+            label: presentation.confirmLabel,
             onPress: () => {
               void Linking.openURL("tel:190");
             }
           }
         ]}
-        icon={<PhoneCall size={18} color={theme.colors.primary} />}
-        message="O 190 e o canal oficial em risco imediato. O SinalSeguro nao substitui o atendimento publico de emergencia."
+        icon={<PhoneCall size={presentation.dialogIconSize} color={theme.colors.primary} />}
+        message={presentation.dialogMessage}
         onClose={() => setConfirmOpen(false)}
-        title="Ligar para 190?"
+        title={presentation.dialogTitle}
         visible={confirmOpen}
       />
     </>

@@ -5953,3 +5953,27 @@ Validacoes:
 Checkpoint:
 
 - `docs/210_CHECKPOINT_ETAPAS_1_177_1_178_BRAND_BACKGROUND_INVITE_CARD_POLICY_2026-05-22.md`.
+
+## 2026-05-23 - Etapas 1.179 e 1.180 policies visuais de SafeScreen e EmergencyCallButton
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.179: extraida `src/components/safeScreenPresentationPolicy.ts` para concentrar defaults de exibicao e ajuste de texto de `SafeScreen`.
+- Etapa 1.180: extraida `src/components/emergencyCallButtonPresentationPolicy.ts` para concentrar copy publica, labels do modal e tamanhos de icone do `EmergencyCallButton`.
+- `SafeScreen` continua responsavel por `SafeAreaView`, `ScrollView`, `AppTopBar`, `BrandLockup`, JSX, estilos e tema.
+- `EmergencyCallButton` continua responsavel por `useState`, `BrandedDialog`, `ButtonIcon`, icone Lucide, tema, callbacks, JSX e `Linking.openURL("tel:190")`.
+- A policy de chamada publica nao contem `tel:190`; o telefone real permanece fixo no componente.
+- `PanicButton` foi mantido intacto apos revisao Cristine/Eliane/Lina recomendar evitar SOS visual nesta rodada.
+- `scripts/smoke-test.mjs` recebeu guardrails para impedir efeitos reais nas policies e preservar o telefone 190 no componente.
+
+Validacoes:
+
+- `test:screen-components-presentation`, `test:presentation-components`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`: aprovados.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/211_CHECKPOINT_ETAPAS_1_179_1_180_SCREEN_CALL_PRESENTATION_POLICY_2026-05-23.md`.

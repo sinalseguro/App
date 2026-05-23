@@ -1277,3 +1277,13 @@ Proximas acoes atualizadas:
 - Sem alteracao de SOS, WebRTC, cofre, player, convites reais, permissao real, login, backend, portal, publicacao, criptografia, chaves ou armazenamento local.
 - Validacoes aprovadas: `test:brand-components-presentation`, `test:status-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+
+## QA/Security - 2026-05-23 - Etapas 1.179 e 1.180 screen/call presentation policies
+
+- Etapas 1.179 e 1.180 extraem apenas apresentacao/acessibilidade: `safeScreenPresentationPolicy` e `emergencyCallButtonPresentationPolicy`.
+- `SafeScreen` continua renderizando container seguro, topo, marca opcional, scroll, filhos, estilos e tema; a policy expoe defaults e ajuste de texto.
+- `EmergencyCallButton` continua renderizando modal, botao, icone, tema, estado React, callbacks e a ligacao real `Linking.openURL("tel:190")`.
+- A policy de chamada publica nao contem `tel:190`; isso preserva o telefone real fixo no componente.
+- `PanicButton` ficou intacto nesta rodada por recomendacao de risco, evitando tocar SOS visual sem validacao fisica dedicada.
+- Validacoes aprovadas: `test:screen-components-presentation`, `test:presentation-components`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
