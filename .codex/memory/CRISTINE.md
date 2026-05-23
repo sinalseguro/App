@@ -1287,3 +1287,13 @@ Proximas acoes atualizadas:
 - `PanicButton` ficou intacto nesta rodada por recomendacao de risco, evitando tocar SOS visual sem validacao fisica dedicada.
 - Validacoes aprovadas: `test:screen-components-presentation`, `test:presentation-components`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+
+## QA/Security - 2026-05-23 - Etapas 1.181 e 1.182 emergency home shell policies
+
+- Etapas 1.181 e 1.182 extraem apenas apresentacao/acessibilidade: `emergencyTopBarPresentationPolicy` e `emergencySettingsDrawerPresentationPolicy`.
+- `EmergencyTopBar` continua renderizando `AppTopBar` e recebendo `menuOpen`/`onToggleMenu`; a policy expoe somente labels e configuracao visual do menu.
+- `EmergencySettingsDrawer` continua renderizando icones Lucide, tema, callbacks e destinos reais; a policy expoe somente ordem, labels, chaves de icone, tamanho, role e text-fit.
+- A policy do drawer nao contem rotas nem paineis; isso evita transformar uma fatia visual em policy comportamental de navegacao.
+- `PanicButton`, `AppTopBar`, `BrandedDialog`, gate protegido, cofre, player, SOS/WebRTC, backend e storage ficaram fora do escopo.
+- Validacoes aprovadas: `test:emergency-home-shell-presentation`, `test:action-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.

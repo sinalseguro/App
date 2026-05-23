@@ -5977,3 +5977,26 @@ Validacoes:
 Checkpoint:
 
 - `docs/211_CHECKPOINT_ETAPAS_1_179_1_180_SCREEN_CALL_PRESENTATION_POLICY_2026-05-23.md`.
+
+## 2026-05-23 - Etapas 1.181 e 1.182 policies visuais da Home
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.181: extraida `src/features/emergency-home/emergencyTopBarPresentationPolicy.ts` para concentrar label de contexto, icone de menu e exibicao de menu do `EmergencyTopBar`.
+- Etapa 1.182: extraida `src/features/emergency-home/emergencySettingsDrawerPresentationPolicy.ts` para concentrar ordem, labels, chaves simbolicas de icone, tamanho de icone, role e ajuste de texto do drawer.
+- `EmergencyTopBar` continua responsavel por `AppTopBar`, `menuOpen`, `onToggleMenu`, JSX e props reais.
+- `EmergencySettingsDrawer` continua responsavel por `Pressable`, `Text`, `View`, `StyleSheet`, tema, icones Lucide, `onNavigate`, rotas e paineis reais.
+- A policy do drawer nao contem rotas nem paineis; os destinos reais permanecem no componente por recomendacao Cristine/Eliane/Lina.
+- `scripts/smoke-test.mjs` recebeu guardrails para preservar `home-settings-toggle`, `Cofre`, `Player`, destinos de cofre/player no componente e ausencia de jargao tecnico no drawer.
+
+Validacoes:
+
+- `test:emergency-home-shell-presentation`, `test:action-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`: aprovados.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/212_CHECKPOINT_ETAPAS_1_181_1_182_EMERGENCY_HOME_SHELL_POLICY_2026-05-23.md`.

@@ -1639,3 +1639,17 @@ Papel: seguranca, LGPD e QA.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.
+
+## Memoria viva - 2026-05-23 - policies visuais da Home sem build
+
+- Etapas 1.181 e 1.182 extraem apenas apresentacao/acessibilidade: `emergencyTopBarPresentationPolicy` e `emergencySettingsDrawerPresentationPolicy`.
+- `EmergencyTopBar` permanece responsavel por `AppTopBar`, `menuOpen`, `onToggleMenu`, `onMenuPress`, JSX e props reais.
+- `EmergencySettingsDrawer` permanece responsavel por `Pressable`, `Text`, `View`, `StyleSheet`, tema, icones Lucide, callbacks, `onNavigate`, rotas e paineis reais.
+- A policy do drawer nao contem rotas nem paineis; os destinos de cofre/player e demais telas ficam no componente por risco moderado.
+- O smoke bloqueia jargao tecnico no drawer e bloqueia API, Share, storage, navegacao real, `Linking.openURL`, tema, icones, React Native e efeitos reais dentro das policies puras.
+- Contratos preservados: `home-settings-toggle`, labels `Você pediu ajuda`, `Modo discreto`, `Cofre`, `Player`, ordem do drawer e destinos reais de cofre/player.
+- Nao houve novo segredo, credencial, SDP, ICE, payload P2P, path local, coordenada, telefone novo, nome real novo ou conteudo de midia.
+- Validacoes aprovadas: `test:emergency-home-shell-presentation`, `test:action-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+- Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.

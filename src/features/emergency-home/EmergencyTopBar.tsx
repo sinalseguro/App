@@ -1,4 +1,5 @@
 import { AppTopBar } from "@/components/AppTopBar";
+import { resolveEmergencyTopBarPresentation } from "./emergencyTopBarPresentationPolicy";
 
 type EmergencyTopBarProps = {
   active: boolean;
@@ -7,13 +8,15 @@ type EmergencyTopBarProps = {
 };
 
 export function EmergencyTopBar({ active, menuOpen, onToggleMenu }: EmergencyTopBarProps) {
+  const presentation = resolveEmergencyTopBarPresentation(active);
+
   return (
     <AppTopBar
-      contextLabel={active ? "Você pediu ajuda" : "Modo discreto"}
-      menuIcon="settings"
+      contextLabel={presentation.contextLabel}
+      menuIcon={presentation.menuIcon}
       menuOpen={menuOpen}
       onMenuPress={onToggleMenu}
-      showMenu
+      showMenu={presentation.showMenu}
     />
   );
 }

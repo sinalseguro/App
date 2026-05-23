@@ -1540,3 +1540,16 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
 - Proxima acao tecnica: nova microtriagem antes da proxima dupla, evitando `PanicButton`, `AppTopBar`, `BrandedDialog`, gate protegido, cofre, player, SOS/WebRTC, backend ou storage sem plano proprio.
+
+# Atualizacao - 2026-05-23 - Etapas 1.181 e 1.182 Policies visuais da Home
+
+- `src/features/emergency-home/emergencyTopBarPresentationPolicy.ts` centraliza labels de contexto e configuracao visual do menu do `EmergencyTopBar`.
+- `src/features/emergency-home/emergencySettingsDrawerPresentationPolicy.ts` centraliza ordem, labels, chaves simbolicas de icone, tamanho de icone, role e text-fit do drawer da Home.
+- `EmergencyTopBar` segue responsavel por `AppTopBar`, `menuOpen`, `onToggleMenu`, JSX e props reais.
+- `EmergencySettingsDrawer` segue responsavel por `Pressable`, `Text`, `View`, `StyleSheet`, tema, icones Lucide, callbacks, `onNavigate`, rotas e paineis reais.
+- A policy do drawer nao contem rotas nem paineis; destinos de cofre/player e demais telas permanecem no componente.
+- O smoke bloqueia regressao arquitetural: sem API, Share, storage, navegacao real, `Linking.openURL`, tema, icones, React Native ou efeitos reais nas policies puras.
+- Validacoes aprovadas: `test:emergency-home-shell-presentation`, `test:action-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
+- `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
+- Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+- Proxima acao tecnica: nova microtriagem antes da proxima dupla, evitando `PanicButton`, `AppTopBar`, `BrandedDialog`, gate protegido, cofre, player, SOS/WebRTC, backend ou storage sem plano proprio.

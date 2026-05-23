@@ -55,6 +55,8 @@ const requiredFiles = [
   "src/features/emergency-home/EmergencyCallDock.tsx",
   "src/features/emergency-home/emergencyCallDockPresentationPolicy.ts",
   "src/features/emergency-home/EmergencyCallTarget.ts",
+  "src/features/emergency-home/emergencySettingsDrawerPresentationPolicy.ts",
+  "src/features/emergency-home/emergencyTopBarPresentationPolicy.ts",
   "src/features/emergency-home/emergencyCallHeroPolicy.ts",
   "src/features/emergency-home/EmergencySettingsDrawer.tsx",
   "src/features/emergency-home/EmergencyTopBar.tsx",
@@ -1585,20 +1587,58 @@ if (
 
 const emergencyTopBar = await readFile("src/features/emergency-home/EmergencyTopBar.tsx", "utf8");
 const emergencyDrawer = await readFile("src/features/emergency-home/EmergencySettingsDrawer.tsx", "utf8");
+const emergencyDrawerPresentationPolicy = await readFile(
+  "src/features/emergency-home/emergencySettingsDrawerPresentationPolicy.ts",
+  "utf8"
+);
+const emergencyTopBarPresentationPolicy = await readFile(
+  "src/features/emergency-home/emergencyTopBarPresentationPolicy.ts",
+  "utf8"
+);
 const emergencyCallTarget = await readFile("src/features/emergency-home/EmergencyCallTarget.ts", "utf8");
 const appTopBar = await readFile("src/components/AppTopBar.tsx", "utf8");
 
 if (
   !appTopBar.includes("home-settings-toggle") ||
-  !emergencyDrawer.includes('label="Cofre"') ||
-  !emergencyDrawer.includes('label="Player"') ||
-  !emergencyDrawer.includes('onNavigate("/arquivos", "cofre")') ||
-  !emergencyDrawer.includes('onNavigate("/arquivos", "player")')
+  !emergencyTopBar.includes("resolveEmergencyTopBarPresentation(active)") ||
+  !emergencyTopBar.includes("menuOpen={menuOpen}") ||
+  !emergencyTopBar.includes("onMenuPress={onToggleMenu}") ||
+  !emergencyTopBarPresentationPolicy.includes('contextLabel: active ? "Você pediu ajuda" : "Modo discreto"') ||
+  !emergencyTopBarPresentationPolicy.includes('menuIcon: "settings"') ||
+  !emergencyDrawer.includes("resolveEmergencySettingsDrawerPresentation()") ||
+  !emergencyDrawer.includes("presentation.actions.map") ||
+  !emergencyDrawer.includes("drawerActionTargets") ||
+  !emergencyDrawer.includes('vault: { panel: "cofre", route: "/arquivos" }') ||
+  !emergencyDrawer.includes('player: { panel: "player", route: "/arquivos" }') ||
+  !emergencyDrawer.includes("onNavigate(target.route, target.panel)") ||
+  !emergencyDrawerPresentationPolicy.includes('label: "Cofre"') ||
+  !emergencyDrawerPresentationPolicy.includes('label: "Player"') ||
+  !emergencyDrawerPresentationPolicy.includes('drawerTestID: "home-settings-drawer"') ||
+  emergencyDrawerPresentationPolicy.includes('route: "/') ||
+  emergencyDrawerPresentationPolicy.includes('panel: "')
 ) {
   throw new Error("Home precisa manter engrenagem retratil com acesso separado a cofre, player, anjos e configuracoes.");
 }
 
-if (emergencyDrawer.includes("backend/P2P")) {
+if (
+  emergencyDrawer.includes("backend/P2P") ||
+  emergencyDrawerPresentationPolicy.includes("backend/P2P") ||
+  [emergencyTopBarPresentationPolicy, emergencyDrawerPresentationPolicy].some(
+    (policySource) =>
+      policySource.includes("from \"react") ||
+      policySource.includes("from \"react-native") ||
+      policySource.includes("lucide-react-native") ||
+      policySource.includes("theme.colors") ||
+      policySource.includes("router.push") ||
+      policySource.includes("apiClient") ||
+      policySource.includes("Share.share") ||
+      policySource.includes("SecureStore") ||
+      policySource.includes("AsyncStorage") ||
+      policySource.includes("Linking.openURL") ||
+      policySource.includes("useEffect") ||
+      policySource.includes("Animated")
+  )
+) {
   throw new Error("Drawer da Home nao pode expor jargao tecnico backend/P2P para a usuaria.");
 }
 

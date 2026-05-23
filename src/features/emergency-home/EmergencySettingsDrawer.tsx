@@ -2,23 +2,69 @@ import { ReactNode } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { Archive, BellRing, CirclePlay, Settings, UserRound, Users } from "lucide-react-native";
 import { theme } from "@/design/theme";
-import { EmergencyHomePanel, EmergencyHomeRoute } from "./routes";
+import type { EmergencyHomePanel, EmergencyHomeRoute } from "./routes";
+import type {
+  EmergencySettingsDrawerAction,
+  EmergencySettingsDrawerActionKey,
+  EmergencySettingsDrawerIconKey
+} from "./emergencySettingsDrawerPresentationPolicy";
+import {
+  resolveEmergencySettingsDrawerPresentation
+} from "./emergencySettingsDrawerPresentationPolicy";
 
 type EmergencySettingsDrawerProps = {
   onNavigate: (route: EmergencyHomeRoute, panel?: EmergencyHomePanel) => void;
 };
 
+type DrawerActionTarget = {
+  panel?: EmergencyHomePanel;
+  route: EmergencyHomeRoute;
+};
+
+const drawerActionTargets: Record<EmergencySettingsDrawerActionKey, DrawerActionTarget> = {
+  alerts: { route: "/alerta" },
+  angels: { route: "/contatos" },
+  player: { panel: "player", route: "/arquivos" },
+  profiles: { route: "/perfis" },
+  settings: { route: "/configuracoes" },
+  vault: { panel: "cofre", route: "/arquivos" }
+};
+
 type MenuActionProps = {
-  icon: ReactNode;
-  label: string;
+  accessibilityRole: "button";
+  action: EmergencySettingsDrawerAction;
+  iconSize: number;
+  labelTextFit: {
+    maxFontSizeMultiplier: number;
+    numberOfLines: number;
+  };
   onPress: () => void;
 };
 
-function MenuAction({ icon, label, onPress }: MenuActionProps) {
+function renderDrawerIcon(iconKey: EmergencySettingsDrawerIconKey, size: number): ReactNode {
+  switch (iconKey) {
+    case "alert":
+      return <BellRing size={size} color={theme.colors.primary} />;
+    case "angels":
+      return <Users size={size} color={theme.colors.primary} />;
+    case "archive":
+      return <Archive size={size} color={theme.colors.primary} />;
+    case "player":
+      return <CirclePlay size={size} color={theme.colors.primary} />;
+    case "profile":
+      return <UserRound size={size} color={theme.colors.primary} />;
+    case "settings":
+      return <Settings size={size} color={theme.colors.primary} />;
+  }
+}
+
+function MenuAction({ accessibilityRole, action, iconSize, labelTextFit, onPress }: MenuActionProps) {
   return (
-    <Pressable accessibilityRole="button" onPress={onPress} style={styles.menuAction}>
-      <View style={styles.menuIcon}>{icon}</View>
-      <Text style={styles.menuActionLabel}>{label}</Text>
+    <Pressable accessibilityRole={accessibilityRole} onPress={onPress} style={styles.menuAction}>
+      <View style={styles.menuIcon}>{renderDrawerIcon(action.iconKey, iconSize)}</View>
+      <Text {...labelTextFit} style={styles.menuActionLabel}>
+        {action.label}
+      </Text>
     </Pressable>
   );
 }
@@ -26,39 +72,24 @@ function MenuAction({ icon, label, onPress }: MenuActionProps) {
 export function EmergencySettingsDrawer({
   onNavigate
 }: EmergencySettingsDrawerProps) {
+  const presentation = resolveEmergencySettingsDrawerPresentation();
+
   return (
-    <View style={styles.drawer} testID="home-settings-drawer">
+    <View style={styles.drawer} testID={presentation.drawerTestID}>
       <View style={styles.menuActions}>
-        <MenuAction
-          icon={<Archive size={18} color={theme.colors.primary} />}
-          label="Cofre"
-          onPress={() => onNavigate("/arquivos", "cofre")}
-        />
-        <MenuAction
-          icon={<Users size={18} color={theme.colors.primary} />}
-          label="Anjos"
-          onPress={() => onNavigate("/contatos")}
-        />
-        <MenuAction
-          icon={<BellRing size={18} color={theme.colors.primary} />}
-          label="Alertas"
-          onPress={() => onNavigate("/alerta")}
-        />
-        <MenuAction
-          icon={<UserRound size={18} color={theme.colors.primary} />}
-          label="Perfis"
-          onPress={() => onNavigate("/perfis")}
-        />
-        <MenuAction
-          icon={<CirclePlay size={18} color={theme.colors.primary} />}
-          label="Player"
-          onPress={() => onNavigate("/arquivos", "player")}
-        />
-        <MenuAction
-          icon={<Settings size={18} color={theme.colors.primary} />}
-          label="Configuracoes"
-          onPress={() => onNavigate("/configuracoes")}
-        />
+        {presentation.actions.map((action) => (
+          <MenuAction
+            accessibilityRole={presentation.actionAccessibilityRole}
+            action={action}
+            iconSize={presentation.iconSize}
+            key={action.key}
+            labelTextFit={presentation.labelTextFit}
+            onPress={() => {
+              const target = drawerActionTargets[action.key];
+              onNavigate(target.route, target.panel);
+            }}
+          />
+        ))}
       </View>
     </View>
   );
