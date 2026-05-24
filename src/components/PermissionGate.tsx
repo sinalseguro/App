@@ -13,9 +13,33 @@ export function PermissionGate({ title, text, status }: PermissionGateProps) {
 
   return (
     <View style={styles.card}>
-      <Text style={styles.status}>{presentation.statusLabel}</Text>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.text}>{text}</Text>
+      <Text
+        adjustsFontSizeToFit={presentation.statusTextFit.adjustsFontSizeToFit}
+        maxFontSizeMultiplier={presentation.statusTextFit.maxFontSizeMultiplier}
+        minimumFontScale={presentation.statusTextFit.minimumFontScale}
+        numberOfLines={presentation.statusTextFit.numberOfLines}
+        style={styles.status}
+      >
+        {presentation.statusLabel}
+      </Text>
+      <Text
+        adjustsFontSizeToFit={presentation.titleTextFit.adjustsFontSizeToFit}
+        maxFontSizeMultiplier={presentation.titleTextFit.maxFontSizeMultiplier}
+        minimumFontScale={presentation.titleTextFit.minimumFontScale}
+        numberOfLines={presentation.titleTextFit.numberOfLines}
+        style={styles.title}
+      >
+        {title}
+      </Text>
+      <Text
+        adjustsFontSizeToFit={presentation.textTextFit.adjustsFontSizeToFit}
+        maxFontSizeMultiplier={presentation.textTextFit.maxFontSizeMultiplier}
+        minimumFontScale={presentation.textTextFit.minimumFontScale}
+        numberOfLines={presentation.textTextFit.numberOfLines}
+        style={styles.text}
+      >
+        {text}
+      </Text>
     </View>
   );
 }

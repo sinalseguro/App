@@ -3,13 +3,16 @@ import { readFile } from "node:fs/promises";
 
 import {
   buildInviteCardPresentation,
+  inviteCardDescriptionTextFit,
   inviteCardDetailTextFit,
   inviteCardIconSize,
   inviteCardNameTextFit,
+  inviteCardStatusTextFit,
   inviteCardStatusPresentation
 } from "../src/components/inviteCardPresentationPolicy";
 import {
   buildPermissionGatePresentation,
+  permissionGateBodyTextFit,
   permissionGateStatusLabels
 } from "../src/components/permissionGatePresentationPolicy";
 
@@ -23,6 +26,13 @@ assert.equal(buildPermissionGatePresentation("pendente").statusLabel, "pendente"
 assert.equal(buildPermissionGatePresentation("permitido").statusLabel, "permitido");
 assert.equal(buildPermissionGatePresentation("negado").statusLabel, "negado");
 assert.equal(buildPermissionGatePresentation("bloqueado").statusLabel, "bloqueado");
+assert.deepEqual(buildPermissionGatePresentation("permitido").textTextFit, permissionGateBodyTextFit);
+assert.deepEqual(buildPermissionGatePresentation("pendente").statusTextFit, {
+  adjustsFontSizeToFit: true,
+  maxFontSizeMultiplier: 1.2,
+  minimumFontScale: 0.84,
+  numberOfLines: 1
+});
 
 assert.deepEqual(inviteCardStatusPresentation, {
   aceito: {
@@ -60,13 +70,31 @@ assert.equal(buildInviteCardPresentation("aceito").iconSize, 20);
 assert.equal(buildInviteCardPresentation("aceito").pressableAccessibilityRole, "button");
 assert.deepEqual(buildInviteCardPresentation("aceito").nameTextFit, inviteCardNameTextFit);
 assert.deepEqual(buildInviteCardPresentation("aceito").detailTextFit, inviteCardDetailTextFit);
+assert.deepEqual(buildInviteCardPresentation("aceito").statusTextFit, inviteCardStatusTextFit);
+assert.deepEqual(buildInviteCardPresentation("aceito").descriptionTextFit, inviteCardDescriptionTextFit);
 assert.deepEqual(inviteCardNameTextFit, {
+  adjustsFontSizeToFit: true,
   maxFontSizeMultiplier: 1.2,
+  minimumFontScale: 0.82,
   numberOfLines: 1
 });
 assert.deepEqual(inviteCardDetailTextFit, {
+  adjustsFontSizeToFit: true,
   maxFontSizeMultiplier: 1.2,
+  minimumFontScale: 0.84,
   numberOfLines: 1
+});
+assert.deepEqual(inviteCardStatusTextFit, {
+  adjustsFontSizeToFit: true,
+  maxFontSizeMultiplier: 1.2,
+  minimumFontScale: 0.84,
+  numberOfLines: 1
+});
+assert.deepEqual(inviteCardDescriptionTextFit, {
+  adjustsFontSizeToFit: true,
+  maxFontSizeMultiplier: 1.2,
+  minimumFontScale: 0.86,
+  numberOfLines: 3
 });
 assert.equal(inviteCardIconSize, 20);
 
@@ -80,10 +108,15 @@ async function main() {
   assert.ok(inviteCardSource.includes("defaultIcon(presentation.iconKey, color, presentation.iconSize)"));
   assert.ok(inviteCardSource.includes("presentation.nameTextFit"));
   assert.ok(inviteCardSource.includes("presentation.detailTextFit"));
+  assert.ok(inviteCardSource.includes("presentation.statusTextFit"));
+  assert.ok(inviteCardSource.includes("presentation.descriptionTextFit"));
   assert.ok(inviteCardSource.includes("presentation.pressableAccessibilityRole"));
   assert.ok(!inviteCardSource.includes("statusLabel"));
   assert.ok(permissionGateSource.includes("buildPermissionGatePresentation(status)"));
   assert.ok(permissionGateSource.includes("presentation.statusLabel"));
+  assert.ok(permissionGateSource.includes("presentation.statusTextFit"));
+  assert.ok(permissionGateSource.includes("presentation.titleTextFit"));
+  assert.ok(permissionGateSource.includes("presentation.textTextFit"));
 
   for (const source of [inviteCardPolicySource, permissionGatePolicySource]) {
     assert.ok(!/from "react|from "react-native|lucide-react-native|theme\.colors|router\.push|apiClient|Share\.share|SecureStore|AsyncStorage|useEffect/.test(source));

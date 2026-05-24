@@ -1553,6 +1553,16 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Validacoes focadas aprovadas: `test:how-it-works-presentation`, `test:local-files-presentation`, `test:onboarding-presentation`, `test:presentation-components`, `test:brand-components-presentation`, `smoke-test`, `typecheck` e `lint`.
 - Sem build/instalacao Android porque o bloco e presentational e nao altera runtime fisico.
 
+# Atualizacao - 2026-05-24 - Etapas 1.189 e 1.190 PermissionGate e InviteCard text-fit
+
+- `src/components/permissionGatePresentationPolicy.ts` centraliza text-fit de status, titulo e corpo do `PermissionGate`.
+- `src/components/inviteCardPresentationPolicy.ts` centraliza text-fit de nome, detalhe, status e descricao do `InviteCard`.
+- `PermissionGate` segue sem permissao real; recebe dados por props.
+- `InviteCard` segue com icones, tema, `Pressable` e callback opcional no componente.
+- Nao houve mudanca em convites reais, backend, Share, storage, rotas, permissoes reais, SOS/WebRTC, cofre/player runtime ou publicacao.
+- Validacoes focadas aprovadas: `test:status-components-presentation`, `smoke-test`, `typecheck` e `lint`.
+- Sem build/instalacao Android porque a rodada e presentational e nao altera runtime fisico.
+
 # Atualizacao - 2026-05-23 - Etapas 1.181 e 1.182 Policies visuais da Home
 
 - `src/features/emergency-home/emergencyTopBarPresentationPolicy.ts` centraliza labels de contexto e configuracao visual do menu do `EmergencyTopBar`.

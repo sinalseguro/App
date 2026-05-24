@@ -6062,3 +6062,24 @@ Validacoes:
 Checkpoint:
 
 - `docs/215_CHECKPOINT_ETAPAS_1_187_1_188_BRAND_LAUNCH_FINE_POLICY_2026-05-24.md`.
+
+## 2026-05-24 - Etapas 1.189 e 1.190 text-fit de PermissionGate e InviteCard
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.189: `src/components/permissionGatePresentationPolicy.ts` agora centraliza text-fit de status, titulo e corpo do `PermissionGate`.
+- Etapa 1.190: `src/components/inviteCardPresentationPolicy.ts` agora centraliza text-fit de nome, detalhe, status e descricao do `InviteCard`.
+- `PermissionGate` continua recebendo titulo/texto/status por props e nao executa permissao real.
+- `InviteCard` continua responsavel por icones Lucide, `Pressable`, callback opcional e cor por tom via tema.
+- Convites reais, aceite, revogacao, backend, Share, storage, rotas, perfis, contatos e permissoes reais ficaram fora do escopo.
+
+Validacoes:
+
+- `test:status-components-presentation`, `smoke-test`, `typecheck` e `lint`: aprovados.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/216_CHECKPOINT_ETAPAS_1_189_1_190_PERMISSION_INVITE_TEXTFIT_POLICY_2026-05-24.md`.

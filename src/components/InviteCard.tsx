@@ -48,9 +48,9 @@ export function InviteCard({ detail, icon, name, onPress, status, description }:
             {detail ? <Text {...presentation.detailTextFit} style={styles.detail}>{detail}</Text> : null}
           </View>
         </View>
-        <Text style={[styles.status, { color }]}>{presentation.label}</Text>
+        <Text {...presentation.statusTextFit} style={[styles.status, { color }]}>{presentation.label}</Text>
       </View>
-      <Text style={styles.description}>{description}</Text>
+      <Text {...presentation.descriptionTextFit} style={styles.description}>{description}</Text>
     </>
   );
 

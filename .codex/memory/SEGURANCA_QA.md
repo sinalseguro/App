@@ -1403,6 +1403,16 @@ Papel: seguranca, LGPD e QA.
 - Validacoes focadas aprovadas: `test:how-it-works-presentation`, `test:local-files-presentation`, `test:onboarding-presentation`, `test:presentation-components`, `test:brand-components-presentation`, `smoke-test`, `typecheck` e `lint`.
 - Sem build/instalacao Android porque as fatias sao presentational e nao alteram runtime fisico.
 
+## Memoria viva - 2026-05-24 - Etapas 1.189 e 1.190 PermissionGate/InviteCard sem build
+
+- Etapas 1.189 e 1.190 ampliam apenas text-fit visual de `PermissionGate` e `InviteCard`.
+- `PermissionGate` continua renderizando titulo, texto e status recebidos por props; permissoes reais seguem fora do componente.
+- `InviteCard` continua responsavel por icones Lucide, `Pressable`, callback opcional e cor por tom via tema; convites reais e Share/backend seguem fora do componente.
+- Policies alteradas nao receberam API, Share, storage, rotas reais, backend, permissoes reais, operacoes de midia ou efeitos de chamada.
+- `PanicButton`, `AppTopBar`, `BrandedDialog`, gate protegido, cofre/player runtime, SOS/WebRTC, backend e storage ficaram fora do escopo.
+- Validacoes focadas aprovadas: `test:status-components-presentation`, `smoke-test`, `typecheck` e `lint`.
+- Sem build/instalacao Android porque as fatias sao presentational e nao alteram runtime fisico.
+
 ## QA/Security - 2026-05-22 - Etapas 1.149 e 1.150 trusted angels relationship/invitation panels
 
 - Mudanca restrita a componentes locais de apresentacao da tela `Anjos de confianca`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.

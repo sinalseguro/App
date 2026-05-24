@@ -1299,6 +1299,15 @@ Proximas acoes atualizadas:
 - Sem build/instalacao Android porque o bloco e presentational e nao altera runtime fisico.
 - Proxima recomendacao: rodar validacao ampla (`npm test`, readiness privado e `git diff --check`) antes de commit/push; depois fazer nova microtriagem antes de tocar blocos sensiveis.
 
+## QA/Security - 2026-05-24 - Etapas 1.189 e 1.190 PermissionGate/InviteCard sem build
+
+- Rodada SS padrao executada com duas fatias presentational pequenas.
+- `PermissionGate` recebeu text-fit por policy para status, titulo e corpo; nao houve mudanca em permissao real.
+- `InviteCard` recebeu text-fit por policy para nome, detalhe, status e descricao; nao houve mudanca em convites reais, backend, Share ou callbacks.
+- Nao houve novo segredo, credencial, SDP, ICE, payload P2P, path local, coordenada, telefone novo, nome real novo ou conteudo de midia.
+- Validacoes focadas aprovadas: `test:status-components-presentation`, `smoke-test`, `typecheck` e `lint`.
+- Sem build/instalacao Android porque a rodada e presentational e nao altera runtime fisico.
+
 ## QA/Security - 2026-05-23 - Etapas 1.181 e 1.182 emergency home shell policies
 
 - Etapas 1.181 e 1.182 extraem apenas apresentacao/acessibilidade: `emergencyTopBarPresentationPolicy` e `emergencySettingsDrawerPresentationPolicy`.
