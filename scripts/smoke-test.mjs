@@ -153,6 +153,7 @@ const requiredFiles = [
   "src/features/settings/settingsPresentationPolicy.ts",
   "src/features/evidence/evidencePolicy.ts",
   "src/features/emergency/localFilesPresentationPolicy.ts",
+  "src/features/local-files/localFilesResourceGridPresentationPolicy.ts",
   "src/features/emergency/packagePresentation.ts",
   "src/features/emergency/mediaInterfacePresentation.ts",
   "src/features/emergency/emergencyPreferences.ts",

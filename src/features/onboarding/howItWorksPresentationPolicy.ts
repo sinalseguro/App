@@ -1,10 +1,25 @@
 export type HowItWorksStepIconKey = "archive" | "key" | "location" | "radio" | "shield" | "video";
 
+export type HowItWorksIconPresentation = {
+  colorToken: "primary";
+  size: number;
+};
+
 export type HowItWorksStep = {
   iconKey: HowItWorksStepIconKey;
   id: string;
   text: string;
   title: string;
+};
+
+export const howItWorksScreenCopy = {
+  subtitle: "Resumo simples dos recursos principais, privacidade e limites atuais do app.",
+  title: "Como funciona"
+} as const;
+
+export const howItWorksIconPresentation: HowItWorksIconPresentation = {
+  colorToken: "primary",
+  size: 20
 };
 
 export const howItWorksSteps: readonly HowItWorksStep[] = [
@@ -45,3 +60,7 @@ export const howItWorksSteps: readonly HowItWorksStep[] = [
     text: "Dados devem ser usados apenas para protecao, orientacao e entrega autorizada."
   }
 ];
+
+export function resolveHowItWorksIconPresentation(): HowItWorksIconPresentation {
+  return howItWorksIconPresentation;
+}

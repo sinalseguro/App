@@ -1288,6 +1288,17 @@ Proximas acoes atualizadas:
 - Validacoes aprovadas: `test:screen-components-presentation`, `test:presentation-components`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
 
+## QA/Security - 2026-05-24 - Etapas 1.183 a 1.188 bloco SS presentational
+
+- Roberto autorizou SS por 3 rodadas; executadas tres duplas presentational pequenas.
+- Etapas 1.183/1.184: `FuncionamentoScreen` e `LocalFilesResourceGrid` receberam policies para copy/configuracao visual e linhas da grade.
+- Etapas 1.185/1.186: `ConsentCard` e `StatusBanner` receberam text-fit em policies puras, sem alterar textos ou consumidores.
+- Etapas 1.187/1.188: `BrandLockup` e `AppLaunchScreen` receberam parametros visuais finos em policies, sem mover assets, hooks, animacao ou boot real.
+- Nao houve novo segredo, credencial, SDP, ICE, payload P2P, path local, coordenada, telefone novo, nome real novo ou conteudo de midia.
+- Validacoes focadas aprovadas: `test:how-it-works-presentation`, `test:local-files-presentation`, `test:onboarding-presentation`, `test:presentation-components`, `test:brand-components-presentation`, `smoke-test`, `typecheck` e `lint`.
+- Sem build/instalacao Android porque o bloco e presentational e nao altera runtime fisico.
+- Proxima recomendacao: rodar validacao ampla (`npm test`, readiness privado e `git diff --check`) antes de commit/push; depois fazer nova microtriagem antes de tocar blocos sensiveis.
+
 ## QA/Security - 2026-05-23 - Etapas 1.181 e 1.182 emergency home shell policies
 
 - Etapas 1.181 e 1.182 extraem apenas apresentacao/acessibilidade: `emergencyTopBarPresentationPolicy` e `emergencySettingsDrawerPresentationPolicy`.

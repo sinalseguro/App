@@ -7,6 +7,10 @@ import type {
   LocalFilesResourceIconKey,
   LocalFilesResourceTileId
 } from "@/features/emergency/localFilesPresentationPolicy";
+import {
+  buildLocalFilesResourceGridRows,
+  resolveLocalFilesResourceGridIconPresentation
+} from "@/features/local-files/localFilesResourceGridPresentationPolicy";
 
 type LocalFilesResourceGridProps = {
   onCheckUpdates: () => void;
@@ -16,15 +20,18 @@ type LocalFilesResourceGridProps = {
 };
 
 function renderLocalFilesResourceIcon(iconKey: LocalFilesResourceIconKey) {
+  const iconPresentation = resolveLocalFilesResourceGridIconPresentation();
+  const iconColor = theme.colors[iconPresentation.colorToken];
+
   switch (iconKey) {
     case "archive":
-      return <Archive size={24} color={theme.colors.primary} />;
+      return <Archive size={iconPresentation.size} color={iconColor} />;
     case "book":
-      return <BookOpen size={24} color={theme.colors.primary} />;
+      return <BookOpen size={iconPresentation.size} color={iconColor} />;
     case "play":
-      return <CirclePlay size={24} color={theme.colors.primary} />;
+      return <CirclePlay size={iconPresentation.size} color={iconColor} />;
     case "refresh":
-      return <RefreshCw size={24} color={theme.colors.primary} />;
+      return <RefreshCw size={iconPresentation.size} color={iconColor} />;
   }
 }
 
@@ -34,6 +41,8 @@ export function LocalFilesResourceGrid({
   onOpenPlayer,
   onOpenVault
 }: LocalFilesResourceGridProps) {
+  const resourceRows = buildLocalFilesResourceGridRows(localFilesResourceTiles);
+
   function handleTilePress(tileId: LocalFilesResourceTileId) {
     if (tileId === "player") {
       onOpenPlayer();
@@ -52,9 +61,9 @@ export function LocalFilesResourceGrid({
 
   return (
     <>
-      {[0, 2].map((startIndex) => (
-        <View key={startIndex} style={styles.resourceGrid}>
-          {localFilesResourceTiles.slice(startIndex, startIndex + 2).map((tile) => (
+      {resourceRows.map((row) => (
+        <View key={row.id} style={styles.resourceGrid}>
+          {row.tiles.map((tile) => (
             <ResourceTile
               key={tile.id}
               icon={renderLocalFilesResourceIcon(tile.iconKey)}

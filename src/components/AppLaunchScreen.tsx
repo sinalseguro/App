@@ -23,10 +23,26 @@ export function AppLaunchScreen() {
   return (
     <View style={styles.screen}>
       <View style={styles.brand}>
-        <Image source={require("../../assets/brand/sinalseguro-symbol.png")} style={styles.symbol} />
-        <Text style={styles.name}>{presentation.brandName}</Text>
+        <Image
+          resizeMode={presentation.symbolResizeMode}
+          source={require("../../assets/brand/sinalseguro-symbol.png")}
+          style={[styles.symbol, presentation.symbolSize]}
+        />
+        <Text
+          adjustsFontSizeToFit={presentation.brandNameTextFit.adjustsFontSizeToFit}
+          maxFontSizeMultiplier={presentation.brandNameTextFit.maxFontSizeMultiplier}
+          minimumFontScale={presentation.brandNameTextFit.minimumFontScale}
+          numberOfLines={presentation.brandNameTextFit.numberOfLines}
+          style={styles.name}
+        >
+          {presentation.brandName}
+        </Text>
       </View>
-      <View accessibilityRole="progressbar" accessibilityLabel={presentation.progressAccessibilityLabel} style={styles.loadingTrack}>
+      <View
+        accessibilityRole={presentation.progressAccessibilityRole}
+        accessibilityLabel={presentation.progressAccessibilityLabel}
+        style={styles.loadingTrack}
+      >
         <Animated.View style={[styles.loadingFill, { width: progressWidth }]} />
       </View>
     </View>
@@ -68,8 +84,6 @@ const styles = StyleSheet.create({
     padding: theme.spacing.xxl
   },
   symbol: {
-    height: 132,
-    resizeMode: "contain",
-    width: 132
+    flexShrink: 0
   }
 });

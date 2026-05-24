@@ -1,6 +1,7 @@
 export type BrandLockupPresentation = {
   accessibilityLabel: string;
   accessibilityRole: "image";
+  logoResizeMode: "contain";
   logoSize: {
     height: number;
     width: number;
@@ -10,6 +11,7 @@ export type BrandLockupPresentation = {
 export const brandLockupPresentation: BrandLockupPresentation = {
   accessibilityLabel: "SinalSeguro",
   accessibilityRole: "image",
+  logoResizeMode: "contain",
   logoSize: {
     height: 72,
     width: 245

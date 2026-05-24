@@ -11,7 +11,11 @@ export function BrandLockup() {
       accessibilityLabel={presentation.accessibilityLabel}
       style={styles.wrapper}
     >
-      <Image source={require("../../assets/brand/sinalseguro-logo.png")} style={[styles.logo, presentation.logoSize]} />
+      <Image
+        resizeMode={presentation.logoResizeMode}
+        source={require("../../assets/brand/sinalseguro-logo.png")}
+        style={presentation.logoSize}
+      />
     </View>
   );
 }
@@ -21,8 +25,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     gap: theme.spacing.md
-  },
-  logo: {
-    resizeMode: "contain"
   }
 });

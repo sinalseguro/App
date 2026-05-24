@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 
 import {
   buildLocalFilesMaintenanceStatus,
@@ -9,6 +10,11 @@ import {
   localFilesResourceTiles,
   localFilesScreenCopy
 } from "../src/features/emergency/localFilesPresentationPolicy";
+import {
+  buildLocalFilesResourceGridRows,
+  localFilesResourceGridPresentation,
+  resolveLocalFilesResourceGridIconPresentation
+} from "../src/features/local-files/localFilesResourceGridPresentationPolicy";
 
 assert.equal(localFilesResourceTiles.length, 4);
 assert.deepEqual(
@@ -20,6 +26,25 @@ assert.deepEqual(
   ["play", "archive", "book", "refresh"]
 );
 assert.equal(new Set(localFilesResourceTiles.map((tile) => tile.id)).size, localFilesResourceTiles.length);
+assert.deepEqual(localFilesResourceGridPresentation.rowStartIndexes, [0, 2]);
+assert.equal(localFilesResourceGridPresentation.tilesPerRow, 2);
+assert.deepEqual(resolveLocalFilesResourceGridIconPresentation(), {
+  colorToken: "primary",
+  size: 24
+});
+
+const localFilesResourceRows = buildLocalFilesResourceGridRows(localFilesResourceTiles);
+assert.deepEqual(
+  localFilesResourceRows.map((row) => row.id),
+  ["resource-row-0", "resource-row-2"]
+);
+assert.deepEqual(
+  localFilesResourceRows.map((row) => row.tiles.map((tile) => tile.id)),
+  [
+    ["player", "vault"],
+    ["how-it-works", "app-updates"]
+  ]
+);
 
 assert.equal(buildLocalFilesTopBarContextLabel("player"), "Player seguro");
 assert.equal(buildLocalFilesTopBarContextLabel("cofre"), "Cofre local");
@@ -106,5 +131,13 @@ assert.equal(
 );
 assert.match(localFilesScreenCopy.deleteConfirmTitle, /Excluir arquivo local/);
 assert.match(localFilesScreenCopy.mapExternalLocationWarning, /localizacao exata/);
+
+const gridPolicySource = readFileSync(
+  "src/features/local-files/localFilesResourceGridPresentationPolicy.ts",
+  "utf8"
+);
+assert.ok(!gridPolicySource.includes("onOpen"));
+assert.ok(!gridPolicySource.includes("router"));
+assert.ok(!gridPolicySource.includes("deleteEmergencyPackage"));
 
 console.log("local files presentation policy ok");

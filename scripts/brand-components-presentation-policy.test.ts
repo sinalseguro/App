@@ -16,16 +16,29 @@ import {
 
 assert.deepEqual(resolveAppLaunchPresentation(), appLaunchPresentation);
 assert.equal(appLaunchPresentation.brandName, "SinalSeguro");
+assert.deepEqual(appLaunchPresentation.brandNameTextFit, {
+  adjustsFontSizeToFit: true,
+  maxFontSizeMultiplier: 1.2,
+  minimumFontScale: 0.82,
+  numberOfLines: 1
+});
 assert.equal(appLaunchPresentation.progressAccessibilityLabel, "Carregando SinalSeguro");
+assert.equal(appLaunchPresentation.progressAccessibilityRole, "progressbar");
 assert.equal(appLaunchPresentation.progressInitialValue, 0.18);
 assert.equal(appLaunchPresentation.progressFinalValue, 1);
 assert.equal(appLaunchPresentation.progressDurationMs, 900);
 assert.deepEqual(appLaunchPresentation.progressInputRange, [0, 1]);
 assert.deepEqual(appLaunchPresentation.progressOutputRange, ["18%", "100%"]);
+assert.equal(appLaunchPresentation.symbolResizeMode, "contain");
+assert.deepEqual(appLaunchPresentation.symbolSize, {
+  height: 132,
+  width: 132
+});
 
 assert.deepEqual(resolveBrandLockupPresentation(), brandLockupPresentation);
 assert.equal(brandLockupPresentation.accessibilityLabel, "SinalSeguro");
 assert.equal(brandLockupPresentation.accessibilityRole, "image");
+assert.equal(brandLockupPresentation.logoResizeMode, "contain");
 assert.deepEqual(brandLockupPresentation.logoSize, {
   height: 72,
   width: 245
@@ -58,9 +71,13 @@ async function main() {
   assert.ok(appLaunchSource.includes("resolveAppLaunchPresentation()"));
   assert.ok(appLaunchSource.includes("presentation.progressInitialValue"));
   assert.ok(appLaunchSource.includes("presentation.progressAccessibilityLabel"));
+  assert.ok(appLaunchSource.includes("presentation.progressAccessibilityRole"));
+  assert.ok(appLaunchSource.includes("presentation.symbolSize"));
+  assert.ok(appLaunchSource.includes("presentation.brandNameTextFit"));
   assert.ok(brandLockupSource.includes("resolveBrandLockupPresentation()"));
   assert.ok(brandLockupSource.includes("presentation.accessibilityLabel"));
   assert.ok(brandLockupSource.includes("presentation.logoSize"));
+  assert.ok(brandLockupSource.includes("presentation.logoResizeMode"));
   assert.ok(brandBackgroundSource.includes("resolveBrandBackgroundPresentation(active)"));
   assert.ok(brandBackgroundSource.includes("presentation.particleConfigs"));
   assert.ok(brandBackgroundSource.includes("presentation.watermarkPulse.duration"));

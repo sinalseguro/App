@@ -1541,6 +1541,18 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
 - Proxima acao tecnica: nova microtriagem antes da proxima dupla, evitando `PanicButton`, `AppTopBar`, `BrandedDialog`, gate protegido, cofre, player, SOS/WebRTC, backend ou storage sem plano proprio.
 
+# Atualizacao - 2026-05-24 - Etapas 1.183 a 1.188 Bloco SS presentational
+
+- `src/features/onboarding/howItWorksPresentationPolicy.ts` agora tambem centraliza copy da tela `Como funciona` e configuracao visual dos icones.
+- `src/features/local-files/localFilesResourceGridPresentationPolicy.ts` centraliza linhas da grade de recursos locais e configuracao visual dos icones.
+- `src/components/consentCardPresentationPolicy.ts` centraliza text-fit de status, titulo e corpo do `ConsentCard`.
+- `src/components/statusBannerPresentationPolicy.ts` centraliza text-fit de titulo e corpo do `StatusBanner`.
+- `src/components/brandLockupPresentationPolicy.ts` centraliza `logoResizeMode` alem de label, role e tamanho do logo.
+- `src/components/appLaunchPresentationPolicy.ts` centraliza role do progresso, text-fit do nome, `symbolResizeMode` e tamanho do simbolo.
+- Componentes seguem responsaveis por JSX, estilos, tema, assets, callbacks e efeitos reais; nao houve mudanca em SOS/WebRTC, backend, storage, cofre/player runtime, gates protegidos ou publicacao.
+- Validacoes focadas aprovadas: `test:how-it-works-presentation`, `test:local-files-presentation`, `test:onboarding-presentation`, `test:presentation-components`, `test:brand-components-presentation`, `smoke-test`, `typecheck` e `lint`.
+- Sem build/instalacao Android porque o bloco e presentational e nao altera runtime fisico.
+
 # Atualizacao - 2026-05-23 - Etapas 1.181 e 1.182 Policies visuais da Home
 
 - `src/features/emergency-home/emergencyTopBarPresentationPolicy.ts` centraliza labels de contexto e configuracao visual do menu do `EmergencyTopBar`.

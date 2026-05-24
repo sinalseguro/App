@@ -3,32 +3,37 @@ import { Archive, KeyRound, MapPin, Radio, ShieldCheck, Video } from "lucide-rea
 import { SafeScreen } from "@/components/SafeScreen";
 import { theme } from "@/design/theme";
 import {
+  howItWorksScreenCopy,
   howItWorksSteps,
+  resolveHowItWorksIconPresentation,
   type HowItWorksStepIconKey
 } from "@/features/onboarding/howItWorksPresentationPolicy";
 
 function renderHowItWorksIcon(iconKey: HowItWorksStepIconKey) {
+  const iconPresentation = resolveHowItWorksIconPresentation();
+  const iconColor = theme.colors[iconPresentation.colorToken];
+
   switch (iconKey) {
     case "archive":
-      return <Archive size={20} color={theme.colors.primary} />;
+      return <Archive size={iconPresentation.size} color={iconColor} />;
     case "key":
-      return <KeyRound size={20} color={theme.colors.primary} />;
+      return <KeyRound size={iconPresentation.size} color={iconColor} />;
     case "location":
-      return <MapPin size={20} color={theme.colors.primary} />;
+      return <MapPin size={iconPresentation.size} color={iconColor} />;
     case "radio":
-      return <Radio size={20} color={theme.colors.primary} />;
+      return <Radio size={iconPresentation.size} color={iconColor} />;
     case "shield":
-      return <ShieldCheck size={20} color={theme.colors.primary} />;
+      return <ShieldCheck size={iconPresentation.size} color={iconColor} />;
     case "video":
-      return <Video size={20} color={theme.colors.primary} />;
+      return <Video size={iconPresentation.size} color={iconColor} />;
   }
 }
 
 export default function FuncionamentoScreen() {
   return (
     <SafeScreen
-      title="Como funciona"
-      subtitle="Resumo simples dos recursos principais, privacidade e limites atuais do app."
+      title={howItWorksScreenCopy.title}
+      subtitle={howItWorksScreenCopy.subtitle}
     >
       <View style={styles.grid}>
         {howItWorksSteps.map((step) => (

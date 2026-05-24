@@ -13,8 +13,24 @@ export function StatusBanner({ tone, title, text }: StatusBannerProps) {
 
   return (
     <View style={[styles.banner, { borderLeftColor: theme.colors[presentation.borderColorToken] }]}>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.text}>{text}</Text>
+      <Text
+        adjustsFontSizeToFit={presentation.titleTextFit.adjustsFontSizeToFit}
+        maxFontSizeMultiplier={presentation.titleTextFit.maxFontSizeMultiplier}
+        minimumFontScale={presentation.titleTextFit.minimumFontScale}
+        numberOfLines={presentation.titleTextFit.numberOfLines}
+        style={styles.title}
+      >
+        {title}
+      </Text>
+      <Text
+        adjustsFontSizeToFit={presentation.textTextFit.adjustsFontSizeToFit}
+        maxFontSizeMultiplier={presentation.textTextFit.maxFontSizeMultiplier}
+        minimumFontScale={presentation.textTextFit.minimumFontScale}
+        numberOfLines={presentation.textTextFit.numberOfLines}
+        style={styles.text}
+      >
+        {text}
+      </Text>
     </View>
   );
 }

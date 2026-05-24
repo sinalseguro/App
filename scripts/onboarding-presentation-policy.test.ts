@@ -7,6 +7,7 @@ import {
 } from "../src/features/onboarding/onboardingPresentationPolicy";
 import {
   buildConsentCardPresentation,
+  consentCardBodyTextFit,
   consentCardStatusLabels
 } from "../src/components/consentCardPresentationPolicy";
 
@@ -45,6 +46,13 @@ assert.deepEqual(consentCardStatusLabels, {
 assert.equal(buildConsentCardPresentation("obrigatorio").statusLabel, "obrigatorio");
 assert.equal(buildConsentCardPresentation("opcional").statusLabel, "opcional");
 assert.equal(buildConsentCardPresentation("bloqueado").statusLabel, "bloqueado");
+assert.deepEqual(buildConsentCardPresentation("opcional").textTextFit, consentCardBodyTextFit);
+assert.deepEqual(buildConsentCardPresentation("obrigatorio").statusTextFit, {
+  adjustsFontSizeToFit: true,
+  maxFontSizeMultiplier: 1.2,
+  minimumFontScale: 0.84,
+  numberOfLines: 1
+});
 
 async function main() {
   const onboardingScreenSource = await readFile("app/onboarding.tsx", "utf8");
@@ -61,6 +69,9 @@ async function main() {
   }
 
   assert.ok(consentCardSource.includes("buildConsentCardPresentation(status)"));
+  assert.ok(consentCardSource.includes("presentation.statusTextFit"));
+  assert.ok(consentCardSource.includes("presentation.titleTextFit"));
+  assert.ok(consentCardSource.includes("presentation.textTextFit"));
 
   console.log("onboarding presentation policy ok");
 }

@@ -8,23 +8,43 @@ import {
 } from "../src/components/resourceTilePresentationPolicy";
 import {
   buildStatusBannerPresentation,
+  statusBannerBodyTextFit,
+  statusBannerTitleTextFit,
   statusBannerTonePresentation
 } from "../src/components/statusBannerPresentationPolicy";
 
 assert.deepEqual(statusBannerTonePresentation, {
   danger: {
-    borderColorToken: "danger"
+    borderColorToken: "danger",
+    textTextFit: statusBannerBodyTextFit,
+    titleTextFit: statusBannerTitleTextFit
   },
   secure: {
-    borderColorToken: "secure"
+    borderColorToken: "secure",
+    textTextFit: statusBannerBodyTextFit,
+    titleTextFit: statusBannerTitleTextFit
   },
   warning: {
-    borderColorToken: "warning"
+    borderColorToken: "warning",
+    textTextFit: statusBannerBodyTextFit,
+    titleTextFit: statusBannerTitleTextFit
   }
 });
 assert.equal(buildStatusBannerPresentation("secure").borderColorToken, "secure");
 assert.equal(buildStatusBannerPresentation("warning").borderColorToken, "warning");
 assert.equal(buildStatusBannerPresentation("danger").borderColorToken, "danger");
+assert.deepEqual(buildStatusBannerPresentation("secure").titleTextFit, {
+  adjustsFontSizeToFit: true,
+  maxFontSizeMultiplier: 1.2,
+  minimumFontScale: 0.82,
+  numberOfLines: 2
+});
+assert.deepEqual(buildStatusBannerPresentation("danger").textTextFit, {
+  adjustsFontSizeToFit: true,
+  maxFontSizeMultiplier: 1.2,
+  minimumFontScale: 0.84,
+  numberOfLines: 5
+});
 
 assert.deepEqual(resourceTileLabelTextFit, {
   adjustsFontSizeToFit: true,
@@ -53,6 +73,8 @@ async function main() {
   assert.ok(resourceTileSource.includes("presentation.descriptionTextFit"));
   assert.ok(statusBannerSource.includes("buildStatusBannerPresentation(tone)"));
   assert.ok(statusBannerSource.includes("theme.colors[presentation.borderColorToken]"));
+  assert.ok(statusBannerSource.includes("presentation.titleTextFit"));
+  assert.ok(statusBannerSource.includes("presentation.textTextFit"));
 
   for (const source of [resourceTilePolicySource, statusBannerPolicySource]) {
     assert.ok(!/from "react|from "react-native|lucide-react-native|theme\.colors|router\.push|apiClient|Share\.share|SecureStore|AsyncStorage|useEffect/.test(source));

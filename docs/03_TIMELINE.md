@@ -6000,3 +6000,65 @@ Validacoes:
 Checkpoint:
 
 - `docs/212_CHECKPOINT_ETAPAS_1_181_1_182_EMERGENCY_HOME_SHELL_POLICY_2026-05-23.md`.
+
+## 2026-05-24 - Etapas 1.183 e 1.184 policies visuais de Funcionamento e grade de arquivos
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.183: `app/funcionamento.tsx` passou a consumir `howItWorksScreenCopy` e `resolveHowItWorksIconPresentation()` em `src/features/onboarding/howItWorksPresentationPolicy.ts`.
+- Etapa 1.184: criada `src/features/local-files/localFilesResourceGridPresentationPolicy.ts` para centralizar linhas da grade e configuracao visual dos icones de `LocalFilesResourceGrid`.
+- `FuncionamentoScreen` continua responsavel por JSX, `StyleSheet`, tema e icones Lucide.
+- `LocalFilesResourceGrid` continua responsavel por callbacks reais: player, cofre, funcionamento e atualizacao.
+- A nova policy da grade nao contem rotas, callbacks reais, exclusao de pacote, storage, backend ou operacoes de midia.
+
+Validacoes:
+
+- `test:how-it-works-presentation`, `test:local-files-presentation`, `smoke-test`, `typecheck` e `lint`: aprovados.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/213_CHECKPOINT_ETAPAS_1_183_1_184_FUNCIONAMENTO_ARQUIVOS_GRID_POLICY_2026-05-24.md`.
+
+## 2026-05-24 - Etapas 1.185 e 1.186 text-fit de ConsentCard e StatusBanner
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.185: `src/components/consentCardPresentationPolicy.ts` agora centraliza text-fit de status, titulo e corpo do `ConsentCard`.
+- Etapa 1.186: `src/components/statusBannerPresentationPolicy.ts` agora centraliza text-fit de titulo e corpo do `StatusBanner`.
+- `ConsentCard` e `StatusBanner` continuam recebendo textos por props e renderizando somente apresentacao.
+- Consumidores, perfis, convites, contatos, backend, storage, rotas e permissoes ficaram fora do escopo.
+
+Validacoes:
+
+- `test:onboarding-presentation`, `test:presentation-components`, `smoke-test`, `typecheck` e `lint`: aprovados.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/214_CHECKPOINT_ETAPAS_1_185_1_186_CONSENT_STATUS_TEXTFIT_POLICY_2026-05-24.md`.
+
+## 2026-05-24 - Etapas 1.187 e 1.188 policies finas de marca e carregamento
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.187: `src/components/brandLockupPresentationPolicy.ts` passou a centralizar `logoResizeMode` alem de label, role e tamanho do logo.
+- Etapa 1.188: `src/components/appLaunchPresentationPolicy.ts` passou a centralizar role do progresso, text-fit do nome, `symbolResizeMode` e tamanho do simbolo.
+- `BrandLockup` continua responsavel pelo asset aprovado da marca.
+- `AppLaunchScreen` continua responsavel por `Animated`, hooks, interpolacao, asset, JSX e estilos.
+- `_layout`, gate de acesso, login, verificacao de versao, backend, storage e boot real ficaram fora do escopo.
+
+Validacoes:
+
+- `test:brand-components-presentation`, `smoke-test`, `typecheck` e `lint`: aprovados.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/215_CHECKPOINT_ETAPAS_1_187_1_188_BRAND_LAUNCH_FINE_POLICY_2026-05-24.md`.

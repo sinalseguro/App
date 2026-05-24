@@ -1393,6 +1393,16 @@ Papel: seguranca, LGPD e QA.
 - `typecheck` nao emitiu erro, mas ficou sem saida e ocioso por cerca de 1 minuto; foi encerrado para nao deixar processo pendurado.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.
 
+## Memoria viva - 2026-05-24 - bloco SS 1.183 a 1.188 sem build
+
+- Etapas 1.183 e 1.184 extraem apenas apresentacao/acessibilidade: copy/configuracao de icone de `FuncionamentoScreen` e linhas/configuracao visual de `LocalFilesResourceGrid`.
+- Etapas 1.185 e 1.186 ampliam apenas text-fit visual de `ConsentCard` e `StatusBanner`; textos continuam por props e consumidores nao foram alterados.
+- Etapas 1.187 e 1.188 centralizam apenas parametros visuais finos de `BrandLockup` e `AppLaunchScreen`, preservando assets, `Animated`, hooks e boot real nos componentes.
+- Policies novas/alteradas nao receberam API, Share, storage, rotas reais, exclusao de pacote, backend, operacoes de midia, permissao real ou efeitos de chamada.
+- `PanicButton`, `AppTopBar`, `BrandedDialog`, gate protegido, cofre/player runtime, SOS/WebRTC, backend e storage ficaram fora do escopo.
+- Validacoes focadas aprovadas: `test:how-it-works-presentation`, `test:local-files-presentation`, `test:onboarding-presentation`, `test:presentation-components`, `test:brand-components-presentation`, `smoke-test`, `typecheck` e `lint`.
+- Sem build/instalacao Android porque as fatias sao presentational e nao alteram runtime fisico.
+
 ## QA/Security - 2026-05-22 - Etapas 1.149 e 1.150 trusted angels relationship/invitation panels
 
 - Mudanca restrita a componentes locais de apresentacao da tela `Anjos de confianca`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.

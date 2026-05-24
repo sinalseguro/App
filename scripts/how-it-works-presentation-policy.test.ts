@@ -1,8 +1,19 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 
-import { howItWorksSteps } from "../src/features/onboarding/howItWorksPresentationPolicy";
+import {
+  howItWorksScreenCopy,
+  howItWorksSteps,
+  resolveHowItWorksIconPresentation
+} from "../src/features/onboarding/howItWorksPresentationPolicy";
 
 assert.equal(howItWorksSteps.length, 6);
+assert.equal(howItWorksScreenCopy.title, "Como funciona");
+assert.match(howItWorksScreenCopy.subtitle, /privacidade/);
+assert.deepEqual(resolveHowItWorksIconPresentation(), {
+  colorToken: "primary",
+  size: 20
+});
 assert.deepEqual(
   howItWorksSteps.map((step) => step.id),
   ["acionamento", "localizacao", "cofre-local", "protecao-arquivos", "midia", "privacidade"]
@@ -23,5 +34,10 @@ for (const step of howItWorksSteps) {
 assert.ok(howItWorksSteps[0].text.includes("pressao longa"));
 assert.ok(howItWorksSteps[1].text.includes("localizacao pontual"));
 assert.ok(howItWorksSteps[5].text.includes("protecao"));
+
+const policySource = readFileSync("src/features/onboarding/howItWorksPresentationPolicy.ts", "utf8");
+assert.ok(!policySource.includes("router"));
+assert.ok(!policySource.includes("Linking"));
+assert.ok(!policySource.includes("onPress"));
 
 console.log("how-it-works presentation policy ok");
