@@ -25,11 +25,6 @@ import {
   resolveEmergencyStartRemoteSyncErrorActions,
   resolveEmergencyStartRemoteSyncResultActions
 } from "@/features/emergency-home/emergencyStartRemoteSyncActionsPolicy";
-import { resolveEmergencyStartRuntimeActions } from "@/features/emergency-home/emergencyStartRuntimePolicy";
-import { resolveFinishActiveCallRuntimeStateActions } from "@/features/emergency-home/finishActiveCallRuntimeStateActionsPolicy";
-import { resolveFinishActiveCallRuntimeStartActions } from "@/features/emergency-home/finishActiveCallRuntimeStartPolicy";
-import { resolveFinishActiveCallStart } from "@/features/emergency-home/finishActiveCallStartPolicy";
-import { resolveMediaProtectionInProgress } from "@/features/emergency-home/finishFlowProgressPolicy";
 import { resolveFinishCodeConfirmationActions } from "@/features/emergency-home/finishCodeConfirmationActionsPolicy";
 import { resolveFinishCodeConfirmationDecision } from "@/features/emergency-home/finishCodePolicy";
 import {
@@ -137,7 +132,7 @@ import { resolveOwnerLiveVideoPreserveRequest } from "@/features/emergency-home/
 import { resolveOwnerLiveVideoStartOutcomeActions } from "@/features/emergency-home/ownerLiveVideoStartOutcomePolicy";
 import { resolveOwnerLiveVideoStartRequest } from "@/features/emergency-home/ownerLiveVideoStartRequestPolicy";
 import { resolveLiveCallWaitingDialogPresentation } from "@/features/emergency-home/liveCallWaitingDialogPolicy";
-import { panicButtonLabel, resolvePanicTriggerDecision } from "@/features/emergency-home/panicTriggerPolicy";
+import { panicButtonLabel } from "@/features/emergency-home/panicTriggerPolicy";
 import { resolveProtectedRouteAccessDecision } from "@/features/emergency-home/protectedRouteAccessPolicy";
 import { resolveProtectedRouteCodeDecision } from "@/features/emergency-home/protectedRouteCodePolicy";
 import { resolveProtectedRouteDialogPresentation } from "@/features/emergency-home/protectedRouteDialogPolicy";
@@ -149,6 +144,10 @@ import {
 import { resolveProtectedRouteUnlockActions } from "@/features/emergency-home/protectedRouteUnlockActionsPolicy";
 import { resolveRecordingConsentDialogPresentation } from "@/features/emergency-home/recordingConsentDialogPolicy";
 import { resolveActiveRemoteSyncStatus } from "@/features/emergency-home/remoteSyncStatusPolicy";
+import {
+  resolveSosControllerFinishStart,
+  resolveSosControllerTrigger
+} from "@/features/emergency-home/sosControllerPolicy";
 import { resolveActiveRemoteSyncAttemptActions, type ActiveRemoteSyncAttemptSource } from "@/features/emergency-home/activeRemoteSyncAttemptActionsPolicy";
 import {
   resolveActiveRemoteSyncFailureActions,
@@ -1278,19 +1277,21 @@ export default function HomeScreen() {
   async function handlePanicTrigger() {
     setMenuOpen(false);
 
-    const panicDecision = resolvePanicTriggerDecision({
+    const sosControllerDecision = resolveSosControllerTrigger({
       activePackageId,
+      currentFinishProgress: finishProgress.progress,
       mediaStopPending: mediaStopPendingRef.current,
+      platform: Platform.OS,
       preferences,
       startInProgress
     });
 
-    switch (panicDecision) {
+    switch (sosControllerDecision.action) {
       case "ignore_start_in_progress":
         return;
       case "show_media_protection_progress":
-        showFinishProgress(resolveMediaProtectionInProgress(finishProgress.progress));
-        setRecordingStatus(resolveLocalSosPackageStatus({ event: "media_protection_in_progress" }));
+        showFinishProgress(sosControllerDecision.finishProgress);
+        setRecordingStatus(sosControllerDecision.recordingStatus);
         return;
       case "finish_active_call":
         requestFinishActiveCall();
@@ -1316,10 +1317,7 @@ export default function HomeScreen() {
         break;
     }
 
-    const emergencyStartRuntimeActions = resolveEmergencyStartRuntimeActions({
-      platform: Platform.OS,
-      preferences
-    });
+    const emergencyStartRuntimeActions = sosControllerDecision.startRuntimeActions;
     setRecordingStatus(emergencyStartRuntimeActions.recordingStatus);
     if (emergencyStartRuntimeActions.shouldResetLiveAudioCall) {
       liveAudioCall.resetLiveAudioCall();
@@ -1424,7 +1422,7 @@ export default function HomeScreen() {
   }
 
   async function handleFinishActiveCall() {
-    const finishStartDecision = resolveFinishActiveCallStart({
+    const finishStartDecision = resolveSosControllerFinishStart({
       activePackageId,
       captureStopLocked,
       finishInProgress,
@@ -1432,19 +1430,17 @@ export default function HomeScreen() {
       liveAudioRemoteSessionId: liveAudioCall.state.remoteSessionId,
       liveRemoteSessionId,
       ownerLiveVideoRecordingActive: Boolean(ownerLiveVideoRecordingRef.current),
-      ownerLiveVideoStartRequestActive: Boolean(ownerLiveVideoStartRequestRef.current)
+      ownerLiveVideoStartRequestActive: Boolean(ownerLiveVideoStartRequestRef.current),
+      platform: Platform.OS
     });
     if (!finishStartDecision.shouldStart) return;
 
-    const { mediaWasHandedToLiveCall, packageId, remoteSessionIdToFinish } = finishStartDecision;
-    const finishRuntimeStartActions = resolveFinishActiveCallRuntimeStartActions({
-      platform: Platform.OS,
-      remoteSessionIdToFinish
-    });
-    const finishRuntimeStateActions = resolveFinishActiveCallRuntimeStateActions({
+    const {
+      mediaWasHandedToLiveCall,
+      packageId,
       remoteSessionIdToFinish,
-      runtimeStartActions: finishRuntimeStartActions
-    });
+      runtimeStateActions: finishRuntimeStateActions
+    } = finishStartDecision;
     const liveVideoAttachedAsset = finishRuntimeStateActions.shouldStopOwnerLiveVideoEvidence &&
       finishRuntimeStateActions.stopOwnerLiveVideoEvidenceReason
       ? await stopOwnerLiveVideoEvidence(finishRuntimeStateActions.stopOwnerLiveVideoEvidenceReason)

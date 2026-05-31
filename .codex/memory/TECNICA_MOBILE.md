@@ -1581,6 +1581,15 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Proximos blocos: `Media Adapters`, `Live Call State`, `Backend Services/Policies`, `Portais/Gestor` e documentacao final.
 - Retomadas apos interrupcao ou troca de login devem reconstruir contexto por docs/Git/checkpoints e aplicar gates proporcionais ao risco.
 
+# Atualizacao - 2026-05-31 - Bloco 1A SOS Controller policy
+
+- `src/features/emergency-home/sosControllerPolicy.ts` centraliza a composicao pura da entrada do SOS e do inicio do encerramento ativo.
+- `resolveSosControllerTrigger()` decide entre duplo acionamento, protecao de midia, encerramento ativo, consentimento de gravacao e inicio do pacote SOS.
+- `resolveSosControllerFinishStart()` compoe guarda inicial do finish, sessao remota a finalizar, midia entregue a chamada ao vivo e acoes runtime iniciais.
+- `app/index.tsx` continua responsavel pelos efeitos reais: refs/estado React, modais, `Linking`, `router`, camera, WebRTC, cofre, storage, sincronizacao backend, auditoria e logs.
+- Novo gate: `test:sos-controller`; smoke passou a exigir controlador e teste.
+- Este corte nao moveu media engine, criptografia, API, permissoes nativas, backend, portais ou release.
+
 # Atualizacao - 2026-05-23 - Etapas 1.181 e 1.182 Policies visuais da Home
 
 - `src/features/emergency-home/emergencyTopBarPresentationPolicy.ts` centraliza labels de contexto e configuracao visual do menu do `EmergencyTopBar`.

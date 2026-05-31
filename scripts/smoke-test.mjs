@@ -136,6 +136,7 @@ const requiredFiles = [
   "src/features/emergency-home/interruptedRecoveryProgressPolicy.ts",
   "src/features/emergency-home/liveCallWaitingDialogPolicy.ts",
   "src/features/emergency-home/panicTriggerPolicy.ts",
+  "src/features/emergency-home/sosControllerPolicy.ts",
   "src/features/emergency-home/recordingConsentDialogPolicy.ts",
   "src/features/emergency-home/protectedRouteAccessPolicy.ts",
   "src/features/emergency-home/protectedRouteCodePolicy.ts",
@@ -192,6 +193,7 @@ const requiredFiles = [
   "scripts/device-key-proof.test.ts",
   "scripts/profile-policy.test.ts",
   "scripts/panic-trigger-policy.test.ts",
+  "scripts/sos-controller-policy.test.ts",
   "scripts/onboarding-presentation-policy.test.ts",
   "scripts/status-components-presentation-policy.test.ts",
   "scripts/presentation-components-policy.test.ts",
@@ -458,6 +460,7 @@ const localSosPackageStatusPolicy = await readFile("src/features/emergency-home/
 const interruptedRecoveryProgressPolicy = await readFile("src/features/emergency-home/interruptedRecoveryProgressPolicy.ts", "utf8");
 const liveCallWaitingDialogPolicy = await readFile("src/features/emergency-home/liveCallWaitingDialogPolicy.ts", "utf8");
 const panicTriggerPolicy = await readFile("src/features/emergency-home/panicTriggerPolicy.ts", "utf8");
+const sosControllerPolicy = await readFile("src/features/emergency-home/sosControllerPolicy.ts", "utf8");
 const recordingConsentDialogPolicy = await readFile("src/features/emergency-home/recordingConsentDialogPolicy.ts", "utf8");
 const protectedRouteAccessPolicy = await readFile("src/features/emergency-home/protectedRouteAccessPolicy.ts", "utf8");
 const protectedRouteCodePolicy = await readFile("src/features/emergency-home/protectedRouteCodePolicy.ts", "utf8");
@@ -1579,7 +1582,8 @@ if (
 
 if (
   !homeScreen.includes("startInProgress") ||
-  !homeScreen.includes("resolvePanicTriggerDecision") ||
+  !homeScreen.includes("resolveSosControllerTrigger") ||
+  !sosControllerPolicy.includes("resolvePanicTriggerDecision") ||
   !panicTriggerPolicy.includes("ignore_start_in_progress") ||
   !homeScreen.includes("setStartInProgress(true)") ||
   !homeScreen.includes("setStartInProgress(false)")
@@ -1662,7 +1666,6 @@ if (!emergencyCallDock.includes("emergencyCallTargets.map")) {
 }
 
 if (
-  !homeScreen.includes("resolvePanicTriggerDecision") ||
   !homeScreen.includes("panicButtonLabel") ||
   !panicTriggerPolicy.includes("shouldRequestRecordingConsent") ||
   !panicTriggerPolicy.includes("request_recording_consent") ||
@@ -1670,6 +1673,19 @@ if (
   !packageJson.scripts["test:panic-trigger"]
 ) {
   throw new Error("Home/SOS precisa manter politica pura testavel para decisao do botao SOS e gate de consentimento.");
+}
+
+if (
+  !homeScreen.includes("resolveSosControllerTrigger") ||
+  !homeScreen.includes("resolveSosControllerFinishStart") ||
+  !sosControllerPolicy.includes("resolveSosControllerTrigger") ||
+  !sosControllerPolicy.includes("resolveSosControllerFinishStart") ||
+  !sosControllerPolicy.includes("resolvePanicTriggerDecision") ||
+  !sosControllerPolicy.includes("resolveEmergencyStartRuntimeActions") ||
+  !sosControllerPolicy.includes("resolveFinishActiveCallRuntimeStateActions") ||
+  !packageJson.scripts["test:sos-controller"]
+) {
+  throw new Error("Home/SOS precisa manter controlador puro testavel para entrada do SOS e inicio do encerramento.");
 }
 
 if (
@@ -1746,7 +1762,8 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveEmergencyStartRuntimeActions") ||
+  !homeScreen.includes("resolveSosControllerTrigger") ||
+  !sosControllerPolicy.includes("resolveEmergencyStartRuntimeActions") ||
   !homeScreen.includes("resolveEmergencyStartRequestPolicy") ||
   !homeScreen.includes("resolveEmergencyStartPresentation") ||
   !homeScreen.includes("resolveEmergencyStartCreatedActions") ||
@@ -1994,14 +2011,15 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishActiveCallStart") ||
-  !homeScreen.includes("resolveFinishActiveCallRuntimeStartActions") ||
+  !homeScreen.includes("resolveSosControllerFinishStart") ||
+  !sosControllerPolicy.includes("resolveFinishActiveCallStart") ||
+  !sosControllerPolicy.includes("resolveFinishActiveCallRuntimeStartActions") ||
   !homeScreen.includes("finishStartDecision.shouldStart") ||
   !finishActiveCallStartPolicy.includes("remoteSessionIdToFinish") ||
   !finishActiveCallStartPolicy.includes("mediaWasHandedToLiveCall") ||
   !finishActiveCallRuntimeStartPolicy.includes("shouldClearOwnerAutoCallSession") ||
   !finishActiveCallRuntimeStartPolicy.includes("emergency_finish_button_pressed") ||
-  !homeScreen.includes("resolveFinishActiveCallRuntimeStateActions") ||
+  !sosControllerPolicy.includes("resolveFinishActiveCallRuntimeStateActions") ||
   !finishActiveCallRuntimeStateActionsPolicy.includes("ownerAutoCallSessionIdToClear") ||
   !finishActiveCallRuntimeStateActionsPolicy.includes("stopOwnerLiveVideoEvidenceReason") ||
   !packageJson.scripts["test:finish-active-call-runtime-state-actions"] ||

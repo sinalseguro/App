@@ -1683,3 +1683,12 @@ Papel: seguranca, LGPD e QA.
 - `private:android:readiness` manteve a pendencia local conhecida de Node 20.16.0 para release publico, aceitavel para build privado debug.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
 - Android/build nao foram executados porque a fatia nao altera UX nativa, chamada real, renderizacao WebRTC, camera, gravacao, Share nativo real, cofre, player ou loop de midia.
+
+## QA/Security - 2026-05-31 - Bloco 1A SOS Controller policy
+
+- Corte restrito a policy/controlador puro de composicao para entrada do SOS e inicio do encerramento ativo.
+- `sosControllerPolicy` combina decisions existentes, mas nao executa API, storage, camera, WebRTC, timer, chamada telefonica, router, cofre ou mutacao real.
+- `app/index.tsx` continua dono dos efeitos reais, inclusive refs/estado React, modais, chamada, camera, WebRTC, cofre, backend, auditoria e logs operacionais.
+- Nao introduz log novo com dados sensiveis, chave, token, hash, codigo, identity token, SDP, ICE, payload P2P, URI local, path de arquivo, coordenada, telefone novo, nome real novo ou conteudo de midia.
+- Validacoes aprovadas: `test:sos-controller`, `test:panic-trigger`, `test:emergency-start-runtime`, `test:finish-active-call-start`, `test:finish-active-call-runtime-state-actions`, `smoke-test`, `typecheck`, `lint` e `git diff --check`.
+- Sem build/instalacao Android nesta subfatia porque nao houve mudanca de runtime fisico; a proxima mudanca que mover side effects de camera/WebRTC/storage exige validacao fisica proporcional.

@@ -24,6 +24,7 @@
     "test:crypto": "tsx scripts/encrypted-video-store.test.ts",
     "test:device-keys": "tsx scripts/device-key-proof.test.ts",
     "test:profiles": "tsx scripts/profile-policy.test.ts",
+    "test:sos-controller": "tsx scripts/sos-controller-policy.test.ts",
     "test:how-it-works-presentation": "tsx scripts/how-it-works-presentation-policy.test.ts",
     "test:onboarding-presentation": "tsx scripts/onboarding-presentation-policy.test.ts",
     "test:status-components-presentation": "tsx scripts/status-components-presentation-policy.test.ts",

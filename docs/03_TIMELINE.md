@@ -6104,3 +6104,25 @@ Validacoes:
 Checkpoint:
 
 - `docs/217_CHECKPOINT_ETAPAS_1_191_1_192_PROFILES_SCREEN_PRESENTATION_POLICY_2026-05-24.md`.
+
+## 2026-05-31 - Bloco 1A SOS Controller policy
+
+Status: refatoracao de controlador puro implementada e validada.
+
+Executado:
+
+- Criada `src/features/emergency-home/sosControllerPolicy.ts` para compor a decisao de entrada do botao SOS e o inicio do encerramento ativo.
+- `resolveSosControllerTrigger()` centraliza a escolha entre ignorar duplo acionamento, mostrar protecao de midia, encerrar chamado ativo, pedir consentimento de gravacao ou iniciar pacote SOS.
+- `resolveSosControllerFinishStart()` centraliza a guarda inicial do encerramento ativo e a composicao das acoes runtime de finish.
+- `app/index.tsx` manteve efeitos reais de chamada, camera, WebRTC, storage, cofre, backend, auditoria e navegacao.
+- Criado `scripts/sos-controller-policy.test.ts` e script `test:sos-controller`.
+- `scripts/smoke-test.mjs` passou a exigir o controlador e o gate dedicado.
+
+Validacoes:
+
+- `test:sos-controller`, `test:panic-trigger`, `test:emergency-start-runtime`, `test:finish-active-call-start`, `test:finish-active-call-runtime-state-actions`, `smoke-test`, `typecheck`, `lint` e `git diff --check`: aprovados.
+- Sem build Android porque a subfatia nao moveu runtime fisico de camera, WebRTC, storage, cofre ou backend.
+
+Checkpoint:
+
+- `docs/218_CHECKPOINT_BLOCO_1A_SOS_CONTROLLER_POLICY_2026-05-31.md`.

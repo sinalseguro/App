@@ -1326,6 +1326,15 @@ Proximas acoes atualizadas:
 - Gates continuam proporcionais ao risco: leve para policy pura, medio para API/store/navegacao e alto para SOS, media, WebRTC, backend de autoridade ou publicacao.
 - Em retomadas com outro login do Codex, reconstruir contexto por docs/Git/checkpoints e nao depender da conversa anterior.
 
+## QA/Security - 2026-05-31 - Bloco 1A SOS Controller policy
+
+- Mudanca restrita a controlador/policy pura de composicao para entrada do SOS e inicio do encerramento ativo.
+- `app/index.tsx` manteve os efeitos reais de chamada, camera, WebRTC, storage, cofre, sincronizacao backend, auditoria, logs e navegacao.
+- `sosControllerPolicy` apenas combina policies existentes; nao executa API, storage, camera, WebRTC, timer, chamada telefonica ou router.
+- Sem novo segredo, credencial, token, chave, SDP, ICE, URI local, path de arquivo, coordenada, telefone novo, nome real novo ou conteudo de midia.
+- Gates aprovados: `test:sos-controller`, `test:panic-trigger`, `test:emergency-start-runtime`, `test:finish-active-call-start`, `test:finish-active-call-runtime-state-actions`, `smoke-test`, `typecheck`, `lint` e `git diff --check`.
+- Sem build Android porque a subfatia nao moveu runtime fisico; qualquer proximo corte com camera/WebRTC/storage exige validacao fisica proporcional.
+
 ## QA/Security - 2026-05-23 - Etapas 1.181 e 1.182 emergency home shell policies
 
 - Etapas 1.181 e 1.182 extraem apenas apresentacao/acessibilidade: `emergencyTopBarPresentationPolicy` e `emergencySettingsDrawerPresentationPolicy`.
