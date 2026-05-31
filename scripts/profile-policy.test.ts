@@ -7,6 +7,14 @@ import {
   canReceiveFutureEmergencyDelivery,
   getProfileSummary
 } from "../src/features/profiles/profilePolicy";
+import {
+  profilesLimitNotice,
+  profilesScreenCopy,
+  profilesStatusTextFit,
+  resolveProfileOptionCardPresentation,
+  resolveProfileStatusAfterLoad,
+  resolveProfilesContinueButtonPresentation
+} from "../src/features/profiles/profilesScreenPresentationPolicy";
 
 const adult = buildProtectionProfile("adult_self_managed", new Date("2026-05-13T12:00:00.000Z"));
 const minor = buildProtectionProfile("minor_protected", new Date("2026-05-13T12:00:00.000Z"));
@@ -37,5 +45,42 @@ assert.equal(canReceiveFutureEmergencyDelivery({ authorizationStatus: "authorize
 assert.equal(getProfileSummary(null).tone, "warning");
 assert.equal(getProfileSummary(minor).tone, "warning");
 assert.equal(getProfileSummary(adult).tone, "secure");
+
+assert.equal(profilesScreenCopy.title, "Perfis e papéis");
+assert.match(profilesScreenCopy.footer, /não coleta documento/);
+assert.equal(profilesLimitNotice.tone, "warning");
+assert.match(profilesLimitNotice.text, /Menor não cria anjo/);
+assert.equal(resolveProfileStatusAfterLoad(undefined), profilesScreenCopy.missingStatus);
+assert.equal(resolveProfileStatusAfterLoad("adult_self_managed"), profilesScreenCopy.loadedStatus);
+assert.deepEqual(resolveProfileOptionCardPresentation(true).icon, {
+  colorToken: "secure",
+  size: 22
+});
+assert.deepEqual(resolveProfileOptionCardPresentation(false).descriptionTextFit, {
+  adjustsFontSizeToFit: true,
+  maxFontSizeMultiplier: 1.2,
+  minimumFontScale: 0.84,
+  numberOfLines: 3
+});
+assert.deepEqual(resolveProfilesContinueButtonPresentation(), {
+  accessibilityRole: "button",
+  icon: {
+    colorToken: "textOnDark",
+    size: 20
+  },
+  label: "Voltar para anjos",
+  textFit: {
+    adjustsFontSizeToFit: true,
+    maxFontSizeMultiplier: 1.2,
+    minimumFontScale: 0.82,
+    numberOfLines: 1
+  }
+});
+assert.deepEqual(profilesStatusTextFit, {
+  adjustsFontSizeToFit: true,
+  maxFontSizeMultiplier: 1.2,
+  minimumFontScale: 0.84,
+  numberOfLines: 2
+});
 
 console.log("Profile policy test aprovado.");

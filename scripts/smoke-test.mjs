@@ -147,6 +147,7 @@ const requiredFiles = [
   "src/features/invitations/invitationAcceptancePresentationPolicy.ts",
   "src/features/invitations/trustedRelationshipStore.ts",
   "src/features/profiles/profilePolicy.ts",
+  "src/features/profiles/profilesScreenPresentationPolicy.ts",
   "src/features/profiles/profileStore.ts",
   "src/features/onboarding/howItWorksPresentationPolicy.ts",
   "src/features/onboarding/onboardingPresentationPolicy.ts",

@@ -1413,6 +1413,16 @@ Papel: seguranca, LGPD e QA.
 - Validacoes focadas aprovadas: `test:status-components-presentation`, `smoke-test`, `typecheck` e `lint`.
 - Sem build/instalacao Android porque as fatias sao presentational e nao alteram runtime fisico.
 
+## Memoria viva - 2026-05-24 - Etapas 1.191 e 1.192 profiles screen sem build
+
+- Etapas 1.191 e 1.192 extraem apenas apresentacao da tela de perfis: copy, status locais, aviso de limites, icon sizing/color tokens e text-fit de cards/botao/status.
+- `app/perfis.tsx` continua responsavel por `getActiveProtectionProfile`, `saveActiveProtectionProfile`, `useEffect`, `setProfile`, `setStatus` e `router.push("/contatos")`.
+- `profilePolicy` continua responsavel por regras de maioridade, convite, aceite como anjo e autorizacao para entrega futura.
+- A nova policy nao recebeu storage, API, Share, rotas reais, backend, permissoes reais, operacoes de midia ou efeitos de chamada.
+- `PanicButton`, `AppTopBar`, `BrandedDialog`, gate protegido, cofre/player runtime, SOS/WebRTC, backend e storage ficaram fora do escopo.
+- Validacoes focadas aprovadas: `test:profiles`, `smoke-test`, `typecheck` e `lint`.
+- Sem build/instalacao Android porque as fatias sao presentational e nao alteram runtime fisico.
+
 ## QA/Security - 2026-05-22 - Etapas 1.149 e 1.150 trusted angels relationship/invitation panels
 
 - Mudanca restrita a componentes locais de apresentacao da tela `Anjos de confianca`; sem novo storage, endpoint, permissao, rede, payload persistido, backend, portal ou release.

@@ -12,14 +12,25 @@ import {
   ProtectionProfileKind
 } from "@/features/profiles/profilePolicy";
 import { getActiveProtectionProfile, saveActiveProtectionProfile } from "@/features/profiles/profileStore";
+import {
+  profilesLimitNotice,
+  profilesScreenCopy,
+  profilesStatusTextFit,
+  resolveProfileOptionIconPresentation,
+  resolveProfileOptionCardPresentation,
+  resolveProfilesContinueButtonPresentation,
+  resolveProfileStatusAfterLoad
+} from "@/features/profiles/profilesScreenPresentationPolicy";
 
 function optionIcon(kind: ProtectionProfileKind, selected: boolean) {
-  const color = selected ? theme.colors.secure : theme.colors.primary;
-  if (kind === "minor_protected") return <ShieldAlert size={22} color={color} />;
+  const iconPresentation = resolveProfileOptionIconPresentation(selected);
+  const color = theme.colors[iconPresentation.colorToken];
+
+  if (kind === "minor_protected") return <ShieldAlert size={iconPresentation.size} color={color} />;
   if (kind === "responsible_with_minor" || kind === "responsible_without_minor") {
-    return <UsersRound size={22} color={color} />;
+    return <UsersRound size={iconPresentation.size} color={color} />;
   }
-  return <UserRound size={22} color={color} />;
+  return <UserRound size={iconPresentation.size} color={color} />;
 }
 
 type ProfileOptionCardProps = {
@@ -29,9 +40,11 @@ type ProfileOptionCardProps = {
 };
 
 function ProfileOptionCard({ onSelect, option, selected }: ProfileOptionCardProps) {
+  const presentation = resolveProfileOptionCardPresentation(selected);
+
   return (
     <Pressable
-      accessibilityRole="button"
+      accessibilityRole={presentation.accessibilityRole}
       accessibilityState={{ selected }}
       onPress={() => onSelect(option.kind)}
       style={({ pressed }) => [
@@ -44,8 +57,8 @@ function ProfileOptionCard({ onSelect, option, selected }: ProfileOptionCardProp
         {optionIcon(option.kind, selected)}
       </View>
       <View style={styles.optionTextBlock}>
-        <Text style={styles.optionTitle}>{option.label}</Text>
-        <Text style={styles.optionDescription}>{option.description}</Text>
+        <Text {...presentation.titleTextFit} style={styles.optionTitle}>{option.label}</Text>
+        <Text {...presentation.descriptionTextFit} style={styles.optionDescription}>{option.description}</Text>
       </View>
     </Pressable>
   );
@@ -56,27 +69,30 @@ type ProfilesContinueButtonProps = {
 };
 
 function ProfilesContinueButton({ onPress }: ProfilesContinueButtonProps) {
+  const presentation = resolveProfilesContinueButtonPresentation();
+  const iconColor = theme.colors[presentation.icon.colorToken];
+
   return (
     <Pressable
-      accessibilityRole="button"
+      accessibilityRole={presentation.accessibilityRole}
       onPress={onPress}
       style={({ pressed }) => [styles.continueButton, pressed && styles.optionPressed]}
     >
-      <ShieldCheck size={20} color={theme.colors.textOnDark} />
-      <Text style={styles.continueText}>Voltar para anjos</Text>
+      <ShieldCheck size={presentation.icon.size} color={iconColor} />
+      <Text {...presentation.textFit} style={styles.continueText}>{presentation.label}</Text>
     </Pressable>
   );
 }
 
 export default function ProfilesScreen() {
   const [profile, setProfile] = useState<ProtectionProfile | null>(null);
-  const [status, setStatus] = useState("Carregando perfil local...");
+  const [status, setStatus] = useState<string>(profilesScreenCopy.loadingStatus);
   const summary = getProfileSummary(profile);
 
   async function loadProfile() {
     const nextProfile = await getActiveProtectionProfile();
     setProfile(nextProfile);
-    setStatus(nextProfile ? "Perfil local carregado." : "Perfil ainda não configurado.");
+    setStatus(resolveProfileStatusAfterLoad(nextProfile?.kind));
   }
 
   useEffect(() => {
@@ -86,14 +102,14 @@ export default function ProfilesScreen() {
   async function selectProfile(kind: ProtectionProfileKind) {
     const nextProfile = await saveActiveProtectionProfile(kind);
     setProfile(nextProfile);
-    setStatus("Perfil salvo neste aparelho.");
+    setStatus(profilesScreenCopy.savedStatus);
   }
 
   return (
     <SafeScreen
-      title="Perfis e papéis"
-      subtitle="Defina quem usa este aparelho antes de preparar rede de apoio."
-      footer="Esta etapa não coleta documento, data de nascimento completa, endereço, agenda ou relato sensível."
+      title={profilesScreenCopy.title}
+      subtitle={profilesScreenCopy.subtitle}
+      footer={profilesScreenCopy.footer}
     >
       <StatusBanner tone={summary.tone} title={summary.title} text={summary.text} />
 
@@ -109,14 +125,14 @@ export default function ProfilesScreen() {
       </View>
 
       <StatusBanner
-        tone="warning"
-        title="Limites de proteção"
-        text="Menor não cria anjo nem atua como anjo. Videochamada, localização ao vivo, envio externo e instituições conveniadas ainda não estão disponíveis."
+        tone={profilesLimitNotice.tone}
+        title={profilesLimitNotice.title}
+        text={profilesLimitNotice.text}
       />
 
       <ProfilesContinueButton onPress={() => router.push("/contatos")} />
 
-      <Text style={styles.statusText}>{status}</Text>
+      <Text {...profilesStatusTextFit} style={styles.statusText}>{status}</Text>
     </SafeScreen>
   );
 }

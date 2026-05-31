@@ -1308,6 +1308,24 @@ Proximas acoes atualizadas:
 - Validacoes focadas aprovadas: `test:status-components-presentation`, `smoke-test`, `typecheck` e `lint`.
 - Sem build/instalacao Android porque a rodada e presentational e nao altera runtime fisico.
 
+## QA/Security - 2026-05-24 - Etapas 1.191 e 1.192 Profiles screen sem build
+
+- Rodada SS executada apos microtriagem; alvo escolhido foi a tela de perfis por baixo risco relativo e smoke ja existente.
+- `profilesScreenPresentationPolicy` recebeu somente copy, status locais, aviso de limites, icon sizing/color tokens e text-fit.
+- `app/perfis.tsx` manteve storage seguro, estado React e navegacao real; `profilePolicy` manteve regras de maioridade e autorizacao.
+- Nao houve novo segredo, credencial, SDP, ICE, payload P2P, path local, coordenada, telefone novo, nome real novo ou conteudo de midia.
+- Validacoes focadas aprovadas: `test:profiles`, `smoke-test`, `typecheck` e `lint`.
+- Sem build/instalacao Android porque a rodada e presentational e nao altera runtime fisico.
+
+## QA/Security - 2026-05-31 - Mudanca de cadencia da refatoracao
+
+- Roberto decidiu acelerar a refatoracao porque a cadencia rigida de duas fatias ficou lenta demais para a entrega.
+- Fonte atual: `../../docs/tecnico/PLANO_REFATORACAO_ACELERADA_2026-05-31.md`.
+- Encerrar primeiro a fatia atual de perfis com gates leves e checkpoint Git.
+- Depois nao continuar abrindo duplas presentational por padrao; iniciar blocos de dominio, com prioridade para `SOS Controller`.
+- Gates continuam proporcionais ao risco: leve para policy pura, medio para API/store/navegacao e alto para SOS, media, WebRTC, backend de autoridade ou publicacao.
+- Em retomadas com outro login do Codex, reconstruir contexto por docs/Git/checkpoints e nao depender da conversa anterior.
+
 ## QA/Security - 2026-05-23 - Etapas 1.181 e 1.182 emergency home shell policies
 
 - Etapas 1.181 e 1.182 extraem apenas apresentacao/acessibilidade: `emergencyTopBarPresentationPolicy` e `emergencySettingsDrawerPresentationPolicy`.

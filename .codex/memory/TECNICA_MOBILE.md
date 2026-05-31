@@ -1563,6 +1563,24 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Validacoes focadas aprovadas: `test:status-components-presentation`, `smoke-test`, `typecheck` e `lint`.
 - Sem build/instalacao Android porque a rodada e presentational e nao altera runtime fisico.
 
+# Atualizacao - 2026-05-24 - Etapas 1.191 e 1.192 Profiles screen presentation policy
+
+- `src/features/profiles/profilesScreenPresentationPolicy.ts` centraliza copy da tela de perfis, status locais, aviso de limites, icon sizing/color tokens e text-fit dos cards/botao/status.
+- `app/perfis.tsx` segue responsavel por carregamento/salvamento real do perfil, estado React e navegacao para `/contatos`.
+- `src/features/profiles/profilePolicy.ts` segue responsavel por regras de maioridade, convites, aceite como anjo e entrega futura autorizada.
+- Nao houve mudanca em backend, Share, storage, rotas reais fora da tela, permissoes reais, SOS/WebRTC, cofre/player runtime ou publicacao.
+- Validacoes focadas aprovadas: `test:profiles`, `smoke-test`, `typecheck` e `lint`.
+- Sem build/instalacao Android porque a rodada e presentational e nao altera runtime fisico.
+
+# Atualizacao - 2026-05-31 - Refatoracao acelerada por blocos
+
+- A cadencia rigida de duas fatias deixa de ser o padrao porque ficou lenta demais para a entrega.
+- Fonte operacional: `../../docs/tecnico/PLANO_REFATORACAO_ACELERADA_2026-05-31.md`.
+- Primeiro fechar a fatia atual de perfis com gates leves: `test:profiles`, smoke, typecheck, lint e `git diff --check`.
+- Depois iniciar Bloco 1 - `SOS Controller`, sem abrir nova dupla presentational por simetria.
+- Proximos blocos: `Media Adapters`, `Live Call State`, `Backend Services/Policies`, `Portais/Gestor` e documentacao final.
+- Retomadas apos interrupcao ou troca de login devem reconstruir contexto por docs/Git/checkpoints e aplicar gates proporcionais ao risco.
+
 # Atualizacao - 2026-05-23 - Etapas 1.181 e 1.182 Policies visuais da Home
 
 - `src/features/emergency-home/emergencyTopBarPresentationPolicy.ts` centraliza labels de contexto e configuracao visual do menu do `EmergencyTopBar`.

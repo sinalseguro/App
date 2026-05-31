@@ -6083,3 +6083,24 @@ Validacoes:
 Checkpoint:
 
 - `docs/216_CHECKPOINT_ETAPAS_1_189_1_190_PERMISSION_INVITE_TEXTFIT_POLICY_2026-05-24.md`.
+
+## 2026-05-24 - Etapas 1.191 e 1.192 policy visual da tela de perfis
+
+Status: refatoracao presentational implementada e validada.
+
+Executado:
+
+- Etapa 1.191: criada `src/features/profiles/profilesScreenPresentationPolicy.ts` para centralizar copy da tela, status locais e aviso de limites.
+- Etapa 1.192: a mesma policy centraliza parametros visuais de icones, text-fit dos cards de perfil, text-fit do status discreto e apresentacao do botao para voltar aos anjos.
+- `app/perfis.tsx` continua responsavel por `getActiveProtectionProfile`, `saveActiveProtectionProfile`, `useEffect`, `setProfile`, `setStatus` e `router.push("/contatos")`.
+- `src/features/profiles/profilePolicy.ts` continua responsavel pelas regras de maioridade, convite, aceite como anjo e autorizacao para entrega futura.
+- SOS/WebRTC, backend, storage, cofre/player runtime, gates protegidos e release ficaram fora do escopo.
+
+Validacoes:
+
+- `test:profiles`, `smoke-test`, `typecheck` e `lint`: aprovados.
+- Sem build Android por ser mudanca presentational sem runtime nativo.
+
+Checkpoint:
+
+- `docs/217_CHECKPOINT_ETAPAS_1_191_1_192_PROFILES_SCREEN_PRESENTATION_POLICY_2026-05-24.md`.
