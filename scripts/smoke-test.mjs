@@ -1728,7 +1728,8 @@ if (
 if (
   !finishActiveCallRuntimeStartPolicy.includes("resolveFinishRequestedProgress") ||
   !finishMediaStopRequestActionsPolicy.includes("resolveFinishMediaStopStartActions") ||
-  !homeScreen.includes("resolveFinishMediaStopResultActions") ||
+  !homeScreen.includes("resolveSosControllerFinishMediaStopResult") ||
+  !sosControllerPolicy.includes("resolveFinishMediaStopResultActions") ||
   !homeScreen.includes("resolveFinishRemoteSyncRequestActions") ||
   !finishRemoteSyncRequestActionsPolicy.includes("resolveFinishRemoteSyncStartActions") ||
   !finishMediaStopStartPolicy.includes("resolveFinishMediaStopSignaledProgress") ||
@@ -2042,8 +2043,10 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishMediaStopRequestActions") ||
-  !homeScreen.includes("resolveFinishMediaStopSignaledActions") ||
+  !homeScreen.includes("resolveSosControllerFinishMediaStopRequest") ||
+  !homeScreen.includes("resolveSosControllerFinishMediaStopSignaled") ||
+  !sosControllerPolicy.includes("resolveFinishMediaStopRequestActions") ||
+  !sosControllerPolicy.includes("resolveFinishMediaStopSignaledActions") ||
   !finishMediaStopRequestActionsPolicy.includes("resolveFinishMediaStopStartActions") ||
   !finishMediaStopRequestActionsPolicy.includes("shouldSignalMediaRecorderStop") ||
   !finishMediaStopStartPolicy.includes("shouldLockCaptureStop") ||
@@ -2056,7 +2059,8 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishMediaStopResultActions") ||
+  !homeScreen.includes("resolveSosControllerFinishMediaStopResult") ||
+  !sosControllerPolicy.includes("resolveFinishMediaStopResultActions") ||
   !finishMediaStopResultPolicy.includes("shouldClearMediaStopPending") ||
   !finishMediaStopResultPolicy.includes("emergency_media_stop_progress_result") ||
   !packageJson.scripts["test:finish-media-stop-result"]

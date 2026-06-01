@@ -1335,6 +1335,15 @@ Proximas acoes atualizadas:
 - Gates aprovados: `test:sos-controller`, `test:panic-trigger`, `test:emergency-start-runtime`, `test:finish-active-call-start`, `test:finish-active-call-runtime-state-actions`, `smoke-test`, `typecheck`, `lint` e `git diff --check`.
 - Sem build Android porque a subfatia nao moveu runtime fisico; qualquer proximo corte com camera/WebRTC/storage exige validacao fisica proporcional.
 
+## QA/Security - 2026-06-01 - Bloco 1B SOS Controller media stop policy
+
+- Mudanca restrita a controlador/policy pura para compor a fase de parada de midia do encerramento.
+- `app/index.tsx` continua executando o recorder real, espera de parada, mutacoes React, progresso, cofre, backend, auditoria e logs.
+- `sosControllerPolicy` nao executa API, storage, camera, WebRTC, timer, chamada telefonica, router, cofre ou mutacao real.
+- Sem novo segredo, credencial, token, chave, SDP, ICE, URI local, path de arquivo, coordenada, telefone novo, nome real novo ou conteudo de midia.
+- Gates aprovados: `test:sos-controller`, `test:finish-media-stop-request-actions`, `test:finish-media-stop-result`, `smoke-test`, `typecheck`, `lint` e `git diff --check`.
+- Sem build Android porque a subfatia nao moveu runtime fisico; qualquer proximo corte com camera/recorder/WebRTC/storage exige validacao fisica proporcional.
+
 ## QA/Security - 2026-05-23 - Etapas 1.181 e 1.182 emergency home shell policies
 
 - Etapas 1.181 e 1.182 extraem apenas apresentacao/acessibilidade: `emergencyTopBarPresentationPolicy` e `emergencySettingsDrawerPresentationPolicy`.

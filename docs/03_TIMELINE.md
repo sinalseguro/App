@@ -6126,3 +6126,24 @@ Validacoes:
 Checkpoint:
 
 - `docs/218_CHECKPOINT_BLOCO_1A_SOS_CONTROLLER_POLICY_2026-05-31.md`.
+
+## 2026-06-01 - Bloco 1B SOS Controller media stop policy
+
+Status: refatoracao de controlador puro implementada e validada.
+
+Executado:
+
+- `sosControllerPolicy` passou a compor a fase pura de parada de midia no encerramento do SOS.
+- Criadas `resolveSosControllerFinishMediaStopRequest()`, `resolveSosControllerFinishMediaStopSignaled()` e `resolveSosControllerFinishMediaStopResult()`.
+- `app/index.tsx` manteve `signalMediaRecorderStop()`, `waitForMediaRecorderStop()`, refs, estado React, progresso visual, cofre, backend e logs reais.
+- `scripts/sos-controller-policy.test.ts` passou a cobrir a composicao de parada de midia.
+- `scripts/smoke-test.mjs` passou a exigir a Home usando o controlador e o controlador usando as policies finas.
+
+Validacoes:
+
+- `test:sos-controller`, `test:finish-media-stop-request-actions`, `test:finish-media-stop-result`, `smoke-test`, `typecheck`, `lint` e `git diff --check`: aprovados.
+- Sem build Android porque a subfatia nao moveu runtime fisico de camera, recorder, WebRTC, storage, cofre ou backend.
+
+Checkpoint:
+
+- `docs/219_CHECKPOINT_BLOCO_1B_SOS_CONTROLLER_MEDIA_STOP_POLICY_2026-06-01.md`.

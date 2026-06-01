@@ -38,11 +38,6 @@ import {
   resolveFinishFailureRuntimeActions,
   resolveFinishFinallyCleanupActions
 } from "@/features/emergency-home/finishFailureCleanupActionsPolicy";
-import { resolveFinishMediaStopResultActions } from "@/features/emergency-home/finishMediaStopResultPolicy";
-import {
-  resolveFinishMediaStopRequestActions,
-  resolveFinishMediaStopSignaledActions
-} from "@/features/emergency-home/finishMediaStopRequestActionsPolicy";
 import { resolveFinishMissingPackageBranchActions } from "@/features/emergency-home/finishMissingPackageBranchActionsPolicy";
 import { resolveFinishPackageOutcomeActions } from "@/features/emergency-home/finishPackageOutcomeActionsPolicy";
 import { resolveFinishProgressDialogPresentation } from "@/features/emergency-home/finishProgressDialogPolicy";
@@ -146,6 +141,9 @@ import { resolveRecordingConsentDialogPresentation } from "@/features/emergency-
 import { resolveActiveRemoteSyncStatus } from "@/features/emergency-home/remoteSyncStatusPolicy";
 import {
   resolveSosControllerFinishStart,
+  resolveSosControllerFinishMediaStopRequest,
+  resolveSosControllerFinishMediaStopResult,
+  resolveSosControllerFinishMediaStopSignaled,
   resolveSosControllerTrigger
 } from "@/features/emergency-home/sosControllerPolicy";
 import { resolveActiveRemoteSyncAttemptActions, type ActiveRemoteSyncAttemptSource } from "@/features/emergency-home/activeRemoteSyncAttemptActionsPolicy";
@@ -1464,13 +1462,14 @@ export default function HomeScreen() {
     appendMediaOperationalLog(finishRuntimeStateActions.log.event, finishRuntimeStateActions.log.payload);
 
     try {
-      mediaStopPurposeRef.current = "finish";
-      const mediaStopRequestActions = resolveFinishMediaStopRequestActions({
+      const mediaStopRequestDecision = resolveSosControllerFinishMediaStopRequest({
         mediaWasHandedToLiveCall
       });
+      mediaStopPurposeRef.current = mediaStopRequestDecision.mediaStopPurpose;
+      const mediaStopRequestActions = mediaStopRequestDecision.requestActions;
       const stopSerial = mediaStopRequestActions.shouldSignalMediaRecorderStop ? signalMediaRecorderStop() : null;
       let stopResult: MediaStopRequestResult | null = null;
-      const mediaStopSignaledActions = resolveFinishMediaStopSignaledActions({
+      const mediaStopSignaledActions = resolveSosControllerFinishMediaStopSignaled({
         packageId,
         stopSerial
       });
@@ -1486,7 +1485,7 @@ export default function HomeScreen() {
         setMediaRecorderPackageId(mediaStopStartActions.mediaRecorderPackageId);
         showFinishProgress(mediaStopStartActions.finishProgress);
         stopResult = await waitForMediaRecorderStop(mediaStopSignaledActions.stopSerial);
-        const mediaStopResultActions = resolveFinishMediaStopResultActions({
+        const mediaStopResultActions = resolveSosControllerFinishMediaStopResult({
           attachedAssets: stopResult.attachedAssets,
           platform: Platform.OS,
           status: stopResult.status

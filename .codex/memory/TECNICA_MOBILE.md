@@ -1590,6 +1590,14 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - Novo gate: `test:sos-controller`; smoke passou a exigir controlador e teste.
 - Este corte nao moveu media engine, criptografia, API, permissoes nativas, backend, portais ou release.
 
+# Atualizacao - 2026-06-01 - Bloco 1B SOS Controller media stop policy
+
+- `sosControllerPolicy` agora tambem centraliza a composicao pura da parada de midia durante o encerramento do SOS.
+- Novas funcoes: `resolveSosControllerFinishMediaStopRequest`, `resolveSosControllerFinishMediaStopSignaled` e `resolveSosControllerFinishMediaStopResult`.
+- `app/index.tsx` deixou de chamar diretamente as policies finas de request/signaled/result da parada de midia no finish, mas segue executando `signalMediaRecorderStop`, `waitForMediaRecorderStop`, refs, estado React, progresso, logs, cofre, storage, backend e WebRTC.
+- `test:sos-controller` cobre midia ja entregue a chamada ao vivo, necessidade de sinalizar recorder, ausencia de serial, serial valido e resultado com asset anexado.
+- Este corte nao moveu side effects reais de camera/recorder/cofre/WebRTC/storage/backend.
+
 # Atualizacao - 2026-05-23 - Etapas 1.181 e 1.182 Policies visuais da Home
 
 - `src/features/emergency-home/emergencyTopBarPresentationPolicy.ts` centraliza labels de contexto e configuracao visual do menu do `EmergencyTopBar`.

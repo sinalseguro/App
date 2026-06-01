@@ -3,6 +3,9 @@ import assert from "node:assert/strict";
 import { defaultEmergencyPreferences } from "../src/features/emergency/emergencyPreferences";
 import {
   resolveSosControllerFinishStart,
+  resolveSosControllerFinishMediaStopRequest,
+  resolveSosControllerFinishMediaStopResult,
+  resolveSosControllerFinishMediaStopSignaled,
   resolveSosControllerTrigger
 } from "../src/features/emergency-home/sosControllerPolicy";
 
@@ -179,6 +182,86 @@ assert.deepEqual(
       remoteSessionIdToFinish: "session-audio",
       shouldStart: true
     }
+  }
+);
+
+assert.deepEqual(
+  resolveSosControllerFinishMediaStopRequest({
+    mediaWasHandedToLiveCall: true
+  }),
+  {
+    mediaStopPurpose: "finish",
+    requestActions: {
+      shouldSignalMediaRecorderStop: false
+    }
+  }
+);
+
+assert.deepEqual(
+  resolveSosControllerFinishMediaStopRequest({
+    mediaWasHandedToLiveCall: false
+  }),
+  {
+    mediaStopPurpose: "finish",
+    requestActions: {
+      shouldSignalMediaRecorderStop: true
+    }
+  }
+);
+
+assert.deepEqual(
+  resolveSosControllerFinishMediaStopSignaled({
+    packageId: "pkg-1",
+    stopSerial: null
+  }),
+  {
+    shouldApply: false
+  }
+);
+
+assert.deepEqual(
+  resolveSosControllerFinishMediaStopSignaled({
+    packageId: "pkg-1",
+    stopSerial: 7
+  }),
+  {
+    shouldApply: true,
+    startActions: {
+      finishProgress: {
+        detail: "Camera sinalizada. O chamado saiu do modo ativo enquanto a midia continua protegendo.",
+        progress: 24,
+        status: "running",
+        title: "Encerrando gravacao"
+      },
+      mediaRecorderPackageId: "pkg-1",
+      nextActivePackageId: null,
+      shouldLockCaptureStop: true,
+      shouldSetMediaStopPending: true
+    },
+    stopSerial: 7
+  }
+);
+
+assert.deepEqual(
+  resolveSosControllerFinishMediaStopResult({
+    attachedAssets: 2,
+    platform: "android",
+    status: "attached"
+  }),
+  {
+    finishProgress: {
+      detail: "Midia criptografada. A finalizacao do pacote pode seguir em segundo plano.",
+      progress: 72,
+      status: "background",
+      title: "Midia protegida"
+    },
+    logEvent: "emergency_media_stop_progress_result",
+    logPayload: {
+      attachedAssets: 2,
+      platform: "android",
+      status: "attached"
+    },
+    shouldClearMediaStopPending: true
   }
 );
 

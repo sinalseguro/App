@@ -17,9 +17,20 @@ import {
   type FinishActiveCallStartInput
 } from "./finishActiveCallStartPolicy";
 import {
+  type FinishFlowMediaStopStatus,
   resolveMediaProtectionInProgress,
   type FinishFlowProgress
 } from "./finishFlowProgressPolicy";
+import {
+  resolveFinishMediaStopRequestActions,
+  resolveFinishMediaStopSignaledActions,
+  type FinishMediaStopRequestActions,
+  type FinishMediaStopSignaledActions
+} from "./finishMediaStopRequestActionsPolicy";
+import {
+  resolveFinishMediaStopResultActions,
+  type FinishMediaStopResultActionsDecision
+} from "./finishMediaStopResultPolicy";
 import { resolveLocalSosPackageStatus } from "./localSosPackageStatusPolicy";
 import { resolvePanicTriggerDecision } from "./panicTriggerPolicy";
 
@@ -69,6 +80,11 @@ export type SosControllerFinishStartDecision =
       shouldStart: true;
       startDecision: FinishActiveCallStartDecision;
     };
+
+export type SosControllerFinishMediaStopRequestDecision = {
+  mediaStopPurpose: "finish";
+  requestActions: FinishMediaStopRequestActions;
+};
 
 export function resolveSosControllerTrigger(input: SosControllerTriggerInput): SosControllerTriggerDecision {
   const panicDecision = resolvePanicTriggerDecision({
@@ -128,4 +144,30 @@ export function resolveSosControllerFinishStart(input: SosControllerFinishStartI
     shouldStart: true,
     startDecision
   };
+}
+
+export function resolveSosControllerFinishMediaStopRequest(input: {
+  mediaWasHandedToLiveCall: boolean;
+}): SosControllerFinishMediaStopRequestDecision {
+  return {
+    mediaStopPurpose: "finish",
+    requestActions: resolveFinishMediaStopRequestActions({
+      mediaWasHandedToLiveCall: input.mediaWasHandedToLiveCall
+    })
+  };
+}
+
+export function resolveSosControllerFinishMediaStopSignaled(input: {
+  packageId: string;
+  stopSerial: number | null;
+}): FinishMediaStopSignaledActions {
+  return resolveFinishMediaStopSignaledActions(input);
+}
+
+export function resolveSosControllerFinishMediaStopResult(input: {
+  attachedAssets: number;
+  platform: string;
+  status: FinishFlowMediaStopStatus;
+}): FinishMediaStopResultActionsDecision {
+  return resolveFinishMediaStopResultActions(input);
 }
