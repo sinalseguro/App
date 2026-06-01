@@ -1,4 +1,5 @@
 import type { EmergencyPreferences } from "@/features/emergency/emergencyPreferences";
+import type { EmergencyRemoteSyncState } from "@/features/emergency/emergencySyncQueue";
 
 import {
   resolveEmergencyStartRuntimeActions,
@@ -31,6 +32,22 @@ import {
   resolveFinishMediaStopResultActions,
   type FinishMediaStopResultActionsDecision
 } from "./finishMediaStopResultPolicy";
+import {
+  resolveFinishRemoteSyncCompletionActions,
+  resolveFinishRemoteSyncPendingResultActions,
+  type FinishRemoteSyncCompletionActions,
+  type FinishRemoteSyncPendingResultActions
+} from "./finishRemoteSyncCompletionActionsPolicy";
+import {
+  resolveFinishRemoteSyncDirectResultActions,
+  resolveFinishRemoteSyncDirectRetryActions,
+  type FinishRemoteSyncDirectResultActions,
+  type FinishRemoteSyncDirectRetryActions
+} from "./finishRemoteSyncDirectActionsPolicy";
+import {
+  resolveFinishRemoteSyncRequestActions,
+  type FinishRemoteSyncRequestActionsDecision
+} from "./finishRemoteSyncRequestActionsPolicy";
 import { resolveLocalSosPackageStatus } from "./localSosPackageStatusPolicy";
 import { resolvePanicTriggerDecision } from "./panicTriggerPolicy";
 
@@ -170,4 +187,40 @@ export function resolveSosControllerFinishMediaStopResult(input: {
   status: FinishFlowMediaStopStatus;
 }): FinishMediaStopResultActionsDecision {
   return resolveFinishMediaStopResultActions(input);
+}
+
+export function resolveSosControllerFinishRemoteSyncRequest(input: {
+  remoteSessionIdToFinish?: string | null;
+}): FinishRemoteSyncRequestActionsDecision {
+  return resolveFinishRemoteSyncRequestActions(input);
+}
+
+export function resolveSosControllerFinishRemoteSyncDirectRetry(input: {
+  directFinishState: EmergencyRemoteSyncState;
+}): FinishRemoteSyncDirectRetryActions {
+  return resolveFinishRemoteSyncDirectRetryActions(input);
+}
+
+export function resolveSosControllerFinishRemoteSyncDirectResult(input: {
+  directFinishState: EmergencyRemoteSyncState;
+  packageId: string;
+  retryStates: EmergencyRemoteSyncState[];
+}): FinishRemoteSyncDirectResultActions {
+  return resolveFinishRemoteSyncDirectResultActions(input);
+}
+
+export function resolveSosControllerFinishRemoteSyncPendingResult(input: {
+  packageId: string;
+  syncStates: EmergencyRemoteSyncState[];
+}): FinishRemoteSyncPendingResultActions {
+  return resolveFinishRemoteSyncPendingResultActions(input);
+}
+
+export function resolveSosControllerFinishRemoteSyncCompletion(input: {
+  packageId: string;
+  platform: string;
+  remoteFinishState?: EmergencyRemoteSyncState;
+  remoteSessionIdToFinish?: string | null;
+}): FinishRemoteSyncCompletionActions {
+  return resolveFinishRemoteSyncCompletionActions(input);
 }

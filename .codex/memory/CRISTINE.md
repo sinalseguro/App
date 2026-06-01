@@ -1344,6 +1344,15 @@ Proximas acoes atualizadas:
 - Gates aprovados: `test:sos-controller`, `test:finish-media-stop-request-actions`, `test:finish-media-stop-result`, `smoke-test`, `typecheck`, `lint` e `git diff --check`.
 - Sem build Android porque a subfatia nao moveu runtime fisico; qualquer proximo corte com camera/recorder/WebRTC/storage exige validacao fisica proporcional.
 
+## QA/Security - 2026-06-01 - Bloco 1C SOS Controller remote sync policy
+
+- Mudanca restrita a controlador/policy pura para compor a fase de sincronizacao remota do encerramento.
+- `app/index.tsx` continua executando fila local, finish remoto direto, sync pendente, estado React, progresso, cofre, backend, auditoria e logs.
+- `sosControllerPolicy` nao executa API, storage, camera, WebRTC, timer, chamada telefonica, router, cofre, fila real ou mutacao real.
+- Sem novo segredo, credencial, token, chave, SDP, ICE, URI local, path de arquivo, coordenada, telefone novo, nome real novo ou conteudo de midia.
+- Gates aprovados: `test:sos-controller`, `test:finish-remote-sync-request-actions`, `test:finish-remote-sync-direct-actions`, `test:finish-remote-sync-completion-actions`, `smoke-test`, `typecheck`, `lint` e `git diff --check`.
+- Sem build Android porque a subfatia nao moveu API real nem runtime fisico; qualquer proximo corte com API/backend/camera/recorder/WebRTC/storage exige validacao proporcional.
+
 ## QA/Security - 2026-05-23 - Etapas 1.181 e 1.182 emergency home shell policies
 
 - Etapas 1.181 e 1.182 extraem apenas apresentacao/acessibilidade: `emergencyTopBarPresentationPolicy` e `emergencySettingsDrawerPresentationPolicy`.

@@ -1598,6 +1598,14 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `test:sos-controller` cobre midia ja entregue a chamada ao vivo, necessidade de sinalizar recorder, ausencia de serial, serial valido e resultado com asset anexado.
 - Este corte nao moveu side effects reais de camera/recorder/cofre/WebRTC/storage/backend.
 
+# Atualizacao - 2026-06-01 - Bloco 1C SOS Controller remote sync policy
+
+- `sosControllerPolicy` agora tambem centraliza a composicao pura da sincronizacao remota durante o encerramento do SOS.
+- Novas funcoes: `resolveSosControllerFinishRemoteSyncRequest`, `resolveSosControllerFinishRemoteSyncDirectRetry`, `resolveSosControllerFinishRemoteSyncDirectResult`, `resolveSosControllerFinishRemoteSyncPendingResult` e `resolveSosControllerFinishRemoteSyncCompletion`.
+- `app/index.tsx` deixou de chamar diretamente as policies finas de sync remoto no finish, mas segue executando fila local, chamada direta de finish remoto, sync pendente, logs, estado React, cofre, storage, backend e WebRTC.
+- `test:sos-controller` cobre modo direto, modo pendente, retry apos falha remota, resultado de retry, resultado pendente e log de falha.
+- Este corte nao moveu side effects reais de API/backend/cofre/WebRTC/storage.
+
 # Atualizacao - 2026-05-23 - Etapas 1.181 e 1.182 Policies visuais da Home
 
 - `src/features/emergency-home/emergencyTopBarPresentationPolicy.ts` centraliza labels de contexto e configuracao visual do menu do `EmergencyTopBar`.

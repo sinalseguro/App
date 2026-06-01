@@ -1730,7 +1730,8 @@ if (
   !finishMediaStopRequestActionsPolicy.includes("resolveFinishMediaStopStartActions") ||
   !homeScreen.includes("resolveSosControllerFinishMediaStopResult") ||
   !sosControllerPolicy.includes("resolveFinishMediaStopResultActions") ||
-  !homeScreen.includes("resolveFinishRemoteSyncRequestActions") ||
+  !homeScreen.includes("resolveSosControllerFinishRemoteSyncRequest") ||
+  !sosControllerPolicy.includes("resolveFinishRemoteSyncRequestActions") ||
   !finishRemoteSyncRequestActionsPolicy.includes("resolveFinishRemoteSyncStartActions") ||
   !finishMediaStopStartPolicy.includes("resolveFinishMediaStopSignaledProgress") ||
   !finishMediaStopResultPolicy.includes("resolveFinishMediaStopSettledProgress") ||
@@ -2069,11 +2070,16 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishRemoteSyncRequestActions") ||
-  !homeScreen.includes("resolveFinishRemoteSyncDirectRetryActions") ||
-  !homeScreen.includes("resolveFinishRemoteSyncDirectResultActions") ||
-  !homeScreen.includes("resolveFinishRemoteSyncPendingResultActions") ||
-  !homeScreen.includes("resolveFinishRemoteSyncCompletionActions") ||
+  !homeScreen.includes("resolveSosControllerFinishRemoteSyncRequest") ||
+  !homeScreen.includes("resolveSosControllerFinishRemoteSyncDirectRetry") ||
+  !homeScreen.includes("resolveSosControllerFinishRemoteSyncDirectResult") ||
+  !homeScreen.includes("resolveSosControllerFinishRemoteSyncPendingResult") ||
+  !homeScreen.includes("resolveSosControllerFinishRemoteSyncCompletion") ||
+  !sosControllerPolicy.includes("resolveFinishRemoteSyncRequestActions") ||
+  !sosControllerPolicy.includes("resolveFinishRemoteSyncDirectRetryActions") ||
+  !sosControllerPolicy.includes("resolveFinishRemoteSyncDirectResultActions") ||
+  !sosControllerPolicy.includes("resolveFinishRemoteSyncPendingResultActions") ||
+  !sosControllerPolicy.includes("resolveFinishRemoteSyncCompletionActions") ||
   !finishRemoteSyncRequestActionsPolicy.includes("resolveFinishRemoteSyncStartActions") ||
   !finishRemoteSyncRequestActionsPolicy.includes("resolveFinishRemoteSyncMode") ||
   !finishRemoteSyncDirectActionsPolicy.includes("shouldRetryRemoteFinishAfterDirect") ||

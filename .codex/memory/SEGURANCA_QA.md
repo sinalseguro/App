@@ -1701,3 +1701,12 @@ Papel: seguranca, LGPD e QA.
 - Nao introduz log novo com dados sensiveis, chave, token, hash, codigo, identity token, SDP, ICE, payload P2P, URI local, path de arquivo, coordenada, telefone novo, nome real novo ou conteudo de midia.
 - Validacoes aprovadas: `test:sos-controller`, `test:finish-media-stop-request-actions`, `test:finish-media-stop-result`, `smoke-test`, `typecheck`, `lint` e `git diff --check`.
 - Sem build/instalacao Android nesta subfatia porque nao houve mudanca de runtime fisico; qualquer proximo corte com side effects de camera/recorder/WebRTC/storage exige validacao fisica proporcional.
+
+## QA/Security - 2026-06-01 - Bloco 1C SOS Controller remote sync policy
+
+- Corte restrito a policy/controlador puro para composicao da sincronizacao remota no encerramento do SOS.
+- `sosControllerPolicy` combina policies existentes de request, retry, resultado direto, resultado pendente e completion de sync remoto, sem executar API, fila, storage, backend, WebRTC, timer ou navegacao.
+- `app/index.tsx` continua dono dos efeitos reais de fila local, chamada direta de finish remoto, sync pendente, estado React, logs operacionais, cofre e backend.
+- Nao introduz log novo com dados sensiveis, chave, token, hash, codigo, identity token, SDP, ICE, payload P2P, URI local, path de arquivo, coordenada, telefone novo, nome real novo ou conteudo de midia.
+- Validacoes aprovadas: `test:sos-controller`, `test:finish-remote-sync-request-actions`, `test:finish-remote-sync-direct-actions`, `test:finish-remote-sync-completion-actions`, `smoke-test`, `typecheck`, `lint` e `git diff --check`.
+- Sem build/instalacao Android nesta subfatia porque nao houve mudanca de runtime fisico ou API real; qualquer proximo corte com side effects de API/backend/camera/WebRTC/storage exige validacao proporcional.

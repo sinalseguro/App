@@ -1,11 +1,17 @@
 import assert from "node:assert/strict";
 
+import type { EmergencyRemoteSyncState } from "../src/features/emergency/emergencySyncQueue";
 import { defaultEmergencyPreferences } from "../src/features/emergency/emergencyPreferences";
 import {
   resolveSosControllerFinishStart,
   resolveSosControllerFinishMediaStopRequest,
   resolveSosControllerFinishMediaStopResult,
   resolveSosControllerFinishMediaStopSignaled,
+  resolveSosControllerFinishRemoteSyncCompletion,
+  resolveSosControllerFinishRemoteSyncDirectResult,
+  resolveSosControllerFinishRemoteSyncDirectRetry,
+  resolveSosControllerFinishRemoteSyncPendingResult,
+  resolveSosControllerFinishRemoteSyncRequest,
   resolveSosControllerTrigger
 } from "../src/features/emergency-home/sosControllerPolicy";
 
@@ -18,6 +24,19 @@ const acceptedPreferences = {
     termsAccepted: true
   }
 };
+
+function remoteState(
+  patch: Partial<EmergencyRemoteSyncState> & Pick<EmergencyRemoteSyncState, "packageId">
+): EmergencyRemoteSyncState {
+  return {
+    attempts: 0,
+    id: patch.packageId,
+    recipientCount: 1,
+    status: "sent_to_ec2",
+    updatedAt: "2026-06-01T00:00:00.000Z",
+    ...patch
+  };
+}
 
 assert.deepEqual(
   resolveSosControllerTrigger({
@@ -262,6 +281,97 @@ assert.deepEqual(
       status: "attached"
     },
     shouldClearMediaStopPending: true
+  }
+);
+
+assert.deepEqual(
+  resolveSosControllerFinishRemoteSyncRequest({
+    remoteSessionIdToFinish: "session-1"
+  }),
+  {
+    mode: {
+      mode: "direct_finish",
+      remoteSessionId: "session-1",
+      shouldSyncPendingOnly: false
+    },
+    startActions: {
+      finishProgress: {
+        detail: "Confirmando o encerramento seguro com a central.",
+        progress: 86,
+        status: "running",
+        title: "Sincronizando chamado"
+      },
+      shouldQueueForRemoteSync: true
+    }
+  }
+);
+
+assert.deepEqual(
+  resolveSosControllerFinishRemoteSyncRequest({
+    remoteSessionIdToFinish: null
+  }).mode,
+  {
+    mode: "pending_sync",
+    shouldSyncPendingOnly: true
+  }
+);
+
+const failedDirect = remoteState({
+  packageId: "pkg-2",
+  remoteFinishStatus: "failed",
+  remoteSessionId: "session-2"
+});
+const retryFinished = remoteState({
+  packageId: "pkg-2",
+  remoteFinishStatus: "finished",
+  remoteSessionId: "session-2"
+});
+
+assert.deepEqual(resolveSosControllerFinishRemoteSyncDirectRetry({ directFinishState: failedDirect }), {
+  shouldSyncPendingAfterDirect: true
+});
+
+assert.deepEqual(
+  resolveSosControllerFinishRemoteSyncDirectResult({
+    directFinishState: failedDirect,
+    packageId: "pkg-2",
+    retryStates: [remoteState({ packageId: "other", remoteFinishStatus: "finished" }), retryFinished]
+  }),
+  {
+    remoteFinishState: retryFinished
+  }
+);
+
+assert.deepEqual(
+  resolveSosControllerFinishRemoteSyncPendingResult({
+    packageId: "pkg-2",
+    syncStates: [remoteState({ packageId: "other", remoteFinishStatus: "pending" }), retryFinished]
+  }),
+  {
+    remoteFinishState: retryFinished
+  }
+);
+
+assert.deepEqual(
+  resolveSosControllerFinishRemoteSyncCompletion({
+    packageId: "pkg-2",
+    platform: "android",
+    remoteFinishState: failedDirect,
+    remoteSessionIdToFinish: "session-request"
+  }),
+  {
+    failureLog: {
+      logEvent: "emergency_remote_finish_sync_error",
+      logPayload: {
+        packageId: "pkg-2",
+        platform: "android",
+        remoteFinishReason: undefined,
+        remoteSessionId: "session-request"
+      },
+      remoteFinishFailed: true,
+      shouldLog: true
+    },
+    remoteFinishFailed: true
   }
 );
 

@@ -6147,3 +6147,24 @@ Validacoes:
 Checkpoint:
 
 - `docs/219_CHECKPOINT_BLOCO_1B_SOS_CONTROLLER_MEDIA_STOP_POLICY_2026-06-01.md`.
+
+## 2026-06-01 - Bloco 1C SOS Controller remote sync policy
+
+Status: refatoracao de controlador puro implementada e validada.
+
+Executado:
+
+- `sosControllerPolicy` passou a compor a fase pura de sincronizacao remota no encerramento do SOS.
+- Criadas `resolveSosControllerFinishRemoteSyncRequest()`, `resolveSosControllerFinishRemoteSyncDirectRetry()`, `resolveSosControllerFinishRemoteSyncDirectResult()`, `resolveSosControllerFinishRemoteSyncPendingResult()` e `resolveSosControllerFinishRemoteSyncCompletion()`.
+- `app/index.tsx` manteve `queueEmergencyPackageForRemoteSync()`, `finishRemoteEmergencySessionForPackage()`, `syncPendingEmergencyPackagesWithApi()`, estado React, progresso, logs, cofre, backend e WebRTC reais.
+- `scripts/sos-controller-policy.test.ts` passou a cobrir a composicao de sincronizacao remota do finish.
+- `scripts/smoke-test.mjs` passou a exigir a Home usando o controlador e o controlador usando as policies finas.
+
+Validacoes:
+
+- `test:sos-controller`, `test:finish-remote-sync-request-actions`, `test:finish-remote-sync-direct-actions`, `test:finish-remote-sync-completion-actions`, `smoke-test`, `typecheck`, `lint` e `git diff --check`: aprovados.
+- Sem build Android porque a subfatia nao moveu API real nem runtime fisico de camera, recorder, WebRTC, storage, cofre ou backend.
+
+Checkpoint:
+
+- `docs/220_CHECKPOINT_BLOCO_1C_SOS_CONTROLLER_REMOTE_SYNC_POLICY_2026-06-01.md`.

@@ -41,15 +41,6 @@ import {
 import { resolveFinishMissingPackageBranchActions } from "@/features/emergency-home/finishMissingPackageBranchActionsPolicy";
 import { resolveFinishPackageOutcomeActions } from "@/features/emergency-home/finishPackageOutcomeActionsPolicy";
 import { resolveFinishProgressDialogPresentation } from "@/features/emergency-home/finishProgressDialogPolicy";
-import {
-  resolveFinishRemoteSyncCompletionActions,
-  resolveFinishRemoteSyncPendingResultActions
-} from "@/features/emergency-home/finishRemoteSyncCompletionActionsPolicy";
-import {
-  resolveFinishRemoteSyncDirectResultActions,
-  resolveFinishRemoteSyncDirectRetryActions
-} from "@/features/emergency-home/finishRemoteSyncDirectActionsPolicy";
-import { resolveFinishRemoteSyncRequestActions } from "@/features/emergency-home/finishRemoteSyncRequestActionsPolicy";
 import { resolveFinishRequestDecision } from "@/features/emergency-home/finishRequestPolicy";
 import {
   idleFinishProgressState,
@@ -144,6 +135,11 @@ import {
   resolveSosControllerFinishMediaStopRequest,
   resolveSosControllerFinishMediaStopResult,
   resolveSosControllerFinishMediaStopSignaled,
+  resolveSosControllerFinishRemoteSyncCompletion,
+  resolveSosControllerFinishRemoteSyncDirectResult,
+  resolveSosControllerFinishRemoteSyncDirectRetry,
+  resolveSosControllerFinishRemoteSyncPendingResult,
+  resolveSosControllerFinishRemoteSyncRequest,
   resolveSosControllerTrigger
 } from "@/features/emergency-home/sosControllerPolicy";
 import { resolveActiveRemoteSyncAttemptActions, type ActiveRemoteSyncAttemptSource } from "@/features/emergency-home/activeRemoteSyncAttemptActionsPolicy";
@@ -1515,7 +1511,7 @@ export default function HomeScreen() {
       }
       if (!result) return;
 
-      const remoteSyncRequestActions = resolveFinishRemoteSyncRequestActions({
+      const remoteSyncRequestActions = resolveSosControllerFinishRemoteSyncRequest({
         remoteSessionIdToFinish
       });
       const remoteSyncStartActions = remoteSyncRequestActions.startActions;
@@ -1530,25 +1526,25 @@ export default function HomeScreen() {
           result.packageRecord,
           remoteSyncMode.remoteSessionId
         );
-        const directRetryActions = resolveFinishRemoteSyncDirectRetryActions({
+        const directRetryActions = resolveSosControllerFinishRemoteSyncDirectRetry({
           directFinishState
         });
         const retryStates = directRetryActions.shouldSyncPendingAfterDirect
           ? await syncPendingEmergencyPackagesWithApi()
           : [];
-        remoteFinishState = resolveFinishRemoteSyncDirectResultActions({
+        remoteFinishState = resolveSosControllerFinishRemoteSyncDirectResult({
           directFinishState,
           packageId,
           retryStates
         }).remoteFinishState;
       } else {
         const syncStates = await syncPendingEmergencyPackagesWithApi();
-        remoteFinishState = resolveFinishRemoteSyncPendingResultActions({
+        remoteFinishState = resolveSosControllerFinishRemoteSyncPendingResult({
           packageId,
           syncStates
         }).remoteFinishState;
       }
-      const remoteFinishCompletionActions = resolveFinishRemoteSyncCompletionActions({
+      const remoteFinishCompletionActions = resolveSosControllerFinishRemoteSyncCompletion({
         packageId,
         platform: Platform.OS,
         remoteFinishState,
