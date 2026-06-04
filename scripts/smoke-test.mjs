@@ -1979,7 +1979,8 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishPackageOutcomeActions") ||
+  !homeScreen.includes("resolveSosControllerFinishPackageOutcome") ||
+  !sosControllerPolicy.includes("resolveFinishPackageOutcomeActions") ||
   !finishPackageOutcomeActionsPolicy.includes("resolveFinishOutcomeInput") ||
   !finishPackageOutcomeActionsPolicy.includes("resolveFinishOutcomePolicy") ||
   !finishOutcomeInputPolicy.includes("attachedAssetsAfterFinish") ||
@@ -2032,7 +2033,8 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishFinallyCleanupActions") ||
+  !homeScreen.includes("resolveSosControllerFinishCleanup") ||
+  !sosControllerPolicy.includes("resolveFinishFinallyCleanupActions") ||
   !finishFailureCleanupActionsPolicy.includes("resolveFinishActiveCallCleanup") ||
   !finishActiveCallCleanupPolicy.includes("shouldClearMediaStopPurpose") ||
   !finishActiveCallCleanupPolicy.includes("shouldClearMediaStopPending") ||
@@ -2100,7 +2102,8 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishPackageOutcomeActions") ||
+  !homeScreen.includes("resolveSosControllerFinishPackageOutcome") ||
+  !sosControllerPolicy.includes("resolveFinishPackageOutcomeActions") ||
   !finishPackageOutcomeActionsPolicy.includes("resolveFinishPackageResult") ||
   !finishPackageResultPolicy.includes("attachedAssetsAfterFinish") ||
   !finishPackageResultPolicy.includes("emergency_finish_package_result") ||
@@ -2112,7 +2115,8 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishPackageOutcomeActions") ||
+  !homeScreen.includes("resolveSosControllerFinishPackageOutcome") ||
+  !sosControllerPolicy.includes("resolveFinishPackageOutcomeActions") ||
   !finishPackageOutcomeActionsPolicy.includes("resolveFinishOwnerCompletionActions") ||
   !finishOwnerCompletionPolicy.includes("resolveFinishOwnerLiveEvidenceUpdate") ||
   !finishOwnerCompletionPolicy.includes("resolveFinishOwnerLiveAuditMarker") ||
@@ -2125,7 +2129,8 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishPackageOutcomeActions") ||
+  !homeScreen.includes("resolveSosControllerFinishPackageOutcome") ||
+  !sosControllerPolicy.includes("resolveFinishPackageOutcomeActions") ||
   !finishPackageOutcomeActionsPolicy.includes("resolveFinishOwnerCompletionActions") ||
   !finishOwnerCompletionPolicy.includes("resolveFinishOwnerLiveAuditMarker") ||
   !finishOwnerLiveAuditPolicy.includes('connectionState: "ended"') ||
@@ -2137,7 +2142,8 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishPackageOutcomeActions") ||
+  !homeScreen.includes("resolveSosControllerFinishPackageOutcome") ||
+  !sosControllerPolicy.includes("resolveFinishPackageOutcomeActions") ||
   !finishPackageOutcomeActionsPolicy.includes("resolveFinishPostOutcomeActions") ||
   !finishPostOutcomeActionsPolicy.includes("resolveFinishNoMediaDiagnosticRequest") ||
   !finishPostOutcomeActionsPolicy.includes("resolveFinishCompletionActions") ||
@@ -2150,8 +2156,9 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishPackageOutcomeActions") ||
+  !homeScreen.includes("resolveSosControllerFinishPackageOutcome") ||
   !homeScreen.includes("resolveFinishCompletionConfirmationFormPatch") ||
+  !sosControllerPolicy.includes("resolveFinishPackageOutcomeActions") ||
   !finishPackageOutcomeActionsPolicy.includes("resolveFinishPostOutcomeActions") ||
   !finishPostOutcomeActionsPolicy.includes("resolveFinishCompletionActions") ||
   !finishConfirmationFormPolicy.includes("resolveFinishCompletionConfirmationFormPatch") ||
@@ -2166,7 +2173,8 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishMissingPackageBranchActions") ||
+  !homeScreen.includes("resolveSosControllerFinishMissingPackage") ||
+  !sosControllerPolicy.includes("resolveFinishMissingPackageBranchActions") ||
   !finishMissingPackageBranchActionsPolicy.includes("resolveFinishMissingPackageActions") ||
   !finishMissingPackageBranchActionsPolicy.includes("shouldReturnAfterApply") ||
   !finishMissingPackagePolicy.includes("shouldShowMissingPackageProgress") ||
@@ -2178,8 +2186,10 @@ if (
 }
 
 if (
-  !homeScreen.includes("resolveFinishFailureRuntimeActions") ||
-  !homeScreen.includes("resolveFinishFinallyCleanupActions") ||
+  !homeScreen.includes("resolveSosControllerFinishFailure") ||
+  !homeScreen.includes("resolveSosControllerFinishCleanup") ||
+  !sosControllerPolicy.includes("resolveFinishFailureRuntimeActions") ||
+  !sosControllerPolicy.includes("resolveFinishFinallyCleanupActions") ||
   !finishFailureCleanupActionsPolicy.includes("resolveFinishFailureActions") ||
   !finishFailureCleanupActionsPolicy.includes("resolveFinishActiveCallCleanup") ||
   !finishFailureActionsPolicy.includes("emergency_finish_package_error") ||

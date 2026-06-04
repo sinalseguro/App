@@ -1710,3 +1710,12 @@ Papel: seguranca, LGPD e QA.
 - Nao introduz log novo com dados sensiveis, chave, token, hash, codigo, identity token, SDP, ICE, payload P2P, URI local, path de arquivo, coordenada, telefone novo, nome real novo ou conteudo de midia.
 - Validacoes aprovadas: `test:sos-controller`, `test:finish-remote-sync-request-actions`, `test:finish-remote-sync-direct-actions`, `test:finish-remote-sync-completion-actions`, `smoke-test`, `typecheck`, `lint` e `git diff --check`.
 - Sem build/instalacao Android nesta subfatia porque nao houve mudanca de runtime fisico ou API real; qualquer proximo corte com side effects de API/backend/camera/WebRTC/storage exige validacao proporcional.
+
+## QA/Security - 2026-06-04 - Bloco 1D SOS Controller outcome e cleanup policy
+
+- Corte restrito a policy/controlador puro para composicao de pacote ausente, outcome final, falha controlada e cleanup do encerramento.
+- `sosControllerPolicy` combina policies existentes, sem executar `finishEmergencyPackage`, outbox, logs reais, atualizacao de evidencia owner, auditoria, diagnostico sem midia, API, storage, camera, recorder, WebRTC, timer ou navegacao.
+- `app/index.tsx` continua dono dos efeitos reais e das mutacoes React/refs.
+- Nao introduz log novo com dados sensiveis, chave, token, hash, codigo, identity token, SDP, ICE, payload P2P, URI local, path de arquivo, coordenada, telefone novo, nome real novo ou conteudo de midia.
+- Validacoes aprovadas: `test:sos-controller`, `test:finish-package-outcome-actions`, `test:finish-missing-package-branch-actions`, `test:finish-failure-cleanup-actions`, `test:finish-post-outcome`, `smoke-test`, `typecheck`, `lint` e `git diff --check`.
+- Sem build/instalacao Android nesta subfatia porque nao houve mudanca de runtime fisico ou API real; qualquer proximo corte com side effects de API/backend/camera/recorder/WebRTC/storage exige validacao proporcional.

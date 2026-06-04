@@ -1606,6 +1606,14 @@ Papel: arquitetura mobile React Native/Expo, SOS, Cofre e Android.
 - `test:sos-controller` cobre modo direto, modo pendente, retry apos falha remota, resultado de retry, resultado pendente e log de falha.
 - Este corte nao moveu side effects reais de API/backend/cofre/WebRTC/storage.
 
+# Atualizacao - 2026-06-04 - Bloco 1D SOS Controller outcome e cleanup policy
+
+- `sosControllerPolicy` agora tambem centraliza a composicao pura de pacote ausente, outcome final, falha controlada e cleanup do encerramento.
+- Novas funcoes: `resolveSosControllerFinishMissingPackage`, `resolveSosControllerFinishPackageOutcome`, `resolveSosControllerFinishFailure` e `resolveSosControllerFinishCleanup`.
+- `app/index.tsx` deixou de chamar diretamente as policies finas dessas fases, mas segue executando `finishEmergencyPackage`, `refreshOutboxCount`, logs, evidencia owner, auditoria, diagnostico sem midia, refs e estado React.
+- `test:sos-controller` cobre pacote ausente, outcome protegido, marcador owner, ausencia de diagnostico sem midia, falha e cleanup.
+- Este corte nao moveu side effects reais de API/backend/cofre/WebRTC/storage/camera/recorder.
+
 # Atualizacao - 2026-05-23 - Etapas 1.181 e 1.182 Policies visuais da Home
 
 - `src/features/emergency-home/emergencyTopBarPresentationPolicy.ts` centraliza labels de contexto e configuracao visual do menu do `EmergencyTopBar`.

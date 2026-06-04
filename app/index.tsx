@@ -34,12 +34,6 @@ import {
   type FinishConfirmationFormPatch
 } from "@/features/emergency-home/finishConfirmationFormPolicy";
 import { resolveFinishConfirmationDialogPresentation } from "@/features/emergency-home/finishConfirmationDialogPolicy";
-import {
-  resolveFinishFailureRuntimeActions,
-  resolveFinishFinallyCleanupActions
-} from "@/features/emergency-home/finishFailureCleanupActionsPolicy";
-import { resolveFinishMissingPackageBranchActions } from "@/features/emergency-home/finishMissingPackageBranchActionsPolicy";
-import { resolveFinishPackageOutcomeActions } from "@/features/emergency-home/finishPackageOutcomeActionsPolicy";
 import { resolveFinishProgressDialogPresentation } from "@/features/emergency-home/finishProgressDialogPolicy";
 import { resolveFinishRequestDecision } from "@/features/emergency-home/finishRequestPolicy";
 import {
@@ -131,6 +125,10 @@ import { resolveProtectedRouteUnlockActions } from "@/features/emergency-home/pr
 import { resolveRecordingConsentDialogPresentation } from "@/features/emergency-home/recordingConsentDialogPolicy";
 import { resolveActiveRemoteSyncStatus } from "@/features/emergency-home/remoteSyncStatusPolicy";
 import {
+  resolveSosControllerFinishCleanup,
+  resolveSosControllerFinishFailure,
+  resolveSosControllerFinishMissingPackage,
+  resolveSosControllerFinishPackageOutcome,
   resolveSosControllerFinishStart,
   resolveSosControllerFinishMediaStopRequest,
   resolveSosControllerFinishMediaStopResult,
@@ -1496,7 +1494,7 @@ export default function HomeScreen() {
       const result = await finishEmergencyPackage(packageId, "manual_finish");
       await refreshOutboxCount();
 
-      const missingPackageActions = resolveFinishMissingPackageBranchActions({
+      const missingPackageActions = resolveSosControllerFinishMissingPackage({
         resultPresent: Boolean(result),
         stopSerialPresent: Boolean(stopSerial)
       });
@@ -1556,7 +1554,7 @@ export default function HomeScreen() {
       }
       const remoteFinishFailed = remoteFinishCompletionActions.remoteFinishFailed;
 
-      const finishPackageOutcomeActions = resolveFinishPackageOutcomeActions({
+      const finishPackageOutcomeActions = resolveSosControllerFinishPackageOutcome({
         endedAt: new Date().toISOString(),
         liveVideoAttached: Boolean(liveVideoAttachedAsset),
         media: result.packageRecord.media,
@@ -1583,14 +1581,14 @@ export default function HomeScreen() {
       showFinishProgress(finishCompletionActions.finishProgress);
       applyFinishConfirmationFormPatch(resolveFinishCompletionConfirmationFormPatch(finishCompletionActions));
     } catch (error) {
-      const finishFailureActions = resolveFinishFailureRuntimeActions({
+      const finishFailureActions = resolveSosControllerFinishFailure({
         platform: Platform.OS
       });
       appendMediaOperationalLog(finishFailureActions.log.event, finishFailureActions.log.payload, error);
       setRecordingStatus(finishFailureActions.recordingStatus);
       showFinishProgress(finishFailureActions.finishProgress);
     } finally {
-      const finishCleanupDecision = resolveFinishFinallyCleanupActions({
+      const finishCleanupDecision = resolveSosControllerFinishCleanup({
         mediaStopPurpose: mediaStopPurposeRef.current
       });
       if (finishCleanupDecision.shouldClearMediaStopPurpose) {

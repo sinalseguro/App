@@ -6168,3 +6168,24 @@ Validacoes:
 Checkpoint:
 
 - `docs/220_CHECKPOINT_BLOCO_1C_SOS_CONTROLLER_REMOTE_SYNC_POLICY_2026-06-01.md`.
+
+## 2026-06-04 - Bloco 1D SOS Controller outcome e cleanup policy
+
+Status: refatoracao de controlador puro implementada e validada.
+
+Executado:
+
+- `sosControllerPolicy` passou a compor a fase final do encerramento do SOS: pacote ausente, outcome final, falha controlada e cleanup.
+- Criadas `resolveSosControllerFinishMissingPackage`, `resolveSosControllerFinishPackageOutcome`, `resolveSosControllerFinishFailure` e `resolveSosControllerFinishCleanup`.
+- `app/index.tsx` manteve `finishEmergencyPackage`, `refreshOutboxCount`, logs, atualizacao de evidencia owner, marcador de auditoria, persistencia de diagnostico sem midia, refs e estado React reais.
+- `scripts/sos-controller-policy.test.ts` passou a cobrir as decisoes finais do finish.
+- `scripts/smoke-test.mjs` passou a exigir a Home usando o controlador e o controlador usando as policies finas.
+
+Validacoes:
+
+- `test:sos-controller`, `test:finish-package-outcome-actions`, `test:finish-missing-package-branch-actions`, `test:finish-failure-cleanup-actions`, `test:finish-post-outcome`, `smoke-test`, `typecheck`, `lint` e `git diff --check`: aprovados.
+- Sem build Android porque a subfatia nao moveu API real nem runtime fisico de camera, recorder, WebRTC, storage, cofre ou backend.
+
+Checkpoint:
+
+- `docs/221_CHECKPOINT_BLOCO_1D_SOS_CONTROLLER_OUTCOME_CLEANUP_POLICY_2026-06-04.md`.

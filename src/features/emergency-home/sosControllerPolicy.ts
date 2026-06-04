@@ -1,6 +1,11 @@
 import type { EmergencyPreferences } from "@/features/emergency/emergencyPreferences";
 import type { EmergencyRemoteSyncState } from "@/features/emergency/emergencySyncQueue";
+import type { MediaCaptureManifest } from "@/features/emergency/types";
 
+import type {
+  FinishActiveCallCleanupDecision,
+  FinishActiveCallCleanupMediaStopPurpose
+} from "./finishActiveCallCleanupPolicy";
 import {
   resolveEmergencyStartRuntimeActions,
   type EmergencyStartRuntimeActionsDecision
@@ -18,6 +23,11 @@ import {
   type FinishActiveCallStartInput
 } from "./finishActiveCallStartPolicy";
 import {
+  resolveFinishFailureRuntimeActions,
+  resolveFinishFinallyCleanupActions,
+  type FinishFailureRuntimeActions
+} from "./finishFailureCleanupActionsPolicy";
+import {
   type FinishFlowMediaStopStatus,
   resolveMediaProtectionInProgress,
   type FinishFlowProgress
@@ -32,6 +42,15 @@ import {
   resolveFinishMediaStopResultActions,
   type FinishMediaStopResultActionsDecision
 } from "./finishMediaStopResultPolicy";
+import {
+  resolveFinishMissingPackageBranchActions,
+  type FinishMissingPackageBranchActionsDecision
+} from "./finishMissingPackageBranchActionsPolicy";
+import type { FinishOutcomeStopResultStatus } from "./finishOutcomePolicy";
+import {
+  resolveFinishPackageOutcomeActions,
+  type FinishPackageOutcomeActionsDecision
+} from "./finishPackageOutcomeActionsPolicy";
 import {
   resolveFinishRemoteSyncCompletionActions,
   resolveFinishRemoteSyncPendingResultActions,
@@ -223,4 +242,37 @@ export function resolveSosControllerFinishRemoteSyncCompletion(input: {
   remoteSessionIdToFinish?: string | null;
 }): FinishRemoteSyncCompletionActions {
   return resolveFinishRemoteSyncCompletionActions(input);
+}
+
+export function resolveSosControllerFinishMissingPackage(input: {
+  resultPresent: boolean;
+  stopSerialPresent: boolean;
+}): FinishMissingPackageBranchActionsDecision {
+  return resolveFinishMissingPackageBranchActions(input);
+}
+
+export function resolveSosControllerFinishPackageOutcome(input: {
+  endedAt: string;
+  liveVideoAttached: boolean;
+  media: MediaCaptureManifest;
+  mediaWasHandedToLiveCall: boolean;
+  packageId: string;
+  platform: string;
+  remoteFinishFailed: boolean;
+  stopResultStatus?: FinishOutcomeStopResultStatus;
+  stopSerialPresent: boolean;
+}): FinishPackageOutcomeActionsDecision {
+  return resolveFinishPackageOutcomeActions(input);
+}
+
+export function resolveSosControllerFinishFailure(input: {
+  platform: string;
+}): FinishFailureRuntimeActions {
+  return resolveFinishFailureRuntimeActions(input);
+}
+
+export function resolveSosControllerFinishCleanup(input: {
+  mediaStopPurpose: FinishActiveCallCleanupMediaStopPurpose;
+}): FinishActiveCallCleanupDecision {
+  return resolveFinishFinallyCleanupActions(input);
 }

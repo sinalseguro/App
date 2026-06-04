@@ -1362,3 +1362,12 @@ Proximas acoes atualizadas:
 - `PanicButton`, `AppTopBar`, `BrandedDialog`, gate protegido, cofre, player, SOS/WebRTC, backend e storage ficaram fora do escopo.
 - Validacoes aprovadas: `test:emergency-home-shell-presentation`, `test:action-components-presentation`, `smoke-test`, `typecheck`, `lint`, `private:android:readiness`, `npm test` e `git diff --check`.
 - Sem build/instalacao Android porque a fatia e presentational e nao altera runtime fisico.
+
+## QA/Security - 2026-06-04 - Bloco 1D SOS Controller outcome e cleanup policy
+
+- Mudanca restrita a controlador/policy pura para compor pacote ausente, outcome final, falha controlada e cleanup do encerramento.
+- `app/index.tsx` continua executando `finishEmergencyPackage`, `refreshOutboxCount`, logs reais, atualizacao de evidencia owner, marcador de auditoria, diagnostico sem midia, refs e estado React.
+- `sosControllerPolicy` nao executa API, storage, camera, recorder, WebRTC, timer, chamada telefonica, router, cofre, fila real, auditoria real ou mutacao real.
+- Sem novo segredo, credencial, token, chave, SDP, ICE, URI local, path de arquivo, coordenada, telefone novo, nome real novo ou conteudo de midia.
+- Gates aprovados: `test:sos-controller`, `test:finish-package-outcome-actions`, `test:finish-missing-package-branch-actions`, `test:finish-failure-cleanup-actions`, `test:finish-post-outcome`, `smoke-test`, `typecheck`, `lint` e `git diff --check`.
+- Sem build Android porque a subfatia nao moveu API real nem runtime fisico; qualquer proximo corte com API/backend/camera/recorder/WebRTC/storage exige validacao proporcional.

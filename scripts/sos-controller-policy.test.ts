@@ -2,7 +2,12 @@ import assert from "node:assert/strict";
 
 import type { EmergencyRemoteSyncState } from "../src/features/emergency/emergencySyncQueue";
 import { defaultEmergencyPreferences } from "../src/features/emergency/emergencyPreferences";
+import type { LocalMediaAsset, MediaCaptureManifest } from "../src/features/emergency/types";
 import {
+  resolveSosControllerFinishCleanup,
+  resolveSosControllerFinishFailure,
+  resolveSosControllerFinishMissingPackage,
+  resolveSosControllerFinishPackageOutcome,
   resolveSosControllerFinishStart,
   resolveSosControllerFinishMediaStopRequest,
   resolveSosControllerFinishMediaStopResult,
@@ -37,6 +42,29 @@ function remoteState(
     ...patch
   };
 }
+
+const mediaAsset: LocalMediaAsset = {
+  cameraMode: "back",
+  completedAt: "2026-05-18T00:00:10.000Z",
+  encryptionStatus: "encrypted_native_segmented_v1",
+  fileName: "asset.mp4",
+  hashMode: "content_sha256",
+  id: "asset-1",
+  kind: "video",
+  mimeType: "video/mp4",
+  recordedAt: "2026-05-18T00:00:00.000Z",
+  sha256: "sha256",
+  sizeBytes: 10,
+  storage: "app_private_native_segments",
+  uri: "sinalseguro://asset-1"
+};
+
+const recordedMedia: MediaCaptureManifest = {
+  assets: [mediaAsset],
+  policy: "local",
+  recordingMode: "video",
+  status: "recorded_local"
+};
 
 assert.deepEqual(
   resolveSosControllerTrigger({
@@ -372,6 +400,83 @@ assert.deepEqual(
       shouldLog: true
     },
     remoteFinishFailed: true
+  }
+);
+
+assert.deepEqual(
+  resolveSosControllerFinishMissingPackage({
+    resultPresent: false,
+    stopSerialPresent: false
+  }),
+  {
+    finishProgress: {
+      detail: "Nao havia chamado ativo para encerrar.",
+      progress: 100,
+      status: "warning",
+      title: "Chamado nao encontrado"
+    },
+    recordingStatus: "Nenhum chamado ativo encontrado.",
+    shouldApply: true,
+    shouldReturnAfterApply: true,
+    shouldShowMissingPackageProgress: true
+  }
+);
+
+const finishOutcomeActions = resolveSosControllerFinishPackageOutcome({
+  endedAt: "2026-05-18T00:01:00.000Z",
+  liveVideoAttached: false,
+  media: recordedMedia,
+  mediaWasHandedToLiveCall: false,
+  packageId: "pkg-3",
+  platform: "android",
+  remoteFinishFailed: false,
+  stopResultStatus: "attached",
+  stopSerialPresent: true
+});
+
+assert.equal(finishOutcomeActions.finishPackageResult.attachedAssetsAfterFinish, 1);
+assert.equal(finishOutcomeActions.finishOutcome.auditMarker, "local_evidence_protected");
+assert.deepEqual(finishOutcomeActions.ownerCompletionActions.auditMarker, {
+  event: "local_evidence_protected",
+  options: {
+    connectionState: "ended",
+    localEvidenceStatus: "protected"
+  }
+});
+assert.deepEqual(finishOutcomeActions.postOutcomeActions.noMediaDiagnostic, {
+  shouldPersist: false
+});
+
+assert.deepEqual(
+  resolveSosControllerFinishFailure({
+    platform: "android"
+  }),
+  {
+    finishProgress: {
+      detail: "Nao foi possivel finalizar o pacote local. Tente novamente pelo botao seguro.",
+      progress: 100,
+      status: "error",
+      title: "Falha no encerramento"
+    },
+    log: {
+      event: "emergency_finish_package_error",
+      payload: {
+        platform: "android"
+      }
+    },
+    recordingStatus: "Nao foi possivel encerrar o chamado neste aparelho. Tente novamente pelo botao seguro."
+  }
+);
+
+assert.deepEqual(
+  resolveSosControllerFinishCleanup({
+    mediaStopPurpose: "finish"
+  }),
+  {
+    shouldClearMediaStopPending: true,
+    shouldClearMediaStopPurpose: true,
+    shouldReleaseFinishInProgress: true,
+    shouldUnlockCaptureStop: true
   }
 );
 
